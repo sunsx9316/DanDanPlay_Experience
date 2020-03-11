@@ -1,0 +1,8 @@
+
+class BaseModel {
+
+}
+
+class BaseModelCollection {
+
+}

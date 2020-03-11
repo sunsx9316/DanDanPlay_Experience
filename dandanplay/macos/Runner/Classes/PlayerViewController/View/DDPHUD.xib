@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="14868" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="14868"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="c22-O7-iKe" customClass="DDPHUD">
+            <rect key="frame" x="0.0" y="0.0" width="182" height="40"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <visualEffectView blendingMode="withinWindow" material="appearanceBased" state="followsWindowActiveState" translatesAutoresizingMaskIntoConstraints="NO" id="J6d-jC-Ucv">
+                    <rect key="frame" x="0.0" y="0.0" width="182" height="40"/>
+                </visualEffectView>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="iuw-WK-Yep">
+                    <rect key="frame" x="18" y="12" width="146" height="16"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Label" id="oNZ-zd-rlf">
+                        <font key="font" usesAppearanceFont="YES"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="J6d-jC-Ucv" secondAttribute="bottom" id="9uH-79-xeD"/>
+                <constraint firstItem="J6d-jC-Ucv" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" id="ONj-hh-GP3"/>
+                <constraint firstItem="iuw-WK-Yep" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="12" id="Rd0-rg-s5z"/>
+                <constraint firstItem="J6d-jC-Ucv" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" id="ZNE-9t-bbC"/>
+                <constraint firstAttribute="trailing" secondItem="iuw-WK-Yep" secondAttribute="trailing" constant="20" id="cxf-Ow-6yP"/>
+                <constraint firstItem="iuw-WK-Yep" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="20" id="iza-9h-Eah"/>
+                <constraint firstAttribute="bottom" secondItem="iuw-WK-Yep" secondAttribute="bottom" constant="12" id="k9v-Rc-em8"/>
+                <constraint firstAttribute="trailing" secondItem="J6d-jC-Ucv" secondAttribute="trailing" id="zPj-p6-iLs"/>
+            </constraints>
+            <connections>
+                <outlet property="bottomConstraint" destination="k9v-Rc-em8" id="brQ-Bz-EuY"/>
+                <outlet property="label" destination="iuw-WK-Yep" id="uB0-bQ-tWg"/>
+                <outlet property="leftConstraint" destination="iza-9h-Eah" id="A7P-Y6-Oz3"/>
+                <outlet property="rightConstraint" destination="cxf-Ow-6yP" id="7Md-5J-tmD"/>
+                <outlet property="topConstraint" destination="Rd0-rg-s5z" id="ncy-MF-q6n"/>
+            </connections>
+            <point key="canvasLocation" x="-199" y="174"/>
+        </customView>
+    </objects>
+</document>
