@@ -76,6 +76,12 @@ target 'Runner' do
       pod p[:name], :path => File.join(symlink, 'macos')
     end
   }
+
+  pod 'DDPCategory', :path => 'LocalPods/DDPCategory'
+  pod 'DDPMediaPlayer', :path => '../DDPMediaPlayer'
+  pod 'DDPShare', :path => '../DDPShare'
+  pod 'SnapKit'
+  pod 'Masonry'
 end
 
 # Prevent Cocoapods from embedding a second Flutter framework and causing an error with the new Xcode build system.

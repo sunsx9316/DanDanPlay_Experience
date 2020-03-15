@@ -5,7 +5,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'LoadDanmakuMessage.g.dart';
 
 @JsonSerializable()
-class LoadDanmakuMessage extends BaseMessage<Map<String, dynamic>> {
+class LoadDanmakuMessage extends BaseMessage {
 
   @JsonKey(ignore: true)
   @override

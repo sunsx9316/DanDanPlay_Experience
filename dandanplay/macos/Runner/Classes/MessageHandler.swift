@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import dandanplay_native
+import DDPShare
 
 class MessageHandler {
     
@@ -17,5 +17,10 @@ class MessageHandler {
         }
     }
     
-    
+    static func transferMessageToMainChannel(_ messageData: [String : Any]) {
+        if let delegate = NSApp.delegate as? AppDelegate,
+            let vc = delegate.mainFlutterWindow.contentViewController as? MainViewController {
+            vc.parseMessage(messageData)
+        }
+    }
 }

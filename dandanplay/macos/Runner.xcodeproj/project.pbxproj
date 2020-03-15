@@ -24,36 +24,40 @@
 		335BBD1B22A9A15E00E9071D /* GeneratedPluginRegistrant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 335BBD1A22A9A15E00E9071D /* GeneratedPluginRegistrant.swift */; };
 		33CC10F12044A3C60003C045 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC10F02044A3C60003C045 /* AppDelegate.swift */; };
 		33CC10F32044A3C60003C045 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33CC10F22044A3C60003C045 /* Assets.xcassets */; };
+		33CC10F62044A3C60003C045 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33CC10F42044A3C60003C045 /* MainMenu.xib */; };
 		33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC11122044BFA00003C045 /* MainFlutterWindow.swift */; };
-		892720C124113DC600E5BD93 /* PlayerSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 892720C024113DC600E5BD93 /* PlayerSettingViewController.swift */; };
-		892720E224137A0700E5BD93 /* FlutterMacOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33D1A10322148B71006C7A3E /* FlutterMacOS.framework */; };
-		892720E324137A0700E5BD93 /* FlutterMacOS.framework in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 33D1A10322148B71006C7A3E /* FlutterMacOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		896354732414E64700DE50C0 /* PlayerListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896354712414E64700DE50C0 /* PlayerListViewController.swift */; };
-		896354742414E64700DE50C0 /* PlayerListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 896354722414E64700DE50C0 /* PlayerListViewController.xib */; };
-		896354772414EAC000DE50C0 /* PlayerListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896354762414EAC000DE50C0 /* PlayerListTableViewCell.swift */; };
-		896354792414EACB00DE50C0 /* PlayerListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 896354782414EACB00DE50C0 /* PlayerListTableViewCell.xib */; };
-		8963547C2414ECC300DE50C0 /* NSView+Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8963547B2414ECC300DE50C0 /* NSView+Tools.swift */; };
-		899F0B6F240EA4940049C216 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 899F0B6D240EA4940049C216 /* MainMenu.xib */; };
-		899F0BA3240EABF10049C216 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899F0B78240EABF10049C216 /* PlayerViewController.swift */; };
-		899F0BA4240EABF10049C216 /* DDPHUD.xib in Resources */ = {isa = PBXBuildFile; fileRef = 899F0B7A240EABF10049C216 /* DDPHUD.xib */; };
-		899F0BA9240EABF10049C216 /* DDPPlayerControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 899F0B82240EABF10049C216 /* DDPPlayerControlView.m */; };
-		899F0BAA240EABF10049C216 /* DDPHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 899F0B84240EABF10049C216 /* DDPHUD.m */; };
-		899F0BAB240EABF10049C216 /* DDPDanmakuColorMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 899F0B85240EABF10049C216 /* DDPDanmakuColorMenuItem.m */; };
-		899F0BAC240EABF10049C216 /* DDPProgressIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 899F0B86240EABF10049C216 /* DDPProgressIndicator.m */; };
-		899F0BAD240EABF10049C216 /* DDPTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 899F0B8A240EABF10049C216 /* DDPTextField.m */; };
-		899F0BAE240EABF10049C216 /* DDPPlayerSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 899F0B8B240EABF10049C216 /* DDPPlayerSlider.m */; };
-		899F0BAF240EABF10049C216 /* DDPPlayerControlView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 899F0B8D240EABF10049C216 /* DDPPlayerControlView.xib */; };
-		899F0BB0240EABF10049C216 /* DDPDanmakuModeMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 899F0B90240EABF10049C216 /* DDPDanmakuModeMenuItem.m */; };
-		899F0BB1240EABF10049C216 /* DDPPlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 899F0B93240EABF10049C216 /* DDPPlayView.m */; };
-		899F0BB2240EABF10049C216 /* DDPPlayTopBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 899F0B94240EABF10049C216 /* DDPPlayTopBar.xib */; };
-		899F0BB3240EABF10049C216 /* DDPPlayTopBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 899F0B95240EABF10049C216 /* DDPPlayTopBar.m */; };
-		899F0BB4240EABF10049C216 /* PlayerWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899F0B96240EABF10049C216 /* PlayerWindowController.swift */; };
-		89AC772B24100EE40065550A /* MessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AC772A24100EE40065550A /* MessageHandler.swift */; };
-		89AC772F241011840065550A /* MessageContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AC772E241011840065550A /* MessageContainer.swift */; };
-		89AC7733241012980065550A /* MessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AC7732241012980065550A /* MessageViewController.swift */; };
-		89CC373B23FAF76700092C18 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89CC373A23FAF76700092C18 /* MainViewController.swift */; };
-		89EDCEC2241568290057F05A /* OCMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89EDCEC1241568290057F05A /* OCMessageViewController.m */; };
-		8D5F6E535044FAEA240763F1 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D2E3ABA91923B6FD0A9E2EC /* Pods_Runner.framework */; };
+		33D1A10422148B71006C7A3E /* FlutterMacOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33D1A10322148B71006C7A3E /* FlutterMacOS.framework */; };
+		33D1A10522148B93006C7A3E /* FlutterMacOS.framework in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 33D1A10322148B71006C7A3E /* FlutterMacOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		89BF419E241E496B00D76A81 /* MessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4169241E496A00D76A81 /* MessageHandler.swift */; };
+		89BF419F241E496B00D76A81 /* NSColor+DDPTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4170241E496A00D76A81 /* NSColor+DDPTools.m */; };
+		89BF41A0241E496B00D76A81 /* NSView+DDPTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4171241E496A00D76A81 /* NSView+DDPTools.m */; };
+		89BF41A1241E496B00D76A81 /* NSTableView+Tools.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4172241E496A00D76A81 /* NSTableView+Tools.swift */; };
+		89BF41A2241E496B00D76A81 /* JHBaseDanmaku+DDPTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4173241E496A00D76A81 /* JHBaseDanmaku+DDPTools.m */; };
+		89BF41A3241E496B00D76A81 /* NSControl+DDPTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4174241E496A00D76A81 /* NSControl+DDPTools.m */; };
+		89BF41A4241E496B00D76A81 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4179241E496A00D76A81 /* PlayerViewController.swift */; };
+		89BF41A5241E496B00D76A81 /* DDPHUD.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89BF417B241E496A00D76A81 /* DDPHUD.xib */; };
+		89BF41A6241E496B00D76A81 /* PlayerListTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89BF417D241E496A00D76A81 /* PlayerListTableViewCell.xib */; };
+		89BF41A7241E496B00D76A81 /* PlayerListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BF417E241E496A00D76A81 /* PlayerListViewController.swift */; };
+		89BF41A8241E496B00D76A81 /* PlayerListViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89BF417F241E496A00D76A81 /* PlayerListViewController.xib */; };
+		89BF41A9241E496B00D76A81 /* PlayerListTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4180241E496A00D76A81 /* PlayerListTableViewCell.swift */; };
+		89BF41AA241E496B00D76A81 /* DDPPlayerControlView.m in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4181241E496A00D76A81 /* DDPPlayerControlView.m */; };
+		89BF41AB241E496B00D76A81 /* DDPHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4183241E496A00D76A81 /* DDPHUD.m */; };
+		89BF41AC241E496B00D76A81 /* DDPDanmakuColorMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4184241E496A00D76A81 /* DDPDanmakuColorMenuItem.m */; };
+		89BF41AD241E496B00D76A81 /* DDPProgressIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4185241E496A00D76A81 /* DDPProgressIndicator.m */; };
+		89BF41AE241E496B00D76A81 /* DDPTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4189241E496A00D76A81 /* DDPTextField.m */; };
+		89BF41AF241E496B00D76A81 /* DDPPlayerSlider.m in Sources */ = {isa = PBXBuildFile; fileRef = 89BF418A241E496A00D76A81 /* DDPPlayerSlider.m */; };
+		89BF41B0241E496B00D76A81 /* DDPPlayerControlView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89BF418C241E496A00D76A81 /* DDPPlayerControlView.xib */; };
+		89BF41B1241E496B00D76A81 /* DDPDanmakuModeMenuItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 89BF418F241E496A00D76A81 /* DDPDanmakuModeMenuItem.m */; };
+		89BF41B2241E496B00D76A81 /* DDPPlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4192241E496A00D76A81 /* DDPPlayView.m */; };
+		89BF41B3241E496B00D76A81 /* DDPPlayTopBar.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89BF4193241E496A00D76A81 /* DDPPlayTopBar.xib */; };
+		89BF41B4241E496B00D76A81 /* DDPPlayTopBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4194241E496A00D76A81 /* DDPPlayTopBar.m */; };
+		89BF41B5241E496B00D76A81 /* PlayerWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4195241E496A00D76A81 /* PlayerWindowController.swift */; };
+		89BF41B6241E496B00D76A81 /* PlayerSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4196241E496A00D76A81 /* PlayerSettingViewController.swift */; };
+		89BF41B7241E496B00D76A81 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4197241E496A00D76A81 /* MainViewController.swift */; };
+		89BF41B8241E496B00D76A81 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4199241E496A00D76A81 /* Constant.swift */; };
+		89BF41B9241E496B00D76A81 /* OCMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89BF419B241E496A00D76A81 /* OCMessageViewController.m */; };
+		89BF41BA241E496B00D76A81 /* MessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BF419C241E496A00D76A81 /* MessageViewController.swift */; };
+		C8D475565146B58CA1FCF8AA /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C673ED9F5DA59A7F610E2439 /* Pods_Runner.framework */; };
 		D73912F022F37F9E000D13A0 /* App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D73912EF22F37F9E000D13A0 /* App.framework */; };
 		D73912F222F3801D000D13A0 /* App.framework in Bundle Framework */ = {isa = PBXBuildFile; fileRef = D73912EF22F37F9E000D13A0 /* App.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -76,7 +80,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				D73912F222F3801D000D13A0 /* App.framework in Bundle Framework */,
-				892720E324137A0700E5BD93 /* FlutterMacOS.framework in Bundle Framework */,
+				33D1A10522148B93006C7A3E /* FlutterMacOS.framework in Bundle Framework */,
 			);
 			name = "Bundle Framework";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -84,13 +88,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		274DE95B3D017ADE908784AF /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
-		2BB021AE9FE9230344117590 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
+		13D8FC90458BE858EAA1E028 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
+		2901B6B1A28DAA6D2CB5A50A /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		333000ED22D3DE5D00554162 /* Warnings.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Warnings.xcconfig; sourceTree = "<group>"; };
 		335BBD1A22A9A15E00E9071D /* GeneratedPluginRegistrant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneratedPluginRegistrant.swift; sourceTree = "<group>"; };
 		33CC10ED2044A3C60003C045 /* dandanplay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = dandanplay.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		33CC10F02044A3C60003C045 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		33CC10F22044A3C60003C045 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Assets.xcassets; path = Runner/Assets.xcassets; sourceTree = "<group>"; };
+		33CC10F52044A3C60003C045 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
 		33CC10F72044A3C60003C045 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = Info.plist; path = Runner/Info.plist; sourceTree = "<group>"; };
 		33CC11122044BFA00003C045 /* MainFlutterWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainFlutterWindow.swift; sourceTree = "<group>"; };
 		33CEB47222A05771004F2AC0 /* Flutter-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Flutter-Debug.xcconfig"; sourceTree = "<group>"; };
@@ -100,51 +105,57 @@
 		33E51913231747F40026EE4D /* DebugProfile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DebugProfile.entitlements; sourceTree = "<group>"; };
 		33E51914231749380026EE4D /* Release.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Release.entitlements; sourceTree = "<group>"; };
 		33E5194F232828860026EE4D /* AppInfo.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = AppInfo.xcconfig; sourceTree = "<group>"; };
-		3D2E3ABA91923B6FD0A9E2EC /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		5423C3840F7CAE94310A3164 /* Pods-Runner.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
-		892720C024113DC600E5BD93 /* PlayerSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSettingViewController.swift; sourceTree = "<group>"; };
-		896354712414E64700DE50C0 /* PlayerListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerListViewController.swift; sourceTree = "<group>"; };
-		896354722414E64700DE50C0 /* PlayerListViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlayerListViewController.xib; sourceTree = "<group>"; };
-		896354762414EAC000DE50C0 /* PlayerListTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerListTableViewCell.swift; sourceTree = "<group>"; };
-		896354782414EACB00DE50C0 /* PlayerListTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlayerListTableViewCell.xib; sourceTree = "<group>"; };
-		8963547B2414ECC300DE50C0 /* NSView+Tools.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSView+Tools.swift"; sourceTree = "<group>"; };
-		899F0B6E240EA4940049C216 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Runner/Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
-		899F0B71240EA49E0049C216 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "Runner/zh-Hans.lproj/MainMenu.strings"; sourceTree = "<group>"; };
-		899F0B73240EA4A20049C216 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = Runner/en.lproj/MainMenu.strings; sourceTree = "<group>"; };
-		899F0B77240EABF10049C216 /* DDPPlayerConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDPPlayerConstant.h; sourceTree = "<group>"; };
-		899F0B78240EABF10049C216 /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
-		899F0B7A240EABF10049C216 /* DDPHUD.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDPHUD.xib; sourceTree = "<group>"; };
-		899F0B82240EABF10049C216 /* DDPPlayerControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDPPlayerControlView.m; sourceTree = "<group>"; };
-		899F0B83240EABF10049C216 /* DDPPlayerSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDPPlayerSlider.h; sourceTree = "<group>"; };
-		899F0B84240EABF10049C216 /* DDPHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDPHUD.m; sourceTree = "<group>"; };
-		899F0B85240EABF10049C216 /* DDPDanmakuColorMenuItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDPDanmakuColorMenuItem.m; sourceTree = "<group>"; };
-		899F0B86240EABF10049C216 /* DDPProgressIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDPProgressIndicator.m; sourceTree = "<group>"; };
-		899F0B87240EABF10049C216 /* DDPDanmakuModeMenuItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDPDanmakuModeMenuItem.h; sourceTree = "<group>"; };
-		899F0B88240EABF10049C216 /* DDPPlayTopBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDPPlayTopBar.h; sourceTree = "<group>"; };
-		899F0B89240EABF10049C216 /* DDPPlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDPPlayView.h; sourceTree = "<group>"; };
-		899F0B8A240EABF10049C216 /* DDPTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDPTextField.m; sourceTree = "<group>"; };
-		899F0B8B240EABF10049C216 /* DDPPlayerSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDPPlayerSlider.m; sourceTree = "<group>"; };
-		899F0B8C240EABF10049C216 /* DDPPlayerControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDPPlayerControlView.h; sourceTree = "<group>"; };
-		899F0B8D240EABF10049C216 /* DDPPlayerControlView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDPPlayerControlView.xib; sourceTree = "<group>"; };
-		899F0B8E240EABF10049C216 /* DDPHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDPHUD.h; sourceTree = "<group>"; };
-		899F0B8F240EABF10049C216 /* DDPDanmakuColorMenuItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDPDanmakuColorMenuItem.h; sourceTree = "<group>"; };
-		899F0B90240EABF10049C216 /* DDPDanmakuModeMenuItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDPDanmakuModeMenuItem.m; sourceTree = "<group>"; };
-		899F0B91240EABF10049C216 /* DDPProgressIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDPProgressIndicator.h; sourceTree = "<group>"; };
-		899F0B92240EABF10049C216 /* DDPTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDPTextField.h; sourceTree = "<group>"; };
-		899F0B93240EABF10049C216 /* DDPPlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDPPlayView.m; sourceTree = "<group>"; };
-		899F0B94240EABF10049C216 /* DDPPlayTopBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDPPlayTopBar.xib; sourceTree = "<group>"; };
-		899F0B95240EABF10049C216 /* DDPPlayTopBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDPPlayTopBar.m; sourceTree = "<group>"; };
-		899F0B96240EABF10049C216 /* PlayerWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerWindowController.swift; sourceTree = "<group>"; };
-		899F0BBD240EAC740049C216 /* OC2SwiftBridgeHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OC2SwiftBridgeHeader.h; sourceTree = "<group>"; };
-		89AC772A24100EE40065550A /* MessageHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageHandler.swift; sourceTree = "<group>"; };
-		89AC772E241011840065550A /* MessageContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageContainer.swift; sourceTree = "<group>"; };
-		89AC7732241012980065550A /* MessageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageViewController.swift; sourceTree = "<group>"; };
-		89CC373A23FAF76700092C18 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
-		89EDCEC0241568290057F05A /* OCMessageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCMessageViewController.h; sourceTree = "<group>"; };
-		89EDCEC1241568290057F05A /* OCMessageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCMessageViewController.m; sourceTree = "<group>"; };
+		89BF4169241E496A00D76A81 /* MessageHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageHandler.swift; sourceTree = "<group>"; };
+		89BF416B241E496A00D76A81 /* NSView+DDPTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSView+DDPTools.h"; sourceTree = "<group>"; };
+		89BF416C241E496A00D76A81 /* NSColor+DDPTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSColor+DDPTools.h"; sourceTree = "<group>"; };
+		89BF416D241E496A00D76A81 /* JHBaseDanmaku+DDPTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JHBaseDanmaku+DDPTools.h"; sourceTree = "<group>"; };
+		89BF416E241E496A00D76A81 /* DDPMacroDefinition.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDPMacroDefinition.h; sourceTree = "<group>"; };
+		89BF416F241E496A00D76A81 /* NSControl+DDPTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSControl+DDPTools.h"; sourceTree = "<group>"; };
+		89BF4170241E496A00D76A81 /* NSColor+DDPTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSColor+DDPTools.m"; sourceTree = "<group>"; };
+		89BF4171241E496A00D76A81 /* NSView+DDPTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSView+DDPTools.m"; sourceTree = "<group>"; };
+		89BF4172241E496A00D76A81 /* NSTableView+Tools.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSTableView+Tools.swift"; sourceTree = "<group>"; };
+		89BF4173241E496A00D76A81 /* JHBaseDanmaku+DDPTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JHBaseDanmaku+DDPTools.m"; sourceTree = "<group>"; };
+		89BF4174241E496A00D76A81 /* NSControl+DDPTools.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSControl+DDPTools.m"; sourceTree = "<group>"; };
+		89BF4175241E496A00D76A81 /* OC2SwiftBridgeHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OC2SwiftBridgeHeader.h; sourceTree = "<group>"; };
+		89BF4178241E496A00D76A81 /* DDPPlayerConstant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDPPlayerConstant.h; sourceTree = "<group>"; };
+		89BF4179241E496A00D76A81 /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
+		89BF417B241E496A00D76A81 /* DDPHUD.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDPHUD.xib; sourceTree = "<group>"; };
+		89BF417D241E496A00D76A81 /* PlayerListTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayerListTableViewCell.xib; sourceTree = "<group>"; };
+		89BF417E241E496A00D76A81 /* PlayerListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerListViewController.swift; sourceTree = "<group>"; };
+		89BF417F241E496A00D76A81 /* PlayerListViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayerListViewController.xib; sourceTree = "<group>"; };
+		89BF4180241E496A00D76A81 /* PlayerListTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerListTableViewCell.swift; sourceTree = "<group>"; };
+		89BF4181241E496A00D76A81 /* DDPPlayerControlView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDPPlayerControlView.m; sourceTree = "<group>"; };
+		89BF4182241E496A00D76A81 /* DDPPlayerSlider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDPPlayerSlider.h; sourceTree = "<group>"; };
+		89BF4183241E496A00D76A81 /* DDPHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDPHUD.m; sourceTree = "<group>"; };
+		89BF4184241E496A00D76A81 /* DDPDanmakuColorMenuItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDPDanmakuColorMenuItem.m; sourceTree = "<group>"; };
+		89BF4185241E496A00D76A81 /* DDPProgressIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDPProgressIndicator.m; sourceTree = "<group>"; };
+		89BF4186241E496A00D76A81 /* DDPDanmakuModeMenuItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDPDanmakuModeMenuItem.h; sourceTree = "<group>"; };
+		89BF4187241E496A00D76A81 /* DDPPlayTopBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDPPlayTopBar.h; sourceTree = "<group>"; };
+		89BF4188241E496A00D76A81 /* DDPPlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDPPlayView.h; sourceTree = "<group>"; };
+		89BF4189241E496A00D76A81 /* DDPTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDPTextField.m; sourceTree = "<group>"; };
+		89BF418A241E496A00D76A81 /* DDPPlayerSlider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDPPlayerSlider.m; sourceTree = "<group>"; };
+		89BF418B241E496A00D76A81 /* DDPPlayerControlView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDPPlayerControlView.h; sourceTree = "<group>"; };
+		89BF418C241E496A00D76A81 /* DDPPlayerControlView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDPPlayerControlView.xib; sourceTree = "<group>"; };
+		89BF418D241E496A00D76A81 /* DDPHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDPHUD.h; sourceTree = "<group>"; };
+		89BF418E241E496A00D76A81 /* DDPDanmakuColorMenuItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDPDanmakuColorMenuItem.h; sourceTree = "<group>"; };
+		89BF418F241E496A00D76A81 /* DDPDanmakuModeMenuItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDPDanmakuModeMenuItem.m; sourceTree = "<group>"; };
+		89BF4190241E496A00D76A81 /* DDPProgressIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDPProgressIndicator.h; sourceTree = "<group>"; };
+		89BF4191241E496A00D76A81 /* DDPTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DDPTextField.h; sourceTree = "<group>"; };
+		89BF4192241E496A00D76A81 /* DDPPlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDPPlayView.m; sourceTree = "<group>"; };
+		89BF4193241E496A00D76A81 /* DDPPlayTopBar.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = DDPPlayTopBar.xib; sourceTree = "<group>"; };
+		89BF4194241E496A00D76A81 /* DDPPlayTopBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DDPPlayTopBar.m; sourceTree = "<group>"; };
+		89BF4195241E496A00D76A81 /* PlayerWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerWindowController.swift; sourceTree = "<group>"; };
+		89BF4196241E496A00D76A81 /* PlayerSettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerSettingViewController.swift; sourceTree = "<group>"; };
+		89BF4197241E496A00D76A81 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		89BF4199241E496A00D76A81 /* Constant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
+		89BF419B241E496A00D76A81 /* OCMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCMessageViewController.m; sourceTree = "<group>"; };
+		89BF419C241E496A00D76A81 /* MessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewController.swift; sourceTree = "<group>"; };
+		89BF419D241E496A00D76A81 /* OCMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMessageViewController.h; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
+		C673ED9F5DA59A7F610E2439 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D73912EF22F37F9E000D13A0 /* App.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = App.framework; path = Flutter/ephemeral/App.framework; sourceTree = SOURCE_ROOT; };
+		EB340EF00BD4C3673F180D62 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -152,9 +163,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				892720E224137A0700E5BD93 /* FlutterMacOS.framework in Frameworks */,
 				D73912F022F37F9E000D13A0 /* App.framework in Frameworks */,
-				8D5F6E535044FAEA240763F1 /* Pods_Runner.framework in Frameworks */,
+				33D1A10422148B71006C7A3E /* FlutterMacOS.framework in Frameworks */,
+				C8D475565146B58CA1FCF8AA /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -179,7 +190,7 @@
 				33CEB47122A05771004F2AC0 /* Flutter */,
 				33CC10EE2044A3C60003C045 /* Products */,
 				D73912EC22F37F3D000D13A0 /* Frameworks */,
-				7B92BF53EC8BE52BA4DAE90A /* Pods */,
+				D9A4AE1401993214E96AFDFB /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -194,8 +205,8 @@
 		33CC11242044D66E0003C045 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				899F0B6D240EA4940049C216 /* MainMenu.xib */,
 				33CC10F22044A3C60003C045 /* Assets.xcassets */,
+				33CC10F42044A3C60003C045 /* MainMenu.xib */,
 				33CC10F72044A3C60003C045 /* Info.plist */,
 			);
 			name = Resources;
@@ -218,117 +229,142 @@
 		33FAB671232836740065AC1E /* Runner */ = {
 			isa = PBXGroup;
 			children = (
-				89AC773424113A750065550A /* ViewController */,
 				33CC10F02044A3C60003C045 /* AppDelegate.swift */,
 				33CC11122044BFA00003C045 /* MainFlutterWindow.swift */,
-				89AC772E241011840065550A /* MessageContainer.swift */,
 				33E51913231747F40026EE4D /* DebugProfile.entitlements */,
 				33E51914231749380026EE4D /* Release.entitlements */,
-				899F0B74240EABF10049C216 /* Classes */,
+				89BF4168241E496A00D76A81 /* Classes */,
 				33CC11242044D66E0003C045 /* Resources */,
 				33BA886A226E78AF003329D5 /* Configs */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
 		};
-		7B92BF53EC8BE52BA4DAE90A /* Pods */ = {
+		89BF4168241E496A00D76A81 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				5423C3840F7CAE94310A3164 /* Pods-Runner.debug.xcconfig */,
-				2BB021AE9FE9230344117590 /* Pods-Runner.release.xcconfig */,
-				274DE95B3D017ADE908784AF /* Pods-Runner.profile.xcconfig */,
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
-		8963547A2414EC9E00DE50C0 /* Category */ = {
-			isa = PBXGroup;
-			children = (
-				8963547B2414ECC300DE50C0 /* NSView+Tools.swift */,
-			);
-			path = Category;
-			sourceTree = "<group>";
-		};
-		899F0B74240EABF10049C216 /* Classes */ = {
-			isa = PBXGroup;
-			children = (
-				8963547A2414EC9E00DE50C0 /* Category */,
-				899F0BBD240EAC740049C216 /* OC2SwiftBridgeHeader.h */,
-				89AC772A24100EE40065550A /* MessageHandler.swift */,
-				899F0B76240EABF10049C216 /* PlayerViewController */,
+				89BF416A241E496A00D76A81 /* Category */,
+				89BF4169241E496A00D76A81 /* MessageHandler.swift */,
+				89BF4175241E496A00D76A81 /* OC2SwiftBridgeHeader.h */,
+				89BF4176241E496A00D76A81 /* ViewController */,
 			);
 			path = Classes;
 			sourceTree = "<group>";
 		};
-		899F0B76240EABF10049C216 /* PlayerViewController */ = {
+		89BF416A241E496A00D76A81 /* Category */ = {
 			isa = PBXGroup;
 			children = (
-				899F0B77240EABF10049C216 /* DDPPlayerConstant.h */,
-				899F0B78240EABF10049C216 /* PlayerViewController.swift */,
-				899F0B96240EABF10049C216 /* PlayerWindowController.swift */,
-				899F0B79240EABF10049C216 /* View */,
+				89BF416B241E496A00D76A81 /* NSView+DDPTools.h */,
+				89BF416C241E496A00D76A81 /* NSColor+DDPTools.h */,
+				89BF416D241E496A00D76A81 /* JHBaseDanmaku+DDPTools.h */,
+				89BF416E241E496A00D76A81 /* DDPMacroDefinition.h */,
+				89BF416F241E496A00D76A81 /* NSControl+DDPTools.h */,
+				89BF4170241E496A00D76A81 /* NSColor+DDPTools.m */,
+				89BF4171241E496A00D76A81 /* NSView+DDPTools.m */,
+				89BF4172241E496A00D76A81 /* NSTableView+Tools.swift */,
+				89BF4173241E496A00D76A81 /* JHBaseDanmaku+DDPTools.m */,
+				89BF4174241E496A00D76A81 /* NSControl+DDPTools.m */,
+			);
+			path = Category;
+			sourceTree = "<group>";
+		};
+		89BF4176241E496A00D76A81 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				89BF4177241E496A00D76A81 /* PlayerViewController */,
+				89BF4196241E496A00D76A81 /* PlayerSettingViewController.swift */,
+				89BF4197241E496A00D76A81 /* MainViewController.swift */,
+				89BF4198241E496A00D76A81 /* Constant */,
+				89BF419A241E496A00D76A81 /* Base */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		89BF4177241E496A00D76A81 /* PlayerViewController */ = {
+			isa = PBXGroup;
+			children = (
+				89BF4178241E496A00D76A81 /* DDPPlayerConstant.h */,
+				89BF4179241E496A00D76A81 /* PlayerViewController.swift */,
+				89BF417A241E496A00D76A81 /* View */,
+				89BF4195241E496A00D76A81 /* PlayerWindowController.swift */,
 			);
 			path = PlayerViewController;
 			sourceTree = "<group>";
 		};
-		899F0B79240EABF10049C216 /* View */ = {
+		89BF417A241E496A00D76A81 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				899F0B8F240EABF10049C216 /* DDPDanmakuColorMenuItem.h */,
-				899F0B85240EABF10049C216 /* DDPDanmakuColorMenuItem.m */,
-				899F0B87240EABF10049C216 /* DDPDanmakuModeMenuItem.h */,
-				899F0B90240EABF10049C216 /* DDPDanmakuModeMenuItem.m */,
-				899F0B8E240EABF10049C216 /* DDPHUD.h */,
-				899F0B84240EABF10049C216 /* DDPHUD.m */,
-				899F0B7A240EABF10049C216 /* DDPHUD.xib */,
-				899F0B8C240EABF10049C216 /* DDPPlayerControlView.h */,
-				899F0B82240EABF10049C216 /* DDPPlayerControlView.m */,
-				899F0B8D240EABF10049C216 /* DDPPlayerControlView.xib */,
-				899F0B83240EABF10049C216 /* DDPPlayerSlider.h */,
-				899F0B8B240EABF10049C216 /* DDPPlayerSlider.m */,
-				899F0B88240EABF10049C216 /* DDPPlayTopBar.h */,
-				899F0B95240EABF10049C216 /* DDPPlayTopBar.m */,
-				899F0B94240EABF10049C216 /* DDPPlayTopBar.xib */,
-				899F0B89240EABF10049C216 /* DDPPlayView.h */,
-				899F0B93240EABF10049C216 /* DDPPlayView.m */,
-				899F0B91240EABF10049C216 /* DDPProgressIndicator.h */,
-				899F0B86240EABF10049C216 /* DDPProgressIndicator.m */,
-				899F0B92240EABF10049C216 /* DDPTextField.h */,
-				899F0B8A240EABF10049C216 /* DDPTextField.m */,
-				899F0B7B240EABF10049C216 /* PlayerList */,
+				89BF417B241E496A00D76A81 /* DDPHUD.xib */,
+				89BF417C241E496A00D76A81 /* PlayerList */,
+				89BF4181241E496A00D76A81 /* DDPPlayerControlView.m */,
+				89BF4182241E496A00D76A81 /* DDPPlayerSlider.h */,
+				89BF4183241E496A00D76A81 /* DDPHUD.m */,
+				89BF4184241E496A00D76A81 /* DDPDanmakuColorMenuItem.m */,
+				89BF4185241E496A00D76A81 /* DDPProgressIndicator.m */,
+				89BF4186241E496A00D76A81 /* DDPDanmakuModeMenuItem.h */,
+				89BF4187241E496A00D76A81 /* DDPPlayTopBar.h */,
+				89BF4188241E496A00D76A81 /* DDPPlayView.h */,
+				89BF4189241E496A00D76A81 /* DDPTextField.m */,
+				89BF418A241E496A00D76A81 /* DDPPlayerSlider.m */,
+				89BF418B241E496A00D76A81 /* DDPPlayerControlView.h */,
+				89BF418C241E496A00D76A81 /* DDPPlayerControlView.xib */,
+				89BF418D241E496A00D76A81 /* DDPHUD.h */,
+				89BF418E241E496A00D76A81 /* DDPDanmakuColorMenuItem.h */,
+				89BF418F241E496A00D76A81 /* DDPDanmakuModeMenuItem.m */,
+				89BF4190241E496A00D76A81 /* DDPProgressIndicator.h */,
+				89BF4191241E496A00D76A81 /* DDPTextField.h */,
+				89BF4192241E496A00D76A81 /* DDPPlayView.m */,
+				89BF4193241E496A00D76A81 /* DDPPlayTopBar.xib */,
+				89BF4194241E496A00D76A81 /* DDPPlayTopBar.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
 		};
-		899F0B7B240EABF10049C216 /* PlayerList */ = {
+		89BF417C241E496A00D76A81 /* PlayerList */ = {
 			isa = PBXGroup;
 			children = (
-				896354712414E64700DE50C0 /* PlayerListViewController.swift */,
-				896354722414E64700DE50C0 /* PlayerListViewController.xib */,
-				896354762414EAC000DE50C0 /* PlayerListTableViewCell.swift */,
-				896354782414EACB00DE50C0 /* PlayerListTableViewCell.xib */,
+				89BF417D241E496A00D76A81 /* PlayerListTableViewCell.xib */,
+				89BF417E241E496A00D76A81 /* PlayerListViewController.swift */,
+				89BF417F241E496A00D76A81 /* PlayerListViewController.xib */,
+				89BF4180241E496A00D76A81 /* PlayerListTableViewCell.swift */,
 			);
 			path = PlayerList;
 			sourceTree = "<group>";
 		};
-		89AC773424113A750065550A /* ViewController */ = {
+		89BF4198241E496A00D76A81 /* Constant */ = {
 			isa = PBXGroup;
 			children = (
-				89AC7732241012980065550A /* MessageViewController.swift */,
-				89CC373A23FAF76700092C18 /* MainViewController.swift */,
-				892720C024113DC600E5BD93 /* PlayerSettingViewController.swift */,
-				89EDCEC0241568290057F05A /* OCMessageViewController.h */,
-				89EDCEC1241568290057F05A /* OCMessageViewController.m */,
+				89BF4199241E496A00D76A81 /* Constant.swift */,
 			);
-			path = ViewController;
+			path = Constant;
+			sourceTree = "<group>";
+		};
+		89BF419A241E496A00D76A81 /* Base */ = {
+			isa = PBXGroup;
+			children = (
+				89BF419B241E496A00D76A81 /* OCMessageViewController.m */,
+				89BF419C241E496A00D76A81 /* MessageViewController.swift */,
+				89BF419D241E496A00D76A81 /* OCMessageViewController.h */,
+			);
+			path = Base;
 			sourceTree = "<group>";
 		};
 		D73912EC22F37F3D000D13A0 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				3D2E3ABA91923B6FD0A9E2EC /* Pods_Runner.framework */,
+				C673ED9F5DA59A7F610E2439 /* Pods_Runner.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D9A4AE1401993214E96AFDFB /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				2901B6B1A28DAA6D2CB5A50A /* Pods-Runner.debug.xcconfig */,
+				EB340EF00BD4C3673F180D62 /* Pods-Runner.release.xcconfig */,
+				13D8FC90458BE858EAA1E028 /* Pods-Runner.profile.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -338,13 +374,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 33CC10FB2044A3C60003C045 /* Build configuration list for PBXNativeTarget "Runner" */;
 			buildPhases = (
-				BA64F7A7162E2AA36B2937E7 /* [CP] Check Pods Manifest.lock */,
+				5887939A6EF78DC471592AEB /* [CP] Check Pods Manifest.lock */,
 				33CC10E92044A3C60003C045 /* Sources */,
 				33CC10EA2044A3C60003C045 /* Frameworks */,
 				33CC10EB2044A3C60003C045 /* Resources */,
 				33CC110E2044A8840003C045 /* Bundle Framework */,
 				3399D490228B24CF009A79C7 /* ShellScript */,
-				2B2A5AC424ABCA19BFCED81A /* [CP] Embed Pods Frameworks */,
+				BF5558A266B754B59AA83D7C /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -388,7 +424,6 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
-				"zh-Hans",
 				Base,
 			);
 			mainGroup = 33CC10E42044A3C60003C045;
@@ -407,34 +442,19 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				896354792414EACB00DE50C0 /* PlayerListTableViewCell.xib in Resources */,
-				899F0BAF240EABF10049C216 /* DDPPlayerControlView.xib in Resources */,
+				89BF41B0241E496B00D76A81 /* DDPPlayerControlView.xib in Resources */,
+				89BF41A6241E496B00D76A81 /* PlayerListTableViewCell.xib in Resources */,
+				89BF41A8241E496B00D76A81 /* PlayerListViewController.xib in Resources */,
+				89BF41B3241E496B00D76A81 /* DDPPlayTopBar.xib in Resources */,
 				33CC10F32044A3C60003C045 /* Assets.xcassets in Resources */,
-				899F0BB2240EABF10049C216 /* DDPPlayTopBar.xib in Resources */,
-				899F0B6F240EA4940049C216 /* MainMenu.xib in Resources */,
-				896354742414E64700DE50C0 /* PlayerListViewController.xib in Resources */,
-				899F0BA4240EABF10049C216 /* DDPHUD.xib in Resources */,
+				33CC10F62044A3C60003C045 /* MainMenu.xib in Resources */,
+				89BF41A5241E496B00D76A81 /* DDPHUD.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2B2A5AC424ABCA19BFCED81A /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		3399D490228B24CF009A79C7 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -472,7 +492,7 @@
 			shellPath = /bin/sh;
 			shellScript = "\"$FLUTTER_ROOT\"/packages/flutter_tools/bin/macos_assemble.sh\ntouch Flutter/ephemeral/tripwire\n";
 		};
-		BA64F7A7162E2AA36B2937E7 /* [CP] Check Pods Manifest.lock */ = {
+		5887939A6EF78DC471592AEB /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -494,6 +514,21 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		BF5558A266B754B59AA83D7C /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -501,29 +536,33 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				899F0BAA240EABF10049C216 /* DDPHUD.m in Sources */,
-				899F0BB1240EABF10049C216 /* DDPPlayView.m in Sources */,
+				89BF41A9241E496B00D76A81 /* PlayerListTableViewCell.swift in Sources */,
+				89BF41BA241E496B00D76A81 /* MessageViewController.swift in Sources */,
+				89BF41B2241E496B00D76A81 /* DDPPlayView.m in Sources */,
 				33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */,
-				899F0BAE240EABF10049C216 /* DDPPlayerSlider.m in Sources */,
-				899F0BA9240EABF10049C216 /* DDPPlayerControlView.m in Sources */,
-				899F0BAC240EABF10049C216 /* DDPProgressIndicator.m in Sources */,
-				899F0BB3240EABF10049C216 /* DDPPlayTopBar.m in Sources */,
+				89BF41AA241E496B00D76A81 /* DDPPlayerControlView.m in Sources */,
+				89BF41B5241E496B00D76A81 /* PlayerWindowController.swift in Sources */,
+				89BF41A3241E496B00D76A81 /* NSControl+DDPTools.m in Sources */,
+				89BF41B9241E496B00D76A81 /* OCMessageViewController.m in Sources */,
+				89BF41AB241E496B00D76A81 /* DDPHUD.m in Sources */,
+				89BF41B4241E496B00D76A81 /* DDPPlayTopBar.m in Sources */,
 				33CC10F12044A3C60003C045 /* AppDelegate.swift in Sources */,
-				899F0BAD240EABF10049C216 /* DDPTextField.m in Sources */,
-				89AC772B24100EE40065550A /* MessageHandler.swift in Sources */,
-				89EDCEC2241568290057F05A /* OCMessageViewController.m in Sources */,
-				89AC7733241012980065550A /* MessageViewController.swift in Sources */,
-				899F0BB4240EABF10049C216 /* PlayerWindowController.swift in Sources */,
+				89BF41A0241E496B00D76A81 /* NSView+DDPTools.m in Sources */,
+				89BF41B1241E496B00D76A81 /* DDPDanmakuModeMenuItem.m in Sources */,
+				89BF419E241E496B00D76A81 /* MessageHandler.swift in Sources */,
+				89BF41AC241E496B00D76A81 /* DDPDanmakuColorMenuItem.m in Sources */,
+				89BF41A1241E496B00D76A81 /* NSTableView+Tools.swift in Sources */,
+				89BF41A2241E496B00D76A81 /* JHBaseDanmaku+DDPTools.m in Sources */,
+				89BF41B7241E496B00D76A81 /* MainViewController.swift in Sources */,
+				89BF41AD241E496B00D76A81 /* DDPProgressIndicator.m in Sources */,
+				89BF41B8241E496B00D76A81 /* Constant.swift in Sources */,
+				89BF419F241E496B00D76A81 /* NSColor+DDPTools.m in Sources */,
+				89BF41A7241E496B00D76A81 /* PlayerListViewController.swift in Sources */,
+				89BF41AE241E496B00D76A81 /* DDPTextField.m in Sources */,
 				335BBD1B22A9A15E00E9071D /* GeneratedPluginRegistrant.swift in Sources */,
-				89CC373B23FAF76700092C18 /* MainViewController.swift in Sources */,
-				892720C124113DC600E5BD93 /* PlayerSettingViewController.swift in Sources */,
-				899F0BA3240EABF10049C216 /* PlayerViewController.swift in Sources */,
-				89AC772F241011840065550A /* MessageContainer.swift in Sources */,
-				896354732414E64700DE50C0 /* PlayerListViewController.swift in Sources */,
-				896354772414EAC000DE50C0 /* PlayerListTableViewCell.swift in Sources */,
-				8963547C2414ECC300DE50C0 /* NSView+Tools.swift in Sources */,
-				899F0BB0240EABF10049C216 /* DDPDanmakuModeMenuItem.m in Sources */,
-				899F0BAB240EABF10049C216 /* DDPDanmakuColorMenuItem.m in Sources */,
+				89BF41AF241E496B00D76A81 /* DDPPlayerSlider.m in Sources */,
+				89BF41B6241E496B00D76A81 /* PlayerSettingViewController.swift in Sources */,
+				89BF41A4241E496B00D76A81 /* PlayerViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -538,14 +577,13 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		899F0B6D240EA4940049C216 /* MainMenu.xib */ = {
+		33CC10F42044A3C60003C045 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				899F0B6E240EA4940049C216 /* Base */,
-				899F0B71240EA49E0049C216 /* zh-Hans */,
-				899F0B73240EA4A20049C216 /* en */,
+				33CC10F52044A3C60003C045 /* Base */,
 			);
 			name = MainMenu.xib;
+			path = Runner;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -556,7 +594,6 @@
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -607,7 +644,6 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/DebugProfile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = UKR23ST9W3;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter/ephemeral",
@@ -636,7 +672,6 @@
 			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -690,7 +725,6 @@
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -741,7 +775,6 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/DebugProfile.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = UKR23ST9W3;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter/ephemeral",
@@ -767,7 +800,6 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Release.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = UKR23ST9W3;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter/ephemeral",

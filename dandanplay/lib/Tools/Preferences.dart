@@ -1,7 +1,10 @@
 
-
-//import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:dandanplay/Model/Message/Send/DanmakuAlphaMessage.dart';
+import 'package:dandanplay/Model/Message/Send/DanmakuCountMessage.dart';
+import 'package:dandanplay/Model/Message/Send/DanmakuFontSizeMessage.dart';
+import 'package:dandanplay/Model/Message/Send/DanmakuSpeedMessage.dart';
+import 'package:dandanplay/Model/Message/Send/SubtitleSafeAreaMessage.dart';
+import 'package:dandanplay/Vendor/message/MessageChannel.dart';
 import 'package:dandanplaystore/dandanplaystore.dart';
 
 class Preferences {
@@ -12,16 +15,61 @@ class Preferences {
   final _subtitleSafeAreaKey = "subtitleSafeArea";
   //弹幕过期时间
   final _danmakuCacheDayKey = "danmakuCacheDay";
+  //弹幕字体大小
+  final _danmakuFontSizeyKey = "danmakuFontSize";
+  //弹幕速度
+  final _danmakuSpeedKey = "danmakuSpeed";
+  //弹幕透明度
+  final _danmakuAlphaKey = "danmakuAlpha";
+  //同屏幕弹幕数量
+  final _danmakuCountKey = "danmakuCount";
 
+  Future<int> get danmakuCount async {
+    return MMKVStore.getInt(_danmakuCountKey);
+  }
+
+  Future<bool> setDanmakuCount(int value) async {
+    final result = await MMKVStore.setInt(_danmakuCountKey, value);
+    final msg = DanmakuCountMessage(value);
+    await MessageChannel.shared.sendMessage(msg);
+    return result;
+  }
+
+  Future<double> get danmakuAlpha async {
+    return MMKVStore.getDouble(_danmakuAlphaKey);
+  }
+
+  Future<bool> setDanmakuAlpha(double value) async {
+    final result = await MMKVStore.setDouble(_danmakuAlphaKey, value);
+    final msg = DanmakuAlphaMessage(value);
+    await MessageChannel.shared.sendMessage(msg);
+    return result;
+  }
+
+  Future<double> get danmakuSpeed async {
+    return MMKVStore.getDouble(_danmakuSpeedKey);
+  }
+
+  Future<bool> setDanmakuSpeed(double value) async {
+    final result = await MMKVStore.setDouble(_danmakuSpeedKey, value);
+    final msg = DanmakuSpeedMessage(value);
+    await MessageChannel.shared.sendMessage(msg);
+    return result;
+  }
+
+  Future<double> get danmakuFontSize async {
+    return MMKVStore.getDouble(_danmakuFontSizeyKey);
+  }
+
+  Future<bool> setDanmakuFontSize(double value) async {
+    final result = await MMKVStore.setDouble(_danmakuFontSizeyKey, value);
+    final msg = DanmakuFontSizeMessage(value);
+    await MessageChannel.shared.sendMessage(msg);
+    return result;
+  }
 
   Future<bool> get fastMatch async {
-    final contains = await MMKVStore.contains(_fastMatchKey);
-    if (!contains) {
-      this.setFastMatch(true);
-      return true;
-    }
-    final v =  MMKVStore.getBool(_fastMatchKey);
-    return v;
+    return MMKVStore.getBool(_fastMatchKey);
   }
 
   Future<bool> setFastMatch(bool on) async {
@@ -29,24 +77,17 @@ class Preferences {
   }
 
   Future<bool> get subtitleSafeArea async {
-    final contains = await MMKVStore.contains(_subtitleSafeAreaKey);
-    if (!contains) {
-      this.setSubtitleSafeArea(true);
-      return true;
-    }
     return MMKVStore.getBool(_subtitleSafeAreaKey);
   }
 
   Future<bool> setSubtitleSafeArea(bool on) async {
-    return MMKVStore.setBool(_subtitleSafeAreaKey, on);
+    final result = await MMKVStore.setBool(_subtitleSafeAreaKey, on);
+    final msg = SubtitleSafeAreaMessage(on);
+    await MessageChannel.shared.sendMessage(msg);
+    return result;
   }
 
   Future<int> get danmakuCacheDay async {
-    final contains = await MMKVStore.contains(_danmakuCacheDayKey);
-    if (!contains) {
-      this.setDanmakuCacheDay(7);
-      return 7;
-    }
     return MMKVStore.getInt(_danmakuCacheDayKey);
   }
 

@@ -11,7 +11,7 @@ enum HUDMessageStyle {
 }
 
 @JsonSerializable()
-class HUDMessage extends BaseMessage<Map<String, dynamic>> {
+class HUDMessage extends BaseMessage {
 
   @JsonKey(ignore: true)
   @override

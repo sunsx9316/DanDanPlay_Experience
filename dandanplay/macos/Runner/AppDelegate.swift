@@ -1,6 +1,6 @@
 import Cocoa
 import FlutterMacOS
-import dandanplay_native
+import dandanplaystore
 
 @NSApplicationMain
 class AppDelegate: FlutterAppDelegate {
@@ -10,7 +10,7 @@ class AppDelegate: FlutterAppDelegate {
     }
     
     override func applicationDidFinishLaunching(_ notification: Notification) {
-        
+        configUserData()
     }
     
     @IBAction func onClickSettingMenu(_ sender: NSMenuItem) {
@@ -20,6 +20,10 @@ class AppDelegate: FlutterAppDelegate {
         }
         
         mainFlutterWindow.makeKeyAndOrderFront(nil)
+    }
+    
+    private func configUserData() {
+        Preferences.shared.setupDefaultValue()
     }
     
 }

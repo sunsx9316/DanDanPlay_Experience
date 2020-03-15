@@ -1,3 +1,4 @@
+import 'package:dandanplay/Tools/Preferences.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -10,13 +11,25 @@ class PlayerSettingWidget extends StatefulWidget {
 
 class PlayerSettingWidgetState extends State<PlayerSettingWidget> {
   List<Widget> _widget = [];
-  double _danmakuFontSize = 20;
+  double _danmakuFontSize = 18;
   double _danmakuSpeed = 1;
   double _danmakuAlpha = 1;
-  double _danmakuMaxCount = 10;
+  double _danmakuMaxCount = 100;
+
+  bool _didGetInitValue = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _getInitValue();
+  }
 
   @override
   Widget build(BuildContext context) {
+    if (!_didGetInitValue) {
+      return Container();
+    }
+
     final danmakuSetting = ListView.builder(
         itemCount: 4,
         itemBuilder: (context, index) {
@@ -25,20 +38,24 @@ class PlayerSettingWidgetState extends State<PlayerSettingWidget> {
                 (value) {
               setState(() {
                 _danmakuFontSize = value;
+                Preferences.shared.setDanmakuFontSize(value);
               });
             }, minString: "18", maxString: "32", divisions: 14);
           } else if (index == 1) {
             double maxValue = 3;
             final isMaxValue = _danmakuSpeed == maxValue;
-            return _createSliderCell("弹幕速度", 1, maxValue, _danmakuSpeed, (value) {
+            return _createSliderCell("弹幕速度", 1, maxValue, _danmakuSpeed,
+                (value) {
               setState(() {
                 _danmakuSpeed = value;
+                Preferences.shared.setDanmakuSpeed(value);
               });
             }, divisions: 20, maxValueColor: isMaxValue ? Colors.red : null);
           } else if (index == 2) {
             return _createSliderCell("弹幕透明度", 0, 1, _danmakuAlpha, (value) {
               setState(() {
                 _danmakuAlpha = value;
+                Preferences.shared.setDanmakuAlpha(value);
               });
             }, divisions: 10);
           } else if (index == 3) {
@@ -48,6 +65,7 @@ class PlayerSettingWidgetState extends State<PlayerSettingWidget> {
                 (value) {
               setState(() {
                 _danmakuMaxCount = value;
+                Preferences.shared.setDanmakuCount(value.toInt());
               });
             },
                 divisions: 18,
@@ -65,6 +83,18 @@ class PlayerSettingWidgetState extends State<PlayerSettingWidget> {
                 indicatorPadding: EdgeInsets.only(left: 30, right: 30)),
             body: TabBarView(
                 children: [danmakuSetting, Container(color: Colors.orange)])));
+  }
+
+  //初始化数据
+  void _getInitValue() async {
+    _danmakuFontSize = await Preferences.shared.danmakuFontSize;
+    _danmakuSpeed = await Preferences.shared.danmakuSpeed;
+    _danmakuAlpha = await Preferences.shared.danmakuAlpha;
+    final danmakuCount = await Preferences.shared.danmakuCount;
+    _danmakuMaxCount = danmakuCount.toDouble();
+    setState(() {
+      _didGetInitValue = true;
+    });
   }
 
   Widget _createSliderCell(String title, double min, double max, double value,
@@ -90,7 +120,8 @@ class PlayerSettingWidgetState extends State<PlayerSettingWidget> {
                         label: label ?? "$value",
                         divisions: divisions,
                         onChanged: onChanged)),
-                Text(maxString ?? "$max", style: TextStyle(color: maxValueColor ?? Colors.black))
+                Text(maxString ?? "$max",
+                    style: TextStyle(color: maxValueColor ?? Colors.black))
               ])
             ]));
   }
