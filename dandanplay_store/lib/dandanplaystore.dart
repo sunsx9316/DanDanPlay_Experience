@@ -11,6 +11,7 @@ class MMKVStore {
   }
 
   static Future<bool> getBool(String key) async {
+
     final value = await _getValue<bool>("getBool", key);
     if (value is bool) {
       return value;

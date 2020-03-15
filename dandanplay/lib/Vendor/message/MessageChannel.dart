@@ -10,17 +10,16 @@ abstract class MessageChannelObserver {
 class MessageChannel {
   static final shared = MessageChannel();
   final channel = BasicMessageChannel("com.dandanplay.native/message", JSONMessageCodec());
-  final extentionChannel = BasicMessageChannel("com.dandanplay.native/extention", JSONMessageCodec());
-  final _observers = List<MessageChannelObserver>();
+//  final _observers = List<MessageChannelObserver>();
 
-  MessageChannel() {
-    channel.setMessageHandler((message) {
-      for (var item in _observers) {
-        item.didReceiveMessage(message, this.channel);
-      }
-      return;
-    });
-  }
+//  MessageChannel() {
+//    channel.setMessageHandler((message) {
+//      for (var item in _observers) {
+//        item.didReceiveMessage(message, this.channel);
+//      }
+//      return;
+//    });
+//  }
 
   Future<MessageChannelResponse> sendMessage(BaseMessage message) async {
     var map = Map<String, dynamic>();
@@ -30,16 +29,16 @@ class MessageChannel {
     return MessageChannelResponse(result);
   }
 
-  void addObserve(MessageChannelObserver observer) {
-    if (!_observers.contains(observer)) {
-      _observers.add(observer);
-    }
-  }
-
-  void removeObserve(MessageChannelObserver observer) {
-    if (_observers.contains(observer)) {
-      _observers.remove(observer);
-    }
-  }
+//  void addObserve(MessageChannelObserver observer) {
+//    if (!_observers.contains(observer)) {
+//      _observers.add(observer);
+//    }
+//  }
+//
+//  void removeObserve(MessageChannelObserver observer) {
+//    if (_observers.contains(observer)) {
+//      _observers.remove(observer);
+//    }
+//  }
 
 }

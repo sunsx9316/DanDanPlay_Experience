@@ -1,6 +1,5 @@
 import Cocoa
 import FlutterMacOS
-import dandanplay_native
 
 class MainFlutterWindow: NSWindow {
     override func awakeFromNib() {

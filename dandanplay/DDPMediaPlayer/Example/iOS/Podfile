@@ -1,0 +1,13 @@
+use_frameworks!
+
+platform :ios, '8.0'
+
+target 'DDPMediaPlayer_Example' do
+  pod 'DDPMediaPlayer', :path => '../../'
+
+  target 'DDPMediaPlayer_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

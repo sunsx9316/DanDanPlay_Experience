@@ -1,0 +1,11 @@
+use_frameworks!
+
+target 'DDPShare_Example' do
+  pod 'DDPShare', :path => '../'
+
+  target 'DDPShare_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end

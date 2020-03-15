@@ -1,0 +1,404 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 50;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1B4C8DC6EE4D605267238BCE /* Pods_DDPMediaPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33A432755654DCF9346391FD /* Pods_DDPMediaPlayer.framework */; };
+		89BF4156241E3F0600D76A81 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4155241E3F0600D76A81 /* AppDelegate.m */; };
+		89BF4159241E3F0600D76A81 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4158241E3F0600D76A81 /* ViewController.m */; };
+		89BF415B241E3F0700D76A81 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 89BF415A241E3F0700D76A81 /* Assets.xcassets */; };
+		89BF415E241E3F0700D76A81 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 89BF415C241E3F0700D76A81 /* Main.storyboard */; };
+		89BF4161241E3F0700D76A81 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4160241E3F0700D76A81 /* main.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		33A432755654DCF9346391FD /* Pods_DDPMediaPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DDPMediaPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7F6F6951EFF13ED08A3A9D43 /* Pods-DDPMediaPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DDPMediaPlayer.debug.xcconfig"; path = "Target Support Files/Pods-DDPMediaPlayer/Pods-DDPMediaPlayer.debug.xcconfig"; sourceTree = "<group>"; };
+		89BF4151241E3F0600D76A81 /* DDPMediaPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DDPMediaPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		89BF4154241E3F0600D76A81 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		89BF4155241E3F0600D76A81 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		89BF4157241E3F0600D76A81 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		89BF4158241E3F0600D76A81 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		89BF415A241E3F0700D76A81 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		89BF415D241E3F0700D76A81 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		89BF415F241E3F0700D76A81 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		89BF4160241E3F0700D76A81 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		89BF4162241E3F0700D76A81 /* DDPMediaPlayer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DDPMediaPlayer.entitlements; sourceTree = "<group>"; };
+		BEE84B7E7FA338B394C20E9B /* Pods-DDPMediaPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DDPMediaPlayer.release.xcconfig"; path = "Target Support Files/Pods-DDPMediaPlayer/Pods-DDPMediaPlayer.release.xcconfig"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		89BF414E241E3F0600D76A81 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				1B4C8DC6EE4D605267238BCE /* Pods_DDPMediaPlayer.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		29240032405BCF079607070C /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				7F6F6951EFF13ED08A3A9D43 /* Pods-DDPMediaPlayer.debug.xcconfig */,
+				BEE84B7E7FA338B394C20E9B /* Pods-DDPMediaPlayer.release.xcconfig */,
+			);
+			name = Pods;
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		42ABA4141E377A10ED855B83 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				33A432755654DCF9346391FD /* Pods_DDPMediaPlayer.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		89BF4148241E3F0600D76A81 = {
+			isa = PBXGroup;
+			children = (
+				89BF4153241E3F0600D76A81 /* DDPMediaPlayer */,
+				89BF4152241E3F0600D76A81 /* Products */,
+				29240032405BCF079607070C /* Pods */,
+				42ABA4141E377A10ED855B83 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		89BF4152241E3F0600D76A81 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				89BF4151241E3F0600D76A81 /* DDPMediaPlayer.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		89BF4153241E3F0600D76A81 /* DDPMediaPlayer */ = {
+			isa = PBXGroup;
+			children = (
+				89BF4154241E3F0600D76A81 /* AppDelegate.h */,
+				89BF4155241E3F0600D76A81 /* AppDelegate.m */,
+				89BF4157241E3F0600D76A81 /* ViewController.h */,
+				89BF4158241E3F0600D76A81 /* ViewController.m */,
+				89BF415A241E3F0700D76A81 /* Assets.xcassets */,
+				89BF415C241E3F0700D76A81 /* Main.storyboard */,
+				89BF415F241E3F0700D76A81 /* Info.plist */,
+				89BF4160241E3F0700D76A81 /* main.m */,
+				89BF4162241E3F0700D76A81 /* DDPMediaPlayer.entitlements */,
+			);
+			path = DDPMediaPlayer;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		89BF4150241E3F0600D76A81 /* DDPMediaPlayer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 89BF4165241E3F0700D76A81 /* Build configuration list for PBXNativeTarget "DDPMediaPlayer" */;
+			buildPhases = (
+				F37E335BD60FFCEF9F560B37 /* [CP] Check Pods Manifest.lock */,
+				89BF414D241E3F0600D76A81 /* Sources */,
+				89BF414E241E3F0600D76A81 /* Frameworks */,
+				89BF414F241E3F0600D76A81 /* Resources */,
+				B5A28FDE80867FA1E84C0881 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DDPMediaPlayer;
+			productName = DDPMediaPlayer;
+			productReference = 89BF4151241E3F0600D76A81 /* DDPMediaPlayer.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		89BF4149241E3F0600D76A81 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 1130;
+				ORGANIZATIONNAME = JimHuang;
+				TargetAttributes = {
+					89BF4150241E3F0600D76A81 = {
+						CreatedOnToolsVersion = 11.3.1;
+					};
+				};
+			};
+			buildConfigurationList = 89BF414C241E3F0600D76A81 /* Build configuration list for PBXProject "DDPMediaPlayer" */;
+			compatibilityVersion = "Xcode 9.3";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 89BF4148241E3F0600D76A81;
+			productRefGroup = 89BF4152241E3F0600D76A81 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				89BF4150241E3F0600D76A81 /* DDPMediaPlayer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		89BF414F241E3F0600D76A81 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				89BF415B241E3F0700D76A81 /* Assets.xcassets in Resources */,
+				89BF415E241E3F0700D76A81 /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		B5A28FDE80867FA1E84C0881 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-DDPMediaPlayer/Pods-DDPMediaPlayer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-DDPMediaPlayer/Pods-DDPMediaPlayer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-DDPMediaPlayer/Pods-DDPMediaPlayer-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F37E335BD60FFCEF9F560B37 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-DDPMediaPlayer-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		89BF414D241E3F0600D76A81 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				89BF4159241E3F0600D76A81 /* ViewController.m in Sources */,
+				89BF4161241E3F0700D76A81 /* main.m in Sources */,
+				89BF4156241E3F0600D76A81 /* AppDelegate.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		89BF415C241E3F0700D76A81 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				89BF415D241E3F0700D76A81 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		89BF4163241E3F0700D76A81 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		89BF4164241E3F0700D76A81 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		89BF4166241E3F0700D76A81 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7F6F6951EFF13ED08A3A9D43 /* Pods-DDPMediaPlayer.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = DDPMediaPlayer/DDPMediaPlayer.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = Q35T78D2D5;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = DDPMediaPlayer/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dandanplay.DDPMediaPlayer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		89BF4167241E3F0700D76A81 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = BEE84B7E7FA338B394C20E9B /* Pods-DDPMediaPlayer.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = DDPMediaPlayer/DDPMediaPlayer.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = Q35T78D2D5;
+				ENABLE_HARDENED_RUNTIME = YES;
+				INFOPLIST_FILE = DDPMediaPlayer/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.dandanplay.DDPMediaPlayer;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		89BF414C241E3F0600D76A81 /* Build configuration list for PBXProject "DDPMediaPlayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				89BF4163241E3F0700D76A81 /* Debug */,
+				89BF4164241E3F0700D76A81 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		89BF4165241E3F0700D76A81 /* Build configuration list for PBXNativeTarget "DDPMediaPlayer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				89BF4166241E3F0700D76A81 /* Debug */,
+				89BF4167241E3F0700D76A81 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 89BF4149241E3F0600D76A81 /* Project object */;
+}

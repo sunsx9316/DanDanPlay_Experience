@@ -1,5 +1,4 @@
 
-
 abstract class FileMatchProtocol {
   String get matchFileName {
     return "";

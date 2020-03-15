@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:dandanplay_path_provider/path_provider.dart';
+import 'package:path_provider/path_provider.dart';
 
 class Cache {
   static final shared = Cache();
