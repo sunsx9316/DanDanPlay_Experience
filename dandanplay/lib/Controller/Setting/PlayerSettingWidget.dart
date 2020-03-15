@@ -79,6 +79,7 @@ class PlayerSettingWidgetState extends State<PlayerSettingWidget> {
         length: 2,
         child: Scaffold(
             appBar: TabBar(
+                labelColor: Colors.white,
                 tabs: <Widget>[Tab(text: "弹幕设置"), Tab(text: "播放器设置")],
                 indicatorPadding: EdgeInsets.only(left: 30, right: 30)),
             body: TabBarView(
@@ -121,7 +122,7 @@ class PlayerSettingWidgetState extends State<PlayerSettingWidget> {
                         divisions: divisions,
                         onChanged: onChanged)),
                 Text(maxString ?? "$max",
-                    style: TextStyle(color: maxValueColor ?? Colors.black))
+                    style: maxValueColor != null ? TextStyle(color: maxValueColor) : null)
               ])
             ]));
   }
