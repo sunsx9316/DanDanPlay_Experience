@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 
 @interface DDPDanmakuColorMenuItem : NSMenuItem
-- (NSUInteger)itemColor;
-- (void)setItemColor:(NSColor *)color;
+@property (nonatomic, strong) NSColor *itemColor;
+
 - (instancetype)initWithTitle:(NSString *)aString color:(NSColor *)color;
 @end

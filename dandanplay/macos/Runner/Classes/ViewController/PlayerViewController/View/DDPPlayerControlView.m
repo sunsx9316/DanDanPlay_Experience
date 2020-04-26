@@ -7,13 +7,14 @@
 //
 
 #import "DDPPlayerControlView.h"
+#import <Carbon/Carbon.h>
+#import <DDPCategory/DDPCategory.h>
 #import "DDPMediaPlayer.h"
 #import "DDPDanmakuColorMenuItem.h"
 #import "DDPDanmakuModeMenuItem.h"
 #import "NSColor+DDPTools.h"
 #import "DDPProgressIndicator.h"
 #import <Masonry/Masonry.h>
-#import <Carbon/Carbon.h>
 #import "NSControl+DDPTools.h"
 #import "DDPMacroDefinition.h"
 
@@ -52,7 +53,8 @@
     };
     
     //弹幕颜色、样式按钮
-    NSArray *colorArr = [NSArray arrayWithContentsOfFile:[[NSBundle mainBundle] pathForResource:@"danmaku_color" ofType:@"plist"]];
+    NSString *path = [[NSBundle mainBundle] pathForResource:@"danmaku_color" ofType:@"plist"];
+    NSArray *colorArr = [NSArray arrayWithContentsOfFile:path];
     for (NSDictionary *dic in colorArr) {
         DDPDanmakuColorMenuItem *item = [[DDPDanmakuColorMenuItem alloc] initWithTitle:dic[@"name"] color:[NSColor colorWithRGB:(uint32_t)[dic[@"value"] integerValue]]];
         [self.danmakuColorPopUpButton.menu addItem:item];
@@ -102,14 +104,14 @@
     self.progressSlider.currentProgress = progress;
 }
 
-- (uint32_t)sendanmakuColor {
+- (NSColor *)sendanmakuColor {
     let item = (DDPDanmakuColorMenuItem *)self.danmakuColorPopUpButton.selectedItem;
     if ([item isKindOfClass:[DDPDanmakuColorMenuItem class]]) {
-        return (uint32_t)item.itemColor;
+        return item.itemColor;
     }
     
     let color = [NSColor colorWithRed:1 green:1 blue:1 alpha:1];
-    return (uint32_t)color.colorValue;
+    return color;
 }
 
 - (DDPDanmakuMode)sendanmakuStyle {

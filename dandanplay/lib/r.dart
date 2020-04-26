@@ -1,4 +1,6 @@
 class R {
+  /// ![](http://127.0.0.1:1234/assets/images/home.png)
+  static final String assetsImagesHome = 'assets/images/home.png';
   /// ![](http://127.0.0.1:1234/assets/images/File/file_phone.png)
   static final String assetsImagesFileFilePhone = 'assets/images/File/file_phone.png';
   /// ![](http://127.0.0.1:1234/assets/images/File/file_computer.png)

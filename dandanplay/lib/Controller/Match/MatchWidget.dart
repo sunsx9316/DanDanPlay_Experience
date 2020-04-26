@@ -1,6 +1,6 @@
-//import 'dart:io';
 import 'dart:math';
 import 'package:dandanplay/Config/Constant.dart';
+import 'package:dandanplay/Controller/Search/SearchWidget.dart';
 import 'package:dandanplay/Model/Match/FileMatch.dart';
 import 'package:dandanplay/Model/Match/FileMatchCollection.dart';
 import 'package:dandanplay/Tools/Utility.dart';
@@ -16,8 +16,8 @@ class MatchWidget extends StatefulWidget {
   factory MatchWidget.fromCollection(
       {@required String mediaId, @required FileMatchCollection collection}) {
     var aMap = Map<AnimateType, List<FileMatch>>();
-
-    for (FileMatch model in collection.matches) {
+    var matches = collection.matches ?? [];
+    for (FileMatch model in matches) {
       if (aMap[model.type] == null) {
         aMap[model.type] = List<FileMatch>();
       }
@@ -25,7 +25,7 @@ class MatchWidget extends StatefulWidget {
       aMap[model.type].add(model);
     }
 
-    return MatchWidget(mediaId: mediaId, map: aMap);
+    return MatchWidget(mediaId: mediaId ?? "", map: aMap);
   }
 
   @override
@@ -47,7 +47,33 @@ class MatchWidgetState extends State<MatchWidget> {
 
     return Scaffold(
         appBar: AppBar(
-          title: Text("搜索"),
+          title: Padding(
+              padding: EdgeInsets.only(left: 0, right: 30),
+              child: TextField(
+                cursorColor: Colors.white,
+                textInputAction: TextInputAction.search,
+                autofocus: true,
+                decoration: InputDecoration(
+                    border: InputBorder.none, hintText: "试试手动♂搜素"),
+                onSubmitted: (str) {
+                  if (str == null || str.isEmpty) {
+                    return;
+                  }
+                  Navigator.push(context, MaterialPageRoute(builder: (context) {
+                    return SearchWidget(
+                        mediaId: widget.mediaId, searchText: str);
+                  }));
+                },
+              )),
+          actions: [
+            GestureDetector(
+                child: Padding(
+                    padding: EdgeInsets.only(right: 10),
+                    child: Align(child: Text("直接播放"))),
+                onTap: () {
+                  Tools.getDanmaku(widget.mediaId);
+                })
+          ],
         ),
         body: TreeView(parentList: parentList));
   }
@@ -105,7 +131,7 @@ class MatchWidgetState extends State<MatchWidget> {
           Expanded(
               child: Container(
                   decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Colors.white10,
                       boxShadow: [
                         BoxShadow(
                             color: Colors.black12,
@@ -122,6 +148,7 @@ class MatchWidgetState extends State<MatchWidget> {
   }
 
   void _onTap(BuildContext content, FileMatch model) {
-    Tools.getDanmaku(widget.mediaId,  episodeId: model.episodeId, title: model.title);
+    Tools.getDanmaku(widget.mediaId,
+        episodeId: model.episodeId, title: model.title);
   }
 }

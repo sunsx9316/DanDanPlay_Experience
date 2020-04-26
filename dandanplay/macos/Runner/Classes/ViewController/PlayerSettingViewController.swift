@@ -20,8 +20,8 @@ class PlayerSettingViewController: MessageViewController {
         
     }
     
-    override func parseMessage(_ messageData: [String : Any]) {
-        MessageHandler.transferMessageToMainChannel(messageData)
+    override func parseMessage(_ name: MessageType, _ messageData: [String : Any]) {
+        MessageHandler.transferMessageToMainChannel(name, messageData)
     }
     
 }

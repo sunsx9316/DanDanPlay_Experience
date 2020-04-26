@@ -1,14 +1,11 @@
 import Cocoa
 import FlutterMacOS
-import MMKV
 
 public class DandanplaystorePlugin: NSObject, FlutterPlugin {
     public static func register(with registrar: FlutterPluginRegistrar) {
         let channel = FlutterMethodChannel(name: "dandanplaystore", binaryMessenger: registrar.messenger)
         let instance = DandanplaystorePlugin()
         registrar.addMethodCallDelegate(instance, channel: channel)
-        
-        MMKV.setLogLevel(MMKVLogNone)
     }
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -19,53 +16,59 @@ public class DandanplaystorePlugin: NSObject, FlutterPlugin {
                 return
         }
         
+        let id = data["id"] as? String ?? "com.ddplay.default"
+        
         switch call.method {
         case "setBool":
             var success = true
             if let value = data["value"] as? Bool {
-                success = MMKV.default().set(value, forKey: key)
+                success = Store.shared.set(value, forKey: key, groupId: id)
             } else {
-                MMKV.default().removeValue(forKey: key)
+                Store.shared.remove(key, groupId: id)
             }
             
             result(success)
         case "getBool":
-            result(MMKV.default().bool(forKey: key))
+            let value: Bool = Store.shared.value(forKey: key, groupId: id)
+            result(value)
         case "setInt":
             var success = true
-            if let value = data["value"] as? Int32 {
-                success = MMKV.default().set(value, forKey: key)
+            if let value = data["value"] as? Int {
+                success = Store.shared.set(value, forKey: key, groupId: id)
             } else {
-                MMKV.default().removeValue(forKey: key)
+                Store.shared.remove(key, groupId: id)
             }
             
             result(success)
         case "getInt":
-            result(MMKV.default().int32(forKey: key))
+            let value: Int = Store.shared.value(forKey: key, groupId: id)
+            result(value)
         case "setDouble":
             var success = true
             if let value = data["value"] as? Double {
-                success = MMKV.default().set(value, forKey: key)
+                success = Store.shared.set(value, forKey: key, groupId: id)
             } else {
-                MMKV.default().removeValue(forKey: key)
+                Store.shared.remove(key, groupId: id)
             }
             
             result(success)
         case "getDouble":
-            result(MMKV.default().double(forKey: key))
+            let value: Double = Store.shared.value(forKey: key, groupId: id)
+            result(value)
         case "setString":
             var success = true
             if let value = data["value"] as? String {
-                success = MMKV.default().set(value, forKey: key)
+                success = Store.shared.set(value, forKey: key, groupId: id)
             } else {
-                MMKV.default().removeValue(forKey: key)
+                Store.shared.remove(key, groupId: id)
             }
             
             result(success)
         case "getString":
-            result(MMKV.default().string(forKey: key))
+            let value: String? = Store.shared.value(forKey: key, groupId: id)
+            result(value)
         case "contains":
-            result(MMKV.default().contains(key: key))
+            result(Store.shared.contains(key, groupId: id))
         default:
             result(FlutterMethodNotImplemented)
         }

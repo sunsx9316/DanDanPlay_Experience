@@ -6,26 +6,30 @@ import 'package:dandanplay/Model/Search/SearchAnimate.dart';
 import 'package:dandanplay/Model/Search/SearchAnimateCollection.dart';
 import 'package:dandanplay/Model/Search/SearchEpisode.dart';
 import 'package:dandanplay/NetworkManager/SearchNetworkManager.dart';
+import 'package:dandanplay/Tools/Utility.dart';
 import 'package:dandanplay/Vendor/tree_view/tree_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class SearchWidget extends StatefulWidget {
-  final String path;
+  final String mediaId;
   final String searchText;
 
-  SearchWidget({@required this.path, @required this.searchText});
+  SearchWidget({@required this.mediaId, @required this.searchText});
 
   @override
   SearchWidgetState createState() {
-    return SearchWidgetState();
+    return SearchWidgetState(searchText);
   }
 }
 
 class SearchWidgetState extends State<SearchWidget> {
   final _selectedAnimateTypeMap = Map<AnimateType, bool>();
   final _selectedAnimateMap = Map<num, bool>();
+  var _searchText = "";
   Map<AnimateType, List<SearchAnimate>> _map;
+
+  SearchWidgetState(this._searchText);
 
   @override
   void initState() {
@@ -36,57 +40,85 @@ class SearchWidgetState extends State<SearchWidget> {
 
   @override
   Widget build(BuildContext context) {
+    Widget body;
 
     if (_map == null) {
-      return Center(child: CircularProgressIndicator());
+      body = Center(child: CircularProgressIndicator());
+    } else {
+      if (_map.isEmpty) {
+        body = Center(child: Text("并没有匹配到结果，试试更换搜索关键字╮(╯▽╰)╭"));
+      } else {
+        var parentList = List<Parent>();
+
+        _map.forEach((key, value) {
+          final animateTypeTitle = _creatAnimate(key);
+
+          Widget icon = Icon(Icons.arrow_forward_ios, size: 15);
+          final selected = this._selectedAnimateTypeMap[key] ?? false;
+          if (selected) {
+            icon = Transform.rotate(angle: pi / 2, child: icon);
+          }
+
+          //标题
+          Widget title = Row(children: <Widget>[
+            Expanded(child: Text(value.first.typeDescription)),
+            icon
+          ]);
+
+          title = Padding(padding: EdgeInsets.all(8), child: title);
+
+          final aParent = Parent(
+              parent: _createBox(
+                  title, EdgeInsets.only(left: 5, right: 5, top: 10)),
+              childList: animateTypeTitle,
+              isSelected: selected,
+              callback: (selected) {
+                setState(() {
+                  this._selectedAnimateTypeMap[key] = selected;
+                });
+              });
+          parentList.add(aParent);
+        });
+
+        body = TreeView(parentList: parentList);
+      }
     }
 
-    var parentList = List<Parent>();
-
-    _map.forEach((key, value) {
-      final animateTypeTitle = _creatAnimate(key);
-
-      Widget icon = Icon(Icons.arrow_forward_ios, size: 15);
-      final selected = this._selectedAnimateTypeMap[key] ?? false;
-      if (selected) {
-        icon = Transform.rotate(angle: pi / 2, child: icon);
-      }
-
-      //标题
-      Widget title = Row(children: <Widget>[
-        Expanded(child: Text(value.first.typeDescription)),
-        icon
-      ]);
-
-      title = Padding(padding: EdgeInsets.all(8), child: title);
-
-      final aParent = Parent(
-          parent:
-              _createBox(title, EdgeInsets.only(left: 5, right: 5, top: 10)),
-          childList: animateTypeTitle,
-          isSelected: selected,
-          callback: (selected) {
-            setState(() {
-              this._selectedAnimateTypeMap[key] = selected;
-            });
-          });
-      parentList.add(aParent);
-    });
-
-    return TreeView(parentList: parentList);
+    return Scaffold(
+        appBar: AppBar(
+            title: Padding(
+                padding: EdgeInsets.only(left: 0, right: 30),
+                child: TextField(
+                  cursorColor: Colors.white,
+                  textInputAction: TextInputAction.search,
+                  autofocus: true,
+                  decoration: InputDecoration(
+                      border: InputBorder.none, hintText: "试试手动♂搜素"),
+                  onSubmitted: (str) {
+                    _searchText = str;
+                    _getResult();
+                  },
+                )),
+            actions: [
+              GestureDetector(
+                  child: Padding(
+                      padding: EdgeInsets.only(right: 10),
+                      child: Align(child: Text("直接播放"))),
+                  onTap: () {
+                    Tools.getDanmaku(widget.mediaId);
+                  })
+            ]),
+        body: body);
   }
 
   //请求数据
   void _getResult() async {
-    final result =
-        await SearchNetworkManager.searchEpisode(this.widget.searchText);
+    final result = await SearchNetworkManager.searchEpisode(_searchText);
 
     setState(() {
       final animates = result.data.animes;
-
+      var aMap = Map<AnimateType, List<SearchAnimate>>();
       if (animates != null) {
-        var aMap = Map<AnimateType, List<SearchAnimate>>();
-
         for (SearchAnimate model in animates) {
           if (aMap[model.type] == null) {
             aMap[model.type] = List<SearchAnimate>();
@@ -107,7 +139,7 @@ class SearchWidgetState extends State<SearchWidget> {
           Expanded(
               child: Container(
                   decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: Colors.white10,
                       boxShadow: [
                         BoxShadow(
                             color: Colors.black12,
@@ -179,6 +211,7 @@ class SearchWidgetState extends State<SearchWidget> {
   }
 
   void _onTap(BuildContext content, SearchEpisode model) {
-    Navigator.pop(context, model);
+    Tools.getDanmaku(widget.mediaId,
+        episodeId: model.episodeId, title: model.episodeTitle);
   }
 }

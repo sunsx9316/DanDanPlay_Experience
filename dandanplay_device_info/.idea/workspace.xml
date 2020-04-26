@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="d103b6bb-7007-453c-8460-aa7d3b112836" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../dandanplay/DDPShare/DDPShare/Classes/Model/Message/Receive/AppVersionMessage.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/DDPShare/DDPShare/Classes/Model/Message/Receive/BecomeKeyWindowMessage.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/DDPShare/DDPShare/Classes/Model/Message/Receive/SyncSettingMessage.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/DDPShare/DDPShare/Classes/Model/Message/Send/RequestAppVersionMessage.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/DDPShare/DDPShare/Classes/Model/Message/Send/SendDanmakuMessage.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/assets/images/home.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/lib/Config/AppConfig.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/lib/Controller/Login/ForgetPasswordWidget.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/lib/Controller/Login/LoginWidget.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/lib/Controller/Login/RegisterWidget.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/lib/Model/Comment/DanmakuCache.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/lib/Model/Login/User.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/lib/Model/Message/Receive/BaseReceiveMessage.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/lib/Model/Message/Receive/RequestAppVersionMessage.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/lib/Model/Message/Receive/RequestAppVersionMessage.g.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/lib/Model/Message/Receive/SendDanmakuMessage.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/lib/Model/Message/Send/AppVersionMessage.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/lib/Model/Message/Send/BecomeKeyWindowMessage.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/lib/Model/Message/Send/SyncSettingMessage.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/lib/Model/Update/AppVersion.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/lib/Model/Update/AppVersion.g.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/lib/NetworkManager/AuthNetWorkManager.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/lib/NetworkManager/CheckVersionNetworkManager.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/macos/LocalPods/DDPCategory/DDPCategory/Classes/NSTimer+DDPAdd.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/macos/LocalPods/DDPCategory/DDPCategory/Classes/NSTimer+DDPAdd.m" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Assets.xcassets/AppIcon.appiconset/icon_128x128.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Assets.xcassets/AppIcon.appiconset/icon_128x128@2x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Assets.xcassets/AppIcon.appiconset/icon_16x16.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Assets.xcassets/AppIcon.appiconset/icon_16x16@2x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Assets.xcassets/AppIcon.appiconset/icon_256x256.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Assets.xcassets/AppIcon.appiconset/icon_256x256@2x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Assets.xcassets/AppIcon.appiconset/icon_32x32.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Assets.xcassets/AppIcon.appiconset/icon_32x32@2x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Assets.xcassets/AppIcon.appiconset/icon_512x512.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Assets.xcassets/AppIcon.appiconset/icon_512x512@2x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Assets.xcassets/status_bar_button.imageset/Contents.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Assets.xcassets/status_bar_button.imageset/status_bar_button@2x-1.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Assets.xcassets/status_bar_button.imageset/status_bar_button@2x.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/Constant/Constant.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/Constant/Helper.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ProgressHUD/ProgressHUD.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ProgressHUD/ProgressHUDHelper.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ProgressHUD/YRKSpinningProgressIndicatorLayer.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/AppVersionViewController.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/AppVersionViewController.xib" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/DragView.swift" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay/macos/danmaku_color.plist" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../dandanplay_store/macos/Classes/Store.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/DDPMediaPlayer/DDPMediaPlayer/Classes/DDPMediaPlayer.h" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/DDPMediaPlayer/DDPMediaPlayer/Classes/DDPMediaPlayer.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/DDPMediaPlayer/DDPMediaPlayer/Classes/DDPMediaPlayer.m" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/DDPMediaPlayer/DDPMediaPlayer/Classes/DDPMediaPlayer.m" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/DDPShare/DDPShare/Classes/DanmakuManager.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/DDPShare/DDPShare/Classes/DanmakuManager.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/DDPShare/DDPShare/Classes/Model/DanmakuModel.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/DDPShare/DDPShare/Classes/Model/DanmakuModel.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/DDPShare/DDPShare/Classes/Model/Message/Receive/DanmakuAlphaMessaege.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/DDPShare/DDPShare/Classes/Model/Message/Receive/DanmakuCountMessage.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/DDPShare/DDPShare/Classes/Model/Message/Receive/DanmakuFontSizeMessage.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/DDPShare/DDPShare/Classes/Model/Message/Receive/DanmakuSpeedMessage.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/DDPShare/DDPShare/Classes/Model/Message/Receive/HUDMessage.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/DDPShare/DDPShare/Classes/Model/Message/Receive/HUDMessage.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/DDPShare/DDPShare/Classes/Model/Message/Receive/LoadDanmakuMessage.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/DDPShare/DDPShare/Classes/Model/Message/Receive/LoadDanmakuMessage.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/DDPShare/DDPShare/Classes/Model/Message/Receive/SubtitleSafeAreaMessage.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/ios/Runner.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/ios/Runner.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/ios/Runner.xcworkspace/contents.xcworkspacedata" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/ios/Runner.xcworkspace/contents.xcworkspacedata" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/Config/Constant.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/lib/Config/Constant.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/Controller/File/FileWidget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/lib/Controller/File/FileWidget.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/Controller/Match/MatchWidget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/lib/Controller/Match/MatchWidget.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/Controller/Search/SearchWidget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/lib/Controller/Search/SearchWidget.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/Controller/SearchNavigation.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/Controller/Setting/PlayerSettingWidget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/lib/Controller/Setting/PlayerSettingWidget.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/Controller/Setting/SettingWidget.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/lib/Controller/Setting/SettingWidget.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/Model/Message/Send/DanmakuAlphaMessage.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/Model/Message/Send/DanmakuAlphaMessage.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/lib/Model/Message/Send/SyncSettingMessage.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/Model/Message/Send/DanmakuCountMessage.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/Model/Message/Send/DanmakuCountMessage.g.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/Model/Message/Send/DanmakuFontSizeMessage.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/Model/Message/Send/DanmakuFontSizeMessage.g.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/Model/Message/Send/DanmakuSpeedMessage.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/Model/Message/Send/DanmakuSpeedMessage.g.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/Model/Message/Send/LoadDanmakuMessage.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/lib/Model/Message/Send/LoadDanmakuMessage.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/Model/Message/Send/LoadDanmakuMessage.g.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/lib/Model/Message/Send/LoadDanmakuMessage.g.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/Model/Message/Send/SubtitleSafeAreaMessage.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/Model/Message/Send/SubtitleSafeAreaMessage.g.dart" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/NetworkManager/BaseNetworkManager.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/lib/NetworkManager/BaseNetworkManager.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/NetworkManager/CommentNetworkManager.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/lib/NetworkManager/CommentNetworkManager.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/NetworkManager/MatchNetworkManager.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/lib/NetworkManager/MatchNetworkManager.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/Tools/Cache.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/lib/Tools/Cache.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/Tools/Preferences.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/lib/Tools/Preferences.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/Tools/Utility.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/lib/Tools/Utility.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/Vendor/message/MessageChannel.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/lib/Vendor/message/MessageChannel.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/lib/main.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/lib/r.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/lib/r.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Flutter/GeneratedPluginRegistrant.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/LocalPods/DDPCategory/DDPCategory/Classes/DDPCategory.h" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/macos/LocalPods/DDPCategory/DDPCategory/Classes/DDPCategory.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Podfile" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/macos/Podfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner.xcodeproj/xcshareddata/xcschemes/Runner.xcscheme" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/AppDelegate.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/AppDelegate.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Assets.xcassets/AppIcon.appiconset/Contents.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_1024.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_128.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_16.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_256.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_32.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_512.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/Assets.xcassets/AppIcon.appiconset/app_icon_64.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/Base.lproj/MainMenu.xib" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Base.lproj/MainMenu.xib" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/Category/DDPMacroDefinition.h" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/Category/DDPMacroDefinition.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/MessageHandler.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/MessageHandler.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/Base/MessageViewController.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/Base/MessageViewController.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/Constant/Constant.swift" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/MainViewController.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/MainViewController.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/PlayerSettingViewController.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/PlayerSettingViewController.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/PlayerViewController/PlayerViewController.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/PlayerViewController/PlayerViewController.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/PlayerViewController/PlayerWindowController.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/PlayerViewController/PlayerWindowController.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/PlayerViewController/View/DDPDanmakuColorMenuItem.h" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/PlayerViewController/View/DDPDanmakuColorMenuItem.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/PlayerViewController/View/DDPDanmakuColorMenuItem.m" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/PlayerViewController/View/DDPDanmakuColorMenuItem.m" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/PlayerViewController/View/DDPHUD.m" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/PlayerViewController/View/DDPHUD.m" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/PlayerViewController/View/DDPPlayView.m" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/PlayerViewController/View/DDPPlayView.m" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/PlayerViewController/View/DDPPlayerControlView.h" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/PlayerViewController/View/DDPPlayerControlView.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/PlayerViewController/View/DDPPlayerControlView.m" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/PlayerViewController/View/DDPPlayerControlView.m" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/PlayerViewController/View/DDPPlayerSlider.m" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Classes/ViewController/PlayerViewController/View/DDPPlayerSlider.m" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/DebugProfile.entitlements" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/DebugProfile.entitlements" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Info.plist" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/macos/Runner/Release.entitlements" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/macos/Runner/Release.entitlements" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay_store/lib/dandanplaystore.dart" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay_store/lib/dandanplaystore.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay_store/macos/Classes/DandanplaystorePlugin.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay_store/macos/Classes/DandanplaystorePlugin.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../dandanplay_store/macos/Classes/Preferences.swift" beforeDir="false" afterPath="$PROJECT_DIR$/../dandanplay_store/macos/Classes/Preferences.swift" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="IgnoredFileRootStore">
+    <option name="generatedRoots">
+      <set>
+        <option value="$PROJECT_DIR$/.idea" />
+      </set>
+    </option>
+  </component>
+  <component name="ProjectId" id="1alQUSG7vOsWubVZdxcQiJRR1Lq" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="PropertiesComponent">
+    <property name="dart.analysis.tool.window.force.activate" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="show.migrate.to.gradle.popup" value="false" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d103b6bb-7007-453c-8460-aa7d3b112836" name="Default Changelist" comment="" />
+      <created>1587307715643</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1587307715643</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>

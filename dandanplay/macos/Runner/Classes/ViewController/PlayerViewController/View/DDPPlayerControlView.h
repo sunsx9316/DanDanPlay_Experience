@@ -24,7 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 
-@property (assign, nonatomic, readonly) uint32_t sendanmakuColor;
+@property (strong, nonatomic, readonly) NSColor *sendanmakuColor;
 @property (assign, nonatomic, readonly) DDPDanmakuMode sendanmakuStyle;
 
 @property (weak) IBOutlet NSPopUpButton *danmakuColorPopUpButton;

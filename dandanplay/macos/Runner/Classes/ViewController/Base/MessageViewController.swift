@@ -61,8 +61,10 @@ class MessageViewController: OCMessageViewController {
         self.channel.sendMessage(aMessage)
     }
     
-    func parseMessage(_ messageData: [String : Any]) {
-        
+    func parseMessage(_ name: MessageType, _ messageData: [String : Any]) {
+        if name == .becomeKeyWindow {
+            self.view.window?.makeKeyAndOrderFront(self)
+        }
     }
     
     func push(_ routeName: String) {
@@ -90,8 +92,13 @@ class MessageViewController: OCMessageViewController {
             }
             
             if let obj = obj as? [String : Any] {
+                
+                guard let name = obj["name"] as? String,
+                    let enumValue = MessageType(rawValue: name) else { return }
+                let data = obj["data"] as? [String : Any] ?? [:]
+                
                 DispatchQueue.main.async {
-                    self.parseMessage(obj)
+                    self.parseMessage(enumValue, data)
                     reply(true)
                 }
             } else {

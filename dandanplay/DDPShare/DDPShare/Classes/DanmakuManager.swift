@@ -20,19 +20,25 @@ open class DanmakuManager {
                 dic[intTime] = [JHDanmakuProtocol]()
             }
             
-            switch model.mode {
-            case .normal:
-                let aDanmaku = JHScrollDanmaku(font: nil, text: model.message, textColor: model.color, effectStyle: .glow, direction: .R2L)
-                aDanmaku.appearTime = model.time
-                dic[intTime]?.append(aDanmaku)
-            case .bottom, .top:
-                let position: JHFloatDanmakuPosition = model.mode == .bottom ? .atBottom : .atTop
-                let aDanmaku = JHFloatDanmaku(font: nil, text: model.message, textColor: model.color, effectStyle: .glow, during: 0, position: position)
-                aDanmaku.appearTime = model.time
-                dic[intTime]?.append(aDanmaku)
-            }
+            dic[intTime]?.append(conver(model))
         }
         
         return dic
+    }
+    
+    open func conver(_ model: DanmakuModel) -> JHDanmakuProtocol {
+        let intTime = UInt(model.time)
+        
+        switch model.mode {
+        case .normal:
+            let aDanmaku = JHScrollDanmaku(font: nil, text: model.message, textColor: model.color, effectStyle: .glow, direction: .R2L)
+            aDanmaku.appearTime = model.time
+            return aDanmaku
+        case .bottom, .top:
+            let position: JHFloatDanmakuPosition = model.mode == .bottom ? .atBottom : .atTop
+            let aDanmaku = JHFloatDanmaku(font: nil, text: model.message, textColor: model.color, effectStyle: .glow, during: 0, position: position)
+            aDanmaku.appearTime = model.time
+            return aDanmaku
+        }
     }
 }

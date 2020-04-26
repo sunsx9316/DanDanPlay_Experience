@@ -8,6 +8,7 @@
 
 #import "DDPHUD.h"
 #import <Masonry/Masonry.h>
+#import <DDPCategory/DDPCategory.h>
 #import "NSView+DDPTools.h"
 #import "DDPCategoriesMacro.h"
 
@@ -124,14 +125,14 @@
 - (void)startTimer {
     @weakify(self)
     [self.timer invalidate];
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:2 repeats:NO block:^(NSTimer * _Nonnull timer) {
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:2 block:^(NSTimer * _Nonnull timer) {
         @strongify(self)
         if (!self) {
             return;
         }
         
         [self dismiss];
-    }];
+    } repeats:NO];
 }
 
 @end

@@ -70,11 +70,7 @@ open class DanmakuModel: BaseModel {
                 return DanmakuColor(rgb: rawValue ?? 0)
             }, toJSON: { (color: DanmakuColor?) -> Int in
                 if let color = color {
-                    let r = color.redComponent * 255 * 256 * 256
-                    let b = color.blueComponent * 255 * 256
-                    let g = color.greenComponent * 255
-                    
-                    return Int(r + g + b)
+                    return color.rgbValue
                 }
                 return 0
             }))
@@ -108,11 +104,19 @@ open class DanmakuCollectionModel: BaseCollectionModel<DanmakuModel> {
     }
 }
 
-private extension DanmakuColor {
+public extension DanmakuColor {
     convenience init(rgb rgbValue: Int) {
         self.init(red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
                      green: CGFloat((rgbValue & 0xFF00) >> 8) / 255.0,
                      blue: CGFloat((rgbValue & 0xFF)) / 255.0,
                      alpha: 1)
+    }
+    
+    var rgbValue: Int {
+        let r = self.redComponent * 255 * 256 * 256
+        let b = self.blueComponent * 255 * 256
+        let g = self.greenComponent * 255
+        
+        return Int(r + g + b)
     }
 }

@@ -10,6 +10,7 @@ import Cocoa
 class PlayerWindowController: NSWindowController, NSWindowDelegate {
     
     private var urls = [URL]()
+    private let windowFrameAutosaveKey = "playerViewController"
     
     var closeCallBack: (() -> Void)?
 
@@ -21,6 +22,11 @@ class PlayerWindowController: NSWindowController, NSWindowDelegate {
         self.window?.isMovableByWindowBackground = true
         self.window?.minSize = CGSize(width: 600, height: 400)
         self.contentViewController = PlayerViewController(urls: urls)
+        
+        if let str = UserDefaults.standard.string(forKey: windowFrameAutosaveKey) {
+            window?.setFrame(NSRectFromString(str), display: true)
+        }
+        
     }
     
     override func loadWindow() {
@@ -29,14 +35,17 @@ class PlayerWindowController: NSWindowController, NSWindowDelegate {
     
     convenience init(urls: [URL]) {
         self.init(windowNibName: "PlayerWindowController")
-        self.windowFrameAutosaveName = "playerViewController"
-        self.shouldCascadeWindows = true
         self.urls = urls;
     }
     
-    func windowShouldClose(_ sender: NSWindow) -> Bool {
+    func windowWillClose(_ notification: Notification) {
         self.closeCallBack?()
-        return true
+        
+        guard let frame = window?.frame else {
+            return
+        }
+        
+        UserDefaults.standard.set(NSStringFromRect(frame), forKey: windowFrameAutosaveKey)
     }
-
+    
 }

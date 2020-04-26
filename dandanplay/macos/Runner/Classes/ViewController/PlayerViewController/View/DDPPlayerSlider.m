@@ -28,20 +28,22 @@
 }
 
 - (void)mouseExited:(NSEvent *)event {
-    if (self.hud != nil) {
-        [self.hud dismiss];
+    DDPHUD *hud = self.hud;
+    if (hud != nil) {
+        [hud dismiss];
     }
 }
 
 - (void)mouseMoved:(NSEvent *)event {
-    if ([self.delegate respondsToSelector:@selector(playerSliderViewShouldShowTips)] && ![self.delegate playerSliderViewShouldShowTips]) {
+    id<DDPPlayerSliderDelegate> delegate = self.delegate;
+    if ([delegate respondsToSelector:@selector(playerSliderViewShouldShowTips)] && ![delegate playerSliderViewShouldShowTips]) {
         return;
     }
     
-    if ([self.delegate respondsToSelector:@selector(playerSliderView:didShowTipsAtProgress:)]) {
+    if ([delegate respondsToSelector:@selector(playerSliderView:didShowTipsAtProgress:)]) {
         float progress = [self progressWithEvent:event];
         
-        NSString *str = [self.delegate playerSliderView:self didShowTipsAtProgress:progress];
+        NSString *str = [delegate playerSliderView:self didShowTipsAtProgress:progress];
         DDPHUD *hud = self.hud;
         if (hud == nil) {
             hud = [[DDPHUD alloc] initWithStyle:DDPHUDStyleCompact];
@@ -50,7 +52,8 @@
         }
         
         hud.title = str;
-        [hud showAtView:self.superview position:DDPHUDPositionCustom];
+        NSView *superview = self.superview;
+        [hud showAtView:superview position:DDPHUDPositionCustom];
         
         CGRect frame = CGRectZero;
         frame.size = hud.fittingSize;
@@ -81,8 +84,9 @@
     
     float value = [self progressWithEvent:event];
     self.currentProgress = value;
-    if ([self.delegate respondsToSelector:@selector(playerSliderView:didDragProgress:)]) {
-        [self.delegate playerSliderView:self didDragProgress:value];
+    id<DDPPlayerSliderDelegate> delegate = self.delegate;
+    if ([delegate respondsToSelector:@selector(playerSliderView:didDragProgress:)]) {
+        [delegate playerSliderView:self didDragProgress:value];
     }
     
     [self mouseMoved:event];
@@ -96,8 +100,9 @@
     _tracking = NO;
     float value = [self progressWithEvent:event];
     self.currentProgress = value;
-    if ([self.delegate respondsToSelector:@selector(playerSliderView:didClickProgress:)]) {
-        [self.delegate playerSliderView:self didClickProgress:value];
+    id<DDPPlayerSliderDelegate> delegate = self.delegate;
+    if ([delegate respondsToSelector:@selector(playerSliderView:didClickProgress:)]) {
+        [delegate playerSliderView:self didClickProgress:value];
     }
 }
 
@@ -119,7 +124,7 @@
 
 - (void)setupInit {
     self.wantsLayer = YES;
-//    self.layer.backgroundColor = [NSColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:0.3].CGColor;
+    self.layer.backgroundColor = [NSColor colorWithRed:0.3 green:0.3 blue:0.3 alpha:0.3].CGColor;
     [self addTrackingArea:self.trackingArea];
     
     [self addSubview:self.slider];
@@ -127,11 +132,7 @@
 
 - (float)progressWithEvent:(NSEvent *)event {
     CGPoint point = event.locationInWindow;
-    CGPoint pointInView = point;
-    NSView *contentView = event.window.contentView;
-    if (contentView) {
-        pointInView = [self convertPoint:point fromView:contentView];
-    }
+    CGPoint pointInView = [self convertPoint:point fromView:nil];
     
     CGFloat progress = pointInView.x / CGRectGetWidth(self.frame);
     if (isnan(progress) || progress < 0) {

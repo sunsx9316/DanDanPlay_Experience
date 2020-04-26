@@ -10,7 +10,7 @@ import Cocoa
 import FlutterMacOS
 import SnapKit
 import HandyJSON
-
+import DDPShare
 
 /// 主控制器，负责与flutter通信
 class MainViewController: MessageViewController {
@@ -32,6 +32,10 @@ class MainViewController: MessageViewController {
         return playerWindowController?.contentViewController as? PlayerViewController
     }
     
+    private lazy var HUDViewsMapper: NSMapTable<NSString, ProgressHUD> = {
+        return NSMapTable<NSString, ProgressHUD>.strongToWeakObjects()
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.wantsLayer = true
@@ -42,33 +46,68 @@ class MainViewController: MessageViewController {
         
     }
     
-    override func parseMessage(_ messageData: [String : Any]) {
-        guard let name = messageData["name"] as? String,
-            let enumValue = MessageType(rawValue: name) else { return }
+    override func parseMessage(_ name: MessageType, _ messageData: [String : Any]){
         
-        let data = messageData["data"] as? [String : Any]
-        
-        switch enumValue {
+        switch name {
+        case .becomeKeyWindow:
+            super.parseMessage(name, messageData)
         case .loadDanmaku:
             playerWindowController?.window?.makeKeyAndOrderFront(nil)
-            playerViewController?.parseMessage(enumValue, data: data)
+            playerViewController?.parseMessage(name, data: messageData)
+        case .HUDMessage:
+            guard let msg = HUDMessage.deserialize(from: messageData) else {
+                return
+            }
+            
+            let key = msg.key as NSString
+            
+            let cacheHUD: ProgressHUD
+            
+            if key.length > 0, let aCacheHUD = HUDViewsMapper.object(forKey: key) {
+                cacheHUD = aCacheHUD
+            } else {
+                
+                switch msg.style {
+                case .tips:
+                    cacheHUD = ProgressHUDHelper.showHUD(text: msg.text)
+                case .progress:
+                    cacheHUD = ProgressHUDHelper.showProgressHUD(text: msg.text, progress: msg.progress)
+                }
+                
+                HUDViewsMapper.setObject(cacheHUD, forKey: key)
+            }
+            
+            if msg.isDismiss {
+                cacheHUD.hide(true)
+            } else {
+                switch msg.style {
+                case .tips:
+                    break
+                case .progress:
+                    cacheHUD.setStatus(msg.text)
+                    cacheHUD.progress = Double(msg.progress)
+                }
+            }
+        case .appVersion:
+            guard let msg = AppVersionMessage.deserialize(from: messageData),
+                let delegate = NSApp.delegate as? AppDelegate else {
+                return
+            }
+
+            delegate.showUpdatePopover(msg)
         default:
-            playerViewController?.parseMessage(enumValue, data: data)
+            playerViewController?.parseMessage(name, data: messageData)
         }
     }
     
     //MARK: Private
-    private func loadFiles(_ files: [String]) {
-        
-        let urls = files.compactMap { (path) -> URL in
-            return URL(fileURLWithPath: path)
-        }
+    private func loadFiles(_ files: [URL]) {
         
         if let vc = self.playerViewController {
-            vc.loadURLs(urls)
+            vc.loadURLs(files)
             playerWindowController?.window?.makeKeyAndOrderFront(nil)
         } else {
-            playerWindowController = PlayerWindowController(urls: urls)
+            playerWindowController = PlayerWindowController(urls: files)
             playerWindowController?.closeCallBack = { [weak self] in
                 guard let self = self else {
                     return
@@ -77,62 +116,6 @@ class MainViewController: MessageViewController {
                 self.playerWindowController = nil
             }
             playerWindowController?.showWindow(nil)
-            //            if let delegate = NSApp.delegate as? FlutterAppDelegate,
-            //                let window = delegate.mainFlutterWindow,
-            //                let playerWindow = playerWindowController?.window {
-            //                window.addChildWindow(playerWindow, ordered: .above)
-            //            }
-        }
-    }
-    
-}
-
-
-extension MainViewController {
-    private class DragView: NSView {
-        
-        var dragFilesCallBack: (([String]) -> Void)?
-        
-        override init(frame frameRect: NSRect) {
-            super.init(frame: frameRect)
-            setupInit()
-        }
-        
-        required init?(coder: NSCoder) {
-            super.init(coder: coder)
-            setupInit()
-        }
-        
-        override var acceptsFirstResponder: Bool {
-            return true
-        }
-        
-        override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
-            return .copy
-        }
-        
-        override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
-            var paths = [String]();
-            sender.enumerateDraggingItems(options: [], for: nil, classes: [NSURL.self], searchOptions: [.urlReadingFileURLsOnly : true]) { (draggingItem, index, stop) in
-                if let url = draggingItem.item as? NSURL, let path = url.path {
-                    paths.append(path)
-                }
-            }
-            
-            if !paths.isEmpty {
-                dragFilesCallBack?(paths)
-            }
-            
-            return true
-        }
-        
-        //MARK: Private
-        private func setupInit() {
-            if #available(OSX 10.13, *) {
-                registerForDraggedTypes([.fileURL])
-            } else {
-                registerForDraggedTypes([NSPasteboard.PasteboardType(rawValue: kUTTypeFileURL as String)])
-            }
         }
     }
     

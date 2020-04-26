@@ -4,7 +4,8 @@ import 'package:dandanplay/Model/File/FileModel.dart';
 import 'package:dandanplay/NetworkManager/MatchNetworkManager.dart';
 import 'package:dandanplay/Tools/Utility.dart';
 import 'package:dandanplay/r.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:dandanplay_file_picker/file_picker.dart';
+//import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

@@ -17,10 +17,10 @@ class MessageHandler {
         }
     }
     
-    static func transferMessageToMainChannel(_ messageData: [String : Any]) {
+    static func transferMessageToMainChannel(_ name: MessageType, _ messageData: [String : Any]) {
         if let delegate = NSApp.delegate as? AppDelegate,
             let vc = delegate.mainFlutterWindow.contentViewController as? MainViewController {
-            vc.parseMessage(messageData)
+            vc.parseMessage(name, messageData)
         }
     }
 }

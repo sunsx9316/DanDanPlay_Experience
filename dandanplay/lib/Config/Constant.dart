@@ -1,3 +1,4 @@
+
 enum FileMatchMode {
   hashAndFileName,
   fileNameOnly,
@@ -15,6 +16,56 @@ enum AnimateType {
   jpMovie,
   jpDrama,
   unknown
+}
+
+enum PlayerMode {
+  notRepeat,
+  repeatCurrentItem,
+  repeatAllItem,
+}
+
+enum DanmakuMode {
+  normal,
+  top,
+  bottom,
+}
+
+int danmakuModeRawValueWithEnum(DanmakuMode mode) {
+  switch (mode) {
+    case DanmakuMode.normal:
+      return 1;
+    case DanmakuMode.top:
+      return 4;
+    case DanmakuMode.bottom:
+      return 5;
+    default:
+      return 1;
+  }
+}
+
+DanmakuMode danmakuModeTypeWithRawValue(int danmakuModeRawValue) {
+  if (danmakuModeRawValue == 4) {
+    return DanmakuMode.top;
+  } else if (danmakuModeRawValue == 5) {
+    return DanmakuMode.bottom;
+  } else {
+    return DanmakuMode.normal;
+  }
+}
+
+
+PlayerMode playerModeTypeWithRawValue(int playerModeRawValue) {
+  final values = PlayerMode.values;
+
+  if (playerModeRawValue >= 0 && playerModeRawValue < values.length) {
+    return values[playerModeRawValue];
+  }
+
+  return PlayerMode.notRepeat;
+}
+
+int playerModeRawValueWithEnum(PlayerMode mode) {
+  return mode.index;
 }
 
 AnimateType animateTypeWithString(String typeRawValue) {

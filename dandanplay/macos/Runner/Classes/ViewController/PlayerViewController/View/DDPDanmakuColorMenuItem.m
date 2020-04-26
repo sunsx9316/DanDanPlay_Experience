@@ -10,9 +10,6 @@
 #import "NSColor+DDPTools.h"
 
 @implementation DDPDanmakuColorMenuItem
-{
-    NSColor *_itemColor;
-}
 
 - (instancetype)initWithTitle:(NSString *)aString color:(NSColor *)color{
     if (self = [super initWithTitle:aString action:nil keyEquivalent:@""]) {
@@ -22,7 +19,8 @@
     return self;
 }
 
-- (void)setItemColor:(NSColor *)color{
+- (void)setItemColor:(NSColor *)color {
+    _itemColor = color;
     NSImage *image = [[NSImage alloc] initWithSize:NSMakeSize(30, 10)];
     [image lockFocus];
     [color setFill];
@@ -31,7 +29,4 @@
     self.image = image;
 }
 
-- (NSUInteger)itemColor {
-    return _itemColor.colorValue;
-}
 @end

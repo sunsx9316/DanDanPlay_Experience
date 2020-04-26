@@ -38,7 +38,10 @@
     NSMutableArray <NSString *>*paths = [NSMutableArray array];
     [sender enumerateDraggingItemsWithOptions:kNilOptions forView:nil classes:@[NSURL.class] searchOptions:@{NSPasteboardURLReadingFileURLsOnlyKey : @(YES)} usingBlock:^(NSDraggingItem * _Nonnull draggingItem, NSInteger idx, BOOL * _Nonnull stop) {
         NSURL *url = draggingItem.item;
-        [paths addObject:url.path];
+        NSString *path = url.path;
+        if (path) {
+            [paths addObject:path];            
+        }
     }];
     
     [self sendParseMessageWithURL:paths];

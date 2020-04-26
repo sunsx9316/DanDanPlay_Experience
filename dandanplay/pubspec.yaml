@@ -11,7 +11,7 @@ description: A new Flutter application.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 5.0.0+202003291
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -27,19 +27,23 @@ dependencies:
   json_annotation: ^2.0.0
   dio: ^3.0.8
   cached_network_image: ^2.0.0
-  file_picker: ^1.4.3+2
+#  file_picker: ^1.4.3+2
   url_launcher: ^5.4.1
   crypto: ^2.1.3
   path: ^1.6.4
-  loader_search_bar: ^1.0.3+3
   path_provider: ^1.5.1
   path_provider_macos: ^0.0.1
+  connectivity: ^0.4.8+2
   dandanplaystore:
     path: "../dandanplay_store"
+  dandanplay_file_picker:
+    path: "../dandanplay_file_picker"
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  build_runner: ^1.0.0
+  json_serializable: ^2.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -48,6 +52,8 @@ dev_dependencies:
 flutter:
   assets:
     # assets-generator-begin
+    # assets/images/*
+    - assets/images/home.png
     # assets/images/File/*
     - assets/images/File/file_phone.png
     - assets/images/File/file_computer.png

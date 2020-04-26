@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import MMKV
 
 open class Preferences {
     public enum KeyName: String {
@@ -18,112 +17,135 @@ open class Preferences {
         case danmakuSpeed
         case danmakuAlpha
         case danmakuCount
+        case showHomePageTips
+        case playerSpeed
+        case playerMode
+        case checkUpdate
+    }
+    
+    public enum PlayerMode: Int {
+      case notRepeat
+      case repeatCurrentItem
+      case repeatAllItem
     }
     
     public static let shared = Preferences()
     private init() {}
+    
+    open var checkUpdate: Bool {
+        get {
+            return Store.shared.value(forKey: KeyName.checkUpdate.rawValue)
+        }
+        
+        set {
+            Store.shared.set(newValue, forKey: KeyName.checkUpdate.rawValue)
+        }
+    }
+    
+    open var playerMode: PlayerMode {
+        get {
+            let rawValue: Int = Store.shared.value(forKey: KeyName.playerMode.rawValue)
+            return PlayerMode(rawValue: rawValue) ?? .notRepeat
+        }
+        
+        set {
+            Store.shared.set(newValue.rawValue, forKey: KeyName.playerMode.rawValue)
+        }
+    }
+    
+    open var playerSpeed: Double {
+        get {
+            return Store.shared.value(forKey: KeyName.playerSpeed.rawValue)
+        }
+        
+        set {
+            Store.shared.set(newValue, forKey: KeyName.playerSpeed.rawValue)
+        }
+    }
+    
+    open var showHomePageTips: Bool {
+        get {
+            return Store.shared.value(forKey: KeyName.showHomePageTips.rawValue)
+        }
+        
+        set {
+            Store.shared.set(newValue, forKey: KeyName.showHomePageTips.rawValue)
+        }
+    }
+
     
     open var danmakuUnlimitCount: Int {
         return 100
     }
     
     open var danmakuCount: Int {
-           get {
-               return Int(MMKV.default().int32(forKey: KeyName.danmakuCount.rawValue))
-           }
-           
-           set {
-               MMKV.default().set(Int32(newValue), forKey: KeyName.danmakuCount.rawValue)
-           }
-       }
-    
-    open var danmakuAlpha: CGFloat {
         get {
-            return CGFloat(MMKV.default().double(forKey: KeyName.danmakuAlpha.rawValue))
+            return Store.shared.value(forKey: KeyName.danmakuCount.rawValue)
         }
         
         set {
-            MMKV.default().set(Double(newValue), forKey: KeyName.danmakuAlpha.rawValue)
+            Store.shared.set(newValue, forKey: KeyName.danmakuCount.rawValue)
+        }
+    }
+    
+    open var danmakuAlpha: Double {
+        get {
+            return Store.shared.value(forKey: KeyName.danmakuAlpha.rawValue)
+        }
+        
+        set {
+            Store.shared.set(newValue, forKey: KeyName.danmakuAlpha.rawValue)
         }
     }
     
     open var fastMatch: Bool {
         get {
-            return MMKV.default().bool(forKey: KeyName.fastMatch.rawValue)
+            return Store.shared.value(forKey: KeyName.fastMatch.rawValue)
         }
         
         set {
-            MMKV.default().set(newValue, forKey: KeyName.fastMatch.rawValue)
+            Store.shared.set(newValue, forKey: KeyName.fastMatch.rawValue)
         }
     }
     
     open var subtitleSafeArea: Bool {
         get {
-            return MMKV.default().bool(forKey: KeyName.subtitleSafeArea.rawValue)
+            return Store.shared.value(forKey: KeyName.subtitleSafeArea.rawValue)
         }
         
         set {
-            MMKV.default().set(newValue, forKey: KeyName.subtitleSafeArea.rawValue)
+            Store.shared.set(newValue, forKey: KeyName.subtitleSafeArea.rawValue)
         }
     }
     
-    open var danmakuCacheDay: Int32 {
+    open var danmakuCacheDay: Int {
         get {
-            return MMKV.default().int32(forKey: KeyName.danmakuCacheDay.rawValue)
+            return Store.shared.value(forKey: KeyName.danmakuCacheDay.rawValue)
         }
         
         set {
-            MMKV.default().set(newValue, forKey: KeyName.danmakuCacheDay.rawValue)
+            Store.shared.set(newValue, forKey: KeyName.danmakuCacheDay.rawValue)
         }
     }
     
     open var danmakuFontSize: Double {
         get {
-            return MMKV.default().double(forKey: KeyName.danmakuFontSize.rawValue)
+            return Store.shared.value(forKey: KeyName.danmakuFontSize.rawValue)
         }
         
         set {
-            MMKV.default().set(newValue, forKey: KeyName.danmakuFontSize.rawValue)
+            Store.shared.set(newValue, forKey: KeyName.danmakuFontSize.rawValue)
         }
     }
     
-    open var danmakuSpeed: CGFloat {
+    open var danmakuSpeed: Double {
         get {
-            return CGFloat(MMKV.default().double(forKey: KeyName.danmakuSpeed.rawValue))
+            return Store.shared.value(forKey: KeyName.danmakuSpeed.rawValue)
         }
         
         set {
-            MMKV.default().set(Double(newValue), forKey: KeyName.danmakuSpeed.rawValue)
+            Store.shared.set(Double(newValue), forKey: KeyName.danmakuSpeed.rawValue)
         }
     }
     
-    open func setupDefaultValue() {
-        if !MMKV.default().contains(key: KeyName.fastMatch.rawValue) {
-            fastMatch = true
-        }
-        
-        if !MMKV.default().contains(key: KeyName.subtitleSafeArea.rawValue) {
-            subtitleSafeArea = true
-        }
-        
-        if !MMKV.default().contains(key: KeyName.danmakuCacheDay.rawValue) {
-            danmakuCacheDay = 7
-        }
-        
-        if !MMKV.default().contains(key: KeyName.danmakuFontSize.rawValue) {
-            danmakuFontSize = 20
-        }
-        
-        if !MMKV.default().contains(key: KeyName.danmakuSpeed.rawValue) {
-            danmakuSpeed = 1
-        }
-        
-        if !MMKV.default().contains(key: KeyName.danmakuAlpha.rawValue) {
-            danmakuAlpha = 1
-        }
-        
-        if !MMKV.default().contains(key: KeyName.danmakuCount.rawValue) {
-            danmakuCount = 100
-        }
-    }
 }

@@ -12,6 +12,8 @@
 #import <DDPCategory/NSObject+DDPAddForKVO.h>
 #import <DDPCategory/NSString+DDPTools.h>
 #import <DDPCategory/NSObject+DDPAdd.h>
+#import <DDPCategory/NSTimer+DDPAdd.h>
+#import <DDPCategory/DDPCategoriesMacro.h>
 #else
 #import "NSArray+DDPTools.h"
 #import "NSData+DDPTools.h"
@@ -19,5 +21,6 @@
 #import "NSObject+DDPAddForKVO.h"
 #import "NSString+DDPTools.h"
 #import "NSObject+DDPAdd.h"
-
+#import "NSTimer+DDPAdd.h"
+#import "DDPCategoriesMacro.h"
 #endif

@@ -1,11 +1,8 @@
-import 'dart:io';
-import 'package:dandanplay/Controller/BaseNavigation.dart';
-import 'package:dandanplay/Controller/Match/MatchWidget.dart';
-import 'package:dandanplay/Controller/Search/SearchWidget.dart';
+import 'package:dandanplay/Model/Match/FileMatchCollection.dart';
 import 'package:dandanplay/Model/Message/Receive/ParseFileMessage.dart';
+import 'package:dandanplay/Model/Message/Receive/SendDanmakuMessage.dart';
 import 'package:dandanplay/Model/Message/Send/HUDMessage.dart';
 import 'package:dandanplay/Model/Message/Send/LoadDanmakuMessage.dart';
-import 'package:dandanplay/Model/Search/SearchEpisode.dart';
 import 'package:dandanplay/NetworkManager/CommentNetworkManager.dart';
 import 'package:dandanplay/NetworkManager/MatchNetworkManager.dart';
 import 'package:dandanplay/Tools/Preferences.dart';
@@ -19,7 +16,9 @@ class GlobalConfig {
 }
 
 class Tools {
-  static void parseMessage(ParseFileMessage message, BuildContext context) async {
+  static void parseMessage(ParseFileMessage message,
+      {Function(String mediaId, FileMatchCollection collection)
+          failedCallBack}) async {
     _showProgressHUD("解析视频...", 0.2);
 
     final res = await MatchNetworkManager.match(message);
@@ -32,101 +31,75 @@ class Tools {
     if (data.isMatched && data.matches.length == 1 && openFastMatch) {
       _showProgressHUD("解析视频成功，开始匹配弹幕...", 0.5);
       final matched = data.matches[0];
-      await getDanmaku(mediaId, episodeId: matched.episodeId, title: matched.title);
+      await getDanmaku(mediaId,
+          episodeId: matched.episodeId, title: matched.title);
       _showProgressHUD("弹幕匹配成功，开始播放...", 1.0);
       _dismissProgressHUD();
     } else {
       _dismissProgressHUD();
-      if (context != null) {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return MatchWidget.fromCollection(mediaId: mediaId, collection: res.data);
-        }));
+      if (failedCallBack != null) {
+        failedCallBack(mediaId, data);
       }
     }
   }
 
-
-//  static void parse(File file, {BuildContext context}) async {
-//    _showProgressHUD("解析视频...", 0.2);
-//
-//    final fileModel = FileModel(file);
-//    final res = await MatchNetworkManager.match(fileModel);
-//
-//    final data = res.data;
-//    data.isMatched = false;
-//    //精确关联
-//    if (data.isMatched && data.matches.length == 1) {
-//      _showProgressHUD("解析视频成功，开始匹配弹幕...", 0.5);
-//      final matched = data.matches[0];
-//      await exactMatch(file, episodeId: matched.episodeId);
-//      _showProgressHUD("弹幕匹配成功，开始播放...", 1.0);
-//      _dismissProgressHUD();
-//    } else {
-//      _dismissProgressHUD();
-//      if (context != null) {
-//      Navigator.push(context, MaterialPageRoute(builder: (context) {
-//        return MatchWidget.fromCollection(file: file, collection: res.data);
-////          BaseNavigation(
-////            body: MatchWidget.fromCollection(
-////                path: file.path, collection: res.data),
-////            titleBar: TextField(
-////              style: TextStyle(
-////                fontSize: 15.0,
-////              ),
-////              decoration: InputDecoration(
-////                hintText: "试试手动♂搜索",
-////                border: OutlineInputBorder(
-////                    borderSide: BorderSide(color: Colors.transparent)),
-////              ),
-////              onSubmitted: (text) {
-////                _showSearchWidget(context, text, file.path);
-////              },
-////            ));
-//      }));
-//
-//      }
-//
-////      if (matched != null) {
-////        _showProgressHUD("开始匹配弹幕...", 0.5);
-////        await exactMatch(file, episodeId: matched.episodeId);
-////        _showProgressHUD("弹幕匹配成功，开始播放...", 1.0);
-////        _dismissProgressHUD();
-////      } else {
-////        exactMatch(file);
-////      }
-//    }
-//  }
-
-  static Future getDanmaku(String mediaId, {int episodeId, String title}) async {
+  static Future getDanmaku(String mediaId,
+      {int episodeId, String title}) async {
     LoadDanmakuMessage message;
     if (episodeId != null) {
       _showProgressHUD("开始匹配弹幕...", 0.5);
       final result = await CommentNetworkManager.danmaku(episodeId);
-      message = LoadDanmakuMessage(mediaId, danmakuCollection: result.data, title: title);
+      message = LoadDanmakuMessage(mediaId: mediaId,
+          danmakuCollection: result.data, title: title, episodeId: episodeId);
       _showProgressHUD("弹幕匹配成功，开始播放...", 1.0);
       _dismissProgressHUD();
     } else {
-      message = LoadDanmakuMessage(mediaId);
+      message = LoadDanmakuMessage(mediaId: mediaId, playImmediately: true);
     }
 
     MessageChannel.shared.sendMessage(message);
   }
 
-  //精确匹配
-//  static Future exactMatch(File file, {int episodeId}) async {
-//    StartPlayMessage message;
-//    if (episodeId != null) {
-//      _showProgressHUD("开始匹配弹幕...", 0.5);
-//      final danmaku = await CommentNetworkManager.danmaku(episodeId);
-//      message = StartPlayMessage(file.path, danmaku: danmaku.data);
-//      _showProgressHUD("弹幕匹配成功，开始播放...", 1.0);
-//      _dismissProgressHUD();
-//    } else {
-//      message = StartPlayMessage(file.path);
-//    }
-//
-//    MessageChannel.shared.sendMessage(message);
-//  }
+  static showSnackBar(String text, BuildContext context) {
+    if (text == null) {
+      return;
+    }
+
+    Scaffold.of(context).hideCurrentSnackBar();
+    final snackBar = SnackBar(
+        content: Text(text, style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.white30);
+    Scaffold.of(context).showSnackBar(snackBar);
+  }
+
+  static sendDanmaku(SendDanmakuMessage msg) async {
+    if (msg == null) {
+      return;
+    }
+
+    final user = await Preferences.shared.user;
+    if (user == null) {
+      final message =
+          HUDMessage(style: HUDMessageStyle.tips, text: "请先登录才能发送弹幕！");
+      MessageChannel.shared.sendMessage(message);
+      return;
+    }
+
+    final result = await CommentNetworkManager.sendDanmaku(
+        time: msg.time,
+        mode: msg.mode,
+        color: msg.color,
+        comment: msg.comment,
+        episodeId: msg.episodeId);
+    if (result.error != null) {
+      final message =
+          HUDMessage(style: HUDMessageStyle.tips, text: result.error.message);
+      MessageChannel.shared.sendMessage(message);
+    } else {
+      final message = HUDMessage(style: HUDMessageStyle.tips, text: "发送成功");
+      MessageChannel.shared.sendMessage(message);
+    }
+  }
 
   static void _showProgressHUD(String text, double progress) {
     HUDMessage message = HUDMessage(
@@ -143,36 +116,4 @@ class Tools {
         style: HUDMessageStyle.progress, key: "parse_file", isDismiss: true);
     MessageChannel.shared.sendMessage(message);
   }
-
-  //显示搜索
-//  static void _showSearchWidget(
-//      BuildContext context, String text, String path) async {
-//    _dismissProgressHUD();
-//
-//    final episode = await Navigator.push<SearchEpisode>(context,
-//        MaterialPageRoute(builder: (context) {
-//      return BaseNavigation(
-//          body: SearchWidget(path: path, searchText: text),
-//          titleBar: TextField(
-//            style: TextStyle(
-//              fontSize: 15.0,
-//            ),
-//            decoration: InputDecoration(
-//              hintText: "试试手动♂搜索",
-//              border: OutlineInputBorder(
-//                  borderSide: BorderSide(color: Colors.transparent)),
-//            ),
-//            onSubmitted: (text1) {
-//              _showSearchWidget(context, text1, path);
-//            },
-//          ));
-//    }));
-//
-//    if (episode != null) {
-//      StartPlayMessage message;
-//      final danmaku = await CommentNetworkManager.danmaku(episode.episodeId);
-//      message = StartPlayMessage(path, danmaku: danmaku.data);
-//      MessageChannel.shared.sendMessage(message);
-//    }
-//  }
 }

@@ -48,8 +48,6 @@
 @end
 
 @implementation DDPMediaPlayer {
-    NSTimeInterval _length;
-    NSTimeInterval _currentTime;
     DDPMediaPlayerStatus _status;
     BOOL _pauseByUser;
 }
@@ -69,7 +67,12 @@
             return;
         }
         
-        [self.delegate mediaPlayer:self mediaDidChange:change[NSKeyValueChangeKindKey]];
+        VLCMedia *media = change[NSKeyValueChangeNewKey];
+        if ([media isKindOfClass:[media class]]) {
+            [self.delegate mediaPlayer:self mediaDidChange:media];
+        } else {
+            [self.delegate mediaPlayer:self mediaDidChange:nil];
+        }
     }
 }
 
@@ -83,10 +86,7 @@
 }
 
 - (NSTimeInterval)length {
-    if (_length > 0) return _length;
-    
-    _length = self.localMediaPlayer.media.length.value.floatValue / 1000.0f;
-    return _length;
+    return self.localMediaPlayer.media.length.value.floatValue / 1000.0f;
 }
 
 - (NSTimeInterval)currentTime {
@@ -96,19 +96,15 @@
 - (DDPMediaPlayerStatus)status {
     switch (self.localMediaPlayer.state) {
         case VLCMediaPlayerStateStopped:
+            _status = DDPMediaPlayerStatusStop;
             if (self.localMediaPlayer.position >= 0.999) {
-                _status = DDPMediaPlayerStatusNextEpisode;
-            }
-            else {
-                _status = DDPMediaPlayerStatusStop;
+                [self tryPlayNextItem];
             }
             break;
         case VLCMediaPlayerStatePaused:
+            _status = DDPMediaPlayerStatusPause;
             if (!_pauseByUser && self.localMediaPlayer.position >= 0.999) {
-                _status = DDPMediaPlayerStatusNextEpisode;
-            }
-            else {
-                _status = DDPMediaPlayerStatusPause;
+                [self tryPlayNextItem];
             }
             break;
         case VLCMediaPlayerStatePlaying:
@@ -288,13 +284,9 @@
     NSInteger index = [self indexWithItem:self.currentPlayItem];
     if (index != NSNotFound && index + 1 < self.playerLists.count) {
         index = index + 1;
-    } else {
-        index = 0;
-    }
-    
-    if (index < self.playerLists.count) {
         return self.playerLists[index];
     }
+    
     return nil;
 }
 
@@ -351,7 +343,6 @@
     self.medias = [playerLists mutableCopy];
     
     self.mediaListPlayer.mediaList = [[VLCMediaList alloc] initWithArray:arr];
-    _length = -1;
 }
 
 - (NSArray<id<DDPMediaItemProtocol>> *)playerLists {
@@ -458,6 +449,31 @@
 #pragma mark - 私有方法
 - (void)saveImage:(DDPMediaImage *)image {
     
+}
+
+- (void)tryPlayNextItem {
+    switch (self.repeatMode) {
+        case DDPMediaPlayerRepeatModeDoNotRepeat:
+            [self stop];
+            [self playNext];
+            break;
+        case DDPMediaPlayerRepeatModeRepeatCurrentItem:
+            [self stop];
+            [self playWithItem:self.currentPlayItem];
+            break;
+        case DDPMediaPlayerRepeatModeRepeatAllItems: {
+            [self stop];
+            id<DDPMediaItemProtocol> item = [self nextItem];
+            if (item) {
+                [self playWithItem:item];
+            } else {
+                [self playWithItem:self.playerLists.firstObject];
+            }
+        }
+            break;
+        default:
+            break;
+    }
 }
 
 - (VLCMedia *)mediaWithItem:(id<DDPMediaItemProtocol>)item {

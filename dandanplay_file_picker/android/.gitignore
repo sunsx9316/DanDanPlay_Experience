@@ -1,0 +1,12 @@
+*.iml
+*.class
+.gradle
+.idea/
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+/build
+/captures
+GeneratedPluginRegistrant.java
+/tmplibs

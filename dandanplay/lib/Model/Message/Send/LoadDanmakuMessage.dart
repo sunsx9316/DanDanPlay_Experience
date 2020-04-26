@@ -19,7 +19,10 @@ class LoadDanmakuMessage extends BaseMessage {
   String mediaId;
   Map<String, dynamic> danmakuCollection;
   String title;
+  int episodeId;
+  //立即播放，无视弹幕
+  bool playImmediately = false;
 
-  LoadDanmakuMessage(this.mediaId, {this.danmakuCollection, this.title});
+  LoadDanmakuMessage({this.mediaId, this.danmakuCollection, this.title, this.playImmediately, this.episodeId});
 
 }

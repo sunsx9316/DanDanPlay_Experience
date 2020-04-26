@@ -42,6 +42,7 @@ class PlayerViewController: NSViewController, DDPMediaPlayerDelegate, JHDanmakuE
             guard let self = self else {
                 return
             }
+            
             self.danmakuRender.canvas.isHidden = selected
         }
         
@@ -70,7 +71,9 @@ class PlayerViewController: NSViewController, DDPMediaPlayerDelegate, JHDanmakuE
                 return
             }
             
-            self.mediaPlayer(self.player, statusChange: .nextEpisode)
+            if let nextItem = self.player.nextItem, let playItem = self.findPlayItem(nextItem) {
+                self.loadMediaItem(playItem)
+            }
         }
         
         view.onClickSettingButtonCallBack = { [weak self] in
@@ -92,9 +95,10 @@ class PlayerViewController: NSViewController, DDPMediaPlayerDelegate, JHDanmakuE
         let danmakuRender = JHDanmakuEngine()
         danmakuRender.delegate = self
         danmakuRender.setUserInfoWithKey(JHScrollDanmakuExtraSpeedKey, value: 1)
+        
         danmakuRender.globalFont = NSFont.systemFont(ofSize: CGFloat(Preferences.shared.danmakuFontSize))
-        danmakuRender.systemSpeed = Preferences.shared.danmakuSpeed
-        danmakuRender.canvas.alphaValue = Preferences.shared.danmakuAlpha
+        danmakuRender.systemSpeed = CGFloat(Preferences.shared.danmakuSpeed)
+        danmakuRender.canvas.alphaValue = CGFloat(Preferences.shared.danmakuAlpha)
         return danmakuRender
     }()
     
@@ -106,11 +110,14 @@ class PlayerViewController: NSViewController, DDPMediaPlayerDelegate, JHDanmakuE
     
     private weak var playerListViewController: NSViewController?
     private weak var playerSettingViewController: NSViewController?
-    private var playerViewBottomConstraint: ConstraintMakerEditable?
+//    private var playerViewBottomConstraint: ConstraintMakerEditable?
     
     private var playItemMap = [URL : PlayItem]()
     //当前弹幕时间/弹幕数组映射
     private var danmakuDic = [UInt : [JHDanmakuProtocol]]()
+    private lazy var danmakuCache: NSCache<NSNumber, DanmakuCollectionModel> = {
+        return NSCache<NSNumber, DanmakuCollectionModel>()
+    }()
     
     private var containerView: NSView = {
         return NSView()
@@ -130,6 +137,26 @@ class PlayerViewController: NSViewController, DDPMediaPlayerDelegate, JHDanmakuE
         return doubleClickGes
     }()
     
+    private lazy var dragView: DragView = {
+        let view = DragView()
+        view.dragFilesCallBack = { [weak self] (urls) in
+            guard let self = self else {
+                return
+            }
+            
+            self.loadURLs(urls)
+        }
+        return view
+    }()
+    
+    private lazy var trackingArea: NSTrackingArea = {
+        var trackingArea = NSTrackingArea(rect: self.view.bounds, options: [.activeInKeyWindow, .mouseMoved, .inVisibleRect, .mouseEnteredAndExited], owner: self, userInfo: nil)
+        return trackingArea
+    }()
+    
+    private var autoHiddenTimer: Timer?
+    private var hiddenControlView = false
+    
     //MARK: - life cycle
     
     init(urls: [URL]) {
@@ -143,7 +170,7 @@ class PlayerViewController: NSViewController, DDPMediaPlayerDelegate, JHDanmakuE
     }
     
     override func loadView() {
-        self.view = NSView(frame: CGRect(x: 0, y: 0, width: 600, height: 400))
+        self.view = NSView()
     }
     
     override func viewDidLoad() {
@@ -151,7 +178,9 @@ class PlayerViewController: NSViewController, DDPMediaPlayerDelegate, JHDanmakuE
         self.view.addSubview(self.containerView)
         self.containerView.addSubview(self.player.mediaView)
         self.containerView.addSubview(self.danmakuRender.canvas)
+        self.containerView.addSubview(self.dragView)
         self.view.addSubview(self.controlView)
+        self.view.addTrackingArea(self.trackingArea)
         
         self.containerView.snp.makeConstraints { (make) in
             make.top.leading.trailing.equalTo(self.view)
@@ -173,7 +202,11 @@ class PlayerViewController: NSViewController, DDPMediaPlayerDelegate, JHDanmakuE
         self.controlView.snp.makeConstraints { (make) in
             make.top.equalTo(self.containerView.snp.bottom)
             make.leading.trailing.equalToSuperview()
-            self.playerViewBottomConstraint = make.bottom.equalToSuperview()
+            make.bottom.equalToSuperview()
+        }
+        
+        self.dragView.snp.makeConstraints { (make) in
+            make.edges.equalToSuperview()
         }
         
         if let first = self.player.playerLists.first,
@@ -183,12 +216,15 @@ class PlayerViewController: NSViewController, DDPMediaPlayerDelegate, JHDanmakuE
         
         self.containerView.addGestureRecognizer(singleClickGestureRecognizer)
         self.containerView.addGestureRecognizer(doubleClickGestureRecognizer)
+        
+        changeRepeatMode()
+        autoShowControlView()
     }
     
     
     override func viewDidAppear() {
         super.viewDidAppear()
-        view.window?.makeFirstResponder(view)
+        makeFirstResponder(view)
     }
     
     override func scrollWheel(with event: NSEvent) {
@@ -221,6 +257,12 @@ class PlayerViewController: NSViewController, DDPMediaPlayerDelegate, JHDanmakuE
         switch keyCode {
         case kVK_Tab:
             break
+//            makeFirstResponder(self.controlView.inputTextField)
+//            self.autoShowControlView {
+//                self.autoHiddenTimer?.invalidate()
+//            }
+        case kVK_Return:
+            self.onToggleFullScreen()
         case kVK_Space:
             self.onClickPlayButton()
         case kVK_LeftArrow, kVK_RightArrow:
@@ -240,6 +282,23 @@ class PlayerViewController: NSViewController, DDPMediaPlayerDelegate, JHDanmakuE
         }
     }
     
+    override func mouseMoved(with event: NSEvent) {
+        autoShowControlView { [weak self] in
+            guard let self = self else {
+                return
+            }
+            
+            let position = event.locationInWindow
+            if (self.controlView.frame.contains(position)) {
+                self.autoHiddenTimer?.invalidate()
+            }
+        }
+    }
+    
+    override func mouseExited(with event: NSEvent) {
+        mouseMoved(with: event)
+    }
+    
     //MARK: - Public
     func parseMessage(_ type: MessageType, data: [String : Any]?) {
         
@@ -249,58 +308,78 @@ class PlayerViewController: NSViewController, DDPMediaPlayerDelegate, JHDanmakuE
                 
                 let danmakus = message.danmakuCollection
                 let mediaId = message.mediaId
+                let episodeId = message.episodeId
                 
                 let playItems = Array(self.playItemMap.values)
                 if let item = playItems.first(where: { $0.mediaId == mediaId }) {
-                    item.collectionModel = danmakus
+                    item.playImmediately = message.playImmediately
+                    item.episodeId = episodeId
+                    
+                    if let danmakus = danmakus, episodeId > 0 {
+                        danmakuCache.setObject(danmakus, forKey: NSNumber(value: episodeId))
+                    }
                     loadMediaItem(item)
                     
                     view.window?.title = message.title ?? item.url?.lastPathComponent ?? ""
                 }
             }
-        case .changeDanmakuFontSize:
-            if let message = DanmakuFontSizeMessage.deserialize(from: data) {
-                danmakuRender.globalFont = NSFont.systemFont(ofSize: message.size)
-            }
-        case .changeDanmakuSpeed:
-            if let message = DanmakuSpeedMessage.deserialize(from: data) {
-                danmakuRender.systemSpeed = message.speed
-            }
-        case .changeDanmakuAlpha:
-            if let message = DanmakuAlphaMessaege.deserialize(from: data) {
-                danmakuRender.canvas.alphaValue = message.value
-            }
-        case .changeDanmakuCount:
-            if let message = DanmakuCountMessage.deserialize(from: data) {
-                danmakuRender.limitCount = UInt(message.count == Preferences.shared.danmakuUnlimitCount ? 0 : message.count)
-            }
-        case .changeSubtitleSafeArea:
-            if let message = SubtitleSafeAreaMessage.deserialize(from: data) {
-                self.danmakuRender.canvas.snp.remakeConstraints { (make) in
-                    make.top.leading.trailing.equalTo(self.containerView)
-                    if message.on {
-                        make.height.equalTo(self.containerView).multipliedBy(0.85)
-                    } else {
-                        make.height.equalTo(self.containerView)
+        case .syncSetting:
+            if let message = SyncSettingMessage.deserialize(from: data) {
+                
+                guard let enumValue = Preferences.KeyName(rawValue: message.key) else { return }
+                
+                switch enumValue {
+                case .playerSpeed:
+                    self.player.speed = Float(Preferences.shared.playerSpeed)
+                case .danmakuAlpha:
+                    danmakuRender.canvas.alphaValue = CGFloat(Preferences.shared.danmakuAlpha)
+                case .danmakuCount:
+                    let danmakuCount = Preferences.shared.danmakuCount
+                    danmakuRender.limitCount = UInt(danmakuCount == Preferences.shared.danmakuUnlimitCount ? 0 : danmakuCount)
+                case .danmakuFontSize:
+                    let danmakuFontSize = CGFloat(Preferences.shared.danmakuFontSize)
+                    danmakuRender.globalFont = NSFont.systemFont(ofSize: danmakuFontSize)
+                case .danmakuSpeed:
+                    danmakuRender.systemSpeed = CGFloat(Preferences.shared.danmakuSpeed)
+                case .subtitleSafeArea:
+                    self.danmakuRender.canvas.snp.remakeConstraints { (make) in
+                        make.top.leading.trailing.equalTo(self.containerView)
+                        if Preferences.shared.subtitleSafeArea {
+                            make.height.equalTo(self.containerView).multipliedBy(0.85)
+                        } else {
+                            make.height.equalTo(self.containerView)
+                        }
                     }
+                case .playerMode:
+                    changeRepeatMode()
+                default:
+                    break
                 }
+                
             }
-            
+            break
+        default:
+            break
         }
     }
     
     func loadURLs(_ urls: [URL]) {
-        let playItems = urls.compactMap { (aURL) -> PlayItem in
-            return PlayItem(url: aURL)
-        }
         
-        for item in playItems {
-            if let url = item.url {
+        var arr = [PlayItem]()
+        for url in urls {
+            if self.playItemMap[url] == nil {
+                let item = PlayItem(url: url)
+                arr.append(item)
                 self.playItemMap[url] = item
             }
         }
         
-        self.player.addMediaItems(playItems)
+        self.player.addMediaItems(arr)
+        if !urls.isEmpty && self.isViewLoaded {
+            if let item = self.playItemMap[urls[0]] {
+                loadMediaItem(item)
+            }
+        }
     }
     
     //MARK: - Private
@@ -330,32 +409,9 @@ class PlayerViewController: NSViewController, DDPMediaPlayerDelegate, JHDanmakuE
             self.playerListViewController = nil
         }
         
-        if let danmakus = item.collectionModel?.collection {
-            self.danmakuDic = DanmakuManager.shared.conver(danmakus)
-            self.player.addMediaItems([item])
-            self.player.stop()
-            self.player.play(withItem: item)
-            self.danmakuRender.currentTime = 0
-        } else {
-            //请求完弹幕再播放
-            if var url = item.url {
-                let message = ParseFileMessage()
-                message.mediaId = item.mediaId
-                
-                let attributesOfItem = try? FileManager.default.attributesOfItem(atPath:
-                    url.path)
-                let size = attributesOfItem?[.size] as? Int ?? 0
-                message.fileSize = size
-                
-                if let data = try? FileHandle(forReadingFrom: url).readData(ofLength: min(16777216, size)) as NSData {
-                    message.fileHash = data.md5String()
-                }
-                
-                url.deletePathExtension()
-                message.fileName = url.lastPathComponent
-                MessageHandler.sendMessage(message)
-            }
-        }
+        self.player.addMediaItems([item])
+        self.player.stop()
+        self.player.play(withItem: item)
     }
     
     @objc private func onClickPlayButton() {
@@ -368,6 +424,26 @@ class PlayerViewController: NSViewController, DDPMediaPlayerDelegate, JHDanmakuE
     
     private func sendDanmaku(_ str: String) {
         
+        guard let currentPlayItem = self.player.currentPlayItem,
+            let playItem = findPlayItem(currentPlayItem),
+            !str.isEmpty else { return }
+        
+        if playItem.episodeId == 0 {
+            ProgressHUDHelper.showHUD(text: "请先匹配视频！")
+            return
+        }
+        
+        let danmaku = DanmakuModel()
+        danmaku.color = self.controlView.sendanmakuColor
+        danmaku.mode = DanmakuModel.Mode(rawValue: Int(self.controlView.sendanmakuStyle.rawValue)) ?? .normal
+        danmaku.message = str
+        danmaku.time = self.player.currentTime
+        
+        let msg = SendDanmakuMessage()
+        msg.danmaku = danmaku
+        msg.episodeId = playItem.episodeId
+        MessageHandler.sendMessage(msg)
+        self.danmakuRender.sendDanmaku(DanmakuManager.shared.conver(danmaku))
     }
     
     private func showPlayerList() {
@@ -389,7 +465,8 @@ class PlayerViewController: NSViewController, DDPMediaPlayerDelegate, JHDanmakuE
     private func showPlayerSetting() {
         if self.playerSettingViewController == nil {
             let vc = PlayerSettingViewController()
-            vc.view.frame = CGRect(x: 0, y: 0, width: max(250, self.view.frame.width * 0.3), height: max(200, self.view.frame.height * 0.5))
+            
+            vc.view.frame = CGRect(x: 0, y: 0, width: max(400, self.view.frame.width * 0.3), height: max(400, self.view.frame.height * 0.5))
             self.playerSettingViewController = vc
             self.present(vc, asPopoverRelativeTo: CGRect(x: 0, y: 0, width: 200, height: 200), of: controlView.playerSettingButtoon ?? view, preferredEdge: .minY, behavior: .transient)
         }
@@ -421,6 +498,78 @@ class PlayerViewController: NSViewController, DDPMediaPlayerDelegate, JHDanmakuE
         onToggleFullScreen()
     }
     
+    private func autoShowControlView(completion: (() -> ())? = nil) {
+        func startHiddenTimerAction() {
+            self.autoHiddenTimer?.invalidate()
+            self.autoHiddenTimer = Timer.scheduledTimer(withTimeInterval: 4, block: { (timer) in
+                self.autoHideMouseControlView()
+            }, repeats: false)
+            self.autoHiddenTimer?.fireDate = Date(timeIntervalSinceNow: 4);
+            
+            completion?()
+        }
+        
+        DispatchQueue.main.async {
+            if self.hiddenControlView {
+                self.hiddenControlView = false
+                
+                var frame = self.controlView.frame
+                frame.origin.y = 0
+                
+                NSAnimationContext.runAnimationGroup({ (context) in
+                    context.duration = 0.2;
+                    self.controlView.animator().frame = frame
+                }) {
+                    self.controlView.snp.remakeConstraints { (make) in
+                        make.top.equalTo(self.containerView.snp.bottom)
+                        make.leading.trailing.equalToSuperview()
+                        make.bottom.equalToSuperview()
+                    }
+                    
+                    startHiddenTimerAction()
+                }
+            } else {
+                startHiddenTimerAction();
+            }
+        }
+    }
+    
+    private func autoHideMouseControlView() {
+        DispatchQueue.main.async {
+            //显示状态 隐藏
+            if self.hiddenControlView == false {
+                self.hiddenControlView = true
+                self.autoHiddenTimer?.invalidate()
+                NSCursor.setHiddenUntilMouseMoves(true)
+                var frame = self.controlView.frame
+                let height = self.controlView.frame.height > 0 ? self.controlView.frame.height : 70
+                let progressHeight: CGFloat = 15
+                frame.origin.y = -(height - progressHeight)
+                
+                NSAnimationContext.runAnimationGroup({ (context) in
+                    context.duration = 0.2;
+                    self.controlView.animator().frame = frame
+                }) {
+                    self.controlView.snp.remakeConstraints { (make) in
+                        make.top.equalTo(self.containerView.snp.bottom)
+                        make.leading.trailing.equalToSuperview()
+                        make.bottom.equalToSuperview().offset(height - progressHeight)
+                    }
+                }
+            }
+        }
+    }
+    
+    private func makeFirstResponder(_ responder: NSResponder?) {
+        view.window?.makeFirstResponder(responder)
+    }
+    
+    private func changeRepeatMode() {
+        if let mode = DDPMediaPlayerRepeatMode(rawValue: UInt(Preferences.shared.playerMode.rawValue)) {
+            player.repeatMode = mode
+        }
+    }
+    
     //MARK: - NSGestureRecognizerDelegate
     func gestureRecognizer(_ gestureRecognizer: NSGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: NSGestureRecognizer) -> Bool {
         if gestureRecognizer == singleClickGestureRecognizer && otherGestureRecognizer == doubleClickGestureRecognizer {
@@ -446,10 +595,6 @@ class PlayerViewController: NSViewController, DDPMediaPlayerDelegate, JHDanmakuE
         case .playing:
             danmakuRender.start()
             controlView.playButton.state = .on
-        case .nextEpisode:
-            if let nextItem = player.nextItem, let playItem = self.findPlayItem(nextItem) {
-                loadMediaItem(playItem)
-            }
         case .pause, .stop:
             danmakuRender.pause()
             controlView.playButton.state = .off
@@ -473,6 +618,41 @@ class PlayerViewController: NSViewController, DDPMediaPlayerDelegate, JHDanmakuE
     
     func mediaPlayer(_ player: DDPMediaPlayer, currentTime: TimeInterval, totalTime: TimeInterval) {
         controlView.updateCurrentTime(currentTime, totalTime: totalTime)
+    }
+    
+    func mediaPlayer(_ player: DDPMediaPlayer, mediaDidChange media: DDPMediaItemProtocol?) {
+        guard let media = media,
+            let item = findPlayItem(media) else { return }
+        
+        let danmakus = self.danmakuCache.object(forKey: NSNumber(value: item.episodeId))?.collection ?? []
+        
+        if item.playImmediately || !danmakus.isEmpty {
+            self.danmakuDic = DanmakuManager.shared.conver(danmakus)
+            self.danmakuRender.currentTime = 0
+            self.player.play()
+        } else {
+            //请求完弹幕再播放
+            if var url = item.url {
+                self.player.pause()
+                
+                let message = ParseFileMessage()
+                message.mediaId = item.mediaId
+                
+                let attributesOfItem = try? FileManager.default.attributesOfItem(atPath:
+                    url.path)
+                let size = attributesOfItem?[.size] as? Int ?? 0
+                message.fileSize = size
+                
+                if let data = try? FileHandle(forReadingFrom: url).readData(ofLength: min(16777216, size)) as NSData {
+                    message.fileHash = data.md5String()
+                }
+                
+                url.deletePathExtension()
+                message.fileName = url.lastPathComponent
+                MessageHandler.sendMessage(message)
+            }
+        }
+        
     }
     
     //MARK: - PlayerListViewControllerDelegate
@@ -515,11 +695,12 @@ extension PlayerViewController {
 
         var url: URL?
         var mediaOptions: [AnyHashable : Any]?
+        var playImmediately = false
         
-        var collectionModel: DanmakuCollectionModel?
         var mediaId: String {
             return url?.path ?? ""
         }
+        var episodeId = 0
         
         init(url: URL) {
             super.init()

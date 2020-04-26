@@ -22,9 +22,7 @@ typedef NS_ENUM(NSUInteger, DDPMediaPlayerStatus) {
     DDPMediaPlayerStatusUnknow,
     DDPMediaPlayerStatusPlaying,
     DDPMediaPlayerStatusPause,
-    DDPMediaPlayerStatusStop,
-    DDPMediaPlayerStatusNextEpisode,
-//    DDPMediaPlayerStatusBuffering
+    DDPMediaPlayerStatusStop
 };
 
 typedef NS_ENUM(NSUInteger, DDPMediaType) {
@@ -67,7 +65,7 @@ typedef void(^SnapshotCompleteBlock)(DDPMediaImage * _Nullable image, NSError * 
 
 - (void)mediaPlayer:(DDPMediaPlayer *)player userJumpWithTime:(NSTimeInterval)time;
 
-- (void)mediaPlayer:(DDPMediaPlayer *)player mediaDidChange:(id<DDPMediaItemProtocol>)media;
+- (void)mediaPlayer:(DDPMediaPlayer *)player mediaDidChange:(id <DDPMediaItemProtocol> _Nullable)media;
 @end
 
 @interface DDPMediaPlayer : NSObject

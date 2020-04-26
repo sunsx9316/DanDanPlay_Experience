@@ -28,6 +28,13 @@
 		33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC11122044BFA00003C045 /* MainFlutterWindow.swift */; };
 		33D1A10422148B71006C7A3E /* FlutterMacOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33D1A10322148B71006C7A3E /* FlutterMacOS.framework */; };
 		33D1A10522148B93006C7A3E /* FlutterMacOS.framework in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 33D1A10322148B71006C7A3E /* FlutterMacOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		89A72B2F24273FD000627562 /* ProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A72B2D24273FD000627562 /* ProgressHUD.swift */; };
+		89A72B312427470A00627562 /* ProgressHUDHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A72B302427470A00627562 /* ProgressHUDHelper.swift */; };
+		89A72B332427618F00627562 /* DragView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A72B322427618F00627562 /* DragView.swift */; };
+		89A72B35242764A600627562 /* danmaku_color.plist in Resources */ = {isa = PBXBuildFile; fileRef = 89A72B34242764A600627562 /* danmaku_color.plist */; };
+		89A72B392427C61500627562 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A72B382427C61500627562 /* Helper.swift */; };
+		89A72B7224309DFA00627562 /* AppVersionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A72B7024309DFA00627562 /* AppVersionViewController.swift */; };
+		89A72B7324309DFA00627562 /* AppVersionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89A72B7124309DFA00627562 /* AppVersionViewController.xib */; };
 		89BF419E241E496B00D76A81 /* MessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4169241E496A00D76A81 /* MessageHandler.swift */; };
 		89BF419F241E496B00D76A81 /* NSColor+DDPTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4170241E496A00D76A81 /* NSColor+DDPTools.m */; };
 		89BF41A0241E496B00D76A81 /* NSView+DDPTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4171241E496A00D76A81 /* NSView+DDPTools.m */; };
@@ -106,6 +113,13 @@
 		33E51914231749380026EE4D /* Release.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Release.entitlements; sourceTree = "<group>"; };
 		33E5194F232828860026EE4D /* AppInfo.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = AppInfo.xcconfig; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
+		89A72B2D24273FD000627562 /* ProgressHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressHUD.swift; sourceTree = "<group>"; };
+		89A72B302427470A00627562 /* ProgressHUDHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressHUDHelper.swift; sourceTree = "<group>"; };
+		89A72B322427618F00627562 /* DragView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragView.swift; sourceTree = "<group>"; };
+		89A72B34242764A600627562 /* danmaku_color.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = danmaku_color.plist; sourceTree = "<group>"; };
+		89A72B382427C61500627562 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
+		89A72B7024309DFA00627562 /* AppVersionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersionViewController.swift; sourceTree = "<group>"; };
+		89A72B7124309DFA00627562 /* AppVersionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AppVersionViewController.xib; sourceTree = "<group>"; };
 		89BF4169241E496A00D76A81 /* MessageHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageHandler.swift; sourceTree = "<group>"; };
 		89BF416B241E496A00D76A81 /* NSView+DDPTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSView+DDPTools.h"; sourceTree = "<group>"; };
 		89BF416C241E496A00D76A81 /* NSColor+DDPTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSColor+DDPTools.h"; sourceTree = "<group>"; };
@@ -205,6 +219,7 @@
 		33CC11242044D66E0003C045 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				89A72B34242764A600627562 /* danmaku_color.plist */,
 				33CC10F22044A3C60003C045 /* Assets.xcassets */,
 				33CC10F42044A3C60003C045 /* MainMenu.xib */,
 				33CC10F72044A3C60003C045 /* Info.plist */,
@@ -240,9 +255,20 @@
 			path = Runner;
 			sourceTree = "<group>";
 		};
+		89A72B2B24273FD000627562 /* ProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				89A72B2D24273FD000627562 /* ProgressHUD.swift */,
+				89A72B302427470A00627562 /* ProgressHUDHelper.swift */,
+			);
+			path = ProgressHUD;
+			sourceTree = "<group>";
+		};
 		89BF4168241E496A00D76A81 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				89BF4198241E496A00D76A81 /* Constant */,
+				89A72B2B24273FD000627562 /* ProgressHUD */,
 				89BF416A241E496A00D76A81 /* Category */,
 				89BF4169241E496A00D76A81 /* MessageHandler.swift */,
 				89BF4175241E496A00D76A81 /* OC2SwiftBridgeHeader.h */,
@@ -271,11 +297,13 @@
 		89BF4176241E496A00D76A81 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
-				89BF4177241E496A00D76A81 /* PlayerViewController */,
-				89BF4196241E496A00D76A81 /* PlayerSettingViewController.swift */,
-				89BF4197241E496A00D76A81 /* MainViewController.swift */,
-				89BF4198241E496A00D76A81 /* Constant */,
 				89BF419A241E496A00D76A81 /* Base */,
+				89A72B322427618F00627562 /* DragView.swift */,
+				89BF4197241E496A00D76A81 /* MainViewController.swift */,
+				89A72B7024309DFA00627562 /* AppVersionViewController.swift */,
+				89A72B7124309DFA00627562 /* AppVersionViewController.xib */,
+				89BF4196241E496A00D76A81 /* PlayerSettingViewController.swift */,
+				89BF4177241E496A00D76A81 /* PlayerViewController */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -285,8 +313,8 @@
 			children = (
 				89BF4178241E496A00D76A81 /* DDPPlayerConstant.h */,
 				89BF4179241E496A00D76A81 /* PlayerViewController.swift */,
-				89BF417A241E496A00D76A81 /* View */,
 				89BF4195241E496A00D76A81 /* PlayerWindowController.swift */,
+				89BF417A241E496A00D76A81 /* View */,
 			);
 			path = PlayerViewController;
 			sourceTree = "<group>";
@@ -294,28 +322,28 @@
 		89BF417A241E496A00D76A81 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				89BF417B241E496A00D76A81 /* DDPHUD.xib */,
-				89BF417C241E496A00D76A81 /* PlayerList */,
-				89BF4181241E496A00D76A81 /* DDPPlayerControlView.m */,
-				89BF4182241E496A00D76A81 /* DDPPlayerSlider.h */,
-				89BF4183241E496A00D76A81 /* DDPHUD.m */,
-				89BF4184241E496A00D76A81 /* DDPDanmakuColorMenuItem.m */,
-				89BF4185241E496A00D76A81 /* DDPProgressIndicator.m */,
-				89BF4186241E496A00D76A81 /* DDPDanmakuModeMenuItem.h */,
-				89BF4187241E496A00D76A81 /* DDPPlayTopBar.h */,
-				89BF4188241E496A00D76A81 /* DDPPlayView.h */,
-				89BF4189241E496A00D76A81 /* DDPTextField.m */,
-				89BF418A241E496A00D76A81 /* DDPPlayerSlider.m */,
-				89BF418B241E496A00D76A81 /* DDPPlayerControlView.h */,
-				89BF418C241E496A00D76A81 /* DDPPlayerControlView.xib */,
-				89BF418D241E496A00D76A81 /* DDPHUD.h */,
 				89BF418E241E496A00D76A81 /* DDPDanmakuColorMenuItem.h */,
+				89BF4184241E496A00D76A81 /* DDPDanmakuColorMenuItem.m */,
+				89BF4186241E496A00D76A81 /* DDPDanmakuModeMenuItem.h */,
 				89BF418F241E496A00D76A81 /* DDPDanmakuModeMenuItem.m */,
-				89BF4190241E496A00D76A81 /* DDPProgressIndicator.h */,
-				89BF4191241E496A00D76A81 /* DDPTextField.h */,
-				89BF4192241E496A00D76A81 /* DDPPlayView.m */,
-				89BF4193241E496A00D76A81 /* DDPPlayTopBar.xib */,
+				89BF418D241E496A00D76A81 /* DDPHUD.h */,
+				89BF4183241E496A00D76A81 /* DDPHUD.m */,
+				89BF417B241E496A00D76A81 /* DDPHUD.xib */,
+				89BF418B241E496A00D76A81 /* DDPPlayerControlView.h */,
+				89BF4181241E496A00D76A81 /* DDPPlayerControlView.m */,
+				89BF418C241E496A00D76A81 /* DDPPlayerControlView.xib */,
+				89BF4182241E496A00D76A81 /* DDPPlayerSlider.h */,
+				89BF418A241E496A00D76A81 /* DDPPlayerSlider.m */,
+				89BF4187241E496A00D76A81 /* DDPPlayTopBar.h */,
 				89BF4194241E496A00D76A81 /* DDPPlayTopBar.m */,
+				89BF4193241E496A00D76A81 /* DDPPlayTopBar.xib */,
+				89BF4188241E496A00D76A81 /* DDPPlayView.h */,
+				89BF4192241E496A00D76A81 /* DDPPlayView.m */,
+				89BF4190241E496A00D76A81 /* DDPProgressIndicator.h */,
+				89BF4185241E496A00D76A81 /* DDPProgressIndicator.m */,
+				89BF4191241E496A00D76A81 /* DDPTextField.h */,
+				89BF4189241E496A00D76A81 /* DDPTextField.m */,
+				89BF417C241E496A00D76A81 /* PlayerList */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -335,6 +363,7 @@
 			isa = PBXGroup;
 			children = (
 				89BF4199241E496A00D76A81 /* Constant.swift */,
+				89A72B382427C61500627562 /* Helper.swift */,
 			);
 			path = Constant;
 			sourceTree = "<group>";
@@ -442,10 +471,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				89A72B7324309DFA00627562 /* AppVersionViewController.xib in Resources */,
 				89BF41B0241E496B00D76A81 /* DDPPlayerControlView.xib in Resources */,
 				89BF41A6241E496B00D76A81 /* PlayerListTableViewCell.xib in Resources */,
 				89BF41A8241E496B00D76A81 /* PlayerListViewController.xib in Resources */,
 				89BF41B3241E496B00D76A81 /* DDPPlayTopBar.xib in Resources */,
+				89A72B35242764A600627562 /* danmaku_color.plist in Resources */,
 				33CC10F32044A3C60003C045 /* Assets.xcassets in Resources */,
 				33CC10F62044A3C60003C045 /* MainMenu.xib in Resources */,
 				89BF41A5241E496B00D76A81 /* DDPHUD.xib in Resources */,
@@ -538,9 +569,11 @@
 			files = (
 				89BF41A9241E496B00D76A81 /* PlayerListTableViewCell.swift in Sources */,
 				89BF41BA241E496B00D76A81 /* MessageViewController.swift in Sources */,
+				89A72B2F24273FD000627562 /* ProgressHUD.swift in Sources */,
 				89BF41B2241E496B00D76A81 /* DDPPlayView.m in Sources */,
 				33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */,
 				89BF41AA241E496B00D76A81 /* DDPPlayerControlView.m in Sources */,
+				89A72B312427470A00627562 /* ProgressHUDHelper.swift in Sources */,
 				89BF41B5241E496B00D76A81 /* PlayerWindowController.swift in Sources */,
 				89BF41A3241E496B00D76A81 /* NSControl+DDPTools.m in Sources */,
 				89BF41B9241E496B00D76A81 /* OCMessageViewController.m in Sources */,
@@ -548,6 +581,8 @@
 				89BF41B4241E496B00D76A81 /* DDPPlayTopBar.m in Sources */,
 				33CC10F12044A3C60003C045 /* AppDelegate.swift in Sources */,
 				89BF41A0241E496B00D76A81 /* NSView+DDPTools.m in Sources */,
+				89A72B392427C61500627562 /* Helper.swift in Sources */,
+				89A72B332427618F00627562 /* DragView.swift in Sources */,
 				89BF41B1241E496B00D76A81 /* DDPDanmakuModeMenuItem.m in Sources */,
 				89BF419E241E496B00D76A81 /* MessageHandler.swift in Sources */,
 				89BF41AC241E496B00D76A81 /* DDPDanmakuColorMenuItem.m in Sources */,
@@ -563,6 +598,7 @@
 				89BF41AF241E496B00D76A81 /* DDPPlayerSlider.m in Sources */,
 				89BF41B6241E496B00D76A81 /* PlayerSettingViewController.swift in Sources */,
 				89BF41A4241E496B00D76A81 /* PlayerViewController.swift in Sources */,
+				89A72B7224309DFA00627562 /* AppVersionViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -642,17 +678,21 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/DebugProfile.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = Q35T78D2D5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter/ephemeral",
 				);
+				GCC_WARN_SHADOW = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				PRODUCT_COPYRIGHT = "Copyright © 2020 jimhuang. All rights reserved.";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = Runner/Classes/OC2SwiftBridgeHeader.h;
 				SWIFT_VERSION = 5.0;
@@ -773,17 +813,21 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/DebugProfile.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = Q35T78D2D5;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter/ephemeral",
 				);
+				GCC_WARN_SHADOW = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				PRODUCT_COPYRIGHT = "Copyright © 2020 jimhuang. All rights reserved.";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = Runner/Classes/OC2SwiftBridgeHeader.h;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -798,17 +842,22 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Runner/Release.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = Q35T78D2D5;
+				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter/ephemeral",
 				);
+				GCC_WARN_SHADOW = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				PRODUCT_COPYRIGHT = "Copyright © 2020 jimhuang. All rights reserved.";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = Runner/Classes/OC2SwiftBridgeHeader.h;
 				SWIFT_VERSION = 5.0;
