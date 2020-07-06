@@ -1,8 +1,7 @@
+import 'package:dandanplay/Controller/HomePage/DesktopHomePageWidget.dart';
 import 'package:dandanplay/Tools/Preferences.dart';
 import 'package:dandanplay/Tools/Utility.dart';
-import 'package:dandanplay/main.dart';
-import 'package:dandanplay/r.dart';
-import 'package:dandanplay_file_picker/file_picker.dart';
+import 'package:dandanplayfilepicker/dandanplayfilepicker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -166,7 +165,7 @@ class SettingWidgetState extends State<SettingWidget> {
 
   //获取首页背景图
   void _getHomePageBgImage(BuildContext context) async {
-    final file = await FilePicker.getFile(type: FileType.image);
+    final file = await Dandanplayfilepicker.getFile(pickType: DandanplayfilepickerType.image);
     if (file != null) {
       await Preferences.shared.setHomePageBgImage(file.path);
       setState(() {});
@@ -239,7 +238,7 @@ class SettingWidgetState extends State<SettingWidget> {
   Widget _homePageThumb() {
     return Stack(children: <Widget>[
       Container(
-          child: MyHomePage(isPreView: true),
+          child: DesktopHomePageWidget(isPreView: true),
           height: 320,
           padding: EdgeInsets.only(top: 40, left: 40, right: 40, bottom: 20)),
       Positioned(

@@ -19,7 +19,9 @@ class PlayerViewController: NSViewController, DDPMediaPlayerDelegate, JHDanmakuE
     
     private let kShortJumpValue: Int32 = 5
     private let kVolumeAddingValue: CGFloat = 20
+    private let controlViewAutoDismissTime: TimeInterval = 2
     
+   
     private lazy var controlView: DDPPlayerControlView = {
         var view = DDPPlayerControlView.loadFromNib()
         
@@ -110,7 +112,6 @@ class PlayerViewController: NSViewController, DDPMediaPlayerDelegate, JHDanmakuE
     
     private weak var playerListViewController: NSViewController?
     private weak var playerSettingViewController: NSViewController?
-//    private var playerViewBottomConstraint: ConstraintMakerEditable?
     
     private var playItemMap = [URL : PlayItem]()
     //当前弹幕时间/弹幕数组映射
@@ -216,6 +217,8 @@ class PlayerViewController: NSViewController, DDPMediaPlayerDelegate, JHDanmakuE
         
         self.containerView.addGestureRecognizer(singleClickGestureRecognizer)
         self.containerView.addGestureRecognizer(doubleClickGestureRecognizer)
+        
+        Helper.shared.player = self.player
         
         changeRepeatMode()
         autoShowControlView()
@@ -414,6 +417,45 @@ class PlayerViewController: NSViewController, DDPMediaPlayerDelegate, JHDanmakuE
         self.player.play(withItem: item)
     }
     
+    @IBAction func onClickOpenSubtitleMenuItem(_ sender: NSMenuItem) {
+        let panel = NSOpenPanel()
+        panel.allowedFileTypes = Helper.shared.subTitlePathExtension
+        panel.allowsMultipleSelection = false
+        panel.canChooseDirectories = false
+        panel.canChooseFiles = true
+        weak var weakPanel = panel
+        if let window = NSApp.keyWindow {
+            panel.beginSheetModal(for: window) { [weak self] (result) in
+                guard let self = self else {
+                    return
+                }
+                
+                if result == .OK {
+                    if let url = weakPanel?.urls.first {
+                        self.loadSubtitle(url)
+                    }
+                }
+            }
+        }
+    }
+    
+    private func loadSubtitle(_ url: URL) {
+        player.openVideoSubTitles(fromFile: url)
+    }
+    
+    @IBAction func onClickSubtitleOffsetAdd(_ sender: NSMenuItem) {
+        player.subtitleDelay += 0.5
+    }
+    
+    @IBAction func onClickSubtitleOffsetSub(_ sender: NSMenuItem) {
+        player.subtitleDelay -= 0.5
+    }
+    
+    @IBAction func onClickSubtitleOffsetReset(_ sender: NSMenuItem) {
+        player.subtitleDelay = 0
+    }
+    
+    
     @objc private func onClickPlayButton() {
         if self.player.isPlaying {
             self.player.pause()
@@ -501,10 +543,10 @@ class PlayerViewController: NSViewController, DDPMediaPlayerDelegate, JHDanmakuE
     private func autoShowControlView(completion: (() -> ())? = nil) {
         func startHiddenTimerAction() {
             self.autoHiddenTimer?.invalidate()
-            self.autoHiddenTimer = Timer.scheduledTimer(withTimeInterval: 4, block: { (timer) in
+            self.autoHiddenTimer = Timer.scheduledTimer(withTimeInterval: controlViewAutoDismissTime, block: { (timer) in
                 self.autoHideMouseControlView()
             }, repeats: false)
-            self.autoHiddenTimer?.fireDate = Date(timeIntervalSinceNow: 4);
+            self.autoHiddenTimer?.fireDate = Date(timeIntervalSinceNow: controlViewAutoDismissTime);
             
             completion?()
         }

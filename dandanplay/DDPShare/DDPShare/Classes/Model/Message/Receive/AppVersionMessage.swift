@@ -5,7 +5,7 @@
 //  Created by JimHuang on 2020/3/29.
 //
 
-import Cocoa
+import Foundation
 
 open class AppVersionMessage: BaseModel, MessageProtocol {
     open var url: String?

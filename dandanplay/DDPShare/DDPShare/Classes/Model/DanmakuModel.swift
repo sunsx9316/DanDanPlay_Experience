@@ -113,9 +113,21 @@ public extension DanmakuColor {
     }
     
     var rgbValue: Int {
-        let r = self.redComponent * 255 * 256 * 256
-        let b = self.blueComponent * 255 * 256
-        let g = self.greenComponent * 255
+        var r: CGFloat = 0
+        var g: CGFloat = 0
+        var b: CGFloat = 0
+        
+        #if os(macOS)
+        r = self.redComponent
+        g = self.greenComponent
+        b = self.blueComponent
+        #else
+        self.getRed(&r, green: &g, blue: &b, alpha: nil)
+        #endif
+        
+        r = r * 255 * 256 * 256
+        g = g * 255 * 256
+        b = b * 255
         
         return Int(r + g + b)
     }

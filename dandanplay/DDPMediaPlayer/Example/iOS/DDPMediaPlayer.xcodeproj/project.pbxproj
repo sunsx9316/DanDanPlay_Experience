@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		16CA143D37BD7BCA69E4FC23 /* libPods-DDPMediaPlayer_Example.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A1C0480A5B3B72F5D3DC7A6 /* libPods-DDPMediaPlayer_Example.a */; };
+		485BD78C33A146E4C7AC59F1 /* libPods-DDPMediaPlayer_Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = DE48343095244926840F5603 /* libPods-DDPMediaPlayer_Tests.a */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
@@ -22,8 +24,6 @@
 		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
 		71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
-		C40B1AD14EA3B699EC5ABA43 /* Pods_DDPMediaPlayer_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 48AA27286F7B7304A361BCD9 /* Pods_DDPMediaPlayer_Example.framework */; };
-		D1D264DB3587F4A6C9A50B3C /* Pods_DDPMediaPlayer_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 847A98443C6900CE79FEF17A /* Pods_DDPMediaPlayer_Tests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,8 +37,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		3A1C0480A5B3B72F5D3DC7A6 /* libPods-DDPMediaPlayer_Example.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-DDPMediaPlayer_Example.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A916E5EEC7F4B7013BE7BC6 /* DDPMediaPlayer.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = DDPMediaPlayer.podspec; path = ../DDPMediaPlayer.podspec; sourceTree = "<group>"; };
-		48AA27286F7B7304A361BCD9 /* Pods_DDPMediaPlayer_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DDPMediaPlayer_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4B7E0A67CFFF0225207D1D4F /* Pods-DDPMediaPlayer_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DDPMediaPlayer_Example.release.xcconfig"; path = "Target Support Files/Pods-DDPMediaPlayer_Example/Pods-DDPMediaPlayer_Example.release.xcconfig"; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* DDPMediaPlayer_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DDPMediaPlayer_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -63,8 +63,8 @@
 		73820381797A7C36DCE03137 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		751DB6AF659AE973CBA83F63 /* Pods-DDPMediaPlayer_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DDPMediaPlayer_Tests.debug.xcconfig"; path = "Target Support Files/Pods-DDPMediaPlayer_Tests/Pods-DDPMediaPlayer_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		7EE803F1679E2DECDD6BC583 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
-		847A98443C6900CE79FEF17A /* Pods_DDPMediaPlayer_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DDPMediaPlayer_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		DE48343095244926840F5603 /* libPods-DDPMediaPlayer_Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-DDPMediaPlayer_Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E7D24B748EA7F29A01DD5467 /* Pods-DDPMediaPlayer_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DDPMediaPlayer_Example.debug.xcconfig"; path = "Target Support Files/Pods-DDPMediaPlayer_Example/Pods-DDPMediaPlayer_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		EC0C4BB5998E7E390D48D0A3 /* Pods-DDPMediaPlayer_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DDPMediaPlayer_Tests.release.xcconfig"; path = "Target Support Files/Pods-DDPMediaPlayer_Tests/Pods-DDPMediaPlayer_Tests.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -77,7 +77,7 @@
 				6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */,
 				6003F592195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F58E195388D20070C39A /* Foundation.framework in Frameworks */,
-				C40B1AD14EA3B699EC5ABA43 /* Pods_DDPMediaPlayer_Example.framework in Frameworks */,
+				16CA143D37BD7BCA69E4FC23 /* libPods-DDPMediaPlayer_Example.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,7 +88,7 @@
 				6003F5B0195388D20070C39A /* XCTest.framework in Frameworks */,
 				6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F5B1195388D20070C39A /* Foundation.framework in Frameworks */,
-				D1D264DB3587F4A6C9A50B3C /* Pods_DDPMediaPlayer_Tests.framework in Frameworks */,
+				485BD78C33A146E4C7AC59F1 /* libPods-DDPMediaPlayer_Tests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,8 +123,8 @@
 				6003F58F195388D20070C39A /* CoreGraphics.framework */,
 				6003F591195388D20070C39A /* UIKit.framework */,
 				6003F5AF195388D20070C39A /* XCTest.framework */,
-				48AA27286F7B7304A361BCD9 /* Pods_DDPMediaPlayer_Example.framework */,
-				847A98443C6900CE79FEF17A /* Pods_DDPMediaPlayer_Tests.framework */,
+				3A1C0480A5B3B72F5D3DC7A6 /* libPods-DDPMediaPlayer_Example.a */,
+				DE48343095244926840F5603 /* libPods-DDPMediaPlayer_Tests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -208,7 +208,6 @@
 				6003F586195388D20070C39A /* Sources */,
 				6003F587195388D20070C39A /* Frameworks */,
 				6003F588195388D20070C39A /* Resources */,
-				F70D3783C41122488955A53C /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -337,24 +336,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F70D3783C41122488955A53C /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-DDPMediaPlayer_Example/Pods-DDPMediaPlayer_Example-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/DDPMediaPlayer/DDPMediaPlayer.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DDPMediaPlayer.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-DDPMediaPlayer_Example/Pods-DDPMediaPlayer_Example-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */

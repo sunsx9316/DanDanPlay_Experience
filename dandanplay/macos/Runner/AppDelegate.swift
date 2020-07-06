@@ -9,6 +9,8 @@ class AppDelegate: FlutterAppDelegate {
     private var statusItem: NSStatusItem?
     private var menuBarPopover: NSPopover?
     private let ignoreVersionKey = "ignoreVersion"
+    @IBOutlet weak var subtitleMenuItem: NSMenuItem!
+    @IBOutlet weak var subtitleDelayMenuItem: NSMenuItem!
     
     override func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
         return true
@@ -105,11 +107,23 @@ class AppDelegate: FlutterAppDelegate {
     
 }
 
-extension AppDelegate: NSPopoverDelegate {
+extension AppDelegate: NSPopoverDelegate, NSMenuDelegate {
+    //MARK: NSPopoverDelegate
     func popoverDidClose(_ notification: Notification) {
         if let vc = self.menuBarPopover?.contentViewController as? AppVersionViewController {
             UserDefaults.standard.set(vc.appVersion?.version, forKey: self.ignoreVersionKey)            
         }
         self.menuBarPopover = nil
+    }
+    
+    //MARK: NSMenuDelegate
+    func menuNeedsUpdate(_ menu: NSMenu) {
+        let delaySecond = Helper.shared.player?.subtitleDelay ?? 0
+        for item in menu.items {
+            if item == self.subtitleDelayMenuItem {
+                item.title = String(format: "字幕延迟 %.1f秒", delaySecond)
+                break
+            }
+        }
     }
 }

@@ -5,13 +5,14 @@
 //  Created by JimHuang on 16/3/4.
 //  Copyright © 2016年 JimHuang. All rights reserved.
 //
-#import <Cocoa/Cocoa.h>
 #import "DDPMediaItemProtocal.h"
 
 #if TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
 typedef UIView DDPMediaPlayerView;
 typedef UIImage DDPMediaImage;
 #else
+#import <Cocoa/Cocoa.h>
 typedef NSView DDPMediaPlayerView;
 typedef NSImage DDPMediaImage;
 #endif
@@ -72,7 +73,9 @@ typedef void(^SnapshotCompleteBlock)(DDPMediaImage * _Nullable image, NSError * 
 @property (strong, nonatomic, readonly) DDPMediaPlayerView *mediaView;
 @property (nonatomic, assign) DDPMediaPlayerRepeatMode repeatMode;
 @property (assign, nonatomic) CGFloat volume;
-@property (assign, nonatomic) NSInteger subtitleDelay;
+
+/// 字幕偏移 单位秒
+@property (assign, nonatomic) CGFloat subtitleDelay;
 
 @property (nonatomic, strong) NSArray <id<DDPMediaItemProtocol>>*playerLists;
 @property (nonatomic, strong, readonly) id<DDPMediaItemProtocol> _Nullable currentPlayItem;

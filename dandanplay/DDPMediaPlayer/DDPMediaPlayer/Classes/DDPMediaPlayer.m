@@ -7,9 +7,16 @@
 //
 
 #import "DDPMediaPlayer.h"
-#import <VLCKit/VLCKit.h>
 #import <objc/runtime.h>
 #import <Foundation/Foundation.h>
+
+#if TARGET_OS_IPHONE
+#import <MobileVLCKit/MobileVLCKit.h>
+typedef UIView VideoView;
+#else
+#import <VLCKit/VLCKit.h>
+typedef VLCVideoView VideoView;
+#endif
 
 @interface VLCMedia(_Private)<DDPMediaItemProtocol>
 
@@ -23,7 +30,7 @@
 
 @end
 
-@interface _DDPlayerView : VLCVideoView
+@interface _DDPlayerView : VideoView
 
 @end
 
@@ -62,7 +69,7 @@
 }
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
-    if ([keyPath isEqualTo:@"media"]) {
+    if ([keyPath isEqual:@"media"]) {
         if (![self.delegate respondsToSelector:@selector(mediaPlayer:mediaDidChange:)]) {
             return;
         }
@@ -202,12 +209,12 @@
 }
 
 #pragma mark 字幕
-- (void)setSubtitleDelay:(NSInteger)subtitleDelay {
-    self.localMediaPlayer.currentVideoSubTitleDelay = subtitleDelay;
+- (void)setSubtitleDelay:(CGFloat)subtitleDelay {
+    self.localMediaPlayer.currentVideoSubTitleDelay = subtitleDelay * 1000000.0;
 }
 
-- (NSInteger)subtitleDelay {
-    return self.localMediaPlayer.currentVideoSubTitleDelay;
+- (CGFloat)subtitleDelay {
+    return self.localMediaPlayer.currentVideoSubTitleDelay / 1000000.0;
 }
 
 - (NSArray *)subtitleIndexs {
@@ -410,7 +417,7 @@
 - (NSInteger)indexWithItem:(id<DDPMediaItemProtocol>)item {
     __block NSInteger index = NSNotFound;
     [self.playerLists enumerateObjectsUsingBlock:^(id<DDPMediaItemProtocol>  _Nonnull obj1, NSUInteger idx1, BOOL * _Nonnull stop1) {
-        if ([obj1.url isEqualTo:item.url]) {
+        if ([obj1.url isEqual:item.url]) {
             index = idx1;
             *stop1 = YES;
         }
@@ -510,9 +517,11 @@
 
 - (DDPMediaPlayerView *)mediaView {
     if (_mediaView == nil) {
-        VLCVideoView *mediaView = [[_DDPlayerView alloc] init];
+        _DDPlayerView *mediaView = [[_DDPlayerView alloc] init];
+#if !TARGET_OS_IPHONE
         mediaView.fillScreen = YES;
         mediaView.wantsLayer = YES;
+#endif
         _mediaView = mediaView;
     }
     return _mediaView;

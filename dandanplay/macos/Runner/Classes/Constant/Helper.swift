@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import DDPMediaPlayer
 
 extension URL {
     var isVideoFile: Bool {
@@ -18,4 +19,22 @@ extension URL {
         }
         return false
     }
+}
+
+class Helper {
+    
+    static let shared = Helper()
+    
+    weak var player: DDPMediaPlayer?
+    
+    let subTitlePathExtension = ["SSA", "ASS", "SMI", "SRT", "SUB", "LRC", "SST", "TXT", "XSS", "PSB", "SSB"]
+    
+    func isSubTitleFile(_ url: URL) -> Bool {
+        let subtitleNames = subTitlePathExtension
+        let pathExtension = url.pathExtension
+        return subtitleNames.contains { (str) -> Bool in
+            return pathExtension.range(of: str, options: .caseInsensitive) != nil
+        }
+    }
+    
 }

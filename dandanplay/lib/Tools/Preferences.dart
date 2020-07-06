@@ -52,66 +52,66 @@ class Preferences {
   final _userKey = "userKey";
 
   Future<void> setupDefaultValue({bool force = false}) async {
-    var isContains = await MMKVStore.contains(key: _fastMatchKey);
+    var isContains = await Dandanplaystore.contains(key: _fastMatchKey);
     if (!isContains || force) {
-      await MMKVStore.setBool(key: _fastMatchKey, value: true);
+      await Dandanplaystore.setBool(key: _fastMatchKey, value: true);
     }
 
-    isContains = await MMKVStore.contains(key: _subtitleSafeAreaKey);
+    isContains = await Dandanplaystore.contains(key: _subtitleSafeAreaKey);
     if (!isContains || force) {
-      await MMKVStore.setBool(key: _subtitleSafeAreaKey, value: true);
+      await Dandanplaystore.setBool(key: _subtitleSafeAreaKey, value: true);
     }
 
-    isContains = await MMKVStore.contains(key: _danmakuCacheDayKey);
+    isContains = await Dandanplaystore.contains(key: _danmakuCacheDayKey);
     if (!isContains || force) {
-      await MMKVStore.setInt(key: _danmakuCacheDayKey, value: 7);
+      await Dandanplaystore.setInt(key: _danmakuCacheDayKey, value: 7);
     }
 
-    isContains = await MMKVStore.contains(key: _danmakuFontSizeyKey);
+    isContains = await Dandanplaystore.contains(key: _danmakuFontSizeyKey);
     if (!isContains || force) {
-      await MMKVStore.setDouble(key: _danmakuFontSizeyKey, value: 20);
+      await Dandanplaystore.setDouble(key: _danmakuFontSizeyKey, value: 20);
     }
 
-    isContains = await MMKVStore.contains(key: _danmakuSpeedKey);
+    isContains = await Dandanplaystore.contains(key: _danmakuSpeedKey);
     if (!isContains || force) {
-      await MMKVStore.setDouble(key: _danmakuSpeedKey, value: 1);
+      await Dandanplaystore.setDouble(key: _danmakuSpeedKey, value: 1);
     }
 
-    isContains = await MMKVStore.contains(key: _danmakuAlphaKey);
+    isContains = await Dandanplaystore.contains(key: _danmakuAlphaKey);
     if (!isContains || force) {
-      await MMKVStore.setDouble(key: _danmakuAlphaKey, value: 1);
+      await Dandanplaystore.setDouble(key: _danmakuAlphaKey, value: 1);
     }
 
-    isContains = await MMKVStore.contains(key: _danmakuCountKey);
+    isContains = await Dandanplaystore.contains(key: _danmakuCountKey);
     if (!isContains || force) {
-      await MMKVStore.setInt(key: _danmakuCountKey, value: 100);
+      await Dandanplaystore.setInt(key: _danmakuCountKey, value: 100);
     }
 
-    isContains = await MMKVStore.contains(key: _showHomePageTipsKey);
+    isContains = await Dandanplaystore.contains(key: _showHomePageTipsKey);
     if (!isContains || force) {
-      await MMKVStore.setBool(key: _showHomePageTipsKey, value: true);
+      await Dandanplaystore.setBool(key: _showHomePageTipsKey, value: true);
     }
 
-    isContains = await MMKVStore.contains(key: _playerSpeedKey);
+    isContains = await Dandanplaystore.contains(key: _playerSpeedKey);
     if (!isContains || force) {
-      await MMKVStore.setDouble(key: _playerSpeedKey, value: 1);
+      await Dandanplaystore.setDouble(key: _playerSpeedKey, value: 1);
     }
 
-    isContains = await MMKVStore.contains(key: _playerModeKey);
+    isContains = await Dandanplaystore.contains(key: _playerModeKey);
     if (!isContains || force) {
-      await MMKVStore.setInt(
+      await Dandanplaystore.setInt(
           key: _playerModeKey,
           value: playerModeRawValueWithEnum(PlayerMode.notRepeat));
     }
 
-    isContains = await MMKVStore.contains(key: _checkUpdateKey);
+    isContains = await Dandanplaystore.contains(key: _checkUpdateKey);
     if (!isContains || force) {
-      await MMKVStore.setBool(key: _checkUpdateKey, value: true);
+      await Dandanplaystore.setBool(key: _checkUpdateKey, value: true);
     }
   }
 
   Future<User> get user async {
-    final value = await MMKVStore.getString(key: _userKey);
+    final value = await Dandanplaystore.getString(key: _userKey);
 
     try {
       final map = json.decode(value);
@@ -128,62 +128,62 @@ class Preferences {
     if (value != null) {
       final jsonValue = value.toJson();
       final str = json.encode(jsonValue);
-      result = await MMKVStore.setString(key: _userKey, value: str);
+      result = await Dandanplaystore.setString(key: _userKey, value: str);
     } else {
-      result = await MMKVStore.setString(key: _userKey, value: null);
+      result = await Dandanplaystore.setString(key: _userKey, value: null);
     }
     return result;
   }
 
   Future<bool> get checkUpdate async {
-    final value = await MMKVStore.getBool(key: _checkUpdateKey);
+    final value = await Dandanplaystore.getBool(key: _checkUpdateKey);
     return value;
   }
 
   Future<bool> setCheckUpdate(bool value) async {
-    final result = await MMKVStore.setBool(key: _checkUpdateKey, value: value);
+    final result = await Dandanplaystore.setBool(key: _checkUpdateKey, value: value);
     final msg = SyncSettingMessage(key: _checkUpdateKey, value: value);
     await MessageChannel.shared.sendMessage(msg);
     return result;
   }
 
   Future<PlayerMode> get playerMode async {
-    final value = await MMKVStore.getInt(key: _playerModeKey);
+    final value = await Dandanplaystore.getInt(key: _playerModeKey);
     return playerModeTypeWithRawValue(value);
   }
 
   Future<bool> setPlayerMode(PlayerMode value) async {
     final rawValue = playerModeRawValueWithEnum(value);
-    final result = await MMKVStore.setInt(key: _playerModeKey, value: rawValue);
+    final result = await Dandanplaystore.setInt(key: _playerModeKey, value: rawValue);
     final msg = SyncSettingMessage(key: _playerModeKey, value: rawValue);
     await MessageChannel.shared.sendMessage(msg);
     return result;
   }
 
   Future<double> get playerSpeed async {
-    return MMKVStore.getDouble(key: _playerSpeedKey);
+    return Dandanplaystore.getDouble(key: _playerSpeedKey);
   }
 
   Future<bool> setPlayerSpeed(double value) async {
     final result =
-        await MMKVStore.setDouble(key: _playerSpeedKey, value: value);
+        await Dandanplaystore.setDouble(key: _playerSpeedKey, value: value);
     final msg = SyncSettingMessage(key: _playerSpeedKey, value: value);
     await MessageChannel.shared.sendMessage(msg);
     return result;
   }
 
   Future<bool> get showHomePageTips async {
-    return MMKVStore.getBool(key: _showHomePageTipsKey);
+    return Dandanplaystore.getBool(key: _showHomePageTipsKey);
   }
 
   Future<bool> setShowHomePageTips(bool isShow) async {
     final result =
-        await MMKVStore.setBool(key: _showHomePageTipsKey, value: isShow);
+        await Dandanplaystore.setBool(key: _showHomePageTipsKey, value: isShow);
     return result;
   }
 
   Future<String> get homePageBgImage async {
-    final name = await MMKVStore.getString(key: _homePageBgImageKey);
+    final name = await Dandanplaystore.getString(key: _homePageBgImageKey);
     final directory = await getApplicationDocumentsDirectory();
     return "${directory.path}/$name";
   }
@@ -195,88 +195,88 @@ class Preferences {
       final newFileName = "homePageImg${extension(path)}";
       final newPath = "${directory.path}/$newFileName";
       await file.copy(newPath);
-      final result = await MMKVStore.setString(
+      final result = await Dandanplaystore.setString(
           key: _homePageBgImageKey, value: newFileName);
       return result;
     } else {
       final result =
-          await MMKVStore.setString(key: _homePageBgImageKey, value: null);
+          await Dandanplaystore.setString(key: _homePageBgImageKey, value: null);
       return result;
     }
   }
 
   Future<int> get danmakuCount async {
-    return MMKVStore.getInt(key: _danmakuCountKey);
+    return Dandanplaystore.getInt(key: _danmakuCountKey);
   }
 
   Future<bool> setDanmakuCount(int value) async {
-    final result = await MMKVStore.setInt(key: _danmakuCountKey, value: value);
+    final result = await Dandanplaystore.setInt(key: _danmakuCountKey, value: value);
     final msg = SyncSettingMessage(key: _danmakuCountKey, value: value);
     await MessageChannel.shared.sendMessage(msg);
     return result;
   }
 
   Future<double> get danmakuAlpha async {
-    return MMKVStore.getDouble(key: _danmakuAlphaKey);
+    return Dandanplaystore.getDouble(key: _danmakuAlphaKey);
   }
 
   Future<bool> setDanmakuAlpha(double value) async {
     final result =
-        await MMKVStore.setDouble(key: _danmakuAlphaKey, value: value);
+        await Dandanplaystore.setDouble(key: _danmakuAlphaKey, value: value);
     final msg = SyncSettingMessage(key: _danmakuAlphaKey, value: value);
     await MessageChannel.shared.sendMessage(msg);
     return result;
   }
 
   Future<double> get danmakuSpeed async {
-    return MMKVStore.getDouble(key: _danmakuSpeedKey);
+    return Dandanplaystore.getDouble(key: _danmakuSpeedKey);
   }
 
   Future<bool> setDanmakuSpeed(double value) async {
     final result =
-        await MMKVStore.setDouble(key: _danmakuSpeedKey, value: value);
+        await Dandanplaystore.setDouble(key: _danmakuSpeedKey, value: value);
     final msg = SyncSettingMessage(key: _danmakuSpeedKey, value: value);
     await MessageChannel.shared.sendMessage(msg);
     return result;
   }
 
   Future<double> get danmakuFontSize async {
-    return MMKVStore.getDouble(key: _danmakuFontSizeyKey);
+    return Dandanplaystore.getDouble(key: _danmakuFontSizeyKey);
   }
 
   Future<bool> setDanmakuFontSize(double value) async {
     final result =
-        await MMKVStore.setDouble(key: _danmakuFontSizeyKey, value: value);
+        await Dandanplaystore.setDouble(key: _danmakuFontSizeyKey, value: value);
     final msg = SyncSettingMessage(key: _danmakuFontSizeyKey, value: value);
     await MessageChannel.shared.sendMessage(msg);
     return result;
   }
 
   Future<bool> get fastMatch async {
-    return MMKVStore.getBool(key: _fastMatchKey);
+    return Dandanplaystore.getBool(key: _fastMatchKey);
   }
 
   Future<bool> setFastMatch(bool on) async {
-    return MMKVStore.setBool(key: _fastMatchKey, value: on);
+    return Dandanplaystore.setBool(key: _fastMatchKey, value: on);
   }
 
   Future<bool> get subtitleSafeArea async {
-    return MMKVStore.getBool(key: _subtitleSafeAreaKey);
+    return Dandanplaystore.getBool(key: _subtitleSafeAreaKey);
   }
 
   Future<bool> setSubtitleSafeArea(bool on) async {
     final result =
-        await MMKVStore.setBool(key: _subtitleSafeAreaKey, value: on);
+        await Dandanplaystore.setBool(key: _subtitleSafeAreaKey, value: on);
     final msg = SyncSettingMessage(key: _subtitleSafeAreaKey, value: on);
     await MessageChannel.shared.sendMessage(msg);
     return result;
   }
 
   Future<int> get danmakuCacheDay async {
-    return MMKVStore.getInt(key: _danmakuCacheDayKey);
+    return Dandanplaystore.getInt(key: _danmakuCacheDayKey);
   }
 
   Future<bool> setDanmakuCacheDay(int value) async {
-    return MMKVStore.setInt(key: _danmakuCacheDayKey, value: value);
+    return Dandanplaystore.setInt(key: _danmakuCacheDayKey, value: value);
   }
 }

@@ -11,7 +11,7 @@ description: A new Flutter application.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 5.0.0+202003291
+version: 5.0.1+202007051
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -36,7 +36,7 @@ dependencies:
   connectivity: ^0.4.8+2
   dandanplaystore:
     path: "../dandanplay_store"
-  dandanplay_file_picker:
+  dandanplayfilepicker:
     path: "../dandanplay_file_picker"
 
 dev_dependencies:

@@ -1,11 +1,5 @@
-import 'package:dandanplay/Controller/BaseNavigation.dart';
-import 'package:dandanplay/Controller/Match/MatchWidget.dart';
-import 'package:dandanplay/Model/File/FileModel.dart';
-import 'package:dandanplay/NetworkManager/MatchNetworkManager.dart';
-import 'package:dandanplay/Tools/Utility.dart';
 import 'package:dandanplay/r.dart';
-import 'package:dandanplay_file_picker/file_picker.dart';
-//import 'package:file_picker/file_picker.dart';
+import 'package:dandanplayfilepicker/dandanplayfilepicker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -74,7 +68,7 @@ class FileWidget extends StatelessWidget {
   /* 点击本地文件 */
   void _onTapLocalFile(BuildContext context) async {
     try {
-      final file = await FilePicker.getFile();
+      final file = await Dandanplayfilepicker.getFile(pickType: DandanplayfilepickerType.video);
       if (file != null) {
 //        Tools.parse(file, context: context);
       }

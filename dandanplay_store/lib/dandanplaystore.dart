@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
-class MMKVStore {
+class Dandanplaystore {
   static const MethodChannel _channel =
   const MethodChannel('dandanplaystore');
 

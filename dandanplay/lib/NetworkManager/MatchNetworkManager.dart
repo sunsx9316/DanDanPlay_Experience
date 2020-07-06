@@ -19,7 +19,7 @@ class MatchNetworkManager extends BaseNetworkManager {
     final connectivityResult = await Connectivity().checkConnectivity();
     //当前是离线状态，读取缓存
     if (connectivityResult == ConnectivityResult.none) {
-      final jsonStr = await MMKVStore.getString(
+      final jsonStr = await Dandanplaystore.getString(
           key: map["fileHash"], id: "com.dandanplay.match");
       if (jsonStr != null) {
         Map<String, dynamic> jsonObj = json.decode(jsonStr);
@@ -37,7 +37,7 @@ class MatchNetworkManager extends BaseNetworkManager {
     if (collection.isMatched && collection.matches.length == 1) {
       final match = collection.matches.first;
       final jsonStr = json.encode(match.toJson());
-      MMKVStore.setString(
+      Dandanplaystore.setString(
           key: map["fileHash"], value: jsonStr, id: "com.dandanplay.match");
     }
 
