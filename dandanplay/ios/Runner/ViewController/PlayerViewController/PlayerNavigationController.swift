@@ -15,6 +15,7 @@ class PlayerNavigationController: UINavigationController {
         let playerViewController = PlayerViewController(urls: urls)
         self.playerViewController = playerViewController
         super.init(nibName: nil, bundle: nil)
+        self.modalPresentationStyle = .fullScreen
     }
     
     required init?(coder aDecoder: NSCoder) {

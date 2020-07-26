@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dandanplay/NetworkManager/AuthNetWorkManager.dart';
 import 'package:dandanplay/Tools/Preferences.dart';
 import 'package:dandanplay/Tools/Utility.dart';
@@ -22,6 +24,13 @@ class _RegisterWidgetState extends State<RegisterWidget> {
     return Scaffold(
         appBar: AppBar(title: Text("注册")),
         body: Builder(builder: (context) {
+          double hintStyleSize = 0;
+          if (Platform.isIOS) {
+            hintStyleSize = 15;
+          } else {
+            hintStyleSize = 20;
+          }
+
           return Column(
             children: <Widget>[
               Container(
@@ -35,7 +44,8 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                         prefixIcon: Icon(Icons.person),
                         enabledBorder: UnderlineInputBorder(),
                         labelText: "用户账号",
-                        hintText: "只能包含英文或数字，长度为5-20位，首位不能为数字。"),
+                        hintText: "英文和数字，长度5-20位，首位不能为数字。",
+                        hintStyle: TextStyle(fontSize: hintStyleSize)),
                   ),
                   width: double.infinity),
               Container(
@@ -49,7 +59,8 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                         prefixIcon: Icon(Icons.lock),
                         enabledBorder: UnderlineInputBorder(),
                         labelText: "密码",
-                        hintText: "长度为5到20位之间。"),
+                        hintText: "长度为5-20位。",
+                        hintStyle: TextStyle(fontSize: hintStyleSize)),
                   ),
                   width: double.infinity),
               Container(

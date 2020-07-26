@@ -6,7 +6,7 @@
 //  Copyright © 2016 Roy Marmelstein. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 /// File browser containing navigation controller.
 @objcMembers

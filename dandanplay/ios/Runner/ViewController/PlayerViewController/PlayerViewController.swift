@@ -12,82 +12,20 @@ import JHDanmakuRender
 import dandanplaystore
 import SnapKit
 import YYCategories
+import dandanplayfilepicker
 
-class PlayerViewController: UIViewController, DDPMediaPlayerDelegate, JHDanmakuEngineDelegate {
+private var FileBrowerManagerTransitioningKey = 0
+
+class PlayerViewController: UIViewController {
     
     private let kShortJumpValue: Int32 = 5
     private let kVolumeAddingValue: CGFloat = 20
     
-//    private lazy var controlView: DDPPlayerControlView = {
-//        var view = DDPPlayerControlView.loadFromNib()
-//
-//        view.sliderDidChangeCallBack = { [weak self] (progress) in
-//            guard let self = self else {
-//                return
-//            }
-//
-//            self.player.setPosition(progress, completionHandler: nil)
-//        }
-//
-//        view.playButtonDidClickCallBack = { [weak self] (selected) in
-//            guard let self = self else {
-//                return
-//            }
-//            self.onClickPlayButton()
-//        }
-//
-//        view.danmakuButtonDidClickCallBack = { [weak self] (selected) in
-//            guard let self = self else {
-//                return
-//            }
-//
-//            self.danmakuRender.canvas.isHidden = selected
-//        }
-//
-//        view.sendDanmakuCallBack = { [weak self] (str) in
-//            guard let self = self else {
-//                return
-//            }
-//
-//            self.sendDanmaku(str)
-//        }
-//
-//        view.onClickPlayListButtonCallBack = { [weak self] in
-//            guard let self = self else {
-//                return
-//            }
-//
-//            if (self.playerListViewController != nil) {
-//                self.hidePlayerList()
-//            } else {
-//                self.showPlayerList()
-//            }
-//        }
-//
-//        view.onClickPlayNextButtonCallBack = { [weak self] in
-//            guard let self = self else {
-//                return
-//            }
-//
-//            if let nextItem = self.player.nextItem, let playItem = self.findPlayItem(nextItem) {
-//                self.loadMediaItem(playItem)
-//            }
-//        }
-//
-//        view.onClickSettingButtonCallBack = { [weak self] in
-//            guard let self = self else {
-//                return
-//            }
-//
-//            if (self.playerSettingViewController != nil) {
-//                self.hidePlayerSetting()
-//            } else {
-//                self.showPlayerSetting()
-//            }
-//        }
-//
-//        return view
-//    }()
+    private lazy var uiView: PlayerUIView = {
+        let view = PlayerUIView.fromNib()
+        view.delegate = self
+        return view
+    }()
     
     private lazy var danmakuRender: JHDanmakuEngine = {
         let danmakuRender = JHDanmakuEngine()
@@ -106,10 +44,6 @@ class PlayerViewController: UIViewController, DDPMediaPlayerDelegate, JHDanmakuE
         return player
     }()
     
-//    private weak var playerListViewController: NSViewController?
-//    private weak var playerSettingViewController: NSViewController?
-//    private var playerViewBottomConstraint: ConstraintMakerEditable?
-    
     private var playItemMap = [URL : PlayItem]()
     //当前弹幕时间/弹幕数组映射
     private var danmakuDic = [UInt : [JHDanmakuProtocol]]()
@@ -121,10 +55,9 @@ class PlayerViewController: UIViewController, DDPMediaPlayerDelegate, JHDanmakuE
         return UIView()
     }()
     
-//    private var volumeHUD: DDPHUD?
-    
     private var autoHiddenTimer: Timer?
     private var hiddenControlView = false
+    private var fileBrower: FileBrowerManager?
     
     //MARK: - life cycle
     
@@ -145,26 +78,27 @@ class PlayerViewController: UIViewController, DDPMediaPlayerDelegate, JHDanmakuE
         self.navigationController?.setNavigationBarHidden(true, animated: animated)
     }
     
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        if self.player.isPlaying == false {
-            self.player.play()
-        }
-    }
+//    override func viewDidAppear(_ animated: Bool) {
+//        super.viewDidAppear(animated)
+//        if self.player.isPlaying == false {
+//            self.player.play()
+//        }
+//    }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        
-        if self.player.isPlaying {
-            self.player.pause()
-        }
-    }
+//    override func viewWillDisappear(_ animated: Bool) {
+//        super.viewWillDisappear(animated)
+//
+//        if self.player.isPlaying {
+//            self.player.pause()
+//        }
+//    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.addSubview(self.containerView)
         self.containerView.addSubview(self.player.mediaView)
         self.containerView.addSubview(self.danmakuRender.canvas)
+        self.view.addSubview(self.uiView)
         
         self.containerView.snp.makeConstraints { (make) in
             make.top.leading.trailing.bottom.equalTo(self.view)
@@ -183,23 +117,17 @@ class PlayerViewController: UIViewController, DDPMediaPlayerDelegate, JHDanmakuE
             }
         }
         
-//        self.controlView.snp.makeConstraints { (make) in
-//            make.top.equalTo(self.containerView.snp.bottom)
-//            make.leading.trailing.equalToSuperview()
-//            make.bottom.equalToSuperview()
-//        }
-//        
-//        self.dragView.snp.makeConstraints { (make) in
-//            make.edges.equalToSuperview()
-//        }
+        self.uiView.snp.makeConstraints { (make) in
+            make.edges.equalToSuperview()
+        }
         
+        
+        changeRepeatMode()
+        autoShowControlView()
         if let first = self.player.playerLists.first,
             let playItem = findPlayItem(first) {
             loadMediaItem(playItem)
         }
-        
-        changeRepeatMode()
-        autoShowControlView()
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -253,8 +181,7 @@ class PlayerViewController: UIViewController, DDPMediaPlayerDelegate, JHDanmakuE
                         danmakuCache.setObject(danmakus, forKey: NSNumber(value: episodeId))
                     }
                     loadMediaItem(item)
-                    
-//                    view.window?.title = message.title ?? item.url?.lastPathComponent ?? ""
+                    uiView.titleLabel.text = message.title ?? item.url?.lastPathComponent ?? ""
                 }
             }
         case .syncSetting:
@@ -309,11 +236,11 @@ class PlayerViewController: UIViewController, DDPMediaPlayerDelegate, JHDanmakuE
         }
         
         self.player.addMediaItems(arr)
-        if !urls.isEmpty && self.isViewLoaded {
-            if let item = self.playItemMap[urls[0]] {
-                loadMediaItem(item)
-            }
-        }
+//        if !urls.isEmpty && self.isViewLoaded {
+//            if let item = self.playItemMap[urls[0]] {
+//                loadMediaItem(item)
+//            }
+//        }
     }
     
     //MARK: - Private
@@ -487,16 +414,102 @@ class PlayerViewController: UIViewController, DDPMediaPlayerDelegate, JHDanmakuE
         }
     }
     
+    //MARK: - PlayerListViewControllerDelegate
+//    func currentPlayIndexAtPlayerListViewController(_ viewController: PlayerListViewController) -> Int? {
+//        if let currentPlayItem = player.currentPlayItem {
+//            return player.index(withItem: currentPlayItem)
+//        }
+//        return nil
+//    }
+//
+//    func playerListViewController(_ viewController: PlayerListViewController, titleAtRow: Int) -> String {
+//        return self.player.playerLists[titleAtRow].url?.lastPathComponent ?? ""
+//    }
+//
+//    func playerListViewController(_ viewController: PlayerListViewController, didSelectedRow: Int) {
+//        let item = self.player.playerLists[didSelectedRow]
+//        if let playItem = findPlayItem(item) {
+//            loadMediaItem(playItem)
+//        }
+//    }
+//
+//    func playerListViewController(_ viewController: PlayerListViewController, didDeleteRowIndexSet: IndexSet) {
+//        player.removeMedia(with: didDeleteRowIndexSet)
+//    }
+//
+//    func numberOfRowAtPlayerListViewController() -> Int {
+//        return self.player.playerLists.count
+//    }
     
-    //MARK: - DDPMediaPlayerDelegate
+}
+
+extension PlayerViewController {
+    private class PlayItem: NSObject, DDPMediaItemProtocol {
+
+        var url: URL?
+        var mediaOptions: [AnyHashable : Any]?
+        var playImmediately = false
+        
+        var mediaId: String {
+            return url?.path ?? ""
+        }
+        var episodeId = 0
+        
+        init(url: URL) {
+            super.init()
+            self.url = url
+        }
+    }
+}
+
+//MARK: - PlayerUIViewDelegate
+extension PlayerViewController: PlayerUIViewDelegate {
+    func onTouchMoreButton(playerUIView: PlayerUIView) {
+        
+    }
+    
+    func onTouchPlayerList(playerUIView: PlayerUIView) {
+        let manager = FileBrowerManager(multipleSelection: false)
+        manager.delegate = self
+        self.fileBrower = manager
+        let animater = PlayerControlAnimater()
+        objc_setAssociatedObject(manager, &FileBrowerManagerTransitioningKey, animater, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        manager.containerViewController.modalPresentationStyle = .custom
+        manager.containerViewController.transitioningDelegate = animater
+        self.present(manager.containerViewController, animated: true, completion: nil)
+    }
+    
+    func onTouchDanmakuSwitch(playerUIView: PlayerUIView, isOn: Bool) {
+        self.danmakuRender.canvas.isHidden = !isOn
+    }
+    
+    func doubleTap(playerUIView: PlayerUIView) {
+        if player.isPlaying {
+            player.pause()
+        } else {
+            player.play()
+        }
+    }
+    
+    func tapSlider(playerUIView: PlayerUIView, progress: CGFloat) {
+        player.setPosition(progress) { [weak self] (time) in
+            guard let self = self else {
+                return
+            }
+            
+            self.uiView.updateTime()
+        }
+    }
+}
+
+//MARK: - DDPMediaPlayerDelegate
+extension PlayerViewController: DDPMediaPlayerDelegate {
     func mediaPlayer(_ player: DDPMediaPlayer, statusChange status: DDPMediaPlayerStatus) {
         switch status {
         case .playing:
             danmakuRender.start()
-//            controlView.playButton.state = .on
         case .pause, .stop:
             danmakuRender.pause()
-//            controlView.playButton.state = .off
         case .unknow:
             break
         @unknown default:
@@ -516,7 +529,7 @@ class PlayerViewController: UIViewController, DDPMediaPlayerDelegate, JHDanmakuE
     }
     
     func mediaPlayer(_ player: DDPMediaPlayer, currentTime: TimeInterval, totalTime: TimeInterval) {
-//        controlView.updateCurrentTime(currentTime, totalTime: totalTime)
+        uiView.updateTime()
     }
     
     func mediaPlayer(_ player: DDPMediaPlayer, mediaDidChange media: DDPMediaItemProtocol?) {
@@ -551,58 +564,40 @@ class PlayerViewController: UIViewController, DDPMediaPlayerDelegate, JHDanmakuE
                 MessageHandler.sendMessage(message)
             }
         }
-        
     }
     
-    //MARK: - PlayerListViewControllerDelegate
-//    func currentPlayIndexAtPlayerListViewController(_ viewController: PlayerListViewController) -> Int? {
-//        if let currentPlayItem = player.currentPlayItem {
-//            return player.index(withItem: currentPlayItem)
-//        }
-//        return nil
-//    }
-//
-//    func playerListViewController(_ viewController: PlayerListViewController, titleAtRow: Int) -> String {
-//        return self.player.playerLists[titleAtRow].url?.lastPathComponent ?? ""
-//    }
-//
-//    func playerListViewController(_ viewController: PlayerListViewController, didSelectedRow: Int) {
-//        let item = self.player.playerLists[didSelectedRow]
-//        if let playItem = findPlayItem(item) {
-//            loadMediaItem(playItem)
-//        }
-//    }
-//
-//    func playerListViewController(_ viewController: PlayerListViewController, didDeleteRowIndexSet: IndexSet) {
-//        player.removeMedia(with: didDeleteRowIndexSet)
-//    }
-//
-//    func numberOfRowAtPlayerListViewController() -> Int {
-//        return self.player.playerLists.count
-//    }
+    func playerCurrentTime(playerUIView: PlayerUIView) -> TimeInterval {
+        return player.currentTime
+    }
     
+    func playerTotalTime(playerUIView: PlayerUIView) -> TimeInterval {
+        return player.length
+    }
+    
+    func playerProgress(playerUIView: PlayerUIView) -> CGFloat {
+        return player.position
+    }
+}
+
+extension PlayerViewController: JHDanmakuEngineDelegate {
     //MARK: - JHDanmakuEngineDelegate
     func danmakuEngine(_ danmakuEngine: JHDanmakuEngine, didSendDanmakuAtTime time: UInt) -> [JHDanmakuProtocol] {
         return danmakuDic[time] ?? []
     }
-    
 }
 
-extension PlayerViewController {
-    private class PlayItem: NSObject, DDPMediaItemProtocol {
-
-        var url: URL?
-        var mediaOptions: [AnyHashable : Any]?
-        var playImmediately = false
-        
-        var mediaId: String {
-            return url?.path ?? ""
-        }
-        var episodeId = 0
-        
-        init(url: URL) {
-            super.init()
-            self.url = url
-        }
+extension PlayerViewController: FileBrowerManagerDelegate {
+    func didSelectedPaths(manager: FileBrowerManager, paths: [String]) {
+        let urls = paths.compactMap({ URL(fileURLWithPath: $0) })
+        self.loadURLs(urls)
+        self.fileBrower = nil
+    }
+    
+    func didDismiss(manager: FileBrowerManager) {
+        self.fileBrower = nil
+    }
+    
+    func didCancel(manager: FileBrowerManager) {
+        self.fileBrower = nil
     }
 }

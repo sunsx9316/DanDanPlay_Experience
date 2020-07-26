@@ -39,7 +39,7 @@ class AuthNetWorkManager extends BaseNetworkManager {
   static Future<HttpResponseResult<User>> renew() async {
     final res = await BaseNetworkManager.get("/login/renew");
     try {
-      final data = User.fromJsonMap(res.data);
+//      final data = User.fromJsonMap(res.data);
       return HttpResponseResult(
           data: User.fromJsonMap(res.data), error: res.error);
     } catch (e) {

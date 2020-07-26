@@ -1,12 +1,12 @@
+import 'package:dandanplay/Controller/File/FileWidget.dart';
 import 'package:dandanplay/Controller/Match/MatchWidget.dart';
+import 'package:dandanplay/Controller/Mine/MineWidget.dart';
 import 'package:dandanplay/Model/Message/Receive/BaseReceiveMessage.dart';
 import 'package:dandanplay/Model/Message/Receive/ParseFileMessage.dart';
 import 'package:dandanplay/Model/Message/Receive/SendDanmakuMessage.dart';
-import 'package:dandanplay/Model/Message/Send/LoadFilesMessage.dart';
 import 'package:dandanplay/Tools/Utility.dart';
 import 'package:dandanplay/Vendor/message/MessageChannel.dart';
 import 'package:dandanplay/r.dart';
-import 'package:dandanplayfilepicker/dandanplayfilepicker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,7 +18,8 @@ class MobileHomePageWidget extends StatefulWidget {
   }
 }
 
-class MobileHomePageState extends State<MobileHomePageWidget> with MessageChannelObserver {
+class MobileHomePageState extends State<MobileHomePageWidget>
+    with MessageChannelObserver {
   var _selectedIndex = 0;
 
   @override
@@ -38,16 +39,9 @@ class MobileHomePageState extends State<MobileHomePageWidget> with MessageChanne
     Widget body;
 
     if (_selectedIndex == 0) {
-      body = ListView(
-        children: <Widget>[
-          _createListTile('本地视频', Icon(Icons.folder, size: 30), () {
-            _onTapLocalFile(context);
-          }),
-          _createListTile('网络', Icon(Icons.device_hub, size: 30), () {})
-        ],
-      );
+      body = FileWidget();
     } else if (_selectedIndex == 1) {
-      body = Container();
+      body = MineWidget();
     }
 
     return Scaffold(
@@ -57,11 +51,6 @@ class MobileHomePageState extends State<MobileHomePageWidget> with MessageChanne
         body: body,
         bottomNavigationBar: BottomNavigationBar(
           items: [
-//            BottomNavigationBarItem(
-//                title: Text("首页"),
-//                icon: Image.asset(R.assetsImagesMainBangumi),
-//                activeIcon: Image.asset(R.assetsImagesMainBangumi,
-//                    color: GlobalConfig.mainColor)),
             BottomNavigationBarItem(
                 title: Text("文件"),
                 icon: Image.asset(R.assetsImagesMainTabbarFile),
@@ -80,29 +69,6 @@ class MobileHomePageState extends State<MobileHomePageWidget> with MessageChanne
             });
           },
         ));
-  }
-
-  Widget _createListTile(String title, Icon icon, GestureTapCallback onTap) {
-    return InkWell(
-        child: Padding(
-            padding: EdgeInsets.only(top: 10, left: 10, bottom: 10),
-            child: Row(
-              children: [icon, SizedBox(width: 10), Text(title)],
-            )),
-        onTap: onTap);
-  }
-
-  /* 点击本地文件 */
-  void _onTapLocalFile(BuildContext context) async {
-    try {
-      final file = await Dandanplayfilepicker.getFile(pickType: DandanplayfilepickerType.video);
-      if (file != null) {
-        final msg = LoadFilesMessage(paths: [file.path]);
-        MessageChannel.shared.sendMessage(msg);
-      }
-    } catch (e) {
-      print("error $e");
-    }
   }
 
   @override

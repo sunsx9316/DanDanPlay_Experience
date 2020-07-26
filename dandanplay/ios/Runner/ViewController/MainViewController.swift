@@ -7,10 +7,14 @@
 
 import UIKit
 import DDPShare
+import MBProgressHUD
 
 class MainViewController: MessageViewController {
     
     private weak var playerNavigationController: PlayerNavigationController?
+    private lazy var HUDViewsMapper: NSMapTable<NSString, MBProgressHUD> = {
+        return NSMapTable<NSString, MBProgressHUD>.strongToWeakObjects()
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,6 +38,46 @@ class MainViewController: MessageViewController {
             }
             
             break
+        case .HUDMessage:
+            guard let msg = HUDMessage.deserialize(from: messageData) else { return }
+            
+            let key = msg.key as NSString
+            
+            let cacheHUD: MBProgressHUD
+            
+            if key.length > 0, let aCacheHUD = HUDViewsMapper.object(forKey: key) {
+                cacheHUD = aCacheHUD
+            } else {
+                
+                switch msg.style {
+                case .tips:
+                    cacheHUD = MBProgressHUD(view: self.view)
+                    cacheHUD.mode = .text
+                    cacheHUD.label.text = msg.text
+                    cacheHUD.show(animated: true)
+                    cacheHUD.hide(animated: true, afterDelay: 2)
+                case .progress:
+                    cacheHUD = MBProgressHUD(view: self.view)
+                    cacheHUD.mode = .determinate
+                    cacheHUD.label.text = msg.text
+                    cacheHUD.show(animated: true)
+                }
+                
+                HUDViewsMapper.setObject(cacheHUD, forKey: key)
+            }
+            
+            if msg.isDismiss {
+                cacheHUD.hide(animated: true)
+            } else {
+                switch msg.style {
+                case .tips:
+                    break
+                case .progress:
+                    cacheHUD.label.text = msg.text
+                    cacheHUD.progress = Float(msg.progress)
+                }
+                HUDViewsMapper.setObject(cacheHUD, forKey: key)
+            }
         default:
             self.playerNavigationController?.playerViewController?.parseMessage(name, data: messageData)
             break

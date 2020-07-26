@@ -1,8 +1,10 @@
+import 'package:dandanplay/Model/Login/User.dart';
 import 'package:dandanplay/Model/Match/FileMatchCollection.dart';
 import 'package:dandanplay/Model/Message/Receive/ParseFileMessage.dart';
 import 'package:dandanplay/Model/Message/Receive/SendDanmakuMessage.dart';
 import 'package:dandanplay/Model/Message/Send/HUDMessage.dart';
 import 'package:dandanplay/Model/Message/Send/LoadDanmakuMessage.dart';
+import 'package:dandanplay/NetworkManager/AuthNetWorkManager.dart';
 import 'package:dandanplay/NetworkManager/CommentNetworkManager.dart';
 import 'package:dandanplay/NetworkManager/MatchNetworkManager.dart';
 import 'package:dandanplay/Tools/Preferences.dart';
@@ -116,4 +118,5 @@ class Tools {
         style: HUDMessageStyle.progress, key: "parse_file", isDismiss: true);
     MessageChannel.shared.sendMessage(message);
   }
+
 }

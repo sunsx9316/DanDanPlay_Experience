@@ -62,6 +62,8 @@ flutter:
     - assets/images/Main/tabbar_file.png
     - assets/images/Main/mine.png
     - assets/images/Main/bangumi.png
+    # assets/images/Mine/*
+    - assets/images/Mine/icon.png
     # assets-generator-end
 
   # The following line ensures that the Material Icons font is

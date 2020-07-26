@@ -25,7 +25,7 @@ class MessageViewController: FlutterViewController {
     
     private var routeName: String?
     
-    required init?(coder: NSCoder) {
+    required init(coder: NSCoder) {
         super.init(coder: coder)
         self.setupInit()
     }
