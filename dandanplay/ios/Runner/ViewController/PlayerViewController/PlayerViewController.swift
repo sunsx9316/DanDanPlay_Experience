@@ -12,9 +12,6 @@ import JHDanmakuRender
 import dandanplaystore
 import SnapKit
 import YYCategories
-import dandanplayfilepicker
-
-private var FileBrowerManagerTransitioningKey = 0
 
 class PlayerViewController: UIViewController {
     
@@ -25,6 +22,10 @@ class PlayerViewController: UIViewController {
         let view = PlayerUIView.fromNib()
         view.delegate = self
         return view
+    }()
+    
+    private lazy var containerView: UIView = {
+        return UIView()
     }()
     
     private lazy var danmakuRender: JHDanmakuEngine = {
@@ -51,13 +52,12 @@ class PlayerViewController: UIViewController {
         return NSCache<NSNumber, DanmakuCollectionModel>()
     }()
     
-    private var containerView: UIView = {
-        return UIView()
+    private lazy var manager: PlayerManager = {
+        let manager = PlayerManager()
+        manager.delegate = self
+        return manager
     }()
     
-    private var autoHiddenTimer: Timer?
-    private var hiddenControlView = false
-    private var fileBrower: FileBrowerManager?
     
     //MARK: - life cycle
     
@@ -85,13 +85,13 @@ class PlayerViewController: UIViewController {
 //        }
 //    }
 
-//    override func viewWillDisappear(_ animated: Bool) {
-//        super.viewWillDisappear(animated)
-//
-//        if self.player.isPlaying {
-//            self.player.pause()
-//        }
-//    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+
+        if self.player.isPlaying {
+            self.player.pause()
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -123,7 +123,8 @@ class PlayerViewController: UIViewController {
         
         
         changeRepeatMode()
-        autoShowControlView()
+//        autoShowControlView()
+        uiView.autoShowControlView()
         if let first = self.player.playerLists.first,
             let playItem = findPlayItem(first) {
             loadMediaItem(playItem)
@@ -345,69 +346,6 @@ class PlayerViewController: UIViewController {
         return nil
     }
     
-    private func autoShowControlView(completion: (() -> ())? = nil) {
-        func startHiddenTimerAction() {
-            self.autoHiddenTimer?.invalidate()
-            
-            self.autoHiddenTimer = Timer.scheduledTimer(withTimeInterval: 4, block: { (timer) in
-                self.autoHideMouseControlView()
-            }, repeats: false)
-            self.autoHiddenTimer?.fireDate = Date(timeIntervalSinceNow: 4);
-            
-            completion?()
-        }
-        
-        DispatchQueue.main.async {
-            if self.hiddenControlView {
-                self.hiddenControlView = false
-                
-//                var frame = self.controlView.frame
-//                frame.origin.y = 0
-//
-//                NSAnimationContext.runAnimationGroup({ (context) in
-//                    context.duration = 0.2;
-//                    self.controlView.animator().frame = frame
-//                }) {
-//                    self.controlView.snp.remakeConstraints { (make) in
-//                        make.top.equalTo(self.containerView.snp.bottom)
-//                        make.leading.trailing.equalToSuperview()
-//                        make.bottom.equalToSuperview()
-//                    }
-//
-//                    startHiddenTimerAction()
-//                }
-            } else {
-                startHiddenTimerAction();
-            }
-        }
-    }
-    
-    private func autoHideMouseControlView() {
-//        DispatchQueue.main.async {
-//            //显示状态 隐藏
-//            if self.hiddenControlView == false {
-//                self.hiddenControlView = true
-//                self.autoHiddenTimer?.invalidate()
-//                NSCursor.setHiddenUntilMouseMoves(true)
-//                var frame = self.controlView.frame
-//                let height = self.controlView.frame.height > 0 ? self.controlView.frame.height : 70
-//                let progressHeight: CGFloat = 15
-//                frame.origin.y = -(height - progressHeight)
-//
-//                NSAnimationContext.runAnimationGroup({ (context) in
-//                    context.duration = 0.2;
-//                    self.controlView.animator().frame = frame
-//                }) {
-//                    self.controlView.snp.remakeConstraints { (make) in
-//                        make.top.equalTo(self.containerView.snp.bottom)
-//                        make.leading.trailing.equalToSuperview()
-//                        make.bottom.equalToSuperview().offset(height - progressHeight)
-//                    }
-//                }
-//            }
-//        }
-    }
-    
     private func changeRepeatMode() {
         if let mode = DDPMediaPlayerRepeatMode(rawValue: UInt(Preferences.shared.playerMode.rawValue)) {
             player.repeatMode = mode
@@ -465,18 +403,11 @@ extension PlayerViewController {
 //MARK: - PlayerUIViewDelegate
 extension PlayerViewController: PlayerUIViewDelegate {
     func onTouchMoreButton(playerUIView: PlayerUIView) {
-        
+        self.manager.showSetting(from: self)
     }
     
     func onTouchPlayerList(playerUIView: PlayerUIView) {
-        let manager = FileBrowerManager(multipleSelection: false)
-        manager.delegate = self
-        self.fileBrower = manager
-        let animater = PlayerControlAnimater()
-        objc_setAssociatedObject(manager, &FileBrowerManagerTransitioningKey, animater, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        manager.containerViewController.modalPresentationStyle = .custom
-        manager.containerViewController.transitioningDelegate = animater
-        self.present(manager.containerViewController, animated: true, completion: nil)
+        self.manager.showFileBrower(from: self)
     }
     
     func onTouchDanmakuSwitch(playerUIView: PlayerUIView, isOn: Bool) {
@@ -579,25 +510,18 @@ extension PlayerViewController: DDPMediaPlayerDelegate {
     }
 }
 
+//MARK: - JHDanmakuEngineDelegate
 extension PlayerViewController: JHDanmakuEngineDelegate {
-    //MARK: - JHDanmakuEngineDelegate
     func danmakuEngine(_ danmakuEngine: JHDanmakuEngine, didSendDanmakuAtTime time: UInt) -> [JHDanmakuProtocol] {
         return danmakuDic[time] ?? []
     }
 }
 
-extension PlayerViewController: FileBrowerManagerDelegate {
-    func didSelectedPaths(manager: FileBrowerManager, paths: [String]) {
-        let urls = paths.compactMap({ URL(fileURLWithPath: $0) })
+//MARK: PlayerManagerDelegate
+extension PlayerViewController: PlayerManagerDelegate {
+    func didSelectedURLs(urls: [URL]) {
         self.loadURLs(urls)
-        self.fileBrower = nil
-    }
-    
-    func didDismiss(manager: FileBrowerManager) {
-        self.fileBrower = nil
-    }
-    
-    func didCancel(manager: FileBrowerManager) {
-        self.fileBrower = nil
     }
 }
+
+

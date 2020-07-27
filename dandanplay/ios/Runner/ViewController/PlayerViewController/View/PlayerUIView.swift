@@ -36,6 +36,9 @@ class PlayerUIView: UIView {
     @IBOutlet weak var danmakuSwitch: SevenSwitch!
     @IBOutlet weak var gestureView: UIView!
     @IBOutlet weak var slider: UISlider!
+    @IBOutlet weak var topView: UIView!
+    @IBOutlet weak var bottomView: UIView!
+    
     
     weak var delegate: PlayerUIViewDelegate?
     
@@ -45,7 +48,18 @@ class PlayerUIView: UIView {
         return timeFormatter
     }()
     
-    private var isDragingSlider = false
+    private var isDragingSlider = false {
+        didSet {
+            if isDragingSlider {
+                suspendTimer()
+            } else {
+                resumeTimer()
+            }
+        }
+    }
+    private var autoHiddenTimer: Timer?
+    private var hiddenControlView = false
+    private var hiddenTime: TimeInterval = 4
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -59,11 +73,23 @@ class PlayerUIView: UIView {
         
         slider.setThumbImage(UIImage(color: UIColor.white, size: CGSize(width: 16, height: 10))?.byRoundCornerRadius(2), for: .normal)
         
-        let tap = UITapGestureRecognizer(target: self, action: #selector(PlayerUIView.doubleTap))
-        tap.numberOfTapsRequired = 2
-        self.gestureView.addGestureRecognizer(tap)
+        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(PlayerUIView.doubleTap))
+        doubleTap.numberOfTapsRequired = 2
+        
+        let singleTap = UITapGestureRecognizer(target: self, action: #selector(PlayerUIView.singleTap))
+        singleTap.numberOfTapsRequired = 1
+        
+        singleTap.require(toFail: doubleTap)
+        
+        self.gestureView.addGestureRecognizer(doubleTap)
+        self.gestureView.addGestureRecognizer(singleTap)
     }
     
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesEnded(touches, with: event)
+        
+        resumeTimer()
+    }
     
     func updateTime() {
         let currentTime = delegate?.playerCurrentTime(playerUIView: self) ?? 0
@@ -76,7 +102,51 @@ class PlayerUIView: UIView {
         }
     }
     
-    //MARK: Private Method
+    func autoShowControlView(completion: (() -> ())? = nil) {
+        func startHiddenTimerAction() {
+            self.autoHiddenTimer?.invalidate()
+            
+            self.autoHiddenTimer = Timer.scheduledTimer(withTimeInterval: hiddenTime, block: { (timer) in
+                self.autoHideControlView()
+            }, repeats: false)
+            self.autoHiddenTimer?.fireDate = Date(timeIntervalSinceNow: hiddenTime);
+            
+            completion?()
+        }
+        
+        DispatchQueue.main.async {
+            if self.hiddenControlView {
+                self.hiddenControlView = false
+                
+                UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
+                    self.topView.transform = .identity
+                    self.bottomView.transform = .identity
+                }) { (finish) in
+                    startHiddenTimerAction()
+                }
+            } else {
+                startHiddenTimerAction();
+            }
+        }
+    }
+        
+    func autoHideControlView() {
+        DispatchQueue.main.async {
+            //显示状态 隐藏
+            if self.hiddenControlView == false {
+                self.hiddenControlView = true
+                self.autoHiddenTimer?.invalidate()
+                
+                UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
+                    self.topView.transform = CGAffineTransform(translationX: 0, y: -self.topView.frame.height)
+                    self.bottomView.transform = CGAffineTransform(translationX: 0, y: self.bottomView.frame.height)
+                })
+            }
+        }
+    }
+    
+    //MARK: - Private Method
+    //MARK: 点击
     @IBAction func onTouchBackButton(_ sender: UIButton) {
         viewController?.dismiss(animated: true, completion: nil)
     }
@@ -87,20 +157,30 @@ class PlayerUIView: UIView {
     
     @objc private func onTouchSwitch(_ sender: SevenSwitch) {
         delegate?.onTouchDanmakuSwitch(playerUIView: self, isOn: sender.isOn())
+        resumeTimer()
     }
     
     @IBAction func onTouchPlayerList(_ sender: UIButton) {
         delegate?.onTouchPlayerList(playerUIView: self)
     }
     
-    //MARK: 滑动条
     @objc private func doubleTap(gesture: UITapGestureRecognizer) {
         delegate?.doubleTap(playerUIView: self)
     }
     
+    @objc private func singleTap(gesture: UITapGestureRecognizer) {
+        autoHiddenTimer?.invalidate()
+        if self.hiddenControlView {
+            autoShowControlView()
+        } else {
+            autoHideControlView()
+        }
+    }
+    
+    //MARK: 滑动条
     @IBAction func tapUp(slider: UISlider) {
         delegate?.tapSlider(playerUIView: self, progress: CGFloat(slider.value))
-        endSliderDraging()
+        isDragingSlider = false
     }
     
     @IBAction func tapDown(slider: UISlider) {
@@ -108,12 +188,17 @@ class PlayerUIView: UIView {
     }
     
     @IBAction func tapCancel(slider: UISlider) {
-        endSliderDraging()
-    }
-    
-    
-    private func endSliderDraging() {
         isDragingSlider = false
     }
+    
+    //MARK: -
+    private func suspendTimer() {
+        autoHiddenTimer?.fireDate = Date.distantFuture
+    }
+    
+    private func resumeTimer() {
+        autoHiddenTimer?.fireDate = Date(timeIntervalSinceNow: hiddenTime)
+    }
+
     
 }

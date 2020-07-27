@@ -22,8 +22,9 @@
 		893226E124BAE320007AC7B3 /* UIColor+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893226E024BAE320007AC7B3 /* UIColor+Helper.swift */; };
 		893226E524BAEDB1007AC7B3 /* SevenSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893226E424BAEDB1007AC7B3 /* SevenSwitch.swift */; };
 		894B2FB0246FD46A00977017 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894B2FAF246FD46A00977017 /* MainViewController.swift */; };
-		89C20A5D24C8915F009A094C /* PlayerListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C20A5C24C8915F009A094C /* PlayerListViewController.swift */; };
+		89C20A5D24C8915F009A094C /* PlayerSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C20A5C24C8915F009A094C /* PlayerSettingViewController.swift */; };
 		89C20A6B24CDDFA2009A094C /* PlayerControlAnimater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C20A6A24CDDFA2009A094C /* PlayerControlAnimater.swift */; };
+		89C20A7724CF1C15009A094C /* PlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C20A7624CF1C15009A094C /* PlayerManager.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
@@ -65,8 +66,9 @@
 		893226E024BAE320007AC7B3 /* UIColor+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Helper.swift"; sourceTree = "<group>"; };
 		893226E424BAEDB1007AC7B3 /* SevenSwitch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SevenSwitch.swift; sourceTree = "<group>"; };
 		894B2FAF246FD46A00977017 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
-		89C20A5C24C8915F009A094C /* PlayerListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerListViewController.swift; sourceTree = "<group>"; };
+		89C20A5C24C8915F009A094C /* PlayerSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSettingViewController.swift; sourceTree = "<group>"; };
 		89C20A6A24CDDFA2009A094C /* PlayerControlAnimater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerControlAnimater.swift; sourceTree = "<group>"; };
+		89C20A7624CF1C15009A094C /* PlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerManager.swift; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
 		97C146EE1CF9000F007C117D /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -121,6 +123,7 @@
 		892FB6CC247D477C00CC1779 /* PlayerViewController */ = {
 			isa = PBXGroup;
 			children = (
+				89C20A7524CF1C00009A094C /* Manager */,
 				89C20A6024CDDA12009A094C /* Model */,
 				893226D924BAD62F007AC7B3 /* View */,
 				892FB6CD247D479600CC1779 /* PlayerViewController.swift */,
@@ -135,7 +138,7 @@
 				893226E424BAEDB1007AC7B3 /* SevenSwitch.swift */,
 				893226DA24BAD646007AC7B3 /* PlayerUIView.swift */,
 				893226DC24BAD64F007AC7B3 /* PlayerUIView.xib */,
-				89C20A5C24C8915F009A094C /* PlayerListViewController.swift */,
+				89C20A5C24C8915F009A094C /* PlayerSettingViewController.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -164,6 +167,14 @@
 				89C20A6A24CDDFA2009A094C /* PlayerControlAnimater.swift */,
 			);
 			path = Model;
+			sourceTree = "<group>";
+		};
+		89C20A7524CF1C00009A094C /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				89C20A7624CF1C15009A094C /* PlayerManager.swift */,
+			);
+			path = Manager;
 			sourceTree = "<group>";
 		};
 		9740EEB11CF90186004384FC /* Flutter */ = {
@@ -374,8 +385,9 @@
 				893226DB24BAD646007AC7B3 /* PlayerUIView.swift in Sources */,
 				89C20A6B24CDDFA2009A094C /* PlayerControlAnimater.swift in Sources */,
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
-				89C20A5D24C8915F009A094C /* PlayerListViewController.swift in Sources */,
+				89C20A5D24C8915F009A094C /* PlayerSettingViewController.swift in Sources */,
 				892FB6D4247D5D6D00CC1779 /* MessageHandler.swift in Sources */,
+				89C20A7724CF1C15009A094C /* PlayerManager.swift in Sources */,
 				893226E524BAEDB1007AC7B3 /* SevenSwitch.swift in Sources */,
 				892FB6B0247A4E9600CC1779 /* Constant.swift in Sources */,
 				893226DF24BADE39007AC7B3 /* UIView+Helper.swift in Sources */,

@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:dandanplay/Config/Constant.dart';
 import 'package:dandanplay/Tools/Preferences.dart';
 import 'package:dandanplay/Tools/Utility.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class PlayerSettingWidget extends StatefulWidget {
   @override
@@ -68,31 +71,38 @@ class PlayerSettingWidgetState extends State<PlayerSettingWidget> {
       int divisions = 1,
       String label,
       Color maxValueColor}) {
-
     assert(value >= min && value <= max, "值不符合规范 $title, $min $value $max");
 
-    return Padding(
-        padding: EdgeInsets.all(10),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Text(title),
-              Row(children: <Widget>[
-                Text(minString ?? "$min"),
-                Expanded(
-                    child: Slider(
-                        value: value,
-                        min: min,
-                        max: max,
-                        label: label ?? "$value",
-                        divisions: divisions,
-                        onChanged: onChanged)),
-                Text(maxString ?? "$max",
-                    style: maxValueColor != null
-                        ? TextStyle(color: maxValueColor)
-                        : null)
-              ])
-            ]));
+    return SafeArea(
+        child: Padding(
+            padding: EdgeInsets.all(10),
+            child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(title),
+                  Row(children: <Widget>[
+                    Text(minString ?? "$min"),
+                    Expanded(
+                        child: Slider(
+                            value: value,
+                            min: min,
+                            max: max,
+                            label: label ?? "$value",
+                            divisions: divisions,
+                            onChanged: (value) {
+                              final format = NumberFormat();
+                              format.minimumFractionDigits = 0;
+                              format.maximumFractionDigits = 2;
+                              final formatValue = format.format(value);
+                              var doubleValue = double.parse(formatValue);
+                              onChanged(doubleValue);
+                            })),
+                    Text(maxString ?? "$max",
+                        style: maxValueColor != null
+                            ? TextStyle(color: maxValueColor)
+                            : null)
+                  ])
+                ])));
   }
 
   Widget _createPlayerSettingWidget() {
@@ -107,14 +117,15 @@ class PlayerSettingWidgetState extends State<PlayerSettingWidget> {
               });
             }, divisions: 15);
           } else if (index == 1) {
-            return InkWell(
-                child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Row(children: [
-                      Expanded(child: Text("播放模式")),
-                      Text(_playerModeTypeDesc(_playerMode))
-                    ])),
-                onTap: _onTapPlayerMode);
+            return SafeArea(
+                child: InkWell(
+                    child: Padding(
+                        padding: EdgeInsets.all(10),
+                        child: Row(children: [
+                          Expanded(child: Text("播放模式")),
+                          Text(_playerModeTypeDesc(_playerMode))
+                        ])),
+                    onTap: _onTapPlayerMode));
           }
           return Container();
         });
@@ -125,13 +136,24 @@ class PlayerSettingWidgetState extends State<PlayerSettingWidget> {
         itemCount: 4,
         itemBuilder: (context, index) {
           if (index == 0) {
-            return _createSliderCell("弹幕字体大小", 18, 32, _danmakuFontSize,
-                (value) {
+            double danmakuFontMinSize = 18;
+            if (Platform.isIOS) {
+              danmakuFontMinSize = 10;
+            }
+
+            double danmakuFontMacSize = 32;
+
+            final divisions = (danmakuFontMacSize - danmakuFontMinSize).toInt();
+            return _createSliderCell(
+                "弹幕字体大小", danmakuFontMinSize, 32, _danmakuFontSize, (value) {
               setState(() {
                 _danmakuFontSize = value;
                 Preferences.shared.setDanmakuFontSize(value);
               });
-            }, minString: "18", maxString: "32", divisions: 14);
+            },
+                minString: "$danmakuFontMinSize",
+                maxString: "$danmakuFontMacSize",
+                divisions: divisions);
           } else if (index == 1) {
             double maxValue = 3;
             final isMaxValue = _danmakuSpeed == maxValue;

@@ -14,7 +14,7 @@ public protocol FileBrowerManagerDelegate: class {
     func didCancel(manager: FileBrowerManager)
 }
 
-extension FileBrowerManagerDelegate {
+public extension FileBrowerManagerDelegate {
     func didSelectedPaths(manager: FileBrowerManager, paths: [String]) {}
     func didDismiss(manager: FileBrowerManager) {}
     func didCancel(manager: FileBrowerManager) {}

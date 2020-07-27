@@ -69,19 +69,19 @@
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ptp-3f-Xy2">
-                    <rect key="frame" x="0.0" y="310" width="591" height="74"/>
+                    <rect key="frame" x="0.0" y="290" width="591" height="94"/>
                     <subviews>
                         <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Player/comment_gradual_gray" translatesAutoresizingMaskIntoConstraints="NO" id="0ko-qr-4Wm">
-                            <rect key="frame" x="0.0" y="0.0" width="591" height="74"/>
+                            <rect key="frame" x="0.0" y="0.0" width="591" height="94"/>
                         </imageView>
                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00/00:00" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8Hx-6j-dMG">
-                            <rect key="frame" x="5" y="42.5" width="85" height="14.5"/>
+                            <rect key="frame" x="5" y="62.5" width="85" height="14.5"/>
                             <fontDescription key="fontDescription" type="system" pointSize="12"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
                         <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wMp-eO-6He" customClass="SevenSwitch" customModule="Runner" customModuleProvider="target">
-                            <rect key="frame" x="95" y="40" width="40" height="20"/>
+                            <rect key="frame" x="95" y="60" width="40" height="20"/>
                             <color key="backgroundColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="40" id="1V9-Ao-Hxu"/>
@@ -92,7 +92,7 @@
                             </userDefinedRuntimeAttributes>
                         </view>
                         <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="WIq-4p-eB4">
-                            <rect key="frame" x="8" y="0.0" width="575" height="31"/>
+                            <rect key="frame" x="8" y="10" width="575" height="31"/>
                             <connections>
                                 <action selector="tapCancelWithSlider:" destination="iN0-l3-epB" eventType="touchUpOutside" id="1gU-Tz-h6Y"/>
                                 <action selector="tapCancelWithSlider:" destination="iN0-l3-epB" eventType="touchCancel" id="YQP-dn-aYq"/>
@@ -101,7 +101,7 @@
                             </connections>
                         </slider>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fOQ-wm-p2d">
-                            <rect key="frame" x="551" y="37.5" width="25" height="25"/>
+                            <rect key="frame" x="551" y="57.5" width="25" height="25"/>
                             <state key="normal" image="Player/player_list"/>
                             <connections>
                                 <action selector="onTouchPlayerList:" destination="iN0-l3-epB" eventType="touchUpInside" id="JBI-b0-qvl"/>
@@ -118,8 +118,8 @@
                         <constraint firstAttribute="bottom" secondItem="8Hx-6j-dMG" secondAttribute="bottom" constant="17" id="NNE-m7-Kci"/>
                         <constraint firstItem="wMp-eO-6He" firstAttribute="leading" secondItem="8Hx-6j-dMG" secondAttribute="trailing" constant="5" id="PCZ-Wq-YYV"/>
                         <constraint firstItem="fOQ-wm-p2d" firstAttribute="centerY" secondItem="wMp-eO-6He" secondAttribute="centerY" id="YVM-JS-j5D"/>
-                        <constraint firstItem="wMp-eO-6He" firstAttribute="top" secondItem="WIq-4p-eB4" secondAttribute="bottom" constant="10" id="c7w-HV-WSM"/>
-                        <constraint firstItem="WIq-4p-eB4" firstAttribute="top" secondItem="Ptp-3f-Xy2" secondAttribute="top" id="fyz-bB-o7U"/>
+                        <constraint firstItem="wMp-eO-6He" firstAttribute="top" secondItem="WIq-4p-eB4" secondAttribute="bottom" constant="20" id="c7w-HV-WSM"/>
+                        <constraint firstItem="WIq-4p-eB4" firstAttribute="top" secondItem="Ptp-3f-Xy2" secondAttribute="top" constant="10" id="fyz-bB-o7U"/>
                         <constraint firstItem="8Hx-6j-dMG" firstAttribute="leading" secondItem="Ptp-3f-Xy2" secondAttribute="leading" constant="5" id="g78-5O-I5j"/>
                         <constraint firstItem="wMp-eO-6He" firstAttribute="centerY" secondItem="8Hx-6j-dMG" secondAttribute="centerY" id="tJt-Da-nC3"/>
                         <constraint firstItem="0ko-qr-4Wm" firstAttribute="top" secondItem="Ptp-3f-Xy2" secondAttribute="top" id="xGj-qf-kZh"/>
@@ -143,11 +143,13 @@
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
             <connections>
+                <outlet property="bottomView" destination="Ptp-3f-Xy2" id="JM8-Ui-m7N"/>
                 <outlet property="danmakuSwitch" destination="wMp-eO-6He" id="SoG-dn-r2Z"/>
                 <outlet property="gestureView" destination="3CG-zv-jjw" id="iJE-I5-ioR"/>
                 <outlet property="slider" destination="WIq-4p-eB4" id="GAe-H0-58F"/>
                 <outlet property="timeLabel" destination="8Hx-6j-dMG" id="29P-VY-sA1"/>
                 <outlet property="titleLabel" destination="X3s-Pw-2c8" id="hlB-6E-Qb6"/>
+                <outlet property="topView" destination="grl-RL-SGz" id="8Td-mG-Q2d"/>
             </connections>
             <point key="canvasLocation" x="165.94202898550725" y="39.508928571428569"/>
         </view>
