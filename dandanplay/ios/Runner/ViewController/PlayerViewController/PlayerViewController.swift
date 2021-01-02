@@ -21,11 +21,13 @@ class PlayerViewController: UIViewController {
     private lazy var uiView: PlayerUIView = {
         let view = PlayerUIView.fromNib()
         view.delegate = self
+        view.dataSource = self
         return view
     }()
     
     private lazy var containerView: UIView = {
-        return UIView()
+        let view = UIView()
+        return view
     }()
     
     private lazy var danmakuRender: JHDanmakuEngine = {
@@ -36,6 +38,7 @@ class PlayerViewController: UIViewController {
         danmakuRender.globalFont = UIFont.systemFont(ofSize: CGFloat(Preferences.shared.danmakuFontSize))
         danmakuRender.systemSpeed = CGFloat(Preferences.shared.danmakuSpeed)
         danmakuRender.canvas.alpha = CGFloat(Preferences.shared.danmakuAlpha)
+        danmakuRender.canvas.isHidden = !Preferences.shared.showDanmaku
         return danmakuRender
     }()
     
@@ -191,6 +194,8 @@ class PlayerViewController: UIViewController {
                 guard let enumValue = Preferences.KeyName(rawValue: message.key) else { return }
                 
                 switch enumValue {
+                case .showDanmaku:
+                    self.danmakuRender.canvas.isHidden = !Preferences.shared.showDanmaku
                 case .playerSpeed:
                     self.player.speed = Float(Preferences.shared.playerSpeed)
                 case .danmakuAlpha:
@@ -260,11 +265,6 @@ class PlayerViewController: UIViewController {
     
     private func loadMediaItem(_ item: PlayItem) {
         
-//        if let vc = self.playerListViewController {
-//            self.dismiss(vc)
-//            self.playerListViewController = nil
-//        }
-        
         self.player.addMediaItems([item])
         self.player.stop()
         self.player.play(withItem: item)
@@ -276,62 +276,6 @@ class PlayerViewController: UIViewController {
         } else {
             self.player.play()
         }
-    }
-    
-    private func sendDanmaku(_ str: String) {
-        
-        guard let currentPlayItem = self.player.currentPlayItem,
-            let playItem = findPlayItem(currentPlayItem),
-            !str.isEmpty else { return }
-        
-        if playItem.episodeId == 0 {
-//            ProgressHUDHelper.showHUD(text: "请先匹配视频！")
-            return
-        }
-        
-//        let danmaku = DanmakuModel()
-//        danmaku.color = self.controlView.sendanmakuColor
-//        danmaku.mode = DanmakuModel.Mode(rawValue: Int(self.controlView.sendanmakuStyle.rawValue)) ?? .normal
-//        danmaku.message = str
-//        danmaku.time = self.player.currentTime
-//
-//        let msg = SendDanmakuMessage()
-//        msg.danmaku = danmaku
-//        msg.episodeId = playItem.episodeId
-//        MessageHandler.sendMessage(msg)
-//        self.danmakuRender.sendDanmaku(DanmakuManager.shared.conver(danmaku))
-    }
-    
-    private func showPlayerList() {
-//        if self.playerListViewController == nil {
-//            let vc = PlayerListViewController()
-//            vc.view.frame = CGRect(x: 0, y: 0, width: max(250, self.view.frame.width * 0.3), height: max(200, self.view.frame.height * 0.5))
-//            vc.delegate = self
-//            self.playerListViewController = vc
-//            self.present(vc, asPopoverRelativeTo: CGRect(x: 0, y: 0, width: 200, height: 200), of: controlView.playerListButton ?? view, preferredEdge: .minY, behavior: .transient)
-//        }
-    }
-    
-    private func hidePlayerList() {
-//        if let vc = self.playerListViewController {
-//            self.dismiss(vc)
-//        }
-    }
-    
-    private func showPlayerSetting() {
-//        if self.playerSettingViewController == nil {
-//            let vc = PlayerSettingViewController()
-//
-//            vc.view.frame = CGRect(x: 0, y: 0, width: max(400, self.view.frame.width * 0.3), height: max(400, self.view.frame.height * 0.5))
-//            self.playerSettingViewController = vc
-//            self.present(vc, asPopoverRelativeTo: CGRect(x: 0, y: 0, width: 200, height: 200), of: controlView.playerSettingButtoon ?? view, preferredEdge: .minY, behavior: .transient)
-//        }
-    }
-    
-    private func hidePlayerSetting() {
-//        if let vc = self.playerSettingViewController {
-//            self.dismiss(vc)
-//        }
     }
     
     private func findPlayItem(_ protocolItem: DDPMediaItemProtocol) -> PlayItem? {
@@ -351,34 +295,6 @@ class PlayerViewController: UIViewController {
             player.repeatMode = mode
         }
     }
-    
-    //MARK: - PlayerListViewControllerDelegate
-//    func currentPlayIndexAtPlayerListViewController(_ viewController: PlayerListViewController) -> Int? {
-//        if let currentPlayItem = player.currentPlayItem {
-//            return player.index(withItem: currentPlayItem)
-//        }
-//        return nil
-//    }
-//
-//    func playerListViewController(_ viewController: PlayerListViewController, titleAtRow: Int) -> String {
-//        return self.player.playerLists[titleAtRow].url?.lastPathComponent ?? ""
-//    }
-//
-//    func playerListViewController(_ viewController: PlayerListViewController, didSelectedRow: Int) {
-//        let item = self.player.playerLists[didSelectedRow]
-//        if let playItem = findPlayItem(item) {
-//            loadMediaItem(playItem)
-//        }
-//    }
-//
-//    func playerListViewController(_ viewController: PlayerListViewController, didDeleteRowIndexSet: IndexSet) {
-//        player.removeMedia(with: didDeleteRowIndexSet)
-//    }
-//
-//    func numberOfRowAtPlayerListViewController() -> Int {
-//        return self.player.playerLists.count
-//    }
-    
 }
 
 extension PlayerViewController {
@@ -400,8 +316,8 @@ extension PlayerViewController {
     }
 }
 
-//MARK: - PlayerUIViewDelegate
-extension PlayerViewController: PlayerUIViewDelegate {
+extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
+    //MARK: PlayerUIViewDelegate
     func onTouchMoreButton(playerUIView: PlayerUIView) {
         self.manager.showSetting(from: self)
     }
@@ -412,6 +328,44 @@ extension PlayerViewController: PlayerUIViewDelegate {
     
     func onTouchDanmakuSwitch(playerUIView: PlayerUIView, isOn: Bool) {
         self.danmakuRender.canvas.isHidden = !isOn
+    }
+    
+    func onTouchSendDanmakuButton(playerUIView: PlayerUIView) {
+        guard let item = self.player.currentPlayItem,
+              self.findPlayItem(item)?.episodeId != nil else {
+            self.view.showHUD("需要指定视频弹幕列表，才能发弹幕哟~")
+            return
+        }
+        
+        let vc = SendDanmakuViewController(project: nil, nibName: nil, bundle: nil)
+        vc.onTouchSendButtonCallBack = { [weak self] (text, aVC) in
+            guard let self = self else { return }
+            
+            guard let item = self.player.currentPlayItem,
+                  let episodeId = self.findPlayItem(item)?.episodeId else {
+                
+                self.view.showHUD("需要指定视频弹幕列表，才能发弹幕哟~")
+                return
+            }
+            
+            if !text.isEmpty {
+                let danmaku = DanmakuModel()
+                danmaku.mode = .normal
+                danmaku.time = self.danmakuRender.currentTime + self.danmakuRender.offsetTime
+                danmaku.message = text
+                danmaku.id = "\(Date().timeIntervalSince1970)"
+                
+                let msg = SendDanmakuMessage()
+                msg.danmaku = danmaku
+                msg.episodeId = episodeId
+                MessageHandler.sendMessage(msg)
+                
+                self.danmakuRender.sendDanmaku(DanmakuManager.shared.conver(danmaku))
+            }
+            
+            aVC.navigationController?.popViewController(animated: true)
+        }
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     func doubleTap(playerUIView: PlayerUIView) {
@@ -430,6 +384,37 @@ extension PlayerViewController: PlayerUIViewDelegate {
             
             self.uiView.updateTime()
         }
+    }
+    
+    func changeProgress(playerUIView: PlayerUIView, diffValue: CGFloat) {
+        player.jump(Int32(diffValue)) { [weak self] (time) in
+            guard let self = self else {
+                return
+            }
+            
+            self.uiView.updateTime()
+        }
+    }
+    
+    func changeBrightness(playerUIView: PlayerUIView, diffValue: CGFloat) {
+        
+    }
+    
+    func changeVolume(playerUIView: PlayerUIView, diffValue: CGFloat) {
+        player.volumeJump(diffValue)
+    }
+    
+    //MARK: PlayerUIViewDataSource
+    func playerCurrentTime(playerUIView: PlayerUIView) -> TimeInterval {
+        return player.currentTime
+    }
+    
+    func playerTotalTime(playerUIView: PlayerUIView) -> TimeInterval {
+        return player.length
+    }
+    
+    func playerProgress(playerUIView: PlayerUIView) -> CGFloat {
+        return player.position
     }
 }
 
@@ -495,18 +480,6 @@ extension PlayerViewController: DDPMediaPlayerDelegate {
                 MessageHandler.sendMessage(message)
             }
         }
-    }
-    
-    func playerCurrentTime(playerUIView: PlayerUIView) -> TimeInterval {
-        return player.currentTime
-    }
-    
-    func playerTotalTime(playerUIView: PlayerUIView) -> TimeInterval {
-        return player.length
-    }
-    
-    func playerProgress(playerUIView: PlayerUIView) -> CGFloat {
-        return player.position
     }
 }
 

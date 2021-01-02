@@ -19,7 +19,6 @@ class MineWidget extends StatefulWidget {
 }
 
 class MineWidgetState extends State with RouteAware {
-
   @override
   void initState() {
     super.initState();
@@ -88,9 +87,9 @@ class MineWidgetState extends State with RouteAware {
               GestureDetector(
                   child: ConstrainedBox(
                       constraints: BoxConstraints(maxHeight: 260),
-                      child: Stack(
+                      child: ClipRect(
+                          child: Stack(
                         alignment: Alignment.center,
-                        overflow: Overflow.clip,
                         fit: StackFit.expand,
                         children: <Widget>[
                           FittedBox(child: icon, fit: BoxFit.cover),
@@ -121,7 +120,7 @@ class MineWidgetState extends State with RouteAware {
                             ],
                           ))
                         ],
-                      )),
+                      ))),
                   onTap: () {
                     _onTapUserIcon(_user);
                   }),

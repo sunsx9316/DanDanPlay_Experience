@@ -11,6 +11,8 @@ class AppDelegate: FlutterAppDelegate {
     private let ignoreVersionKey = "ignoreVersion"
     @IBOutlet weak var subtitleMenuItem: NSMenuItem!
     @IBOutlet weak var subtitleDelayMenuItem: NSMenuItem!
+    @IBOutlet weak var subtitleTrackMenuItem: NSMenuItem!
+    
     
     override func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {
         return true
@@ -119,11 +121,37 @@ extension AppDelegate: NSPopoverDelegate, NSMenuDelegate {
     //MARK: NSMenuDelegate
     func menuNeedsUpdate(_ menu: NSMenu) {
         let delaySecond = Helper.shared.player?.subtitleDelay ?? 0
-        for item in menu.items {
-            if item == self.subtitleDelayMenuItem {
-                item.title = String(format: "字幕延迟 %.1f秒", delaySecond)
-                break
+        self.subtitleDelayMenuItem.title = String(format: "字幕延迟 %.1f秒", delaySecond)
+        
+        self.subtitleTrackMenuItem.submenu?.removeAllItems()
+        if let player = Helper.shared.player {
+            let subtitleTitles = player.subtitleTitles
+            self.subtitleTrackMenuItem.isEnabled = true
+            var subtitleTitlesMenu = self.subtitleTrackMenuItem.submenu
+            
+            if subtitleTitlesMenu == nil {
+                subtitleTitlesMenu = NSMenu()
+                self.subtitleTrackMenuItem.submenu = subtitleTitlesMenu
             }
+            
+            let subtitleIndexs = player.subtitleIndexs
+            let currentSubtitleIndex = player.currentSubtitleIndex
+            for (index, title) in subtitleTitles.enumerated() {
+                let item = NSMenuItem(title: title, action: #selector(onClickSubtitleTrack(_:)), keyEquivalent: "")
+                if index < subtitleIndexs.count {
+                    item.tag = subtitleIndexs[index].intValue
+                    item.state = currentSubtitleIndex == item.tag ? .on : .off
+                }
+                subtitleTitlesMenu?.addItem(item)
+            }
+            
+        } else {
+            self.subtitleTrackMenuItem.submenu = nil
+            self.subtitleTrackMenuItem.isEnabled = false
         }
+    }
+    
+    @objc private func onClickSubtitleTrack(_ item: NSMenuItem) {
+        Helper.shared.player?.currentSubtitleIndex = Int32(item.tag)
     }
 }

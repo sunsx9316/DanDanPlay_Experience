@@ -9,19 +9,16 @@ import UIKit
 
 class PlayerSettingViewController: MessageViewController {
     
-    override init(project: FlutterDartProject?, nibName: String?, bundle nibBundle: Bundle?) {
-        super.init(project: project, nibName: nibName, bundle: nibBundle)
-        setInitialRoute("playerSetting")
+    override init(project: FlutterDartProject?, initialRoute: String? = "playerSetting", nibName: String?, bundle nibBundle: Bundle?) {
+        super.init(project: project, initialRoute: initialRoute, nibName: nibName, bundle: nibBundle)
     }
     
-    override init(engine: FlutterEngine, nibName: String?, bundle nibBundle: Bundle?) {
-        super.init(engine: engine, nibName: nibName, bundle: nibBundle)
-        setInitialRoute("playerSetting")
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
     }
     
-    required init(coder: NSCoder) {
-        super.init(coder: coder)
-        setInitialRoute("playerSetting")
+    convenience init() {
+        self.init(project: nil, nibName: nil, bundle: nil)
     }
     
     override func viewDidLoad() {

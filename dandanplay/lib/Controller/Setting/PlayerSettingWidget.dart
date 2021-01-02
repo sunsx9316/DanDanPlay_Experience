@@ -21,6 +21,7 @@ class PlayerSettingWidgetState extends State<PlayerSettingWidget> {
   double _danmakuMaxCount = 100;
   double _playerSpeed = 1.0;
   PlayerMode _playerMode;
+  bool _danmakuOpen = false;
 
   bool _didGetInitValue = false;
 
@@ -59,6 +60,7 @@ class PlayerSettingWidgetState extends State<PlayerSettingWidget> {
     _danmakuMaxCount = danmakuCount.toDouble();
     _playerSpeed = await Preferences.shared.playerSpeed;
     _playerMode = await Preferences.shared.playerMode;
+    _danmakuOpen = await Preferences.shared.showDanmaku;
     setState(() {
       _didGetInitValue = true;
     });
@@ -107,7 +109,7 @@ class PlayerSettingWidgetState extends State<PlayerSettingWidget> {
 
   Widget _createPlayerSettingWidget() {
     return ListView.builder(
-        itemCount: 2,
+        itemCount: Platform.isIOS ? 3 : 2,
         itemBuilder: (context, index) {
           if (index == 0) {
             return _createSliderCell("播放速度", 0.5, 2, _playerSpeed, (value) {
@@ -126,6 +128,23 @@ class PlayerSettingWidgetState extends State<PlayerSettingWidget> {
                           Text(_playerModeTypeDesc(_playerMode))
                         ])),
                     onTap: _onTapPlayerMode));
+          } else if (index == 2) {
+            return SafeArea(
+                child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Row(children: [
+                      Expanded(child: Text("弹幕开关")),
+                      // Text(_playerModeTypeDesc(_playerMode))
+                      CupertinoSwitch(
+                          value: _danmakuOpen,
+                          activeColor: GlobalConfig.mainColor,
+                          onChanged: (on) {
+                            setState(() {
+                              _danmakuOpen = on;
+                              Preferences.shared.setShowDanmaku(on);
+                            });
+                          })
+                    ])));
           }
           return Container();
         });

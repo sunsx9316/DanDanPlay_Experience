@@ -27,7 +27,7 @@ open class DanmakuManager {
     }
     
     open func conver(_ model: DanmakuModel) -> JHDanmakuProtocol {
-        let intTime = UInt(model.time)
+//        let intTime = UInt(model.time)
         
         switch model.mode {
         case .normal:

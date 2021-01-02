@@ -28,6 +28,7 @@
 		33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC11122044BFA00003C045 /* MainFlutterWindow.swift */; };
 		33D1A10422148B71006C7A3E /* FlutterMacOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33D1A10322148B71006C7A3E /* FlutterMacOS.framework */; };
 		33D1A10522148B93006C7A3E /* FlutterMacOS.framework in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 33D1A10322148B71006C7A3E /* FlutterMacOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		893F8CDC259374F30081629E /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893F8CDB259374F30081629E /* Preferences.swift */; };
 		89A72B2F24273FD000627562 /* ProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A72B2D24273FD000627562 /* ProgressHUD.swift */; };
 		89A72B312427470A00627562 /* ProgressHUDHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A72B302427470A00627562 /* ProgressHUDHelper.swift */; };
 		89A72B332427618F00627562 /* DragView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A72B322427618F00627562 /* DragView.swift */; };
@@ -113,6 +114,7 @@
 		33E51914231749380026EE4D /* Release.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Release.entitlements; sourceTree = "<group>"; };
 		33E5194F232828860026EE4D /* AppInfo.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = AppInfo.xcconfig; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
+		893F8CDB259374F30081629E /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		89A72B2D24273FD000627562 /* ProgressHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressHUD.swift; sourceTree = "<group>"; };
 		89A72B302427470A00627562 /* ProgressHUDHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressHUDHelper.swift; sourceTree = "<group>"; };
 		89A72B322427618F00627562 /* DragView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragView.swift; sourceTree = "<group>"; };
@@ -362,6 +364,7 @@
 		89BF4198241E496A00D76A81 /* Constant */ = {
 			isa = PBXGroup;
 			children = (
+				893F8CDB259374F30081629E /* Preferences.swift */,
 				89BF4199241E496A00D76A81 /* Constant.swift */,
 				89A72B382427C61500627562 /* Helper.swift */,
 			);
@@ -550,10 +553,10 @@
 			buildActionMask = 2147483647;
 			files = (
 			);
-			inputFileListPaths = (
+			inputPaths = (
 			);
 			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -596,6 +599,7 @@
 				89BF41AE241E496B00D76A81 /* DDPTextField.m in Sources */,
 				335BBD1B22A9A15E00E9071D /* GeneratedPluginRegistrant.swift in Sources */,
 				89BF41AF241E496B00D76A81 /* DDPPlayerSlider.m in Sources */,
+				893F8CDC259374F30081629E /* Preferences.swift in Sources */,
 				89BF41B6241E496B00D76A81 /* PlayerSettingViewController.swift in Sources */,
 				89BF41A4241E496B00D76A81 /* PlayerViewController.swift in Sources */,
 				89A72B7224309DFA00627562 /* AppVersionViewController.swift in Sources */,
@@ -681,7 +685,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = Q35T78D2D5;
+				DEVELOPMENT_TEAM = 25452CX7T6;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter/ephemeral",
@@ -816,7 +820,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = Q35T78D2D5;
+				DEVELOPMENT_TEAM = 25452CX7T6;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter/ephemeral",
@@ -845,7 +849,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = Q35T78D2D5;
+				DEVELOPMENT_TEAM = 25452CX7T6;
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

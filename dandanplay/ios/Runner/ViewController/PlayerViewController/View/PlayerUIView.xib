@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="16097.2" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -80,9 +81,9 @@
                             <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wMp-eO-6He" customClass="SevenSwitch" customModule="Runner" customModuleProvider="target">
+                        <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="wMp-eO-6He" customClass="SevenSwitch" customModule="Runner" customModuleProvider="target">
                             <rect key="frame" x="95" y="60" width="40" height="20"/>
-                            <color key="backgroundColor" systemColor="systemRedColor" red="1" green="0.23137254900000001" blue="0.18823529410000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <color key="backgroundColor" systemColor="systemRedColor"/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="40" id="1V9-Ao-Hxu"/>
                                 <constraint firstAttribute="height" constant="20" id="8Ab-TG-1ZZ"/>
@@ -107,6 +108,14 @@
                                 <action selector="onTouchPlayerList:" destination="iN0-l3-epB" eventType="touchUpInside" id="JBI-b0-qvl"/>
                             </connections>
                         </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="deK-XB-3os">
+                            <rect key="frame" x="450" y="55" width="86" height="30"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                            <state key="normal" title="发个弹幕吧~"/>
+                            <connections>
+                                <action selector="onTouchSendDanmakuButon:" destination="iN0-l3-epB" eventType="touchUpInside" id="KY1-vN-2dS"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
@@ -117,6 +126,8 @@
                         <constraint firstAttribute="trailing" secondItem="WIq-4p-eB4" secondAttribute="trailing" constant="10" id="EqO-EW-MaH"/>
                         <constraint firstAttribute="bottom" secondItem="8Hx-6j-dMG" secondAttribute="bottom" constant="17" id="NNE-m7-Kci"/>
                         <constraint firstItem="wMp-eO-6He" firstAttribute="leading" secondItem="8Hx-6j-dMG" secondAttribute="trailing" constant="5" id="PCZ-Wq-YYV"/>
+                        <constraint firstItem="fOQ-wm-p2d" firstAttribute="centerY" secondItem="deK-XB-3os" secondAttribute="centerY" id="PF4-Wb-cWO"/>
+                        <constraint firstItem="fOQ-wm-p2d" firstAttribute="leading" secondItem="deK-XB-3os" secondAttribute="trailing" constant="15" id="QSE-AW-U6v"/>
                         <constraint firstItem="fOQ-wm-p2d" firstAttribute="centerY" secondItem="wMp-eO-6He" secondAttribute="centerY" id="YVM-JS-j5D"/>
                         <constraint firstItem="wMp-eO-6He" firstAttribute="top" secondItem="WIq-4p-eB4" secondAttribute="bottom" constant="20" id="c7w-HV-WSM"/>
                         <constraint firstItem="WIq-4p-eB4" firstAttribute="top" secondItem="Ptp-3f-Xy2" secondAttribute="top" constant="10" id="fyz-bB-o7U"/>
@@ -160,5 +171,8 @@
         <image name="Player/comment_gradual_gray_b2w" width="1" height="10"/>
         <image name="Player/player_list" width="25" height="25"/>
         <image name="Player/player_more" width="25" height="25"/>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
     </resources>
 </document>

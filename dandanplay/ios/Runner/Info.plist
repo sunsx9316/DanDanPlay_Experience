@@ -4,6 +4,8 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>AniPlayer</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -116,11 +118,11 @@
 		<true/>
 	</dict>
 	<key>NSFaceIDUsageDescription</key>
-	<string>请允许弹弹play使用Face Id进行认证</string>
+	<string>请允许 AniPlayer 使用Face Id进行认证</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>请允许弹弹play访问您的相册</string>
+	<string>请允许 AniPlayer 访问您的相册</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>请允许弹弹play访问您的相册</string>
+	<string>请允许 AniPlayer 访问您的相册</string>
 	<key>UIFileSharingEnabled</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -128,8 +130,6 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
-		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>

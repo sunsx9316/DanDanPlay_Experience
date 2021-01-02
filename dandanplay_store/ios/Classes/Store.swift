@@ -8,11 +8,11 @@
 import Foundation
 import MMKV
 
-class Store {
+open class Store {
     
-    static private let _groupId = "com.ddplay.default"
+    public static let defaultGroupId = "com.ddplay.default"
     
-    static let shared: Store = {
+    public static let shared: Store = {
         var rootDir: String?
         #if os(iOS)
         if let path = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true).first,
@@ -27,44 +27,76 @@ class Store {
         return obj
     }()
     
-    @discardableResult func set(_ value: Double, forKey key: String, groupId: String = _groupId) -> Bool {
+    @discardableResult open func set<Value>(_ value: Value, forKey key: String, groupId: String = defaultGroupId) -> Bool {
+        if let v = value as? Double {
+            return self.set(v, forKey: key)
+        } else if let v = value as? String {
+            return self.set(v, forKey: key)
+        } else if let v = value as? Int {
+            return self.set(v, forKey: key)
+        } else if let v = value as? Bool {
+            return self.set(v, forKey: key)
+        }
+        return false
+    }
+    
+    open func value<Value>(forKey: String, groupId: String = defaultGroupId) -> Value {
+        let valueType = Value.self
+        if valueType is Double.Type {
+            let v: Double = self.value(forKey: forKey, groupId: groupId)
+            return v as! Value
+        } else if valueType is String.Type {
+            let v: String = self.value(forKey: forKey, groupId: groupId)
+            return v as! Value
+        } else if valueType is Int.Type {
+            let v: Int = self.value(forKey: forKey, groupId: groupId)
+            return v as! Value
+        } else if valueType is Bool.Type {
+            let v: Bool = self.value(forKey: forKey, groupId: groupId)
+            return v as! Value
+        }
+        
+        fatalError()
+    }
+    
+    @discardableResult open func set(_ value: Double, forKey key: String, groupId: String = defaultGroupId) -> Bool {
         return MMKV(mmapID: groupId)?.set(value, forKey: key) ?? false
     }
     
-    func value(forKey: String, groupId: String = _groupId) -> Double {
+    open func value(forKey: String, groupId: String = defaultGroupId) -> Double {
         return MMKV(mmapID: groupId)?.double(forKey: forKey) ?? 0
     }
     
-    func set(_ value: Int, forKey key: String, groupId: String = _groupId) -> Bool {
-        return MMKV(mmapID: groupId)?.set(Int32(value), forKey: key) ?? false
+    @discardableResult open func set(_ value: Int, forKey key: String, groupId: String = defaultGroupId) -> Bool {
+        return MMKV(mmapID: groupId)?.set(Int64(value), forKey: key) ?? false
     }
     
-    func value(forKey: String, groupId: String = _groupId) -> Int {
-        let value = MMKV(mmapID: groupId)?.int32(forKey: forKey) ?? 0
+    open func value(forKey: String, groupId: String = defaultGroupId) -> Int {
+        let value = MMKV(mmapID: groupId)?.int64(forKey: forKey) ?? 0
         return Int(value)
     }
     
-    func set(_ value: Bool, forKey key: String, groupId: String = _groupId) -> Bool {
+    @discardableResult open func set(_ value: Bool, forKey key: String, groupId: String = defaultGroupId) -> Bool {
         return MMKV(mmapID: groupId)?.set(value, forKey: key) ?? false
     }
     
-    func value(forKey: String, groupId: String = _groupId) -> Bool {
+    open func value(forKey: String, groupId: String = defaultGroupId) -> Bool {
         return MMKV(mmapID: groupId)?.bool(forKey: forKey) ?? false
     }
     
-    func set(_ value: String, forKey key: String, groupId: String = _groupId) -> Bool {
+    @discardableResult open func set(_ value: String, forKey key: String, groupId: String = defaultGroupId) -> Bool {
         return MMKV(mmapID: groupId)?.set(value, forKey: key) ?? false
     }
     
-    func value(forKey: String, groupId: String = _groupId) -> String? {
+    open func value(forKey: String, groupId: String = defaultGroupId) -> String? {
         return MMKV(mmapID: groupId)?.string(forKey: forKey)
     }
     
-    func contains(_ forKey: String, groupId: String = _groupId) -> Bool {
+    open func contains(_ forKey: String, groupId: String = defaultGroupId) -> Bool {
         return MMKV(mmapID: groupId)?.contains(key: forKey) == true
     }
     
-    func remove(_ forKey: String, groupId: String = _groupId) {
+    open func remove(_ forKey: String, groupId: String = defaultGroupId) {
         MMKV(mmapID: groupId)?.removeValue(forKey: forKey)
     }
     

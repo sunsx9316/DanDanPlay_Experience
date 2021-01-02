@@ -4,6 +4,7 @@ import 'package:dandanplay/Controller/HomePage/MobileHomePageWidget.dart';
 import 'package:dandanplay/Controller/Login/ForgetPasswordWidget.dart';
 import 'package:dandanplay/Controller/Login/LoginWidget.dart';
 import 'package:dandanplay/Controller/Login/RegisterWidget.dart';
+import 'package:dandanplay/Controller/Player/SendDanmakuWidget.dart';
 import 'package:dandanplay/Controller/Setting/PlayerSettingWidget.dart';
 import 'package:dandanplay/Controller/Setting/SettingWidget.dart';
 import 'package:dandanplay/Model/Message/Receive/BaseReceiveMessage.dart';
@@ -102,7 +103,10 @@ class AppState extends State<App> with MessageChannelObserver {
               },
               "register": (context) {
                 return RegisterWidget();
-              }
+              },
+              "sendDanmaku": (context) {
+                return SendDanmakuWidget();
+              },
             }));
   }
 

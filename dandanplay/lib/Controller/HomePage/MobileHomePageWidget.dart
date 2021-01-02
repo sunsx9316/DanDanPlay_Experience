@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:dandanplay/Controller/File/FileWidget.dart';
 import 'package:dandanplay/Controller/Match/MatchWidget.dart';
 import 'package:dandanplay/Controller/Mine/MineWidget.dart';
@@ -49,26 +51,32 @@ class MobileHomePageState extends State<MobileHomePageWidget>
           title: Text("弹弹play"),
         ),
         body: body,
-        bottomNavigationBar: BottomNavigationBar(
-          items: [
-            BottomNavigationBarItem(
-                title: Text("文件"),
-                icon: Image.asset(R.assetsImagesMainTabbarFile),
-                activeIcon: Image.asset(R.assetsImagesMainTabbarFile,
-                    color: GlobalConfig.mainColor)),
-            BottomNavigationBarItem(
-                title: Text("我的"),
-                icon: Image.asset(R.assetsImagesMainMine),
-                activeIcon: Image.asset(R.assetsImagesMainMine,
-                    color: GlobalConfig.mainColor))
-          ],
-          currentIndex: _selectedIndex,
-          onTap: (index) {
-            setState(() {
-              _selectedIndex = index;
-            });
-          },
-        ));
+        bottomNavigationBar: Container(
+            decoration: BoxDecoration(color: Colors.white, boxShadow: [
+              BoxShadow(
+                color: Colors.black,
+              ),
+            ]),
+            child: BottomNavigationBar(
+              items: [
+                BottomNavigationBarItem(
+                    icon: Image.asset(R.assetsImagesMainTabbarFile),
+                    label: "文件",
+                    activeIcon: Image.asset(R.assetsImagesMainTabbarFile,
+                        color: GlobalConfig.mainColor)),
+                BottomNavigationBarItem(
+                    icon: Image.asset(R.assetsImagesMainMine),
+                    label: "我的",
+                    activeIcon: Image.asset(R.assetsImagesMainMine,
+                        color: GlobalConfig.mainColor))
+              ],
+              currentIndex: _selectedIndex,
+              onTap: (index) {
+                setState(() {
+                  _selectedIndex = index;
+                });
+              },
+            )));
   }
 
   @override

@@ -1,9 +1,7 @@
 import 'dart:math';
 
 import 'package:dandanplay/Config/Constant.dart';
-import 'package:dandanplay/Model/HttpResponse.dart';
 import 'package:dandanplay/Model/Search/SearchAnimate.dart';
-import 'package:dandanplay/Model/Search/SearchAnimateCollection.dart';
 import 'package:dandanplay/Model/Search/SearchEpisode.dart';
 import 'package:dandanplay/NetworkManager/SearchNetworkManager.dart';
 import 'package:dandanplay/Tools/Utility.dart';

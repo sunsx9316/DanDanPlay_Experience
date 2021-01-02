@@ -19,9 +19,19 @@ class MainViewController: MessageViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
     }
     
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return UIDevice.current.isPad ? .all : .portrait
+    }
+    
+    override var shouldAutorotate: Bool {
+        return UIDevice.current.isPad
+    }
+    
+    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+        return .portrait
+    }
 
     override func parseMessage(_ name: MessageType, _ messageData: [String : Any]) {
         switch name {

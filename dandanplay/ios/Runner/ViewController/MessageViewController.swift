@@ -23,10 +23,8 @@ class MessageViewController: FlutterViewController {
         return "com.dandanplay.native/message"
     }
     
-    private var routeName: String?
-    
-    required init(coder: NSCoder) {
-        super.init(coder: coder)
+    override init(project: FlutterDartProject?, initialRoute: String?, nibName: String?, bundle nibBundle: Bundle?) {
+        super.init(project: project, initialRoute: initialRoute, nibName: nibName, bundle: nibBundle)
         self.setupInit()
     }
     
@@ -37,6 +35,11 @@ class MessageViewController: FlutterViewController {
     
     override init(project: FlutterDartProject?, nibName: String?, bundle nibBundle: Bundle?) {
         super.init(project: project, nibName: nibName, bundle: nibBundle)
+        self.setupInit()
+    }
+    
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
         self.setupInit()
     }
     

@@ -32,7 +32,8 @@ class PlayerManager {
     
     private lazy var settingViewController: PlayerSettingViewController = {
         let vc = PlayerSettingViewController(project: nil, nibName: nil, bundle: nil)
-        let animater = PlayerControlAnimater()
+        let extractedExpr = PlayerControlAnimater()
+        let animater = extractedExpr
         objc_setAssociatedObject(vc, &FileBrowerManagerTransitioningKey, animater, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
         vc.modalPresentationStyle = .custom
         vc.transitioningDelegate = animater
@@ -45,8 +46,16 @@ class PlayerManager {
         from.present(self.fileBrower.containerViewController, animated: true, completion: nil)
     }
     
+    func dismissFileBrower() {
+        self.fileBrower.containerViewController.dismiss(animated: true, completion: nil)
+    }
+    
     func showSetting(from: UIViewController) {
         from.present(self.settingViewController, animated: true, completion: nil)
+    }
+    
+    func dismissSetting() {
+        self.settingViewController.dismiss(animated: true, completion: nil)
     }
 }
 

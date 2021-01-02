@@ -1,10 +1,8 @@
-import 'package:dandanplay/Controller/Login/RegisterWidget.dart';
 import 'package:dandanplay/NetworkManager/AuthNetWorkManager.dart';
 import 'package:dandanplay/Tools/Preferences.dart';
 import 'package:dandanplay/Tools/Utility.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 
 class LoginWidget extends StatefulWidget {
   @override

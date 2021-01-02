@@ -39,6 +39,12 @@ target 'Runner' do
   pod 'YYCategories'
   pod 'MBProgressHUD'
   pod 'JHDanmakuRender'
+  pod 'RxSwift'
+  pod 'RxCocoa'
+  pod 'YYKeyboardManager'
+  pod 'Masonry'
+  pod 'IQKeyboardManager'
+  pod 'NKOColorPickerView'
 end
 
 post_install do |installer|

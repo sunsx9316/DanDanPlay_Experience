@@ -9,10 +9,10 @@ part of 'HUDMessage.dart';
 HUDMessage _$HUDMessageFromJson(Map<String, dynamic> json) {
   return HUDMessage(
       style: _$enumDecodeNullable(_$HUDMessageStyleEnumMap, json['style']),
-      text: json['text'] as String,
+      text: json['text'],
       progress: (json['progress'] as num)?.toDouble(),
       isDismiss: json['isDismiss'] as bool,
-      key: json['key'] as String);
+      key: json['key']);
 }
 
 Map<String, dynamic> _$HUDMessageToJson(HUDMessage instance) =>

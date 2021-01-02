@@ -14,4 +14,6 @@ enum MessageType: String {
     case syncSetting = "SyncSettingMessage"
     case loadFiles = "LoadFilesMessage"
     case appVersion = "AppVersionMessage"
+    case naviBack = "NaviBackMessage"
+    case inputDanmaku = "InputDanmakuMessage"
 }

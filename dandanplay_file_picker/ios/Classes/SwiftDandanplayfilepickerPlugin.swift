@@ -34,7 +34,13 @@ public class SwiftDandanplayfilepickerPlugin: NSObject, FlutterPlugin {
     
     
     public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        assert(self.resultCallBack == nil, "Cancelled by a second request")
+        if self.resultCallBack != nil {
+            self.resultCallBack = nil
+            if let vc = manager?.containerViewController, vc.isBeingDismissed == false {
+                vc.dismiss(animated: true, completion: nil)
+            }
+            self.manager = nil
+        }
         
         self.resultCallBack = result
         

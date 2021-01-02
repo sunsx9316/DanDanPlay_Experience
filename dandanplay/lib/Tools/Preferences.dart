@@ -6,6 +6,8 @@ import 'package:dandanplay/Model/Login/User.dart';
 import 'package:dandanplay/Model/Message/Send/SyncSettingMessage.dart';
 import 'package:dandanplay/Vendor/message/MessageChannel.dart';
 import 'package:dandanplaystore/dandanplaystore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -51,63 +53,138 @@ class Preferences {
   //登录的用户
   final _userKey = "userKey";
 
+  //发送弹幕类型
+  final _sendDanmakuTypeKey = "sendDanmakuType";
+
+  //发送弹幕颜色
+  final _sendDanmakuColorKey = "sendDanmakuColor";
+
+  //显示弹幕
+  final _showDanmakuKey = "showDanmaku";
+
   Future<void> setupDefaultValue({bool force = false}) async {
     var isContains = await Dandanplaystore.contains(key: _fastMatchKey);
     if (!isContains || force) {
-      await Dandanplaystore.setBool(key: _fastMatchKey, value: true);
+      await setFastMatch(true);
     }
 
     isContains = await Dandanplaystore.contains(key: _subtitleSafeAreaKey);
     if (!isContains || force) {
-      await Dandanplaystore.setBool(key: _subtitleSafeAreaKey, value: true);
+      await setSubtitleSafeArea(true, sync: false);
     }
 
     isContains = await Dandanplaystore.contains(key: _danmakuCacheDayKey);
     if (!isContains || force) {
-      await Dandanplaystore.setInt(key: _danmakuCacheDayKey, value: 7);
+      await setDanmakuCacheDay(7);
     }
 
     isContains = await Dandanplaystore.contains(key: _danmakuFontSizeyKey);
     if (!isContains || force) {
-      await Dandanplaystore.setDouble(key: _danmakuFontSizeyKey, value: 20);
+      await setDanmakuFontSize(20, sync: false);
     }
 
     isContains = await Dandanplaystore.contains(key: _danmakuSpeedKey);
     if (!isContains || force) {
-      await Dandanplaystore.setDouble(key: _danmakuSpeedKey, value: 1);
+      await setDanmakuSpeed(1, sync: false);
     }
 
     isContains = await Dandanplaystore.contains(key: _danmakuAlphaKey);
     if (!isContains || force) {
-      await Dandanplaystore.setDouble(key: _danmakuAlphaKey, value: 1);
+      await setDanmakuAlpha(1, sync: false);
     }
 
     isContains = await Dandanplaystore.contains(key: _danmakuCountKey);
     if (!isContains || force) {
-      await Dandanplaystore.setInt(key: _danmakuCountKey, value: 100);
+      await setDanmakuCount(100, sync: false);
     }
 
     isContains = await Dandanplaystore.contains(key: _showHomePageTipsKey);
     if (!isContains || force) {
-      await Dandanplaystore.setBool(key: _showHomePageTipsKey, value: true);
+      await setShowHomePageTips(true);
     }
 
     isContains = await Dandanplaystore.contains(key: _playerSpeedKey);
     if (!isContains || force) {
-      await Dandanplaystore.setDouble(key: _playerSpeedKey, value: 1);
+      await setPlayerSpeed(1, sync: false);
     }
 
     isContains = await Dandanplaystore.contains(key: _playerModeKey);
     if (!isContains || force) {
-      await Dandanplaystore.setInt(
-          key: _playerModeKey,
-          value: playerModeRawValueWithEnum(PlayerMode.notRepeat));
+      await setPlayerMode(PlayerMode.notRepeat, sync: false);
     }
 
     isContains = await Dandanplaystore.contains(key: _checkUpdateKey);
     if (!isContains || force) {
-      await Dandanplaystore.setBool(key: _checkUpdateKey, value: true);
+      await setCheckUpdate(true, sync: false);
     }
+
+    isContains = await Dandanplaystore.contains(key: _sendDanmakuColorKey);
+    if (!isContains || force) {
+      await setSendDanmakuColor(Colors.white, sync: false);
+    }
+
+    isContains = await Dandanplaystore.contains(key: _sendDanmakuTypeKey);
+    if (!isContains || force) {
+      await setSendDanmakuType(DanmakuMode.normal, sync: false);
+    }
+
+    isContains = await Dandanplaystore.contains(key: _showDanmakuKey);
+    if (!isContains || force) {
+      await setShowDanmaku(false, sync: false);
+    }
+  }
+
+  Future<bool> get showDanmaku async {
+    final value = await Dandanplaystore.getBool(key: _showDanmakuKey);
+    return value;
+  }
+
+  Future<bool> setShowDanmaku(bool value, {bool sync = true}) async {
+    final result = await Dandanplaystore.setBool(key: _showDanmakuKey, value: value);
+    if (sync) {
+      await _sendSyncMsg(_showDanmakuKey, value);
+    }
+
+    return result;
+  }
+
+  Future<Color> get sendDanmakuColor async {
+    final rgbaValue = await Dandanplaystore.getInt(key: _sendDanmakuColorKey);
+    return Color.fromARGB(rgbaValue & 0xFF,
+        ((rgbaValue & 0xFF000000) >> 24),
+        ((rgbaValue & 0xFF0000) >> 16),
+        ((rgbaValue & 0xFF00) >> 8));
+  }
+
+  Future<bool> setSendDanmakuColor(Color color, {bool sync = true}) async {
+    final r = color.red;
+    final g = color.green;
+    final b = color.blue;
+    final a = color.alpha;
+
+    final value = ((r << 24) + (g << 16) + (b << 8) + a);
+
+    final result = await Dandanplaystore.setInt(key: _sendDanmakuColorKey, value: value);
+    if (sync) {
+      await _sendSyncMsg(_sendDanmakuColorKey, value);
+    }
+
+    return result;
+  }
+
+  Future<DanmakuMode> get sendDanmakuType async {
+    final value = await Dandanplaystore.getInt(key: _sendDanmakuTypeKey);
+    return danmakuModeTypeWithRawValue(value);
+  }
+
+  Future<bool> setSendDanmakuType(DanmakuMode value, {bool sync = true}) async {
+    final intValue = danmakuModeRawValueWithEnum(value);
+    final result = await Dandanplaystore.setInt(key: _sendDanmakuTypeKey, value: intValue);
+    if (sync) {
+      await _sendSyncMsg(_sendDanmakuTypeKey, intValue);
+    }
+
+    return result;
   }
 
   Future<User> get user async {
@@ -140,10 +217,12 @@ class Preferences {
     return value;
   }
 
-  Future<bool> setCheckUpdate(bool value) async {
+  Future<bool> setCheckUpdate(bool value, {bool sync = true}) async {
     final result = await Dandanplaystore.setBool(key: _checkUpdateKey, value: value);
-    final msg = SyncSettingMessage(key: _checkUpdateKey, value: value);
-    await MessageChannel.shared.sendMessage(msg);
+    if (sync) {
+      await _sendSyncMsg(_checkUpdateKey, value);
+    }
+
     return result;
   }
 
@@ -152,11 +231,13 @@ class Preferences {
     return playerModeTypeWithRawValue(value);
   }
 
-  Future<bool> setPlayerMode(PlayerMode value) async {
+  Future<bool> setPlayerMode(PlayerMode value, {bool sync = true}) async {
     final rawValue = playerModeRawValueWithEnum(value);
     final result = await Dandanplaystore.setInt(key: _playerModeKey, value: rawValue);
-    final msg = SyncSettingMessage(key: _playerModeKey, value: rawValue);
-    await MessageChannel.shared.sendMessage(msg);
+    if (sync) {
+      await _sendSyncMsg(_playerModeKey, rawValue);
+    }
+
     return result;
   }
 
@@ -164,11 +245,13 @@ class Preferences {
     return Dandanplaystore.getDouble(key: _playerSpeedKey);
   }
 
-  Future<bool> setPlayerSpeed(double value) async {
+  Future<bool> setPlayerSpeed(double value, {bool sync = true}) async {
     final result =
         await Dandanplaystore.setDouble(key: _playerSpeedKey, value: value);
-    final msg = SyncSettingMessage(key: _playerSpeedKey, value: value);
-    await MessageChannel.shared.sendMessage(msg);
+    if (sync) {
+      await _sendSyncMsg(_playerSpeedKey, value);
+    }
+
     return result;
   }
 
@@ -209,10 +292,11 @@ class Preferences {
     return Dandanplaystore.getInt(key: _danmakuCountKey);
   }
 
-  Future<bool> setDanmakuCount(int value) async {
+  Future<bool> setDanmakuCount(int value, {bool sync = true}) async {
     final result = await Dandanplaystore.setInt(key: _danmakuCountKey, value: value);
-    final msg = SyncSettingMessage(key: _danmakuCountKey, value: value);
-    await MessageChannel.shared.sendMessage(msg);
+    if (sync) {
+      await _sendSyncMsg(_danmakuCountKey, value);
+    }
     return result;
   }
 
@@ -220,11 +304,12 @@ class Preferences {
     return Dandanplaystore.getDouble(key: _danmakuAlphaKey);
   }
 
-  Future<bool> setDanmakuAlpha(double value) async {
+  Future<bool> setDanmakuAlpha(double value, {bool sync = true}) async {
     final result =
         await Dandanplaystore.setDouble(key: _danmakuAlphaKey, value: value);
-    final msg = SyncSettingMessage(key: _danmakuAlphaKey, value: value);
-    await MessageChannel.shared.sendMessage(msg);
+    if (sync) {
+      await _sendSyncMsg(_danmakuAlphaKey, value);
+    }
     return result;
   }
 
@@ -232,11 +317,12 @@ class Preferences {
     return Dandanplaystore.getDouble(key: _danmakuSpeedKey);
   }
 
-  Future<bool> setDanmakuSpeed(double value) async {
+  Future<bool> setDanmakuSpeed(double value, {bool sync = true}) async {
     final result =
         await Dandanplaystore.setDouble(key: _danmakuSpeedKey, value: value);
-    final msg = SyncSettingMessage(key: _danmakuSpeedKey, value: value);
-    await MessageChannel.shared.sendMessage(msg);
+    if (sync) {
+      await _sendSyncMsg(_danmakuSpeedKey, value);
+    }
     return result;
   }
 
@@ -244,11 +330,12 @@ class Preferences {
     return Dandanplaystore.getDouble(key: _danmakuFontSizeyKey);
   }
 
-  Future<bool> setDanmakuFontSize(double value) async {
+  Future<bool> setDanmakuFontSize(double value, {bool sync = true}) async {
     final result =
         await Dandanplaystore.setDouble(key: _danmakuFontSizeyKey, value: value);
-    final msg = SyncSettingMessage(key: _danmakuFontSizeyKey, value: value);
-    await MessageChannel.shared.sendMessage(msg);
+    if (sync) {
+      await _sendSyncMsg(_danmakuFontSizeyKey, value);
+    }
     return result;
   }
 
@@ -264,11 +351,12 @@ class Preferences {
     return Dandanplaystore.getBool(key: _subtitleSafeAreaKey);
   }
 
-  Future<bool> setSubtitleSafeArea(bool on) async {
+  Future<bool> setSubtitleSafeArea(bool on, {bool sync = true}) async {
     final result =
         await Dandanplaystore.setBool(key: _subtitleSafeAreaKey, value: on);
-    final msg = SyncSettingMessage(key: _subtitleSafeAreaKey, value: on);
-    await MessageChannel.shared.sendMessage(msg);
+    if (sync) {
+      await _sendSyncMsg(_subtitleSafeAreaKey, on);
+    }
     return result;
   }
 
@@ -278,5 +366,10 @@ class Preferences {
 
   Future<bool> setDanmakuCacheDay(int value) async {
     return Dandanplaystore.setInt(key: _danmakuCacheDayKey, value: value);
+  }
+
+  Future _sendSyncMsg(String key, dynamic value) async {
+    final msg = SyncSettingMessage(key: key, value: value);
+    return MessageChannel.shared.sendMessage(msg);
   }
 }

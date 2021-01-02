@@ -103,7 +103,8 @@ class SettingWidgetState extends State<SettingWidget> {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20.0)),
                             onPressed: () {
-                              _resetHomePageBgImageToDefault();
+                              Navigator.pushNamed(context, "sendDanmaku");
+                              // _resetHomePageBgImageToDefault();
                             },
                           )
                         ]),
