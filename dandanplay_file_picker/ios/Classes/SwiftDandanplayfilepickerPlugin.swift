@@ -66,8 +66,24 @@ public class SwiftDandanplayfilepickerPlugin: NSObject, FlutterPlugin {
 }
 
 extension SwiftDandanplayfilepickerPlugin: FileBrowerManagerDelegate {
-    public func didSelectedPaths(manager: FileBrowerManager, paths: [String]) {
-        self.resultCallBack?(paths)
+    public func didSelectedPaths(manager: FileBrowerManager, urls: [URL]) {
+        
+        let models = urls.compactMap { (aURL) -> [String : Any]? in
+            let isStart = aURL.startAccessingSecurityScopedResource()
+            defer {
+                if isStart {
+                    aURL.stopAccessingSecurityScopedResource()
+                }
+            }
+            var dic = [String : Any]()
+            dic["path"] = aURL.absoluteString
+            if let str = try? aURL.bookmarkData().base64EncodedString() {
+                dic["urlDataString"] = str
+            }
+            return dic
+        }
+        
+        self.resultCallBack?(models)
         self.resultCallBack = nil
         self.manager = nil
     }

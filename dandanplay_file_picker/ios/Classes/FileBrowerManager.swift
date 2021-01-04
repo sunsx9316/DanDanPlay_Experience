@@ -9,13 +9,12 @@ import UIKit
 import CoreServices
 
 public protocol FileBrowerManagerDelegate: class {
-    func didSelectedPaths(manager: FileBrowerManager, paths: [String])
+    func didSelectedPaths(manager: FileBrowerManager, urls: [URL])
     func didDismiss(manager: FileBrowerManager)
     func didCancel(manager: FileBrowerManager)
 }
 
 public extension FileBrowerManagerDelegate {
-    func didSelectedPaths(manager: FileBrowerManager, paths: [String]) {}
     func didDismiss(manager: FileBrowerManager) {}
     func didCancel(manager: FileBrowerManager) {}
 }
@@ -37,9 +36,12 @@ open class FileBrowerManager: NSObject {
     
     private func createContainerViewController() -> UIViewController {
         if #available(iOS 11.0, *) {
-            let vc = UIDocumentPickerViewController(documentTypes: fileTypes ?? [kUTTypeItem as String], in: .import)
+            let vc = UIDocumentPickerViewController(documentTypes: fileTypes ?? [kUTTypeItem as String], in: .open)
             vc.allowsMultipleSelection = multipleSelection
             vc.delegate = self
+            if #available(iOS 13.0, *) {
+                vc.shouldShowFileExtensions = true
+            }
             return vc
         } else {
             let vc = FileBrowser()
@@ -51,15 +53,15 @@ open class FileBrowerManager: NSObject {
                     return
                 }
                 
-                let paths = aFiles.compactMap { (file) -> String? in
+                let paths = aFiles.compactMap { (file) -> URL? in
                     if file.isDirectory {
                         return nil
                     }
                     
-                    return file.filePath.path
+                    return file.filePath
                 }
 
-                self.delegate?.didSelectedPaths(manager: self, paths: paths)
+                self.delegate?.didSelectedPaths(manager: self, urls: paths)
             }
             
             vc.dismissCallBack = { [weak self] in
@@ -80,13 +82,12 @@ extension FileBrowerManager: UIDocumentPickerDelegate {
     //MARK: Delegates
     public func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentAt url: URL) {
         controller.dismiss(animated: true, completion: nil)
-        self.delegate?.didSelectedPaths(manager: self, paths: [url.path])
+        self.delegate?.didSelectedPaths(manager: self, urls: [url])
     }
     
     public func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
         controller.dismiss(animated: true, completion: nil)
-        let paths = urls.compactMap({ $0.path })
-        self.delegate?.didSelectedPaths(manager: self, paths: paths)
+        self.delegate?.didSelectedPaths(manager: self, urls: urls)
     }
     
     public func documentPickerWasCancelled(_ controller: UIDocumentPickerViewController) {

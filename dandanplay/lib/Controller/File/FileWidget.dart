@@ -30,9 +30,16 @@ class FileWidget extends StatelessWidget {
   /* 点击本地文件 */
   void _onTapLocalFile(BuildContext context) async {
     try {
-      final file = await Dandanplayfilepicker.getFile(pickType: DandanplayfilepickerType.video);
-      if (file != null) {
-        final msg = LoadFilesMessage(paths: [file.path]);
+      final files = await Dandanplayfilepicker.getFiles(pickType: DandanplayfilepickerType.file);
+      if (files != null) {
+
+        final arr = List<Map>.empty(growable: true);
+
+        for (final file in files) {
+          arr.add(file.mapData);
+        }
+
+        final msg = LoadFilesMessage(fileDatas: arr);
         MessageChannel.shared.sendMessage(msg);
       }
     } catch (e) {

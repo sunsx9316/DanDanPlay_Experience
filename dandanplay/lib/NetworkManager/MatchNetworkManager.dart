@@ -19,14 +19,17 @@ class MatchNetworkManager extends BaseNetworkManager {
     final connectivityResult = await Connectivity().checkConnectivity();
     //当前是离线状态，读取缓存
     if (connectivityResult == ConnectivityResult.none) {
-      final jsonStr = await Dandanplaystore.getString(
-          key: map["fileHash"], id: "com.dandanplay.match");
-      if (jsonStr != null) {
-        Map<String, dynamic> jsonObj = json.decode(jsonStr);
-        final matchModel = FileMatch.fromJson(jsonObj);
-        if (matchModel != null) {
-          final collection = FileMatchCollection(true, [matchModel]);
-          return HttpResponseResult(data: collection, error: null);
+      String jsonStr;
+      if (map["fileHash"] != null) {
+        jsonStr = await Dandanplaystore.getString(
+            key: map["fileHash"], id: "com.dandanplay.match");
+        if (jsonStr != null) {
+          Map<String, dynamic> jsonObj = json.decode(jsonStr);
+          final matchModel = FileMatch.fromJson(jsonObj);
+          if (matchModel != null) {
+            final collection = FileMatchCollection(true, [matchModel]);
+            return HttpResponseResult(data: collection, error: null);
+          }
         }
       }
     }

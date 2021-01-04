@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dandanplay/Controller/HomePage/DesktopHomePageWidget.dart';
 import 'package:dandanplay/Tools/Preferences.dart';
 import 'package:dandanplay/Tools/Utility.dart';
@@ -61,6 +63,9 @@ class SettingWidgetState extends State<SettingWidget> {
                         });
                       });
                 } else if (index == 2) {
+                  if (Platform.isIOS) {
+                    return SizedBox.fromSize(size: Size.zero);
+                  }
                   return _switchCell(
                       titleValue: "显示首页拖拽播放提示文字",
                       subtitleValue: "就是 \"拖拽 视频/文件夹 到屏幕中开始播放\"这一串",
@@ -82,6 +87,10 @@ class SettingWidgetState extends State<SettingWidget> {
                         _showDanmakuCacheInputDialog(context);
                       });
                 } else if (index == 4) {
+                  if (Platform.isIOS) {
+                    return SizedBox.fromSize(size: Size.zero);
+                  }
+
                   return Column(children: <Widget>[
                     InkWell(
                         child: _defaultInsetsCell(children: [
@@ -114,6 +123,10 @@ class SettingWidgetState extends State<SettingWidget> {
                     _homePageThumb()
                   ]);
                 } else if (index == 5) {
+                  if (Platform.isIOS) {
+                    return SizedBox.fromSize(size: Size.zero);
+                  }
+
                   return _switchCell(
                       titleValue: "自动检查更新",
                       on: _checkUpdate,
@@ -166,9 +179,9 @@ class SettingWidgetState extends State<SettingWidget> {
 
   //获取首页背景图
   void _getHomePageBgImage(BuildContext context) async {
-    final file = await Dandanplayfilepicker.getFile(pickType: DandanplayfilepickerType.image);
-    if (file != null) {
-      await Preferences.shared.setHomePageBgImage(file.path);
+    final paths = await Dandanplayfilepicker.getFiles(pickType: DandanplayfilepickerType.image);
+    if (paths != null && paths.isNotEmpty) {
+      await Preferences.shared.setHomePageBgImage(paths[0].path);
       setState(() {});
     }
   }

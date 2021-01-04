@@ -4,6 +4,7 @@ import 'package:dandanplay/Controller/HomePage/MobileHomePageWidget.dart';
 import 'package:dandanplay/Controller/Login/ForgetPasswordWidget.dart';
 import 'package:dandanplay/Controller/Login/LoginWidget.dart';
 import 'package:dandanplay/Controller/Login/RegisterWidget.dart';
+import 'package:dandanplay/Controller/Mine/AboutUsWidget.dart';
 import 'package:dandanplay/Controller/Player/SendDanmakuWidget.dart';
 import 'package:dandanplay/Controller/Setting/PlayerSettingWidget.dart';
 import 'package:dandanplay/Controller/Setting/SettingWidget.dart';
@@ -69,7 +70,7 @@ class AppState extends State<App> with MessageChannelObserver {
           }
         },
         child: MaterialApp(
-            title: 'Flutter Demo',
+            title: 'AniPlayer',
             theme: ThemeData(
                 brightness: Brightness.dark,
                 sliderTheme: SliderThemeData(
@@ -107,6 +108,9 @@ class AppState extends State<App> with MessageChannelObserver {
               "sendDanmaku": (context) {
                 return SendDanmakuWidget();
               },
+              "AboutUs": (context) {
+                return AboutUsWidget();
+              }
             }));
   }
 

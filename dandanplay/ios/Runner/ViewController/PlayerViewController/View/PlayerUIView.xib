@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="17156" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17126"/>
         <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -95,6 +95,7 @@
                         <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="WIq-4p-eB4">
                             <rect key="frame" x="8" y="10" width="575" height="31"/>
                             <connections>
+                                <action selector="onSliderValueChange:" destination="iN0-l3-epB" eventType="valueChanged" id="O8u-6s-BVB"/>
                                 <action selector="tapCancelWithSlider:" destination="iN0-l3-epB" eventType="touchUpOutside" id="1gU-Tz-h6Y"/>
                                 <action selector="tapCancelWithSlider:" destination="iN0-l3-epB" eventType="touchCancel" id="YQP-dn-aYq"/>
                                 <action selector="tapDownWithSlider:" destination="iN0-l3-epB" eventType="touchDown" id="yQn-Tm-nCk"/>

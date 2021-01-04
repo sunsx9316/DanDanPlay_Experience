@@ -32,6 +32,31 @@ extension PlayerUIViewDelegate {
     func tapSlider(playerUIView: PlayerUIView, progress: CGFloat) {}
 }
 
+private class PlayerSnapTimeView: UIView {
+    lazy var label: UILabel = {
+        let label = UILabel()
+        label.font = .ddp_normal
+        label.textColor = .white
+        label.textAlignment = .center
+        return label
+    }()
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
+        self.layer.cornerRadius = 5
+        self.layer.masksToBounds = true
+        self.addSubview(self.label)
+        self.label.snp.makeConstraints { (make) in
+            make.edges.equalToSuperview().inset(UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
+        }
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
 class PlayerUIView: UIView {
     
     enum PanType {
@@ -47,31 +72,6 @@ class PlayerUIView: UIView {
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var topView: UIView!
     @IBOutlet weak var bottomView: UIView!
-    
-    
-    weak var delegate: PlayerUIViewDelegate?
-    weak var dataSource: PlayerUIViewDataSource?
-    
-    private var panType: PanType?
-    
-    private lazy var timeFormatter: DateFormatter = {
-        var timeFormatter = DateFormatter()
-        timeFormatter.dateFormat = "mm:ss"
-        return timeFormatter
-    }()
-    
-    private var isDragingSlider = false {
-        didSet {
-            if isDragingSlider {
-                suspendTimer()
-            } else {
-                resumeTimer()
-            }
-        }
-    }
-    private var autoHiddenTimer: Timer?
-    private var hiddenControlView = false
-    private var hiddenTime: TimeInterval = 4
     private weak var _brightnessView: SliderControlView?
     private weak var _volumeView: VolumeControlView?
     
@@ -98,6 +98,35 @@ class PlayerUIView: UIView {
         return controlView
     }
     
+    private lazy var snapTimeView: PlayerSnapTimeView = {
+        return PlayerSnapTimeView()
+    }()
+    
+    
+    weak var delegate: PlayerUIViewDelegate?
+    weak var dataSource: PlayerUIViewDataSource?
+    
+    private var panType: PanType?
+    
+    private lazy var timeFormatter: DateFormatter = {
+        var timeFormatter = DateFormatter()
+        timeFormatter.dateFormat = "mm:ss"
+        return timeFormatter
+    }()
+    
+    private var isDragingSlider = false {
+        didSet {
+            if isDragingSlider {
+                suspendTimer()
+            } else {
+                resumeTimer()
+            }
+        }
+    }
+    private var autoHiddenTimer: Timer?
+    private var hiddenControlView = false
+    private var hiddenTime: TimeInterval = 4
+    
     private var lastPanDate: Data?
     private var obsObj: AnyObject?
     
@@ -111,7 +140,6 @@ class PlayerUIView: UIView {
         
         titleLabel.text = nil
         slider.tintColor = UIColor.mainColor
-        
         slider.setThumbImage(UIImage(color: UIColor.white, size: CGSize(width: 16, height: 10))?.byRoundCornerRadius(2), for: .normal)
         
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(PlayerUIView.doubleTap))
@@ -244,17 +272,27 @@ class PlayerUIView: UIView {
     }
     
     //MARK: 滑动条
+    
+    
+    @IBAction func onSliderValueChange(_ sender: UISlider) {
+        let totalTime = dataSource?.playerTotalTime(playerUIView: self) ?? 0
+        updateDataTimeSnapLabel(currentTime: TimeInterval(sender.value * Float(totalTime)))
+    }
+    
     @IBAction func tapUp(slider: UISlider) {
         delegate?.tapSlider(playerUIView: self, progress: CGFloat(slider.value))
         isDragingSlider = false
+        hideTimeSnapLabel()
     }
     
     @IBAction func tapDown(slider: UISlider) {
         isDragingSlider = true
+        showTimeSnapLabel()
     }
     
     @IBAction func tapCancel(slider: UISlider) {
         isDragingSlider = false
+        hideTimeSnapLabel()
     }
     
     @objc private func panGesture(_ ges: UIPanGestureRecognizer) {
@@ -293,6 +331,7 @@ class PlayerUIView: UIView {
                 let diff = width > 0 ? translation.x / width : 0;
                 
                 self.slider.value += Float(diff)
+                self.onSliderValueChange(self.slider)
             case .brightness, .volume:
                 let height = self.frame.size.height
                 let diff = height > 0 ? -translation.y / height : 0;
@@ -316,13 +355,50 @@ class PlayerUIView: UIView {
         }
     }
     
-    //MARK: -
+    //MARK:
     private func suspendTimer() {
         autoHiddenTimer?.fireDate = Date.distantFuture
     }
     
     private func resumeTimer() {
         autoHiddenTimer?.fireDate = Date(timeIntervalSinceNow: hiddenTime)
+    }
+    
+    private func showTimeSnapLabel() {
+        if self.snapTimeView.superview == nil {
+            self.snapTimeView.alpha = 0
+            self.addSubview(self.snapTimeView)
+            self.snapTimeView.snp.makeConstraints { (make) in
+                make.center.equalToSuperview()
+                make.width.greaterThanOrEqualTo(110)
+            }
+            
+            let currentTime = dataSource?.playerCurrentTime(playerUIView: self) ?? 0
+            updateDataTimeSnapLabel(currentTime: currentTime)
+        }
+        
+        UIView.animate(withDuration: 0.3) {
+            self.snapTimeView.alpha = 1
+        }
+    }
+    
+    private func hideTimeSnapLabel() {
+        if self.snapTimeView.superview == nil {
+            return
+        }
+        
+        UIView.animate(withDuration: 0.3) {
+            self.snapTimeView.alpha = 0
+        } completion: { (finish) in
+            self.snapTimeView.removeFromSuperview()
+        }
+    }
+    
+    private func updateDataTimeSnapLabel(currentTime: TimeInterval) {
+        let totalTime = dataSource?.playerTotalTime(playerUIView: self) ?? 0
+        let current = Date(timeIntervalSince1970: currentTime)
+        let total = Date(timeIntervalSince1970: totalTime)
+        snapTimeView.label.text = timeFormatter.string(from: current) + "/" + timeFormatter.string(from: total)
     }
 
     

@@ -12,6 +12,7 @@ import 'package:dandanplay/r.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:package_info/package_info.dart';
 
 class MobileHomePageWidget extends StatefulWidget {
   @override
@@ -20,9 +21,22 @@ class MobileHomePageWidget extends StatefulWidget {
   }
 }
 
-class MobileHomePageState extends State<MobileHomePageWidget>
-    with MessageChannelObserver {
+class MobileHomePageState extends State<MobileHomePageWidget> with MessageChannelObserver {
   var _selectedIndex = 0;
+  String _appName = "";
+
+  void _getInitValue() async {
+    final packageInfo = await PackageInfo.fromPlatform();
+    _appName = packageInfo.appName ?? "";
+
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getInitValue();
+  }
 
   @override
   void dispose() {
@@ -39,17 +53,25 @@ class MobileHomePageState extends State<MobileHomePageWidget>
   @override
   Widget build(BuildContext context) {
     Widget body;
-
+    Widget appBar;
+    
     if (_selectedIndex == 0) {
       body = FileWidget();
+      appBar = AppBar(
+        title: Text(_appName),
+      );
     } else if (_selectedIndex == 1) {
       body = MineWidget();
+      appBar = AppBar(
+        title: Text(_appName),
+        actions: [IconButton(icon: Icon(Icons.settings), onPressed: (){
+          Navigator.pushNamed(context, "setting");
+        })],
+      );
     }
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text("弹弹play"),
-        ),
+        appBar: appBar,
         body: body,
         bottomNavigationBar: Container(
             decoration: BoxDecoration(color: Colors.white, boxShadow: [

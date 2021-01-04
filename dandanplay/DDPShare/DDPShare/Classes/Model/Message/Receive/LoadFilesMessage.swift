@@ -8,6 +8,11 @@
 
 import HandyJSON
 
+public class FilesModel: BaseModel {
+    public var path: String?
+    public var urlDataString: String?
+}
+
 public class LoadFilesMessage: BaseModel {
-    public var paths = [String]();
+    public var fileDatas = [FilesModel]()
 }

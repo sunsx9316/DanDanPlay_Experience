@@ -10,6 +10,7 @@ import 'package:dandanplay/main.dart';
 import 'package:dandanplay/r.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info/package_info.dart';
 
 class MineWidget extends StatefulWidget {
   @override
@@ -19,6 +20,9 @@ class MineWidget extends StatefulWidget {
 }
 
 class MineWidgetState extends State with RouteAware {
+  User _user;
+  String _appName = "";
+
   @override
   void initState() {
     super.initState();
@@ -46,97 +50,83 @@ class MineWidgetState extends State with RouteAware {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<User>(
-      future: Preferences.shared.user,
-      builder: (context, snapshot) {
-        // 请求已结束
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (snapshot.hasError) {
-            // 请求失败，显示错误
-            return Container();
-          } else {
-            final _user = snapshot.data;
-            Widget icon;
-            Widget title;
-            if (_user != null && _user.profileImage != null) {
-              final profileImage = _user.profileImage;
-              icon = CachedNetworkImage(
-                  imageUrl: profileImage,
-                  placeholder: (context, url) {
-                    return Image.asset(R.assetsImagesMineIcon);
-                  });
+    Widget icon;
+    Widget title;
+    if (_user != null && _user.profileImage != null) {
+      final profileImage = _user.profileImage;
+      icon = CachedNetworkImage(
+          imageUrl: profileImage,
+          placeholder: (context, url) {
+            return Image.asset(R.assetsImagesMineIcon);
+          });
 
-              var titleList = List<Widget>();
-              if (_user.screenName != null) {
-                titleList.add(Text(_user.screenName));
-              }
+      var titleList = List.empty(growable: true);
+      if (_user.screenName != null) {
+        titleList.add(Text(_user.screenName));
+      }
 
-              if (_user.userName != null) {
-                titleList.add(Text("@${_user.userName}",
-                    style: TextStyle(color: Colors.white60, fontSize: 12)));
-              }
-              title = Column(
-                children: titleList,
-              );
-            } else {
-              icon = Image.asset(R.assetsImagesMineIcon);
-              title = Text("点击登录");
-            }
+      if (_user.userName != null) {
+        titleList.add(Text("@${_user.userName}",
+            style: TextStyle(color: Colors.white60, fontSize: 12)));
+      }
+      title = Column(
+        children: titleList,
+      );
+    } else {
+      icon = Image.asset(R.assetsImagesMineIcon);
+      title = Text("点击登录");
+    }
 
-            return ListView(children: [
-              GestureDetector(
-                  child: ConstrainedBox(
-                      constraints: BoxConstraints(maxHeight: 260),
-                      child: ClipRect(
-                          child: Stack(
-                        alignment: Alignment.center,
-                        fit: StackFit.expand,
-                        children: <Widget>[
-                          FittedBox(child: icon, fit: BoxFit.cover),
-                          ClipRect(
-                              child: BackdropFilter(
-                                  filter:
-                                      ImageFilter.blur(sigmaX: 4, sigmaY: 4),
-                                  child: Container(
-                                    color: Colors.black.withOpacity(0.6),
-                                  ))),
-                          Center(
-                              child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Container(
-                                  width: 80,
-                                  height: 80,
-                                  decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.white.withAlpha(120),
-                                        width: 5.0,
-                                      ),
-                                      borderRadius: BorderRadius.circular(40)),
-                                  child: ClipOval(
-                                      child: SizedBox(
-                                          width: 80, height: 80, child: icon))),
-                              title
-                            ],
-                          ))
-                        ],
-                      ))),
-                  onTap: () {
-                    _onTapUserIcon(_user);
-                  }),
-              _createListTile("关于弹弹play", () {})
-            ]);
-          }
-        } else {
-          // 请求未结束，显示loading
-          return Container();
-        }
-      },
-    );
+    return ListView(children: [
+      GestureDetector(
+          child: ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: 260),
+              child: ClipRect(
+                  child: Stack(
+                alignment: Alignment.center,
+                fit: StackFit.expand,
+                children: <Widget>[
+                  FittedBox(child: icon, fit: BoxFit.cover),
+                  ClipRect(
+                      child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
+                          child: Container(
+                            color: Colors.black.withOpacity(0.6),
+                          ))),
+                  Center(
+                      child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Container(
+                          width: 80,
+                          height: 80,
+                          decoration: BoxDecoration(
+                              border: Border.all(
+                                color: Colors.white.withAlpha(120),
+                                width: 5.0,
+                              ),
+                              borderRadius: BorderRadius.circular(40)),
+                          child: ClipOval(
+                              child: SizedBox(
+                                  width: 80, height: 80, child: icon))),
+                      title
+                    ],
+                  ))
+                ],
+              ))),
+          onTap: () {
+            _onTapUserIcon(_user);
+          }),
+      _createListTile("关于" + _appName, () {
+        Navigator.pushNamed(context, "AboutUs");
+      })
+    ]);
   }
 
   void _getInitValue(bool isFirstGet) async {
-    final _user = await Preferences.shared.user;
+    _user = await Preferences.shared.user;
+    final packageInfo = await PackageInfo.fromPlatform();
+    _appName = packageInfo.appName ?? "";
 
     //交换token
     if (isFirstGet && _user != null && _user.token != null) {

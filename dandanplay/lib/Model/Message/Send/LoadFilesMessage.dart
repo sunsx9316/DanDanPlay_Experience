@@ -15,8 +15,8 @@ class LoadFilesMessage extends BaseMessage {
     return _$LoadFilesMessageToJson(this);
   }
 
-  List<String> paths;
+  List<Map> fileDatas;
 
-  LoadFilesMessage({this.paths});
+  LoadFilesMessage({this.fileDatas});
 
 }

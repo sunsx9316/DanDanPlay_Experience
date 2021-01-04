@@ -36,6 +36,7 @@ dependencies:
   connectivity: ^0.4.8+2
   intl: ^0.16.1
   flutter_colorpicker: ^0.3.4
+  package_info: ^0.4.3+2
   dandanplaystore:
     path: "../dandanplay_store"
   dandanplayfilepicker:

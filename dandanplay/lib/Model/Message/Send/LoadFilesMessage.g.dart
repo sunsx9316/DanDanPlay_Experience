@@ -8,8 +8,10 @@ part of 'LoadFilesMessage.dart';
 
 LoadFilesMessage _$LoadFilesMessageFromJson(Map<String, dynamic> json) {
   return LoadFilesMessage(
-      paths: (json['paths'] as List)?.map((e) => e as String)?.toList());
+      fileDatas: (json['fileDatas'] as List)
+          ?.map((e) => e as Map<String, dynamic>)
+          ?.toList());
 }
 
 Map<String, dynamic> _$LoadFilesMessageToJson(LoadFilesMessage instance) =>
-    <String, dynamic>{'paths': instance.paths};
+    <String, dynamic>{'fileDatas': instance.fileDatas};

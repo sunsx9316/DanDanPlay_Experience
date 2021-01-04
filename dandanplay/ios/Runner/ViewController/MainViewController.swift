@@ -15,10 +15,10 @@ class MainViewController: MessageViewController {
     private lazy var HUDViewsMapper: NSMapTable<NSString, MBProgressHUD> = {
         return NSMapTable<NSString, MBProgressHUD>.strongToWeakObjects()
     }()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
@@ -32,12 +32,19 @@ class MainViewController: MessageViewController {
     override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
         return .portrait
     }
-
+    
     override func parseMessage(_ name: MessageType, _ messageData: [String : Any]) {
         switch name {
         case .loadFiles:
             guard let msg = LoadFilesMessage.deserialize(from: messageData) else { return }
-            let urls = msg.paths.compactMap({ URL(fileURLWithPath: $0) })
+            
+            let urls = msg.fileDatas.compactMap { (model) -> URL? in
+                if let urlDataString = model.urlDataString, let data = Data(base64Encoded: urlDataString) {
+                    var isStale = false
+                    return try? URL(resolvingBookmarkData: data, bookmarkDataIsStale: &isStale)
+                }
+                return nil
+            }
             
             if let playerNavigationController = self.playerNavigationController {
                 playerNavigationController.playerViewController?.loadURLs(urls)
@@ -61,16 +68,10 @@ class MainViewController: MessageViewController {
                 
                 switch msg.style {
                 case .tips:
-                    cacheHUD = MBProgressHUD(view: self.view)
-                    cacheHUD.mode = .text
-                    cacheHUD.label.text = msg.text
-                    cacheHUD.show(animated: true)
-                    cacheHUD.hide(animated: true, afterDelay: 2)
+                    cacheHUD = self.view.showHUD(msg.text)
                 case .progress:
-                    cacheHUD = MBProgressHUD(view: self.view)
-                    cacheHUD.mode = .determinate
+                    cacheHUD = self.view.showProgress()
                     cacheHUD.label.text = msg.text
-                    cacheHUD.show(animated: true)
                 }
                 
                 HUDViewsMapper.setObject(cacheHUD, forKey: key)
@@ -93,5 +94,5 @@ class MainViewController: MessageViewController {
             break
         }
     }
-
+    
 }

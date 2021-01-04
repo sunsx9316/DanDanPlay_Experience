@@ -460,24 +460,68 @@ extension PlayerViewController: DDPMediaPlayerDelegate {
             self.player.play()
         } else {
             //请求完弹幕再播放
-            if var url = item.url {
+            if let url = item.url {
                 self.player.pause()
                 
                 let message = ParseFileMessage()
                 message.mediaId = item.mediaId
                 
-                let attributesOfItem = try? FileManager.default.attributesOfItem(atPath:
-                    url.path)
-                let size = attributesOfItem?[.size] as? Int ?? 0
-                message.fileSize = size
+                let hud = self.view.showProgress()
+                hud.label.text = "解析视频中..."
                 
-                if let data = try? FileHandle(forReadingFrom: url).readData(ofLength: min(16777216, size)) as NSData {
-                    message.fileHash = data.md5String()
+                DispatchQueue.global().async {
+                    let shouldStop = url.startAccessingSecurityScopedResource()
+                    defer {
+                        if shouldStop {
+                            url.stopAccessingSecurityScopedResource()
+                        }
+                    }
+                    
+                    var error: NSError?
+                    NSFileCoordinator().coordinate(readingItemAt: url, error: &error) { (aURL) in
+                        do {
+                            let attributesOfItem = try FileManager.default.attributesOfItem(atPath:aURL.path)
+                            let size = attributesOfItem[.size] as? Int ?? 0
+                            message.fileSize = size
+                            
+                            if let fileHandle = try? FileHandle(forReadingFrom: aURL) {
+                                var seek: UInt64 = 0
+                                var allData = Data()
+                                let readSize = min(16777216, size)
+                                let everyReadSize = 512
+                                while seek < readSize {
+                                    allData.append(fileHandle.readData(ofLength: everyReadSize))
+                                    fileHandle.seek(toFileOffset: seek)
+                                    seek += UInt64(everyReadSize)
+                                    
+                                    let progress = readSize == 0 ? 0 : Float(seek) / Float(readSize)
+                                    DispatchQueue.main.async {
+                                        hud.progress = progress
+                                    }
+                                }
+                                
+//                                if let data = try? FileHandle(forReadingFrom: aURL).readData(ofLength: 512) as NSData {
+//                                }
+                                message.fileHash = (allData as NSData).md5String()
+                            }
+                            
+                            if let data = try? FileHandle(forReadingFrom: aURL).readData(ofLength: min(16777216, size)) as NSData {
+                                message.fileHash = data.md5String()
+                            }
+                            
+                            message.fileName = aURL.deletingPathExtension().lastPathComponent
+                            DispatchQueue.main.async {
+                                MessageHandler.sendMessage(message)
+                                hud.hide(animated: true)
+                            }
+                        } catch let error {
+                            DispatchQueue.main.async {
+                                hud.hide(animated: true)
+                                self.view.showHUD(error.localizedDescription)
+                            }
+                        }
+                    }
                 }
-                
-                url.deletePathExtension()
-                message.fileName = url.lastPathComponent
-                MessageHandler.sendMessage(message)
             }
         }
     }

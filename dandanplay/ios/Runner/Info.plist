@@ -104,7 +104,16 @@
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
 	<array>
-		<dict/>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>CFBundleURLName</key>
+			<string>SMB</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>smb</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
@@ -154,9 +163,13 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
-				<string>ogv</string>
+				<array>
+					<string>ogv</string>
+				</array>
 				<key>public.mime-type</key>
-				<string>video/ogg</string>
+				<array>
+					<string>video/ogg</string>
+				</array>
 			</dict>
 		</dict>
 		<dict>
@@ -166,6 +179,8 @@
 			</array>
 			<key>UTTypeDescription</key>
 			<string>Ogg Audio</string>
+			<key>UTTypeIconFiles</key>
+			<array/>
 			<key>UTTypeIdentifier</key>
 			<string>org.xiph.oga</string>
 			<key>UTTypeTagSpecification</key>
@@ -176,7 +191,9 @@
 					<string>oga</string>
 				</array>
 				<key>public.mime-type</key>
-				<string>audio/ogg</string>
+				<array>
+					<string>audio/ogg</string>
+				</array>
 			</dict>
 		</dict>
 		<dict>
@@ -191,9 +208,13 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
-				<string>divx</string>
+				<array>
+					<string>divx</string>
+				</array>
 				<key>public.mime-type</key>
-				<string>application/octet-stream</string>
+				<array>
+					<string>application/octet-stream</string>
+				</array>
 			</dict>
 		</dict>
 		<dict>
@@ -208,9 +229,13 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
-				<string>mkv</string>
+				<array>
+					<string>mkv</string>
+				</array>
 				<key>public.mime-type</key>
-				<string>video/x-matroska</string>
+				<array>
+					<string>video/x-matroska</string>
+				</array>
 			</dict>
 		</dict>
 		<dict>
@@ -225,9 +250,13 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
-				<string>flac</string>
+				<array>
+					<string>flac</string>
+				</array>
 				<key>public.mime-type</key>
-				<string>audio/x-flac</string>
+				<array>
+					<string>audio/x-flac</string>
+				</array>
 			</dict>
 		</dict>
 		<dict>
@@ -242,9 +271,13 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
-				<string>opus</string>
+				<array>
+					<string>opus</string>
+				</array>
 				<key>public.mime-type</key>
-				<string>audio/opus</string>
+				<array>
+					<string>audio/opus</string>
+				</array>
 			</dict>
 		</dict>
 		<dict>
@@ -259,9 +292,13 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
-				<string>mxf</string>
+				<array>
+					<string>mxf</string>
+				</array>
 				<key>public.mime-type</key>
-				<string>application/mxf</string>
+				<array>
+					<string>application/mxf</string>
+				</array>
 			</dict>
 		</dict>
 		<dict>
@@ -276,9 +313,13 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
-				<string>webm</string>
+				<array>
+					<string>webm</string>
+				</array>
 				<key>public.mime-type</key>
-				<string>video/webm</string>
+				<array>
+					<string>video/webm</string>
+				</array>
 			</dict>
 		</dict>
 		<dict>
@@ -293,9 +334,13 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
-				<string>mxg</string>
+				<array>
+					<string>mxg</string>
+				</array>
 				<key>public.mime-type</key>
-				<string>application/octet-stream</string>
+				<array>
+					<string>application/octet-stream</string>
+				</array>
 			</dict>
 		</dict>
 		<dict>
@@ -310,9 +355,13 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
-				<string>caf</string>
+				<array>
+					<string>caf</string>
+				</array>
 				<key>public.mime-type</key>
-				<string>application/octet-stream</string>
+				<array>
+					<string>application/octet-stream</string>
+				</array>
 			</dict>
 		</dict>
 		<dict>
@@ -327,9 +376,13 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
-				<string>oma</string>
+				<array>
+					<string>oma</string>
+				</array>
 				<key>public.mime-type</key>
-				<string>application/octet-stream</string>
+				<array>
+					<string>application/octet-stream</string>
+				</array>
 			</dict>
 		</dict>
 		<dict>
@@ -344,9 +397,13 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
-				<string>w64</string>
+				<array>
+					<string>w64</string>
+				</array>
 				<key>public.mime-type</key>
-				<string>application/octet-stream</string>
+				<array>
+					<string>application/octet-stream</string>
+				</array>
 			</dict>
 		</dict>
 		<dict>
@@ -361,9 +418,13 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
-				<string>srt</string>
+				<array>
+					<string>srt</string>
+				</array>
 				<key>public.mime-type</key>
-				<string>text/plain</string>
+				<array>
+					<string>text/plain</string>
+				</array>
 			</dict>
 		</dict>
 		<dict>
@@ -378,9 +439,13 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
-				<string>sub</string>
+				<array>
+					<string>sub</string>
+				</array>
 				<key>public.mime-type</key>
-				<string>text/plain</string>
+				<array>
+					<string>text/plain</string>
+				</array>
 			</dict>
 		</dict>
 		<dict>
@@ -395,9 +460,13 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
-				<string>cdg</string>
+				<array>
+					<string>cdg</string>
+				</array>
 				<key>public.mime-type</key>
-				<string>text/plain</string>
+				<array>
+					<string>text/plain</string>
+				</array>
 			</dict>
 		</dict>
 		<dict>
@@ -412,9 +481,13 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
-				<string>idx</string>
+				<array>
+					<string>idx</string>
+				</array>
 				<key>public.mime-type</key>
-				<string>text/plain</string>
+				<array>
+					<string>text/plain</string>
+				</array>
 			</dict>
 		</dict>
 		<dict>
@@ -429,9 +502,13 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
-				<string>ass</string>
+				<array>
+					<string>ass</string>
+				</array>
 				<key>public.mime-type</key>
-				<string>text/plain</string>
+				<array>
+					<string>text/plain</string>
+				</array>
 			</dict>
 		</dict>
 		<dict>
@@ -446,9 +523,13 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
-				<string>ssa</string>
+				<array>
+					<string>ssa</string>
+				</array>
 				<key>public.mime-type</key>
-				<string>text/plain</string>
+				<array>
+					<string>text/plain</string>
+				</array>
 			</dict>
 		</dict>
 		<dict>
@@ -463,9 +544,13 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
-				<string>aqt</string>
+				<array>
+					<string>aqt</string>
+				</array>
 				<key>public.mime-type</key>
-				<string>text/plain</string>
+				<array>
+					<string>text/plain</string>
+				</array>
 			</dict>
 		</dict>
 		<dict>
@@ -480,9 +565,13 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
-				<string>jss</string>
+				<array>
+					<string>jss</string>
+				</array>
 				<key>public.mime-type</key>
-				<string>text/plain</string>
+				<array>
+					<string>text/plain</string>
+				</array>
 			</dict>
 		</dict>
 		<dict>
@@ -497,9 +586,13 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
-				<string>psb</string>
+				<array>
+					<string>psb</string>
+				</array>
 				<key>public.mime-type</key>
-				<string>text/plain</string>
+				<array>
+					<string>text/plain</string>
+				</array>
 			</dict>
 		</dict>
 		<dict>
@@ -514,9 +607,13 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
-				<string>rt</string>
+				<array>
+					<string>rt</string>
+				</array>
 				<key>public.mime-type</key>
-				<string>text/plain</string>
+				<array>
+					<string>text/plain</string>
+				</array>
 			</dict>
 		</dict>
 		<dict>
@@ -531,9 +628,13 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
-				<string>smi</string>
+				<array>
+					<string>smi</string>
+				</array>
 				<key>public.mime-type</key>
-				<string>text/plain</string>
+				<array>
+					<string>text/plain</string>
+				</array>
 			</dict>
 		</dict>
 		<dict>
@@ -548,9 +649,13 @@
 			<key>UTTypeTagSpecification</key>
 			<dict>
 				<key>public.filename-extension</key>
-				<string>vlc</string>
+				<array>
+					<string>vlc</string>
+				</array>
 				<key>public.mime-type</key>
-				<string>application/octet-stream</string>
+				<array>
+					<string>application/octet-stream</string>
+				</array>
 			</dict>
 		</dict>
 	</array>

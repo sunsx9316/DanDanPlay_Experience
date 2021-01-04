@@ -135,7 +135,7 @@ class PlayerSettingWidgetState extends State<PlayerSettingWidget> {
                     child: Row(children: [
                       Expanded(child: Text("弹幕开关")),
                       // Text(_playerModeTypeDesc(_playerMode))
-                      CupertinoSwitch(
+                      Switch(
                           value: _danmakuOpen,
                           activeColor: GlobalConfig.mainColor,
                           onChanged: (on) {

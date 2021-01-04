@@ -60,8 +60,7 @@ class PlayerManager {
 }
 
 extension PlayerManager: FileBrowerManagerDelegate {
-    func didSelectedPaths(manager: FileBrowerManager, paths: [String]) {
-        let urls = paths.compactMap({ URL(fileURLWithPath: $0) })
+    func didSelectedPaths(manager: FileBrowerManager, urls: [URL]) {
         delegate?.didSelectedURLs(urls: urls)
     }
 }

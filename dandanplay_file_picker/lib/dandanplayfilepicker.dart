@@ -10,32 +10,29 @@ enum DandanplayfilepickerType {
   image
 }
 
+class FileDataModel {
+  String path;
+  String urlDataString;
+
+  Map<String, dynamic> get mapData {
+    var dic = Map<String, dynamic>();
+    dic["path"] = path;
+    dic["urlDataString"] = urlDataString;
+    return dic;
+  }
+
+  FileDataModel(Map jsonDic) {
+    this.path = jsonDic["path"] as String;
+    this.urlDataString = jsonDic["urlDataString"] as String;
+  }
+}
+
 class Dandanplayfilepicker {
   Dandanplayfilepicker._();
   static const MethodChannel _channel = const MethodChannel('dandanplay.flutter.plugins.file_picker');
   static const String _tag = 'FilePicker';
 
-  static Future<List<File>> getFiles({String fileExtension, @required DandanplayfilepickerType pickType, bool multipleSelection}) async {
-    final filePaths = await _getPath(fileExtension: fileExtension, multipleSelection: multipleSelection, pickType: pickType);
-
-    final files = List<File>();
-    if (filePaths != null) {
-      for (String path in filePaths) {
-        final file =  File(path);
-        files.add(file);
-      }
-    }
-
-    return files;
-  }
-
-  static Future<File> getFile({String fileExtension, @required DandanplayfilepickerType pickType}) async {
-    final files = await getFiles(pickType: pickType, multipleSelection: false, fileExtension: fileExtension);
-    return files.first;
-  }
-
-
-  static Future<List<String>> _getPath({String fileExtension, @required DandanplayfilepickerType pickType, bool multipleSelection = false}) async {
+  static Future<List<FileDataModel>> getFiles({String fileExtension, @required DandanplayfilepickerType pickType, bool multipleSelection = false}) async {
     try {
       Map<String, dynamic> aMap = {};
       aMap["multipleSelection"] = multipleSelection;
@@ -45,13 +42,16 @@ class Dandanplayfilepicker {
       }
 
       List<dynamic> result = await _channel.invokeMethod("pickFiles", aMap);
-      final paths = List<String>();
-      for (dynamic aPath in result) {
-        if (aPath is String) {
-          paths.add(aPath);
+      final files = List<FileDataModel>.empty(growable: true);
+      if (result is List) {
+        for (dynamic model in result) {
+          if (model is Map) {
+            final dataModel = FileDataModel(model);
+            files.add(dataModel);
+          }
         }
       }
-      return paths;
+      return files;
     } on PlatformException catch (e) {
       print('[$_tag] Platform exception: $e');
       rethrow;
