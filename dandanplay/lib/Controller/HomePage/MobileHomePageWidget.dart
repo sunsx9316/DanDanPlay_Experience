@@ -1,10 +1,12 @@
 import 'dart:ffi';
+import 'dart:io';
 
 import 'package:dandanplay/Controller/File/FileWidget.dart';
 import 'package:dandanplay/Controller/Match/MatchWidget.dart';
 import 'package:dandanplay/Controller/Mine/MineWidget.dart';
 import 'package:dandanplay/Model/Message/Receive/BaseReceiveMessage.dart';
 import 'package:dandanplay/Model/Message/Receive/ParseFileMessage.dart';
+import 'package:dandanplay/Model/Message/Receive/ReloadMatchWidgetMessage.dart';
 import 'package:dandanplay/Model/Message/Receive/SendDanmakuMessage.dart';
 import 'package:dandanplay/Tools/Utility.dart';
 import 'package:dandanplay/Vendor/message/MessageChannel.dart';
@@ -63,10 +65,7 @@ class MobileHomePageState extends State<MobileHomePageWidget> with MessageChanne
     } else if (_selectedIndex == 1) {
       body = MineWidget();
       appBar = AppBar(
-        title: Text(_appName),
-        actions: [IconButton(icon: Icon(Icons.settings), onPressed: (){
-          Navigator.pushNamed(context, "setting");
-        })],
+        title: Text(_appName)
       );
     }
 
@@ -107,10 +106,15 @@ class MobileHomePageState extends State<MobileHomePageWidget> with MessageChanne
     if (messageData.name == "ParseFileMessage") {
       final message = ParseFileMessage.fromJson(messageData.data);
       Tools.parseMessage(message, failedCallBack: (mediaId, collection) {
-        Navigator.push(this.context, MaterialPageRoute(builder: (context) {
-          return MatchWidget.fromCollection(
-              mediaId: mediaId, collection: collection);
-        }));
+        if (Platform.isIOS) {
+          final msg = ReloadMatchWidgetMessage.fromParseData(mediaId: mediaId, collection: collection);
+          MessageChannel.shared.sendMessage(msg);
+        } else {
+          Navigator.push(this.context, MaterialPageRoute(builder: (context) {
+            return MatchWidget.fromCollection(
+                mediaId: mediaId, collection: collection);
+          }));
+        }
       });
     } else if (messageData.name == "SendDanmakuMessage") {
       final message = SendDanmakuMessage.fromJsonMap(messageData.data);

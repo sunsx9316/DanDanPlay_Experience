@@ -21,7 +21,7 @@ class Tools {
   static void parseMessage(ParseFileMessage message,
       {Function(String mediaId, FileMatchCollection collection)
           failedCallBack}) async {
-    _showProgressHUD("解析视频...", 0.2);
+    _showProgressHUD("匹配视频中...", 0.2);
 
     final res = await MatchNetworkManager.match(message);
     final mediaId = message.mediaId;
@@ -31,11 +31,10 @@ class Tools {
 
     //精确关联
     if (data.isMatched && data.matches.length == 1 && openFastMatch) {
-      _showProgressHUD("解析视频成功，开始匹配弹幕...", 0.5);
+      _showProgressHUD("匹配视频成功...", 0.5);
       final matched = data.matches[0];
       await getDanmaku(mediaId,
           episodeId: matched.episodeId, title: matched.title);
-      _showProgressHUD("弹幕匹配成功，开始播放...", 1.0);
       _dismissProgressHUD();
     } else {
       _dismissProgressHUD();
@@ -49,17 +48,17 @@ class Tools {
       {int episodeId, String title}) async {
     LoadDanmakuMessage message;
     if (episodeId != null) {
-      _showProgressHUD("开始匹配弹幕...", 0.5);
+      _showProgressHUD("开始加载弹幕...", 0.5);
       final result = await CommentNetworkManager.danmaku(episodeId);
       message = LoadDanmakuMessage(mediaId: mediaId,
           danmakuCollection: result.data, title: title, episodeId: episodeId);
-      _showProgressHUD("弹幕匹配成功，开始播放...", 1.0);
+      _showProgressHUD("弹幕加载成功，开始播放...", 1.0);
       _dismissProgressHUD();
     } else {
       message = LoadDanmakuMessage(mediaId: mediaId, playImmediately: true);
     }
 
-    MessageChannel.shared.sendMessage(message);
+    await MessageChannel.shared.sendMessage(message);
   }
 
   static showSnackBar(String text, BuildContext context) {
@@ -83,7 +82,7 @@ class Tools {
     if (user == null) {
       final message =
           HUDMessage(style: HUDMessageStyle.tips, text: "请先登录才能发送弹幕！");
-      MessageChannel.shared.sendMessage(message);
+      await MessageChannel.shared.sendMessage(message);
       return;
     }
 
@@ -96,10 +95,10 @@ class Tools {
     if (result.error != null) {
       final message =
           HUDMessage(style: HUDMessageStyle.tips, text: result.error.message);
-      MessageChannel.shared.sendMessage(message);
+      await MessageChannel.shared.sendMessage(message);
     } else {
       final message = HUDMessage(style: HUDMessageStyle.tips, text: "发送成功");
-      MessageChannel.shared.sendMessage(message);
+      await MessageChannel.shared.sendMessage(message);
     }
   }
 

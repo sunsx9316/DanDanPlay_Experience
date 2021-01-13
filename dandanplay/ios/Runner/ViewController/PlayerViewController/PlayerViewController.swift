@@ -170,60 +170,67 @@ class PlayerViewController: UIViewController {
         
         switch type {
         case .loadDanmaku:
-            if let message = LoadDanmakuMessage.deserialize(from: data) {
+            guard let message = LoadDanmakuMessage.deserialize(from: data) else { break }
+            
+            let danmakus = message.danmakuCollection
+            let mediaId = message.mediaId
+            let episodeId = message.episodeId
+            
+            let playItems = Array(self.playItemMap.values)
+            if let item = playItems.first(where: { $0.mediaId == mediaId }) {
+                item.playImmediately = message.playImmediately
+                item.episodeId = episodeId
                 
-                let danmakus = message.danmakuCollection
-                let mediaId = message.mediaId
-                let episodeId = message.episodeId
-                
-                let playItems = Array(self.playItemMap.values)
-                if let item = playItems.first(where: { $0.mediaId == mediaId }) {
-                    item.playImmediately = message.playImmediately
-                    item.episodeId = episodeId
-                    
-                    if let danmakus = danmakus, episodeId > 0 {
-                        danmakuCache.setObject(danmakus, forKey: NSNumber(value: episodeId))
-                    }
-                    loadMediaItem(item)
-                    uiView.titleLabel.text = message.title ?? item.url?.lastPathComponent ?? ""
+                if let danmakus = danmakus, episodeId > 0 {
+                    danmakuCache.setObject(danmakus, forKey: NSNumber(value: episodeId))
                 }
+                loadMediaItem(item)
+                uiView.titleLabel.text = message.title ?? item.url?.lastPathComponent ?? ""
             }
         case .syncSetting:
-            if let message = SyncSettingMessage.deserialize(from: data) {
-                
-                guard let enumValue = Preferences.KeyName(rawValue: message.key) else { return }
-                
-                switch enumValue {
-                case .showDanmaku:
-                    self.danmakuRender.canvas.isHidden = !Preferences.shared.showDanmaku
-                case .playerSpeed:
-                    self.player.speed = Float(Preferences.shared.playerSpeed)
-                case .danmakuAlpha:
-                    danmakuRender.canvas.alpha = CGFloat(Preferences.shared.danmakuAlpha)
-                case .danmakuCount:
-                    let danmakuCount = Preferences.shared.danmakuCount
-                    danmakuRender.limitCount = UInt(danmakuCount == Preferences.shared.danmakuUnlimitCount ? 0 : danmakuCount)
-                case .danmakuFontSize:
-                    let danmakuFontSize = CGFloat(Preferences.shared.danmakuFontSize)
-                    danmakuRender.globalFont = UIFont.systemFont(ofSize: danmakuFontSize)
-                case .danmakuSpeed:
-                    danmakuRender.systemSpeed = CGFloat(Preferences.shared.danmakuSpeed)
-                case .subtitleSafeArea:
-                    self.danmakuRender.canvas.snp.remakeConstraints { (make) in
-                        make.top.leading.trailing.equalTo(self.containerView)
-                        if Preferences.shared.subtitleSafeArea {
-                            make.height.equalTo(self.containerView).multipliedBy(0.85)
-                        } else {
-                            make.height.equalTo(self.containerView)
-                        }
+            guard let message = SyncSettingMessage.deserialize(from: data),
+                  let enumValue = Preferences.KeyName(rawValue: message.key) else { break }
+            
+            switch enumValue {
+            case .showDanmaku:
+                self.danmakuRender.canvas.isHidden = !Preferences.shared.showDanmaku
+            case .playerSpeed:
+                self.player.speed = Float(Preferences.shared.playerSpeed)
+            case .danmakuAlpha:
+                danmakuRender.canvas.alpha = CGFloat(Preferences.shared.danmakuAlpha)
+            case .danmakuCount:
+                let danmakuCount = Preferences.shared.danmakuCount
+                danmakuRender.limitCount = UInt(danmakuCount == Preferences.shared.danmakuUnlimitCount ? 0 : danmakuCount)
+            case .danmakuFontSize:
+                let danmakuFontSize = CGFloat(Preferences.shared.danmakuFontSize)
+                danmakuRender.globalFont = UIFont.systemFont(ofSize: danmakuFontSize)
+            case .danmakuSpeed:
+                danmakuRender.systemSpeed = CGFloat(Preferences.shared.danmakuSpeed)
+            case .subtitleSafeArea:
+                self.danmakuRender.canvas.snp.remakeConstraints { (make) in
+                    make.top.leading.trailing.equalTo(self.containerView)
+                    if Preferences.shared.subtitleSafeArea {
+                        make.height.equalTo(self.containerView).multipliedBy(0.85)
+                    } else {
+                        make.height.equalTo(self.containerView)
                     }
-                case .playerMode:
-                    changeRepeatMode()
-                default:
-                    break
                 }
-                
+            case .playerMode:
+                changeRepeatMode()
+            default:
+                break
             }
+        case .reloadMatch:
+            guard let message = ReloadMatchWidgetMessage.deserialize(from: data) else { break }
+            
+            let vc = MatchMessageViewController(with: message)
+            vc.parseMessageCallBack = { [weak self] (name, data) in
+                guard let self = self else { return }
+                
+                self.parseMessage(name, data: data)
+            }
+            vc.reloadData(message)
+            self.navigationController?.pushViewController(vc, animated: true)
             break
         default:
             break
@@ -368,6 +375,14 @@ extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
+    func onTouchPlayButton(playerUIView: PlayerUIView, isSelected: Bool) {
+        if self.player.isPlaying {
+            self.player.pause()
+        } else {
+            self.player.play()
+        }
+    }
+    
     func doubleTap(playerUIView: PlayerUIView) {
         if player.isPlaying {
             player.pause()
@@ -424,8 +439,10 @@ extension PlayerViewController: DDPMediaPlayerDelegate {
         switch status {
         case .playing:
             danmakuRender.start()
+            self.uiView.playButton.isSelected = true
         case .pause, .stop:
             danmakuRender.pause()
+            self.uiView.playButton.isSelected = false
         case .unknow:
             break
         @unknown default:
@@ -468,6 +485,7 @@ extension PlayerViewController: DDPMediaPlayerDelegate {
                 
                 let hud = self.view.showProgress()
                 hud.label.text = "解析视频中..."
+                hud.progress = 0
                 
                 DispatchQueue.global().async {
                     let shouldStop = url.startAccessingSecurityScopedResource()
@@ -500,8 +518,6 @@ extension PlayerViewController: DDPMediaPlayerDelegate {
                                     }
                                 }
                                 
-//                                if let data = try? FileHandle(forReadingFrom: aURL).readData(ofLength: 512) as NSData {
-//                                }
                                 message.fileHash = (allData as NSData).md5String()
                             }
                             

@@ -56,7 +56,12 @@ class MessageViewController: FlutterViewController {
     }
     
     func parseMessage(_ name: MessageType, _ messageData: [String : Any]) {
-        
+        switch name {
+        case .naviBack:
+            self.navigationController?.popViewController(animated: true)
+        default:
+            break
+        }
     }
     
     //MARK: Private Method

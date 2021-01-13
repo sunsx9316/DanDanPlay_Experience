@@ -11,6 +11,8 @@ class PlayerNavigationController: UINavigationController {
     
     var playerViewController: PlayerViewController?
     
+    private let defaultOrientationKey = "PlayerDefaultOrientationKey";
+    
     init(urls: [URL]) {
         let playerViewController = PlayerViewController(urls: urls)
         self.playerViewController = playerViewController
@@ -39,22 +41,36 @@ class PlayerNavigationController: UINavigationController {
     }
     
     override var shouldAutorotate: Bool {
-        return visibleViewController?.shouldAutorotate ?? false
+        return true
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return visibleViewController?.supportedInterfaceOrientations ?? .landscape
+        return .landscape
     }
     
     override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-        return visibleViewController?.preferredInterfaceOrientationForPresentation ?? .landscapeLeft
+        let rawValue = UserDefaults.standard.integer(forKey: defaultOrientationKey)
+        guard let orientation = UIInterfaceOrientation(rawValue: rawValue),
+              (orientation == .landscapeLeft || orientation == .landscapeRight) else { return .landscapeLeft }
+        
+        return orientation
     }
     
     //MARK: Private
     @objc private func handleDeviceOrientationDidChange(_ notification: Notification) {
         guard let orientation = notification.userInfo?[UIApplication.statusBarFrameUserInfoKey] as? UIDeviceOrientation else { return }
         
-        print("orientation = \(orientation)")
+        let saveOrientation: UIInterfaceOrientation
+        switch orientation {
+        case .landscapeLeft:
+            saveOrientation = .landscapeLeft
+        case .landscapeRight:
+            saveOrientation = .landscapeRight
+        default:
+            saveOrientation = .landscapeLeft
+        }
+        
+        UserDefaults.standard.set(saveOrientation.rawValue, forKey: defaultOrientationKey)
     }
 
 }

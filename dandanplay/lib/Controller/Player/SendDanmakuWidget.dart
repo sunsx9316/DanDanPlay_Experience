@@ -1,5 +1,6 @@
+import 'dart:io';
+
 import 'package:dandanplay/Config/Constant.dart';
-import 'package:dandanplay/Model/Message/Receive/SendDanmakuMessage.dart';
 import 'package:dandanplay/Model/Message/Send/NaviBackMessage.dart';
 import 'package:dandanplay/Model/Message/Send/InputDanmakuMessage.dart';
 import 'package:dandanplay/Tools/Preferences.dart';
@@ -34,6 +35,15 @@ class _SendDanmakuWidgetState extends State {
 
   @override
   Widget build(BuildContext context) {
+
+    bool autofocus;
+
+    if (Platform.isIOS) {
+      autofocus = false;
+    } else {
+      autofocus = true;
+    }
+
     return Scaffold(
         appBar: AppBar(
           title: Text("发送弹幕"),
@@ -62,7 +72,7 @@ class _SendDanmakuWidgetState extends State {
               expands: true,
               keyboardType: TextInputType.multiline,
               textInputAction: TextInputAction.send,
-              autofocus: true,
+              autofocus: autofocus,
               decoration: InputDecoration(
                   border: InputBorder.none,
                   focusedBorder: InputBorder.none,

@@ -19,6 +19,7 @@
 		892FB6CE247D479600CC1779 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 892FB6CD247D479600CC1779 /* PlayerViewController.swift */; };
 		892FB6D4247D5D6D00CC1779 /* MessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 892FB6D3247D5D6D00CC1779 /* MessageHandler.swift */; };
 		892FB6D6247D5E1B00CC1779 /* PlayerNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 892FB6D5247D5E1B00CC1779 /* PlayerNavigationController.swift */; };
+		8930E78125A9F51F00B0C72E /* MatchMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8930E78025A9F51F00B0C72E /* MatchMessageViewController.swift */; };
 		893226DB24BAD646007AC7B3 /* PlayerUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893226DA24BAD646007AC7B3 /* PlayerUIView.swift */; };
 		893226DD24BAD64F007AC7B3 /* PlayerUIView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 893226DC24BAD64F007AC7B3 /* PlayerUIView.xib */; };
 		893226DF24BADE39007AC7B3 /* UIView+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893226DE24BADE39007AC7B3 /* UIView+Helper.swift */; };
@@ -69,6 +70,7 @@
 		892FB6CD247D479600CC1779 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		892FB6D3247D5D6D00CC1779 /* MessageHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageHandler.swift; sourceTree = "<group>"; };
 		892FB6D5247D5E1B00CC1779 /* PlayerNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerNavigationController.swift; sourceTree = "<group>"; };
+		8930E78025A9F51F00B0C72E /* MatchMessageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchMessageViewController.swift; sourceTree = "<group>"; };
 		893226DA24BAD646007AC7B3 /* PlayerUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerUIView.swift; sourceTree = "<group>"; };
 		893226DC24BAD64F007AC7B3 /* PlayerUIView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = PlayerUIView.xib; sourceTree = "<group>"; };
 		893226DE24BADE39007AC7B3 /* UIView+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Helper.swift"; sourceTree = "<group>"; };
@@ -143,6 +145,7 @@
 				893226D924BAD62F007AC7B3 /* View */,
 				892FB6CD247D479600CC1779 /* PlayerViewController.swift */,
 				890263E62573C187001333FA /* SendDanmakuViewController.swift */,
+				8930E78025A9F51F00B0C72E /* MatchMessageViewController.swift */,
 				892FB6D5247D5E1B00CC1779 /* PlayerNavigationController.swift */,
 			);
 			path = PlayerViewController;
@@ -407,6 +410,7 @@
 				890263E72573C187001333FA /* SendDanmakuViewController.swift in Sources */,
 				892FB6D4247D5D6D00CC1779 /* MessageHandler.swift in Sources */,
 				890263EB2573FE24001333FA /* UIFont+Helper.swift in Sources */,
+				8930E78125A9F51F00B0C72E /* MatchMessageViewController.swift in Sources */,
 				89C20A7724CF1C15009A094C /* PlayerManager.swift in Sources */,
 				893F8B95258E4DE40081629E /* Preferences.swift in Sources */,
 				893F8C72258F5CC40081629E /* VolumeControlView.swift in Sources */,

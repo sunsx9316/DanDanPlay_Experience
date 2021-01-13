@@ -22,14 +22,12 @@ class SendDanmakuViewController: MessageViewController {
     
     override func parseMessage(_ name: MessageType, _ messageData: [String : Any]) {
         switch name {
-        case .naviBack:
-            self.navigationController?.popViewController(animated: true)
         case .inputDanmaku:
             if let message = InputDanmakuMessage.deserialize(from: messageData) {
                 self.onTouchSendButtonCallBack?(message.message, self)
             }
         default:
-            break
+            super.parseMessage(name, messageData)
         }
     }
 }

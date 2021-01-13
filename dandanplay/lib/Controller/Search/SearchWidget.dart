@@ -1,10 +1,13 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:dandanplay/Config/Constant.dart';
+import 'package:dandanplay/Model/Message/Send/NaviBackMessage.dart';
 import 'package:dandanplay/Model/Search/SearchAnimate.dart';
 import 'package:dandanplay/Model/Search/SearchEpisode.dart';
 import 'package:dandanplay/NetworkManager/SearchNetworkManager.dart';
 import 'package:dandanplay/Tools/Utility.dart';
+import 'package:dandanplay/Vendor/message/MessageChannel.dart';
 import 'package:dandanplay/Vendor/tree_view/tree_view.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -39,6 +42,13 @@ class SearchWidgetState extends State<SearchWidget> {
   @override
   Widget build(BuildContext context) {
     Widget body;
+    bool autofocus;
+
+    if (Platform.isIOS) {
+      autofocus = false;
+    } else {
+      autofocus = true;
+    }
 
     if (_map == null) {
       body = Center(child: CircularProgressIndicator());
@@ -46,7 +56,7 @@ class SearchWidgetState extends State<SearchWidget> {
       if (_map.isEmpty) {
         body = Center(child: Text("并没有匹配到结果，试试更换搜索关键字╮(╯▽╰)╭"));
       } else {
-        var parentList = List<Parent>();
+        var parentList = List<Parent>.empty(growable: true);
 
         _map.forEach((key, value) {
           final animateTypeTitle = _creatAnimate(key);
@@ -78,7 +88,7 @@ class SearchWidgetState extends State<SearchWidget> {
           parentList.add(aParent);
         });
 
-        body = TreeView(parentList: parentList);
+        body = SafeArea(child: TreeView(parentList: parentList));
       }
     }
 
@@ -89,7 +99,7 @@ class SearchWidgetState extends State<SearchWidget> {
                 child: TextField(
                   cursorColor: Colors.white,
                   textInputAction: TextInputAction.search,
-                  autofocus: true,
+                  autofocus: autofocus,
                   decoration: InputDecoration(
                       border: InputBorder.none, hintText: "试试手动♂搜素"),
                   onSubmitted: (str) {
@@ -104,6 +114,7 @@ class SearchWidgetState extends State<SearchWidget> {
                       child: Align(child: Text("直接播放"))),
                   onTap: () {
                     Tools.getDanmaku(widget.mediaId);
+                    _goBack();
                   })
             ]),
         body: body);
@@ -119,7 +130,7 @@ class SearchWidgetState extends State<SearchWidget> {
       if (animates != null) {
         for (SearchAnimate model in animates) {
           if (aMap[model.type] == null) {
-            aMap[model.type] = List<SearchAnimate>();
+            aMap[model.type] = List<SearchAnimate>.empty(growable: true);
           }
 
           aMap[model.type].add(model);
@@ -154,7 +165,7 @@ class SearchWidgetState extends State<SearchWidget> {
   }
 
   ChildList _creatEpisode(SearchAnimate animate) {
-    var childrenWidget = List<Widget>();
+    var childrenWidget = List<Widget>.empty(growable: true);
     //二级标题
     for (SearchEpisode m in animate.episodes) {
       Widget widget = Text("${m.episodeTitle}");
@@ -172,7 +183,7 @@ class SearchWidgetState extends State<SearchWidget> {
   }
 
   ChildList _creatAnimate(AnimateType animateType) {
-    var childrenWidget = List<Widget>();
+    var childrenWidget = List<Widget>.empty(growable: true);
     final animateList = _map[animateType];
     if (animateList != null) {
       //二级标题
@@ -208,8 +219,17 @@ class SearchWidgetState extends State<SearchWidget> {
     return ChildList(children: childrenWidget);
   }
 
-  void _onTap(BuildContext content, SearchEpisode model) {
-    Tools.getDanmaku(widget.mediaId,
+  void _onTap(BuildContext content, SearchEpisode model) async {
+    await Tools.getDanmaku(widget.mediaId,
         episodeId: model.episodeId, title: model.episodeTitle);
+    _goBack();
   }
+
+  void _goBack() {
+    if (Platform.isIOS) {
+      final msg = NaviBackMessage();
+      MessageChannel.shared.sendMessage(msg);
+    }
+  }
+
 }

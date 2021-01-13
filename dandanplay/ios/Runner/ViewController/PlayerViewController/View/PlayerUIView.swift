@@ -7,12 +7,14 @@
 
 import UIKit
 import AVFoundation
+import SnapKit
 
 protocol PlayerUIViewDelegate: class {
     func onTouchMoreButton(playerUIView: PlayerUIView)
     func onTouchDanmakuSwitch(playerUIView: PlayerUIView, isOn: Bool)
     func onTouchPlayerList(playerUIView: PlayerUIView)
     func onTouchSendDanmakuButton(playerUIView: PlayerUIView)
+    func onTouchPlayButton(playerUIView: PlayerUIView, isSelected: Bool)
     func doubleTap(playerUIView: PlayerUIView)
     func tapSlider(playerUIView: PlayerUIView, progress: CGFloat)
 }
@@ -30,6 +32,7 @@ extension PlayerUIViewDelegate {
     func onTouchSendDanmakuButton(playerUIView: PlayerUIView) {}
     func doubleTap(playerUIView: PlayerUIView) {}
     func tapSlider(playerUIView: PlayerUIView, progress: CGFloat) {}
+    func onTouchPlayButton(playerUIView: PlayerUIView, isSelected: Bool) {}
 }
 
 private class PlayerSnapTimeView: UIView {
@@ -72,6 +75,10 @@ class PlayerUIView: UIView {
     @IBOutlet weak var slider: UISlider!
     @IBOutlet weak var topView: UIView!
     @IBOutlet weak var bottomView: UIView!
+    @IBOutlet weak var playButton: UIButton!
+    @IBOutlet weak var backButton: UIButton!
+    @IBOutlet weak var moreButton: UIButton!
+    
     private weak var _brightnessView: SliderControlView?
     private weak var _volumeView: VolumeControlView?
     
@@ -86,6 +93,7 @@ class PlayerUIView: UIView {
         }
         return brightnessView
     }
+    
     private var volumeView: VolumeControlView {
         let controlView: VolumeControlView
         if let view = self._volumeView {
@@ -141,6 +149,32 @@ class PlayerUIView: UIView {
         titleLabel.text = nil
         slider.tintColor = UIColor.mainColor
         slider.setThumbImage(UIImage(color: UIColor.white, size: CGSize(width: 16, height: 10))?.byRoundCornerRadius(2), for: .normal)
+        slider.snp.makeConstraints { (make) in
+            if #available(iOS 11.0, *) {
+                make.leading.equalTo(self.safeAreaLayoutGuide.snp.leading)
+                make.trailing.equalTo(self.safeAreaLayoutGuide.snp.trailing)
+            } else {
+                make.leading.equalToSuperview().offset(10)
+                make.trailing.equalToSuperview().offset(-10)
+            }
+        }
+        
+        backButton.snp.makeConstraints { (make) in
+            if #available(iOS 11.0, *) {
+                make.leading.equalTo(self.safeAreaLayoutGuide.snp.leading)
+            } else {
+                make.leading.equalToSuperview().offset(5)
+            }
+        }
+        
+        moreButton.snp.makeConstraints { (make) in
+            if #available(iOS 11.0, *) {
+                make.trailing.equalTo(self.safeAreaLayoutGuide.snp.trailing)
+            } else {
+                make.trailing.equalToSuperview().offset(-5)
+            }
+        }
+        
         
         let doubleTap = UITapGestureRecognizer(target: self, action: #selector(PlayerUIView.doubleTap))
         doubleTap.numberOfTapsRequired = 2
@@ -270,6 +304,12 @@ class PlayerUIView: UIView {
     @IBAction func onTouchSendDanmakuButon(_ sender: UIButton) {
         delegate?.onTouchSendDanmakuButton(playerUIView: self)
     }
+    
+    @IBAction func onTouchPlayButton(_ sender: UIButton) {
+        sender.isSelected.toggle()
+        delegate?.onTouchPlayButton(playerUIView: self, isSelected: sender.isSelected)
+    }
+    
     
     //MARK: 滑动条
     

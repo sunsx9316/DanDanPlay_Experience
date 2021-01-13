@@ -43,11 +43,11 @@ class PlayerSettingWidgetState extends State<PlayerSettingWidget> {
             appBar: TabBar(
                 indicatorColor: GlobalConfig.mainColor,
                 labelColor: Colors.white,
-                tabs: <Widget>[Tab(text: "弹幕设置"), Tab(text: "播放器设置")],
+                tabs: <Widget>[Tab(text: "播放器设置"), Tab(text: "弹幕设置")],
                 indicatorPadding: EdgeInsets.only(left: 30, right: 30)),
             body: TabBarView(children: [
-              _createDanmakuSettingWidget(),
-              _createPlayerSettingWidget()
+              _createPlayerSettingWidget(),
+              _createDanmakuSettingWidget()
             ])));
   }
 
@@ -109,7 +109,7 @@ class PlayerSettingWidgetState extends State<PlayerSettingWidget> {
 
   Widget _createPlayerSettingWidget() {
     return ListView.builder(
-        itemCount: Platform.isIOS ? 3 : 2,
+        itemCount: 2,
         itemBuilder: (context, index) {
           if (index == 0) {
             return _createSliderCell("播放速度", 0.5, 2, _playerSpeed, (value) {
@@ -128,23 +128,6 @@ class PlayerSettingWidgetState extends State<PlayerSettingWidget> {
                           Text(_playerModeTypeDesc(_playerMode))
                         ])),
                     onTap: _onTapPlayerMode));
-          } else if (index == 2) {
-            return SafeArea(
-                child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Row(children: [
-                      Expanded(child: Text("弹幕开关")),
-                      // Text(_playerModeTypeDesc(_playerMode))
-                      Switch(
-                          value: _danmakuOpen,
-                          activeColor: GlobalConfig.mainColor,
-                          onChanged: (on) {
-                            setState(() {
-                              _danmakuOpen = on;
-                              Preferences.shared.setShowDanmaku(on);
-                            });
-                          })
-                    ])));
           }
           return Container();
         });
@@ -152,7 +135,7 @@ class PlayerSettingWidgetState extends State<PlayerSettingWidget> {
 
   Widget _createDanmakuSettingWidget() {
     return ListView.builder(
-        itemCount: 4,
+        itemCount: Platform.isIOS ? 5 : 4,
         itemBuilder: (context, index) {
           if (index == 0) {
             double danmakuFontMinSize = 18;
@@ -203,6 +186,23 @@ class PlayerSettingWidgetState extends State<PlayerSettingWidget> {
                 divisions: 18,
                 label: isMaxValue ? "∞" : "$_danmakuMaxCount",
                 maxString: "∞");
+          } else if (index == 4) {
+            return SafeArea(
+                child: Padding(
+                    padding: EdgeInsets.all(10),
+                    child: Row(children: [
+                      Expanded(child: Text("弹幕开关")),
+                      // Text(_playerModeTypeDesc(_playerMode))
+                      Switch(
+                          value: _danmakuOpen,
+                          activeColor: GlobalConfig.mainColor,
+                          onChanged: (on) {
+                            setState(() {
+                              _danmakuOpen = on;
+                              Preferences.shared.setShowDanmaku(on);
+                            });
+                          })
+                    ])));
           }
           return Container();
         });

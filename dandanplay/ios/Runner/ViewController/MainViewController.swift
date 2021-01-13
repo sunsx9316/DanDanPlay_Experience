@@ -66,11 +66,19 @@ class MainViewController: MessageViewController {
                 cacheHUD = aCacheHUD
             } else {
                 
+                let hudSuperView: UIView
+                
+                if let keyWindow = UIApplication.shared.keyWindow {
+                    hudSuperView = keyWindow
+                } else {
+                    hudSuperView = self.view
+                }
+                
                 switch msg.style {
                 case .tips:
-                    cacheHUD = self.view.showHUD(msg.text)
+                    cacheHUD = hudSuperView.showHUD(msg.text)
                 case .progress:
-                    cacheHUD = self.view.showProgress()
+                    cacheHUD = hudSuperView.showProgress()
                     cacheHUD.label.text = msg.text
                 }
                 

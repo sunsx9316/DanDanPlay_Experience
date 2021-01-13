@@ -74,7 +74,8 @@ class MineWidgetState extends State with RouteAware {
       );
     } else {
       icon = Image.asset(R.assetsImagesMineIcon);
-      title = Text("点击登录");
+      title = Text("");
+      // title = Text("点击登录");
     }
 
     return ListView(children: [
@@ -115,11 +116,14 @@ class MineWidgetState extends State with RouteAware {
                 ],
               ))),
           onTap: () {
-            _onTapUserIcon(_user);
+            // _onTapUserIcon(_user);
           }),
+      _createListTile("设置", () {
+        Navigator.pushNamed(context, "setting");
+      }),
       _createListTile("关于" + _appName, () {
-        Navigator.pushNamed(context, "AboutUs");
-      })
+        Navigator.pushNamed(context, "aboutUs");
+      }),
     ]);
   }
 
