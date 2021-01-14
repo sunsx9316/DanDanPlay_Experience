@@ -37,6 +37,8 @@ dependencies:
   intl: ^0.16.1
   flutter_colorpicker: ^0.3.4
   package_info: ^0.4.3+2
+  webdav_client: ^0.0.2
+  pull_to_refresh: ^1.6.3
   dandanplaystore:
     path: "../dandanplay_store"
   dandanplayfilepicker:

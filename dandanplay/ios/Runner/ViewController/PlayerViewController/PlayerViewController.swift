@@ -80,13 +80,6 @@ class PlayerViewController: UIViewController {
         UIViewController.attemptRotationToDeviceOrientation()
         self.navigationController?.setNavigationBarHidden(true, animated: animated)
     }
-    
-//    override func viewDidAppear(_ animated: Bool) {
-//        super.viewDidAppear(animated)
-//        if self.player.isPlaying == false {
-//            self.player.play()
-//        }
-//    }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
@@ -126,7 +119,6 @@ class PlayerViewController: UIViewController {
         
         
         changeRepeatMode()
-//        autoShowControlView()
         uiView.autoShowControlView()
         if let first = self.player.playerLists.first,
             let playItem = findPlayItem(first) {
@@ -172,7 +164,7 @@ class PlayerViewController: UIViewController {
         case .loadDanmaku:
             guard let message = LoadDanmakuMessage.deserialize(from: data) else { break }
             
-            let danmakus = message.danmakuCollection
+            let danmakus = message.danmakuCollection ?? DanmakuCollectionModel()
             let mediaId = message.mediaId
             let episodeId = message.episodeId
             
@@ -180,10 +172,7 @@ class PlayerViewController: UIViewController {
             if let item = playItems.first(where: { $0.mediaId == mediaId }) {
                 item.playImmediately = message.playImmediately
                 item.episodeId = episodeId
-                
-                if let danmakus = danmakus, episodeId > 0 {
-                    danmakuCache.setObject(danmakus, forKey: NSNumber(value: episodeId))
-                }
+                danmakuCache.setObject(danmakus, forKey: NSNumber(value: episodeId))
                 loadMediaItem(item)
                 uiView.titleLabel.text = message.title ?? item.url?.lastPathComponent ?? ""
             }
@@ -249,25 +238,12 @@ class PlayerViewController: UIViewController {
         }
         
         self.player.addMediaItems(arr)
-//        if !urls.isEmpty && self.isViewLoaded {
-//            if let item = self.playItemMap[urls[0]] {
-//                loadMediaItem(item)
-//            }
-//        }
     }
     
     //MARK: - Private
     
     private func changeVolume(_ addBy: CGFloat) {
         self.player.volumeJump(addBy)
-//        var hud = self.volumeHUD
-//        if hud == nil {
-//            hud = DDPHUD(style: .normal)
-//            self.volumeHUD = hud
-//        }
-//
-//        hud?.title = "音量: \(Int(self.player.volume))"
-//        hud?.show(at: self.view)
     }
     
     private func loadMediaItem(_ item: PlayItem) {
@@ -469,9 +445,10 @@ extension PlayerViewController: DDPMediaPlayerDelegate {
         guard let media = media,
             let item = findPlayItem(media) else { return }
         
-        let danmakus = self.danmakuCache.object(forKey: NSNumber(value: item.episodeId))?.collection ?? []
+        let danmakuCollection = self.danmakuCache.object(forKey: NSNumber(value: item.episodeId))
         
-        if item.playImmediately || !danmakus.isEmpty {
+        if danmakuCollection != nil || item.playImmediately {
+            let danmakus = danmakuCollection?.collection ?? []
             self.danmakuDic = DanmakuManager.shared.conver(danmakus)
             self.danmakuRender.currentTime = 0
             self.player.play()
