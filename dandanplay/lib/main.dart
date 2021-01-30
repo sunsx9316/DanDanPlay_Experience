@@ -71,7 +71,7 @@ class AppState extends State<App> with MessageChannelObserver {
           }
         },
         child: MaterialApp(
-            title: 'AniPlayer',
+            title: 'AniXPlayer',
             theme: ThemeData(
                 brightness: Brightness.dark,
                 sliderTheme: SliderThemeData(

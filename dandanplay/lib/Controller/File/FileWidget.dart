@@ -29,7 +29,7 @@ class _FileWidgetState extends State<FileWidget> {
               }),
           Text("点击选取视频播放", style: TextStyle(fontSize: 16, color: Colors.white38)),
         ]));
-    
+
     // return ListView(
     //   children: <Widget>[
     //     _createListTile('本地视频', Icon(Icons.folder, size: 30), () {

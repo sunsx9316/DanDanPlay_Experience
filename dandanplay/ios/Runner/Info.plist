@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>AniPlayer</string>
+	<string>${U_APP_NAME}</string>
 	<key>CFBundleDocumentTypes</key>
 	<array>
 		<dict>
@@ -129,11 +129,11 @@
 		<true/>
 	</dict>
 	<key>NSFaceIDUsageDescription</key>
-	<string>请允许 AniPlayer 使用Face Id进行认证</string>
+	<string>${U_FACE_ID_DESC}</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>请允许 AniPlayer 访问您的相册</string>
+	<string>${U_PHOTO_USE_DESC}</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>请允许 AniPlayer 访问您的相册</string>
+	<string>${U_PHOTO_USE_DESC}</string>
 	<key>UIFileSharingEnabled</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
