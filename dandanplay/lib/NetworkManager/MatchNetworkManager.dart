@@ -23,7 +23,7 @@ class MatchNetworkManager extends BaseNetworkManager {
       if (map["fileHash"] != null) {
         jsonStr = await Dandanplaystore.getString(
             key: map["fileHash"], id: "com.dandanplay.match");
-        if (jsonStr != null) {
+        if (jsonStr != null && jsonStr.isNotEmpty) {
           Map<String, dynamic> jsonObj = json.decode(jsonStr);
           final matchModel = FileMatch.fromJson(jsonObj);
           if (matchModel != null) {

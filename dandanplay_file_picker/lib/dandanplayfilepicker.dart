@@ -12,6 +12,7 @@ enum DandanplayfilepickerType {
 
 class FileDataModel {
   String path;
+  //对于沙盒外的URL 需要通过这种方式获取
   String urlDataString;
 
   Map<String, dynamic> get mapData {

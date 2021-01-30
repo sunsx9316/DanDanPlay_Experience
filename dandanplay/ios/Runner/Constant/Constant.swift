@@ -17,4 +17,5 @@ enum MessageType: String {
     case naviBack = "NaviBackMessage"
     case inputDanmaku = "InputDanmakuMessage"
     case reloadMatch = "ReloadMatchWidgetMessage"
+    case loadCustomDanmaku = "LoadCustomDanmakuMessage"
 }

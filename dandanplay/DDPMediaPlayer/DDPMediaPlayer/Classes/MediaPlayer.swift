@@ -470,7 +470,6 @@ extension MediaPlayer: VLCMediaPlayerDelegate {
         let length = self.length
         
         self.delegate?.player(self, currentTime: nowTime, totalTime: length)
-        
         self.playerTimer?.invalidate()
         self.playerTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(playerTimerStart), userInfo: nil, repeats: false)
         
@@ -493,6 +492,7 @@ extension MediaPlayer: VLCMediaPlayerDelegate {
     
     @objc private func playerTimerStart() {
         self.timeIsUpdate = false
+        self.stateChanged()
     }
     
     private func isPlayAtEnd() -> Bool {

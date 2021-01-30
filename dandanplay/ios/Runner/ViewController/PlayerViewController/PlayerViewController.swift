@@ -219,7 +219,11 @@ class PlayerViewController: UIViewController {
             }
             vc.reloadData(message)
             self.navigationController?.pushViewController(vc, animated: true)
-            break
+        case .loadCustomDanmaku:
+            guard let _ = LoadCustomDanmakuMessage.deserialize(from: data) else { break }
+            self.manager.dismissSetting {
+                self.manager.showDanmakuFileBrower(from: self)
+            }
         default:
             break
         }
@@ -270,6 +274,12 @@ class PlayerViewController: UIViewController {
         case .repeatCurrentItem:
             player.playMode = .repeatCurrentItem
         }
+    }
+    
+    private func setPlayerProgress(_ progress: CGFloat) {
+        _ = self.player.setPosition(progress)
+        self.danmakuRender.currentTime = self.player.currentTime
+        self.uiView.updateTime()
     }
 }
 
@@ -361,16 +371,14 @@ extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
     }
     
     func tapSlider(playerUIView: PlayerUIView, progress: CGFloat) {
-        _ = self.player.setPosition(progress)
-        self.uiView.updateTime()
+        self.setPlayerProgress(progress)
     }
     
     func changeProgress(playerUIView: PlayerUIView, diffValue: CGFloat) {
         let length = self.player.length
         if length > 0 {
             let progress = (CGFloat(self.player.currentTime) + diffValue) / CGFloat(length)
-            _ = self.player.setPosition(progress)
-            self.uiView.updateTime()
+            self.setPlayerProgress(progress)
         }
     }
     
@@ -454,7 +462,7 @@ extension PlayerViewController: MediaPlayerDelegate {
                             var seek: UInt64 = 0
                             var allData = Data()
                             let readSize = min(16777216, size)
-                            let everyReadSize = 512
+                            let everyReadSize = 1024
                             while seek < readSize {
                                 allData.append(fileHandle.readData(ofLength: everyReadSize))
                                 fileHandle.seek(toFileOffset: seek)
@@ -506,6 +514,57 @@ extension PlayerViewController: JHDanmakuEngineDelegate {
 extension PlayerViewController: PlayerManagerDelegate {
     func didSelectedURLs(urls: [URL]) {
         self.loadURLs(urls)
+    }
+    
+    func didSelectedDanmakuURLs(urls: [URL]) {
+        guard let url = urls.first else { return }
+        
+        DispatchQueue.global().async {
+            
+            let shouldStop = url.startAccessingSecurityScopedResource()
+            defer {
+                if shouldStop {
+                    url.stopAccessingSecurityScopedResource()
+                }
+            }
+            
+            var error: NSError?
+            NSFileCoordinator().coordinate(readingItemAt: url, error: &error) { (aURL) in
+                if let data = try? Data(contentsOf: aURL), let dic = NSDictionary(xml: data) {
+                    if let arr = dic["d"] as? [[String : Any]] {
+                        var danmakuModels = [DanmakuModel]()
+                        for d in arr {
+                            if let p = d["p"] as? String {
+                                let strArr = p.components(separatedBy: ",")
+                                if strArr.count >= 4, let text = d["_text"] as? String {
+                                    let model = DanmakuModel()
+                                    model.time = TimeInterval(strArr[0]) ?? 0
+                                    model.mode = DanmakuModel.Mode(rawValue: Int(strArr[1]) ?? 1) ?? .normal
+                                    model.color = UIColor(rgb: Int(strArr[3]) ?? 0)
+                                    model.message = text
+                                    danmakuModels.append(model)
+                                }
+                            }
+                        }
+                        
+                        let converDic = DanmakuManager.shared.conver(danmakuModels)
+                        DispatchQueue.main.async {
+                            self.danmakuDic = converDic
+                            self.setPlayerProgress(0)
+                        }
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        if let error = error {
+                            self.view.showHUD("加载自定义弹幕失败：\(error.localizedDescription)")
+                        } else {
+                            self.view.showHUD("加载自定义弹幕失败")
+                        }
+                    }
+                }
+            }
+        }
+        
     }
 }
 
