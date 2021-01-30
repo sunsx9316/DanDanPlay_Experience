@@ -42,8 +42,8 @@ class PlayerViewController: UIViewController {
         return danmakuRender
     }()
     
-    private lazy var player: DDPMediaPlayer = {
-        let player = DDPMediaPlayer()
+    private lazy var player: MediaPlayer = {
+        let player = MediaPlayer()
         player.delegate = self
         return player
     }()
@@ -120,10 +120,7 @@ class PlayerViewController: UIViewController {
         
         changeRepeatMode()
         uiView.autoShowControlView()
-        if let first = self.player.playerLists.first,
-            let playItem = findPlayItem(first) {
-            loadMediaItem(playItem)
-        }
+        self.player(self.player, mediaDidChange: self.player.playList.first)
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -173,8 +170,8 @@ class PlayerViewController: UIViewController {
                 item.playImmediately = message.playImmediately
                 item.episodeId = episodeId
                 danmakuCache.setObject(danmakus, forKey: NSNumber(value: episodeId))
-                loadMediaItem(item)
-                uiView.titleLabel.text = message.title ?? item.url?.lastPathComponent ?? ""
+                playMediaItem(item)
+                uiView.titleLabel.text = message.title ?? item.url.lastPathComponent
             }
         case .syncSetting:
             guard let message = SyncSettingMessage.deserialize(from: data),
@@ -184,7 +181,9 @@ class PlayerViewController: UIViewController {
             case .showDanmaku:
                 self.danmakuRender.canvas.isHidden = !Preferences.shared.showDanmaku
             case .playerSpeed:
-                self.player.speed = Float(Preferences.shared.playerSpeed)
+                let speed = CGFloat(Preferences.shared.playerSpeed)
+                self.player.speed = speed
+                self.danmakuRender.systemSpeed = speed
             case .danmakuAlpha:
                 danmakuRender.canvas.alpha = CGFloat(Preferences.shared.danmakuAlpha)
             case .danmakuCount:
@@ -227,30 +226,23 @@ class PlayerViewController: UIViewController {
     }
     
     func loadURLs(_ urls: [URL]) {
-        
-        var arr = [PlayItem]()
         for url in urls {
             if self.playItemMap[url] == nil {
                 let item = PlayItem(url: url)
-                arr.append(item)
                 self.playItemMap[url] = item
+                self.player.addMediaToPlayList(item)
             }
         }
-        
-        self.player.addMediaItems(arr)
     }
     
     //MARK: - Private
     
     private func changeVolume(_ addBy: CGFloat) {
-        self.player.volumeJump(addBy)
+        self.player.volume += Int(addBy)
     }
     
-    private func loadMediaItem(_ item: PlayItem) {
-        
-        self.player.addMediaItems([item])
-        self.player.stop()
-        self.player.play(withItem: item)
+    private func playMediaItem(_ item: PlayItem) {
+        self.player.play(item)
     }
     
     @objc private func onClickPlayButton() {
@@ -261,40 +253,41 @@ class PlayerViewController: UIViewController {
         }
     }
     
-    private func findPlayItem(_ protocolItem: DDPMediaItemProtocol) -> PlayItem? {
+    private func findPlayItem(_ protocolItem: DDPMediaPlayer.MediaItem) -> PlayItem? {
         if let protocolItem = protocolItem as? PlayItem {
             return protocolItem
         }
         
-        if let url = protocolItem.url {
-            return self.playItemMap[url]
-        }
-        
-        return nil
+        return self.playItemMap[protocolItem.url]
     }
     
     private func changeRepeatMode() {
-        if let mode = DDPMediaPlayerRepeatMode(rawValue: UInt(Preferences.shared.playerMode.rawValue)) {
-            player.repeatMode = mode
+        switch Preferences.shared.playerMode {
+        case .notRepeat:
+            player.playMode = .autoPlayNext
+        case .repeatAllItem:
+            player.playMode = .repeatList
+        case .repeatCurrentItem:
+            player.playMode = .repeatCurrentItem
         }
     }
 }
 
 extension PlayerViewController {
-    private class PlayItem: NSObject, DDPMediaItemProtocol {
-
-        var url: URL?
-        var mediaOptions: [AnyHashable : Any]?
+    private class PlayItem: NSObject, MediaItem {
+        
+        var url: URL
+        var option: [AnyHashable : Any]?
         var playImmediately = false
         
         var mediaId: String {
-            return url?.path ?? ""
+            return url.path
         }
         var episodeId = 0
         
         init(url: URL) {
-            super.init()
             self.url = url
+            super.init()
         }
     }
 }
@@ -368,21 +361,15 @@ extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
     }
     
     func tapSlider(playerUIView: PlayerUIView, progress: CGFloat) {
-        player.setPosition(progress) { [weak self] (time) in
-            guard let self = self else {
-                return
-            }
-            
-            self.uiView.updateTime()
-        }
+        _ = self.player.setPosition(progress)
+        self.uiView.updateTime()
     }
     
     func changeProgress(playerUIView: PlayerUIView, diffValue: CGFloat) {
-        player.jump(Int32(diffValue)) { [weak self] (time) in
-            guard let self = self else {
-                return
-            }
-            
+        let length = self.player.length
+        if length > 0 {
+            let progress = (CGFloat(self.player.currentTime) + diffValue) / CGFloat(length)
+            _ = self.player.setPosition(progress)
             self.uiView.updateTime()
         }
     }
@@ -392,7 +379,7 @@ extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
     }
     
     func changeVolume(playerUIView: PlayerUIView, diffValue: CGFloat) {
-        player.volumeJump(diffValue)
+        self.player.volume += Int(diffValue)
     }
     
     //MARK: PlayerUIViewDataSource
@@ -409,39 +396,22 @@ extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
     }
 }
 
-//MARK: - DDPMediaPlayerDelegate
-extension PlayerViewController: DDPMediaPlayerDelegate {
-    func mediaPlayer(_ player: DDPMediaPlayer, statusChange status: DDPMediaPlayerStatus) {
-        switch status {
+//MARK: - MediaPlayerDelegate
+extension PlayerViewController: MediaPlayerDelegate {
+    
+    func player(_ player: MediaPlayer, stateDidChange state: MediaPlayer.State) {
+        switch state {
         case .playing:
             danmakuRender.start()
             self.uiView.playButton.isSelected = true
         case .pause, .stop:
             danmakuRender.pause()
             self.uiView.playButton.isSelected = false
-        case .unknow:
-            break
-        @unknown default:
-            break
         }
     }
     
-    func mediaPlayer(_ player: DDPMediaPlayer, rateChange rate: Float) {
-        danmakuRender.systemSpeed = CGFloat(rate)
-    }
-    
-    func mediaPlayer(_ player: DDPMediaPlayer, userJumpWithTime time: TimeInterval) {
-        danmakuRender.currentTime = time
-        if !player.isPlaying {
-            danmakuRender.pause()
-        }
-    }
-    
-    func mediaPlayer(_ player: DDPMediaPlayer, currentTime: TimeInterval, totalTime: TimeInterval) {
-        uiView.updateTime()
-    }
-    
-    func mediaPlayer(_ player: DDPMediaPlayer, mediaDidChange media: DDPMediaItemProtocol?) {
+    func player(_ player: MediaPlayer, mediaDidChange media: MediaItem?) {
+        
         guard let media = media,
             let item = findPlayItem(media) else { return }
         
@@ -451,73 +421,78 @@ extension PlayerViewController: DDPMediaPlayerDelegate {
             let danmakus = danmakuCollection?.collection ?? []
             self.danmakuDic = DanmakuManager.shared.conver(danmakus)
             self.danmakuRender.currentTime = 0
-            self.player.play()
+            self.player.play(item)
         } else {
             //请求完弹幕再播放
-            if let url = item.url {
-                self.player.pause()
-                
-                let message = ParseFileMessage()
-                message.mediaId = item.mediaId
-                
-                let hud = self.view.showProgress()
-                hud.label.text = "解析视频中..."
-                hud.progress = 0
-                
-                DispatchQueue.global().async {
-                    let shouldStop = url.startAccessingSecurityScopedResource()
-                    defer {
-                        if shouldStop {
-                            url.stopAccessingSecurityScopedResource()
-                        }
+            let url = item.url
+            
+            self.player.pause()
+            
+            let message = ParseFileMessage()
+            message.mediaId = item.mediaId
+            
+            let hud = self.view.showProgress()
+            hud.label.text = "解析视频中..."
+            hud.progress = 0
+            
+            DispatchQueue.global().async {
+                let shouldStop = url.startAccessingSecurityScopedResource()
+                defer {
+                    if shouldStop {
+                        url.stopAccessingSecurityScopedResource()
                     }
-                    
-                    var error: NSError?
-                    NSFileCoordinator().coordinate(readingItemAt: url, error: &error) { (aURL) in
-                        do {
-                            let attributesOfItem = try FileManager.default.attributesOfItem(atPath:aURL.path)
-                            let size = attributesOfItem[.size] as? Int ?? 0
-                            message.fileSize = size
-                            
-                            if let fileHandle = try? FileHandle(forReadingFrom: aURL) {
-                                var seek: UInt64 = 0
-                                var allData = Data()
-                                let readSize = min(16777216, size)
-                                let everyReadSize = 512
-                                while seek < readSize {
-                                    allData.append(fileHandle.readData(ofLength: everyReadSize))
-                                    fileHandle.seek(toFileOffset: seek)
-                                    seek += UInt64(everyReadSize)
-                                    
-                                    let progress = readSize == 0 ? 0 : Float(seek) / Float(readSize)
-                                    DispatchQueue.main.async {
-                                        hud.progress = progress
-                                    }
-                                }
+                }
+                
+                var error: NSError?
+                NSFileCoordinator().coordinate(readingItemAt: url, error: &error) { (aURL) in
+                    do {
+                        let attributesOfItem = try FileManager.default.attributesOfItem(atPath:aURL.path)
+                        let size = attributesOfItem[.size] as? Int ?? 0
+                        message.fileSize = size
+                        
+                        if let fileHandle = try? FileHandle(forReadingFrom: aURL) {
+                            var seek: UInt64 = 0
+                            var allData = Data()
+                            let readSize = min(16777216, size)
+                            let everyReadSize = 512
+                            while seek < readSize {
+                                allData.append(fileHandle.readData(ofLength: everyReadSize))
+                                fileHandle.seek(toFileOffset: seek)
+                                seek += UInt64(everyReadSize)
                                 
-                                message.fileHash = (allData as NSData).md5String()
+                                let progress = readSize == 0 ? 0 : Float(seek) / Float(readSize)
+                                DispatchQueue.main.async {
+                                    hud.progress = progress
+                                }
                             }
                             
-                            if let data = try? FileHandle(forReadingFrom: aURL).readData(ofLength: min(16777216, size)) as NSData {
-                                message.fileHash = data.md5String()
-                            }
-                            
-                            message.fileName = aURL.deletingPathExtension().lastPathComponent
-                            DispatchQueue.main.async {
-                                MessageHandler.sendMessage(message)
-                                hud.hide(animated: true)
-                            }
-                        } catch let error {
-                            DispatchQueue.main.async {
-                                hud.hide(animated: true)
-                                self.view.showHUD(error.localizedDescription)
-                            }
+                            message.fileHash = (allData as NSData).md5String()
+                        }
+                        
+                        if let data = try? FileHandle(forReadingFrom: aURL).readData(ofLength: min(16777216, size)) as NSData {
+                            message.fileHash = data.md5String()
+                        }
+                        
+                        message.fileName = aURL.deletingPathExtension().lastPathComponent
+                        DispatchQueue.main.async {
+                            MessageHandler.sendMessage(message)
+                            hud.hide(animated: true)
+                        }
+                    } catch let error {
+                        DispatchQueue.main.async {
+                            hud.hide(animated: true)
+                            self.view.showHUD(error.localizedDescription)
                         }
                     }
                 }
             }
         }
     }
+    
+    func player(_ player: MediaPlayer, currentTime: TimeInterval, totalTime: TimeInterval) {
+        uiView.updateTime()
+    }
+    
 }
 
 //MARK: - JHDanmakuEngineDelegate

@@ -2,6 +2,8 @@
 
 platform :ios, '9.0'
 
+# use_modular_headers!
+
 target 'DDPMediaPlayer_Example' do
   pod 'DDPMediaPlayer', :path => '../../'
 

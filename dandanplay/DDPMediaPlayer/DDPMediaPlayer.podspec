@@ -42,4 +42,5 @@ TODO: Add long description of the pod here.
   # s.frameworks = 'UIKit', 'MapKit'
   s.ios.dependency 'MobileVLCKit'
   s.macos.dependency 'VLCKit'
+  s.dependency 'GCDWebServer'
 end
