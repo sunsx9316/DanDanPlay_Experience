@@ -90,7 +90,7 @@ class _RegisterWidgetState extends State<RegisterWidget> {
                   width: double.infinity),
               Container(
                 padding: EdgeInsets.only(top: 20, bottom: 20),
-                child: FlatButton(
+                child: MaterialButton(
                   color: GlobalConfig.mainColor,
                   highlightColor: Colors.orangeAccent,
                   colorBrightness: Brightness.dark,

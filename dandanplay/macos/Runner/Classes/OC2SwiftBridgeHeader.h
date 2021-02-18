@@ -13,5 +13,6 @@
 #import "DDPHUD.h"
 #import "OCMessageViewController.h"
 #import "NSView+DDPTools.h"
+#import "NSColor+DDPTools.h"
 
 #endif /* OC2SwiftBridgeHeader_h */

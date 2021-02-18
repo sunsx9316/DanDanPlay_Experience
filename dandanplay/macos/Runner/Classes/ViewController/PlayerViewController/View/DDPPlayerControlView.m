@@ -9,7 +9,6 @@
 #import "DDPPlayerControlView.h"
 #import <Carbon/Carbon.h>
 #import <DDPCategory/DDPCategory.h>
-#import "DDPMediaPlayer.h"
 #import "DDPDanmakuColorMenuItem.h"
 #import "DDPDanmakuModeMenuItem.h"
 #import "NSColor+DDPTools.h"

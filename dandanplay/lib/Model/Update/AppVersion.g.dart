@@ -8,12 +8,13 @@ part of 'AppVersion.dart';
 
 AppVersion _$AppVersionFromJson(Map<String, dynamic> json) {
   return AppVersion(
-      url: json['url'] as String,
-      version: json['version'] as String,
-      shortVersion: json['shortVersion'] as String,
-      desc: json['desc'] as String,
-      hash: json['hash'] as String,
-      forceUpdate: json['forceUpdate'] as bool);
+    url: json['url'] as String,
+    version: json['version'] as String,
+    shortVersion: json['shortVersion'] as String,
+    desc: json['desc'] as String,
+    hash: json['hash'] as String,
+    forceUpdate: json['forceUpdate'] as bool,
+  );
 }
 
 Map<String, dynamic> _$AppVersionToJson(AppVersion instance) =>
@@ -23,5 +24,5 @@ Map<String, dynamic> _$AppVersionToJson(AppVersion instance) =>
       'shortVersion': instance.shortVersion,
       'desc': instance.desc,
       'hash': instance.hash,
-      'forceUpdate': instance.forceUpdate
+      'forceUpdate': instance.forceUpdate,
     };

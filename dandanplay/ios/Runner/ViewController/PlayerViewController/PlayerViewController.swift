@@ -64,10 +64,10 @@ class PlayerViewController: UIViewController {
     
     //MARK: - life cycle
     
-    init(urls: [URL]) {
+    init(items: [File]) {
         super.init(nibName: nil, bundle: nil)
         
-        loadURLs(urls)
+        loadItems(items)
     }
     
     required init?(coder: NSCoder) {
@@ -171,7 +171,7 @@ class PlayerViewController: UIViewController {
                 item.episodeId = episodeId
                 danmakuCache.setObject(danmakus, forKey: NSNumber(value: episodeId))
                 playMediaItem(item)
-                uiView.titleLabel.text = message.title ?? item.url.lastPathComponent
+                uiView.titleLabel.text = message.title ?? item.media.url.lastPathComponent
             }
         case .syncSetting:
             guard let message = SyncSettingMessage.deserialize(from: data),
@@ -229,11 +229,12 @@ class PlayerViewController: UIViewController {
         }
     }
     
-    func loadURLs(_ urls: [URL]) {
-        for url in urls {
+    func loadItems(_ items: [File]) {
+        for item in items {
+            let url = item.url
             if self.playItemMap[url] == nil {
-                let item = PlayItem(url: url)
-                self.playItemMap[url] = item
+                let playItem = PlayItem(item: item)
+                self.playItemMap[url] = playItem
                 self.player.addMediaToPlayList(item)
             }
         }
@@ -246,7 +247,7 @@ class PlayerViewController: UIViewController {
     }
     
     private func playMediaItem(_ item: PlayItem) {
-        self.player.play(item)
+        self.player.play(item.media)
     }
     
     @objc private func onClickPlayButton() {
@@ -257,7 +258,7 @@ class PlayerViewController: UIViewController {
         }
     }
     
-    private func findPlayItem(_ protocolItem: DDPMediaPlayer.MediaItem) -> PlayItem? {
+    private func findPlayItem(_ protocolItem: File) -> PlayItem? {
         if let protocolItem = protocolItem as? PlayItem {
             return protocolItem
         }
@@ -284,20 +285,18 @@ class PlayerViewController: UIViewController {
 }
 
 extension PlayerViewController {
-    private class PlayItem: NSObject, MediaItem {
-        
-        var url: URL
-        var option: [AnyHashable : Any]?
+    private class PlayItem {
+  
+        let media: File
         var playImmediately = false
-        
         var mediaId: String {
-            return url.path
+            return self.media.url.path
         }
+        
         var episodeId = 0
         
-        init(url: URL) {
-            self.url = url
-            super.init()
+        init(item: File) {
+            self.media = item
         }
     }
 }
@@ -418,7 +417,7 @@ extension PlayerViewController: MediaPlayerDelegate {
         }
     }
     
-    func player(_ player: MediaPlayer, mediaDidChange media: MediaItem?) {
+    func player(_ player: MediaPlayer, mediaDidChange media: File?) {
         
         guard let media = media,
             let item = findPlayItem(media) else { return }
@@ -429,10 +428,9 @@ extension PlayerViewController: MediaPlayerDelegate {
             let danmakus = danmakuCollection?.collection ?? []
             self.danmakuDic = DanmakuManager.shared.conver(danmakus)
             self.danmakuRender.currentTime = 0
-            self.player.play(item)
+            self.player.play(item.media)
         } else {
             //请求完弹幕再播放
-            let url = item.url
             
             self.player.pause()
             
@@ -444,52 +442,26 @@ extension PlayerViewController: MediaPlayerDelegate {
             hud.progress = 0
             
             DispatchQueue.global().async {
-                let shouldStop = url.startAccessingSecurityScopedResource()
-                defer {
-                    if shouldStop {
-                        url.stopAccessingSecurityScopedResource()
-                    }
-                }
+
+                message.fileName = item.media.fileName
+                message.fileSize = item.media.fileSize
                 
-                var error: NSError?
-                NSFileCoordinator().coordinate(readingItemAt: url, error: &error) { (aURL) in
-                    do {
-                        let attributesOfItem = try FileManager.default.attributesOfItem(atPath:aURL.path)
-                        let size = attributesOfItem[.size] as? Int ?? 0
-                        message.fileSize = size
-                        
-                        if let fileHandle = try? FileHandle(forReadingFrom: aURL) {
-                            var seek: UInt64 = 0
-                            var allData = Data()
-                            let readSize = min(16777216, size)
-                            let everyReadSize = 1024
-                            while seek < readSize {
-                                allData.append(fileHandle.readData(ofLength: everyReadSize))
-                                fileHandle.seek(toFileOffset: seek)
-                                seek += UInt64(everyReadSize)
-                                
-                                let progress = readSize == 0 ? 0 : Float(seek) / Float(readSize)
-                                DispatchQueue.main.async {
-                                    hud.progress = progress
-                                }
-                            }
-                            
-                            message.fileHash = (allData as NSData).md5String()
-                        }
-                        
-                        if let data = try? FileHandle(forReadingFrom: aURL).readData(ofLength: min(16777216, size)) as NSData {
-                            message.fileHash = data.md5String()
-                        }
-                        
-                        message.fileName = aURL.deletingPathExtension().lastPathComponent
+                item.media.getDataWithRange(0...16777215) { (progress) in
+                    DispatchQueue.main.async {
+                        hud.progress = Float(progress)
+                    }
+                } completion: { (result) in
+                    switch result {
+                    case .success(let data):
+                        message.fileHash = (data as NSData).md5String()
                         DispatchQueue.main.async {
+                            hud.hide(animated: true)
                             MessageHandler.sendMessage(message)
-                            hud.hide(animated: true)
                         }
-                    } catch let error {
+                    case .failure(let error):
                         DispatchQueue.main.async {
                             hud.hide(animated: true)
-                            self.view.showHUD(error.localizedDescription)
+                            self.view.showError(error)
                         }
                     }
                 }
@@ -513,7 +485,8 @@ extension PlayerViewController: JHDanmakuEngineDelegate {
 //MARK: PlayerManagerDelegate
 extension PlayerViewController: PlayerManagerDelegate {
     func didSelectedURLs(urls: [URL]) {
-        self.loadURLs(urls)
+        let items = urls.compactMap({ LocalFile(with: $0) })
+        self.loadItems(items)
     }
     
     func didSelectedDanmakuURLs(urls: [URL]) {
@@ -530,37 +503,14 @@ extension PlayerViewController: PlayerManagerDelegate {
             
             var error: NSError?
             NSFileCoordinator().coordinate(readingItemAt: url, error: &error) { (aURL) in
-                if let data = try? Data(contentsOf: aURL), let dic = NSDictionary(xml: data) {
-                    if let arr = dic["d"] as? [[String : Any]] {
-                        var danmakuModels = [DanmakuModel]()
-                        for d in arr {
-                            if let p = d["p"] as? String {
-                                let strArr = p.components(separatedBy: ",")
-                                if strArr.count >= 4, let text = d["_text"] as? String {
-                                    let model = DanmakuModel()
-                                    model.time = TimeInterval(strArr[0]) ?? 0
-                                    model.mode = DanmakuModel.Mode(rawValue: Int(strArr[1]) ?? 1) ?? .normal
-                                    model.color = UIColor(rgb: Int(strArr[3]) ?? 0)
-                                    model.message = text
-                                    danmakuModels.append(model)
-                                }
-                            }
-                        }
-                        
-                        let converDic = DanmakuManager.shared.conver(danmakuModels)
-                        DispatchQueue.main.async {
-                            self.danmakuDic = converDic
-                            self.setPlayerProgress(0)
-                        }
-                    }
-                } else {
+                do {
+                    let converDic = try DanmakuManager.shared.conver(aURL)
                     DispatchQueue.main.async {
-                        if let error = error {
-                            self.view.showHUD("加载自定义弹幕失败：\(error.localizedDescription)")
-                        } else {
-                            self.view.showHUD("加载自定义弹幕失败")
-                        }
+                        self.danmakuDic = converDic
+                        self.setPlayerProgress(0)
                     }
+                } catch let error {
+                    self.view.showError(error)
                 }
             }
         }

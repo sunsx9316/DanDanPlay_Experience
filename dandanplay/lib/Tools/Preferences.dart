@@ -62,6 +62,9 @@ class Preferences {
   //显示弹幕
   final _showDanmakuKey = "showDanmaku";
 
+  //自动加载同名弹幕文件
+  final _autoLoadCusomDanmakuKey = "autoLoadCusomDanmaku";
+
   Future<void> setupDefaultValue({bool force = false}) async {
     var isContains = await Dandanplaystore.contains(key: _fastMatchKey);
     if (!isContains || force) {
@@ -132,6 +135,25 @@ class Preferences {
     if (!isContains || force) {
       await setShowDanmaku(false, sync: false);
     }
+
+    isContains = await Dandanplaystore.contains(key: _autoLoadCusomDanmakuKey);
+    if (!isContains || force) {
+      await setAutoLoadCusomDanmakuKey(true, sync: false);
+    }
+  }
+
+  Future<bool> get autoLoadCusomDanmaku async {
+    final value = await Dandanplaystore.getBool(key: _autoLoadCusomDanmakuKey);
+    return value;
+  }
+
+  Future<bool> setAutoLoadCusomDanmakuKey(bool value, {bool sync = true}) async {
+    final result = await Dandanplaystore.setBool(key: _autoLoadCusomDanmakuKey, value: value);
+    if (sync) {
+      await _sendSyncMsg(_autoLoadCusomDanmakuKey, value);
+    }
+
+    return result;
   }
 
   Future<bool> get showDanmaku async {

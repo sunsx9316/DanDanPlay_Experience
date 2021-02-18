@@ -9,7 +9,10 @@ part of 'HomePagePopularTorrents.dart';
 HomePagePopularTorrents _$HomePagePopularTorrentsFromJson(
     Map<String, dynamic> json) {
   return HomePagePopularTorrents(
-      json['name'] as String, json['magnet'] as String, json['hot'] as int);
+    json['name'] as String,
+    json['magnet'] as String,
+    json['hot'] as int,
+  );
 }
 
 Map<String, dynamic> _$HomePagePopularTorrentsToJson(
@@ -17,5 +20,5 @@ Map<String, dynamic> _$HomePagePopularTorrentsToJson(
     <String, dynamic>{
       'name': instance.name,
       'magnet': instance.magnet,
-      'hot': instance.hot
+      'hot': instance.hot,
     };

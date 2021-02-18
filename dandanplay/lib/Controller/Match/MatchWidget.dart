@@ -30,7 +30,7 @@ class MatchWidget extends StatefulWidget {
     var matches = collection.matches ?? [];
     for (FileMatch model in matches) {
       if (aMap[model.type] == null) {
-        aMap[model.type] = List<FileMatch>.empty(growable: true);;
+        aMap[model.type] = List<FileMatch>.empty(growable: true);
       }
 
       aMap[model.type].add(model);

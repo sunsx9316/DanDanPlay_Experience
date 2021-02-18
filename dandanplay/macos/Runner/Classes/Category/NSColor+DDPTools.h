@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign, nonatomic, readonly) NSInteger colorValue;
 + (NSColor *)colorWithRGB:(uint32_t)rgbValue alpha:(CGFloat)alpha;
 + (NSColor *)colorWithRGB:(uint32_t)rgbValue;
++ (NSColor *)colorWithRGBA:(uint32_t)rgbaValue;
+- (uint32_t)rgbaValue;
 @end
 
 NS_ASSUME_NONNULL_END

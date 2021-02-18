@@ -8,15 +8,16 @@ part of 'HomePageShinBangumi.dart';
 
 HomePageShinBangumi _$HomePageShinBangumiFromJson(Map<String, dynamic> json) {
   return HomePageShinBangumi(
-      json['animeId'] as int,
-      json['animeTitle'] as String,
-      json['imageUrl'] as String,
-      json['searchKeyword'] as String,
-      json['isOnAir'] as bool,
-      json['airDay'] as int,
-      json['isFavorited'] as bool,
-      json['isRestricted'] as bool,
-      (json['rating'] as num)?.toDouble());
+    json['animeId'] as int,
+    json['animeTitle'] as String,
+    json['imageUrl'] as String,
+    json['searchKeyword'] as String,
+    json['isOnAir'] as bool,
+    json['airDay'] as int,
+    json['isFavorited'] as bool,
+    json['isRestricted'] as bool,
+    (json['rating'] as num)?.toDouble(),
+  );
 }
 
 Map<String, dynamic> _$HomePageShinBangumiToJson(
@@ -30,5 +31,5 @@ Map<String, dynamic> _$HomePageShinBangumiToJson(
       'airDay': instance.airDay,
       'isFavorited': instance.isFavorited,
       'isRestricted': instance.isRestricted,
-      'rating': instance.rating
+      'rating': instance.rating,
     };

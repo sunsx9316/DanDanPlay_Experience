@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSString (DDPTools)
 /**
  Returns a lowercase NSString for md2 hash.
@@ -99,7 +101,7 @@
 
 /**
  Returns an NSString from base64 encoded string.
- @param base64Encoding The encoded string.
+ @param base64EncodedString The encoded string.
  */
 + (NSString *)stringWithBase64EncodedString:(NSString *)base64EncodedString;
 
@@ -115,10 +117,8 @@
  */
 - (NSString *)stringByURLDecode;
 
-/**
- Escape commmon HTML to Entity.
- Example: "a<b" will be escape to "a&lt;b".
- */
+/// Escape commmon HTML to Entity.
+/// Example: "a < b" will be escape to "a&lt;b".
 - (NSString *)stringByEscapingHTML;
 
 
@@ -333,3 +333,4 @@
 - (CGSize)sizeForFont:(NSFont *)font size:(CGSize)size mode:(NSLineBreakMode)lineBreakMode;
 
 @end
+NS_ASSUME_NONNULL_END

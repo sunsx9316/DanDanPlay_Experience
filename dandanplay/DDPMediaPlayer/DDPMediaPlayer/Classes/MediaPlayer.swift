@@ -8,6 +8,17 @@
 import Foundation
 import GCDWebServer
 
+extension Timer {
+    open class func mp_scheduledTimer(timeInterval ti: TimeInterval, repeats yesOrNo: Bool, action: @escaping((Timer) -> Void)) -> Timer {
+        return Timer.scheduledTimer(timeInterval: ti, target: self, selector: #selector(mp_timerStart(_:)), userInfo: action, repeats: yesOrNo)
+    }
+    
+    @objc private class func mp_timerStart(_ sender: Timer) {
+        let action = sender.userInfo as? (Timer) -> Void
+        action?(sender)
+    }
+}
+
 #if os(iOS)
 import UIKit
 import MobileVLCKit
@@ -15,58 +26,20 @@ import AVFoundation
 public typealias MediaView = UIView
 #else
 import AppKit
+import VLCKit
 public typealias MediaView = NSView
 #endif
 
 public protocol MediaPlayerDelegate: class {
     func player(_ player: MediaPlayer, currentTime: TimeInterval, totalTime: TimeInterval)
     func player(_ player: MediaPlayer, stateDidChange state: MediaPlayer.State)
-    func player(_ player: MediaPlayer, mediaDidChange media: MediaItem?)
+    func player(_ player: MediaPlayer, mediaDidChange media: File?)
 }
 
 public extension MediaPlayerDelegate {
     func player(_ player: MediaPlayer, currentTime: TimeInterval, totalTime: TimeInterval) {}
     func player(_ player: MediaPlayer, stateDidChange state: MediaPlayer.State) {}
-    func player(_ player: MediaPlayer, mediaDidChange media: MediaItem?) {}
-}
-
-public let MediaItemWebDavNameKey = "name"
-public let MediaItemWebDavPasswordKey = "password"
-public let MediaItemWebDavURLKey = "url"
-public let MediaItemIsWebDavURLKey = "is_web_dav"
-
-public protocol MediaItem {
-    var url: URL { get }
-    var option: [AnyHashable : Any]? { get }
-}
-
-extension MediaPlayer: URLSessionTaskDelegate {
-    public func urlSession(_ session: URLSession, task: URLSessionTask, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
-
-        if challenge.previousFailureCount > 0 {
-            completionHandler(.cancelAuthenticationChallenge, nil)
-        } else {
-            let option = self.currentPlayItem?.option
-            let name = option?[MediaItemWebDavNameKey] as? String
-            let password = option?[MediaItemWebDavPasswordKey] as? String
-            if let name = name, let password = password {
-                let credential = URLCredential(user: name, password: password, persistence: .forSession)
-                completionHandler(.useCredential, credential)
-            } else {
-                completionHandler(.performDefaultHandling, nil)
-            }
-        }
-    }
-}
-
-extension MediaPlayer: GCDWebServerDelegate {
-    public func webServerDidDisconnect(_ server: GCDWebServer) {
-//        try? server.start(options: [GCDWebServerOption_AutomaticallySuspendInBackground : false])
-    }
-    
-    public func webServerDidStop(_ server: GCDWebServer) {
-        
-    }
+    func player(_ player: MediaPlayer, mediaDidChange media: File?) {}
 }
 
 open class MediaPlayer: NSObject {
@@ -85,166 +58,107 @@ open class MediaPlayer: NSObject {
     }
     
     public struct Subtitle {
-        let index: Int
-        let name: String
+        public let index: Int
+        public let name: String
     }
     
     public struct AudioChannel {
-        let index: Int
-        let name: String
+        public let index: Int
+        public let name: String
+    }
+    
+    public enum AspectRatio: RawRepresentable {
+        public typealias RawValue = String
+        
+        case `default`
+        case fillToScreen
+        case fourToThree
+        case sixteenToNine
+        case sixteenToTen
+        case other(_ width: Int, _ height: Int)
+        
+        public init?(rawValue: RawValue) {
+            switch rawValue {
+            case "DEFAULT":
+                self = .default
+            case "FILL_TO_SCREEN":
+                self = .fillToScreen
+            case "4:3":
+                self = .fourToThree
+            case "16:9":
+                self = .sixteenToNine
+            case "16:10":
+                self = .sixteenToTen
+            default:
+                let arr = rawValue.components(separatedBy: ":")
+                if arr.count < 2 {
+                    return nil
+                }
+                
+                let width = Int(arr[0]) ?? 0
+                let height = Int(arr[1]) ?? 0
+                self = .other(width, height)
+            }
+        }
+        
+        public var rawValue: RawValue {
+            switch self {
+            case .default:
+                return "DEFAULT"
+            case .fillToScreen:
+                return "FILL_TO_SCREEN"
+            case .fourToThree:
+                return "4:3"
+            case .sixteenToNine:
+                return "16:9"
+            case .sixteenToTen:
+                return "16:10"
+            case .other(let width, let height):
+                return "\(width):\(height)"
+            }
+        }
     }
     
     open private(set) lazy var mediaView = MediaView()
     
-    open private(set) lazy var playList = [MediaItem]()
+    open private(set) lazy var playList = [File]()
     
-    class TestItem: MediaItem {
-        
-        var url: URL {
-                return URL(string: "http://jimhuangdemacbook-pro.local:8080/%5BHYSUB%5DKaifuku%20Jutsushi%20no%20Yarinaoshi%5B01%5D%5BGB_MP4%5D%5B1280X720%5D.mp4")!
-        }
-        
-        var option: [AnyHashable : Any]? {
-            return ["is_web_dav" : true, "name" : "jimhuang", "password" : "123"]
-        }
-    }
-    
-    open private(set) var currentPlayItem: MediaItem? {
+    open private(set) var currentPlayItem: File? {
         didSet {
             if let item = self.currentPlayItem {
-                if let isWebDavURL = item.option?[MediaItemIsWebDavURLKey] as? Bool, isWebDavURL {
-                    //                if !self.webServer.isRunning {
-                    //                    try? self.webServer.start(options:
-                    //                                                [GCDWebServerOption_AutomaticallySuspendInBackground : NSNumber(value: false),
-                    //                                                 GCDWebServerOption_ConnectedStateCoalescingInterval : NSNumber(value: true)])
-                    //                }
-                    if let url = self.createWebDavURL(with: item) {
-                        self.player.media = VLCMedia(url: url)
-                    } else {
-                        self.player.media = nil
-                    }
-                } else {
-                    self.player.media = VLCMedia(url: item.url)
-                }
-            } else {
-                self.player.media = nil
+                self.player.stop()
+                self.player.media = VLCMedia(url: item.url)
             }
             
             self.delegate?.player(self, mediaDidChange: self.currentPlayItem)
         }
     }
     
-    private func createWebDavURL(with medieItem: MediaItem) -> URL? {
-        
-        if let serverURLString = self.webServer.serverURL?.absoluteString {
-            var components = URLComponents(string: serverURLString)
-            
-            var queryItems = [URLQueryItem]()
-            
-            if let userName = medieItem.option?[MediaItemWebDavNameKey] as? String {
-                queryItems.append(URLQueryItem(name: MediaItemWebDavNameKey, value: userName))
-            }
-            
-            if let password = medieItem.option?[MediaItemWebDavPasswordKey] as? String {
-                queryItems.append(URLQueryItem(name: MediaItemWebDavPasswordKey, value: password))
-            }
-            
-            if let urlEnbodeString = medieItem.url.absoluteString.data(using: .utf8)?.base64EncodedString() {
-                queryItems.append(URLQueryItem(name: MediaItemWebDavURLKey, value: urlEnbodeString))
-            }
-            
-            components?.queryItems = queryItems
-            return components?.url
-        }
-        
-        return nil
-    }
-    
-    private lazy var session: URLSession = {
-        let session = URLSession(configuration: .default, delegate: self, delegateQueue: nil)
-        return session
-    }()
-    
-    private lazy var webServer: GCDWebServer = {
-        let svr = GCDWebServer()
-        svr.delegate = self
-        svr.addDefaultHandler(forMethod: "GET", request: GCDWebServerRequest.self) { (request, completion) in
-            if let encodeStr = request.query?[MediaItemWebDavURLKey], let data = Data(base64Encoded: encodeStr) {
-                let urlString = String(data: data, encoding: .utf8)
-                
-                if let urlString = urlString, let url = URL(string: urlString) {
-                    var req = URLRequest(url: url)
-                    req.httpMethod = request.method
-                    for (key, value) in request.headers {
-                        req.addValue(value, forHTTPHeaderField: key)
-                    }
-                    /*
-                    self.session.downloadTask(with: req) { (url, res, err) in
-                        if let url = url, let res = res as? HTTPURLResponse {
-                            if let range = res.allHeaderFields["Content-Range"] as? String,
-                               let value = range.components(separatedBy: " ").last?.components(separatedBy: "/").first {
-                                let result = value.components(separatedBy: "-")
-                                if result.count == 2 {
-                                    let f = Int(result[0]) ?? 0
-                                    let e = Int(result[1]) ?? 0
-                                    let r = NSRange(location: f, length: e - f)
-                                    let response = GCDWebServerFileResponse(file: url.path, byteRange: r)
-        //                            let response = GCDWebServerDataResponse(data: data, contentType: res.mimeType ?? "")
-                                    completion(response)
-                                } else {
-                                    let response = GCDWebServerDataResponse(statusCode: -999)
-                                    completion(response)
-                                }
-                            } else {
-                                let response = GCDWebServerDataResponse(statusCode: -999)
-                                completion(response)
-                            }
-                            
-//                            let response = GCDWebServerFileResponse(file: url.path, byteRange: request.byteRange)
-//                            let response = GCDWebServerDataResponse(data: data, contentType: res.mimeType ?? "")
-//                            completion(response)
-                        } else if let err = err as NSError? {
-                            let response = GCDWebServerDataResponse(statusCode: err.code)
-                            completion(response)
-                        } else {
-                            let response = GCDWebServerDataResponse(statusCode: -999)
-                            completion(response)
-                        }
-                    }.resume()
-                    */
-                    self.session.dataTask(with: req) { (data, res, err) in
-                        if let data = data, let res = res as? HTTPURLResponse {
-                            let response = GCDWebServerDataResponse(data: data, contentType: res.mimeType ?? "")
-                            completion(response)
-                        } else if let err = err as NSError? {
-                            let response = GCDWebServerDataResponse(statusCode: err.code)
-                            completion(response)
-                        } else {
-                            let response = GCDWebServerDataResponse(statusCode: -999)
-                            completion(response)
-                        }
-                    }.resume()
-                }
-            }
-        }
-        return svr
-    }()
-    
     open var subtitleList: [Subtitle] {
         return self.player.videoSubTitlesIndexes.indices.compactMap({ subtitleWithIndexInPlayer($0) })
     }
     
     open var currentSubtitle: Subtitle? {
-        let currentVideoSubTitleIndex = self.player.currentVideoSubTitleIndex
-        if let fristIndex = self.player.videoSubTitlesIndexes.firstIndex(where: { (value) -> Bool in
-            if let value = value as? Int, value == currentVideoSubTitleIndex {
-                return true
+        get {
+            let currentVideoSubTitleIndex = self.player.currentVideoSubTitleIndex
+            if let fristIndex = self.player.videoSubTitlesIndexes.firstIndex(where: { (value) -> Bool in
+                if let value = value as? Int, value == currentVideoSubTitleIndex {
+                    return true
+                }
+                return false
+            }) {
+                return subtitleWithIndexInPlayer(fristIndex)
             }
-            return false
-        }) {
-            return subtitleWithIndexInPlayer(fristIndex)
+            return nil
         }
-        return nil
+        
+        set {
+            if let subtitle = newValue {
+                self.player.currentVideoSubTitleIndex = Int32(subtitle.index)
+            } else {
+                self.player.currentVideoSubTitleIndex = -1
+            }
+        }
     }
     
     open var audioChannelList: [AudioChannel] {
@@ -252,16 +166,26 @@ open class MediaPlayer: NSObject {
     }
     
     open var currentAudioChannel: AudioChannel?  {
-        let currentAudioTrackIndex = self.player.currentAudioTrackIndex
-        if let fristIndex = self.player.audioTrackIndexes.firstIndex(where: { (value) -> Bool in
-            if let value = value as? Int, value == currentAudioTrackIndex {
-                return true
+        get {
+            let currentAudioTrackIndex = self.player.currentAudioTrackIndex
+            if let fristIndex = self.player.audioTrackIndexes.firstIndex(where: { (value) -> Bool in
+                if let value = value as? Int, value == currentAudioTrackIndex {
+                    return true
+                }
+                return false
+            }) {
+                return audioChannelWithIndexInPlayer(fristIndex)
             }
-            return false
-        }) {
-            return audioChannelWithIndexInPlayer(fristIndex)
+            return nil
         }
-        return nil
+        
+        set {
+            if let audioChannel = newValue {
+                self.player.currentAudioTrackIndex = Int32(audioChannel.index)
+            } else {
+                self.player.currentAudioTrackIndex = -1
+            }
+        }
     }
     
     private lazy var player: VLCMediaPlayer = {
@@ -302,20 +226,52 @@ open class MediaPlayer: NSObject {
         }
     }
     
-    open var videoAspectRatio: CGSize {
+    open var aspectRatio: AspectRatio {
         get {
             let str = String(cString: self.player.videoAspectRatio)
-            let arr = str.components(separatedBy: ":")
-            if arr.count < 2 {
-                return .zero
-            }
-            return .init(width: CGFloat(Double(arr[0]) ?? 0),
-                         height: CGFloat(Double(arr[1]) ?? 0))
+            return AspectRatio(rawValue: str) ?? .default
         }
         
         set {
-            let str = "\(newValue.width):\(newValue.height)"
-            self.player.videoAspectRatio = UnsafeMutablePointer(mutating: (str as NSString).utf8String)
+            switch newValue {
+            case .default:
+                self.player.scaleFactor = 0
+                self.player.videoAspectRatio = nil
+                self.player.videoCropGeometry = nil
+            case .fillToScreen:
+                if let window = self.mediaView.window {
+                    self.player.videoAspectRatio = nil
+                    
+                    let windowSize = window.frame.size
+                    let videoSize = self.player.videoSize
+                    let ar = videoSize.width / videoSize.height
+                    let dar = windowSize.width / windowSize.height
+                    
+                    let scale: CGFloat
+                    
+                    if (dar >= ar) {
+                        scale = windowSize.width / videoSize.width;
+                    } else {
+                        scale = windowSize.height / videoSize.height;
+                    }
+                    
+                    
+                    let windowScale: CGFloat
+                    
+                    #if os(iOS)
+                    windowScale = window.contentScaleFactor
+                    #else
+                    windowScale = window.backingScaleFactor
+                    #endif
+                    
+                    self.player.scaleFactor = Float(scale * windowScale)
+                }
+            
+            case .fourToThree, .sixteenToNine, .sixteenToTen, .other(_, _):
+                self.player.scaleFactor = 0
+                self.player.videoCropGeometry = nil
+                self.player.videoAspectRatio = UnsafeMutablePointer(mutating: (newValue.rawValue as NSString).utf8String)
+            }
         }
     }
     
@@ -324,11 +280,13 @@ open class MediaPlayer: NSObject {
     }
     
     open var length: TimeInterval {
-        return self.player.media.length.value.doubleValue / 1000
+        let length = self.player.media.length.value?.doubleValue ?? 0
+        return length / 1000
     }
     
     open var currentTime: TimeInterval {
-        return self.player.time.value.doubleValue / 1000
+        let time = self.player.time.value?.doubleValue ?? 0
+        return time / 1000
     }
     
     open var state: State {
@@ -358,16 +316,19 @@ open class MediaPlayer: NSObject {
     
     private var playerTimer: Timer?
     private var timeIsUpdate = false
-
     
     public override init() {
         super.init()
+        
+        #if os(iOS)
         NotificationCenter.default.addObserver(self, selector: #selector(handleInterreption(_:)), name: AVAudioSession.interruptionNotification, object: nil)
+        #endif
     }
     
     deinit {
         NotificationCenter.default.removeObserver(self)
         self.playerTimer?.invalidate()
+        self.player.stop()
     }
     
     open func setPosition(_ position: CGFloat) -> TimeInterval {
@@ -377,7 +338,7 @@ open class MediaPlayer: NSObject {
         return self.length * TimeInterval(position)
     }
     
-    open func play(_ media: MediaItem) {
+    open func play(_ media: File) {
         
         if !self.playList.contains(where: { $0.url == media.url }) {
             self.playList.append(media)
@@ -407,11 +368,13 @@ open class MediaPlayer: NSObject {
         self.player.addPlaybackSlave(url, type: .subtitle, enforce: true)
     }
     
-    open func addMediaToPlayList(_ media: MediaItem) {
-        self.playList.append(media)
+    open func addMediaToPlayList(_ media: File) {
+        if !self.playList.contains(where: { $0.url == media.url }) {
+            self.playList.append(media)
+        }
     }
     
-    open func removeMediaFromPlayList(_ media: MediaItem) {
+    open func removeMediaFromPlayList(_ media: File) {
         self.playList.removeAll(where: { $0.url == media.url })
     }
     
@@ -450,6 +413,7 @@ open class MediaPlayer: NSObject {
         }
     }
     
+    #if os(iOS)
     @objc private func handleInterreption(_ notice: Notification) {
         guard let interruptionType = notice.userInfo?[AVAudioSessionInterruptionTypeKey] as? AVAudioSession.InterruptionType else { return }
         
@@ -462,6 +426,7 @@ open class MediaPlayer: NSObject {
             break
         }
     }
+    #endif
 }
 
 extension MediaPlayer: VLCMediaPlayerDelegate {
@@ -471,7 +436,12 @@ extension MediaPlayer: VLCMediaPlayerDelegate {
         
         self.delegate?.player(self, currentTime: nowTime, totalTime: length)
         self.playerTimer?.invalidate()
-        self.playerTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(playerTimerStart), userInfo: nil, repeats: false)
+        self.playerTimer = Timer.mp_scheduledTimer(timeInterval: 1, repeats: false) { [weak self] (aTimer) in
+            guard let self = self else { return }
+            
+            self.timeIsUpdate = false
+            self.stateChanged()
+        }
         
         if self.timeIsUpdate == false {
             self.timeIsUpdate = true
@@ -490,18 +460,13 @@ extension MediaPlayer: VLCMediaPlayerDelegate {
         }
     }
     
-    @objc private func playerTimerStart() {
-        self.timeIsUpdate = false
-        self.stateChanged()
-    }
-    
     private func isPlayAtEnd() -> Bool {
         return self.position >= 0.999
     }
     
     private func tryPlayNextItem() {
         
-        func nextItemWithCycle(_ cycle: Bool) -> MediaItem? {
+        func nextItemWithCycle(_ cycle: Bool) -> File? {
             if let index = self.playList.firstIndex(where: { $0.url == self.currentPlayItem?.url }) {
                 if index == self.playList.count - 1 {
                     return cycle ? self.playList.first : nil

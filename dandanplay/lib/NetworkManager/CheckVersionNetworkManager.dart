@@ -1,5 +1,4 @@
 
-import 'package:dandanplay/Model/HttpResponse.dart';
 import 'package:dandanplay/Model/Update/AppVersion.dart';
 import 'package:dandanplay/NetworkManager/BaseNetworkManager.dart';
 

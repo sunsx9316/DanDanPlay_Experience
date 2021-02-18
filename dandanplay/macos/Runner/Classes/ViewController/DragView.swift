@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import DDPMediaPlayer
 
 class DragView: NSView {
     
@@ -38,12 +39,12 @@ class DragView: NSView {
                 if url.hasDirectoryPath {
                     
                     if let content = try? FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: .skipsHiddenFiles) {
-                        let urls = content.filter({ $0.isVideoFile }).sorted { (url1, url2) -> Bool in
+                        let urls = content.filter({ $0.isMediaFile }).sorted { (url1, url2) -> Bool in
                             return url1.path.compare(url2.path) == .orderedAscending
                         }
                         paths.append(contentsOf: urls)
                     }
-                } else if (url.isVideoFile) {
+                } else if (url.isMediaFile) {
                     paths.append(url)
                 }
             }

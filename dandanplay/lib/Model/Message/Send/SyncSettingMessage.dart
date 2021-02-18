@@ -6,7 +6,6 @@ part 'SyncSettingMessage.g.dart';
 
 @JsonSerializable()
 class SyncSettingMessage extends BaseMessage {
-
   dynamic value;
   String key;
 

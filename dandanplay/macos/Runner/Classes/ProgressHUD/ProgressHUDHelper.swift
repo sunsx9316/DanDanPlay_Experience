@@ -10,7 +10,7 @@ import Foundation
 
 class ProgressHUDHelper {
     
-    @discardableResult class func showHUD(text: String) -> ProgressHUD {
+    @discardableResult class func showHUDWithText(_ text: String) -> ProgressHUD {
         let hud = createHUDOnMainScreen(mode: .text)
         hud.setStatus(text)
         hud.hide(true, dismissAfterDelay: 2)
@@ -21,6 +21,10 @@ class ProgressHUDHelper {
         let hud = createHUDOnMainScreen(mode: .determinate)
         hud.setStatus(text)
         return hud
+    }
+    
+    @discardableResult class func showHUDWithError(_ error: Error) -> ProgressHUD {
+        return self.showHUDWithText(error.localizedDescription)
     }
     
     private class func createHUDOnMainScreen(mode: ProgressHUDMode) -> ProgressHUD {

@@ -8,9 +8,13 @@ part of 'SetInitialRouteMessage.dart';
 
 SetInitialRouteMessage _$SetInitialRouteMessageFromJson(
     Map<String, dynamic> json) {
-  return SetInitialRouteMessage(json['routeName'] as String);
+  return SetInitialRouteMessage(
+    json['routeName'] as String,
+  );
 }
 
 Map<String, dynamic> _$SetInitialRouteMessageToJson(
         SetInitialRouteMessage instance) =>
-    <String, dynamic>{'routeName': instance.routeName};
+    <String, dynamic>{
+      'routeName': instance.routeName,
+    };

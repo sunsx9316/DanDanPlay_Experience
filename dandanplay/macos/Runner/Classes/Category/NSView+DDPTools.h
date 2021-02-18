@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)loadFromNib;
 
+- (instancetype)animator:(BOOL)isAnimate;
+
 @end
 
 NS_ASSUME_NONNULL_END

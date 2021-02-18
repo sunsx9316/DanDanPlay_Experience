@@ -8,6 +8,7 @@
 import UIKit
 import DDPShare
 import MBProgressHUD
+import DDPMediaPlayer
 
 class MainViewController: MessageViewController {
     
@@ -38,18 +39,24 @@ class MainViewController: MessageViewController {
         case .loadFiles:
             guard let msg = LoadFilesMessage.deserialize(from: messageData) else { return }
             
-            let urls = msg.fileDatas.compactMap { (model) -> URL? in
-                if let urlDataString = model.urlDataString, let data = Data(base64Encoded: urlDataString) {
-                    var isStale = false
-                    return try? URL(resolvingBookmarkData: data, bookmarkDataIsStale: &isStale)
+            let items = msg.fileDatas.compactMap { (model) -> File? in
+                
+                guard let url = model.url else { return nil }
+                
+                switch model.type {
+                case .localFile:
+                    return LocalFile(with: url, fileSize: model.size)
+                case .webDav:
+                    let user = model.otherParameter?[WebDavFile.KeyName.user.rawValue] as? String
+                    let password = model.otherParameter?[WebDavFile.KeyName.password.rawValue] as? String
+                    return WebDavFile(with: url, fileSize: model.size, user: user, password: password)
                 }
-                return nil
             }
             
             if let playerNavigationController = self.playerNavigationController {
-                playerNavigationController.playerViewController?.loadURLs(urls)
+                playerNavigationController.playerViewController?.loadItems(items)
             } else {
-                let nav = PlayerNavigationController(urls: urls)
+                let nav = PlayerNavigationController(items: items)
                 self.playerNavigationController = nav
                 self.present(nav, animated: true, completion: nil)
             }

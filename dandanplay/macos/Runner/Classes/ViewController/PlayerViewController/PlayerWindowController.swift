@@ -6,13 +6,17 @@
 //
 
 import Cocoa
+import DDPMediaPlayer
 
 class PlayerWindowController: NSWindowController, NSWindowDelegate {
     
-    private var urls = [URL]()
     private let windowFrameAutosaveKey = "playerViewController"
     
     var closeCallBack: (() -> Void)?
+    
+    lazy var playerViewController: PlayerViewController = {
+        return PlayerViewController()
+    }()
 
     override func windowDidLoad() {
         super.windowDidLoad()
@@ -21,8 +25,7 @@ class PlayerWindowController: NSWindowController, NSWindowDelegate {
         self.window?.delegate = self
         self.window?.isMovableByWindowBackground = true
         self.window?.minSize = CGSize(width: 600, height: 400)
-        self.contentViewController = PlayerViewController(urls: urls)
-        
+        self.contentViewController = self.playerViewController
         if let str = UserDefaults.standard.string(forKey: windowFrameAutosaveKey) {
             window?.setFrame(NSRectFromString(str), display: true)
         }
@@ -33,9 +36,9 @@ class PlayerWindowController: NSWindowController, NSWindowDelegate {
         self.window = NSWindow()
     }
     
-    convenience init(urls: [URL]) {
+    convenience init(items: [File]) {
         self.init(windowNibName: "PlayerWindowController")
-        self.urls = urls;
+        self.playerViewController.loadItem(items)
     }
     
     func windowWillClose(_ notification: Notification) {

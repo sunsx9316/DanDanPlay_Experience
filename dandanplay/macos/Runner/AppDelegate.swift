@@ -2,6 +2,7 @@ import Cocoa
 import FlutterMacOS
 import DDPShare
 import dandanplaystore
+import DDPMediaPlayer
 
 @NSApplicationMain
 class AppDelegate: FlutterAppDelegate {
@@ -19,6 +20,7 @@ class AppDelegate: FlutterAppDelegate {
     }
     
     override func applicationDidFinishLaunching(_ notification: Notification) {
+        
         let statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         statusItem.button?.image = NSImage(named: "status_bar_button")
         let menu = NSMenu()
@@ -125,7 +127,7 @@ extension AppDelegate: NSPopoverDelegate, NSMenuDelegate {
         
         self.subtitleTrackMenuItem.submenu?.removeAllItems()
         if let player = Helper.shared.player {
-            let subtitleTitles = player.subtitleTitles
+            
             self.subtitleTrackMenuItem.isEnabled = true
             var subtitleTitlesMenu = self.subtitleTrackMenuItem.submenu
             
@@ -134,15 +136,13 @@ extension AppDelegate: NSPopoverDelegate, NSMenuDelegate {
                 self.subtitleTrackMenuItem.submenu = subtitleTitlesMenu
             }
             
-            let subtitleIndexs = player.subtitleIndexs
-            let currentSubtitleIndex = player.currentSubtitleIndex
-            for (index, title) in subtitleTitles.enumerated() {
-                let item = NSMenuItem(title: title, action: #selector(onClickSubtitleTrack(_:)), keyEquivalent: "")
-                if index < subtitleIndexs.count {
-                    item.tag = subtitleIndexs[index].intValue
-                    item.state = currentSubtitleIndex == item.tag ? .on : .off
-                }
-                subtitleTitlesMenu?.addItem(item)
+            let currentSubtitleIndex = player.currentSubtitle?.index
+            
+            for item in player.subtitleList {
+                let menuItem = NSMenuItem(title: item.name, action: #selector(onClickSubtitleTrack(_:)), keyEquivalent: "")
+                menuItem.representedObject = item
+                menuItem.state = currentSubtitleIndex == item.index ? .on : .off
+                subtitleTitlesMenu?.addItem(menuItem)
             }
             
         } else {
@@ -152,6 +152,7 @@ extension AppDelegate: NSPopoverDelegate, NSMenuDelegate {
     }
     
     @objc private func onClickSubtitleTrack(_ item: NSMenuItem) {
-        Helper.shared.player?.currentSubtitleIndex = Int32(item.tag)
+        let subtitle = item.representedObject as? MediaPlayer.Subtitle
+        Helper.shared.player?.currentSubtitle = subtitle
     }
 }

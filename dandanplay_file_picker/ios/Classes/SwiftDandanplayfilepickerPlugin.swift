@@ -75,8 +75,13 @@ extension SwiftDandanplayfilepickerPlugin: FileBrowerManagerDelegate {
                     aURL.stopAccessingSecurityScopedResource()
                 }
             }
+            
             var dic = [String : Any]()
+            dic["type"] = 0
             dic["path"] = aURL.absoluteString
+            let attributesOfItem = try? FileManager.default.attributesOfItem(atPath:aURL.path)
+            let size = attributesOfItem?[.size] as? Int ?? 0
+            dic["size"] = size
             if let str = try? aURL.bookmarkData().base64EncodedString() {
                 dic["urlDataString"] = str
             }

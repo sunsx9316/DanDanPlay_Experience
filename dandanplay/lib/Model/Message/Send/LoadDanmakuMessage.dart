@@ -7,7 +7,6 @@ part 'LoadDanmakuMessage.g.dart';
 @JsonSerializable()
 class LoadDanmakuMessage extends BaseMessage {
 
-  @JsonKey(ignore: true)
   @override
   String get name => "LoadDanmakuMessage";
 

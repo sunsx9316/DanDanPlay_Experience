@@ -7,6 +7,17 @@ import 'package:dandanplayfilepicker/dandanplayfilepicker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+enum _SettingCellType {
+  faseMatch,
+  autoLoadCustomDanmaku,
+  subtitleProtectlArea,
+  showHomePageTips,
+  danmakuCacheTime,
+  homePageBackGround,
+  autoCheckVersion,
+  reset,
+}
+
 class SettingWidget extends StatefulWidget {
   @override
   SettingWidgetState createState() {
@@ -21,10 +32,34 @@ class SettingWidgetState extends State<SettingWidget> {
   var _danmakuCacheDay = 0;
   var _checkUpdate = false;
   var _requestDidFinish = false;
+  var _autoLoadCustomDanmaku = false;
+  var _dataSource = List<_SettingCellType>.empty(growable: true);
 
   @override
   void initState() {
     super.initState();
+
+    if (Platform.isIOS) {
+      _dataSource = [
+        _SettingCellType.faseMatch,
+        _SettingCellType.autoLoadCustomDanmaku,
+        _SettingCellType.subtitleProtectlArea,
+        _SettingCellType.danmakuCacheTime,
+        _SettingCellType.reset
+      ];
+    } else {
+      _dataSource = [
+        _SettingCellType.faseMatch,
+        _SettingCellType.autoLoadCustomDanmaku,
+        _SettingCellType.subtitleProtectlArea,
+        _SettingCellType.showHomePageTips,
+        _SettingCellType.danmakuCacheTime,
+        _SettingCellType.homePageBackGround,
+        _SettingCellType.autoCheckVersion,
+        _SettingCellType.reset
+      ];
+    }
+
     _initValue();
   }
 
@@ -34,140 +69,168 @@ class SettingWidgetState extends State<SettingWidget> {
       return Scaffold(
           appBar: AppBar(title: Text("设置")),
           body: ListView.builder(
-              itemCount: 7,
+              itemCount: _dataSource.length,
               itemBuilder: (context, index) {
-                if (index == 0) {
-                  return _switchCell(
-                      titleValue: "弹幕快速匹配",
-                      subtitleValue: "自动识别视频，并匹配弹幕",
-                      on: _fastMatch,
-                      onChanged: (on) {
-                        Preferences.shared.setFastMatch(on).then((value) {
-                          setState(() {
-                            _fastMatch = on;
-                          });
-                        });
-                      });
-                } else if (index == 1) {
-                  return _switchCell(
-                      titleValue: "字幕保护区域",
-                      subtitleValue: "在画面底部大约15%的位置禁止弹幕出现",
-                      on: _subtitleSafeArea,
-                      onChanged: (on) {
-                        Preferences.shared
-                            .setSubtitleSafeArea(on)
-                            .then((value) {
-                          setState(() {
-                            _subtitleSafeArea = on;
-                          });
-                        });
-                      });
-                } else if (index == 2) {
-                  if (Platform.isIOS) {
-                    return SizedBox.fromSize(size: Size.zero);
-                  }
-                  return _switchCell(
-                      titleValue: "显示首页拖拽播放提示文字",
-                      subtitleValue: "就是 \"拖拽 视频/文件夹 到屏幕中开始播放\"这一串",
-                      on: _showHomePageTips,
-                      onChanged: (on) {
-                        Preferences.shared
-                            .setShowHomePageTips(on)
-                            .then((value) {
-                          setState(() {
-                            _showHomePageTips = on;
-                          });
-                        });
-                      });
-                } else if (index == 3) {
-                  return InkWell(
-                      child: _titleCell("弹幕缓存时间",
-                          subtitleValue: "$_danmakuCacheDay天"),
-                      onTap: () {
-                        _showDanmakuCacheInputDialog(context);
-                      });
-                } else if (index == 4) {
-                  if (Platform.isIOS) {
-                    return SizedBox.fromSize(size: Size.zero);
-                  }
+                final style = _dataSource[index];
 
-                  return Column(children: <Widget>[
-                    InkWell(
-                        child: _defaultInsetsCell(children: [
+                switch (style) {
+                  case _SettingCellType.faseMatch:
+                    {
+                      return _switchCell(
+                          titleValue: "弹幕快速匹配",
+                          subtitleValue: "自动识别视频，并匹配弹幕",
+                          on: _fastMatch,
+                          onChanged: (on) {
+                            Preferences.shared.setFastMatch(on).then((value) {
+                              setState(() {
+                                _fastMatch = on;
+                              });
+                            });
+                          });
+                    }
+                    break;
+                  case _SettingCellType.autoLoadCustomDanmaku: {
+                    return _switchCell(
+                        titleValue: "自动加载同名“弹幕”文件",
+                        subtitleValue: "目前支持 XML 格式",
+                        on: _autoLoadCustomDanmaku,
+                        onChanged: (on) {
+                          Preferences.shared.setAutoLoadCusomDanmakuKey(on).then((value) {
+                            setState(() {
+                              _autoLoadCustomDanmaku = on;
+                            });
+                          });
+                        });
+                  }
+                  break;
+                  case _SettingCellType.subtitleProtectlArea:
+                    {
+                      return _switchCell(
+                          titleValue: "字幕保护区域",
+                          subtitleValue: "在画面底部大约15%的位置禁止弹幕出现",
+                          on: _subtitleSafeArea,
+                          onChanged: (on) {
+                            Preferences.shared
+                                .setSubtitleSafeArea(on)
+                                .then((value) {
+                              setState(() {
+                                _subtitleSafeArea = on;
+                              });
+                            });
+                          });
+                    }
+                    break;
+                  case _SettingCellType.showHomePageTips:
+                    {
+                      return _switchCell(
+                          titleValue: "显示首页拖拽播放提示文字",
+                          subtitleValue: "就是 \"拖拽 视频/文件夹 到屏幕中开始播放\"这一串",
+                          on: _showHomePageTips,
+                          onChanged: (on) {
+                            Preferences.shared
+                                .setShowHomePageTips(on)
+                                .then((value) {
+                              setState(() {
+                                _showHomePageTips = on;
+                              });
+                            });
+                          });
+                    }
+                    break;
+                  case _SettingCellType.danmakuCacheTime:
+                    {
+                      return InkWell(
+                          child: _titleCell("弹幕缓存时间",
+                              subtitleValue: "$_danmakuCacheDay天"),
+                          onTap: () {
+                            _showDanmakuCacheInputDialog(context);
+                          });
+                    }
+                    break;
+                  case _SettingCellType.homePageBackGround:
+                    {
+                      return Column(children: <Widget>[
+                        InkWell(
+                            child: _defaultInsetsCell(children: [
+                              Expanded(
+                                  child: Wrap(
+                                      direction: Axis.vertical,
+                                      children: <Widget>[
+                                    Text(
+                                      "设置首页背景...",
+                                      style: TextStyle(fontSize: 18),
+                                    ),
+                                  ])),
+                              MaterialButton(
+                                color: GlobalConfig.mainColor,
+                                highlightColor: Colors.orangeAccent,
+                                colorBrightness: Brightness.dark,
+                                splashColor: Colors.grey,
+                                child: Text("恢复默认"),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20.0)),
+                                onPressed: () {
+                                  _resetHomePageBgImageToDefault();
+                                },
+                              )
+                            ]),
+                            onTap: () {
+                              _getHomePageBgImage(context);
+                            }),
+                        _homePageThumb()
+                      ]);
+                    }
+                    break;
+                  case _SettingCellType.autoCheckVersion:
+                    {
+                      return _switchCell(
+                          titleValue: "自动检查更新",
+                          on: _checkUpdate,
+                          onChanged: (on) {
+                            Preferences.shared.setCheckUpdate(on).then((value) {
+                              setState(() {
+                                _checkUpdate = on;
+                              });
+                            });
+                          });
+                    }
+                    break;
+                  case _SettingCellType.reset:
+                    {
+                      return Column(children: <Widget>[
+                        _defaultInsetsCell(children: [
                           Expanded(
                               child: Wrap(
                                   direction: Axis.vertical,
                                   children: <Widget>[
-                                Text(
-                                  "设置首页背景...",
-                                  style: TextStyle(fontSize: 18),
-                                ),
+                                Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "恢复默认设置",
+                                        style: TextStyle(fontSize: 18),
+                                      ),
+                                      Text("出现问题可以尝试还原设置",
+                                          style: TextStyle(color: Colors.grey))
+                                    ])
                               ])),
-                          FlatButton(
+                          MaterialButton(
                             color: GlobalConfig.mainColor,
                             highlightColor: Colors.orangeAccent,
                             colorBrightness: Brightness.dark,
                             splashColor: Colors.grey,
-                            child: Text("恢复默认"),
+                            child: Text("一键重来"),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20.0)),
                             onPressed: () {
-                              Navigator.pushNamed(context, "sendDanmaku");
-                              // _resetHomePageBgImageToDefault();
+                              _resetToDefault();
                             },
                           )
                         ]),
-                        onTap: () {
-                          _getHomePageBgImage(context);
-                        }),
-                    _homePageThumb()
-                  ]);
-                } else if (index == 5) {
-                  if (Platform.isIOS) {
-                    return SizedBox.fromSize(size: Size.zero);
-                  }
-
-                  return _switchCell(
-                      titleValue: "自动检查更新",
-                      on: _checkUpdate,
-                      onChanged: (on) {
-                        Preferences.shared.setCheckUpdate(on).then((value) {
-                          setState(() {
-                            _checkUpdate = on;
-                          });
-                        });
-                      });
-                } else if (index == 6) {
-                  return Column(children: <Widget>[
-                    _defaultInsetsCell(children: [
-                      Expanded(
-                          child:
-                              Wrap(direction: Axis.vertical, children: <Widget>[
-                        Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "恢复默认设置",
-                                style: TextStyle(fontSize: 18),
-                              ),
-                              Text("出现问题可以尝试还原设置",
-                                  style: TextStyle(color: Colors.grey))
-                            ])
-                      ])),
-                      FlatButton(
-                        color: GlobalConfig.mainColor,
-                        highlightColor: Colors.orangeAccent,
-                        colorBrightness: Brightness.dark,
-                        splashColor: Colors.grey,
-                        child: Text("一键重来"),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0)),
-                        onPressed: () {
-                          _resetToDefault();
-                        },
-                      )
-                    ]),
-                  ]);
+                      ]);
+                    }
+                    break;
                 }
 
                 return Container();
@@ -179,7 +242,8 @@ class SettingWidgetState extends State<SettingWidget> {
 
   //获取首页背景图
   void _getHomePageBgImage(BuildContext context) async {
-    final paths = await Dandanplayfilepicker.getFiles(pickType: DandanplayfilepickerType.image);
+    final paths = await Dandanplayfilepicker.getFiles(
+        pickType: DandanplayfilepickerType.image);
     if (paths != null && paths.isNotEmpty) {
       await Preferences.shared.setHomePageBgImage(paths[0].path);
       setState(() {});
@@ -198,6 +262,7 @@ class SettingWidgetState extends State<SettingWidget> {
     _danmakuCacheDay = await Preferences.shared.danmakuCacheDay;
     _showHomePageTips = await Preferences.shared.showHomePageTips;
     _checkUpdate = await Preferences.shared.checkUpdate;
+    _autoLoadCustomDanmaku = await Preferences.shared.autoLoadCusomDanmaku;
     setState(() {
       _requestDidFinish = true;
     });
@@ -209,7 +274,7 @@ class SettingWidgetState extends State<SettingWidget> {
       bool on,
       String subtitleValue,
       ValueChanged<bool> onChanged}) {
-    var expandedChildren = List<Widget>();
+    var expandedChildren = List<Widget>.empty(growable: true);
     expandedChildren.add(Text(
       titleValue,
       style: TextStyle(fontSize: 18),
@@ -283,13 +348,13 @@ class SettingWidgetState extends State<SettingWidget> {
               ),
             ),
             actions: <Widget>[
-              FlatButton(
+              MaterialButton(
                 child: Text('取消'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
-              FlatButton(
+              MaterialButton(
                 child: Text('确认'),
                 onPressed: () {
                   if (inputTextField != null) {

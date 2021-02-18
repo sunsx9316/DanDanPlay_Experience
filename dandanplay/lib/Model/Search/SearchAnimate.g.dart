@@ -8,15 +8,16 @@ part of 'SearchAnimate.dart';
 
 SearchAnimate _$SearchAnimateFromJson(Map<String, dynamic> json) {
   return SearchAnimate(
-      json['animeId'] as num,
-      json['animeTitle'] as String,
-      json['type'] as String,
-      json['typeDescription'] as String,
-      (json['episodes'] as List)
-          ?.map((e) => e == null
-              ? null
-              : SearchEpisode.fromJson(e as Map<String, dynamic>))
-          ?.toList());
+    json['animeId'] as num,
+    json['animeTitle'] as String,
+    json['type'] as String,
+    json['typeDescription'] as String,
+    (json['episodes'] as List)
+        ?.map((e) => e == null
+            ? null
+            : SearchEpisode.fromJson(e as Map<String, dynamic>))
+        ?.toList(),
+  );
 }
 
 Map<String, dynamic> _$SearchAnimateToJson(SearchAnimate instance) =>
@@ -25,5 +26,5 @@ Map<String, dynamic> _$SearchAnimateToJson(SearchAnimate instance) =>
       'animeTitle': instance.animeTitle,
       'type': instance.typeRawValue,
       'typeDescription': instance.typeDescription,
-      'episodes': instance.episodes
+      'episodes': instance.episodes,
     };

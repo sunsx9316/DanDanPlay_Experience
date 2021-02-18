@@ -53,7 +53,7 @@ class _LoginWidgetState extends State<LoginWidget> {
               Container(
                   padding: EdgeInsets.only(left: 20, right: 20),
                   child: Row(children: [
-                    FlatButton(
+                    MaterialButton(
                         child: Text("忘记密码", style: TextStyle(fontSize: 16)),
                         onPressed: () {
                           Navigator.pushNamed(context, "forgetPassword");
@@ -61,7 +61,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                     Expanded(
                         child: Row(
                       children: [
-                        FlatButton(
+                        MaterialButton(
                             child: Text("没有账号？去注册",
                                 style: TextStyle(fontSize: 16)),
                             onPressed: () {
@@ -73,7 +73,7 @@ class _LoginWidgetState extends State<LoginWidget> {
                   ])),
               Container(
                 padding: EdgeInsets.only(top: 20, bottom: 20),
-                child: FlatButton(
+                child: MaterialButton(
                   color: GlobalConfig.mainColor,
                   highlightColor: Colors.orangeAccent,
                   colorBrightness: Brightness.dark,

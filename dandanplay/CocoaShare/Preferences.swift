@@ -47,6 +47,7 @@ open class Preferences {
         case sendDanmakuType
         case sendDanmakuColor
         case showDanmaku
+        case autoLoadCusomDanmaku
     }
     
     public enum PlayerMode: Int {
@@ -57,6 +58,9 @@ open class Preferences {
     
     public static let shared = Preferences()
     private init() {}
+    
+    @StoreWrapper(wrappedValue: true, key: .autoLoadCusomDanmaku)
+    open var autoLoadCusomDanmaku: Bool
     
     @StoreWrapper(wrappedValue: false, key: .showDanmaku)
     open var showDanmaku: Bool
@@ -75,10 +79,10 @@ open class Preferences {
         }
     }
     
-    open var sendDanmakuColor: UIColor {
+    open var sendDanmakuColor: DDPColor {
         get {
             let rawValue: Int = Store.shared.value(forKey: KeyName.sendDanmakuColor.rawValue)
-            return UIColor(rgba: UInt32(rawValue))
+            return DDPColor(rgba: UInt32(rawValue))
         }
         
         set {

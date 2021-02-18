@@ -7,16 +7,3 @@
 //
 
 import Foundation
-import CoreServices
-
-extension URL {
-    var isVideoFile: Bool {
-        let pathExtension = self.pathExtension as CFString
-        if let fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension, nil) {
-            if UTTypeConformsTo(fileUTI.takeRetainedValue(), kUTTypeMovie) {
-                return true
-            }
-        }
-        return false
-    }
-}

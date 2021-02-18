@@ -68,7 +68,7 @@ class _MyHomePageState extends State<DesktopHomePageWidget>
 
   @override
   Widget build(BuildContext context) {
-    var stackChildren = List<Widget>();
+    var stackChildren = List<Widget>.empty(growable: true);
     if (_bgImgPath != null) {
       final imgFile = File(_bgImgPath);
       if (imgFile.existsSync()) {
@@ -221,13 +221,13 @@ class _MyHomePageState extends State<DesktopHomePageWidget>
                 ),
               ),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
                   child: Text('取消'),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
-                FlatButton(
+                TextButton(
                   child: Text('确认'),
                   onPressed: () {
                     final name = textField.controller.text;
@@ -294,13 +294,13 @@ class _MyHomePageState extends State<DesktopHomePageWidget>
                 ),
               ),
               actions: <Widget>[
-                FlatButton(
+                TextButton(
                   child: Text('取消'),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
-                FlatButton(
+                TextButton(
                   child: Text('确认'),
                   onPressed: () {
                     final oldPassword = oldPasswordTextField.controller.text;

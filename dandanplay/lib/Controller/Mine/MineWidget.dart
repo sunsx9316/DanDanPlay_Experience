@@ -223,13 +223,13 @@ class MineWidgetState extends State with RouteAware {
                 ),
               ),
               actions: <Widget>[
-                FlatButton(
+                MaterialButton(
                   child: Text('取消'),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
-                FlatButton(
+                MaterialButton(
                   child: Text('确认'),
                   onPressed: () {
                     final name = textField.controller.text;
@@ -296,13 +296,13 @@ class MineWidgetState extends State with RouteAware {
                 ),
               ),
               actions: <Widget>[
-                FlatButton(
+                MaterialButton(
                   child: Text('取消'),
                   onPressed: () {
                     Navigator.of(context).pop();
                   },
                 ),
-                FlatButton(
+                MaterialButton(
                   child: Text('确认'),
                   onPressed: () {
                     final oldPassword = oldPasswordTextField.controller.text;

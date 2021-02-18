@@ -8,11 +8,12 @@ part of 'HUDMessage.dart';
 
 HUDMessage _$HUDMessageFromJson(Map<String, dynamic> json) {
   return HUDMessage(
-      style: _$enumDecodeNullable(_$HUDMessageStyleEnumMap, json['style']),
-      text: json['text'],
-      progress: (json['progress'] as num)?.toDouble(),
-      isDismiss: json['isDismiss'] as bool,
-      key: json['key']);
+    style: _$enumDecodeNullable(_$HUDMessageStyleEnumMap, json['style']),
+    text: json['text'] as String,
+    progress: (json['progress'] as num)?.toDouble(),
+    isDismiss: json['isDismiss'] as bool,
+    key: json['key'] as String,
+  );
 }
 
 Map<String, dynamic> _$HUDMessageToJson(HUDMessage instance) =>
@@ -21,30 +22,42 @@ Map<String, dynamic> _$HUDMessageToJson(HUDMessage instance) =>
       'text': instance.text,
       'progress': instance.progress,
       'isDismiss': instance.isDismiss,
-      'key': instance.key
+      'key': instance.key,
     };
 
-T _$enumDecode<T>(Map<T, dynamic> enumValues, dynamic source) {
+T _$enumDecode<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
   if (source == null) {
     throw ArgumentError('A value must be provided. Supported values: '
         '${enumValues.values.join(', ')}');
   }
-  return enumValues.entries
-      .singleWhere((e) => e.value == source,
-          orElse: () => throw ArgumentError(
-              '`$source` is not one of the supported values: '
-              '${enumValues.values.join(', ')}'))
-      .key;
+
+  final value = enumValues.entries
+      .singleWhere((e) => e.value == source, orElse: () => null)
+      ?.key;
+
+  if (value == null && unknownValue == null) {
+    throw ArgumentError('`$source` is not one of the supported values: '
+        '${enumValues.values.join(', ')}');
+  }
+  return value ?? unknownValue;
 }
 
-T _$enumDecodeNullable<T>(Map<T, dynamic> enumValues, dynamic source) {
+T _$enumDecodeNullable<T>(
+  Map<T, dynamic> enumValues,
+  dynamic source, {
+  T unknownValue,
+}) {
   if (source == null) {
     return null;
   }
-  return _$enumDecode<T>(enumValues, source);
+  return _$enumDecode<T>(enumValues, source, unknownValue: unknownValue);
 }
 
-const _$HUDMessageStyleEnumMap = <HUDMessageStyle, dynamic>{
+const _$HUDMessageStyleEnumMap = {
   HUDMessageStyle.tips: 'tips',
-  HUDMessageStyle.progress: 'progress'
+  HUDMessageStyle.progress: 'progress',
 };

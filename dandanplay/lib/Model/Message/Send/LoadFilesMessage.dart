@@ -1,21 +1,46 @@
+import 'package:dandanplay/Config/Constant.dart';
 import 'package:dandanplay/Model/Message/Send/BaseMessage.dart';
-import 'package:json_annotation/json_annotation.dart';
 
-part 'LoadFilesMessage.g.dart';
+abstract class FileModelProtocol {
+  FileDataMediaType get fileType;
+  int get fileSize;
+  String get urlDataString;
+  String get path;
+  Map<String, dynamic> get otherParameter;
 
-@JsonSerializable()
+  Map<String, dynamic> data() {
+    final map = Map<String, dynamic>();
+    map["urlDataString"] = this.urlDataString;
+    map["path"] = this.path;
+    map["size"] = this.fileSize;
+    map["type"] = this.fileType.rawValue;
+    map["otherParameter"] = this.otherParameter;
+    return map;
+  }
+}
+
 class LoadFilesMessage extends BaseMessage {
 
-  @JsonKey(ignore: true)
   @override
   String get name => "LoadFilesMessage";
 
   @override
   Map<String, dynamic> get data {
-    return _$LoadFilesMessageToJson(this);
+    final map = Map<String, dynamic>();
+    if (this.fileDatas != null) {
+
+      final arr = List.empty(growable: true);
+      for (final obj in this.fileDatas) {
+        arr.add(obj.data());
+      }
+
+      map["fileDatas"] = arr;
+    }
+
+    return map;
   }
 
-  List<Map> fileDatas;
+  List<FileModelProtocol> fileDatas;
 
   LoadFilesMessage({this.fileDatas});
 

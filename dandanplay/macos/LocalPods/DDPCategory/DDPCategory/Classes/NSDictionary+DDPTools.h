@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface NSDictionary (DDPTools)
 #pragma mark - Dictionary Convertor
 ///=============================================================================
@@ -94,6 +96,18 @@
  */
 - (NSString *)jsonPrettyStringEncoded;
 
+/**
+ Try to parse an XML and wrap it into a dictionary.
+ If you just want to get some value from a small xml, try this.
+ 
+ example XML: "<config><a href="test.com">link</a></config>"
+ example Return: @{@"_name":@"config", @"a":{@"_text":@"link",@"href":@"test.com"}}
+ 
+ @param xmlDataOrString XML in NSData or NSString format.
+ @return Return a new dictionary, or nil if an error occurs.
+ */
++ (nullable NSDictionary *)dictionaryWithXML:(id)xmlDataOrString;
+
 #pragma mark - Dictionary Value Getter
 ///=============================================================================
 /// @name Dictionary Value Getter
@@ -172,3 +186,4 @@
 - (NSDictionary *)popEntriesForKeys:(NSArray *)keys;
 
 @end
+NS_ASSUME_NONNULL_END

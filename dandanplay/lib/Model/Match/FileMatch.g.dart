@@ -8,13 +8,14 @@ part of 'FileMatch.dart';
 
 FileMatch _$FileMatchFromJson(Map<String, dynamic> json) {
   return FileMatch(
-      json['episodeId'] as num,
-      json['animeId'] as num,
-      json['animeTitle'] as String,
-      json['episodeTitle'] as String,
-      json['type'] as String,
-      json['typeDescription'] as String,
-      json['shift'] as num);
+    json['episodeId'] as num,
+    json['animeId'] as num,
+    json['animeTitle'] as String,
+    json['episodeTitle'] as String,
+    json['type'] as String,
+    json['typeDescription'] as String,
+    json['shift'] as num,
+  );
 }
 
 Map<String, dynamic> _$FileMatchToJson(FileMatch instance) => <String, dynamic>{
@@ -24,5 +25,5 @@ Map<String, dynamic> _$FileMatchToJson(FileMatch instance) => <String, dynamic>{
       'episodeTitle': instance.episodeTitle,
       'shift': instance.shift,
       'type': instance.typeRawValue,
-      'typeDescription': instance.typeDescription
+      'typeDescription': instance.typeDescription,
     };

@@ -11,18 +11,20 @@ import FlutterMacOS
 import SnapKit
 import HandyJSON
 import DDPShare
+import DDPMediaPlayer
 
 /// 主控制器，负责与flutter通信
 class MainViewController: MessageViewController {
     
     private lazy var dragView: DragView = {
         let view = DragView()
-        view.dragFilesCallBack = { [weak self] (paths) in
+        view.dragFilesCallBack = { [weak self] (urls) in
             guard let self = self else {
                 return
             }
             
-            self.loadFiles(paths)
+            let items = urls.compactMap({ LocalFile(with: $0) })
+            self.loadItems(items)
         }
         return view
     }()
@@ -69,7 +71,7 @@ class MainViewController: MessageViewController {
                 
                 switch msg.style {
                 case .tips:
-                    cacheHUD = ProgressHUDHelper.showHUD(text: msg.text)
+                    cacheHUD = ProgressHUDHelper.showHUDWithText(msg.text)
                 case .progress:
                     cacheHUD = ProgressHUDHelper.showProgressHUD(text: msg.text, progress: msg.progress)
                 }
@@ -101,21 +103,21 @@ class MainViewController: MessageViewController {
     }
     
     //MARK: Private
-    private func loadFiles(_ files: [URL]) {
-        
+    private func loadItems(_ items: [File]) {
         if let vc = self.playerViewController {
-            vc.loadURLs(files)
+            vc.loadItem(items)
             playerWindowController?.window?.makeKeyAndOrderFront(nil)
         } else {
-            playerWindowController = PlayerWindowController(urls: files)
-            playerWindowController?.closeCallBack = { [weak self] in
+            let playerWindowController = PlayerWindowController(items: items)
+            self.playerWindowController = playerWindowController
+            playerWindowController.closeCallBack = { [weak self] in
                 guard let self = self else {
                     return
                 }
                 
                 self.playerWindowController = nil
             }
-            playerWindowController?.showWindow(nil)
+            playerWindowController.showWindow(nil)
         }
     }
     

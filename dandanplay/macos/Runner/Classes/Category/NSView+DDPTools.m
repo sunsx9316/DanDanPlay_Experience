@@ -31,4 +31,12 @@
     return nil;
 }
 
+- (instancetype)animator:(BOOL)isAnimate {
+    if (isAnimate) {
+        return self.animator;
+    } else {
+        return self;
+    }
+}
+
 @end

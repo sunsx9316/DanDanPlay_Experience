@@ -9,23 +9,11 @@
 import Foundation
 import DDPMediaPlayer
 
-extension URL {
-    var isVideoFile: Bool {
-        let pathExtension = self.pathExtension as CFString
-        if let fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension, nil) {
-            if UTTypeConformsTo(fileUTI.takeRetainedValue(), kUTTypeMovie) {
-                return true
-            }
-        }
-        return false
-    }
-}
-
 class Helper {
     
     static let shared = Helper()
     
-    weak var player: DDPMediaPlayer?
+    weak var player: MediaPlayer?
     
     let subTitlePathExtension = ["SSA", "ASS", "SMI", "SRT", "SUB", "LRC", "SST", "TXT", "XSS", "PSB", "SSB"]
     

@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import DDPMediaPlayer
 
 class PlayerNavigationController: UINavigationController {
     
@@ -13,8 +14,8 @@ class PlayerNavigationController: UINavigationController {
     
     private let defaultOrientationKey = "PlayerDefaultOrientationKey";
     
-    init(urls: [URL]) {
-        let playerViewController = PlayerViewController(urls: urls)
+    init(items: [File]) {
+        let playerViewController = PlayerViewController(items: items)
         self.playerViewController = playerViewController
         super.init(nibName: nil, bundle: nil)
         self.modalPresentationStyle = .fullScreen

@@ -26,9 +26,10 @@
 		33CC10F32044A3C60003C045 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 33CC10F22044A3C60003C045 /* Assets.xcassets */; };
 		33CC10F62044A3C60003C045 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 33CC10F42044A3C60003C045 /* MainMenu.xib */; };
 		33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33CC11122044BFA00003C045 /* MainFlutterWindow.swift */; };
-		33D1A10422148B71006C7A3E /* FlutterMacOS.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33D1A10322148B71006C7A3E /* FlutterMacOS.framework */; };
-		33D1A10522148B93006C7A3E /* FlutterMacOS.framework in Bundle Framework */ = {isa = PBXBuildFile; fileRef = 33D1A10322148B71006C7A3E /* FlutterMacOS.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		893F8CDC259374F30081629E /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 893F8CDB259374F30081629E /* Preferences.swift */; };
+		8966025C25DCD28200648580 /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8966025B25DCD28200648580 /* BaseView.swift */; };
+		8966026225DCE16C00648580 /* DanmakuManager+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8966026125DCE16C00648580 /* DanmakuManager+Extension.swift */; };
+		8966028525DCE83C00648580 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8966028425DCE83C00648580 /* Constant.swift */; };
+		8966028925DCEA5F00648580 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8966028825DCEA5F00648580 /* Preferences.swift */; };
 		89A72B2F24273FD000627562 /* ProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A72B2D24273FD000627562 /* ProgressHUD.swift */; };
 		89A72B312427470A00627562 /* ProgressHUDHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A72B302427470A00627562 /* ProgressHUDHelper.swift */; };
 		89A72B332427618F00627562 /* DragView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A72B322427618F00627562 /* DragView.swift */; };
@@ -62,12 +63,9 @@
 		89BF41B5241E496B00D76A81 /* PlayerWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4195241E496A00D76A81 /* PlayerWindowController.swift */; };
 		89BF41B6241E496B00D76A81 /* PlayerSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4196241E496A00D76A81 /* PlayerSettingViewController.swift */; };
 		89BF41B7241E496B00D76A81 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4197241E496A00D76A81 /* MainViewController.swift */; };
-		89BF41B8241E496B00D76A81 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4199241E496A00D76A81 /* Constant.swift */; };
 		89BF41B9241E496B00D76A81 /* OCMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 89BF419B241E496A00D76A81 /* OCMessageViewController.m */; };
 		89BF41BA241E496B00D76A81 /* MessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BF419C241E496A00D76A81 /* MessageViewController.swift */; };
 		C8D475565146B58CA1FCF8AA /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C673ED9F5DA59A7F610E2439 /* Pods_Runner.framework */; };
-		D73912F022F37F9E000D13A0 /* App.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D73912EF22F37F9E000D13A0 /* App.framework */; };
-		D73912F222F3801D000D13A0 /* App.framework in Bundle Framework */ = {isa = PBXBuildFile; fileRef = D73912EF22F37F9E000D13A0 /* App.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,8 +85,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				D73912F222F3801D000D13A0 /* App.framework in Bundle Framework */,
-				33D1A10522148B93006C7A3E /* FlutterMacOS.framework in Bundle Framework */,
 			);
 			name = "Bundle Framework";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -109,12 +105,14 @@
 		33CEB47222A05771004F2AC0 /* Flutter-Debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Flutter-Debug.xcconfig"; sourceTree = "<group>"; };
 		33CEB47422A05771004F2AC0 /* Flutter-Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = "Flutter-Release.xcconfig"; sourceTree = "<group>"; };
 		33CEB47722A0578A004F2AC0 /* Flutter-Generated.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = "Flutter-Generated.xcconfig"; path = "ephemeral/Flutter-Generated.xcconfig"; sourceTree = "<group>"; };
-		33D1A10322148B71006C7A3E /* FlutterMacOS.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FlutterMacOS.framework; path = Flutter/ephemeral/FlutterMacOS.framework; sourceTree = SOURCE_ROOT; };
 		33E51913231747F40026EE4D /* DebugProfile.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = DebugProfile.entitlements; sourceTree = "<group>"; };
 		33E51914231749380026EE4D /* Release.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = Release.entitlements; sourceTree = "<group>"; };
 		33E5194F232828860026EE4D /* AppInfo.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = AppInfo.xcconfig; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Release.xcconfig; sourceTree = "<group>"; };
-		893F8CDB259374F30081629E /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
+		8966025B25DCD28200648580 /* BaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseView.swift; sourceTree = "<group>"; };
+		8966026125DCE16C00648580 /* DanmakuManager+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DanmakuManager+Extension.swift"; sourceTree = "<group>"; };
+		8966028425DCE83C00648580 /* Constant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
+		8966028825DCEA5F00648580 /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		89A72B2D24273FD000627562 /* ProgressHUD.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressHUD.swift; sourceTree = "<group>"; };
 		89A72B302427470A00627562 /* ProgressHUDHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressHUDHelper.swift; sourceTree = "<group>"; };
 		89A72B322427618F00627562 /* DragView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragView.swift; sourceTree = "<group>"; };
@@ -164,13 +162,11 @@
 		89BF4195241E496A00D76A81 /* PlayerWindowController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerWindowController.swift; sourceTree = "<group>"; };
 		89BF4196241E496A00D76A81 /* PlayerSettingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerSettingViewController.swift; sourceTree = "<group>"; };
 		89BF4197241E496A00D76A81 /* MainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
-		89BF4199241E496A00D76A81 /* Constant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		89BF419B241E496A00D76A81 /* OCMessageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OCMessageViewController.m; sourceTree = "<group>"; };
 		89BF419C241E496A00D76A81 /* MessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewController.swift; sourceTree = "<group>"; };
 		89BF419D241E496A00D76A81 /* OCMessageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OCMessageViewController.h; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = Debug.xcconfig; sourceTree = "<group>"; };
 		C673ED9F5DA59A7F610E2439 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D73912EF22F37F9E000D13A0 /* App.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = App.framework; path = Flutter/ephemeral/App.framework; sourceTree = SOURCE_ROOT; };
 		EB340EF00BD4C3673F180D62 /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -179,8 +175,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D73912F022F37F9E000D13A0 /* App.framework in Frameworks */,
-				33D1A10422148B71006C7A3E /* FlutterMacOS.framework in Frameworks */,
 				C8D475565146B58CA1FCF8AA /* Pods_Runner.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -237,8 +231,6 @@
 				33CEB47222A05771004F2AC0 /* Flutter-Debug.xcconfig */,
 				33CEB47422A05771004F2AC0 /* Flutter-Release.xcconfig */,
 				33CEB47722A0578A004F2AC0 /* Flutter-Generated.xcconfig */,
-				D73912EF22F37F9E000D13A0 /* App.framework */,
-				33D1A10322148B71006C7A3E /* FlutterMacOS.framework */,
 			);
 			path = Flutter;
 			sourceTree = "<group>";
@@ -257,6 +249,25 @@
 			path = Runner;
 			sourceTree = "<group>";
 		};
+		8966025A25DCD27000648580 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				8966025B25DCD28200648580 /* BaseView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		8966026025DCE0F700648580 /* CocoaShare */ = {
+			isa = PBXGroup;
+			children = (
+				8966028825DCEA5F00648580 /* Preferences.swift */,
+				8966028425DCE83C00648580 /* Constant.swift */,
+				8966026125DCE16C00648580 /* DanmakuManager+Extension.swift */,
+			);
+			name = CocoaShare;
+			path = ../../../CocoaShare;
+			sourceTree = "<group>";
+		};
 		89A72B2B24273FD000627562 /* ProgressHUD */ = {
 			isa = PBXGroup;
 			children = (
@@ -269,11 +280,13 @@
 		89BF4168241E496A00D76A81 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				8966026025DCE0F700648580 /* CocoaShare */,
 				89BF4198241E496A00D76A81 /* Constant */,
 				89A72B2B24273FD000627562 /* ProgressHUD */,
 				89BF416A241E496A00D76A81 /* Category */,
 				89BF4169241E496A00D76A81 /* MessageHandler.swift */,
 				89BF4175241E496A00D76A81 /* OC2SwiftBridgeHeader.h */,
+				8966025A25DCD27000648580 /* View */,
 				89BF4176241E496A00D76A81 /* ViewController */,
 			);
 			path = Classes;
@@ -282,16 +295,16 @@
 		89BF416A241E496A00D76A81 /* Category */ = {
 			isa = PBXGroup;
 			children = (
-				89BF416B241E496A00D76A81 /* NSView+DDPTools.h */,
-				89BF416C241E496A00D76A81 /* NSColor+DDPTools.h */,
-				89BF416D241E496A00D76A81 /* JHBaseDanmaku+DDPTools.h */,
 				89BF416E241E496A00D76A81 /* DDPMacroDefinition.h */,
-				89BF416F241E496A00D76A81 /* NSControl+DDPTools.h */,
-				89BF4170241E496A00D76A81 /* NSColor+DDPTools.m */,
-				89BF4171241E496A00D76A81 /* NSView+DDPTools.m */,
-				89BF4172241E496A00D76A81 /* NSTableView+Tools.swift */,
+				89BF416D241E496A00D76A81 /* JHBaseDanmaku+DDPTools.h */,
 				89BF4173241E496A00D76A81 /* JHBaseDanmaku+DDPTools.m */,
+				89BF416C241E496A00D76A81 /* NSColor+DDPTools.h */,
+				89BF4170241E496A00D76A81 /* NSColor+DDPTools.m */,
+				89BF416F241E496A00D76A81 /* NSControl+DDPTools.h */,
 				89BF4174241E496A00D76A81 /* NSControl+DDPTools.m */,
+				89BF4172241E496A00D76A81 /* NSTableView+Tools.swift */,
+				89BF416B241E496A00D76A81 /* NSView+DDPTools.h */,
+				89BF4171241E496A00D76A81 /* NSView+DDPTools.m */,
 			);
 			path = Category;
 			sourceTree = "<group>";
@@ -364,8 +377,6 @@
 		89BF4198241E496A00D76A81 /* Constant */ = {
 			isa = PBXGroup;
 			children = (
-				893F8CDB259374F30081629E /* Preferences.swift */,
-				89BF4199241E496A00D76A81 /* Constant.swift */,
 				89A72B382427C61500627562 /* Helper.swift */,
 			);
 			path = Constant;
@@ -504,7 +515,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "echo \"$PRODUCT_NAME.app\" > \"$PROJECT_DIR\"/Flutter/ephemeral/.app_filename\n";
+			shellScript = "echo \"$PRODUCT_NAME.app\" > \"$PROJECT_DIR\"/Flutter/ephemeral/.app_filename && \"$FLUTTER_ROOT\"/packages/flutter_tools/bin/macos_assemble.sh embed\n";
 		};
 		33CC111E2044C6BF0003C045 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -554,9 +565,48 @@
 			files = (
 			);
 			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/DDPCategory/DDPCategory.framework",
+				"${BUILT_PRODUCTS_DIR}/DDPShare/DDPShare.framework",
+				"${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework",
+				"${BUILT_PRODUCTS_DIR}/GCDWebServer/GCDWebServer.framework",
+				"${BUILT_PRODUCTS_DIR}/HandyJSON/HandyJSON.framework",
+				"${BUILT_PRODUCTS_DIR}/JHDanmakuRender/JHDanmakuRender.framework",
+				"${BUILT_PRODUCTS_DIR}/MMKV/MMKV.framework",
+				"${BUILT_PRODUCTS_DIR}/MMKVCore/MMKVCore.framework",
+				"${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework",
+				"${BUILT_PRODUCTS_DIR}/Reachability/Reachability.framework",
+				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
+				"${PODS_ROOT}/VLCKit/VLCKit.framework",
+				"${BUILT_PRODUCTS_DIR}/connectivity_macos/connectivity_macos.framework",
+				"${BUILT_PRODUCTS_DIR}/dandanplayfilepicker/dandanplayfilepicker.framework",
+				"${BUILT_PRODUCTS_DIR}/dandanplaystore/dandanplaystore.framework",
+				"${BUILT_PRODUCTS_DIR}/package_info/package_info.framework",
+				"${BUILT_PRODUCTS_DIR}/path_provider_macos/path_provider_macos.framework",
+				"${BUILT_PRODUCTS_DIR}/sqflite/sqflite.framework",
+				"${BUILT_PRODUCTS_DIR}/url_launcher_macos/url_launcher_macos.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DDPCategory.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DDPShare.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FMDB.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GCDWebServer.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HandyJSON.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JHDanmakuRender.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MMKV.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MMKVCore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Masonry.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reachability.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VLCKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/connectivity_macos.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/dandanplayfilepicker.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/dandanplaystore.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/package_info.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/path_provider_macos.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/sqflite.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/url_launcher_macos.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -573,10 +623,13 @@
 				89BF41A9241E496B00D76A81 /* PlayerListTableViewCell.swift in Sources */,
 				89BF41BA241E496B00D76A81 /* MessageViewController.swift in Sources */,
 				89A72B2F24273FD000627562 /* ProgressHUD.swift in Sources */,
+				8966025C25DCD28200648580 /* BaseView.swift in Sources */,
 				89BF41B2241E496B00D76A81 /* DDPPlayView.m in Sources */,
 				33CC11132044BFA00003C045 /* MainFlutterWindow.swift in Sources */,
 				89BF41AA241E496B00D76A81 /* DDPPlayerControlView.m in Sources */,
+				8966028525DCE83C00648580 /* Constant.swift in Sources */,
 				89A72B312427470A00627562 /* ProgressHUDHelper.swift in Sources */,
+				8966026225DCE16C00648580 /* DanmakuManager+Extension.swift in Sources */,
 				89BF41B5241E496B00D76A81 /* PlayerWindowController.swift in Sources */,
 				89BF41A3241E496B00D76A81 /* NSControl+DDPTools.m in Sources */,
 				89BF41B9241E496B00D76A81 /* OCMessageViewController.m in Sources */,
@@ -589,17 +642,16 @@
 				89BF41B1241E496B00D76A81 /* DDPDanmakuModeMenuItem.m in Sources */,
 				89BF419E241E496B00D76A81 /* MessageHandler.swift in Sources */,
 				89BF41AC241E496B00D76A81 /* DDPDanmakuColorMenuItem.m in Sources */,
+				8966028925DCEA5F00648580 /* Preferences.swift in Sources */,
 				89BF41A1241E496B00D76A81 /* NSTableView+Tools.swift in Sources */,
 				89BF41A2241E496B00D76A81 /* JHBaseDanmaku+DDPTools.m in Sources */,
 				89BF41B7241E496B00D76A81 /* MainViewController.swift in Sources */,
 				89BF41AD241E496B00D76A81 /* DDPProgressIndicator.m in Sources */,
-				89BF41B8241E496B00D76A81 /* Constant.swift in Sources */,
 				89BF419F241E496B00D76A81 /* NSColor+DDPTools.m in Sources */,
 				89BF41A7241E496B00D76A81 /* PlayerListViewController.swift in Sources */,
 				89BF41AE241E496B00D76A81 /* DDPTextField.m in Sources */,
 				335BBD1B22A9A15E00E9071D /* GeneratedPluginRegistrant.swift in Sources */,
 				89BF41AF241E496B00D76A81 /* DDPPlayerSlider.m in Sources */,
-				893F8CDC259374F30081629E /* Preferences.swift in Sources */,
 				89BF41B6241E496B00D76A81 /* PlayerSettingViewController.swift in Sources */,
 				89BF41A4241E496B00D76A81 /* PlayerViewController.swift in Sources */,
 				89A72B7224309DFA00627562 /* AppVersionViewController.swift in Sources */,

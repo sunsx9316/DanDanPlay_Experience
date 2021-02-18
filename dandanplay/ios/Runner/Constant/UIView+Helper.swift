@@ -22,6 +22,10 @@ extension UIView {
         return view
     }
     
+    func showError(_ error: Error) {
+        self.showHUD(error.localizedDescription)
+    }
+    
     func showProgress() -> MBProgressHUD {
         let view = self.createHUD()
         view.mode = .determinateHorizontalBar

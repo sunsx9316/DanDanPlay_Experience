@@ -8,7 +8,9 @@ part of 'RequestAppVersionMessage.dart';
 
 RequestAppVersionMessage _$RequestAppVersionMessageFromJson(
     Map<String, dynamic> json) {
-  return RequestAppVersionMessage(json['byManual'] as bool)
+  return RequestAppVersionMessage(
+    json['byManual'] as bool,
+  )
     ..data = json['data'] as Map<String, dynamic>
     ..name = json['name'] as String;
 }
@@ -18,5 +20,5 @@ Map<String, dynamic> _$RequestAppVersionMessageToJson(
     <String, dynamic>{
       'data': instance.data,
       'name': instance.name,
-      'byManual': instance.byManual
+      'byManual': instance.byManual,
     };

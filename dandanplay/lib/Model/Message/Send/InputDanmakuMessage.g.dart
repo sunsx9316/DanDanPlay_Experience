@@ -7,9 +7,13 @@ part of 'InputDanmakuMessage.dart';
 // **************************************************************************
 
 InputDanmakuMessage _$InputDanmakuMessageFromJson(Map<String, dynamic> json) {
-  return InputDanmakuMessage(message: json['message'] as String);
+  return InputDanmakuMessage(
+    message: json['message'] as String,
+  );
 }
 
 Map<String, dynamic> _$InputDanmakuMessageToJson(
         InputDanmakuMessage instance) =>
-    <String, dynamic>{'message': instance.message};
+    <String, dynamic>{
+      'message': instance.message,
+    };

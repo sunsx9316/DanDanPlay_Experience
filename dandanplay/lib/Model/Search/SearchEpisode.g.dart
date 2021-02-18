@@ -8,11 +8,13 @@ part of 'SearchEpisode.dart';
 
 SearchEpisode _$SearchEpisodeFromJson(Map<String, dynamic> json) {
   return SearchEpisode(
-      json['episodeId'] as int, json['episodeTitle'] as String);
+    json['episodeId'] as int,
+    json['episodeTitle'] as String,
+  );
 }
 
 Map<String, dynamic> _$SearchEpisodeToJson(SearchEpisode instance) =>
     <String, dynamic>{
       'episodeId': instance.episodeId,
-      'episodeTitle': instance.episodeTitle
+      'episodeTitle': instance.episodeTitle,
     };

@@ -379,9 +379,23 @@
         paragraphStyle.lineBreakMode = lineBreakMode;
         attr[NSParagraphStyleAttributeName] = paragraphStyle;
     }
-    CGRect rect = [self boundingRectWithSize:size
+    
+    CGRect rect;
+    
+#if TARGET_OS_IPHONE
+    rect = [self boundingRectWithSize:size
                                      options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
                                   attributes:attr context:nil];
+#else
+    if (@available(macOS 10.11, *)) {
+        rect = [self boundingRectWithSize:size
+                                  options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading
+                               attributes:attr context:nil];
+    } else {
+        rect = [self boundingRectWithSize:size options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:attr];
+    }    
+#endif
+    
     result = rect.size;
     return result;
 }

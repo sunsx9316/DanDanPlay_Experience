@@ -335,13 +335,13 @@ class PlayerSettingWidgetState extends State<PlayerSettingWidget> {
               );
             }),
             actions: <Widget>[
-              FlatButton(
+              MaterialButton(
                 child: Text('取消'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
               ),
-              FlatButton(
+              MaterialButton(
                 child: Text('确认'),
                 onPressed: () {
                   setState(() {

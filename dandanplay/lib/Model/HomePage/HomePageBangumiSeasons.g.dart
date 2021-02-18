@@ -9,7 +9,10 @@ part of 'HomePageBangumiSeasons.dart';
 HomePageBangumiSeasons _$HomePageBangumiSeasonsFromJson(
     Map<String, dynamic> json) {
   return HomePageBangumiSeasons(
-      json['year'] as int, json['month'] as int, json['seasonName'] as String);
+    json['year'] as int,
+    json['month'] as int,
+    json['seasonName'] as String,
+  );
 }
 
 Map<String, dynamic> _$HomePageBangumiSeasonsToJson(
@@ -17,5 +20,5 @@ Map<String, dynamic> _$HomePageBangumiSeasonsToJson(
     <String, dynamic>{
       'year': instance.year,
       'month': instance.month,
-      'seasonName': instance.seasonName
+      'seasonName': instance.seasonName,
     };

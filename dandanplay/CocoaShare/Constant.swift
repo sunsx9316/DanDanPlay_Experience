@@ -8,14 +8,23 @@
 
 import Foundation
 
+#if os(iOS)
+public typealias DDPColor = UIColor
+#else
+public typealias DDPColor = NSColor
+#endif
+
 enum MessageType: String {
     case loadDanmaku = "LoadDanmakuMessage"
     case HUDMessage = "HUDMessage"
     case syncSetting = "SyncSettingMessage"
     case loadFiles = "LoadFilesMessage"
     case appVersion = "AppVersionMessage"
-    case naviBack = "NaviBackMessage"
     case inputDanmaku = "InputDanmakuMessage"
     case reloadMatch = "ReloadMatchWidgetMessage"
     case loadCustomDanmaku = "LoadCustomDanmakuMessage"
+    //iOS only
+    case naviBack = "NaviBackMessage"
+    //mac only
+    case becomeKeyWindow = "BecomeKeyWindowMessage"
 }

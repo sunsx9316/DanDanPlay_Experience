@@ -1,10 +1,8 @@
-import 'package:dandanplay/Model/Login/User.dart';
 import 'package:dandanplay/Model/Match/FileMatchCollection.dart';
 import 'package:dandanplay/Model/Message/Receive/ParseFileMessage.dart';
 import 'package:dandanplay/Model/Message/Receive/SendDanmakuMessage.dart';
 import 'package:dandanplay/Model/Message/Send/HUDMessage.dart';
 import 'package:dandanplay/Model/Message/Send/LoadDanmakuMessage.dart';
-import 'package:dandanplay/NetworkManager/AuthNetWorkManager.dart';
 import 'package:dandanplay/NetworkManager/CommentNetworkManager.dart';
 import 'package:dandanplay/NetworkManager/MatchNetworkManager.dart';
 import 'package:dandanplay/Tools/Preferences.dart';
@@ -24,13 +22,13 @@ class Tools {
     _showProgressHUD("匹配视频中...", 0.2);
 
     final res = await MatchNetworkManager.match(message);
-    final mediaId = message.mediaId;
-    final data = res.data;
+    final mediaId = message.mediaId ?? "";
+    final data = res.data ?? FileMatchCollection(false, []);
 
     final openFastMatch = await Preferences.shared.fastMatch;
 
     //精确关联
-    if (data.isMatched && data.matches.length == 1 && openFastMatch) {
+    if (data != null && data.isMatched && data.matches.length == 1 && openFastMatch) {
       _showProgressHUD("匹配视频成功...", 0.5);
       final matched = data.matches[0];
       await getDanmaku(mediaId,
@@ -66,11 +64,11 @@ class Tools {
       return;
     }
 
-    Scaffold.of(context).hideCurrentSnackBar();
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
     final snackBar = SnackBar(
         content: Text(text, style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.white30);
-    Scaffold.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   static sendDanmaku(SendDanmakuMessage msg) async {

@@ -30,6 +30,37 @@ enum DanmakuMode {
   bottom,
 }
 
+enum FileDataMediaType {
+  localFile,
+  webDav,
+}
+
+extension FileDataMediaTypeConvenience on FileDataMediaType {
+  int get rawValue {
+    switch (this) {
+      case FileDataMediaType.localFile: {
+        return 0;
+      }
+      break;
+      case FileDataMediaType.webDav: {
+        return 1;
+      }
+      break;
+      default: {
+        return 0;
+      }
+      break;
+    }
+  }
+
+  static FileDataMediaType mediaTypeWithRawValue(int rawValue) {
+    if (rawValue == 1) {
+      return FileDataMediaType.webDav;
+    }
+    return FileDataMediaType.localFile;
+  }
+}
+
 int danmakuModeRawValueWithEnum(DanmakuMode mode) {
   switch (mode) {
     case DanmakuMode.normal:

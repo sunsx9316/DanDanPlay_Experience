@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 
@@ -11,9 +9,13 @@ enum DandanplayfilepickerType {
 }
 
 class FileDataModel {
+  //获取背景图的时候，这个值不为空
   String path;
   //对于沙盒外的URL 需要通过这种方式获取
   String urlDataString;
+
+  int size;
+
 
   Map<String, dynamic> get mapData {
     var dic = Map<String, dynamic>();
@@ -25,6 +27,7 @@ class FileDataModel {
   FileDataModel(Map jsonDic) {
     this.path = jsonDic["path"] as String;
     this.urlDataString = jsonDic["urlDataString"] as String;
+    this.size = jsonDic["size"] as int;
   }
 }
 

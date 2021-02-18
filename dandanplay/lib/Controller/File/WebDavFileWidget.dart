@@ -1,8 +1,10 @@
+import 'package:dandanplay/Model/Message/Send/LoadFilesMessage.dart';
+import 'package:dandanplay/Vendor/message/MessageChannel.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:webdav_client/webdav_client.dart';
+import 'package:dandanplay/Model/File/WebDavFile+Extension.dart';
 
 class WebDavFileWidget extends StatefulWidget {
   final Client client;
@@ -20,10 +22,17 @@ class _WebDavFileWidgetState extends State<WebDavFileWidget> {
   RefreshController _refreshController =
       RefreshController(initialRefresh: true);
   List<File> _items;
+  String get _parentDirection {
+    final uri = this.widget.client.uri;
+    if (uri != null && uri.endsWith("/")) {
+      return uri.substring(0, uri.lastIndexOf('/'));
+    }
+    return uri;
+  }
 
   @override
   Widget build(BuildContext context) {
-    String path = this.widget.client.uri + this.widget.path;
+    String path = this._parentDirection + this.widget.path;
 
     return Scaffold(
         appBar: AppBar(
@@ -61,7 +70,12 @@ class _WebDavFileWidgetState extends State<WebDavFileWidget> {
                       }));
                     });
                   } else {
-                    return _createFileTitle(file.name, () {});
+                    return _createFileTitle(file.name, () {
+                      final obj = file.createProtocolObj(parentPath: this._parentDirection, user: this.widget.client.auth.user, password: this.widget.client.auth.pwd);
+                      final msg = LoadFilesMessage(fileDatas: [obj]);
+                      MessageChannel.shared.sendMessage(msg);
+
+                    });
                   }
                 },
                 itemCount: _items != null ? _items.length : 0,
@@ -97,6 +111,7 @@ class _WebDavFileWidgetState extends State<WebDavFileWidget> {
   void _onRefresh() async {
     final client = this.widget.client;
     final path = this.widget.path;
+
     if (client == null || path == null) {
       _refreshController.refreshCompleted();
       return;

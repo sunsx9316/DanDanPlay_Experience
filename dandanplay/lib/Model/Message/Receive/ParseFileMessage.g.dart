@@ -8,10 +8,11 @@ part of 'ParseFileMessage.dart';
 
 ParseFileMessage _$ParseFileMessageFromJson(Map<String, dynamic> json) {
   return ParseFileMessage(
-      json['fileName'] as String,
-      json['fileHash'] as String,
-      json['fileSize'] as num,
-      json['mediaId'] as String);
+    json['fileName'] as String,
+    json['fileHash'] as String,
+    json['fileSize'] as num,
+    json['mediaId'] as String,
+  );
 }
 
 Map<String, dynamic> _$ParseFileMessageToJson(ParseFileMessage instance) =>
@@ -19,5 +20,5 @@ Map<String, dynamic> _$ParseFileMessageToJson(ParseFileMessage instance) =>
       'fileName': instance.fileName,
       'fileHash': instance.fileHash,
       'fileSize': instance.fileSize,
-      'mediaId': instance.mediaId
+      'mediaId': instance.mediaId,
     };

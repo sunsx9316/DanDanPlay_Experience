@@ -7,8 +7,14 @@ part of 'SyncSettingMessage.dart';
 // **************************************************************************
 
 SyncSettingMessage _$SyncSettingMessageFromJson(Map<String, dynamic> json) {
-  return SyncSettingMessage(value: json['value'], key: json['key'] as String);
+  return SyncSettingMessage(
+    value: json['value'],
+    key: json['key'] as String,
+  );
 }
 
 Map<String, dynamic> _$SyncSettingMessageToJson(SyncSettingMessage instance) =>
-    <String, dynamic>{'value': instance.value, 'key': instance.key};
+    <String, dynamic>{
+      'value': instance.value,
+      'key': instance.key,
+    };
