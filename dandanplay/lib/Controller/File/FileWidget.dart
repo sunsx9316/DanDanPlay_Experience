@@ -19,28 +19,28 @@ class FileWidget extends StatefulWidget {
 class _FileWidgetState extends State<FileWidget> {
   @override
   Widget build(BuildContext context) {
-    // return Center(
-    //     child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-    //       IconButton(
-    //           color: Colors.white38,
-    //           iconSize: 130,
-    //           icon: Icon(Icons.folder),
-    //           onPressed: () {
-    //             _onTapLocalFile(context);
-    //           }),
-    //       Text("点击选取视频播放", style: TextStyle(fontSize: 16, color: Colors.white38)),
-    //     ]));
+    return Center(
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          IconButton(
+              color: Colors.white38,
+              iconSize: 130,
+              icon: Icon(Icons.folder),
+              onPressed: () {
+                _onTapLocalFile(context);
+              }),
+          Text("点击选取视频播放", style: TextStyle(fontSize: 16, color: Colors.white38)),
+        ]));
 
-    return ListView(
-      children: <Widget>[
-        _createListTile('本地视频', Icon(Icons.folder, size: 30), () {
-          _onTapLocalFile(context);
-        }),
-        _createListTile('WebDav', Icon(Icons.device_hub, size: 30), () {
-          _onTapWevDav(context);
-        })
-      ],
-    );
+    // return ListView(
+    //   children: <Widget>[
+    //     _createListTile('本地视频', Icon(Icons.folder, size: 30), () {
+    //       _onTapLocalFile(context);
+    //     }),
+    //     _createListTile('WebDav', Icon(Icons.device_hub, size: 30), () {
+    //       _onTapWevDav(context);
+    //     })
+    //   ],
+    // );
   }
 
   Widget _createListTile(String title, Icon icon, GestureTapCallback onTap) {

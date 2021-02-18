@@ -30,7 +30,6 @@
 		8966026625DCE28D00648580 /* DanmakuManager+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8966026525DCE28D00648580 /* DanmakuManager+Extension.swift */; };
 		8966028225DCE82900648580 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8966028125DCE82900648580 /* Constant.swift */; };
 		8966028C25DCEA7400648580 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8966028B25DCEA7400648580 /* Preferences.swift */; };
-		8966049725DD3A3200648580 /* 123.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 8966049625DD3A2800648580 /* 123.mp4 */; };
 		89C20A5D24C8915F009A094C /* PlayerSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C20A5C24C8915F009A094C /* PlayerSettingViewController.swift */; };
 		89C20A6B24CDDFA2009A094C /* PlayerControlAnimater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C20A6A24CDDFA2009A094C /* PlayerControlAnimater.swift */; };
 		89C20A7724CF1C15009A094C /* PlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C20A7624CF1C15009A094C /* PlayerManager.swift */; };
@@ -83,7 +82,6 @@
 		8966026525DCE28D00648580 /* DanmakuManager+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DanmakuManager+Extension.swift"; sourceTree = "<group>"; };
 		8966028125DCE82900648580 /* Constant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		8966028B25DCEA7400648580 /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
-		8966049625DD3A2800648580 /* 123.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = 123.mp4; sourceTree = "<group>"; };
 		89C20A5C24C8915F009A094C /* PlayerSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSettingViewController.swift; sourceTree = "<group>"; };
 		89C20A6A24CDDFA2009A094C /* PlayerControlAnimater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerControlAnimater.swift; sourceTree = "<group>"; };
 		89C20A7624CF1C15009A094C /* PlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerManager.swift; sourceTree = "<group>"; };
@@ -244,7 +242,6 @@
 		97C146F01CF9000F007C117D /* Runner */ = {
 			isa = PBXGroup;
 			children = (
-				8966049625DD3A2800648580 /* 123.mp4 */,
 				892FB6D3247D5D6D00CC1779 /* MessageHandler.swift */,
 				8966026425DCE28D00648580 /* CocoaShare */,
 				892FB6AD247A4E9600CC1779 /* Constant */,
@@ -332,7 +329,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8966049725DD3A3200648580 /* 123.mp4 in Resources */,
 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
 				893226DD24BAD64F007AC7B3 /* PlayerUIView.xib in Resources */,
 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,

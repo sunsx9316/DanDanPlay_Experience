@@ -257,6 +257,7 @@ class SettingWidgetState extends State<SettingWidget> {
 
   //初始化一些值
   void _initValue() async {
+
     _fastMatch = await Preferences.shared.fastMatch;
     _subtitleSafeArea = await Preferences.shared.subtitleSafeArea;
     _danmakuCacheDay = await Preferences.shared.danmakuCacheDay;
