@@ -44,35 +44,7 @@ open class FileBrowerManager: NSObject {
             }
             return vc
         } else {
-            let vc = FileBrowser()
-            self.containerViewController = vc
-            vc.documentTypes = fileTypes
-            vc.multipleSelection = multipleSelection
-            vc.didSelectFiles = { [weak self] (aFiles) in
-                guard let self = self else {
-                    return
-                }
-                
-                let paths = aFiles.compactMap { (file) -> URL? in
-                    if file.isDirectory {
-                        return nil
-                    }
-                    
-                    return file.filePath
-                }
-
-                self.delegate?.didSelectedPaths(manager: self, urls: paths)
-            }
-            
-            vc.dismissCallBack = { [weak self] in
-                guard let self = self else {
-                    return
-                }
-                
-                self.delegate?.didDismiss(manager: self)
-            }
-            
-            return vc
+            fatalError("不支持 iOS 11.0 以下系统")
         }
     }
 }
