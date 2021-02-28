@@ -9,7 +9,6 @@ import UIKit
 import DDPShare
 import DDPMediaPlayer
 import JHDanmakuRender
-import dandanplaystore
 import SnapKit
 import YYCategories
 
@@ -39,6 +38,7 @@ class PlayerViewController: UIViewController {
         danmakuRender.systemSpeed = CGFloat(Preferences.shared.danmakuSpeed)
         danmakuRender.canvas.alpha = CGFloat(Preferences.shared.danmakuAlpha)
         danmakuRender.canvas.isHidden = !Preferences.shared.showDanmaku
+        danmakuRender.offsetTime = TimeInterval(Preferences.shared.danmakuOffsetTime)
         return danmakuRender
     }()
     
@@ -205,6 +205,8 @@ class PlayerViewController: UIViewController {
                 }
             case .playerMode:
                 changeRepeatMode()
+            case .danmakuOffsetTime:
+                self.danmakuRender.offsetTime = TimeInterval(Preferences.shared.danmakuOffsetTime)
             default:
                 break
             }

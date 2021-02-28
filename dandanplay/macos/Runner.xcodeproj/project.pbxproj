@@ -37,6 +37,9 @@
 		89A72B392427C61500627562 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A72B382427C61500627562 /* Helper.swift */; };
 		89A72B7224309DFA00627562 /* AppVersionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A72B7024309DFA00627562 /* AppVersionViewController.swift */; };
 		89A72B7324309DFA00627562 /* AppVersionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89A72B7124309DFA00627562 /* AppVersionViewController.xib */; };
+		89B3551D25E7FB650092C3F9 /* DandanplayfilepickerPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B3551C25E7FB650092C3F9 /* DandanplayfilepickerPlugin.swift */; };
+		89B3552225E7FB8C0092C3F9 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B3552025E7FB8C0092C3F9 /* Store.swift */; };
+		89B3552325E7FB8C0092C3F9 /* SwiftDandanplaystorePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B3552125E7FB8C0092C3F9 /* SwiftDandanplaystorePlugin.swift */; };
 		89BF419E241E496B00D76A81 /* MessageHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4169241E496A00D76A81 /* MessageHandler.swift */; };
 		89BF419F241E496B00D76A81 /* NSColor+DDPTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4170241E496A00D76A81 /* NSColor+DDPTools.m */; };
 		89BF41A0241E496B00D76A81 /* NSView+DDPTools.m in Sources */ = {isa = PBXBuildFile; fileRef = 89BF4171241E496A00D76A81 /* NSView+DDPTools.m */; };
@@ -120,6 +123,9 @@
 		89A72B382427C61500627562 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		89A72B7024309DFA00627562 /* AppVersionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersionViewController.swift; sourceTree = "<group>"; };
 		89A72B7124309DFA00627562 /* AppVersionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AppVersionViewController.xib; sourceTree = "<group>"; };
+		89B3551C25E7FB650092C3F9 /* DandanplayfilepickerPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DandanplayfilepickerPlugin.swift; sourceTree = "<group>"; };
+		89B3552025E7FB8C0092C3F9 /* Store.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
+		89B3552125E7FB8C0092C3F9 /* SwiftDandanplaystorePlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftDandanplaystorePlugin.swift; sourceTree = "<group>"; };
 		89BF4169241E496A00D76A81 /* MessageHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageHandler.swift; sourceTree = "<group>"; };
 		89BF416B241E496A00D76A81 /* NSView+DDPTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSView+DDPTools.h"; sourceTree = "<group>"; };
 		89BF416C241E496A00D76A81 /* NSColor+DDPTools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSColor+DDPTools.h"; sourceTree = "<group>"; };
@@ -260,6 +266,7 @@
 		8966026025DCE0F700648580 /* CocoaShare */ = {
 			isa = PBXGroup;
 			children = (
+				89B3551F25E7FB8C0092C3F9 /* StoreManager */,
 				8966028825DCEA5F00648580 /* Preferences.swift */,
 				8966028425DCE83C00648580 /* Constant.swift */,
 				8966026125DCE16C00648580 /* DanmakuManager+Extension.swift */,
@@ -277,9 +284,35 @@
 			path = ProgressHUD;
 			sourceTree = "<group>";
 		};
+		89B3551A25E7FB460092C3F9 /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+				89B3551B25E7FB4E0092C3F9 /* FilePicker */,
+			);
+			path = Vendor;
+			sourceTree = "<group>";
+		};
+		89B3551B25E7FB4E0092C3F9 /* FilePicker */ = {
+			isa = PBXGroup;
+			children = (
+				89B3551C25E7FB650092C3F9 /* DandanplayfilepickerPlugin.swift */,
+			);
+			path = FilePicker;
+			sourceTree = "<group>";
+		};
+		89B3551F25E7FB8C0092C3F9 /* StoreManager */ = {
+			isa = PBXGroup;
+			children = (
+				89B3552025E7FB8C0092C3F9 /* Store.swift */,
+				89B3552125E7FB8C0092C3F9 /* SwiftDandanplaystorePlugin.swift */,
+			);
+			path = StoreManager;
+			sourceTree = "<group>";
+		};
 		89BF4168241E496A00D76A81 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				89B3551A25E7FB460092C3F9 /* Vendor */,
 				8966026025DCE0F700648580 /* CocoaShare */,
 				89BF4198241E496A00D76A81 /* Constant */,
 				89A72B2B24273FD000627562 /* ProgressHUD */,
@@ -569,7 +602,6 @@
 				"${BUILT_PRODUCTS_DIR}/DDPCategory/DDPCategory.framework",
 				"${BUILT_PRODUCTS_DIR}/DDPShare/DDPShare.framework",
 				"${BUILT_PRODUCTS_DIR}/FMDB/FMDB.framework",
-				"${BUILT_PRODUCTS_DIR}/GCDWebServer/GCDWebServer.framework",
 				"${BUILT_PRODUCTS_DIR}/HandyJSON/HandyJSON.framework",
 				"${BUILT_PRODUCTS_DIR}/JHDanmakuRender/JHDanmakuRender.framework",
 				"${BUILT_PRODUCTS_DIR}/MMKV/MMKV.framework",
@@ -577,10 +609,9 @@
 				"${BUILT_PRODUCTS_DIR}/Masonry/Masonry.framework",
 				"${BUILT_PRODUCTS_DIR}/Reachability/Reachability.framework",
 				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
+				"${BUILT_PRODUCTS_DIR}/Swifter/Swifter.framework",
 				"${PODS_ROOT}/VLCKit/VLCKit.framework",
 				"${BUILT_PRODUCTS_DIR}/connectivity_macos/connectivity_macos.framework",
-				"${BUILT_PRODUCTS_DIR}/dandanplayfilepicker/dandanplayfilepicker.framework",
-				"${BUILT_PRODUCTS_DIR}/dandanplaystore/dandanplaystore.framework",
 				"${BUILT_PRODUCTS_DIR}/package_info/package_info.framework",
 				"${BUILT_PRODUCTS_DIR}/path_provider_macos/path_provider_macos.framework",
 				"${BUILT_PRODUCTS_DIR}/sqflite/sqflite.framework",
@@ -591,7 +622,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DDPCategory.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DDPShare.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FMDB.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/GCDWebServer.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/HandyJSON.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/JHDanmakuRender.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MMKV.framework",
@@ -599,10 +629,9 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Masonry.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Reachability.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Swifter.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/VLCKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/connectivity_macos.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/dandanplayfilepicker.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/dandanplaystore.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/package_info.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/path_provider_macos.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/sqflite.framework",
@@ -636,6 +665,7 @@
 				89BF41AB241E496B00D76A81 /* DDPHUD.m in Sources */,
 				89BF41B4241E496B00D76A81 /* DDPPlayTopBar.m in Sources */,
 				33CC10F12044A3C60003C045 /* AppDelegate.swift in Sources */,
+				89B3551D25E7FB650092C3F9 /* DandanplayfilepickerPlugin.swift in Sources */,
 				89BF41A0241E496B00D76A81 /* NSView+DDPTools.m in Sources */,
 				89A72B392427C61500627562 /* Helper.swift in Sources */,
 				89A72B332427618F00627562 /* DragView.swift in Sources */,
@@ -643,6 +673,7 @@
 				89BF419E241E496B00D76A81 /* MessageHandler.swift in Sources */,
 				89BF41AC241E496B00D76A81 /* DDPDanmakuColorMenuItem.m in Sources */,
 				8966028925DCEA5F00648580 /* Preferences.swift in Sources */,
+				89B3552325E7FB8C0092C3F9 /* SwiftDandanplaystorePlugin.swift in Sources */,
 				89BF41A1241E496B00D76A81 /* NSTableView+Tools.swift in Sources */,
 				89BF41A2241E496B00D76A81 /* JHBaseDanmaku+DDPTools.m in Sources */,
 				89BF41B7241E496B00D76A81 /* MainViewController.swift in Sources */,
@@ -653,6 +684,7 @@
 				335BBD1B22A9A15E00E9071D /* GeneratedPluginRegistrant.swift in Sources */,
 				89BF41AF241E496B00D76A81 /* DDPPlayerSlider.m in Sources */,
 				89BF41B6241E496B00D76A81 /* PlayerSettingViewController.swift in Sources */,
+				89B3552225E7FB8C0092C3F9 /* Store.swift in Sources */,
 				89BF41A4241E496B00D76A81 /* PlayerViewController.swift in Sources */,
 				89A72B7224309DFA00627562 /* AppVersionViewController.swift in Sources */,
 			);
@@ -738,7 +770,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 25452CX7T6;
+				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter/ephemeral",
@@ -874,7 +906,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 25452CX7T6;
+				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter/ephemeral",
@@ -904,7 +936,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				DEVELOPMENT_TEAM = 25452CX7T6;
+				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

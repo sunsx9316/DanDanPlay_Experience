@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import GCDWebServer
 
 extension Timer {
     open class func mp_scheduledTimer(timeInterval ti: TimeInterval, repeats yesOrNo: Bool, action: @escaping((Timer) -> Void)) -> Timer {

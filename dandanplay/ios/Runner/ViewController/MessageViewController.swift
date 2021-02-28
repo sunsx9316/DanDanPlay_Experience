@@ -86,8 +86,14 @@ class MessageViewController: FlutterViewController {
                 reply(false)
             }
         }
-        
         GeneratedPluginRegistrant.register(with: self)
+        if let registrar = self.registrar(forPlugin: "DandanplaystorePlugin") {
+            SwiftDandanplayfilepickerPlugin.register(with: registrar)
+        }
+        
+        if let registrar = self.registrar(forPlugin: "SwiftDandanplaystorePlugin") {
+            SwiftDandanplaystorePlugin.register(with: registrar)
+        }
     }
     
 }

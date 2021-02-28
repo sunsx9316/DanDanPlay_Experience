@@ -5,7 +5,7 @@ import 'package:dandanplay/Config/Constant.dart';
 import 'package:dandanplay/Model/Login/User.dart';
 import 'package:dandanplay/Model/Message/Send/SyncSettingMessage.dart';
 import 'package:dandanplay/Vendor/message/MessageChannel.dart';
-import 'package:dandanplaystore/dandanplaystore.dart';
+import 'package:dandanplay/Vendor/Store/dandanplaystore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
@@ -64,6 +64,9 @@ class Preferences {
 
   //自动加载同名弹幕文件
   final _autoLoadCusomDanmakuKey = "autoLoadCusomDanmaku";
+
+  //弹幕偏移时间
+  final _danmakuOffsetTimeKey = "danmakuOffsetTime";
 
   Future<void> setupDefaultValue({bool force = false}) async {
     var isContains = await Dandanplaystore.contains(key: _fastMatchKey);
@@ -138,8 +141,27 @@ class Preferences {
 
     isContains = await Dandanplaystore.contains(key: _autoLoadCusomDanmakuKey);
     if (!isContains || force) {
-      await setAutoLoadCusomDanmakuKey(true, sync: false);
+      await setAutoLoadCusomDanmaku(true, sync: false);
     }
+
+    isContains = await Dandanplaystore.contains(key: _danmakuOffsetTimeKey);
+    if (!isContains || force) {
+      await setDanmakuOffsetTime(0, sync: false);
+    }
+  }
+
+  Future<int> get danmakuOffsetTime async {
+    final value = await Dandanplaystore.getInt(key: _danmakuOffsetTimeKey);
+    return value;
+  }
+
+  Future<bool> setDanmakuOffsetTime(int value, {bool sync = true}) async {
+    final result = await Dandanplaystore.setInt(key: _danmakuOffsetTimeKey, value: value);
+    if (sync) {
+      await _sendSyncMsg(_danmakuOffsetTimeKey, value);
+    }
+
+    return result;
   }
 
   Future<bool> get autoLoadCusomDanmaku async {
@@ -147,7 +169,7 @@ class Preferences {
     return value;
   }
 
-  Future<bool> setAutoLoadCusomDanmakuKey(bool value, {bool sync = true}) async {
+  Future<bool> setAutoLoadCusomDanmaku(bool value, {bool sync = true}) async {
     final result = await Dandanplaystore.setBool(key: _autoLoadCusomDanmakuKey, value: value);
     if (sync) {
       await _sendSyncMsg(_autoLoadCusomDanmakuKey, value);

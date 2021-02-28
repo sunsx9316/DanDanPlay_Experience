@@ -15,9 +15,6 @@ import DDPMediaPlayer
     ) -> Bool {
         let flag = super.application(application, didFinishLaunchingWithOptions: launchOptions)
         
-//        WebDavFile.start()
-        
-//        GeneratedPluginRegistrant.register(with: self)
         self.engine.run()
         let vc = MainViewController(engine: self.engine, nibName: nil, bundle: nil)
         self.window = UIWindow(frame: UIScreen.main.bounds)

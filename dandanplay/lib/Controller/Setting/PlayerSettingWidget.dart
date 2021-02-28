@@ -5,9 +5,10 @@ import 'package:dandanplay/Model/Message/Send/LoadCustomDanmakuMessage.dart';
 import 'package:dandanplay/Tools/Preferences.dart';
 import 'package:dandanplay/Tools/Utility.dart';
 import 'package:dandanplay/Vendor/message/MessageChannel.dart';
-import 'package:dandanplayfilepicker/dandanplayfilepicker.dart';
+import 'package:dandanplay/Vendor/file_picker/dandanplayfilepicker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:intl/intl.dart';
 
 enum _DanmakuCellType {
@@ -17,7 +18,10 @@ enum _DanmakuCellType {
   count,
   danmakuSwitch,
   local,
+  timeOffset,
 }
+
+enum _PlayerCellType { speed, mode }
 
 class PlayerSettingWidget extends StatefulWidget {
   @override
@@ -34,11 +38,13 @@ class PlayerSettingWidgetState extends State<PlayerSettingWidget> {
   double _playerSpeed = 1.0;
   PlayerMode _playerMode;
   bool _danmakuOpen = false;
+  int _danmakuOffsetTime = 0;
 
   bool _didGetInitValue = false;
+  final _defaultPadding = EdgeInsets.only(top: 10, bottom: 10);
 
-  List<_DanmakuCellType> _cellTypes =
-      List<_DanmakuCellType>.empty(growable: true);
+  var _danmakuCellTypes = List<_DanmakuCellType>.empty(growable: true);
+  var _playerCellTypes = List<_PlayerCellType>.empty(growable: true);
 
   @override
   void initState() {
@@ -76,29 +82,217 @@ class PlayerSettingWidgetState extends State<PlayerSettingWidget> {
     _playerSpeed = await Preferences.shared.playerSpeed;
     _playerMode = await Preferences.shared.playerMode;
     _danmakuOpen = await Preferences.shared.showDanmaku;
+    _danmakuOffsetTime = await Preferences.shared.danmakuOffsetTime;
+
+    _playerCellTypes = [_PlayerCellType.speed, _PlayerCellType.mode];
 
     if (Platform.isIOS) {
-      _cellTypes = [
+      _danmakuCellTypes = [
         _DanmakuCellType.fontSize,
         _DanmakuCellType.speed,
         _DanmakuCellType.alpha,
         _DanmakuCellType.count,
         _DanmakuCellType.danmakuSwitch,
+        _DanmakuCellType.timeOffset,
         _DanmakuCellType.local
       ];
     } else {
-      _cellTypes = [
+      _danmakuCellTypes = [
         _DanmakuCellType.fontSize,
         _DanmakuCellType.speed,
         _DanmakuCellType.alpha,
         _DanmakuCellType.count,
-        _DanmakuCellType.local
+        _DanmakuCellType.timeOffset,
+        _DanmakuCellType.local,
       ];
     }
 
     setState(() {
       _didGetInitValue = true;
     });
+  }
+
+  Widget _createPlayerSettingWidget() {
+    return SafeArea(
+        child: Padding(
+            padding: EdgeInsets.all(10),
+            child: ListView.builder(
+                itemCount: _playerCellTypes.length,
+                itemBuilder: (context, index) {
+                  final cellType = _playerCellTypes[index];
+
+                  switch (cellType) {
+                    case _PlayerCellType.speed:
+                      {
+                        return _createSliderCell("播放速度", 0.5, 2, _playerSpeed,
+                            (value) {
+                          setState(() {
+                            _playerSpeed = value;
+                            Preferences.shared.setPlayerSpeed(value);
+                          });
+                        }, divisions: 15);
+                      }
+                      break;
+
+                    case _PlayerCellType.mode:
+                      {
+                        return SafeArea(
+                            child: InkWell(
+                                child: Padding(
+                                    padding: _defaultPadding,
+                                    child: Row(children: [
+                                      Expanded(child: Text("播放模式")),
+                                      Text(_playerModeTypeDesc(_playerMode))
+                                    ])),
+                                onTap: () {
+                                  _onTapPlayerMode(context);
+                                }));
+                      }
+                      break;
+                    default:
+                      return Container();
+                  }
+                })));
+  }
+
+  Widget _createDanmakuSettingWidget() {
+    return SafeArea(
+        child: Padding(
+            padding: EdgeInsets.all(10),
+            child: ListView.builder(
+                itemCount: _danmakuCellTypes.length,
+                itemBuilder: (context, index) {
+                  final cellType = _danmakuCellTypes[index];
+
+                  switch (cellType) {
+                    case _DanmakuCellType.fontSize:
+                      {
+                        double danmakuFontMinSize = 18;
+                        if (Platform.isIOS) {
+                          danmakuFontMinSize = 10;
+                        }
+
+                        double danmakuFontMacSize = 32;
+
+                        final divisions =
+                            (danmakuFontMacSize - danmakuFontMinSize).toInt();
+                        return _createSliderCell(
+                            "弹幕字体大小", danmakuFontMinSize, 32, _danmakuFontSize,
+                            (value) {
+                          setState(() {
+                            _danmakuFontSize = value;
+                            Preferences.shared.setDanmakuFontSize(value);
+                          });
+                        },
+                            minString: "$danmakuFontMinSize",
+                            maxString: "$danmakuFontMacSize",
+                            divisions: divisions);
+                      }
+                      break;
+                    case _DanmakuCellType.speed:
+                      {
+                        double maxValue = 3;
+                        final isMaxValue = _danmakuSpeed == maxValue;
+                        return _createSliderCell(
+                            "弹幕速度", 1, maxValue, _danmakuSpeed, (value) {
+                          setState(() {
+                            _danmakuSpeed = value;
+                            Preferences.shared.setDanmakuSpeed(value);
+                          });
+                        },
+                            divisions: 20,
+                            maxValueColor: isMaxValue ? Colors.red : null);
+                      }
+                      break;
+                    case _DanmakuCellType.alpha:
+                      {
+                        return _createSliderCell("弹幕透明度", 0, 1, _danmakuAlpha,
+                            (value) {
+                          setState(() {
+                            _danmakuAlpha = value;
+                            Preferences.shared.setDanmakuAlpha(value);
+                          });
+                        }, divisions: 10);
+                      }
+                      break;
+                    case _DanmakuCellType.count:
+                      {
+                        double max = 100;
+                        final isMaxValue = _danmakuMaxCount == max;
+                        return _createSliderCell(
+                            "同屏弹幕数", 10, max, _danmakuMaxCount, (value) {
+                          setState(() {
+                            _danmakuMaxCount = value;
+                            Preferences.shared.setDanmakuCount(value.toInt());
+                          });
+                        },
+                            divisions: 18,
+                            label: isMaxValue ? "∞" : "$_danmakuMaxCount",
+                            maxString: "∞");
+                      }
+                      break;
+                    case _DanmakuCellType.danmakuSwitch:
+                      {
+                        return Row(children: [
+                          Expanded(child: Text("弹幕开关")),
+                          Switch(
+                              value: _danmakuOpen,
+                              activeColor: GlobalConfig.mainColor,
+                              onChanged: (on) {
+                                setState(() {
+                                  _danmakuOpen = on;
+                                  Preferences.shared.setShowDanmaku(on);
+                                });
+                              })
+                        ]);
+                      }
+                      break;
+                    case _DanmakuCellType.local:
+                      {
+                        return InkWell(
+                            child: Padding(
+                                padding: _defaultPadding,
+                                child: Row(children: [Text("加载本地弹幕...")],)),
+                            onTap: () {
+                              _onTapLocalDanmaku(context);
+                            });
+                      }
+                      break;
+                    case _DanmakuCellType.timeOffset:
+                      {
+                        return Padding(
+                            padding: _defaultPadding,
+                            child: Row(children: [
+                              Expanded(child: Text("弹幕时间偏移")),
+                              MaterialButton(
+                                  child:
+                                      Text("-", style: TextStyle(fontSize: 16)),
+                                  color: GlobalConfig.mainColor,
+                                  onPressed: () {
+                                    setState(() {
+                                      _pressDanmakuOffsetButton(isAdd: false);
+                                    });
+                                  }),
+                              Container(
+                                  constraints: BoxConstraints(minWidth: 50),
+                                  child: Text("$_danmakuOffsetTime",
+                                      textAlign: TextAlign.center)),
+                              MaterialButton(
+                                  child:
+                                      Text("+", style: TextStyle(fontSize: 16)),
+                                  color: GlobalConfig.mainColor,
+                                  onPressed: () {
+                                    setState(() {
+                                      _pressDanmakuOffsetButton(isAdd: true);
+                                    });
+                                  })
+                            ]));
+                      }
+                      break;
+                    default:
+                      return Container();
+                  }
+                })));
   }
 
   Widget _createSliderCell(String title, double min, double max, double value,
@@ -110,174 +304,46 @@ class PlayerSettingWidgetState extends State<PlayerSettingWidget> {
       Color maxValueColor}) {
     assert(value >= min && value <= max, "值不符合规范 $title, $min $value $max");
 
-    return SafeArea(
-        child: Padding(
-            padding: EdgeInsets.all(10),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(title),
-                  Row(children: <Widget>[
-                    Text(minString ?? "$min"),
-                    Expanded(
-                        child: Slider(
-                            value: value,
-                            min: min,
-                            max: max,
-                            label: label ?? "$value",
-                            divisions: divisions,
-                            onChanged: (value) {
-                              final format = NumberFormat();
-                              format.minimumFractionDigits = 0;
-                              format.maximumFractionDigits = 2;
-                              final formatValue = format.format(value);
-                              var doubleValue = double.parse(formatValue);
-                              onChanged(doubleValue);
-                            })),
-                    Text(maxString ?? "$max",
-                        style: maxValueColor != null
-                            ? TextStyle(color: maxValueColor)
-                            : null)
-                  ])
-                ])));
+    return Padding(
+        padding: _defaultPadding,
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text(title),
+              Row(children: <Widget>[
+                Text(minString ?? "$min"),
+                Expanded(
+                    child: Slider(
+                        value: value,
+                        min: min,
+                        max: max,
+                        label: label ?? "$value",
+                        divisions: divisions,
+                        onChanged: (value) {
+                          final format = NumberFormat();
+                          format.minimumFractionDigits = 0;
+                          format.maximumFractionDigits = 2;
+                          final formatValue = format.format(value);
+                          var doubleValue = double.parse(formatValue);
+                          onChanged(doubleValue);
+                        })),
+                Text(maxString ?? "$max",
+                    style: maxValueColor != null
+                        ? TextStyle(color: maxValueColor)
+                        : null)
+              ])
+            ]));
   }
 
-  Widget _createPlayerSettingWidget() {
-    return ListView.builder(
-        itemCount: 2,
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            return _createSliderCell("播放速度", 0.5, 2, _playerSpeed, (value) {
-              setState(() {
-                _playerSpeed = value;
-                Preferences.shared.setPlayerSpeed(value);
-              });
-            }, divisions: 15);
-          } else if (index == 1) {
-            return SafeArea(
-                child: InkWell(
-                    child: Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Row(children: [
-                          Expanded(child: Text("播放模式")),
-                          Text(_playerModeTypeDesc(_playerMode))
-                        ])),
-                    onTap: () {
-                      _onTapPlayerMode(context);
-                    }));
-          }
-          return Container();
-        });
-  }
-
-  Widget _createDanmakuSettingWidget() {
-    return ListView.builder(
-        itemCount: _cellTypes.length,
-        itemBuilder: (context, index) {
-          final cellType = _cellTypes[index];
-
-          switch (cellType) {
-            case _DanmakuCellType.fontSize:
-              {
-                double danmakuFontMinSize = 18;
-                if (Platform.isIOS) {
-                  danmakuFontMinSize = 10;
-                }
-
-                double danmakuFontMacSize = 32;
-
-                final divisions =
-                    (danmakuFontMacSize - danmakuFontMinSize).toInt();
-                return _createSliderCell(
-                    "弹幕字体大小", danmakuFontMinSize, 32, _danmakuFontSize,
-                    (value) {
-                  setState(() {
-                    _danmakuFontSize = value;
-                    Preferences.shared.setDanmakuFontSize(value);
-                  });
-                },
-                    minString: "$danmakuFontMinSize",
-                    maxString: "$danmakuFontMacSize",
-                    divisions: divisions);
-              }
-              break;
-            case _DanmakuCellType.speed:
-              {
-                double maxValue = 3;
-                final isMaxValue = _danmakuSpeed == maxValue;
-                return _createSliderCell("弹幕速度", 1, maxValue, _danmakuSpeed,
-                    (value) {
-                  setState(() {
-                    _danmakuSpeed = value;
-                    Preferences.shared.setDanmakuSpeed(value);
-                  });
-                },
-                    divisions: 20,
-                    maxValueColor: isMaxValue ? Colors.red : null);
-              }
-              break;
-            case _DanmakuCellType.alpha:
-              {
-                return _createSliderCell("弹幕透明度", 0, 1, _danmakuAlpha, (value) {
-                  setState(() {
-                    _danmakuAlpha = value;
-                    Preferences.shared.setDanmakuAlpha(value);
-                  });
-                }, divisions: 10);
-              }
-              break;
-            case _DanmakuCellType.count:
-              {
-                double max = 100;
-                final isMaxValue = _danmakuMaxCount == max;
-                return _createSliderCell("同屏弹幕数", 10, max, _danmakuMaxCount,
-                    (value) {
-                  setState(() {
-                    _danmakuMaxCount = value;
-                    Preferences.shared.setDanmakuCount(value.toInt());
-                  });
-                },
-                    divisions: 18,
-                    label: isMaxValue ? "∞" : "$_danmakuMaxCount",
-                    maxString: "∞");
-              }
-              break;
-            case _DanmakuCellType.danmakuSwitch:
-              {
-                return SafeArea(
-                    child: Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Row(children: [
-                          Expanded(child: Text("弹幕开关")),
-                          // Text(_playerModeTypeDesc(_playerMode))
-                          Switch(
-                              value: _danmakuOpen,
-                              activeColor: GlobalConfig.mainColor,
-                              onChanged: (on) {
-                                setState(() {
-                                  _danmakuOpen = on;
-                                  Preferences.shared.setShowDanmaku(on);
-                                });
-                              })
-                        ])));
-              }
-              break;
-            case _DanmakuCellType.local:
-              {
-                return SafeArea(
-                    child: InkWell(
-                        child: Padding(
-                            padding: EdgeInsets.all(10),
-                            child: Expanded(child: Text("加载本地弹幕..."))),
-                        onTap: () {
-                          _onTapLocalDanmaku(context);
-                        }));
-              }
-              break;
-            default:
-              return Container();
-          }
-        });
+  void _pressDanmakuOffsetButton({@required bool isAdd}) {
+    var value = 0;
+    if (isAdd) {
+      value = this._danmakuOffsetTime + 1;
+    } else {
+      value = this._danmakuOffsetTime - 1;
+    }
+    this._danmakuOffsetTime = value;
+    Preferences.shared.setDanmakuOffsetTime(value);
   }
 
   String _playerModeTypeDesc(PlayerMode mode) {

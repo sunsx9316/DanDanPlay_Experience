@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:dandanplay/Controller/HomePage/DesktopHomePageWidget.dart';
 import 'package:dandanplay/Tools/Preferences.dart';
 import 'package:dandanplay/Tools/Utility.dart';
-import 'package:dandanplayfilepicker/dandanplayfilepicker.dart';
+import 'package:dandanplay/Vendor/file_picker/dandanplayfilepicker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -95,7 +95,7 @@ class SettingWidgetState extends State<SettingWidget> {
                         subtitleValue: "目前支持 XML 格式",
                         on: _autoLoadCustomDanmaku,
                         onChanged: (on) {
-                          Preferences.shared.setAutoLoadCusomDanmakuKey(on).then((value) {
+                          Preferences.shared.setAutoLoadCusomDanmaku(on).then((value) {
                             setState(() {
                               _autoLoadCustomDanmaku = on;
                             });

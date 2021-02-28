@@ -1,7 +1,7 @@
 
 import 'package:dandanplay/Config/Constant.dart';
 import 'package:dandanplay/Model/Message/Send/LoadFilesMessage.dart';
-import 'package:dandanplayfilepicker/dandanplayfilepicker.dart';
+import 'package:dandanplay/Vendor/file_picker/dandanplayfilepicker.dart';
 
 class _FileDataModel extends FileModelProtocol {
   int fileSize;

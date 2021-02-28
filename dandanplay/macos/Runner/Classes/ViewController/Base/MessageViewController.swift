@@ -107,6 +107,9 @@ class MessageViewController: OCMessageViewController {
         }
         
         RegisterGeneratedPlugins(registry: self)
+        
+        DandanplayfilepickerPlugin.register(with: self.registrar(forPlugin: "DandanplayfilepickerPlugin"))
+        SwiftDandanplaystorePlugin.register(with: self.registrar(forPlugin: "SwiftDandanplaystorePlugin"))
     }
     
 }

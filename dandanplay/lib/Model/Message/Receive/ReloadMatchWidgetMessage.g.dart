@@ -11,7 +11,7 @@ ReloadMatchWidgetMessage _$ReloadMatchWidgetMessageFromJson(
   return ReloadMatchWidgetMessage(
     mediaId: json['mediaId'] as String,
     collectionData: json['collectionData'] as String,
-  )..data = json['data'] as Map<String, dynamic>;
+  );
 }
 
 Map<String, dynamic> _$ReloadMatchWidgetMessageToJson(
@@ -19,5 +19,4 @@ Map<String, dynamic> _$ReloadMatchWidgetMessageToJson(
     <String, dynamic>{
       'mediaId': instance.mediaId,
       'collectionData': instance.collectionData,
-      'data': instance.data,
     };

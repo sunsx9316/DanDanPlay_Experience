@@ -3,6 +3,8 @@ platform :osx, '10.11'
 # CocoaPods analytics sends network stats synchronously affecting flutter build latency.
 ENV['COCOAPODS_DISABLE_STATS'] = 'true'
 
+inhibit_all_warnings!
+
 project 'Runner', {
   'Debug' => :debug,
   'Profile' => :release,
@@ -37,6 +39,7 @@ target 'Runner' do
   pod 'DDPShare', :path => '../DDPShare'
   pod 'SnapKit'
   pod 'Masonry'
+  pod 'MMKV'
 end
 
 post_install do |installer|

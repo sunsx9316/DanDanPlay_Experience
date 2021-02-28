@@ -10,7 +10,6 @@ import SnapKit
 import JHDanmakuRender
 import FlutterMacOS
 import Carbon
-import dandanplaystore
 import DDPMediaPlayer
 import DDPShare
 import DDPCategory
@@ -108,6 +107,7 @@ class PlayerViewController: NSViewController, MediaPlayerDelegate, JHDanmakuEngi
         danmakuRender.globalFont = NSFont.systemFont(ofSize: CGFloat(Preferences.shared.danmakuFontSize))
         danmakuRender.systemSpeed = CGFloat(Preferences.shared.danmakuSpeed)
         danmakuRender.canvas.alphaValue = CGFloat(Preferences.shared.danmakuAlpha)
+        danmakuRender.offsetTime = TimeInterval(Preferences.shared.danmakuOffsetTime)
         return danmakuRender
     }()
     
@@ -362,6 +362,8 @@ class PlayerViewController: NSViewController, MediaPlayerDelegate, JHDanmakuEngi
                 }
             case .playerMode:
                 changeRepeatMode()
+            case .danmakuOffsetTime:
+                self.danmakuRender.offsetTime = TimeInterval(Preferences.shared.danmakuOffsetTime)
             default:
                 break
             }

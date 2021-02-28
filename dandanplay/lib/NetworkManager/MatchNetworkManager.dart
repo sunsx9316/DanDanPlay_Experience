@@ -6,7 +6,7 @@ import 'package:dandanplay/Model/Match/FileMatch.dart';
 import 'package:dandanplay/Model/Match/FileMatchCollection.dart';
 import 'package:dandanplay/NetworkManager/BaseNetworkManager.dart';
 import 'package:dandanplay/Protocol/FileMatchProtocol.dart';
-import 'package:dandanplaystore/dandanplaystore.dart';
+import 'package:dandanplay/Vendor/Store/dandanplaystore.dart';
 
 class MatchNetworkManager extends BaseNetworkManager {
   static Future<HttpResponseResult<FileMatchCollection>> match(

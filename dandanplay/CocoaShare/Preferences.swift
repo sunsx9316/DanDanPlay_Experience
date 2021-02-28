@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import dandanplaystore
 import DDPShare
 
 open class Preferences {
@@ -48,6 +47,7 @@ open class Preferences {
         case sendDanmakuColor
         case showDanmaku
         case autoLoadCusomDanmaku
+        case danmakuOffsetTime
     }
     
     public enum PlayerMode: Int {
@@ -58,6 +58,9 @@ open class Preferences {
     
     public static let shared = Preferences()
     private init() {}
+    
+    @StoreWrapper(wrappedValue: 0, key: .danmakuOffsetTime)
+    open var danmakuOffsetTime: Int
     
     @StoreWrapper(wrappedValue: true, key: .autoLoadCusomDanmaku)
     open var autoLoadCusomDanmaku: Bool

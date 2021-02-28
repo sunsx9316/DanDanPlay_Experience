@@ -1,8 +1,8 @@
 
 import 'package:dandanplay/Controller/File/WebDavFileWidget.dart';
 import 'package:dandanplay/Model/Message/Send/LoadFilesMessage.dart';
+import 'package:dandanplay/Vendor/file_picker/dandanplayfilepicker.dart';
 import 'package:dandanplay/Vendor/message/MessageChannel.dart';
-import 'package:dandanplayfilepicker/dandanplayfilepicker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:webdav_client/webdav_client.dart';
@@ -17,6 +17,7 @@ class FileWidget extends StatefulWidget {
 }
 
 class _FileWidgetState extends State<FileWidget> {
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -76,7 +77,7 @@ class _FileWidgetState extends State<FileWidget> {
 
   void _onTapWevDav(BuildContext context) {
     Navigator.push(context, MaterialPageRoute(builder: (ctx) {
-      return WebDavFileWidget(client: newClient("http://jimhuangdeMacBook-Pro.local:8080/", password: "123", user: "jimhuang"), path: "/");
+      return WebDavFileWidget(client: newClient("http://jimhuangdeMacBook-Pro.local:8080/", password: "123", user: "jim"), path: "/");
     }));
   }
 }

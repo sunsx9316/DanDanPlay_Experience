@@ -30,6 +30,11 @@
 		8966026625DCE28D00648580 /* DanmakuManager+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8966026525DCE28D00648580 /* DanmakuManager+Extension.swift */; };
 		8966028225DCE82900648580 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8966028125DCE82900648580 /* Constant.swift */; };
 		8966028C25DCEA7400648580 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8966028B25DCEA7400648580 /* Preferences.swift */; };
+		8983C5B025E7E61D0031614A /* FileBrowerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8983C5AE25E7E61D0031614A /* FileBrowerManager.swift */; };
+		8983C5B125E7E61D0031614A /* SwiftDandanplayfilepickerPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8983C5AF25E7E61D0031614A /* SwiftDandanplayfilepickerPlugin.swift */; };
+		8983C5FF25E7EBAA0031614A /* CoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8983C5FE25E7EBAA0031614A /* CoreServices.framework */; };
+		8983C60525E7ECF40031614A /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8983C60325E7ECF40031614A /* Store.swift */; };
+		8983C60625E7ECF40031614A /* SwiftDandanplaystorePlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8983C60425E7ECF40031614A /* SwiftDandanplaystorePlugin.swift */; };
 		89C20A5D24C8915F009A094C /* PlayerSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C20A5C24C8915F009A094C /* PlayerSettingViewController.swift */; };
 		89C20A6B24CDDFA2009A094C /* PlayerControlAnimater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C20A6A24CDDFA2009A094C /* PlayerControlAnimater.swift */; };
 		89C20A7724CF1C15009A094C /* PlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C20A7624CF1C15009A094C /* PlayerManager.swift */; };
@@ -82,6 +87,11 @@
 		8966026525DCE28D00648580 /* DanmakuManager+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DanmakuManager+Extension.swift"; sourceTree = "<group>"; };
 		8966028125DCE82900648580 /* Constant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		8966028B25DCEA7400648580 /* Preferences.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
+		8983C5AE25E7E61D0031614A /* FileBrowerManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileBrowerManager.swift; sourceTree = "<group>"; };
+		8983C5AF25E7E61D0031614A /* SwiftDandanplayfilepickerPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftDandanplayfilepickerPlugin.swift; sourceTree = "<group>"; };
+		8983C5FE25E7EBAA0031614A /* CoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreServices.framework; path = System/Library/Frameworks/CoreServices.framework; sourceTree = SDKROOT; };
+		8983C60325E7ECF40031614A /* Store.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
+		8983C60425E7ECF40031614A /* SwiftDandanplaystorePlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwiftDandanplaystorePlugin.swift; sourceTree = "<group>"; };
 		89C20A5C24C8915F009A094C /* PlayerSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSettingViewController.swift; sourceTree = "<group>"; };
 		89C20A6A24CDDFA2009A094C /* PlayerControlAnimater.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerControlAnimater.swift; sourceTree = "<group>"; };
 		89C20A7624CF1C15009A094C /* PlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerManager.swift; sourceTree = "<group>"; };
@@ -101,6 +111,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ECD790C4D9EDFBEBEC903E5A /* Pods_Runner.framework in Frameworks */,
+				8983C5FF25E7EBAA0031614A /* CoreServices.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,6 +121,7 @@
 		5B5152895336D131B3200E15 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8983C5FE25E7EBAA0031614A /* CoreServices.framework */,
 				A2E3E310C91A061852494673 /* Pods_Runner.framework */,
 			);
 			name = Frameworks;
@@ -185,12 +197,39 @@
 		8966026425DCE28D00648580 /* CocoaShare */ = {
 			isa = PBXGroup;
 			children = (
+				8983C60225E7ECF40031614A /* StoreManager */,
 				8966028B25DCEA7400648580 /* Preferences.swift */,
 				8966028125DCE82900648580 /* Constant.swift */,
 				8966026525DCE28D00648580 /* DanmakuManager+Extension.swift */,
 			);
 			name = CocoaShare;
 			path = ../../CocoaShare;
+			sourceTree = "<group>";
+		};
+		8983C5AD25E7E6120031614A /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+				8983C60025E7EC3E0031614A /* FilePicker */,
+			);
+			path = Vendor;
+			sourceTree = "<group>";
+		};
+		8983C60025E7EC3E0031614A /* FilePicker */ = {
+			isa = PBXGroup;
+			children = (
+				8983C5AE25E7E61D0031614A /* FileBrowerManager.swift */,
+				8983C5AF25E7E61D0031614A /* SwiftDandanplayfilepickerPlugin.swift */,
+			);
+			path = FilePicker;
+			sourceTree = "<group>";
+		};
+		8983C60225E7ECF40031614A /* StoreManager */ = {
+			isa = PBXGroup;
+			children = (
+				8983C60325E7ECF40031614A /* Store.swift */,
+				8983C60425E7ECF40031614A /* SwiftDandanplaystorePlugin.swift */,
+			);
+			path = StoreManager;
 			sourceTree = "<group>";
 		};
 		89C20A6024CDDA12009A094C /* Model */ = {
@@ -243,6 +282,7 @@
 			isa = PBXGroup;
 			children = (
 				892FB6D3247D5D6D00CC1779 /* MessageHandler.swift */,
+				8983C5AD25E7E6120031614A /* Vendor */,
 				8966026425DCE28D00648580 /* CocoaShare */,
 				892FB6AD247A4E9600CC1779 /* Constant */,
 				894B2FB3246FD49600977017 /* ViewController */,
@@ -417,16 +457,20 @@
 				894B2FB0246FD46A00977017 /* MainViewController.swift in Sources */,
 				893226DB24BAD646007AC7B3 /* PlayerUIView.swift in Sources */,
 				89C20A6B24CDDFA2009A094C /* PlayerControlAnimater.swift in Sources */,
+				8983C60525E7ECF40031614A /* Store.swift in Sources */,
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				89C20A5D24C8915F009A094C /* PlayerSettingViewController.swift in Sources */,
 				890263E72573C187001333FA /* SendDanmakuViewController.swift in Sources */,
+				8983C5B125E7E61D0031614A /* SwiftDandanplayfilepickerPlugin.swift in Sources */,
 				892FB6D4247D5D6D00CC1779 /* MessageHandler.swift in Sources */,
 				890263EB2573FE24001333FA /* UIFont+Helper.swift in Sources */,
 				8930E78125A9F51F00B0C72E /* MatchMessageViewController.swift in Sources */,
 				89C20A7724CF1C15009A094C /* PlayerManager.swift in Sources */,
+				8983C60625E7ECF40031614A /* SwiftDandanplaystorePlugin.swift in Sources */,
 				8966028225DCE82900648580 /* Constant.swift in Sources */,
 				893F8C72258F5CC40081629E /* VolumeControlView.swift in Sources */,
 				893226E524BAEDB1007AC7B3 /* SevenSwitch.swift in Sources */,
+				8983C5B025E7E61D0031614A /* FileBrowerManager.swift in Sources */,
 				8966026625DCE28D00648580 /* DanmakuManager+Extension.swift in Sources */,
 				8966028C25DCEA7400648580 /* Preferences.swift in Sources */,
 				893F8C70258F564A0081629E /* SliderControlView.swift in Sources */,
@@ -517,10 +561,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
+				APP_ID = com.anixplayer.ios;
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
-				DEVELOPMENT_TEAM = 25452CX7T6;
+				CURRENT_PROJECT_VERSION = "${FLUTTER_BUILD_NUMBER}";
+				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -657,10 +703,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9740EEB21CF90195004384FC /* Debug.xcconfig */;
 			buildSettings = {
+				APP_ID = com.anixplayer.ios;
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
-				DEVELOPMENT_TEAM = 25452CX7T6;
+				CURRENT_PROJECT_VERSION = "${FLUTTER_BUILD_NUMBER}";
+				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -691,10 +739,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7AFA3C8E1D35360C0083082E /* Release.xcconfig */;
 			buildSettings = {
+				APP_ID = com.anixplayer.ios;
+				ARCHS = "$(ARCHS_STANDARD)";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
-				DEVELOPMENT_TEAM = 25452CX7T6;
+				CURRENT_PROJECT_VERSION = "${FLUTTER_BUILD_NUMBER}";
+				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

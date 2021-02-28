@@ -17,6 +17,7 @@ class ReloadMatchWidgetMessage extends BaseReceiveMessage {
   @override
   String get name => "ReloadMatchWidgetMessage";
 
+  @JsonKey(ignore: true)
   @override
   Map<String, dynamic> get data {
     return this.toJson();
