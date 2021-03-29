@@ -280,8 +280,8 @@ class PlayerViewController: UIViewController {
     }
     
     private func setPlayerProgress(_ progress: CGFloat) {
-        _ = self.player.setPosition(progress)
-        self.danmakuRender.currentTime = self.player.currentTime
+        let currentTime = self.player.setPosition(progress)
+        self.danmakuRender.currentTime = currentTime
         self.uiView.updateTime()
     }
 }

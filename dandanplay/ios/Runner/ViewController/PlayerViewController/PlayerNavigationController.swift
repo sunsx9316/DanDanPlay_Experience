@@ -37,16 +37,12 @@ class PlayerNavigationController: UINavigationController {
         NotificationCenter.default.addObserver(self, selector: #selector(handleDeviceOrientationDidChange), name: UIApplication.didChangeStatusBarOrientationNotification, object: nil)
     }
     
-    deinit {
-        NotificationCenter.default.removeObserver(self)
-    }
-    
     override var shouldAutorotate: Bool {
         return true
     }
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        return .landscape
+        return [.landscapeRight, .landscapeLeft]
     }
     
     override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
@@ -59,19 +55,16 @@ class PlayerNavigationController: UINavigationController {
     
     //MARK: Private
     @objc private func handleDeviceOrientationDidChange(_ notification: Notification) {
-        guard let orientation = notification.userInfo?[UIApplication.statusBarFrameUserInfoKey] as? UIDeviceOrientation else { return }
         
-        let saveOrientation: UIInterfaceOrientation
+        guard let orientationRawValue = notification.userInfo?[UIApplication.statusBarOrientationUserInfoKey] as? Int,
+              let orientation = UIInterfaceOrientation(rawValue: orientationRawValue) else { return }
+        
         switch orientation {
-        case .landscapeLeft:
-            saveOrientation = .landscapeLeft
-        case .landscapeRight:
-            saveOrientation = .landscapeRight
+        case .landscapeLeft, .landscapeRight:
+            UserDefaults.standard.set(orientation.rawValue, forKey: defaultOrientationKey)
         default:
-            saveOrientation = .landscapeLeft
+            break
         }
-        
-        UserDefaults.standard.set(saveOrientation.rawValue, forKey: defaultOrientationKey)
     }
 
 }
