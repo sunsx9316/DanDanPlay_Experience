@@ -1,19 +1,17 @@
 import 'package:dandanplay/Config/Constant.dart';
 import 'package:dandanplay/Model/Message/Send/BaseMessage.dart';
 
-abstract class FileModelProtocol {
-  FileDataMediaType get fileType;
+abstract class FileDataProtocol {
+  FileURLType get urlType;
   int get fileSize;
-  String get urlDataString;
   String get path;
   Map<String, dynamic> get otherParameter;
 
   Map<String, dynamic> data() {
     final map = Map<String, dynamic>();
-    map["urlDataString"] = this.urlDataString;
     map["path"] = this.path;
     map["size"] = this.fileSize;
-    map["type"] = this.fileType.rawValue;
+    map["type"] = this.urlType.rawValue;
     map["otherParameter"] = this.otherParameter;
     return map;
   }
@@ -40,7 +38,7 @@ class LoadFilesMessage extends BaseMessage {
     return map;
   }
 
-  List<FileModelProtocol> fileDatas;
+  List<FileDataProtocol> fileDatas;
 
   LoadFilesMessage({this.fileDatas});
 

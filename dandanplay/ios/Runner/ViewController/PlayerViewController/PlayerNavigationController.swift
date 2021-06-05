@@ -6,9 +6,8 @@
 //
 
 import UIKit
-import DDPMediaPlayer
 
-class PlayerNavigationController: UINavigationController {
+class PlayerNavigationController: NavigationController {
     
     var playerViewController: PlayerViewController?
     

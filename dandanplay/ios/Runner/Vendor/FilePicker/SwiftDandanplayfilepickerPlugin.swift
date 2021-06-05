@@ -82,9 +82,6 @@ extension SwiftDandanplayfilepickerPlugin: FileBrowerManagerDelegate {
             let attributesOfItem = try? FileManager.default.attributesOfItem(atPath:aURL.path)
             let size = attributesOfItem?[.size] as? Int ?? 0
             dic["size"] = size
-            if let str = try? aURL.bookmarkData().base64EncodedString() {
-                dic["urlDataString"] = str
-            }
             return dic
         }
         

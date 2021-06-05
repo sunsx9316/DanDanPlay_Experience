@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import DDPShare
 
 class MatchMessageViewController: MessageViewController {
     

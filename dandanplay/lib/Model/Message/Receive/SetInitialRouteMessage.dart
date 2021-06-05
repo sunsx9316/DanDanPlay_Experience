@@ -7,6 +7,7 @@ part 'SetInitialRouteMessage.g.dart';
 @JsonSerializable()
 class SetInitialRouteMessage extends BaseModel {
   String routeName;
+  Map<String, dynamic> parameters;
 
   SetInitialRouteMessage(this.routeName);
 

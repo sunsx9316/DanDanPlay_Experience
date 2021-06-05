@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="166" id="KGk-i7-Jjw" customClass="TitleDetailTableViewCell" customModule="AniXPlayer" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="493" height="166"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="493" height="166"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="249" verticalCompressionResistancePriority="748" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wNX-HQ-ebI" customClass="Label" customModule="AniXPlayer" customModuleProvider="target">
+                        <rect key="frame" x="10" y="38" width="53" height="18"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iNC-28-Wtl" customClass="Label" customModule="AniXPlayer" customModuleProvider="target">
+                        <rect key="frame" x="10" y="10" width="30" height="18"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="wNX-HQ-ebI" secondAttribute="bottom" constant="10" id="2kI-0W-cB1"/>
+                    <constraint firstItem="wNX-HQ-ebI" firstAttribute="leading" secondItem="iNC-28-Wtl" secondAttribute="leading" id="37h-cL-A5Y"/>
+                    <constraint firstItem="wNX-HQ-ebI" firstAttribute="top" secondItem="iNC-28-Wtl" secondAttribute="bottom" constant="10" id="5hl-98-RDV"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="wNX-HQ-ebI" secondAttribute="trailing" constant="10" id="7Bk-QK-E12"/>
+                    <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="iNC-28-Wtl" secondAttribute="trailing" constant="10" id="GfF-Vc-4vZ"/>
+                    <constraint firstItem="iNC-28-Wtl" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="oNC-uS-sxx"/>
+                    <constraint firstItem="iNC-28-Wtl" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="wWF-bv-ZVL"/>
+                </constraints>
+            </tableViewCellContentView>
+            <viewLayoutGuide key="safeArea" id="njF-e1-oar"/>
+            <connections>
+                <outlet property="subtitleLabel" destination="wNX-HQ-ebI" id="Cyi-vW-Ogl"/>
+                <outlet property="titleLabel" destination="iNC-28-Wtl" id="h7h-QG-3sp"/>
+            </connections>
+            <point key="canvasLocation" x="44" y="68"/>
+        </tableViewCell>
+    </objects>
+</document>

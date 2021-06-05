@@ -28,3 +28,9 @@ enum MessageType: String {
     //mac only
     case becomeKeyWindow = "BecomeKeyWindowMessage"
 }
+
+public enum WebDavKey: String {
+    case url
+    case user = "web_dav_user"
+    case password = "web_dav_password"
+}

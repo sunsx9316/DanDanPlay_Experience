@@ -136,7 +136,7 @@ class Preferences {
 
     isContains = await Dandanplaystore.contains(key: _showDanmakuKey);
     if (!isContains || force) {
-      await setShowDanmaku(false, sync: false);
+      await setShowDanmaku(true, sync: false);
     }
 
     isContains = await Dandanplaystore.contains(key: _autoLoadCusomDanmakuKey);

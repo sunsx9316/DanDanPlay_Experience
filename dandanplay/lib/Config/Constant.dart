@@ -30,19 +30,47 @@ enum DanmakuMode {
   bottom,
 }
 
-enum FileDataMediaType {
+enum FileURLType {
   localFile,
   webDav,
 }
 
-extension FileDataMediaTypeConvenience on FileDataMediaType {
+enum FileType {
+  file,
+  folder
+}
+
+enum FileFilterType {
+  none,
+  video,
+  subtitle,
+  danmaku,
+}
+
+FileFilterType FileFilterTypeWithRawValue(int rawValue) {
+  if (rawValue == 1) {
+    return FileFilterType.video;
+  }
+
+  if (rawValue == 2) {
+    return FileFilterType.video;
+  }
+
+  if (rawValue == 3) {
+    return FileFilterType.subtitle;
+  }
+
+  return FileFilterType.none;
+}
+
+extension FileDataMediaTypeConvenience on FileURLType {
   int get rawValue {
     switch (this) {
-      case FileDataMediaType.localFile: {
+      case FileURLType.localFile: {
         return 0;
       }
       break;
-      case FileDataMediaType.webDav: {
+      case FileURLType.webDav: {
         return 1;
       }
       break;
@@ -53,11 +81,11 @@ extension FileDataMediaTypeConvenience on FileDataMediaType {
     }
   }
 
-  static FileDataMediaType mediaTypeWithRawValue(int rawValue) {
+  static FileURLType mediaTypeWithRawValue(int rawValue) {
     if (rawValue == 1) {
-      return FileDataMediaType.webDav;
+      return FileURLType.webDav;
     }
-    return FileDataMediaType.localFile;
+    return FileURLType.localFile;
   }
 }
 

@@ -20,4 +20,16 @@ extension UIColor {
     static var mainColor: UIColor {
         return UIColor(red: 243, green: 118, blue: 47, alpha: 1)
     }
+    
+    static var backgroundColor: UIColor {
+        return .white
+    }
+    
+    static var textColor: UIColor {
+        return .black
+    }
+    
+    static var cellHighlightColor: UIColor {
+        return .init(red: 220, green: 220, blue: 220)
+    }
 }

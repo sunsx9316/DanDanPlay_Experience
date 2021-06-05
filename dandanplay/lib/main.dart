@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'package:dandanplay/Config/Constant.dart';
+import 'package:dandanplay/Controller/File/FileListWidget.dart';
 import 'package:dandanplay/Controller/HomePage/DesktopHomePageWidget.dart';
 import 'package:dandanplay/Controller/HomePage/MobileHomePageWidget.dart';
 import 'package:dandanplay/Controller/Login/ForgetPasswordWidget.dart';
@@ -9,6 +11,8 @@ import 'package:dandanplay/Controller/Mine/AboutUsWidget.dart';
 import 'package:dandanplay/Controller/Player/SendDanmakuWidget.dart';
 import 'package:dandanplay/Controller/Setting/PlayerSettingWidget.dart';
 import 'package:dandanplay/Controller/Setting/SettingWidget.dart';
+import 'package:dandanplay/Mediator/LocalFileMediator.dart';
+import 'package:dandanplay/Mediator/WebDavFileMediator.dart';
 import 'package:dandanplay/Model/Message/Receive/BaseReceiveMessage.dart';
 import 'package:dandanplay/Model/Message/Receive/RequestAppVersionMessage.dart';
 import 'package:dandanplay/Model/Message/Receive/SetInitialRouteMessage.dart';
@@ -19,6 +23,7 @@ import 'package:dandanplay/Tools/Utility.dart';
 import 'package:dandanplay/Vendor/message/MessageChannel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:webdav_client/webdav_client.dart';
 
 void main() => runApp(App());
 
@@ -33,6 +38,7 @@ class App extends StatefulWidget {
 
 class AppState extends State<App> with MessageChannelObserver {
   var _initRoute = "/";
+  Map<String, dynamic> _initRouteParameters;
 
   @override
   void initState() {
@@ -114,7 +120,47 @@ class AppState extends State<App> with MessageChannelObserver {
               },
               "match": (context) {
                 return MatchWidget();
-              }
+              },
+              "localFiles": (context) {
+                String path;
+                FileFilterType filterType = FileFilterType.none;
+
+                if (_initRouteParameters != null) {
+                  path = _initRouteParameters["path"];
+                  final filterTypeRawValue = _initRouteParameters["filterType"];
+                  if (filterTypeRawValue is num) {
+                    filterType = FileFilterTypeWithRawValue(filterTypeRawValue);
+                  }
+                } else {
+                  path = "";
+                }
+
+                return FileListWidget(mediator: LocalFileMediator(), path: path, filterType: filterType);
+              },
+              "webDavFiles": (context) {
+
+                String user;
+                String pwd;
+                String path;
+                FileFilterType filterType = FileFilterType.none;
+
+                if (_initRouteParameters != null) {
+                  user = _initRouteParameters["user"];
+                  pwd = _initRouteParameters["pwd"];
+                  path = _initRouteParameters["path"];
+                  final filterTypeRawValue = _initRouteParameters["filterType"];
+                  if (filterTypeRawValue is num) {
+                    filterType = FileFilterTypeWithRawValue(filterTypeRawValue);
+                  }
+                } else {
+                  user = "";
+                  pwd = "";
+                  path = "";
+                }
+
+                final mediator = WebDavFileMediator(auth: Auth(user: user, pwd: pwd));
+                return FileListWidget(mediator: mediator, path: path, filterType: filterType);
+              },
             }));
   }
 
@@ -125,6 +171,7 @@ class AppState extends State<App> with MessageChannelObserver {
       final message = SetInitialRouteMessage.fromJson(messageData.data);
       setState(() {
         _initRoute = message.routeName ?? "/";
+        _initRouteParameters = message.parameters;
       });
     } else if (messageData.name == "RequestAppVersionMessage") {
       final msg = RequestAppVersionMessage.fromJson(messageData.data);

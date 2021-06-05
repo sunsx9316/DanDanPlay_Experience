@@ -360,8 +360,9 @@ class PlayerSettingWidgetState extends State<PlayerSettingWidget> {
   }
 
   void _onTapLocalDanmaku(BuildContext context) async {
-    final msg = LoadCustomDanmakuMessage();
-    MessageChannel.shared.sendMessage(msg);
+
+    // final msg = LoadCustomDanmakuMessage();
+    // MessageChannel.shared.sendMessage(msg);
   }
 
   void _onTapPlayerMode(BuildContext context) {

@@ -38,7 +38,7 @@ extension PlayerUIViewDelegate {
 private class PlayerSnapTimeView: UIView {
     lazy var label: UILabel = {
         let label = UILabel()
-        label.font = .ddp_normal
+        label.font = .ddp_small
         label.textColor = .white
         label.textAlignment = .center
         return label

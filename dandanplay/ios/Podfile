@@ -35,19 +35,18 @@ target 'Runner' do
 
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
 
-  pod 'DDPMediaPlayer', :path => '../DDPMediaPlayer'
-  pod 'DDPShare', :path => '../DDPShare'
   pod 'SnapKit'
   pod 'YYCategories'
   pod 'MBProgressHUD'
-  # pod 'JHDanmakuRender'
-  # pod 'RxSwift'
-  # pod 'RxCocoa'
   pod 'YYKeyboardManager'
   pod 'Masonry'
   pod 'IQKeyboardManager'
   pod 'NKOColorPickerView'
   pod 'MMKV'
+  pod 'JHDanmakuRender'
+  pod 'HandyJSON'
+  pod 'MJRefresh'
+  pod 'MobileVLCKit'
 end
 
 post_install do |installer|

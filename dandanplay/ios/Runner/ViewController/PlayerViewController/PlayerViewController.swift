@@ -6,13 +6,11 @@
 //
 
 import UIKit
-import DDPShare
-import DDPMediaPlayer
 import JHDanmakuRender
 import SnapKit
 import YYCategories
 
-class PlayerViewController: UIViewController {
+class PlayerViewController: ViewController {
     
     private let kShortJumpValue: Int32 = 5
     private let kVolumeAddingValue: CGFloat = 20
@@ -223,8 +221,8 @@ class PlayerViewController: UIViewController {
             self.navigationController?.pushViewController(vc, animated: true)
         case .loadCustomDanmaku:
             guard let _ = LoadCustomDanmakuMessage.deserialize(from: data) else { break }
-            self.manager.dismissSetting {
-                self.manager.showDanmakuFileBrower(from: self)
+            if let item = self.player.currentPlayItem {
+                self.manager.showCustomDanmakuBrower(from: self, file: item)
             }
         default:
             break
@@ -310,7 +308,9 @@ extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
     }
     
     func onTouchPlayerList(playerUIView: PlayerUIView) {
-        self.manager.showFileBrower(from: self)
+        if let item = self.player.currentPlayItem {
+            self.manager.showFileBrower(from: self, file: item)
+        }
     }
     
     func onTouchDanmakuSwitch(playerUIView: PlayerUIView, isOn: Bool) {
@@ -442,27 +442,28 @@ extension PlayerViewController: MediaPlayerDelegate {
             let hud = self.view.showProgress()
             hud.label.text = "解析视频中..."
             hud.progress = 0
-            
+            hud.hide(animated: true)
             DispatchQueue.global().async {
 
                 message.fileName = item.media.fileName
                 message.fileSize = item.media.fileSize
-                
-                item.media.getDataWithRange(0...16777215) { (progress) in
+                item.media.getParseDataWithProgress { [weak hud] (progress) in
                     DispatchQueue.main.async {
-                        hud.progress = Float(progress)
+                        hud?.progress = Float(progress)
                     }
-                } completion: { (result) in
+                } completion: { [weak self, weak hud] (result) in
+                    guard let self = self else { return }
+                    
                     switch result {
                     case .success(let data):
                         message.fileHash = (data as NSData).md5String()
                         DispatchQueue.main.async {
-                            hud.hide(animated: true)
+                            hud?.hide(animated: true)
                             MessageHandler.sendMessage(message)
                         }
                     case .failure(let error):
                         DispatchQueue.main.async {
-                            hud.hide(animated: true)
+                            hud?.hide(animated: true)
                             self.view.showError(error)
                         }
                     }
@@ -496,24 +497,14 @@ extension PlayerViewController: PlayerManagerDelegate {
         
         DispatchQueue.global().async {
             
-            let shouldStop = url.startAccessingSecurityScopedResource()
-            defer {
-                if shouldStop {
-                    url.stopAccessingSecurityScopedResource()
+            do {
+                let converDic = try DanmakuManager.shared.conver(url)
+                DispatchQueue.main.async {
+                    self.danmakuDic = converDic
+                    self.setPlayerProgress(0)
                 }
-            }
-            
-            var error: NSError?
-            NSFileCoordinator().coordinate(readingItemAt: url, error: &error) { (aURL) in
-                do {
-                    let converDic = try DanmakuManager.shared.conver(aURL)
-                    DispatchQueue.main.async {
-                        self.danmakuDic = converDic
-                        self.setPlayerProgress(0)
-                    }
-                } catch let error {
-                    self.view.showError(error)
-                }
+            } catch let error {
+                self.view.showError(error)
             }
         }
         

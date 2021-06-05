@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import DDPShare
 
 class MessageViewController: FlutterViewController {
     

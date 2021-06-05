@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import DDPShare
 
 open class Preferences {
     
