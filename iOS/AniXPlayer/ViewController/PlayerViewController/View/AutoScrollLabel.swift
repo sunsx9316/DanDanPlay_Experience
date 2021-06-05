@@ -29,7 +29,7 @@ class AutoScrollLabel: UIView {
         return displayLink
     }()
     
-    private let scrollSpeed: CGFloat = 3
+    private let scrollSpeed: CGFloat = 1
     
     private let padding: CGFloat = 50
     
