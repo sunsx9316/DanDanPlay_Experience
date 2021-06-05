@@ -291,12 +291,12 @@ class MediaPlayer {
     }
     
     var length: TimeInterval {
-        let length = self.player.media.length.value?.doubleValue ?? 0
+        let length = self.player.media?.length.value?.doubleValue ?? 0
         return length / 1000
     }
     
     var currentTime: TimeInterval {
-        let time = self.player.time.value?.doubleValue ?? 0
+        let time = self.player.time?.value?.doubleValue ?? 0
         return time / 1000
     }
     
