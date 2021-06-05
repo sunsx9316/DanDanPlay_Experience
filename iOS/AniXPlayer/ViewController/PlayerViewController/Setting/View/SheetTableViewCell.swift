@@ -20,5 +20,7 @@ class SheetTableViewCell: TableViewCell {
         self.arrowImgView.image = UIImage(named: "Comment/comment_arrow_down")?.byTintColor(.backgroundColor)
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
+        self.titleLabel.textColor = .white
+        self.valueLabel.textColor = .white
     }
 }

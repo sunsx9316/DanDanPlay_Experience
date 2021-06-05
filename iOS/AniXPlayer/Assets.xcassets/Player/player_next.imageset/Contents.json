@@ -1,7 +1,6 @@
 {
   "images" : [
     {
-      "filename" : "player_next.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -11,6 +10,7 @@
       "scale" : "2x"
     },
     {
+      "filename" : "player_next@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

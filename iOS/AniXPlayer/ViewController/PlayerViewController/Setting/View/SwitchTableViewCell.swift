@@ -23,6 +23,7 @@ class SwitchTableViewCell: TableViewCell {
         super.awakeFromNib()
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
+        self.titleLabel.textColor = .white
     }
     
 }

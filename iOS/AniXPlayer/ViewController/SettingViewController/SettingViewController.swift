@@ -76,7 +76,7 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
                 Preferences.shared.danmakuCacheDay = day
                 self.tableView.reloadData()
             }))
-            
+            vc.popoverPresentationController?.sourceView = tableView.cellForRow(at: indexPath)
             self.present(vc, animated: true, completion: nil)
         }
     }

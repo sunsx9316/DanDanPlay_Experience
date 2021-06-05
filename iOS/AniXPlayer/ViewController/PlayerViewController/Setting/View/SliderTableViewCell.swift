@@ -55,6 +55,10 @@ class SliderTableViewCell: TableViewCell {
         super.awakeFromNib()
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
+        self.titleLabel.textColor = .white
+        self.minValueLabel.textColor = .white
+        self.maxValueLabel.textColor = .white
+        self.currentValueLabel.textColor = .white
     }
     
     @IBAction func onChangeSlider(_ sender: UISlider) {

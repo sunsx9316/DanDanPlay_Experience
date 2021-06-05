@@ -9,6 +9,7 @@ import UIKit
 import JHDanmakuRender
 import SnapKit
 import YYCategories
+import MBProgressHUD
 
 class PlayerViewController: ViewController {
     
@@ -17,7 +18,7 @@ class PlayerViewController: ViewController {
     private let kVolumeAddingValue: CGFloat = 20
     
     private lazy var uiView: PlayerUIView = {
-        let view = PlayerUIView.fromNib()
+        let view = PlayerUIView()
         view.delegate = self
         view.dataSource = self
         return view
@@ -136,7 +137,7 @@ class PlayerViewController: ViewController {
         if self.isViewLoaded == false {
             return false
         }
-        return true
+        return self.uiView.hiddenControlView
     }
     
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -213,7 +214,7 @@ class PlayerViewController: ViewController {
     private func tryParseMedia(_ media: File) {
         self.player.stop()
         
-        self.uiView.titleLabel.text = media.fileName
+        self.uiView.title = media.fileName
         
         let hud = self.view.showProgress()
         hud.label.text = "解析视频中..."
@@ -388,7 +389,6 @@ extension PlayerViewController {
 }
 
 extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
-    
     //MARK: PlayerUIViewDelegate
     func onTouchMoreButton(playerUIView: PlayerUIView) {
         let vc = PlayerSettingViewController()
@@ -449,6 +449,7 @@ extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
     func onTouchPlayButton(playerUIView: PlayerUIView, isSelected: Bool) {
         if self.player.isPlaying {
             self.player.pause()
+            self.showPauseHUD()
         } else {
             self.player.play()
         }
@@ -466,6 +467,7 @@ extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
     func doubleTap(playerUIView: PlayerUIView) {
         if player.isPlaying {
             player.pause()
+            self.showPauseHUD()
         } else {
             player.play()
         }
@@ -503,6 +505,26 @@ extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
     func playerProgress(playerUIView: PlayerUIView) -> CGFloat {
         return CGFloat(player.position)
     }
+    
+    func playerUIView(_ playerUIView: PlayerUIView, didChangeControlViewState show: Bool) {
+        self.setNeedsStatusBarAppearanceUpdate()
+    }
+    
+    private func showPauseHUD() {
+        let view = MBProgressHUD.showAdded(to: self.view, animated: true)
+        view.mode = .customView
+        view.bezelView.color = UIColor(red: 0, green: 0, blue: 0, alpha: 0.6)
+        view.bezelView.style = .solidColor
+        view.label.font = .ddp_normal
+        view.label.numberOfLines = 0
+        view.contentColor = .white
+        view.isUserInteractionEnabled = true
+        
+        let imgView = UIImageView()
+        imgView.image = UIImage(named: "Player/player_pause")
+        view.customView = imgView
+        view.hide(animated: true, afterDelay: 0.8)
+    }
 }
 
 //MARK: - MediaPlayerDelegate
@@ -512,10 +534,10 @@ extension PlayerViewController: MediaPlayerDelegate {
         switch state {
         case .playing:
             danmakuRender.start()
-            self.uiView.playButton.isSelected = true
+            self.uiView.isPlay = true
         case .pause, .stop:
             danmakuRender.pause()
-            self.uiView.playButton.isSelected = false
+            self.uiView.isPlay = false
         }
     }
     

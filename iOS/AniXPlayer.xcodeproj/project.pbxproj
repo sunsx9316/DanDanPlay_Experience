@@ -45,14 +45,11 @@
 		890DF77126160B3E002D8AE5 /* FileTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 890DF75C26160B3E002D8AE5 /* FileTableViewCell.xib */; };
 		890DF77226160B3E002D8AE5 /* FolderTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 890DF75D26160B3E002D8AE5 /* FolderTableViewCell.xib */; };
 		890DF77326160B3E002D8AE5 /* SendDanmakuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF75F26160B3E002D8AE5 /* SendDanmakuViewController.swift */; };
-		890DF77426160B3E002D8AE5 /* MatchMessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF76026160B3E002D8AE5 /* MatchMessageViewController.swift */; };
 		890DF77526160B3E002D8AE5 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF76126160B3E002D8AE5 /* PlayerViewController.swift */; };
 		890DF77726160B3E002D8AE5 /* PlayerControlAnimater.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF76526160B3E002D8AE5 /* PlayerControlAnimater.swift */; };
-		890DF77826160B3E002D8AE5 /* PlayerUIView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 890DF76726160B3E002D8AE5 /* PlayerUIView.xib */; };
 		890DF77926160B3E002D8AE5 /* PlayerUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF76826160B3E002D8AE5 /* PlayerUIView.swift */; };
 		890DF77A26160B3E002D8AE5 /* SliderControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF76926160B3E002D8AE5 /* SliderControlView.swift */; };
 		890DF77B26160B3E002D8AE5 /* SevenSwitch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF76A26160B3E002D8AE5 /* SevenSwitch.swift */; };
-		890DF77C26160B3E002D8AE5 /* PlayerSettingViewController1.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF76B26160B3E002D8AE5 /* PlayerSettingViewController1.swift */; };
 		890DF77D26160B3E002D8AE5 /* VolumeControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF76C26160B3E002D8AE5 /* VolumeControlView.swift */; };
 		890DF77E26160B3E002D8AE5 /* PlayerNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF76D26160B3E002D8AE5 /* PlayerNavigationController.swift */; };
 		890DF81C2616174C002D8AE5 /* PickFileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF81B2616174C002D8AE5 /* PickFileViewController.swift */; };
@@ -106,6 +103,8 @@
 		89E0D710266B44BE00E2337B /* TitleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0D70E266B44BE00E2337B /* TitleTableViewCell.swift */; };
 		89E0D711266B44BE00E2337B /* TitleTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89E0D70F266B44BE00E2337B /* TitleTableViewCell.xib */; };
 		89E0D827266BBA9400E2337B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0D826266BBA9400E2337B /* SceneDelegate.swift */; };
+		89E0D82A266BD4FC00E2337B /* PlayerUITopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0D829266BD4FC00E2337B /* PlayerUITopView.swift */; };
+		89E0D82C266BDB8600E2337B /* PlayerUIBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0D82B266BDB8600E2337B /* PlayerUIBottomView.swift */; };
 		89E1097A26402B4900825308 /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E1097926402B4900825308 /* CacheManager.swift */; };
 		89E109B426443F4F00825308 /* BaseLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E109B326443F4F00825308 /* BaseLoginHistoryViewController.swift */; };
 		89E109B62644424800825308 /* BaseConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E109B52644424800825308 /* BaseConnectSvrViewController.swift */; };
@@ -152,14 +151,11 @@
 		890DF75C26160B3E002D8AE5 /* FileTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FileTableViewCell.xib; sourceTree = "<group>"; };
 		890DF75D26160B3E002D8AE5 /* FolderTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FolderTableViewCell.xib; sourceTree = "<group>"; };
 		890DF75F26160B3E002D8AE5 /* SendDanmakuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendDanmakuViewController.swift; sourceTree = "<group>"; };
-		890DF76026160B3E002D8AE5 /* MatchMessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MatchMessageViewController.swift; sourceTree = "<group>"; };
 		890DF76126160B3E002D8AE5 /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		890DF76526160B3E002D8AE5 /* PlayerControlAnimater.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerControlAnimater.swift; sourceTree = "<group>"; };
-		890DF76726160B3E002D8AE5 /* PlayerUIView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayerUIView.xib; sourceTree = "<group>"; };
 		890DF76826160B3E002D8AE5 /* PlayerUIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerUIView.swift; sourceTree = "<group>"; };
 		890DF76926160B3E002D8AE5 /* SliderControlView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SliderControlView.swift; sourceTree = "<group>"; };
 		890DF76A26160B3E002D8AE5 /* SevenSwitch.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SevenSwitch.swift; sourceTree = "<group>"; };
-		890DF76B26160B3E002D8AE5 /* PlayerSettingViewController1.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerSettingViewController1.swift; sourceTree = "<group>"; };
 		890DF76C26160B3E002D8AE5 /* VolumeControlView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VolumeControlView.swift; sourceTree = "<group>"; };
 		890DF76D26160B3E002D8AE5 /* PlayerNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerNavigationController.swift; sourceTree = "<group>"; };
 		890DF81B2616174C002D8AE5 /* PickFileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickFileViewController.swift; sourceTree = "<group>"; };
@@ -216,6 +212,8 @@
 		89E0D70E266B44BE00E2337B /* TitleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleTableViewCell.swift; sourceTree = "<group>"; };
 		89E0D70F266B44BE00E2337B /* TitleTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TitleTableViewCell.xib; sourceTree = "<group>"; };
 		89E0D826266BBA9400E2337B /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		89E0D829266BD4FC00E2337B /* PlayerUITopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerUITopView.swift; sourceTree = "<group>"; };
+		89E0D82B266BDB8600E2337B /* PlayerUIBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerUIBottomView.swift; sourceTree = "<group>"; };
 		89E1097926402B4900825308 /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
 		89E109B326443F4F00825308 /* BaseLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseLoginHistoryViewController.swift; sourceTree = "<group>"; };
 		89E109B52644424800825308 /* BaseConnectSvrViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseConnectSvrViewController.swift; sourceTree = "<group>"; };
@@ -439,7 +437,6 @@
 			isa = PBXGroup;
 			children = (
 				897CF527262F308300CC297A /* Setting */,
-				890DF76026160B3E002D8AE5 /* MatchMessageViewController.swift */,
 				890DF76D26160B3E002D8AE5 /* PlayerNavigationController.swift */,
 				890DF76126160B3E002D8AE5 /* PlayerViewController.swift */,
 				890DF75F26160B3E002D8AE5 /* SendDanmakuViewController.swift */,
@@ -468,11 +465,9 @@
 		890DF76626160B3E002D8AE5 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				890DF76726160B3E002D8AE5 /* PlayerUIView.xib */,
-				890DF76826160B3E002D8AE5 /* PlayerUIView.swift */,
+				89E0D828266BD4D800E2337B /* PlayerUI */,
 				890DF76926160B3E002D8AE5 /* SliderControlView.swift */,
 				890DF76A26160B3E002D8AE5 /* SevenSwitch.swift */,
-				890DF76B26160B3E002D8AE5 /* PlayerSettingViewController1.swift */,
 				890DF76C26160B3E002D8AE5 /* VolumeControlView.swift */,
 				89AF9C0E26343BE70037A133 /* AutoScrollLabel.swift */,
 			);
@@ -639,6 +634,16 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		89E0D828266BD4D800E2337B /* PlayerUI */ = {
+			isa = PBXGroup;
+			children = (
+				890DF76826160B3E002D8AE5 /* PlayerUIView.swift */,
+				89E0D829266BD4FC00E2337B /* PlayerUITopView.swift */,
+				89E0D82B266BDB8600E2337B /* PlayerUIBottomView.swift */,
+			);
+			path = PlayerUI;
+			sourceTree = "<group>";
+		};
 		A36E3F8730C441A1F2AC3DAF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -722,7 +727,6 @@
 				89E0D711266B44BE00E2337B /* TitleTableViewCell.xib in Resources */,
 				890DF6D426160826002D8AE5 /* Main.storyboard in Resources */,
 				890DF6EE26160A25002D8AE5 /* RefreshText.plist in Resources */,
-				890DF77826160B3E002D8AE5 /* PlayerUIView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -808,6 +812,7 @@
 				89E109B62644424800825308 /* BaseConnectSvrViewController.swift in Sources */,
 				8949F8912662AA2100274520 /* WebDavLoginHistoryViewController.swift in Sources */,
 				890DF75426160B1B002D8AE5 /* UITableView+Extension.swift in Sources */,
+				89E0D82A266BD4FC00E2337B /* PlayerUITopView.swift in Sources */,
 				8949F88D2662A11100274520 /* FTPFile.swift in Sources */,
 				890DF86F2618B922002D8AE5 /* AnimatesTableViewCell.swift in Sources */,
 				890DF73426160A58002D8AE5 /* FileManagerProtocol.swift in Sources */,
@@ -816,7 +821,6 @@
 				890DF81C2616174C002D8AE5 /* PickFileViewController.swift in Sources */,
 				890DF6FE26160A36002D8AE5 /* NavigationController.swift in Sources */,
 				89E0D60E2669113400E2337B /* SettingViewController.swift in Sources */,
-				890DF77426160B3E002D8AE5 /* MatchMessageViewController.swift in Sources */,
 				89E109B426443F4F00825308 /* BaseLoginHistoryViewController.swift in Sources */,
 				890DF77A26160B3E002D8AE5 /* SliderControlView.swift in Sources */,
 				890DF85726186687002D8AE5 /* Comment.swift in Sources */,
@@ -837,6 +841,7 @@
 				890DF84E2618569D002D8AE5 /* Response.swift in Sources */,
 				890DF74F26160B1B002D8AE5 /* UIFont+Helper.swift in Sources */,
 				89E0D6162669143400E2337B /* TitleDetailTableViewCell.swift in Sources */,
+				89E0D82C266BDB8600E2337B /* PlayerUIBottomView.swift in Sources */,
 				890DF77526160B3E002D8AE5 /* PlayerViewController.swift in Sources */,
 				8949F88F2662A1B700274520 /* FTPFileManager.swift in Sources */,
 				890DF76F26160B3E002D8AE5 /* FolderTableViewCell.swift in Sources */,
@@ -855,7 +860,6 @@
 				8914481C261F510700E26133 /* SearchViewController.swift in Sources */,
 				8944E86D263AE58A00EF00B1 /* SMBFile.swift in Sources */,
 				890DF6FD26160A36002D8AE5 /* ViewController.swift in Sources */,
-				890DF77C26160B3E002D8AE5 /* PlayerSettingViewController1.swift in Sources */,
 				890DF73326160A58002D8AE5 /* LocalFileManager.swift in Sources */,
 				890DF83E261848A4002D8AE5 /* NetworkManager.swift in Sources */,
 				8949F8932662AA8E00274520 /* FTPLoginHistoryViewController.swift in Sources */,

@@ -105,7 +105,7 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             vc.addAction(.init(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: { (_) in
                 
             }))
-            
+            vc.popoverPresentationController?.sourceView = tableView.cellForRow(at: indexPath)
             self.present(vc, animated: true, completion: nil)
         } else if type == .loadSubtitle {
             self.delegate?.loadSubtitleFileInMediaSettingViewController(self)

@@ -15,5 +15,6 @@ class TitleTableViewCell: TableViewCell {
         super.awakeFromNib()
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
+        self.label.textColor = .white
     }
 }

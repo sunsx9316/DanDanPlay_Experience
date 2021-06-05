@@ -69,6 +69,7 @@ extension SMBLoginHistoryViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 
                 vc.addAction(UIAlertAction(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: nil))
+                vc.popoverPresentationController?.sourceView = tableView.cellForRow(at: indexPath)
                 self.present(vc, animated: true, completion: nil)
             } else if (addressModels.count == 1) {
                 let loginInfo = addressModels[0].loginInfo
@@ -107,7 +108,7 @@ extension SMBLoginHistoryViewController: UITableViewDelegate, UITableViewDataSou
         let config = UISwipeActionsConfiguration(actions: [UIContextualAction(style: .destructive, title: NSLocalizedString("删除", comment: ""), handler: { [weak self] (_, _, _) in
             guard let self = self else { return }
             
-            self.deleteLoginInfo(self.historyLoginInfos[indexPath.row])
+            self.deleteLoginInfo(self.historyLoginInfos[indexPath.row], at: tableView.cellForRow(at: indexPath))
         })])
         return config
     }
@@ -290,7 +291,7 @@ class SMBLoginHistoryViewController: ViewController {
         self.netServiceBrowser.stop()
     }
     
-    private func deleteLoginInfo(_ info: LoginInfo) {
+    private func deleteLoginInfo(_ info: LoginInfo, at view: UIView?) {
         let message = String(format: NSLocalizedString("确定删除%@吗？", comment: ""), info.url.host ?? "")
         let vc = UIAlertController(title: NSLocalizedString("提示", comment: ""), message: message, preferredStyle: .alert)
         vc.addAction(UIAlertAction(title: NSLocalizedString("确定", comment: ""), style: .destructive, handler: { action in
@@ -306,6 +307,7 @@ class SMBLoginHistoryViewController: ViewController {
         vc.addAction(UIAlertAction(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: { action in
             self.tableView.reloadData()
         }))
+        vc.popoverPresentationController?.sourceView = view
         self.present(vc, animated: true, completion: nil)
     }
     

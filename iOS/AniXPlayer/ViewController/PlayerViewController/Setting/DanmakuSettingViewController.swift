@@ -37,6 +37,7 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
         case .danmakuAlpha:
             let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
             cell.titleLabel.text = type.title
+            cell.selectionStyle = .none
             let model = SliderTableViewCell.Model(maxValue: 1,
                                                   minValue: 0,
                                                   currentValue: Float(Preferences.shared.danmakuAlpha))
@@ -54,6 +55,7 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
             return cell
         case .danmakuFontSize:
             let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
+            cell.selectionStyle = .none
             cell.titleLabel.text = type.title
             let model = SliderTableViewCell.Model(maxValue: 40,
                                                   minValue: 10,
@@ -72,6 +74,7 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
             return cell
         case .danmakuSpeed:
             let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
+            cell.selectionStyle = .none
             cell.titleLabel.text = type.title
             let model = SliderTableViewCell.Model(maxValue: 3,
                                                   minValue: 1,
@@ -91,6 +94,7 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
             return cell
         case .danmakuCount:
             let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
+            cell.selectionStyle = .none
             cell.titleLabel.text = type.title
             let model = SliderTableViewCell.Model(maxValue: Float(Preferences.shared.danmakuUnlimitCount),
                                                   minValue: 1,
@@ -113,6 +117,7 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
         
         case .showDanmaku:
             let cell = tableView.dequeueCell(class: SwitchTableViewCell.self, indexPath: indexPath)
+            cell.selectionStyle = .none
             cell.aSwitch.isOn = Preferences.shared.isShowDanmaku
             cell.titleLabel.text = type.title
             cell.onTouchSliderCallBack = { [weak self] (aCell) in
@@ -125,6 +130,7 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
             return cell
         case .danmakuOffsetTime:
             let cell = tableView.dequeueCell(class: StepTableViewCell.self, indexPath: indexPath)
+            cell.selectionStyle = .none
             cell.titleLabel.text = type.title
             let danmakuOffsetTime = Preferences.shared.danmakuOffsetTime
             cell.stepper.value = Double(danmakuOffsetTime)
@@ -148,6 +154,8 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
         let type = self.dataSource[indexPath.row]
         
         if type == .loadDanmaku {

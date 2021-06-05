@@ -27,6 +27,7 @@ protocol PlayerUIViewDelegate: AnyObject {
     
     func tapSlider(playerUIView: PlayerUIView, progress: CGFloat)
     
+    func playerUIView(_ playerUIView: PlayerUIView, didChangeControlViewState show: Bool)
 }
 
 protocol PlayerUIViewDataSource: AnyObject {
@@ -73,25 +74,59 @@ class PlayerUIView: UIView {
         case volume
     }
     
-    @IBOutlet weak var titleLabel: UILabel!
+    var title: String? {
+        didSet {
+            self.topView.titleLabel.text = self.title
+        }
+    }
     
-    @IBOutlet weak var timeLabel: UILabel!
+    var isPlay = false {
+        didSet {
+            self.bottomView.playButton.isSelected = self.isPlay
+        }
+    }
     
-    @IBOutlet weak var danmakuSwitch: SevenSwitch!
+    weak var delegate: PlayerUIViewDelegate?
     
-    @IBOutlet weak var gestureView: UIView!
+    weak var dataSource: PlayerUIViewDataSource?
     
-    @IBOutlet weak var slider: UISlider!
+    private lazy var gestureView: UIView = {
+        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(PlayerUIView.doubleTap))
+        doubleTap.numberOfTapsRequired = 2
+        
+        let singleTap = UITapGestureRecognizer(target: self, action: #selector(PlayerUIView.singleTap))
+        singleTap.numberOfTapsRequired = 1
+        
+        singleTap.require(toFail: doubleTap)
+        
+        let panGes = UIPanGestureRecognizer(target: self, action: #selector(panGesture(_:)))
+        
+        let gestureView = UIView()
+        gestureView.addGestureRecognizer(doubleTap)
+        gestureView.addGestureRecognizer(singleTap)
+        gestureView.addGestureRecognizer(panGes)
+        return gestureView
+    }()
     
-    @IBOutlet weak var topView: UIView!
+    private lazy var topView: PlayerUITopView = {
+        let topView = PlayerUITopView()
+        topView.backButton.addTarget(self, action: #selector(onTouchBackButton(_:)), for: .touchUpInside)
+        topView.settingButton.addTarget(self, action: #selector(onTouchMoreButton(_:)), for: .touchUpInside)
+        return topView
+    }()
     
-    @IBOutlet weak var bottomView: UIView!
-    
-    @IBOutlet weak var playButton: UIButton!
-    
-    @IBOutlet weak var backButton: UIButton!
-    
-    @IBOutlet weak var moreButton: UIButton!
+    private lazy var bottomView: PlayerUIBottomView = {
+        let bottomView = PlayerUIBottomView()
+        bottomView.progressSlider.addTarget(self, action: #selector(tapCancel(slider:)), for: .touchCancel)
+        bottomView.progressSlider.addTarget(self, action: #selector(tapCancel(slider:)), for: .touchUpOutside)
+        bottomView.progressSlider.addTarget(self, action: #selector(tapDown(slider:)), for: .touchDown)
+        bottomView.progressSlider.addTarget(self, action: #selector(tapUp(slider:)), for: .touchUpInside)
+        bottomView.progressSlider.addTarget(self, action: #selector(onSliderValueChange(_:)), for: .valueChanged)
+        bottomView.playerListButton.addTarget(self, action: #selector(onTouchPlayerList(_:)), for: .touchUpInside)
+        bottomView.nextButton.addTarget(self, action: #selector(onTouchNextButton(_:)), for: .touchUpInside)
+        bottomView.playButton.addTarget(self, action: #selector(onTouchPlayButton(_:)), for: .touchUpInside)
+        return bottomView
+    }()
     
     private weak var _brightnessView: SliderControlView?
     
@@ -125,11 +160,6 @@ class PlayerUIView: UIView {
         return PlayerSnapTimeView()
     }()
     
-    
-    weak var delegate: PlayerUIViewDelegate?
-    
-    weak var dataSource: PlayerUIViewDataSource?
-    
     private var panType: PanType?
     
     private lazy var timeFormatter: DateFormatter = {
@@ -146,92 +176,31 @@ class PlayerUIView: UIView {
                 resumeTimer()
             }
         }
+        
     }
+    
     private var autoHiddenTimer: Timer?
     
-    private var hiddenControlView = false
+    private(set) var hiddenControlView = false {
+        didSet {
+            self.delegate?.playerUIView(self, didChangeControlViewState: !self.hiddenControlView)
+        }
+    }
     
     private var hiddenTime: TimeInterval = 4
     
     private var lastPanDate: Data?
     
     private var obsObj: AnyObject?
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.setupInit()
+    }
     
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        
-        danmakuSwitch.onTintColor = UIColor.mainColor
-        danmakuSwitch.addTarget(self, action: #selector(PlayerUIView.onTouchSwitch(_:)), for: .valueChanged)
-        danmakuSwitch.backgroundColor = nil
-        
-        titleLabel.text = nil
-        slider.tintColor = UIColor.mainColor
-        slider.setThumbImage(UIImage(color: UIColor.white, size: CGSize(width: 16, height: 10))?.byRoundCornerRadius(2), for: .normal)
-        slider.snp.makeConstraints { (make) in
-            if #available(iOS 11.0, *) {
-                make.leading.equalTo(self.safeAreaLayoutGuide.snp.leading)
-                make.trailing.equalTo(self.safeAreaLayoutGuide.snp.trailing)
-            } else {
-                make.leading.equalToSuperview().offset(10)
-                make.trailing.equalToSuperview().offset(-10)
-            }
-        }
-        
-        backButton.snp.makeConstraints { (make) in
-            if #available(iOS 11.0, *) {
-                make.leading.equalTo(self.safeAreaLayoutGuide.snp.leading)
-            } else {
-                make.leading.equalToSuperview().offset(5)
-            }
-        }
-        
-        moreButton.snp.makeConstraints { (make) in
-            if #available(iOS 11.0, *) {
-                make.trailing.equalTo(self.safeAreaLayoutGuide.snp.trailing)
-            } else {
-                make.trailing.equalToSuperview().offset(-5)
-            }
-        }
-        
-        self.playButton.snp.makeConstraints { (make) in
-            if #available(iOS 11.0, *) {
-                make.bottom.equalTo(self.safeAreaLayoutGuide.snp.bottom)
-            } else {
-                make.bottom.equalToSuperview().offset(-10)
-            }
-        }
-        
-        let doubleTap = UITapGestureRecognizer(target: self, action: #selector(PlayerUIView.doubleTap))
-        doubleTap.numberOfTapsRequired = 2
-        
-        let singleTap = UITapGestureRecognizer(target: self, action: #selector(PlayerUIView.singleTap))
-        singleTap.numberOfTapsRequired = 1
-        
-        singleTap.require(toFail: doubleTap)
-        
-        let panGes = UIPanGestureRecognizer(target: self, action: #selector(panGesture(_:)))
-        
-        self.gestureView.addGestureRecognizer(doubleTap)
-        self.gestureView.addGestureRecognizer(singleTap)
-        self.gestureView.addGestureRecognizer(panGes)
-        
-        let audioSession = AVAudioSession.sharedInstance()
-        try? audioSession.setActive(true)
-        self.obsObj = audioSession.observe(\.outputVolume, options: .new) { [weak self] (view, value) in
-            guard let self = self else { return }
-            
-            //当前正在通过拖动调整音量
-            if self.panType == .volume {
-                return
-            }
-            
-            let volume = value.newValue ?? 0
-            
-            let controlView = self.volumeView
-            controlView.showFromView(self)
-            controlView.dismissAfter(1)
-            controlView.progress = CGFloat(volume)
-        }
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        self.setupInit()
     }
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
@@ -247,9 +216,10 @@ class PlayerUIView: UIView {
         let totalTime = dataSource?.playerTotalTime(playerUIView: self) ?? 0
         let current = Date(timeIntervalSince1970: currentTime)
         let total = Date(timeIntervalSince1970: totalTime)
-        timeLabel.text = timeFormatter.string(from: current) + "/" + timeFormatter.string(from: total)
+        
+        self.bottomView.timeLabel.text = timeFormatter.string(from: current) + "/" + timeFormatter.string(from: total)
         if !isDragingSlider {
-            slider.value = Float(dataSource?.playerProgress(playerUIView: self) ?? 0)
+            self.bottomView.progressSlider.value = Float(dataSource?.playerProgress(playerUIView: self) ?? 0)
         }
     }
     
@@ -297,21 +267,17 @@ class PlayerUIView: UIView {
     }
     
     //MARK: - Private Method
+    
     //MARK: 点击
-    @IBAction func onTouchBackButton(_ sender: UIButton) {
+    @IBAction private func onTouchBackButton(_ sender: UIButton) {
         viewController?.dismiss(animated: true, completion: nil)
     }
     
-    @IBAction func onTouchMoreButton(_ sender: UIButton) {
+    @IBAction private func onTouchMoreButton(_ sender: UIButton) {
         delegate?.onTouchMoreButton(playerUIView: self)
     }
     
-    @objc private func onTouchSwitch(_ sender: SevenSwitch) {
-        delegate?.onTouchDanmakuSwitch(playerUIView: self, isOn: sender.isOn())
-        resumeTimer()
-    }
-    
-    @IBAction func onTouchPlayerList(_ sender: UIButton) {
+    @IBAction private func onTouchPlayerList(_ sender: UIButton) {
         delegate?.onTouchPlayerList(playerUIView: self)
     }
     
@@ -328,39 +294,34 @@ class PlayerUIView: UIView {
         }
     }
     
-    @IBAction func onTouchSendDanmakuButon(_ sender: UIButton) {
-        delegate?.onTouchSendDanmakuButton(playerUIView: self)
-    }
-    
-    @IBAction func onTouchPlayButton(_ sender: UIButton) {
+    @objc private func onTouchPlayButton(_ sender: UIButton) {
         sender.isSelected.toggle()
         delegate?.onTouchPlayButton(playerUIView: self, isSelected: sender.isSelected)
     }
     
-    @IBAction func onTouchNextButton(_ sender: UIButton) {
+    @objc private func onTouchNextButton(_ sender: UIButton) {
         delegate?.onTouchNextButton(playerUIView: self)
     }
     
     
     //MARK: 滑动条
-    
-    @IBAction func onSliderValueChange(_ sender: UISlider) {
+    @objc private func onSliderValueChange(_ sender: UISlider) {
         let totalTime = dataSource?.playerTotalTime(playerUIView: self) ?? 0
         updateDataTimeSnapLabel(currentTime: TimeInterval(sender.value * Float(totalTime)))
     }
     
-    @IBAction func tapUp(slider: UISlider) {
+    @objc private func tapUp(slider: UISlider) {
         delegate?.tapSlider(playerUIView: self, progress: CGFloat(slider.value))
         isDragingSlider = false
         hideTimeSnapLabel()
     }
     
-    @IBAction func tapDown(slider: UISlider) {
+    @objc private func tapDown(slider: UISlider) {
         isDragingSlider = true
         showTimeSnapLabel()
     }
     
-    @IBAction func tapCancel(slider: UISlider) {
+    @objc private func tapCancel(slider: UISlider) {
         isDragingSlider = false
         hideTimeSnapLabel()
     }
@@ -375,7 +336,7 @@ class PlayerUIView: UIView {
             //横向运动
             if abs(velocity.x) > abs(velocity.y) {
                 self.panType = .progress
-                self.tapDown(slider: self.slider)
+                self.tapDown(slider: self.bottomView.progressSlider)
             } else if location.x < self.frame.size.width / 2 {
                 self.panType = .brightness
                 
@@ -400,8 +361,8 @@ class PlayerUIView: UIView {
                 let width = self.frame.size.width
                 let diff = width > 0 ? translation.x / width : 0;
                 
-                self.slider.value += Float(diff)
-                self.onSliderValueChange(self.slider)
+                self.bottomView.progressSlider.value += Float(diff)
+                self.onSliderValueChange(self.bottomView.progressSlider)
             case .brightness, .volume:
                 let height = self.frame.size.height
                 let diff = height > 0 ? -translation.y / height : 0;
@@ -416,7 +377,7 @@ class PlayerUIView: UIView {
             break
         default:
             if self.panType == .progress {
-                self.tapUp(slider: self.slider)
+                self.tapUp(slider: self.bottomView.progressSlider)
             }
             self.panType = nil
             self.brightnessView.dismiss()
@@ -425,7 +386,44 @@ class PlayerUIView: UIView {
         }
     }
     
-    //MARK:
+    //MARK: 其他私有方法
+    private func setupInit() {
+        
+        self.addSubview(self.gestureView)
+        self.addSubview(self.topView)
+        self.addSubview(self.bottomView)
+        
+        self.gestureView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        self.topView.snp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+        }
+        
+        self.bottomView.snp.makeConstraints { make in
+            make.bottom.leading.trailing.equalToSuperview()
+        }
+        
+        let audioSession = AVAudioSession.sharedInstance()
+        try? audioSession.setActive(true)
+        self.obsObj = audioSession.observe(\.outputVolume, options: .new) { [weak self] (view, value) in
+            guard let self = self else { return }
+            
+            //当前正在通过拖动调整音量
+            if self.panType == .volume {
+                return
+            }
+            
+            let volume = value.newValue ?? 0
+            
+            let controlView = self.volumeView
+            controlView.showFromView(self)
+            controlView.dismissAfter(1)
+            controlView.progress = CGFloat(volume)
+        }
+    }
+    
     private func suspendTimer() {
         autoHiddenTimer?.fireDate = Date.distantFuture
     }
