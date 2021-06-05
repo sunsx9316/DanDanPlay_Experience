@@ -18,10 +18,8 @@ class PlayerUITopView: UIView {
         return backButton
     }()
     
-    lazy var titleLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.font = .systemFont(ofSize: 15)
+    lazy var titleLabel: AutoScrollLabel = {
+        let label = AutoScrollLabel()
         label.setContentCompressionResistancePriority(.required, for: .horizontal)
         label.setContentHuggingPriority(.required, for: .horizontal)
         return label
@@ -80,13 +78,14 @@ class PlayerUITopView: UIView {
         self.titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(self.backButton.snp.trailing).offset(5)
             make.centerY.equalTo(self.backButton)
+            make.top.bottom.equalToSuperview()
         }
         
         self.settingButton.snp.makeConstraints { make in
             make.trailing.equalToSuperview()
             make.width.height.equalTo(30)
             make.centerY.equalTo(self.backButton)
-            make.leading.greaterThanOrEqualTo(self.titleLabel.snp.trailing)
+            make.leading.equalTo(self.titleLabel.snp.trailing)
         }
     }
     

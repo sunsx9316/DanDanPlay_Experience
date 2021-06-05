@@ -76,7 +76,11 @@ class PlayerUIView: UIView {
     
     var title: String? {
         didSet {
-            self.topView.titleLabel.text = self.title
+            if let title = self.title {
+                self.topView.titleLabel.attributedString = .init(string: title, attributes: [.font : UIFont.systemFont(ofSize: 15), .foregroundColor : UIColor.white])
+            } else {
+                self.topView.titleLabel.attributedString = nil
+            }
         }
     }
     
@@ -183,6 +187,11 @@ class PlayerUIView: UIView {
     
     private(set) var hiddenControlView = false {
         didSet {
+            if self.hiddenControlView {
+                self.topView.titleLabel.paused()
+            } else {
+                self.topView.titleLabel.start()
+            }
             self.delegate?.playerUIView(self, didChangeControlViewState: !self.hiddenControlView)
         }
     }
@@ -242,6 +251,8 @@ class PlayerUIView: UIView {
                 UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
                     self.topView.transform = .identity
                     self.bottomView.transform = .identity
+                    self.topView.alpha = 1
+                    self.bottomView.alpha = 1
                 }) { (finish) in
                     startHiddenTimerAction()
                 }
@@ -261,6 +272,8 @@ class PlayerUIView: UIView {
                 UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
                     self.topView.transform = CGAffineTransform(translationX: 0, y: -self.topView.frame.height)
                     self.bottomView.transform = CGAffineTransform(translationX: 0, y: self.bottomView.frame.height)
+                    self.topView.alpha = 0
+                    self.bottomView.alpha = 0
                 })
             }
         }
