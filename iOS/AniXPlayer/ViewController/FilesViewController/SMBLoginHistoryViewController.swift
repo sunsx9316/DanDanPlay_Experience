@@ -214,7 +214,7 @@ class SMBLoginHistoryViewController: ViewController {
         tableView.registerNibCell(class: LinkHistoryTableViewCell.self)
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
-        tableView.tableHeaderView = UIView()
+        tableView.tableHeaderView = UIView(frame: .init(x: 0, y: 0, width: 0, height: CGFloat.leastNormalMagnitude))
         tableView.registerClassHeaderFooterView(class: LinkHistoryHeaderView.self)
         tableView.mj_header = RefreshHeader(refreshingTarget: self, refreshingAction: #selector(beginRefreshing))
         return tableView

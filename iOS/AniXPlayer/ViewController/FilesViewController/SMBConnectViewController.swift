@@ -54,6 +54,7 @@ class SMBConnectViewController: ViewController {
     private lazy var segmentedControl: UISegmentedControl = {
         let button = UISegmentedControl(items: [NSLocalizedString("客人", comment: ""),
                                                 NSLocalizedString("注册用户", comment: "")])
+        button.tintColor = .mainColor
         button.setTitleTextAttributes([.foregroundColor : UIColor.black], for: .normal)
         if #available(iOS 13.0, *) {
             button.selectedSegmentTintColor = .lightGray

@@ -36,6 +36,7 @@ class PlayerSettingViewController: ViewController {
     
     private lazy var segmentedControl: UISegmentedControl = {
         let segmentedControl = UISegmentedControl(items: VCType.allCases.compactMap({ $0.title }))
+        segmentedControl.tintColor = .mainColor
         segmentedControl.addTarget(self, action: #selector(onTouchSegmentedControl(_:)), for: .valueChanged)
         segmentedControl.setTitleTextAttributes([.foregroundColor : UIColor.lightGray], for: .normal)
         segmentedControl.setTitleTextAttributes([.foregroundColor : UIColor.black], for: .selected)
