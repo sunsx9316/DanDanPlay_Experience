@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Bugly
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -44,6 +45,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     //MARK: - Private Method
     private func setup() {
+        
+        let isDevelop: Bool
+        
+        #if DEBUG
+        isDevelop = true
+        #else
+        isDevelop = false
+        #endif
+        
+        let config = BuglyConfig()
+        config.channel = "AppStore"
+        Bugly.start(withAppId: "a72dd7c16d", developmentDevice: isDevelop, config: config)
+        
         do {
             let navBarAppearance = UINavigationBar.appearance()
             navBarAppearance.isTranslucent = false
