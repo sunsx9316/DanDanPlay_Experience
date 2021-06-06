@@ -136,7 +136,7 @@ class MatchsViewController: ViewController {
             return t1.compare(t2) == .orderedDescending
         }
         self.init(with: values, file: file)
-        self.title = NSLocalizedString("匹配结果", comment: "")
+        self.title = NSLocalizedString("弹幕匹配结果", comment: "")
     }
     
     required init?(coder: NSCoder) {
@@ -153,7 +153,7 @@ class MatchsViewController: ViewController {
             make.edges.equalTo(self.view.safeAreaLayoutGuide.snp.edges)
         }
         
-        let rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("搜索", comment: ""), style: .plain, target: self, action: #selector(onTouchSearchButton))
+        let rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("搜索弹幕", comment: ""), style: .plain, target: self, action: #selector(onTouchSearchButton))
         rightBarButtonItem.setTitleTextAttributes([.font : UIFont.ddp_normal,
                                                    .foregroundColor : UIColor.navigationTitleColor], for: .normal)
         rightBarButtonItem.setTitleTextAttributes([.font : UIFont.ddp_normal,

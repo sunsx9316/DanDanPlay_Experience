@@ -71,8 +71,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //搜索框
         do {
             let placeholderAttributes: [NSAttributedString.Key : Any] = [.font : UIFont.ddp_normal, .foregroundColor : UIColor.placeholderColor]
-            let attributedPlaceholder = NSAttributedString(string: "搜索", attributes: placeholderAttributes)
-            UITextField.appearance(whenContainedInInstancesOf: [UISearchBar.self]).attributedPlaceholder = attributedPlaceholder
             let barButtonItemAppearance = UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self])
             barButtonItemAppearance.tintColor = UIColor.navigationTitleColor
             barButtonItemAppearance.title = "取消"

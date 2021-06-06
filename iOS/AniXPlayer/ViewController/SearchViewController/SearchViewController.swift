@@ -140,6 +140,12 @@ class SearchViewController: ViewController {
         if self.isRootVC {
             let searchController = UISearchController(searchResultsController: nil)
             searchController.searchBar.autocapitalizationType = .none
+            if #available(iOS 13.0, *) {
+                let placeholderAttributes: [NSAttributedString.Key : Any] = [.font : UIFont.ddp_normal, .foregroundColor : UIColor.placeholderColor]
+                searchController.searchBar.searchTextField.attributedPlaceholder = .init(string: NSLocalizedString("搜索弹幕", comment: ""), attributes: placeholderAttributes)
+            } else {
+                searchController.searchBar.placeholder = NSLocalizedString("搜索弹幕", comment: "")
+            }
             searchController.searchBar.setImage(UIImage(named: "Player/player_close_button")?.byResize(to: .init(width: 16, height: 16)), for: .clear, state: .normal)
             searchController.dimsBackgroundDuringPresentation = false
             searchController.searchBar.delegate = self
