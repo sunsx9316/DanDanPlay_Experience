@@ -9,9 +9,12 @@ import Foundation
 
 class LocalFileManager: FileManagerProtocol {
     
+    var addressExampleDesc: String {
+        return ""
+    }
     
     var desc: String {
-        return "本地文件"
+        return NSLocalizedString("本地文件", comment: "")
     }
     
     func contentsOfDirectory(at directory: File, completion: @escaping ((Result<[File], Error>) -> Void)) {

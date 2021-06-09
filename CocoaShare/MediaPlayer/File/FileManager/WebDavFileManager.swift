@@ -18,6 +18,10 @@ class WebDavFileManager: FileManagerProtocol {
         return NSLocalizedString("WebDav", comment: "")
     }
     
+    var addressExampleDesc: String {
+        return "服务器地址：http://example"
+    }
+    
     static let shared = WebDavFileManager()
     
     private init() {}

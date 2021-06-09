@@ -64,9 +64,7 @@ class WebDavFile: File {
     //应该是vlc的bug，需要强引用InputStream对象，否则会crash
     private static var inputStream: DDPWebDAVInputStream?
     
-    static var rootFile: File {
-        return WebDavFile(url: URL(string: "/")!, fileSize: 0)
-    }
+    static var rootFile: File = WebDavFile(url: URL(string: "/")!, fileSize: 0)
     
     var parentFile: File? {
         return WebDavFile(url: self.url.deletingLastPathComponent(), fileSize: 0)

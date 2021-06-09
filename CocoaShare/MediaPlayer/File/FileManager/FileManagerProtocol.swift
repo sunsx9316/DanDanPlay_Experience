@@ -11,6 +11,8 @@ protocol FileManagerProtocol {
     
     var desc: String { get }
     
+    var addressExampleDesc: String { get }
+    
     func contentsOfDirectory(at directory: File, completion: @escaping ((Result<[File], Error>) -> Void))
     
     func getDataWithFile(_ file: File, range: ClosedRange<Int>?, progress: FileProgressAction?, completion: @escaping ((Result<Data, Error>) -> Void))

@@ -33,7 +33,11 @@ class SMBFileManager: FileManagerProtocol {
     private(set) var loginInfo: LoginInfo?
     
     var desc: String {
-        return "SMB"
+        return NSLocalizedString("SMB", comment: "")
+    }
+    
+    var addressExampleDesc: String {
+        return "服务器地址：smb://example"
     }
     
     func connectWithLoginInfo(_ loginInfo: LoginInfo, completionHandler: @escaping((Error?) -> Void)) {

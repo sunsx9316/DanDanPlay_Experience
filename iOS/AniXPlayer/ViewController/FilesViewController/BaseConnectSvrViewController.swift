@@ -15,8 +15,6 @@ class BaseConnectSvrViewController: ViewController {
     
     private lazy var addressLabel: TextField = {
         let textField = TextField()
-        textField.attributedPlaceholder = .init(string: NSLocalizedString("服务器地址：example.com", comment: ""),
-                                                attributes: [.foregroundColor : UIColor.lightGray])
         return textField
     }()
     
@@ -101,6 +99,9 @@ class BaseConnectSvrViewController: ViewController {
         self.userNameLabel.text = self.loginInfo?.auth?.userName
         self.passwordLabel.text = self.loginInfo?.auth?.password
         self.addressLabel.text = self.loginInfo?.url.absoluteString
+        let addressPlaceholder = self.fileManager.addressExampleDesc
+        self.addressLabel.attributedPlaceholder = .init(string: addressPlaceholder,
+                                                     attributes: [.foregroundColor : UIColor.lightGray])
     }
     
     //MARK: Private Method
@@ -154,4 +155,5 @@ class BaseConnectSvrViewController: ViewController {
             }
         }
     }
+
 }

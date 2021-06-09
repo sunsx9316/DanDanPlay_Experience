@@ -274,7 +274,7 @@ class SMBLoginHistoryViewController: ViewController {
     }
     
     private func jumpToConnectViewController(_ loginInfo: LoginInfo? = nil) {
-        let vc = SMBConnectViewController(loginInfo: loginInfo)
+        let vc = SMBConnectViewController(loginInfo: loginInfo, fileManager: SMBFile.rootFile.fileManager)
         vc.delegate = self
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)

@@ -48,9 +48,7 @@ class SMBFile: File {
     
     let path: String
     
-    static var rootFile: File {
-        return SMBFile(rootPath: "/")
-    }
+    static var rootFile: File = SMBFile(rootPath: "/")
     
     var parentFile: File? {
         //根目录

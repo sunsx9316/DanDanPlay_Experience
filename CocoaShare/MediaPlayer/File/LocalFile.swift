@@ -26,9 +26,7 @@ class LocalFile: File {
         return LocalFile(with: self.url.deletingLastPathComponent())
     }
     
-    static var rootFile: File {
-        return LocalFile(with: UIApplication.shared.documentsURL)
-    }
+    static var rootFile: File = LocalFile(with: UIApplication.shared.documentsURL)
     
     init(with url: URL, fileSize: Int) {
         self.url = url

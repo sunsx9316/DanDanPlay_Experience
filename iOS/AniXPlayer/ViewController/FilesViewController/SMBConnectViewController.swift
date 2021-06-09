@@ -15,8 +15,6 @@ class SMBConnectViewController: ViewController {
     
     private lazy var addressLabel: TextField = {
         let textField = TextField()
-        textField.attributedPlaceholder = .init(string: NSLocalizedString("服务器地址：example.com", comment: ""),
-                                                attributes: [.foregroundColor : UIColor.lightGray])
         return textField
     }()
     
@@ -67,11 +65,14 @@ class SMBConnectViewController: ViewController {
     
     private var loginInfo: LoginInfo?
     
+    private let fileManager: FileManagerProtocol
+    
     /// 按客人身份登录时使用的用户名
     private let guestName = "guest"
     
-    init(loginInfo: LoginInfo?) {
+    init(loginInfo: LoginInfo?, fileManager: FileManagerProtocol) {
         self.loginInfo = loginInfo
+        self.fileManager = fileManager
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -133,6 +134,8 @@ class SMBConnectViewController: ViewController {
         self.userNameLabel.text = self.loginInfo?.auth?.userName
         self.passwordLabel.text = self.loginInfo?.auth?.password
         self.addressLabel.text = self.loginInfo?.url.absoluteString
+        self.addressLabel.attributedPlaceholder = .init(string: self.fileManager.addressExampleDesc,
+                                                attributes: [.foregroundColor : UIColor.lightGray])
         
         let userName = self.loginInfo?.auth?.userName
         if userName?.isEmpty == false && userName != guestName {
@@ -180,7 +183,7 @@ class SMBConnectViewController: ViewController {
         }
         
         if self.segmentedControl.selectedSegmentIndex == 0 {
-            
+
             let loginInfo = LoginInfo(url: url, auth: Auth(userName: guestName, password: nil))
             self.loginWithInfo(loginInfo)
         } else {
@@ -204,7 +207,7 @@ class SMBConnectViewController: ViewController {
         let progressHUD = self.view.showProgress()
         progressHUD.mode = .indeterminate
         
-        SMBFileManager.shared.connectWithLoginInfo(info) { [weak self, weak progressHUD] error in
+        self.fileManager.connectWithLoginInfo(info) { [weak self, weak progressHUD] error in
             guard let self = self else { return }
             
             if let error = error {

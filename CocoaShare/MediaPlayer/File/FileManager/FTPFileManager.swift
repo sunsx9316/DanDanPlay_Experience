@@ -19,6 +19,10 @@ class FTPFileManager: FileManagerProtocol {
         return NSLocalizedString("FTP", comment: "")
     }
     
+    var addressExampleDesc: String {
+        return "服务器地址：ftp://example"
+    }
+    
     static let shared = FTPFileManager()
     
     private init() {}
