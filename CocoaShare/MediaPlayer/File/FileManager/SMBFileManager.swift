@@ -10,8 +10,18 @@ import AMSMB2
 
 class SMBFileManager: FileManagerProtocol {
     
-    private enum SMBError: Error {
+    private enum SMBError: LocalizedError {
         case fileTypeError
+        case listSharesError
+        
+        var errorDescription: String? {
+            switch self {
+            case .fileTypeError:
+                return "文件类型错误"
+            case .listSharesError:
+                return "获取服务器共享列表失败"
+            }
+        }
     }
     
     static let shared = SMBFileManager()
@@ -36,14 +46,19 @@ class SMBFileManager: FileManagerProtocol {
         }
         
         self.client = .init(url: loginInfo.url, credential: credential)
-        self.client?.timeout = 10
-        self.client?.listShares(completionHandler: { [weak self] result in
+        self.client?.timeout = 5
+        self.client?.listShares(enumerateHidden: true, completionHandler: { [weak self] result in
             guard let self = self else { return }
             
             switch result {
-            case .success(_):
-                self.loginInfo = loginInfo
-                completionHandler(nil)
+            case .success(let shares):
+                debugPrint("smbshares: \(shares)")
+                if shares.isEmpty {
+                    completionHandler(SMBError.listSharesError)
+                } else {
+                    self.loginInfo = loginInfo
+                    completionHandler(nil)
+                }
             case .failure(let error):
                 completionHandler(error)
             }
