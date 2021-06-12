@@ -44,6 +44,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        
+        if url.isMediaFile || url.isSubtitleFile || url.isSubtitleFile {
+            let fileName = url.lastPathComponent
+            let toUrl = UIApplication.shared.documentsURL.appendingPathComponent(fileName)
+            do {
+                try FileManager.default.copyItem(at: url, to: toUrl)
+                app.keyWindow?.showHUD(String(format: NSLocalizedString("导入 %@ 成功，请在“本地文件”中查看。", comment: ""), fileName))
+            } catch let error {
+                debugPrint(error)
+            }
+        }
+        
         return true
     }
 
