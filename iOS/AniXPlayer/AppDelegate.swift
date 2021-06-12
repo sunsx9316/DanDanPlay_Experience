@@ -45,7 +45,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         
-        if url.isMediaFile || url.isSubtitleFile || url.isSubtitleFile {
+        if url.isMediaFile || url.isSubtitleFile || url.isDanmakuFile {
             let fileName = url.lastPathComponent
             let toUrl = UIApplication.shared.documentsURL.appendingPathComponent(fileName)
             do {
