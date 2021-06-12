@@ -27,6 +27,7 @@ target 'AniXPlayer' do
   pod 'AMSMB2'
   pod 'FilesProvider'
   pod 'Bugly'
+  pod "GCDWebServer/WebUploader"
 
   # install_all_flutter_pods(flutter_application_path)
 end

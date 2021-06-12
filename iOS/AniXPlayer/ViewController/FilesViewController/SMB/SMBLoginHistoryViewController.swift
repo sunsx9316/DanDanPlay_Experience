@@ -246,13 +246,8 @@ class SMBLoginHistoryViewController: ViewController {
             make.edges.equalTo(self.view.safeAreaLayoutGuide.snp.edges)
         }
         
-        let img = UIImage(named: "File/file_add_file")?.withRenderingMode(.alwaysOriginal)
-        let rightBarButtonItem = UIBarButtonItem(image: img, style: .plain, target: self, action: #selector(onTouchAddButton))
+        let rightBarButtonItem = UIBarButtonItem(imageName: "File/file_add_file", target: self, action: #selector(onTouchAddButton))
         
-        rightBarButtonItem.setTitleTextAttributes([.font : UIFont.ddp_normal,
-                                                   .foregroundColor : UIColor.navigationTitleColor], for: .normal)
-        rightBarButtonItem.setTitleTextAttributes([.font : UIFont.ddp_normal,
-                                                   .foregroundColor : UIColor.black], for: .highlighted)
         self.navigationItem.rightBarButtonItem = rightBarButtonItem
         
         self.beginRefreshing()

@@ -82,6 +82,16 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             let cell = tableView.dequeueCell(class: TitleTableViewCell.self, indexPath: indexPath)
             cell.label.text = type.title
             return cell
+        case .subtitleTrack:
+            let cell = tableView.dequeueCell(class: SheetTableViewCell.self, indexPath: indexPath)
+            cell.titleLabel.text = type.title
+            cell.valueLabel.text = self.player?.currentSubtitle?.name ?? NSLocalizedString("无", comment: "")
+            return cell
+        case .audioTrack:
+            let cell = tableView.dequeueCell(class: SheetTableViewCell.self, indexPath: indexPath)
+            cell.titleLabel.text = type.title
+            cell.valueLabel.text = self.player?.currentAudioChannel?.name ?? NSLocalizedString("无", comment: "")
+            return cell
         }
     }
     
@@ -109,6 +119,50 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             self.present(vc, animated: true, completion: nil)
         } else if type == .loadSubtitle {
             self.delegate?.loadSubtitleFileInMediaSettingViewController(self)
+        } else if type == .subtitleTrack {
+            guard let subtitleList = self.player?.subtitleList,
+                  !subtitleList.isEmpty else { return }
+            
+            let vc = UIAlertController(title: type.title, message: nil, preferredStyle: .actionSheet)
+            
+            let actions = subtitleList.compactMap { (mode) -> UIAlertAction? in
+                return UIAlertAction(title: mode.name, style: .default) { (UIAlertAction) in
+                    self.player?.currentSubtitle = mode
+                    self.tableView.reloadData()
+                }
+            }
+            
+            for action in actions {
+                vc.addAction(action)
+            }
+            
+            vc.addAction(.init(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: { (_) in
+                
+            }))
+            vc.popoverPresentationController?.sourceView = tableView.cellForRow(at: indexPath)
+            self.present(vc, animated: true, completion: nil)
+        } else if type == .audioTrack {
+            guard let audioChannelList = self.player?.audioChannelList,
+                  !audioChannelList.isEmpty else { return }
+            
+            let vc = UIAlertController(title: type.title, message: nil, preferredStyle: .actionSheet)
+            
+            let actions = audioChannelList.compactMap { (mode) -> UIAlertAction? in
+                return UIAlertAction(title: mode.name, style: .default) { (UIAlertAction) in
+                    self.player?.currentAudioChannel = mode
+                    self.tableView.reloadData()
+                }
+            }
+            
+            for action in actions {
+                vc.addAction(action)
+            }
+            
+            vc.addAction(.init(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: { (_) in
+                
+            }))
+            vc.popoverPresentationController?.sourceView = tableView.cellForRow(at: indexPath)
+            self.present(vc, animated: true, completion: nil)
         }
     }
     
@@ -124,6 +178,8 @@ class MediaSettingViewController: ViewController {
 
     private enum CellType: CaseIterable {
         case subtitleSafeArea
+        case subtitleTrack
+        case audioTrack
         case playerSpeed
         case playerMode
         case loadSubtitle
@@ -138,6 +194,10 @@ class MediaSettingViewController: ViewController {
                 return NSLocalizedString("播放模式", comment: "")
             case .loadSubtitle:
                 return NSLocalizedString("加载本地字幕...", comment: "")
+            case .subtitleTrack:
+                return NSLocalizedString("字幕轨道", comment: "")
+            case .audioTrack:
+                return NSLocalizedString("音频轨道", comment: "")
             }
         }
     }
@@ -156,11 +216,24 @@ class MediaSettingViewController: ViewController {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.backgroundColor = .clear
         tableView.showsVerticalScrollIndicator = false
-        tableView.separatorStyle = .none
+        tableView.separatorStyle = .singleLine
+        tableView.separatorColor = .darkGray
         return tableView
     }()
+    
+    private weak var player: MediaPlayer?
 
     weak var delegate: MediaSettingViewControllerDelegate?
+    
+    
+    init(player: MediaPlayer?) {
+        self.player = player
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -20,6 +20,7 @@ class PlayerUITopView: UIView {
     
     lazy var titleLabel: AutoScrollLabel = {
         let label = AutoScrollLabel()
+        label.isUserInteractionEnabled = false
         label.setContentCompressionResistancePriority(.required, for: .horizontal)
         label.setContentHuggingPriority(.required, for: .horizontal)
         return label
@@ -28,6 +29,7 @@ class PlayerUITopView: UIView {
     lazy var settingButton: UIButton = {
         let button = UIButton(type: .custom)
         button.setImage(UIImage(named: "Player/player_more"), for: .normal)
+        button.hitTestSlop = .init(top: -10, left: -10, bottom: -10, right: -10)
         button.adjustsImageWhenHighlighted = true
         button.adjustsImageWhenDisabled = true
         return button
@@ -52,8 +54,8 @@ class PlayerUITopView: UIView {
         
         self.addSubview(self.bgImgView)
         let containerView = UIView()
-        containerView.addSubview(self.settingButton)
         containerView.addSubview(self.titleLabel)
+        containerView.addSubview(self.settingButton)
         containerView.addSubview(self.backButton)
         self.addSubview(containerView)
         
@@ -85,7 +87,7 @@ class PlayerUITopView: UIView {
             make.trailing.equalToSuperview()
             make.width.height.equalTo(30)
             make.centerY.equalTo(self.backButton)
-            make.leading.equalTo(self.titleLabel.snp.trailing)
+            make.leading.equalTo(self.titleLabel.snp.trailing).offset(5)
         }
     }
     

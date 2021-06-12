@@ -42,8 +42,6 @@ class PlayerViewController: ViewController {
         return danmakuRender
     }()
     
-    private static let player = MediaPlayer()
-    
     private lazy var player: MediaPlayer = {
         let player = MediaPlayer()
         player.delegate = self
@@ -391,7 +389,7 @@ extension PlayerViewController {
 extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
     //MARK: PlayerUIViewDelegate
     func onTouchMoreButton(playerUIView: PlayerUIView) {
-        let vc = PlayerSettingViewController()
+        let vc = PlayerSettingViewController(player: self.player)
         vc.delegate = self
         vc.transitioningDelegate = self.animater
         vc.modalPresentationStyle = .custom

@@ -120,8 +120,7 @@ class PickFileViewController: ViewController {
     }
     
     private func addNavigationItem() {
-        let img = UIImage(named: "Comment/comment_setting")?.withRenderingMode(.alwaysOriginal)
-        let commentItem = UIBarButtonItem(image: img, style: .plain, target: self, action: #selector(onTouchSettingButton))
+        let commentItem = UIBarButtonItem(imageName: "Comment/comment_setting", target: self, action: #selector(onTouchSettingButton))
         self.navigationItem.rightBarButtonItem = commentItem
     }
     

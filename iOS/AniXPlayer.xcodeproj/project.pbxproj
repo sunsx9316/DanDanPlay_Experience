@@ -67,6 +67,9 @@
 		890DF86F2618B922002D8AE5 /* AnimatesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF86E2618B922002D8AE5 /* AnimatesTableViewCell.swift */; };
 		89144817261F4DA200E26133 /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89144816261F4DA200E26133 /* Search.swift */; };
 		8914481C261F510700E26133 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8914481B261F510700E26133 /* SearchViewController.swift */; };
+		8931F0E52674CA6A00590569 /* UIBarButtonItem+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8931F0E42674CA6A00590569 /* UIBarButtonItem+Helper.swift */; };
+		8931F0EB2674CD3300590569 /* HttpServerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8931F0EA2674CD3300590569 /* HttpServerViewController.swift */; };
+		8931F0EE26750D6500590569 /* UIView+HitTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8931F0ED26750D6500590569 /* UIView+HitTest.m */; };
 		8944E86D263AE58A00EF00B1 /* SMBFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8944E86C263AE58A00EF00B1 /* SMBFile.swift */; };
 		8944E86F263AE87000EF00B1 /* SMBFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8944E86E263AE87000EF00B1 /* SMBFileManager.swift */; };
 		8944E871263AF11A00EF00B1 /* SMBLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8944E870263AF11A00EF00B1 /* SMBLoginHistoryViewController.swift */; };
@@ -83,6 +86,7 @@
 		897CF529262F309D00CC297A /* PlayerSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897CF528262F309D00CC297A /* PlayerSettingViewController.swift */; };
 		897CF52D262F30D200CC297A /* DanmakuSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897CF52C262F30D200CC297A /* DanmakuSettingViewController.swift */; };
 		897CF533262F317B00CC297A /* SliderTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 897CF531262F317B00CC297A /* SliderTableViewCell.xib */; };
+		898C71BA26711394006EB849 /* HttpServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 898C71B926711394006EB849 /* HttpServer.swift */; };
 		899A9DDF262F35EB00C54AC9 /* SliderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897CF530262F317B00CC297A /* SliderTableViewCell.swift */; };
 		899C4E97263BDDE600A17C83 /* LinkHistoryHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899C4E96263BDDE600A17C83 /* LinkHistoryHeaderView.swift */; };
 		899C4E9F263CF88700A17C83 /* NSNetService+Util.m in Sources */ = {isa = PBXBuildFile; fileRef = 899C4E9E263CF88700A17C83 /* NSNetService+Util.m */; };
@@ -173,6 +177,10 @@
 		890DF86E2618B922002D8AE5 /* AnimatesTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimatesTableViewCell.swift; sourceTree = "<group>"; };
 		89144816261F4DA200E26133 /* Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
 		8914481B261F510700E26133 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
+		8931F0E42674CA6A00590569 /* UIBarButtonItem+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+Helper.swift"; sourceTree = "<group>"; };
+		8931F0EA2674CD3300590569 /* HttpServerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpServerViewController.swift; sourceTree = "<group>"; };
+		8931F0EC26750D6500590569 /* UIView+HitTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+HitTest.h"; sourceTree = "<group>"; };
+		8931F0ED26750D6500590569 /* UIView+HitTest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIView+HitTest.m"; sourceTree = "<group>"; };
 		8944E86C263AE58A00EF00B1 /* SMBFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMBFile.swift; sourceTree = "<group>"; };
 		8944E86E263AE87000EF00B1 /* SMBFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMBFileManager.swift; sourceTree = "<group>"; };
 		8944E870263AF11A00EF00B1 /* SMBLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMBLoginHistoryViewController.swift; sourceTree = "<group>"; };
@@ -191,6 +199,7 @@
 		897CF52C262F30D200CC297A /* DanmakuSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuSettingViewController.swift; sourceTree = "<group>"; };
 		897CF530262F317B00CC297A /* SliderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderTableViewCell.swift; sourceTree = "<group>"; };
 		897CF531262F317B00CC297A /* SliderTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SliderTableViewCell.xib; sourceTree = "<group>"; };
+		898C71B926711394006EB849 /* HttpServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpServer.swift; sourceTree = "<group>"; };
 		899C4E96263BDDE600A17C83 /* LinkHistoryHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkHistoryHeaderView.swift; sourceTree = "<group>"; };
 		899C4E9C263CF88600A17C83 /* AniXPlayer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AniXPlayer-Bridging-Header.h"; sourceTree = "<group>"; };
 		899C4E9D263CF88700A17C83 /* NSNetService+Util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSNetService+Util.h"; sourceTree = "<group>"; };
@@ -264,6 +273,7 @@
 			isa = PBXGroup;
 			children = (
 				899C4E9C263CF88600A17C83 /* AniXPlayer-Bridging-Header.h */,
+				898C71B82671137A006EB849 /* HttpServer */,
 				899C4EA0263F8E5E00A17C83 /* Vendor */,
 				890DF850261859A8002D8AE5 /* Helper */,
 				890DF70026160A58002D8AE5 /* CocoaShare */,
@@ -407,13 +417,12 @@
 		890DF75626160B3E002D8AE5 /* FilesViewController */ = {
 			isa = PBXGroup;
 			children = (
-				890DF75726160B3E002D8AE5 /* FilesViewController.swift */,
-				8949F8902662AA2100274520 /* WebDavLoginHistoryViewController.swift */,
-				8949F8922662AA8E00274520 /* FTPLoginHistoryViewController.swift */,
+				8931F0E92674CCD800590569 /* WebDAV */,
+				8931F0E82674CCD100590569 /* SMB */,
+				8931F0E72674CCCA00590569 /* FTP */,
+				8931F0E62674CCC100590569 /* 本地文件 */,
 				89E109B326443F4F00825308 /* BaseLoginHistoryViewController.swift */,
 				89E109B52644424800825308 /* BaseConnectSvrViewController.swift */,
-				8944E870263AF11A00EF00B1 /* SMBLoginHistoryViewController.swift */,
-				8944E878263AF6D200EF00B1 /* SMBConnectViewController.swift */,
 				890DF75926160B3E002D8AE5 /* View */,
 			);
 			path = FilesViewController;
@@ -531,6 +540,9 @@
 				890DF74C26160B1B002D8AE5 /* UIDevice+Helper.swift */,
 				890DF74E26160B1B002D8AE5 /* UITableView+Extension.swift */,
 				890DF85A26189533002D8AE5 /* Helper.swift */,
+				8931F0E42674CA6A00590569 /* UIBarButtonItem+Helper.swift */,
+				8931F0EC26750D6500590569 /* UIView+HitTest.h */,
+				8931F0ED26750D6500590569 /* UIView+HitTest.m */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -570,6 +582,40 @@
 			path = SearchViewController;
 			sourceTree = "<group>";
 		};
+		8931F0E62674CCC100590569 /* 本地文件 */ = {
+			isa = PBXGroup;
+			children = (
+				890DF75726160B3E002D8AE5 /* FilesViewController.swift */,
+				8931F0EA2674CD3300590569 /* HttpServerViewController.swift */,
+			);
+			path = "本地文件";
+			sourceTree = "<group>";
+		};
+		8931F0E72674CCCA00590569 /* FTP */ = {
+			isa = PBXGroup;
+			children = (
+				8949F8922662AA8E00274520 /* FTPLoginHistoryViewController.swift */,
+			);
+			path = FTP;
+			sourceTree = "<group>";
+		};
+		8931F0E82674CCD100590569 /* SMB */ = {
+			isa = PBXGroup;
+			children = (
+				8944E870263AF11A00EF00B1 /* SMBLoginHistoryViewController.swift */,
+				8944E878263AF6D200EF00B1 /* SMBConnectViewController.swift */,
+			);
+			path = SMB;
+			sourceTree = "<group>";
+		};
+		8931F0E92674CCD800590569 /* WebDAV */ = {
+			isa = PBXGroup;
+			children = (
+				8949F8902662AA2100274520 /* WebDavLoginHistoryViewController.swift */,
+			);
+			path = WebDAV;
+			sourceTree = "<group>";
+		};
 		897CF527262F308300CC297A /* Setting */ = {
 			isa = PBXGroup;
 			children = (
@@ -596,6 +642,14 @@
 				89E0D70F266B44BE00E2337B /* TitleTableViewCell.xib */,
 			);
 			path = View;
+			sourceTree = "<group>";
+		};
+		898C71B82671137A006EB849 /* HttpServer */ = {
+			isa = PBXGroup;
+			children = (
+				898C71B926711394006EB849 /* HttpServer.swift */,
+			);
+			path = HttpServer;
 			sourceTree = "<group>";
 		};
 		899C4E99263CF85800A17C83 /* Helper */ = {
@@ -818,11 +872,13 @@
 				890DF73426160A58002D8AE5 /* FileManagerProtocol.swift in Sources */,
 				899C4E97263BDDE600A17C83 /* LinkHistoryHeaderView.swift in Sources */,
 				890DF77E26160B3E002D8AE5 /* PlayerNavigationController.swift in Sources */,
+				8931F0E52674CA6A00590569 /* UIBarButtonItem+Helper.swift in Sources */,
 				890DF81C2616174C002D8AE5 /* PickFileViewController.swift in Sources */,
 				890DF6FE26160A36002D8AE5 /* NavigationController.swift in Sources */,
 				89E0D60E2669113400E2337B /* SettingViewController.swift in Sources */,
 				89E109B426443F4F00825308 /* BaseLoginHistoryViewController.swift in Sources */,
 				890DF77A26160B3E002D8AE5 /* SliderControlView.swift in Sources */,
+				898C71BA26711394006EB849 /* HttpServer.swift in Sources */,
 				890DF85726186687002D8AE5 /* Comment.swift in Sources */,
 				8944E87D263BD69800EF00B1 /* Button.swift in Sources */,
 				8944E871263AF11A00EF00B1 /* SMBLoginHistoryViewController.swift in Sources */,
@@ -832,6 +888,7 @@
 				89E1097A26402B4900825308 /* CacheManager.swift in Sources */,
 				890DF72D26160A58002D8AE5 /* URL+Extension.swift in Sources */,
 				8944E87B263AF72400EF00B1 /* TextField.swift in Sources */,
+				8931F0EB2674CD3300590569 /* HttpServerViewController.swift in Sources */,
 				890DF72E26160A58002D8AE5 /* MediaPlayer.swift in Sources */,
 				890DF77926160B3E002D8AE5 /* PlayerUIView.swift in Sources */,
 				897CF52D262F30D200CC297A /* DanmakuSettingViewController.swift in Sources */,
@@ -841,6 +898,7 @@
 				890DF84E2618569D002D8AE5 /* Response.swift in Sources */,
 				890DF74F26160B1B002D8AE5 /* UIFont+Helper.swift in Sources */,
 				89E0D6162669143400E2337B /* TitleDetailTableViewCell.swift in Sources */,
+				8931F0EE26750D6500590569 /* UIView+HitTest.m in Sources */,
 				89E0D82C266BDB8600E2337B /* PlayerUIBottomView.swift in Sources */,
 				890DF77526160B3E002D8AE5 /* PlayerViewController.swift in Sources */,
 				8949F88F2662A1B700274520 /* FTPFileManager.swift in Sources */,

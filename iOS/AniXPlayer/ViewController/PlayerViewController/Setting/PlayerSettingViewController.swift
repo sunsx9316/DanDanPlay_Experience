@@ -23,15 +23,6 @@ class PlayerSettingViewController: ViewController {
             }
         }
         
-        var vc: UIViewController {
-            switch self {
-            case .danmakuSetting:
-                return DanmakuSettingViewController()
-            case .mediaSetting:
-                return MediaSettingViewController()
-            }
-        }
-        
     }
     
     private lazy var segmentedControl: UISegmentedControl = {
@@ -43,7 +34,24 @@ class PlayerSettingViewController: ViewController {
         return segmentedControl
     }()
     
-    private lazy var vcs = VCType.allCases.compactMap({ $0.vc })
+    private lazy var vcs: [UIViewController] = {
+        var vcs = [UIViewController]()
+        
+        for type in VCType.allCases {
+            switch type {
+            case .danmakuSetting:
+                let vc = DanmakuSettingViewController()
+                vc.delegate = self.delegate
+                vcs.append(vc)
+            case .mediaSetting:
+                let vc = MediaSettingViewController(player: self.player)
+                vc.delegate = self.delegate
+                vcs.append(vc)
+            }
+        }
+        
+        return vcs
+    }()
     
     private var currentVC: UIViewController?
     
@@ -51,6 +59,8 @@ class PlayerSettingViewController: ViewController {
         let blurVuew = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
         return blurVuew
     }()
+    
+    private weak var player: MediaPlayer?
     
     weak var delegate: (DanmakuSettingViewControllerDelegate & MediaSettingViewControllerDelegate)?
     
@@ -61,7 +71,16 @@ class PlayerSettingViewController: ViewController {
     override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
         return .landscapeLeft
     }
-
+    
+    init(player: MediaPlayer?) {
+        self.player = player
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -100,13 +119,6 @@ class PlayerSettingViewController: ViewController {
             self.currentVC?.view.removeFromSuperview()
             
             let selectedVC = self.vcs[index]
-            
-            if let selectedVC = selectedVC as? DanmakuSettingViewController {
-                selectedVC.delegate = self.delegate
-            } else if let selectedVC = selectedVC as? MediaSettingViewController {
-                selectedVC.delegate = self.delegate
-            }
-            
             self.view.addSubview(selectedVC.view)
             selectedVC.view.snp.makeConstraints { (make) in
                 make.top.equalTo(self.segmentedControl.snp.bottom).offset(10)

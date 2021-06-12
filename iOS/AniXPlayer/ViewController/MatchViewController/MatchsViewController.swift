@@ -153,17 +153,9 @@ class MatchsViewController: ViewController {
             make.edges.equalTo(self.view.safeAreaLayoutGuide.snp.edges)
         }
         
-        let rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("搜索弹幕", comment: ""), style: .plain, target: self, action: #selector(onTouchSearchButton))
-        rightBarButtonItem.setTitleTextAttributes([.font : UIFont.ddp_normal,
-                                                   .foregroundColor : UIColor.navigationTitleColor], for: .normal)
-        rightBarButtonItem.setTitleTextAttributes([.font : UIFont.ddp_normal,
-                                                   .foregroundColor : UIColor.black], for: .highlighted)
+        let rightBarButtonItem = UIBarButtonItem(title: NSLocalizedString("搜索弹幕", comment: ""), target: self, action: #selector(onTouchSearchButton))
         
-        let playNowItem = UIBarButtonItem(title: NSLocalizedString("直接播放", comment: ""), style: .plain, target: self, action: #selector(onTouchPlayNowButton))
-        playNowItem.setTitleTextAttributes([.font : UIFont.ddp_normal,
-                                                   .foregroundColor : UIColor.navigationTitleColor], for: .normal)
-        playNowItem.setTitleTextAttributes([.font : UIFont.ddp_normal,
-                                                   .foregroundColor : UIColor.black], for: .highlighted)
+        let playNowItem = UIBarButtonItem(title: NSLocalizedString("直接播放", comment: ""), target: self, action: #selector(onTouchPlayNowButton))
         
         self.navigationItem.rightBarButtonItems = [rightBarButtonItem, playNowItem]
         

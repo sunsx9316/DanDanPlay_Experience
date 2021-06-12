@@ -115,6 +115,9 @@ class FilesViewController: ViewController {
         super.viewDidLoad()
         
         self.title = self.rootFile.fileName
+        
+        self.navigationItem.rightBarButtonItem = .init(imageName: "File/file_add_file", target: self, action: #selector(onTouchAddItem(_:)))
+        
         self.view.addSubview(self.tableView)
         self.tableView.snp.makeConstraints { (make) in
             make.edges.equalTo(self.view.safeAreaLayoutGuide.snp.edges)
@@ -139,6 +142,11 @@ class FilesViewController: ViewController {
         }
         
         return false
+    }
+    
+    @objc private func onTouchAddItem(_ item: UIBarButtonItem) {
+        let vc = HttpServerViewController()
+        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc private func beginRefreshing() {
