@@ -35,6 +35,11 @@ protocol MediaPlayerDelegate: AnyObject {
     func player(_ player: MediaPlayer, shouldChangeMedia media: File) -> Bool
 }
 
+protocol SubtitleProtocol {
+    var name: String { get }
+    func load(by player: MediaPlayer)
+}
+
 extension MediaPlayerDelegate {
     func player(_ player: MediaPlayer, currentTime: TimeInterval, totalTime: TimeInterval) {}
     func player(_ player: MediaPlayer, stateDidChange state: MediaPlayer.State) {}
@@ -47,6 +52,28 @@ private class Coordinator: NSObject {
     init(player: MediaPlayer) {
         super.init()
         self.player = player
+    }
+}
+
+/// 内嵌字幕
+private struct Subtitle: SubtitleProtocol {
+    let index: Int
+    
+    let name: String
+    
+    func load(by player: MediaPlayer) {
+        player.player.currentVideoSubTitleIndex = Int32(index)
+    }
+}
+
+/// 外挂字幕
+struct ExternalSubtitle: SubtitleProtocol {
+    let name: String
+    
+    let url: URL
+    
+    func load(by player: MediaPlayer) {
+        player.player.addPlaybackSlave(self.url, type: .subtitle, enforce: true)
     }
 }
 
@@ -63,11 +90,6 @@ class MediaPlayer {
         case playing
         case pause
         case stop
-    }
-    
-    struct Subtitle {
-        let index: Int
-        let name: String
     }
     
     struct AudioChannel {
@@ -136,6 +158,7 @@ class MediaPlayer {
     private(set) var currentPlayItem: File? {
         didSet {
             self.player.stop()
+            self.currentSubTitleFile = nil
             let media = self.currentPlayItem?.createMedia()
             self.player.media = media
         }
@@ -145,12 +168,20 @@ class MediaPlayer {
         return Coordinator(player: self)
     }()
     
-    var subtitleList: [Subtitle] {
+    
+    /// 当前选择的字幕文件
+    private var currentSubTitleFile: SubtitleProtocol?
+    
+    var subtitleList: [SubtitleProtocol] {
         return self.player.videoSubTitlesIndexes.indices.compactMap({ subtitleWithIndexInPlayer($0) })
     }
     
-    var currentSubtitle: Subtitle? {
+    var currentSubtitle: SubtitleProtocol? {
         get {
+            if let currentSubTitleFile = self.currentSubTitleFile {
+                return currentSubTitleFile
+            }
+            
             let currentVideoSubTitleIndex = self.player.currentVideoSubTitleIndex
             if let fristIndex = self.player.videoSubTitlesIndexes.firstIndex(where: { (value) -> Bool in
                 if let value = value as? Int, value == currentVideoSubTitleIndex {
@@ -164,11 +195,8 @@ class MediaPlayer {
         }
         
         set {
-            if let subtitle = newValue {
-                self.player.currentVideoSubTitleIndex = Int32(subtitle.index)
-            } else {
-                self.player.currentVideoSubTitleIndex = -1
-            }
+            self.currentSubTitleFile = newValue
+            newValue?.load(by: self)
         }
     }
     
@@ -400,10 +428,6 @@ class MediaPlayer {
     
     func stop() {
         self.player.stop()
-    }
-    
-    func openVideoSubTitle(with url: URL) {
-        self.player.addPlaybackSlave(url, type: .subtitle, enforce: true)
     }
     
     func addMediaToPlayList(_ media: File) {

@@ -7,63 +7,52 @@
 
 import Foundation
 
-enum SubtitleError: LocalizedError {
-    case customSubtitleNotExit
-    
-    var errorDescription: String? {
-        switch self {
-        case .customSubtitleNotExit:
-            return "本地字幕不存在"
-        }
-    }
-}
-
 class SubtitleManager {
-    
-    
     
     static let shared = SubtitleManager()
     
     private init() {}
     
-    func loadCustomSubtitleWithMedia(_ media: File, completion: @escaping((Result<URL, Error>) -> Void)) {
-        //加载本地弹幕
-        if let parentFile = media.parentFile {
-            let name = media.url.deletingPathExtension().lastPathComponent
-            media.fileManager.subtitlesOfDirectory(at: parentFile) { result in
+    func downCustomSubtitle(_ file: File, completion: @escaping((Result<SubtitleProtocol, Error>) -> Void)) {
+        var cacheURL = UIApplication.shared.cachesURL
+        cacheURL.appendPathComponent(file.fileHash)
+        
+        let subtitle = ExternalSubtitle(name: file.url.lastPathComponent, url: cacheURL)
+        
+        if !FileManager.default.fileExists(atPath: cacheURL.path) {
+            file.getDataWithProgress(nil) { result in
                 switch result {
-                case .success(let files):
-                    if let file = files.first(where: { $0.url.lastPathComponent.contains(name) }) {
-                        
-                        var cacheURL = UIApplication.shared.cachesURL
-                        cacheURL.appendPathComponent(file.fileHash)
-                        
-                        if !FileManager.default.fileExists(atPath: cacheURL.path) {
-                            file.getDataWithProgress(nil) { result in
-                                switch result {
-                                case .success(let data):
-                                    do {
-                                        try data.write(to: cacheURL)
-                                        completion(.success(cacheURL))
-                                    } catch (let error) {
-                                        completion(.failure(error))
-                                    }
-                                case .failure(let error):
-                                    completion(.failure(error))
-                                }
-                            }
-                        } else {
-                            completion(.success(cacheURL))
-                        }
-                    } else {
-                        completion(.failure(SubtitleError.customSubtitleNotExit))
+                case .success(let data):
+                    do {
+                        try data.write(to: cacheURL, options: .atomic)
+                        completion(.success(subtitle))
+                    } catch (let error) {
+                        completion(.failure(error))
                     }
                 case .failure(let error):
                     completion(.failure(error))
                 }
             }
         } else {
-            completion(.failure(SubtitleError.customSubtitleNotExit))
+            completion(.success(subtitle))
+        }
+    }
+    
+    func findCustomSubtitleWithMedia(_ media: File, completion: @escaping((Result<[File], Error>) -> Void)) {
+        //加载本地弹幕
+        if let parentFile = media.parentFile {
+            let name = media.url.deletingPathExtension().lastPathComponent
+            media.fileManager.subtitlesOfDirectory(at: parentFile) { result in
+                switch result {
+                case .success(let files):
+                    let subtitleFiles = files.filter({ $0.url.lastPathComponent.contains(name) })
+                    completion(.success(subtitleFiles))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        } else {
+            completion(.success([]))
         }
     }
 }

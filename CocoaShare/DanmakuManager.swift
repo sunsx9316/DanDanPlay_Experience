@@ -14,63 +14,69 @@ import YYCategories
 import DDPCategory
 #endif
 
-enum DanmakuError: LocalizedError {
+private enum DanmakuError: LocalizedError {
     case parseError
-    case customDanmakuNotExit
     
     var errorDescription: String? {
         switch self {
         case .parseError:
             return "弹幕解析错误"
-        case .customDanmakuNotExit:
-            return "本地弹幕不存在"
         }
     }
 }
 
 class DanmakuManager {
+    
     static let shared = DanmakuManager()
     
     private init() {}
     
-    func loadCustomDanmakuWithMedia(_ media: File, completion: @escaping((Result<URL, Error>) -> Void)) {
-        //加载本地弹幕
-        if let parentFile = media.parentFile {
-            let name = media.url.deletingPathExtension().lastPathComponent
-            media.fileManager.danmakusOfDirectory(at: parentFile) { result in
+    /// 下载本地弹幕
+    /// - Parameters:
+    ///   - file: 弹幕文件
+    ///   - completion: 完成回调
+    func downCustomDanmaku(_ file: File, completion: @escaping((Result<URL, Error>) -> Void)) {
+        var cacheURL = UIApplication.shared.cachesURL
+        cacheURL.appendPathComponent(file.fileHash)
+        
+        if !FileManager.default.fileExists(atPath: cacheURL.path) {
+            file.getDataWithProgress(nil) { result in
                 switch result {
-                case .success(let files):
-                    if let file = files.first(where: { $0.url.lastPathComponent.contains(name) }) {
-                        
-                        var cacheURL = UIApplication.shared.cachesURL
-                        cacheURL.appendPathComponent(file.fileHash)
-                        
-                        if !FileManager.default.fileExists(atPath: cacheURL.path) {
-                            file.getDataWithProgress(nil) { result in
-                                switch result {
-                                case .success(let data):
-                                    do {
-                                        try data.write(to: cacheURL)
-                                        completion(.success(cacheURL))
-                                    } catch (let error) {
-                                        completion(.failure(error))
-                                    }
-                                case .failure(let error):
-                                    completion(.failure(error))
-                                }
-                            }
-                        } else {
-                            completion(.success(cacheURL))
-                        }
-                    } else {
-                        completion(.failure(DanmakuError.customDanmakuNotExit))
+                case .success(let data):
+                    do {
+                        try data.write(to: cacheURL, options: .atomic)
+                        completion(.success(cacheURL))
+                    } catch (let error) {
+                        completion(.failure(error))
                     }
                 case .failure(let error):
                     completion(.failure(error))
                 }
             }
         } else {
-            completion(.failure(DanmakuError.customDanmakuNotExit))
+            completion(.success(cacheURL))
+        }
+    }
+    
+    
+    /// 根据视频查找本地弹幕
+    /// - Parameters:
+    ///   - media: 视频
+    ///   - completion: 完成回调
+    func findCustomDanmakuWithMedia(_ media: File, completion: @escaping((Result<[File], Error>) -> Void)) {
+        if let parentFile = media.parentFile {
+            let name = media.url.deletingPathExtension().lastPathComponent
+            media.fileManager.danmakusOfDirectory(at: parentFile) { result in
+                switch result {
+                case .success(let files):
+                    let danmakuFiles = files.filter({ $0.url.lastPathComponent.contains(name) })
+                    completion(.success(danmakuFiles))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        } else {
+            completion(.success([]))
         }
     }
     

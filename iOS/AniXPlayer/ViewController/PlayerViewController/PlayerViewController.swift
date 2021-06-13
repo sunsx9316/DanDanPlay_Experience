@@ -264,32 +264,46 @@ class PlayerViewController: ViewController {
         
         //加载本地弹幕
         if Preferences.shared.autoLoadCustomDanmaku {
-            DanmakuManager.shared.loadCustomDanmakuWithMedia(media) { [weak self] result in
+            DanmakuManager.shared.findCustomDanmakuWithMedia(media) { [weak self] result in
                 guard let self = self else { return }
                 
                 switch result {
-                case .success(let url):
-                    do {
-                        let converResult = try DanmakuManager.shared.conver(url)
-                        DispatchQueue.main.async {
-                            startPlayAction(converResult)
-                            self.view.showHUD(NSLocalizedString("加载本地弹幕成功！", comment: ""))
-                        }
-                    } catch let error {
+                case .success(let files):
+                    if files.isEmpty {
                         DispatchQueue.main.async {
                             startPlayAction(DanmakuManager.shared.conver(danmakus))
-                            self.view.showError(error)
+                        }
+                        return
+                    }
+                    
+                    DanmakuManager.shared.downCustomDanmaku(files[0]) { [weak self] result1 in
+                        
+                        guard let self = self else { return }
+                        
+                        switch result1 {
+                        case .success(let url):
+                            do {
+                                let converResult = try DanmakuManager.shared.conver(url)
+                                DispatchQueue.main.async {
+                                    startPlayAction(converResult)
+                                    self.view.showHUD(NSLocalizedString("加载本地弹幕成功！", comment: ""))
+                                }
+                            } catch let error {
+                                DispatchQueue.main.async {
+                                    startPlayAction(DanmakuManager.shared.conver(danmakus))
+                                    self.view.showError(error)
+                                }
+                            }
+                        case .failure(let error):
+                            DispatchQueue.main.async {
+                                startPlayAction(DanmakuManager.shared.conver(danmakus))
+                                self.view.showError(error)
+                            }
                         }
                     }
                 case .failure(let error):
                     DispatchQueue.main.async {
                         startPlayAction(DanmakuManager.shared.conver(danmakus))
-                        
-                        //不存在的错误不用展示tips
-                        if let error = error as? DanmakuError,
-                           error == DanmakuError.customDanmakuNotExit {
-                            return
-                        }
                         self.view.showError(error)
                     }
                 }
@@ -299,23 +313,29 @@ class PlayerViewController: ViewController {
         }
         
         //加载本地字幕
-        SubtitleManager.shared.loadCustomSubtitleWithMedia(media) { [weak self] result in
+        SubtitleManager.shared.findCustomSubtitleWithMedia(media) { [weak self] result in
             guard let self = self else { return }
             
             switch result {
-            case .success(let url):
-                DispatchQueue.main.async {
-                    self.view.showHUD(NSLocalizedString("加载本地字幕成功！", comment: ""))
-                    self.player.openVideoSubTitle(with: url)
-                }
-            case .failure(let error):
-                
-                //不存在的错误不用展示tips
-                if let error = error as? SubtitleError,
-                   error == SubtitleError.customSubtitleNotExit {
+            case .success(let files):
+                if files.isEmpty {
                     return
                 }
                 
+                SubtitleManager.shared.downCustomSubtitle(files[0]) { result1 in
+                    switch result1 {
+                    case .success(let subtitle):
+                    DispatchQueue.main.async {
+                        self.player.currentSubtitle = subtitle
+                        self.view.showHUD(NSLocalizedString("加载本地字幕成功！", comment: ""))
+                    }
+                    case .failure(let error):
+                        DispatchQueue.main.async {
+                            self.view.showError(error)
+                        }
+                    }
+                }
+            case .failure(let error):
                 DispatchQueue.main.async {
                     self.view.showError(error)
                 }
@@ -598,6 +618,10 @@ extension PlayerViewController: DanmakuSettingViewControllerDelegate {
 
 extension PlayerViewController: MediaSettingViewControllerDelegate {
     
+    func mediaSettingViewController(_ vc: MediaSettingViewController, didOpenSubtitle subtitle: SubtitleProtocol) {
+        self.player.currentSubtitle = subtitle
+    }
+    
     func mediaSettingViewController(_ vc: MediaSettingViewController, didChangeSubtitleSafeArea isOn: Bool) {
         
         UIView.animate(withDuration: 0.2) {
@@ -644,23 +668,49 @@ extension PlayerViewController: FilesViewControllerDelegate {
             self.tryParseMedia(didSelectFile)
             vc.dismiss(animated: true, completion: nil)
         } else if didSelectFile.url.isDanmakuFile {
-            DispatchQueue.global().async {
-                do {
-                    let converDic = try DanmakuManager.shared.conver(didSelectFile.url)
-                    DispatchQueue.main.async {
-                        self.danmakuDic = converDic
-                        vc.dismiss(animated: true, completion: nil)
+            
+            DanmakuManager.shared.downCustomDanmaku(didSelectFile) { [weak self] result1 in
+                
+                guard let self = self else { return }
+                
+                switch result1 {
+                case .success(let url):
+                    do {
+                        let converResult = try DanmakuManager.shared.conver(url)
+                        DispatchQueue.main.async {
+                            self.danmakuDic = converResult
+                            vc.dismiss(animated: true, completion: nil)
+                            self.view.showHUD(NSLocalizedString("加载本地弹幕成功！", comment: ""))
+                        }
+                    } catch let error {
+                        DispatchQueue.main.async {
+                            vc.dismiss(animated: true, completion: nil)
+                            self.view.showError(error)
+                        }
                     }
-                } catch let error {
+                case .failure(let error):
                     DispatchQueue.main.async {
-                        self.view.showError(error)
                         vc.dismiss(animated: true, completion: nil)
+                        self.view.showError(error)
                     }
                 }
             }
         } else if didSelectFile.url.isSubtitleFile {
-            self.player.openVideoSubTitle(with: didSelectFile.url)
-            vc.dismiss(animated: true, completion: nil)
+            SubtitleManager.shared.downCustomSubtitle(didSelectFile) { result1 in
+                switch result1 {
+                case .success(let subtitle):
+                DispatchQueue.main.async {
+                    self.player.currentSubtitle = subtitle
+                    vc.dismiss(animated: true, completion: nil)
+                    self.view.showHUD(NSLocalizedString("加载本地字幕成功！", comment: ""))
+                }
+                case .failure(let error):
+                    DispatchQueue.main.async {
+                        vc.dismiss(animated: true, completion: nil)
+                        self.view.showError(error)
+                    }
+                }
+            }
         }
     }
 }
