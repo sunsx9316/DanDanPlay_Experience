@@ -300,7 +300,7 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
-				<string>public.movie</string>
+				<string>public.video</string>
 			</array>
 			<key>UTTypeDescription</key>
 			<string>Ogg Video</string>
@@ -354,7 +354,7 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
-				<string>public.movie</string>
+				<string>public.video</string>
 			</array>
 			<key>UTTypeDescription</key>
 			<string>Matroska</string>
@@ -694,7 +694,7 @@
 		<dict>
 			<key>UTTypeConformsTo</key>
 			<array>
-				<string>public.movie</string>
+				<string>public.video</string>
 			</array>
 			<key>UTTypeDescription</key>
 			<string>vlc fake file</string>

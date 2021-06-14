@@ -127,66 +127,29 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
                 return
             }
             
-            SubtitleManager.shared.findCustomSubtitleWithMedia(media) { [weak self] result in
-                
-                guard let self = self else { return }
-                
-                switch result {
-                case .success(let files):
-                    DispatchQueue.main.async {
-                        let localSubtitleList = self.player?.subtitleList ?? []
-                        
-                        //远端和本地都没有字幕，不响应。
-                        if files.isEmpty && localSubtitleList.isEmpty {
-                            return
-                        }
-                        
-                        let vc = UIAlertController(title: type.title, message: nil, preferredStyle: .actionSheet)
-                        
-                        //加载本地字幕
-                        for subtitle in localSubtitleList {
-                            let action = UIAlertAction(title: subtitle.name, style: .default) { (UIAlertAction) in
-                                DispatchQueue.main.async {
-                                    self.player?.currentSubtitle = subtitle
-                                    self.tableView.reloadData()
-                                }
-                            }
-                            vc.addAction(action)
-                        }
-                        
-                        //加载远端字幕
-                        for subtitle in files {
-                            let action = UIAlertAction(title: subtitle.fileName, style: .default) { (UIAlertAction) in
-                                
-                                SubtitleManager.shared.downCustomSubtitle(subtitle) { result1 in
-                                    switch result1 {
-                                    case .success(let subtitle):
-                                        DispatchQueue.main.async {
-                                            self.delegate?.mediaSettingViewController(self, didOpenSubtitle: subtitle)
-                                            self.tableView.reloadData()
-                                        }
-                                    case .failure(let error):
-                                        DispatchQueue.main.async {
-                                            self.view.showError(error)
-                                        }
-                                    }
-                                }
-                            }
-                            vc.addAction(action)
-                        }
-                        
-                        vc.addAction(.init(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: { (_) in }))
-                        vc.popoverPresentationController?.sourceView = tableView.cellForRow(at: indexPath)
-                        self.present(vc, animated: true, completion: nil)
-                    }
-                    
-                case .failure(let error):
-                    DispatchQueue.main.async {
-                        self.view.showError(error)
-                    }
-                }
+            let localSubtitleList = self.player?.subtitleList ?? []
+            
+            //本地没有字幕，不响应。
+            if localSubtitleList.isEmpty {
+                return
             }
             
+            let vc = UIAlertController(title: type.title, message: nil, preferredStyle: .actionSheet)
+            
+            //加载本地字幕
+            for subtitle in localSubtitleList {
+                let action = UIAlertAction(title: subtitle.name, style: .default) { (UIAlertAction) in
+                    DispatchQueue.main.async {
+                        self.player?.currentSubtitle = subtitle
+                        self.tableView.reloadData()
+                    }
+                }
+                vc.addAction(action)
+            }
+            
+            vc.addAction(.init(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: { (_) in }))
+            vc.popoverPresentationController?.sourceView = tableView.cellForRow(at: indexPath)
+            self.present(vc, animated: true, completion: nil)
             
         } else if type == .audioTrack {
             guard let audioChannelList = self.player?.audioChannelList,

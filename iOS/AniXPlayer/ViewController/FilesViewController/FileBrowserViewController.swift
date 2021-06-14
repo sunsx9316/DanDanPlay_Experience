@@ -1,5 +1,5 @@
 //
-//  FilesViewController.swift
+//  FileBrowserViewController.swift
 //  Runner
 //
 //  Created by jimhuang on 2021/3/7.
@@ -9,11 +9,11 @@ import UIKit
 import SnapKit
 import MJRefresh
 
-protocol FilesViewControllerDelegate: AnyObject {
-    func filesViewController(_ vc: FilesViewController, didSelectFile: File, allFiles: [File])
+protocol FileBrowserViewControllerDelegate: AnyObject {
+    func fileBrowserViewController(_ vc: FileBrowserViewController, didSelectFile: File, allFiles: [File])
 }
 
-extension FilesViewController: UITableViewDelegate, UITableViewDataSource {
+extension FileBrowserViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.dataSource.count
     }
@@ -46,23 +46,24 @@ extension FilesViewController: UITableViewDelegate, UITableViewDataSource {
         switch file.type {
         case .file:
             let files = self.dataSource.filter({ $0.type == .file })
-            self.delegate?.filesViewController(self, didSelectFile: file, allFiles: files)
+            self.delegate?.fileBrowserViewController(self, didSelectFile: file, allFiles: files)
         case .folder:
-            let vc = FilesViewController(with: file, selectedFile: self.selectedFile, filterType: self.filterType)
+            let vc = FileBrowserViewController(with: file, selectedFile: self.selectedFile, filterType: self.filterType)
             vc.delegate = self
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }
 }
 
-extension FilesViewController: FilesViewControllerDelegate {
-    func filesViewController(_ vc: FilesViewController, didSelectFile: File, allFiles: [File]) {
-        self.delegate?.filesViewController(vc, didSelectFile: didSelectFile, allFiles: allFiles)
+extension FileBrowserViewController: FileBrowserViewControllerDelegate {
+    func fileBrowserViewController(_ vc: FileBrowserViewController, didSelectFile: File, allFiles: [File]) {
+        self.delegate?.fileBrowserViewController(vc, didSelectFile: didSelectFile, allFiles: allFiles)
     }
 }
 
 
-class FilesViewController: ViewController {
+/// 文件浏览器
+class FileBrowserViewController: ViewController {
     
     struct FilterType: OptionSet {
         let rawValue: Int
@@ -96,7 +97,7 @@ class FilesViewController: ViewController {
     
     private var dataSource = [File]()
     
-    weak var delegate: FilesViewControllerDelegate?
+    weak var delegate: FileBrowserViewControllerDelegate?
     
     
     init(with rootFile: File, selectedFile: File?, filterType: FilterType? = nil) {
@@ -115,8 +116,6 @@ class FilesViewController: ViewController {
         super.viewDidLoad()
         
         self.title = self.rootFile.fileName
-        
-        self.navigationItem.rightBarButtonItem = .init(imageName: "File/file_add_file", target: self, action: #selector(onTouchAddItem(_:)))
         
         self.view.addSubview(self.tableView)
         self.tableView.snp.makeConstraints { (make) in
@@ -142,11 +141,6 @@ class FilesViewController: ViewController {
         }
         
         return false
-    }
-    
-    @objc private func onTouchAddItem(_ item: UIBarButtonItem) {
-        let vc = HttpServerViewController()
-        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     @objc private func beginRefreshing() {

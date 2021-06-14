@@ -169,15 +169,15 @@ extension SMBLoginHistoryViewController: SMBConnectViewControllerDelegate {
         }
         
         let rootFile = SMBFile.rootFile
-        let vc = FilesViewController(with: rootFile, selectedFile: nil, filterType: .video)
+        let vc = FileBrowserViewController(with: rootFile, selectedFile: nil, filterType: .video)
         vc.delegate = self
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 
-extension SMBLoginHistoryViewController: FilesViewControllerDelegate {
-    func filesViewController(_ vc: FilesViewController, didSelectFile: File, allFiles: [File]) {
+extension SMBLoginHistoryViewController: FileBrowserViewControllerDelegate {
+    func fileBrowserViewController(_ vc: FileBrowserViewController, didSelectFile: File, allFiles: [File]) {
         let nvc = PlayerNavigationController(items: allFiles, selectedItem: didSelectFile)
         self.present(nvc, animated: true, completion: nil)
     }

@@ -50,6 +50,7 @@ class Preferences {
         case smbLoginInfo
         case webDavLoginInfo
         case ftpLoginInfo
+        case subtitleLoadOrder
     }
     
     enum PlayerMode: Int, CaseIterable {
@@ -157,7 +158,7 @@ class Preferences {
                     let data = try JSONEncoder().encode(newValue)
                     Store.shared.set(data, forKey: KeyName.smbLoginInfo.rawValue)
                 } catch let error {
-                    debugPrint("读取 smbLoginInfo 失败 error: \(error)")
+                    debugPrint("设置 smbLoginInfo 失败 error: \(error)")
                 }
             } else {
                 Store.shared.remove(KeyName.smbLoginInfo.rawValue)
@@ -184,7 +185,7 @@ class Preferences {
                     let data = try JSONEncoder().encode(newValue)
                     Store.shared.set(data, forKey: KeyName.webDavLoginInfo.rawValue)
                 } catch let error {
-                    debugPrint("读取 webDavLoginInfos 失败 error: \(error)")
+                    debugPrint("设置 webDavLoginInfos 失败 error: \(error)")
                 }
             } else {
                 Store.shared.remove(KeyName.webDavLoginInfo.rawValue)
@@ -211,10 +212,37 @@ class Preferences {
                     let data = try JSONEncoder().encode(newValue)
                     Store.shared.set(data, forKey: KeyName.ftpLoginInfo.rawValue)
                 } catch let error {
-                    debugPrint("读取 webDavLoginInfos 失败 error: \(error)")
+                    debugPrint("设置 webDavLoginInfos 失败 error: \(error)")
                 }
             } else {
                 Store.shared.remove(KeyName.ftpLoginInfo.rawValue)
+            }
+        }
+    }
+    
+    var subtitleLoadOrder: [String]? {
+        get {
+            if let jsonData: Data = Store.shared.value(forKey: KeyName.subtitleLoadOrder.rawValue) {
+                do {
+                    let loadOrder = try JSONDecoder().decode([String].self, from: jsonData)
+                    return loadOrder
+                } catch let error {
+                    debugPrint("读取 subtitleLoadOrder 失败 error: \(error)")
+                }
+            }
+            return nil
+        }
+        
+        set {
+            if let newValue = newValue {
+                do {
+                    let data = try JSONEncoder().encode(newValue)
+                    Store.shared.set(data, forKey: KeyName.subtitleLoadOrder.rawValue)
+                } catch let error {
+                    debugPrint("设置 subtitleLoadOrder 失败 error: \(error)")
+                }
+            } else {
+                Store.shared.remove(KeyName.subtitleLoadOrder.rawValue)
             }
         }
     }

@@ -43,6 +43,11 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = type.subtitle
             return cell
+        case .subtitleLoadOrder:
+            let cell = tableView.dequeueCell(class: TitleDetailMoreTableViewCell.self, indexPath: indexPath)
+            cell.titleLabel.text = type.title
+            cell.subtitleLabel.text = type.subtitle
+            return cell
         }
     }
     
@@ -78,6 +83,9 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
             }))
             vc.popoverPresentationController?.sourceView = tableView.cellForRow(at: indexPath)
             self.present(vc, animated: true, completion: nil)
+        } else if type == .subtitleLoadOrder {
+            let vc = SubtitleOrderViewController()
+            self.navigationController?.pushViewController(vc, animated: true)
         }
     }
     
@@ -89,6 +97,7 @@ class SettingViewController: ViewController {
         case fastMatch
         case autoLoadCustomDanmaku
         case danmakuCacheDay
+        case subtitleLoadOrder
         
         var title: String {
             switch self {
@@ -98,6 +107,8 @@ class SettingViewController: ViewController {
                 return NSLocalizedString("弹幕缓存时间", comment: "")
             case .autoLoadCustomDanmaku:
                 return NSLocalizedString("自动加载本地弹幕", comment: "")
+            case .subtitleLoadOrder:
+                return NSLocalizedString("字幕加载顺序", comment: "")
             }
         }
         
@@ -116,6 +127,20 @@ class SettingViewController: ViewController {
                 return str
             case .autoLoadCustomDanmaku:
                 return NSLocalizedString("自动加载本地弹幕", comment: "")
+            case .subtitleLoadOrder:
+                let desc = Preferences.shared.subtitleLoadOrder?.reduce("", { result, str in
+                    
+                    guard let result = result, !result.isEmpty else {
+                        return str
+                    }
+                    
+                    return result + "," + str
+                }) ?? ""
+                
+                if desc.isEmpty {
+                    return NSLocalizedString("未指定", comment: "")
+                }
+                return desc
             }
         }
     }
@@ -128,6 +153,7 @@ class SettingViewController: ViewController {
         tableView.dataSource = self
         tableView.registerNibCell(class: SwitchDetailTableViewCell.self)
         tableView.registerNibCell(class: TitleDetailTableViewCell.self)
+        tableView.registerNibCell(class: TitleDetailMoreTableViewCell.self)
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
         return tableView
@@ -144,6 +170,11 @@ class SettingViewController: ViewController {
         self.tableView.snp.makeConstraints { (make) in
             make.edges.equalTo(self.view.safeAreaLayoutGuide.snp.edges)
         }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.tableView.reloadData()
     }
 
 }

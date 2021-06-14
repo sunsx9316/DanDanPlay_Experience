@@ -322,7 +322,19 @@ class PlayerViewController: ViewController {
                     return
                 }
                 
-                SubtitleManager.shared.downCustomSubtitle(files[0]) { result1 in
+                var subtitleFile = files[0]
+                
+                //按照优先级加载字幕
+                if let subtitleLoadOrder = Preferences.shared.subtitleLoadOrder {
+                    for keyName in subtitleLoadOrder {
+                        if let matched = files.first(where: { $0.fileName.contains(keyName) }) {
+                            subtitleFile = matched
+                            break
+                        }
+                    }
+                }
+                
+                SubtitleManager.shared.downCustomSubtitle(subtitleFile) { result1 in
                     switch result1 {
                     case .success(let subtitle):
                     DispatchQueue.main.async {
@@ -345,7 +357,7 @@ class PlayerViewController: ViewController {
     
     /// 弹出文件选择器
     /// - Parameter type: 筛选文件类型
-    func showFilesVCWithType(_ type: FilesViewController.FilterType) {
+    func showFilesVCWithType(_ type: FileBrowserViewController.FilterType) {
         
         if let presentedViewController = self.presentedViewController {
             presentedViewController.dismiss(animated: true, completion: nil)
@@ -354,7 +366,7 @@ class PlayerViewController: ViewController {
         let item = self.player.currentPlayItem ?? self.player.playList.first
         
         if let parentFile = item?.parentFile {
-            let vc = FilesViewController(with: parentFile, selectedFile: item, filterType: type)
+            let vc = FileBrowserViewController(with: parentFile, selectedFile: item, filterType: type)
             vc.delegate = self
             let nav = UINavigationController(rootViewController: vc)
             nav.modalPresentationStyle = .custom
@@ -660,8 +672,8 @@ extension PlayerViewController: MediaSettingViewControllerDelegate {
     
 }
 
-extension PlayerViewController: FilesViewControllerDelegate {
-    func filesViewController(_ vc: FilesViewController, didSelectFile: File, allFiles: [File]) {
+extension PlayerViewController: FileBrowserViewControllerDelegate {
+    func fileBrowserViewController(_ vc: FileBrowserViewController, didSelectFile: File, allFiles: [File]) {
         
         if didSelectFile.url.isMediaFile {
             self.loadItems(allFiles)
