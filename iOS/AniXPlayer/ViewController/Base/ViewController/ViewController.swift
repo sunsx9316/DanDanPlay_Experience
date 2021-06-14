@@ -13,5 +13,13 @@ class ViewController: UIViewController {
         self.view.backgroundColor = .backgroundColor
         let backBarButtton = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         self.navigationItem.backBarButtonItem = backBarButtton
+        
+        self.navigationItem.leftBarButtonItem = .init(backToTopItem: self, action: #selector(onTouchLeftBarButtonItem(_:)))
+        self.navigationItem.leftItemsSupplementBackButton = true
     }
+    
+    @objc private func onTouchLeftBarButtonItem(_ item: UIButton) {
+        self.navigationController?.popToRootViewController(animated: true)
+    }
+    
 }

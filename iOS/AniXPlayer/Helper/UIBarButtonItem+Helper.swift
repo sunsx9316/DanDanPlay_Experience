@@ -22,4 +22,11 @@ extension UIBarButtonItem {
         self.init(image: img, style: .plain, target: target, action: action)
     }
     
+    convenience init(backToTopItem withTarget: Any, action: Selector) {
+        let button = Button()
+        button.setImage(UIImage(named: "Comment/comment_back_to_top"), for: .normal)
+        button.addTarget(withTarget, action: action, for: .touchUpInside)
+        self.init(customView: button)
+    }
+    
 }

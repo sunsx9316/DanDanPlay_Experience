@@ -109,6 +109,8 @@ class PickFileViewController: ViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.navigationItem.leftBarButtonItem = nil
 
         self.view.addSubview(self.tableView)
         self.tableView.snp.makeConstraints { (make) in
