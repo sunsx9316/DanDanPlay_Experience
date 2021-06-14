@@ -22,7 +22,7 @@ target 'AniXPlayer' do
   pod 'JHDanmakuRender'
   pod 'HandyJSON'
   pod 'MJRefresh'
-  pod 'MobileVLCKit'
+  pod 'MobileVLCKit', '3.3.10'
   pod 'Alamofire'
   pod 'AMSMB2'
   pod 'FilesProvider'

@@ -20,7 +20,7 @@ fileprivate extension Timer {
 
 #if os(iOS)
 import UIKit
-import MobileVLCKit
+//import MobileVLCKit
 import AVFoundation
 typealias MediaView = UIView
 #else

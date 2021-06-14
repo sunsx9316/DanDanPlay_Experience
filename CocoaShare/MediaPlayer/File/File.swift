@@ -7,7 +7,7 @@
 
 import Foundation
 #if os(iOS)
-import MobileVLCKit
+//import MobileVLCKit
 #else
 import VLCKit
 #endif
