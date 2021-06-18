@@ -29,6 +29,5 @@ class FileTableViewCell: TableViewCell {
         self.typeLabel.layer.cornerRadius = 6
         
         self.titleLabel.font = .ddp_normal
-        self.titleLabel.textColor = .black
     }
 }

@@ -13,7 +13,15 @@ class ViewController: UIViewController {
         self.view.backgroundColor = .backgroundColor
         let backBarButtton = UIBarButtonItem(title: "", style: .plain, target: nil, action: nil)
         self.navigationItem.backBarButtonItem = backBarButtton
-        
+        self.setupNavigationItem()
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        self.setupNavigationItem()
+    }
+    
+    private func setupNavigationItem() {
         self.navigationItem.leftBarButtonItem = .init(backToTopItem: self, action: #selector(onTouchLeftBarButtonItem(_:)))
         self.navigationItem.leftItemsSupplementBackButton = true
     }

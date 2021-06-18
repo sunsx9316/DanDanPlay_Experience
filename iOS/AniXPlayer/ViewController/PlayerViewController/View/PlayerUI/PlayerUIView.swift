@@ -8,6 +8,7 @@
 import UIKit
 import AVFoundation
 import SnapKit
+import DynamicButton
 
 protocol PlayerUIViewDelegate: AnyObject {
     
@@ -86,7 +87,11 @@ class PlayerUIView: UIView {
     
     var isPlay = false {
         didSet {
-            self.bottomView.playButton.isSelected = self.isPlay
+            if self.isPlay {
+                self.bottomView.playButton.setStyle(.pause, animated: true)
+            } else {
+                self.bottomView.playButton.setStyle(.play, animated: true)
+            }
         }
     }
     
@@ -141,7 +146,7 @@ class PlayerUIView: UIView {
         if let view = self._brightnessView {
             brightnessView = view
         } else {
-            brightnessView = SliderControlView(image: UIImage(named: "Player/player_brightness"))
+            brightnessView = SliderControlView(image: UIImage(named: "Player/brightness"))
             brightnessView.progress = UIScreen.main.brightness
             self._brightnessView = brightnessView
         }
@@ -153,7 +158,7 @@ class PlayerUIView: UIView {
         if let view = self._volumeView {
             controlView = view
         } else {
-            controlView = VolumeControlView(image: UIImage(named: "Player/player_volume"))
+            controlView = VolumeControlView(image: UIImage(named: "Player/volume"))
             controlView.progress = CGFloat(AVAudioSession.sharedInstance().outputVolume)
             self._volumeView = controlView
         }
@@ -308,8 +313,8 @@ class PlayerUIView: UIView {
     }
     
     @objc private func onTouchPlayButton(_ sender: UIButton) {
-        sender.isSelected.toggle()
-        delegate?.onTouchPlayButton(playerUIView: self, isSelected: sender.isSelected)
+        self.isPlay.toggle()
+        delegate?.onTouchPlayButton(playerUIView: self, isSelected: self.isPlay)
     }
     
     @objc private func onTouchNextButton(_ sender: UIButton) {

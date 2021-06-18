@@ -53,7 +53,8 @@ class SMBConnectViewController: ViewController {
         let button = UISegmentedControl(items: [NSLocalizedString("客人", comment: ""),
                                                 NSLocalizedString("注册用户", comment: "")])
         button.tintColor = .mainColor
-        button.setTitleTextAttributes([.foregroundColor : UIColor.black], for: .normal)
+        button.setTitleTextAttributes([.foregroundColor : UIColor.black], for: .selected)
+        button.setTitleTextAttributes([.foregroundColor : UIColor.gray], for: .normal)
         if #available(iOS 13.0, *) {
             button.selectedSegmentTintColor = .lightGray
         }
@@ -106,7 +107,8 @@ class SMBConnectViewController: ViewController {
         
         
         segmentedStackView.snp.makeConstraints { make in
-            make.top.leading.equalTo(10)
+            make.top.equalTo(self.view.safeAreaLayoutGuide.snp.top)
+            make.leading.equalTo(10)
             make.trailing.equalTo(-10)
         }
         

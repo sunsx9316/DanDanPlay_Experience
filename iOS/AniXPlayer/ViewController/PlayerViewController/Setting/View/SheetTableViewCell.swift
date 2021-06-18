@@ -17,10 +17,11 @@ class SheetTableViewCell: TableViewCell {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        self.arrowImgView.image = UIImage(named: "Comment/comment_arrow_down")?.byTintColor(.backgroundColor)
+        
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
         self.titleLabel.textColor = .white
         self.valueLabel.textColor = .white
+        self.arrowImgView.image = UIImage(named: "Public/right_arrow")?.byTintColor(.white)
     }
 }

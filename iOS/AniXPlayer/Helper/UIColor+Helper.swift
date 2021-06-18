@@ -17,24 +17,36 @@ extension UIColor {
         self.init(red: normalizedRed, green: normalizedGreen, blue: normalizedBlue, alpha: alpha)
     }
     
-    static var mainColor: UIColor {
-        return UIColor(red: 243, green: 118, blue: 47, alpha: 1)
-    }
-    
-    static var backgroundColor: UIColor {
+    private static func byName(_ name: String) -> UIColor {
+        if let color = UIColor(named: name) {
+            return color
+        }
+        assert(false, "未找到颜色 \(name)")
         return .white
     }
     
+    static var mainColor: UIColor {
+        return UIColor(red: 20, green: 180, blue: 9, alpha: 1)
+    }
+    
+    static var backgroundColor: UIColor {
+        return .byName("Color/backgroundColor")
+    }
+    
+    static var navItemColor: UIColor {
+        return .byName("Color/navItemColor")
+    }
+    
     static var headViewBackgroundColor: UIColor {
-        return .init(red: 240, green: 240, blue: 240)
+        return .byName("Color/headViewBackgroundColor")
     }
     
     static var separatorColor: UIColor {
-        return .lightGray
+        return .byName("Color/separatorColor")
     }
     
     static var textColor: UIColor {
-        return .black
+        return .byName("Color/textColor")
     }
     
     static var subtitleTextColor: UIColor {
@@ -42,7 +54,7 @@ extension UIColor {
     }
     
     static var navigationTitleColor: UIColor {
-        return .white
+        return .byName("Color/navItemColor")
     }
     
     static var placeholderColor: UIColor {
@@ -50,6 +62,6 @@ extension UIColor {
     }
     
     static var cellHighlightColor: UIColor {
-        return .init(red: 220, green: 220, blue: 220)
+        return .byName("Color/cellHighlightColor")
     }
 }

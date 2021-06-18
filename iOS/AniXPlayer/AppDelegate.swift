@@ -20,10 +20,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        if #available(iOS 13.0, *) {
 //
 //        } else {
-            let vc = TabBarController()
-            self.window = UIWindow(frame: UIScreen.main.bounds)
-            self.window?.rootViewController = vc
-            self.window?.makeKeyAndVisible()
+//            let vc = TabBarController()
+        
+        let vc = PickFileViewController()
+        let nav = PickFileNavigationController(rootViewController: vc)
+        nav.navigationBar.prefersLargeTitles = true
+        
+        self.window = UIWindow(frame: UIScreen.main.bounds)
+        self.window?.rootViewController = nav
+        self.window?.makeKeyAndVisible()
 //        }
         
         return true
@@ -75,14 +80,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Bugly.start(withAppId: "a72dd7c16d", developmentDevice: isDevelop, config: config)
         
         do {
-            let navBarAppearance = UINavigationBar.appearance()
-            navBarAppearance.isTranslucent = false
-            navBarAppearance.barTintColor = .mainColor
-            navBarAppearance.titleTextAttributes = [.font : UIFont.systemFont(ofSize: 17, weight: .medium),
-                                                    .foregroundColor : UIColor.navigationTitleColor]
-            let backImage = UIImage(named: "Player/comment_back_item")?.withRenderingMode(.alwaysOriginal)
-            navBarAppearance.backIndicatorImage = backImage
-            navBarAppearance.backIndicatorTransitionMaskImage = backImage
+//            let navBarAppearance = UINavigationBar.appearance()
+
+//            let backImage = UIImage(named: "Public/go_back")?.byTintColor(.navItemColor)?.withRenderingMode(.alwaysOriginal)
+//            navBarAppearance.backIndicatorImage = backImage
+//            navBarAppearance.backIndicatorTransitionMaskImage = backImage
             
             let barButtonAppearance = UIBarButtonItem.appearance()
             barButtonAppearance.setBackButtonTitlePositionAdjustment(UIOffset(horizontal: 0, vertical: -5), for: .default)
@@ -99,13 +101,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         //搜索框
-        do {
-            let placeholderAttributes: [NSAttributedString.Key : Any] = [.font : UIFont.ddp_normal, .foregroundColor : UIColor.placeholderColor]
-            let barButtonItemAppearance = UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self])
-            barButtonItemAppearance.tintColor = UIColor.navigationTitleColor
-            barButtonItemAppearance.title = "取消"
-            barButtonItemAppearance.setTitleTextAttributes(placeholderAttributes, for: .normal)
-        }
+//        do {
+//            let placeholderAttributes: [NSAttributedString.Key : Any] = [.font : UIFont.ddp_normal, .foregroundColor : UIColor.placeholderColor]
+//            let barButtonItemAppearance = UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self])
+//            barButtonItemAppearance.tintColor = UIColor.navigationTitleColor
+//            barButtonItemAppearance.title = "取消"
+//            barButtonItemAppearance.setTitleTextAttributes(placeholderAttributes, for: .normal)
+//        }
         
         // 滚动条
         do {

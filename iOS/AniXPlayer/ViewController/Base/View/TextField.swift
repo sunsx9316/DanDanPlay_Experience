@@ -22,7 +22,7 @@ class TextField: UITextField {
     //MARK: Private
     private func setupInit() {
         self.font = .ddp_normal
-        self.textColor = .black
+        self.textColor = .textColor
     }
 
 }

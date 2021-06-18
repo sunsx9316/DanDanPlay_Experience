@@ -246,7 +246,7 @@ class SMBLoginHistoryViewController: ViewController {
             make.edges.equalTo(self.view.safeAreaLayoutGuide.snp.edges)
         }
         
-        let rightBarButtonItem = UIBarButtonItem(imageName: "File/file_add_file", target: self, action: #selector(onTouchAddButton))
+        let rightBarButtonItem = UIBarButtonItem(imageName: "Public/add", target: self, action: #selector(onTouchAddButton))
         
         self.navigationItem.rightBarButtonItem = rightBarButtonItem
         

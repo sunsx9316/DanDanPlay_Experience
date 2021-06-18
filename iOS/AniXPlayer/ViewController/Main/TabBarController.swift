@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+/*
 class TabBarController: UITabBarController {
 
     override func viewDidLoad() {
@@ -19,6 +19,7 @@ class TabBarController: UITabBarController {
             let vc = PickFileViewController()
             vc.title = title
             let nav = UINavigationController(rootViewController: vc)
+            nav.navigationBar.prefersLargeTitles = true
             let item = self.createTabBarItemWithImageName("Main/main_file", title: title)
             nav.tabBarItem = item
             vcs.append(nav)
@@ -58,3 +59,4 @@ class TabBarController: UITabBarController {
 
 
 }
+*/

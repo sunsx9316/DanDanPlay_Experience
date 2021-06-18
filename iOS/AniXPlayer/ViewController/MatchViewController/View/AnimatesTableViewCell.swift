@@ -23,7 +23,7 @@ class AnimatesTableViewCell: EpisodeTableViewCell {
     
     private lazy var arrowImgView: UIImageView = {
         let imgView = UIImageView()
-        imgView.image = UIImage(named: "Comment/comment_right_arrow")
+        imgView.image = UIImage()
         imgView.setContentCompressionResistancePriority(.required, for: .horizontal)
         imgView.setContentHuggingPriority(.required, for: .horizontal)
         return imgView
@@ -65,5 +65,17 @@ class AnimatesTableViewCell: EpisodeTableViewCell {
             make.centerY.equalToSuperview()
             make.leading.greaterThanOrEqualTo(self.titleLabel.snp.trailing).offset(10)
         }
+        
+        self.setupUI()
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        self.setupUI()
+    }
+    
+    //MARK: Private
+    private func setupUI() {
+        self.arrowImgView.image = UIImage(named: "Public/right_arrow")?.byTintColor(.navItemColor)
     }
 }

@@ -10,6 +10,7 @@ import UIKit
 class FolderTableViewCell: TableViewCell {
     
     @IBOutlet weak var titleLabel: Label!
+    
     @IBOutlet weak var imgView: UIImageView!
     
 
@@ -23,7 +24,16 @@ class FolderTableViewCell: TableViewCell {
         super.awakeFromNib()
         self.titleLabel.textColor = .textColor
         self.titleLabel.font = .ddp_normal
-        self.imgView.image = UIImage(named: "Comment/comment_local_file_folder")?.byTintColor(.mainColor)
+        self.setupUI()
+    }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        self.setupUI()
+    }
+    
+    private func setupUI() {
+        self.imgView.image = UIImage(named: "Public/folder")?.byTintColor(.mainColor)
     }
     
 }

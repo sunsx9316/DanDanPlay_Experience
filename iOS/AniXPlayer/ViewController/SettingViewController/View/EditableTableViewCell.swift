@@ -18,20 +18,19 @@ class EditableTableViewCell: TableViewCell {
         self.backgroundColor = .clear
         self.titleLabel.textColor = .textColor
     }
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        self.setupUI()
+    }
 
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
         
-        if let reorderView = self.findReorderView() {
-            for view in reorderView.subviews {
-                if let imgView = view as? UIImageView {
-                    imgView.image = UIImage(named: "Comment/sort")
-                }
-            }
-        }
+        self.setupUI()
     }
     
-    func findReorderView() -> UIView? {
+    private func findReorderView() -> UIView? {
         var subviews = self.subviews
         var index = 0
         while index < subviews.count {
@@ -47,4 +46,13 @@ class EditableTableViewCell: TableViewCell {
         return nil
     }
     
+    private func setupUI() {
+        if let reorderView = self.findReorderView() {
+            for view in reorderView.subviews {
+                if let imgView = view as? UIImageView {
+                    imgView.image = UIImage(named: "Public/sort")?.byTintColor(.navItemColor)
+                }
+            }
+        }
+    }
 }

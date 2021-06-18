@@ -75,7 +75,7 @@ class BaseConnectSvrViewController: ViewController {
         self.view.addSubview(stackView)
         
         stackView.snp.makeConstraints { make in
-            make.top.equalTo(10)
+            make.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(10)
             make.leading.equalTo(10)
             make.trailing.equalTo(-10)
         }

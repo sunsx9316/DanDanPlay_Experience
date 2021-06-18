@@ -15,7 +15,7 @@ target 'AniXPlayer' do
   pod 'YYCategories'
   pod 'MBProgressHUD'
   pod 'YYKeyboardManager'
-  pod 'Masonry'
+  # pod 'Masonry'
   pod 'IQKeyboardManager'
   pod 'NKOColorPickerView'
   pod 'MMKV'
@@ -28,7 +28,7 @@ target 'AniXPlayer' do
   pod 'FilesProvider'
   pod 'Bugly'
   pod "GCDWebServer/WebUploader"
-
+  pod 'DynamicButton'
   # install_all_flutter_pods(flutter_application_path)
 end
 

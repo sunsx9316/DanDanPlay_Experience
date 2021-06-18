@@ -10,6 +10,7 @@ import JHDanmakuRender
 import SnapKit
 import YYCategories
 import MBProgressHUD
+import DynamicButton
 
 class PlayerViewController: ViewController {
     
@@ -550,9 +551,12 @@ extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
         view.contentColor = .white
         view.isUserInteractionEnabled = true
         
-        let imgView = UIImageView()
-        imgView.image = UIImage(named: "Player/player_pause")
-        view.customView = imgView
+        let pauseIcon = DynamicButton(style: .pause)
+        pauseIcon.lineWidth = 6
+        pauseIcon.strokeColor = .white
+        pauseIcon.highlightStokeColor = .lightGray
+        pauseIcon.frame = .init(x: 0, y: 0, width: 50, height: 50)
+        view.customView = pauseIcon
         view.hide(animated: true, afterDelay: 0.8)
     }
 }

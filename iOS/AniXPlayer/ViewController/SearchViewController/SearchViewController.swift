@@ -141,17 +141,19 @@ class SearchViewController: ViewController {
             let searchController = UISearchController(searchResultsController: nil)
             searchController.searchBar.autocapitalizationType = .none
             if #available(iOS 13.0, *) {
-                let placeholderAttributes: [NSAttributedString.Key : Any] = [.font : UIFont.ddp_normal, .foregroundColor : UIColor.placeholderColor]
+                let placeholderAttributes: [NSAttributedString.Key : Any] = [.font : UIFont.ddp_normal, .foregroundColor : UIColor.placeholderText]
                 searchController.searchBar.searchTextField.attributedPlaceholder = .init(string: NSLocalizedString("搜索弹幕", comment: ""), attributes: placeholderAttributes)
+                searchController.searchBar.tintColor = .mainColor
             } else {
                 searchController.searchBar.placeholder = NSLocalizedString("搜索弹幕", comment: "")
             }
-            searchController.searchBar.setImage(UIImage(named: "Player/player_close_button")?.byResize(to: .init(width: 16, height: 16)), for: .clear, state: .normal)
+
             searchController.dimsBackgroundDuringPresentation = false
             searchController.searchBar.delegate = self
             self.navigationItem.searchController = searchController
             self.navigationItem.hidesSearchBarWhenScrolling = false
             
+            self.setupUI()
             self.tableView.mj_header = RefreshHeader(refreshingTarget: self, refreshingAction: #selector(beginRefresh))
         }
     }
@@ -161,7 +163,20 @@ class SearchViewController: ViewController {
         self.navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        self.setupUI()
+    }
+    
+    
+    
     //MARK: Private Method
+    private func setupUI() {
+        let img = UIImage(named: "Public/close")?.byTintColor(.navItemColor)?.byResize(to: .init(width: 16, height: 16))
+        let searchController = self.navigationItem.searchController
+        searchController?.searchBar.setImage(img, for: .clear, state: .normal)
+    }
+    
     @objc private func beginRefresh() {
         if let text = self.navigationItem.searchController?.searchBar.text,
            text.isEmpty == false {

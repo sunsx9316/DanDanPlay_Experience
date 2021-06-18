@@ -19,7 +19,7 @@ extension PickFileViewController: UITableViewDelegate, UITableViewDataSource {
         
         let cell = tableView.dequeueCell(class: PickFileTableViewCell.self, indexPath: indexPath)
         cell.titleLabel.text = type.name
-        cell.iconImgView.image = UIImage(named: type.iconName)
+        cell.iconImgView.image = UIImage(named: type.iconName)?.byTintColor(.mainColor)
         return cell
     }
     
@@ -84,13 +84,13 @@ class PickFileViewController: ViewController {
         var iconName: String {
             switch self {
             case .localFile:
-                return "File/file_phone"
+                return "PickFile/file"
             case .smb:
-                return "File/file_net_equipment"
+                return "PickFile/smb"
             case .webDav:
-                return "File/file_web_dav"
+                return "PickFile/webdav"
             case .ftp:
-                return "File/file_ftp"
+                return "PickFile/ftp"
             }
             
         }
@@ -110,6 +110,8 @@ class PickFileViewController: ViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.title = NSLocalizedString("媒体", comment: "")
+        
         self.navigationItem.leftBarButtonItem = nil
 
         self.view.addSubview(self.tableView)
@@ -117,12 +119,29 @@ class PickFileViewController: ViewController {
             make.edges.equalToSuperview()
         }
         
-        self.addNavigationItem()
+        self.setupNavigationItem()
     }
     
-    private func addNavigationItem() {
-        let commentItem = UIBarButtonItem(imageName: "Comment/comment_setting", target: self, action: #selector(onTouchSettingButton))
-        self.navigationItem.rightBarButtonItem = commentItem
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        self.tableView.reloadData()
+        self.setupNavigationItem()
+    }
+    
+    override var shouldAutorotate: Bool {
+        return UIDevice.current.isPad
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        if UIDevice.current.isPad {
+            return .all
+        }
+        
+        return .portrait
+    }
+    
+    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+        return .portrait
     }
     
     @objc private func onTouchSettingButton() {
@@ -131,5 +150,8 @@ class PickFileViewController: ViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
-
+    private func setupNavigationItem() {
+        let commentItem = UIBarButtonItem(imageName: "Public/setting", target: self, action: #selector(onTouchSettingButton))
+        self.navigationItem.rightBarButtonItem = commentItem
+    }
 }

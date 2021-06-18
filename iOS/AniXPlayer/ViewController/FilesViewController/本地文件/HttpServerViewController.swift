@@ -67,7 +67,15 @@ class HttpServerViewController: ViewController {
         return tableView
     }()
     
+    private weak var wifiIconImgView: UIImageView?
+    
     private lazy var dataSource = [File]()
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        self.tableView.reloadData()
+        self.setupUI()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,15 +86,14 @@ class HttpServerViewController: ViewController {
         
         let tipsLabel = Label()
         tipsLabel.text = NSLocalizedString(NSLocalizedString("上传过程中请勿离开此页或锁屏", comment: ""), comment: "")
-        tipsLabel.textColor = .black
         self.stackView.addArrangedSubview(tipsLabel)
         
-        let wifiIconImgView = UIImageView(image: .init(named: "File/wifi")?.byTintColor(.mainColor))
+        let wifiIconImgView = UIImageView()
+        self.wifiIconImgView = wifiIconImgView
         self.stackView.addArrangedSubview(wifiIconImgView)
         
         let addressTipsLabel = Label()
         addressTipsLabel.text = NSLocalizedString("在电脑浏览器地址栏输入", comment: "")
-        addressTipsLabel.textColor = .black
         self.stackView.addArrangedSubview(addressTipsLabel)
         
         let addressLabel = Label()
@@ -110,7 +117,7 @@ class HttpServerViewController: ViewController {
         self.view.addSubview(self.stackView)
         self.view.addSubview(self.tableView)
         self.stackView.snp.makeConstraints { make in
-            make.top.equalTo(10)
+            make.top.equalTo(self.view.safeAreaLayoutGuide.snp.top).offset(10)
             make.leading.trailing.equalToSuperview()
         }
         
@@ -120,12 +127,17 @@ class HttpServerViewController: ViewController {
             make.bottom.equalTo(self.view.safeAreaLayoutGuide.snp.bottom)
         }
         
+        self.setupUI()
         self.resetAddress()
     }
     
     //MARK: Private Method
     private func resetAddress() {
         self.addressLabel?.text = "\n" + (self.httpServer.serverURL?.absoluteString ?? "") + "\n"
+    }
+    
+    private func setupUI() {
+        self.wifiIconImgView?.image = .init(named: "PickFile/wifi")?.byTintColor(.mainColor)
     }
 
 }
