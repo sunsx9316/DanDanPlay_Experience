@@ -584,6 +584,6 @@ extension Coordinator: VLCMediaPlayerDelegate {
         guard let player = self.player else { return }
         
         player.stateChanged()
-        debugPrint("mediaPlayerStateChanged \(VLCMediaPlayerStateToString(player.player.state))")
+//        debugPrint("mediaPlayerStateChanged \(VLCMediaPlayerStateToString(player.player.state))")
     }
 }

@@ -58,4 +58,8 @@ class FTPFile: File {
         return media
     }
     
+    func getParseDataWithProgress(_ progress: FileProgressAction?, completion: @escaping ((Result<Data, Error>) -> Void)) {
+        let length = parseFileLength
+        self.getDataWithRange(0...length, progress: progress, completion: completion)
+    }
 }

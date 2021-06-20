@@ -14,6 +14,9 @@ import VLCKit
 
 typealias FileProgressAction = ((Double) -> Void)
 
+//弹弹解析文件的长度
+let parseFileLength = 16777215
+
 enum FileType {
     case folder
     case file
@@ -41,6 +44,9 @@ protocol File {
                           progress: FileProgressAction?,
                           completion: @escaping((Result<Data, Error>) -> Void))
     
+    func getParseDataWithProgress(_ progress: FileProgressAction?,
+                          completion: @escaping((Result<Data, Error>) -> Void))
+    
     func createMedia() -> VLCMedia?
 }
 
@@ -60,8 +66,8 @@ extension File {
     //弹弹解析文件需要的文件长度
     func getParseDataWithProgress(_ progress: FileProgressAction? = nil,
                           completion: @escaping((Result<Data, Error>) -> Void)) {
-        let parseFileLength = 16777216
-        self.getDataWithRange(0...parseFileLength, progress: progress, completion: completion)
+        let length = parseFileLength + 1
+        self.getDataWithRange(0...length, progress: progress, completion: completion)
     }
     
     func getDataWithRange(_ range: ClosedRange<Int>,

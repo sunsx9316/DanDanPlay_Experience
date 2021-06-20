@@ -16,7 +16,7 @@ class WebDAVInputStream: InputStream {
             return "range: \(self.range.lowerBound)-\(self.range.upperBound), index: \(self.index), isCached: \(self.isCached), isRequesting: \(self.isRequesting)"
         }
         
-        let range: ClosedRange<Int>
+        let range: NSRange
         
         let index: Int
         
@@ -24,7 +24,7 @@ class WebDAVInputStream: InputStream {
         
         var isRequesting = false
         
-        init(range: ClosedRange<Int>, index: Int) {
+        init(range: NSRange, index: Int) {
             self.range = range
             self.index = index
         }
@@ -40,13 +40,9 @@ class WebDAVInputStream: InputStream {
     
     private let fileLength: Int
     
-    private var readOffset: Int {
-        get {
-            return self.inputStream?.property(forKey: .fileCurrentOffsetKey) as? Int ?? 0
-        }
-
-        set {
-            self.inputStream?.setProperty(newValue, forKey: .fileCurrentOffsetKey)
+    private var readOffset: Int = 0 {
+        didSet {
+            self.inputStream?.setProperty(self.readOffset, forKey: .fileCurrentOffsetKey)
         }
     }
     
@@ -57,7 +53,6 @@ class WebDAVInputStream: InputStream {
     private var inputStream: InputStream?
     
     private var fileHandle: FileHandle?
-//    private var outputStream: OutputStream?
     
     private let rangeKey = "Range"
     
@@ -73,8 +68,6 @@ class WebDAVInputStream: InputStream {
         return _streamError
     }
     
-//    weak var _delegate: StreamDelegate?
-    
     weak var file: WebDavFile?
     
     override var delegate: StreamDelegate? {
@@ -85,8 +78,6 @@ class WebDAVInputStream: InputStream {
         set {
             self.inputStream?.delegate = newValue
         }
-//        get { _delegate }
-//        set { _delegate = newValue }
     }
     
     
@@ -95,10 +86,8 @@ class WebDAVInputStream: InputStream {
         self.file = file
         let url = file.url
         
-        var cacheURL = URL(string: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true)[0])!
-        let pathName = (url.absoluteString as NSString).md5() ?? ""
-        cacheURL.appendPathComponent(pathName)
-        cacheURL.appendPathExtension(url.pathExtension)
+        var cacheURL = UIApplication.shared.cachesURL
+        cacheURL.appendPathComponent(url.lastPathComponent)
         
         if FileManager.default.fileExists(atPath: cacheURL.path) {
             do {
@@ -115,7 +104,6 @@ class WebDAVInputStream: InputStream {
         
         self.inputStream = .init(fileAtPath: cacheURL.path)
         self.fileHandle = .init(forWritingAtPath: cacheURL.path)
-//        self.outputStream = .init(toFileAtPath: cacheURL.path, append: false)
         
         self.url = url
         super.init(url: url)
@@ -126,14 +114,12 @@ class WebDAVInputStream: InputStream {
         self._streamStatus = .closed
         self.inputStream?.close()
         self.fileHandle?.closeFile()
-//        self.outputStream?.close()
     }
     
     override func open() {
         debugPrint("open")
         _streamStatus = .open
         self.inputStream?.open()
-//        self.outputStream?.open()
     }
     
     override func close() {
@@ -141,40 +127,44 @@ class WebDAVInputStream: InputStream {
         self._streamStatus = .closed
         self.inputStream?.close()
         self.fileHandle?.closeFile()
-//        self.outputStream?.close()
         self.delegate?.stream?(self, handle: .endEncountered)
     }
     
     override var hasBytesAvailable: Bool {
-        return self.inputStream?.hasBytesAvailable ?? false
-//        if self.fileLength > 0 {
-//            return self.fileLength - self.readOffset > 0
-//        }
-//        return true
+        if self.fileLength > 0 {
+            return self.fileLength - self.readOffset > 0
+        }
+        return true
     }
     
     override func property(forKey key: Stream.PropertyKey) -> Any? {
-        return self.inputStream?.property(forKey: key)
-//        guard key == .fileCurrentOffsetKey else { return nil }
-//        return self.readOffset
+        guard key == .fileCurrentOffsetKey else { return nil }
+        return self.readOffset
     }
     
     override func setProperty(_ property: Any?, forKey key: Stream.PropertyKey) -> Bool {
-        return self.inputStream?.setProperty(property, forKey: key) ?? false
-//        guard key == .fileCurrentOffsetKey, let property = property as? Int else { return false }
-//        debugPrint("setProperty key:\(key) property:\(property)")
-//
-//        self.readOffset = property
-//        return true
+        
+        guard key == .fileCurrentOffsetKey,
+              let property = property as? Int else { return false }
+        
+        debugPrint("setProperty key:\(key) property:\(property)")
+        
+        self.readOffset = property
+        return true
     }
     
     override func getBuffer(_ buffer: UnsafeMutablePointer<UnsafeMutablePointer<UInt8>?>, length len: UnsafeMutablePointer<Int>) -> Bool {
-        return self.inputStream?.getBuffer(buffer, length: len) ?? false
+        return false
     }
     
     override func read(_ buffer: UnsafeMutablePointer<UInt8>, maxLength len: Int) -> Int {
 
         let dataRange = NSRange(location: self.readOffset, length: min(max(self.fileLength - self.readOffset, 0), len))
+        
+        if (self.fileLength > 0 && self.readOffset >= self.fileLength) {
+            _streamStatus = .atEnd
+            return 0
+        }
         
         
         let lower = dataRange.lowerBound / defaultDownloadSize
@@ -192,50 +182,53 @@ class WebDAVInputStream: InputStream {
         
         debugPrint("lower: \(lower) upper:\(upper)")
         
-        var count = shouldDownloadTasks.count
-        
         if !shouldDownloadTasks.isEmpty {
+            
+            var count = shouldDownloadTasks.count
+            
             debugPrint("批量请求数据开始 range：\(dataRange) count：\(count)")
             for aTask in shouldDownloadTasks {
-                self.getPartOfFile(with: aTask) { (_) in
+                self.downloadFile(with: aTask) { (_) in
                     
                 } completion: { (_) in
                     count -= 1
                 }
             }
+            
+            while count > 0 && self._streamStatus != .closed {}
+            
+            if self._streamStatus == .closed {
+                debugPrint("streamStatus end")
+                return 0
+            }
         }
         
-        while count > 0 && self._streamStatus != .closed {}
-        
-        
-        if self._streamStatus == .closed {
-            debugPrint("streamStatus end")
-            return 0
-        }
-        
-        let r = self.inputStream?.read(buffer, maxLength: dataRange.length)
+        let _ = self.inputStream?.read(buffer, maxLength: dataRange.length)
         self.readOffset += dataRange.length
-        debugPrint("streamResult \(r)")
+//        debugPrint("streamResult \(r)")
         return dataRange.length
     }
     
     private func generateTasks() {
+        
+        if self.fileLength == 0 {
+            debugPrint("webdav fileLength = 0")
+            return
+        }
+        
         let taskCount = Int(ceil(Double(self.fileLength) / Double(defaultDownloadSize)))
         var taskDic = [Int : TaskInfo](minimumCapacity: taskCount)
         
         if taskCount == 0 {
-            taskDic[0] = .init(range: 0...fileLength, index: 0)
+            taskDic[0] = .init(range: .init(location: 0, length: self.fileLength - 1), index: 0)
         } else {
             for i in 0..<taskCount {
                 
-                let tmpRange: ClosedRange<Int>
+                var tmpRange = NSRange(location: i * defaultDownloadSize, length: defaultDownloadSize - 1)
                 
-                let start = i * defaultDownloadSize
                 //最后一个range.length不一定是kDefaultDownloadSize的整数倍，需要根据文件实际长度处理
                 if i == taskCount - 1 {
-                    tmpRange = start...self.fileLength - 1
-                } else {
-                    tmpRange = start...(start + defaultDownloadSize - 1)
+                    tmpRange.length = fileLength - tmpRange.location - 1
                 }
                 
                 taskDic[i] = .init(range: tmpRange, index: i)
@@ -246,7 +239,7 @@ class WebDAVInputStream: InputStream {
         self.cacheRangeDic = taskDic
     }
     
-    private func getPartOfFile(with task: TaskInfo,
+    private func downloadFile(with task: TaskInfo,
                        progressHandler: @escaping((Double) -> Void),
                        completion: @escaping((Result<TaskInfo, Error>) -> Void)) {
         
@@ -262,7 +255,9 @@ class WebDAVInputStream: InputStream {
         
         task.isRequesting = true
         debugPrint("请求数据 \(task)")
-        self.file?.getDataWithRange(task.range, progress: progressHandler, completion: { [weak self] result in
+        let r = task.range
+        self.file?.getDataWithRange(r.lowerBound...r.upperBound, progress: progressHandler, completion: { [weak self] result in
+            
             guard let self = self else {
                 completion(.failure(StreamError.streamClose))
                 return
@@ -271,23 +266,15 @@ class WebDAVInputStream: InputStream {
             task.isRequesting = false
             
             switch result {
-            case .failure(let error):
-                debugPrint("请求数据失败 \(error)")
-                completion(.failure(error))
             case .success(let data):
                 debugPrint("请求数据成功 \(task)")
                 task.isCached = true
                 self.fileHandle?.write(data)
                 self.fileHandle?.synchronizeFile()
                 completion(.success(task))
-//                self.outputStream?.setProperty(task.range.lowerBound, forKey: .fileCurrentOffsetKey)
-//                data.withUnsafeBytes { p in
-//                    if let b = p.baseAddress?.assumingMemoryBound(to: UInt8.self) {
-//                        self.outputStream?.write(b, maxLength: task.range.count)
-//                    }
-//
-//                    completion(.success(task))
-//                }
+            case .failure(let error):
+                debugPrint("请求数据失败 \(error)")
+                completion(.failure(error))
             }
         })
     }

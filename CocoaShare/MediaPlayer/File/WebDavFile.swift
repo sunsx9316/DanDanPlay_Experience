@@ -13,8 +13,8 @@ import FilesProvider
 import VLCKit
 #endif
 
-private class Coordinator: NSObject, StreamDelegate, DDPWebDAVInputStreamFile {
-    
+private class Coordinator: NSObject, StreamDelegate {
+
     private weak var file: WebDavFile?
 
     init(file: WebDavFile) {
@@ -22,26 +22,6 @@ private class Coordinator: NSObject, StreamDelegate, DDPWebDAVInputStreamFile {
         self.file = file
     }
 
-    var url: URL {
-        return self.file?.url ?? URL(fileURLWithPath: "/")
-    }
-    
-    var fileSize: Int {
-        return self.file?.fileSize ?? 0
-    }
-    
-    func requestData(with range: NSRange, progressHandle progress: @escaping (Double) -> Void, completion: @escaping (Data?, Error?) -> Void) {
-        self.file?.getDataWithRange(range.lowerBound...range.upperBound, progress: progress) { result in
-            switch result {
-            case .success(let data):
-                completion(data, nil)
-            case .failure(let err):
-                completion(nil, err)
-            }
-        }
-    }
-    
-    
 //    func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
 //        if eventCode == .endEncountered {
 //            self.file?.inputStream = nil
@@ -57,12 +37,12 @@ class WebDavFile: File {
     
     var fileSize = 0
     
-    fileprivate var inputStream: DDPWebDAVInputStream?
+    fileprivate var inputStream: WebDAVInputStream?
     
     private lazy var coordinator = Coordinator(file: self)
     
     //应该是vlc的bug，需要强引用InputStream对象，否则会crash
-    private static var inputStream: DDPWebDAVInputStream?
+    private static var inputStream: WebDAVInputStream?
     
     static var rootFile: File = WebDavFile(url: URL(string: "/")!, fileSize: 0)
     
@@ -91,11 +71,16 @@ class WebDavFile: File {
     }
     
     func createMedia() -> VLCMedia? {
-        let inputStream = DDPWebDAVInputStream(file: self.coordinator)
+        let inputStream = WebDAVInputStream(file: self)
         WebDavFile.inputStream = inputStream
-        inputStream.delegate = self.coordinator
+        inputStream?.delegate = self.coordinator
         self.inputStream = inputStream
-        return VLCMedia(stream: inputStream)
+        return VLCMedia(stream: inputStream!)
+    }
+    
+    func getParseDataWithProgress(_ progress: FileProgressAction?, completion: @escaping ((Result<Data, Error>) -> Void)) {
+        let length = parseFileLength
+        self.getDataWithRange(0...length, progress: progress, completion: completion)
     }
    
 }
