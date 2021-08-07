@@ -12,7 +12,16 @@ class LocalFilesViewController: FileBrowserViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.navigationItem.rightBarButtonItem = .init(imageName: "Public/add", target: self, action: #selector(onTouchAddItem(_:)))
+        var items = [UIBarButtonItem]()
+        items.append(.init(imageName: "Public/add", target: self, action: #selector(onTouchAddItem(_:))))
+        
+        if let addItem = self.navigationItem.rightBarButtonItem {
+            items.append(addItem)
+            self.navigationItem.rightBarButtonItem = nil
+        }
+        
+        
+        self.navigationItem.rightBarButtonItems = items
     }
     
     //MARK: Private Method

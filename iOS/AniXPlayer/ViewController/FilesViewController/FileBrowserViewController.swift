@@ -97,6 +97,8 @@ class FileBrowserViewController: ViewController {
     
     private var dataSource = [File]()
     
+    private var isShowAllFile = false
+    
     weak var delegate: FileBrowserViewControllerDelegate?
     
     
@@ -122,11 +124,33 @@ class FileBrowserViewController: ViewController {
             make.edges.equalTo(self.view.safeAreaLayoutGuide.snp.edges)
         }
         
+        let showAllItem = UIBarButtonItem(title: NSLocalizedString("显示全部", comment: ""), target: self, action: #selector(showAllFile(_:)))
+        
+        self.navigationItem.rightBarButtonItem = showAllItem
+        
         self.tableView.mj_header?.beginRefreshing()
+    }
+    
+    //MARK: Private Method
+    
+    @objc private func showAllFile(_ item: UIBarButtonItem) {
+        isShowAllFile.toggle()
+        
+        if isShowAllFile {
+            item.title = NSLocalizedString("恢复默认", comment: "")
+        } else {
+            item.title = NSLocalizedString("显示全部", comment: "")
+        }
+        
+        self.beginRefreshing()
     }
     
     private func isThisType(_ url: URL) -> Bool {
         guard let filterType = self.filterType else { return true }
+        
+        if isShowAllFile {
+            return true
+        }
         
         if url.isMediaFile {
             return filterType.contains(.video)
