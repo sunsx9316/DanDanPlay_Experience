@@ -76,7 +76,7 @@ class SubtitleOrderViewController: ViewController {
             make.edges.equalTo(self.view.safeAreaLayoutGuide.snp.edges)
         }
         
-        let addItem = UIBarButtonItem(imageName: "File/file_add_file", target: self, action: #selector(onTouchAddItem(_:)))
+        let addItem = UIBarButtonItem(imageName: "Public/add", target: self, action: #selector(onTouchAddItem(_:)))
         let editItem = UIBarButtonItem(title: NSLocalizedString("编辑", comment: ""), target: self, action: #selector(onTouchEditItem(_:)))
         
         editItem.setTitleTextAttributes([.font : UIFont.ddp_large,

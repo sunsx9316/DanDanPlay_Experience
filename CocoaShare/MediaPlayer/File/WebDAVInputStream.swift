@@ -172,7 +172,7 @@ class WebDAVInputStream: InputStream {
         
         var shouldDownloadTasks = [TaskInfo]()
         
-        for i in 0...upper {
+        for i in lower...upper {
             if let aTask = self.cacheRangeDic[i] {
                 if !aTask.isCached && !aTask.isRequesting {
                     shouldDownloadTasks.append(aTask)
@@ -269,6 +269,7 @@ class WebDAVInputStream: InputStream {
             case .success(let data):
                 debugPrint("请求数据成功 \(task)")
                 task.isCached = true
+                self.fileHandle?.seek(toFileOffset: UInt64(r.lowerBound))
                 self.fileHandle?.write(data)
                 self.fileHandle?.synchronizeFile()
                 completion(.success(task))
