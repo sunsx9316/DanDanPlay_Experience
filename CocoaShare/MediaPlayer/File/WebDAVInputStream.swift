@@ -8,6 +8,10 @@
 import UIKit
 import YYCategories
 
+protocol WebDAVInputStreamDelegate: AnyObject {
+    func streamDidClose(_ stream: WebDAVInputStream)
+}
+
 class WebDAVInputStream: InputStream {
     
     private class TaskInfo: CustomStringConvertible {
@@ -38,7 +42,7 @@ class WebDAVInputStream: InputStream {
     
     private let defaultDownloadSize = 20 * 1024 * 1024
     
-    private let fileLength: Int
+    private var fileLength: Int
     
     private var readOffset: Int = 0 {
         didSet {
@@ -70,15 +74,7 @@ class WebDAVInputStream: InputStream {
     
     weak var file: WebDavFile?
     
-    override var delegate: StreamDelegate? {
-        get {
-            self.inputStream?.delegate
-        }
-        
-        set {
-            self.inputStream?.delegate = newValue
-        }
-    }
+    weak var streamDelegate: WebDAVInputStreamDelegate?
     
     
     init?(file: WebDavFile) {
@@ -107,7 +103,9 @@ class WebDAVInputStream: InputStream {
         
         self.url = url
         super.init(url: url)
-        self.generateTasks()
+        if self.fileLength > 0 {
+            self.generateTasks()
+        }
     }
     
     deinit {
@@ -127,7 +125,7 @@ class WebDAVInputStream: InputStream {
         self._streamStatus = .closed
         self.inputStream?.close()
         self.fileHandle?.closeFile()
-        self.delegate?.stream?(self, handle: .endEncountered)
+        self.streamDelegate?.streamDidClose(self)
     }
     
     override var hasBytesAvailable: Bool {
@@ -158,7 +156,19 @@ class WebDAVInputStream: InputStream {
     }
     
     override func read(_ buffer: UnsafeMutablePointer<UInt8>, maxLength len: Int) -> Int {
-
+        
+        if self.fileLength == 0 {
+            
+            self.fileLength = self.file?.getFileSizeSync() ?? 0
+            
+            if self.fileLength == 0 {
+                debugPrint("文件长度为0")
+                return 0
+            } else {
+                self.generateTasks()
+            }
+        }
+        
         let dataRange = NSRange(location: self.readOffset, length: min(max(self.fileLength - self.readOffset, 0), len))
         
         if (self.fileLength > 0 && self.readOffset >= self.fileLength) {
@@ -180,7 +190,7 @@ class WebDAVInputStream: InputStream {
             }
         }
         
-        debugPrint("lower: \(lower) upper:\(upper)")
+//        debugPrint("lower: \(lower) upper:\(upper)")
         
         if !shouldDownloadTasks.isEmpty {
             
@@ -188,16 +198,18 @@ class WebDAVInputStream: InputStream {
             
             debugPrint("批量请求数据开始 range：\(dataRange) count：\(count)")
             for aTask in shouldDownloadTasks {
-                self.downloadFile(with: aTask) { (_) in
+                self.downloadFile(with: aTask, retryCount: 2) { (_) in
                     
                 } completion: { (_) in
                     count -= 1
                 }
             }
             
-            while count > 0 && self._streamStatus != .closed {}
+            weak var weakSelf = self
             
-            if self._streamStatus == .closed {
+            while count > 0 && weakSelf?._streamStatus != .closed {}
+            
+            if weakSelf?._streamStatus == .closed {
                 debugPrint("streamStatus end")
                 return 0
             }
@@ -240,6 +252,7 @@ class WebDAVInputStream: InputStream {
     }
     
     private func downloadFile(with task: TaskInfo,
+                              retryCount: Int,
                        progressHandler: @escaping((Double) -> Void),
                        completion: @escaping((Result<TaskInfo, Error>) -> Void)) {
         
@@ -274,8 +287,12 @@ class WebDAVInputStream: InputStream {
                 self.fileHandle?.synchronizeFile()
                 completion(.success(task))
             case .failure(let error):
-                debugPrint("请求数据失败 \(error)")
-                completion(.failure(error))
+                if retryCount > 0 {
+                    self.downloadFile(with: task, retryCount: retryCount - 1, progressHandler: progressHandler, completion: completion)
+                } else {
+                    debugPrint("请求数据失败 \(error)")
+                    completion(.failure(error))
+                }
             }
         })
     }

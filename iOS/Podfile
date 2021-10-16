@@ -22,14 +22,16 @@ target 'AniXPlayer' do
   pod 'JHDanmakuRender'
   pod 'HandyJSON'
   pod 'MJRefresh'
-  pod 'MobileVLCKit', '3.3.16.3'
-  # pod 'MobileVLCKit', '3.3.10'
+  # pod 'MobileVLCKit'
+  pod 'MobileVLCKit', '3.3.10'
   pod 'Alamofire'
   pod 'AMSMB2'
   pod 'FilesProvider'
   pod 'Bugly'
   pod "GCDWebServer/WebUploader"
   pod 'DynamicButton'
+  pod 'AFNetworking'
+  pod 'Ono'
   # install_all_flutter_pods(flutter_application_path)
 end
 

@@ -25,7 +25,14 @@ public extension URL {
     }
     
     var isMediaFile: Bool {
+        
+        //fix mkv不展示的问题
+        if self.pathExtension.compare("mkv", options: .caseInsensitive, range: nil, locale: nil) == .orderedSame {
+            return true
+        }
+        
         let pathExtension = self.pathExtension as CFString
+        
         if let fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension, nil) {
             if UTTypeConformsTo(fileUTI.takeRetainedValue(), kUTTypeMovie) {
                 return true

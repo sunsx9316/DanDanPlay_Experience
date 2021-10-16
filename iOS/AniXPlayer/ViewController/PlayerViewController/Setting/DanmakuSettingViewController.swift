@@ -23,6 +23,7 @@ protocol DanmakuSettingViewControllerDelegate: AnyObject {
     func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuOffsetTime danmakuOffsetTime: Int)
     
     func loadDanmakuFileInDanmakuSettingViewController(vc: DanmakuSettingViewController)
+    func searchDanmakuInDanmakuSettingViewController(vc: DanmakuSettingViewController)
 }
 
 extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSource {
@@ -146,7 +147,7 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
                 self.delegate?.danmakuSettingViewController(self, didChangeDanmakuOffsetTime: value)
             }
             return cell
-        case .loadDanmaku:
+        case .loadDanmaku, .searchDanmaku:
             let cell = tableView.dequeueCell(class: TitleTableViewCell.self, indexPath: indexPath)
             cell.label.text = type.title
             return cell
@@ -160,6 +161,8 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
         
         if type == .loadDanmaku {
             self.delegate?.loadDanmakuFileInDanmakuSettingViewController(vc: self)
+        } else if type == .searchDanmaku {
+            self.delegate?.searchDanmakuInDanmakuSettingViewController(vc: self)
         }
     }
     
@@ -174,6 +177,7 @@ class DanmakuSettingViewController: ViewController {
         case danmakuCount
         case showDanmaku
         case danmakuOffsetTime
+        case searchDanmaku
         case loadDanmaku
         
         var title: String {
@@ -192,6 +196,8 @@ class DanmakuSettingViewController: ViewController {
                 return NSLocalizedString("弹幕偏移时间", comment: "")
             case .loadDanmaku:
                 return NSLocalizedString("加载本地弹幕...", comment: "")
+            case .searchDanmaku:
+                return NSLocalizedString("搜索弹幕", comment: "")
             }
         }
     }

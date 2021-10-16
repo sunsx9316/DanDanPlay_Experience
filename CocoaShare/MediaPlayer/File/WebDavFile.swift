@@ -13,7 +13,8 @@ import FilesProvider
 import VLCKit
 #endif
 
-private class Coordinator: NSObject, StreamDelegate {
+private class Coordinator: NSObject, WebDAVInputStreamDelegate {
+    
 
     private weak var file: WebDavFile?
 
@@ -21,12 +22,10 @@ private class Coordinator: NSObject, StreamDelegate {
         super.init()
         self.file = file
     }
-
-//    func stream(_ aStream: Stream, handle eventCode: Stream.Event) {
-//        if eventCode == .endEncountered {
-//            self.file?.inputStream = nil
-//        }
-//    }
+    
+    func streamDidClose(_ stream: WebDAVInputStream) {
+        self.file?.inputStream = nil
+    }
 }
 
 class WebDavFile: File {
@@ -51,8 +50,12 @@ class WebDavFile: File {
     }
     
     var fileManager: FileManagerProtocol {
-        return WebDavFileManager.shared
+        return _fileManager
     }
+    
+    private lazy var _fileManager = WebDavFileManager()
+    
+    private lazy var fileSizeSemaphore = DispatchSemaphore(value: 0)
     
     init(with file: FileObject) {
         self.url = file.url
@@ -60,20 +63,24 @@ class WebDavFile: File {
         self.type = (file.isDirectory || file.isSymLink) ? .folder : .file
     }
     
-    private init(url: URL, fileSize: Int = 0) {
+    init(with file: AFWebDAVMultiStatusResponse) {
+        self.url = file.url ?? URL(fileURLWithPath: "")
+        self.type = file.isCollection ? .folder : .file
+        if self.type == .file {
+            self.fileSize = Int(file.contentLength)
+        }
+    }
+    
+    init(url: URL, fileSize: Int = 0) {
         self.url = url
         self.fileSize = fileSize
         self.type = .folder
     }
     
-    deinit {
-        debugPrint("webdavfile dealloc")
-    }
-    
     func createMedia() -> VLCMedia? {
         let inputStream = WebDAVInputStream(file: self)
         WebDavFile.inputStream = inputStream
-        inputStream?.delegate = self.coordinator
+        inputStream?.streamDelegate = self.coordinator
         self.inputStream = inputStream
         return VLCMedia(stream: inputStream!)
     }
@@ -81,6 +88,24 @@ class WebDavFile: File {
     func getParseDataWithProgress(_ progress: FileProgressAction?, completion: @escaping ((Result<Data, Error>) -> Void)) {
         let length = parseFileLength
         self.getDataWithRange(0...length, progress: progress, completion: completion)
+    }
+    
+    func getFileSizeSync() -> Int {
+        _fileManager.getFileSize(self) { res in
+            
+            switch res {
+            case .success(let size):
+                self.fileSize = size
+            case .failure(_):
+                break
+            }
+            
+            self.fileSizeSemaphore.signal()
+        }
+        
+        _ = self.fileSizeSemaphore.wait(timeout: .distantFuture)
+        
+        return self.fileSize
     }
    
 }

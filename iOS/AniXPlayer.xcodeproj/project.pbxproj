@@ -119,6 +119,8 @@
 		89E1097A26402B4900825308 /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E1097926402B4900825308 /* CacheManager.swift */; };
 		89E109B426443F4F00825308 /* BaseLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E109B326443F4F00825308 /* BaseLoginHistoryViewController.swift */; };
 		89E109B62644424800825308 /* BaseConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E109B52644424800825308 /* BaseConnectSvrViewController.swift */; };
+		89FA071026E4F6750071EC9E /* AFWebDAVManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 89FA070F26E4F6750071EC9E /* AFWebDAVManager.m */; };
+		89FF586E271A80B200434BD9 /* HistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FF586D271A80B200434BD9 /* HistoryManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -241,6 +243,9 @@
 		89E1097926402B4900825308 /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
 		89E109B326443F4F00825308 /* BaseLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseLoginHistoryViewController.swift; sourceTree = "<group>"; };
 		89E109B52644424800825308 /* BaseConnectSvrViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseConnectSvrViewController.swift; sourceTree = "<group>"; };
+		89FA070E26E4F6740071EC9E /* AFWebDAVManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFWebDAVManager.h; sourceTree = "<group>"; };
+		89FA070F26E4F6750071EC9E /* AFWebDAVManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFWebDAVManager.m; sourceTree = "<group>"; };
+		89FF586D271A80B200434BD9 /* HistoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryManager.swift; sourceTree = "<group>"; };
 		CF2D5334A2A53D20F8B80E22 /* Pods-AniXPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.release.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.release.xcconfig"; sourceTree = "<group>"; };
 		F410B8A741526DF765820021 /* Pods-AniXPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.debug.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -364,6 +369,7 @@
 				89E0D6182669484B00E2337B /* SubtitleManager.swift */,
 				890DF70E26160A58002D8AE5 /* Preferences.swift */,
 				89E1097926402B4900825308 /* CacheManager.swift */,
+				89FF586D271A80B200434BD9 /* HistoryManager.swift */,
 				899C4E99263CF85800A17C83 /* Helper */,
 				890DF70226160A58002D8AE5 /* MediaPlayer */,
 				890DF71326160A58002D8AE5 /* Model */,
@@ -409,10 +415,10 @@
 		890DF70F26160A58002D8AE5 /* FileManager */ = {
 			isa = PBXGroup;
 			children = (
+				89FA071126E4F6770071EC9E /* WebDav */,
 				890DF71126160A58002D8AE5 /* FileManagerProtocol.swift */,
 				890DF71026160A58002D8AE5 /* LocalFileManager.swift */,
 				8944E86E263AE87000EF00B1 /* SMBFileManager.swift */,
-				890DF71226160A58002D8AE5 /* WebDavFileManager.swift */,
 				8949F88E2662A1B700274520 /* FTPFileManager.swift */,
 			);
 			path = FileManager;
@@ -711,6 +717,16 @@
 			path = PlayerUI;
 			sourceTree = "<group>";
 		};
+		89FA071126E4F6770071EC9E /* WebDav */ = {
+			isa = PBXGroup;
+			children = (
+				890DF71226160A58002D8AE5 /* WebDavFileManager.swift */,
+				89FA070E26E4F6740071EC9E /* AFWebDAVManager.h */,
+				89FA070F26E4F6750071EC9E /* AFWebDAVManager.m */,
+			);
+			path = WebDav;
+			sourceTree = "<group>";
+		};
 		A36E3F8730C441A1F2AC3DAF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -909,6 +925,7 @@
 				8931F0F92677457100590569 /* EditableTableViewCell.swift in Sources */,
 				8931F0EB2674CD3300590569 /* HttpServerViewController.swift in Sources */,
 				890DF72E26160A58002D8AE5 /* MediaPlayer.swift in Sources */,
+				89FF586E271A80B200434BD9 /* HistoryManager.swift in Sources */,
 				890DF77926160B3E002D8AE5 /* PlayerUIView.swift in Sources */,
 				897CF52D262F30D200CC297A /* DanmakuSettingViewController.swift in Sources */,
 				890DF77B26160B3E002D8AE5 /* SevenSwitch.swift in Sources */,
@@ -922,6 +939,7 @@
 				890DF77526160B3E002D8AE5 /* PlayerViewController.swift in Sources */,
 				8949F88F2662A1B700274520 /* FTPFileManager.swift in Sources */,
 				890DF76F26160B3E002D8AE5 /* FolderTableViewCell.swift in Sources */,
+				89FA071026E4F6750071EC9E /* AFWebDAVManager.m in Sources */,
 				8944E876263AF48C00EF00B1 /* LinkHistoryTableViewCell.swift in Sources */,
 				890DF77026160B3E002D8AE5 /* FileTableViewCell.swift in Sources */,
 				890DF6FA26160A36002D8AE5 /* RefreshHeader.swift in Sources */,
@@ -1096,7 +1114,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2021090602;
+				CURRENT_PROJECT_VERSION = 2021101601;
 				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1126,7 +1144,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2021090602;
+				CURRENT_PROJECT_VERSION = 2021101601;
 				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (

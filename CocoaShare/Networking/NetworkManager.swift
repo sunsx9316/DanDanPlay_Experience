@@ -25,7 +25,7 @@ class NetworkManager {
     func danmakuWithFile(_ file: File,
                        progress: FileProgressAction? = nil,
                        matchCompletion: @escaping((MatchCollection?, Error?) -> Void),
-                       danmakuCompletion: @escaping((CommentCollection?, Error?) -> Void)) {
+                         danmakuCompletion: @escaping((CommentCollection?, _ episodeId: Int, Error?) -> Void)) {
         
         self.matchWithFile(file) { (progressValue) in
             progress?(0.5 * progressValue)
@@ -50,7 +50,7 @@ class NetworkManager {
                 let matched = collection!.collection[0]
                 self.danmakuWithEpisodeId(matched.episodeId) { (damakus, error) in
                     progress?(1)
-                    danmakuCompletion(damakus, error)
+                    danmakuCompletion(damakus, matched.episodeId, error)
                 }
             } else {
                 progress?(1)

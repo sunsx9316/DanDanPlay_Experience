@@ -77,6 +77,10 @@ class PlayerViewController: ViewController {
         super.init(coder: coder)
     }
     
+    deinit {
+        self.storeProgress()
+    }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -211,6 +215,9 @@ class PlayerViewController: ViewController {
     }
     
     private func tryParseMedia(_ media: File) {
+        
+        self.storeProgress()
+        
         self.player.stop()
         
         self.uiView.title = media.fileName
@@ -239,7 +246,7 @@ class PlayerViewController: ViewController {
                     self.navigationController?.pushViewController(vc, animated: true)
                 }
             }
-        } danmakuCompletion: { (collection, error) in
+        } danmakuCompletion: { (collection, episodeId, error) in
             DispatchQueue.main.async {
                 hud.hide(animated: true)
                 
@@ -247,13 +254,13 @@ class PlayerViewController: ViewController {
                     self.view.showError(error)
                 } else {
                     let danmakus = collection?.collection ?? []
-                    self.playMedia(media, danmakus: danmakus)
+                    self.playMedia(media, episodeId: episodeId, danmakus: danmakus)
                 }
             }
         }
     }
     
-    private func playMedia(_ media: File, danmakus: [Comment]) {
+    private func playMedia(_ media: File, episodeId: Int, danmakus: [Comment]) {
         
         let startPlayAction = { [weak self] (_ comment: [UInt : [JHDanmakuProtocol]]) in
             guard let self = self else { return }
@@ -261,6 +268,22 @@ class PlayerViewController: ViewController {
             self.danmakuDic = comment
             self.danmakuRender.currentTime = 0
             self.player.play(media)
+            
+            if let playItem = self.findPlayItem(media) {
+                playItem.episodeId = episodeId
+                if let watchProgressKey = playItem.watchProgressKey,
+                   let lastWatchProgress = HistoryManager.shared.watchProgress(mediaKey: watchProgressKey) {
+                    
+                    if lastWatchProgress > 0 {
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                            self.setPlayerProgress(lastWatchProgress)
+                            let hud = self.view.showHUD(NSLocalizedString("已为你定位上次观看位置", comment: ""), position: .bottomleft)
+                            hud.margin = 5
+                        }
+                    }
+                }
+            }
+            
         }
         
         //加载本地弹幕
@@ -358,7 +381,7 @@ class PlayerViewController: ViewController {
     
     /// 弹出文件选择器
     /// - Parameter type: 筛选文件类型
-    func showFilesVCWithType(_ type: FileBrowserViewController.FilterType) {
+    private func showFilesVCWithType(_ type: FileBrowserViewController.FilterType) {
         
         if let presentedViewController = self.presentedViewController {
             presentedViewController.dismiss(animated: true, completion: nil)
@@ -369,10 +392,19 @@ class PlayerViewController: ViewController {
         if let parentFile = item?.parentFile {
             let vc = FileBrowserViewController(with: parentFile, selectedFile: item, filterType: type)
             vc.delegate = self
-            let nav = UINavigationController(rootViewController: vc)
+            let nav = NavigationController(rootViewController: vc)
             nav.modalPresentationStyle = .custom
             nav.transitioningDelegate = self.animater
             self.present(nav, animated: true, completion: nil)
+        }
+    }
+    
+    //保存观看记录
+    private func storeProgress() {
+        if let currentPlayItem = self.player.currentPlayItem,
+           let playItem = self.findPlayItem(currentPlayItem),
+            let watchProgressKey = playItem.watchProgressKey {
+            HistoryManager.shared.storeWatchProgress(mediaKey: watchProgressKey, progress: self.player.position)
         }
     }
 }
@@ -381,29 +413,54 @@ extension PlayerViewController: MatchsViewControllerDelegate {
     
     func matchsViewController(_ matchsViewController: MatchsViewController, didSelectedEpisodeId episodeId: Int) {
         
-        matchsViewController.navigationController?.popToRootViewController(animated: true)
+        switch matchsViewController.style {
+        case .full:
+            matchsViewController.navigationController?.popToRootViewController(animated: true)
+        case .mini:
+            if let presentedViewController = self.presentedViewController {
+                presentedViewController.dismiss(animated: true, completion: nil)
+            }
+        }
         
+        let hud = self.view.showProgress()
+        hud.label.text = "加载弹幕中..."
+        hud.progress = 0.5
+        hud.show(animated: true)
+
         NetworkManager.shared.danmakuWithEpisodeId(episodeId) { [weak self] (collection, error) in
             
             guard let self = self else { return }
             
             if let error = error {
-                self.view.showError(error)
+                DispatchQueue.main.async {
+                    hud.progress = 1
+                    hud.hide(animated: true)
+                    self.view.showError(error)
+                }
             } else {
                 let danmakus = collection?.collection ?? []
-                self.playMedia(matchsViewController.file, danmakus: danmakus)
+                DispatchQueue.main.async {
+                    hud.label.text = "即将开始播放"
+                    hud.progress = 1
+                    hud.hide(animated: true, afterDelay: 0.5)
+                    self.playMedia(matchsViewController.file, episodeId: episodeId, danmakus: danmakus)
+                }
             }
         }
     }
     
     func playNowInMatchsViewController(_ matchsViewController: MatchsViewController) {
         matchsViewController.navigationController?.popToRootViewController(animated: true)
-        self.playMedia(matchsViewController.file, danmakus: [])
+        self.playMedia(matchsViewController.file, episodeId: 0, danmakus: [])
     }
 }
 
 extension PlayerViewController {
     private class PlayItem {
+        
+        var watchProgressKey: String? {
+            return episodeId == 0 ? nil : "\(episodeId)"
+        }
   
         private let media: File
         var playImmediately = false
@@ -629,6 +686,23 @@ extension PlayerViewController: DanmakuSettingViewControllerDelegate {
     
     func loadDanmakuFileInDanmakuSettingViewController(vc: DanmakuSettingViewController) {
         self.showFilesVCWithType(.danmaku)
+    }
+    
+    func searchDanmakuInDanmakuSettingViewController(vc: DanmakuSettingViewController) {
+        if let presentedViewController = self.presentedViewController {
+            presentedViewController.dismiss(animated: true, completion: nil)
+        }
+        
+        if let item = self.player.currentPlayItem ?? self.player.playList.first {
+            let vc = MatchsViewController(file: item)
+            vc.showPlayNowItem = false
+            vc.delegate = self
+            let nav = NavigationController(rootViewController: vc)
+            nav.modalPresentationStyle = .custom
+            nav.transitioningDelegate = self.animater
+            self.present(nav, animated: true, completion: nil)
+        }
+        
     }
 }
 
