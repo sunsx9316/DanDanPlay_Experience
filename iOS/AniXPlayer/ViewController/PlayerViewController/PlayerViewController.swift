@@ -53,14 +53,15 @@ class PlayerViewController: ViewController {
     //当前弹幕时间/弹幕数组映射
     private var danmakuDic = [UInt : [JHDanmakuProtocol]]()
     
-    private lazy var danmakuCache: NSCache<NSNumber, DanmakuCollectionModel> = {
-        return NSCache<NSNumber, DanmakuCollectionModel>()
-    }()
-    
     private lazy var animater = PlayerControlAnimater()
     
     /// 初始化时选择的视频
     private var selectedItem: File?
+    
+    ///加速指示器
+    private weak var speedUpHUD: MBProgressHUD?
+    ///开启临时加速前的速度
+    private var originSpeed: Double?
     
     //MARK: - life cycle
     
@@ -94,6 +95,8 @@ class PlayerViewController: ViewController {
         if self.player.isPlaying {
             self.player.pause()
         }
+        
+        self.storeProgress()
     }
     
     override func viewDidLoad() {
@@ -407,6 +410,11 @@ class PlayerViewController: ViewController {
             HistoryManager.shared.storeWatchProgress(mediaKey: watchProgressKey, progress: self.player.position)
         }
     }
+    
+    private func changeSpeed(_ speed: Double) {
+        self.player.speed = speed
+        self.danmakuRender.systemSpeed = CGFloat(speed)
+    }
 }
 
 extension PlayerViewController: MatchsViewControllerDelegate {
@@ -461,7 +469,7 @@ extension PlayerViewController {
         var watchProgressKey: String? {
             return episodeId == 0 ? nil : "\(episodeId)"
         }
-  
+        
         private let media: File
         var playImmediately = false
         var mediaId: String {
@@ -558,6 +566,42 @@ extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
             self.showPauseHUD()
         } else {
             player.play()
+        }
+    }
+    
+    func longPress(playerUIView: PlayerUIView, isBegin: Bool) {
+        self.speedUpHUD?.hide(animated: false)
+        
+        if isBegin {
+            //记录原来的速度
+            if self.originSpeed == nil {
+                self.originSpeed = self.player.speed
+            }
+            
+            self.changeSpeed(4)
+            
+            let view = MBProgressHUD.showAdded(to: self.view, animated: true)
+            self.speedUpHUD = view
+            view.offset.y = -1000
+            view.mode = .customView
+            view.bezelView.color = UIColor(red: 0, green: 0, blue: 0, alpha: 0.6)
+            view.bezelView.style = .solidColor
+            view.label.font = .ddp_normal
+            view.label.numberOfLines = 0
+            view.contentColor = .white
+            view.isUserInteractionEnabled = true
+            
+            let speedUpView = SpeedUpView()
+            speedUpView.titleLabel.text = NSLocalizedString("倍速播放中", comment: "")
+            speedUpView.startAnimate()
+            view.customView = speedUpView
+            
+        } else {
+            //结束恢复默认速度
+            if let originSpeed = self.originSpeed {
+                self.changeSpeed(originSpeed)
+                self.originSpeed = nil
+            }
         }
     }
     
@@ -736,8 +780,7 @@ extension PlayerViewController: MediaSettingViewControllerDelegate {
     }
     
     func mediaSettingViewController(_ vc: MediaSettingViewController, didChangePlayerSpeed speed: Double) {
-        self.player.speed = speed
-        self.danmakuRender.systemSpeed = CGFloat(speed)
+        self.changeSpeed(speed)
     }
     
     func mediaSettingViewController(_ vc: MediaSettingViewController, didChangePlayerMode mode: Preferences.PlayerMode) {

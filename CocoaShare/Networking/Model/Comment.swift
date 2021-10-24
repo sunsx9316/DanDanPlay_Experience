@@ -34,7 +34,10 @@ struct Comment: HandyJSON {
     
     var userId = ""
     
-    //    p参数格式为出现时间,模式,颜色,用户ID，各个参数之间使用英文逗号分隔
+    //来源
+    var source = ""
+    
+    //    p参数格式为出现时间,模式,颜色,[来源]用户ID，各个参数之间使用英文逗号分隔
     //
     //    弹幕出现时间：格式为 0.00，单位为秒，精确到小数点后两位，例如12.34、445.6、789.01
     //    弹幕模式：1-普通弹幕，4-底部弹幕，5-顶部弹幕
@@ -69,7 +72,12 @@ struct Comment: HandyJSON {
         }
         
         if parameter.count > 3 {
-            self.userId = parameter[3]
+            let arr = parameter[3].components(separatedBy: "]")
+            if arr.count == 2 {
+                self.source = arr[0].replacingOccurrences(of: "[", with: "")
+                self.userId = arr[1]
+            }
+            
         }
     }
 }

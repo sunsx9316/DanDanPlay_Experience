@@ -9,6 +9,7 @@ import UIKit
 import AVFoundation
 import SnapKit
 import DynamicButton
+import MBProgressHUD
 
 protocol PlayerUIViewDelegate: AnyObject {
     
@@ -26,6 +27,8 @@ protocol PlayerUIViewDelegate: AnyObject {
     
     func doubleTap(playerUIView: PlayerUIView)
     
+    func longPress(playerUIView: PlayerUIView, isBegin: Bool)
+    
     func tapSlider(playerUIView: PlayerUIView, progress: CGFloat)
     
     func playerUIView(_ playerUIView: PlayerUIView, didChangeControlViewState show: Bool)
@@ -39,32 +42,6 @@ protocol PlayerUIViewDataSource: AnyObject {
     
     func playerProgress(playerUIView: PlayerUIView) -> CGFloat
     
-}
-
-private class PlayerSnapTimeView: UIView {
-    
-    lazy var label: UILabel = {
-        let label = UILabel()
-        label.font = .ddp_small
-        label.textColor = .white
-        label.textAlignment = .center
-        return label
-    }()
-    
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.5)
-        self.layer.cornerRadius = 5
-        self.layer.masksToBounds = true
-        self.addSubview(self.label)
-        self.label.snp.makeConstraints { (make) in
-            make.edges.equalToSuperview().inset(UIEdgeInsets(top: 10, left: 10, bottom: 10, right: 10))
-        }
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
 }
 
 class PlayerUIView: UIView {
@@ -106,6 +83,9 @@ class PlayerUIView: UIView {
         let singleTap = UITapGestureRecognizer(target: self, action: #selector(PlayerUIView.singleTap))
         singleTap.numberOfTapsRequired = 1
         
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(longPress))
+        
+        
         singleTap.require(toFail: doubleTap)
         
         let panGes = UIPanGestureRecognizer(target: self, action: #selector(panGesture(_:)))
@@ -114,6 +94,7 @@ class PlayerUIView: UIView {
         gestureView.addGestureRecognizer(doubleTap)
         gestureView.addGestureRecognizer(singleTap)
         gestureView.addGestureRecognizer(panGes)
+        gestureView.addGestureRecognizer(longPress)
         return gestureView
     }()
     
@@ -165,9 +146,7 @@ class PlayerUIView: UIView {
         return controlView
     }
     
-    private lazy var snapTimeView: PlayerSnapTimeView = {
-        return PlayerSnapTimeView()
-    }()
+    private weak var timeSnapHUD: MBProgressHUD?
     
     private var panType: PanType?
     
@@ -321,6 +300,17 @@ class PlayerUIView: UIView {
         delegate?.onTouchNextButton(playerUIView: self)
     }
     
+    @objc private func longPress(_ ges: UILongPressGestureRecognizer) {
+        switch ges.state {
+        case .began:
+            self.delegate?.longPress(playerUIView: self, isBegin: true)
+        case .ended, .cancelled, .failed:
+            self.delegate?.longPress(playerUIView: self, isBegin: false)
+        default:
+            break
+        }
+    }
+    
     
     //MARK: 滑动条
     @objc private func onSliderValueChange(_ sender: UISlider) {
@@ -377,7 +367,7 @@ class PlayerUIView: UIView {
             switch panType {
             case .progress:
                 let width = self.frame.size.width
-                let diff = width > 0 ? translation.x / width : 0;
+                let diff = width > 0 ? (translation.x / width) * 0.4 : 0;
                 
                 self.bottomView.progressSlider.value += Float(diff)
                 self.onSliderValueChange(self.bottomView.progressSlider)
@@ -451,40 +441,33 @@ class PlayerUIView: UIView {
     }
     
     private func showTimeSnapLabel() {
-        if self.snapTimeView.superview == nil {
-            self.snapTimeView.alpha = 0
-            self.addSubview(self.snapTimeView)
-            self.snapTimeView.snp.makeConstraints { (make) in
-                make.center.equalToSuperview()
-                make.width.greaterThanOrEqualTo(110)
-            }
-            
-            let currentTime = dataSource?.playerCurrentTime(playerUIView: self) ?? 0
-            updateDataTimeSnapLabel(currentTime: currentTime)
-        }
         
-        UIView.animate(withDuration: 0.3) {
-            self.snapTimeView.alpha = 1
-        }
+        self.timeSnapHUD?.hide(animated: false)
+        
+        let aHUD = MBProgressHUD.showAdded(to: self, animated: true)
+        self.timeSnapHUD = aHUD
+        aHUD.mode = .text
+        aHUD.bezelView.color = UIColor(red: 0, green: 0, blue: 0, alpha: 0.6)
+        aHUD.bezelView.style = .solidColor
+        aHUD.label.font = .ddp_normal
+        aHUD.label.numberOfLines = 0
+        aHUD.contentColor = .white
+        aHUD.margin = 15
+        aHUD.isUserInteractionEnabled = true
+        
+        let currentTime = dataSource?.playerCurrentTime(playerUIView: self) ?? 0
+        updateDataTimeSnapLabel(currentTime: currentTime)
     }
     
     private func hideTimeSnapLabel() {
-        if self.snapTimeView.superview == nil {
-            return
-        }
-        
-        UIView.animate(withDuration: 0.3) {
-            self.snapTimeView.alpha = 0
-        } completion: { (finish) in
-            self.snapTimeView.removeFromSuperview()
-        }
+        self.timeSnapHUD?.hide(animated: true)
     }
     
     private func updateDataTimeSnapLabel(currentTime: TimeInterval) {
         let totalTime = dataSource?.playerTotalTime(playerUIView: self) ?? 0
         let current = Date(timeIntervalSince1970: currentTime)
         let total = Date(timeIntervalSince1970: totalTime)
-        snapTimeView.label.text = timeFormatter.string(from: current) + "/" + timeFormatter.string(from: total)
+        self.timeSnapHUD?.label.text = timeFormatter.string(from: current) + "/" + timeFormatter.string(from: total)
     }
 
     
