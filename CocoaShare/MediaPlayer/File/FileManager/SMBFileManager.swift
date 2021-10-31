@@ -156,4 +156,14 @@ class SMBFileManager: FileManagerProtocol {
         }
     }
     
+    func deleteFile(_ file: File, completionHandler: @escaping ((Error?) -> Void)) {
+        guard let file = file as? SMBFile, file.isCanDelete else {
+            assert(false, "文件类型错误: \(file)")
+            completionHandler(SMBError.fileTypeError)
+            return
+        }
+        
+        self.client?.removeItem(atPath: file.path, completionHandler: completionHandler)
+    }
+    
 }

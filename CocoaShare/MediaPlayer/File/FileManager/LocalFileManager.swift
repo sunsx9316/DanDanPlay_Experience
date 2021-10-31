@@ -9,6 +9,17 @@ import Foundation
 
 class LocalFileManager: FileManagerProtocol {
     
+    private enum LocalError: LocalizedError {
+        case fileTypeError
+        
+        var errorDescription: String? {
+            switch self {
+            case .fileTypeError:
+                return "文件类型错误"
+            }
+        }
+    }
+    
     var addressExampleDesc: String {
         return ""
     }
@@ -72,6 +83,24 @@ class LocalFileManager: FileManagerProtocol {
     
     func connectWithLoginInfo(_ loginInfo: LoginInfo, completionHandler: @escaping ((Error?) -> Void)) {
         completionHandler(nil)
+    }
+    
+    func deleteFile(_ file: File, completionHandler: @escaping ((Error?) -> Void)) {
+        
+        guard file.isCanDelete else {
+            assert(false, "文件类型错误: \(file)")
+            completionHandler(LocalError.fileTypeError)
+            return
+        }
+        
+        var error: Error?
+        do {
+            try FileManager.default.removeItem(at: file.url)
+        } catch let err {
+            error = err
+        }
+        
+        completionHandler(error)
     }
     
 }

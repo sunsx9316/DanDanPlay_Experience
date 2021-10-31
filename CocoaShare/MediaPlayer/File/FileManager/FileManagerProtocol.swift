@@ -18,6 +18,8 @@ protocol FileManagerProtocol {
     func getDataWithFile(_ file: File, range: ClosedRange<Int>?, progress: FileProgressAction?, completion: @escaping ((Result<Data, Error>) -> Void))
     
     func connectWithLoginInfo(_ loginInfo: LoginInfo, completionHandler: @escaping((Error?) -> Void))
+    
+    func deleteFile(_ file: File, completionHandler: @escaping((Error?) -> Void))
 }
 
 extension FileManagerProtocol {

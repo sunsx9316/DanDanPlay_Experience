@@ -62,6 +62,13 @@ class SMBFile: File {
         }
     }
     
+    var isCanDelete: Bool {
+        if self.url == SMBFile.rootFile.url {
+            return false
+        }
+        return self.pathType == .normal
+    }
+    
     init(shareName: String) {
         self.pathType = .share
         self.type = .folder

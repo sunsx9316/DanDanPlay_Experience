@@ -41,6 +41,12 @@ extension UIView {
         return view
     }
     
+    func showLoading() -> MBProgressHUD {
+        let view = self.createHUD(at: .center)
+        view.mode = .indeterminate
+        return view
+    }
+    
     private func createHUD(at position: HUDPosition) -> MBProgressHUD {
         let view = MBProgressHUD.showAdded(to: self, animated: true)
         view.bezelView.color = UIColor(red: 0, green: 0, blue: 0, alpha: 0.6)

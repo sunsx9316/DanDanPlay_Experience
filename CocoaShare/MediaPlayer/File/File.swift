@@ -40,6 +40,8 @@ protocol File {
     
     var fileHash: String { get }
     
+    var isCanDelete: Bool { get }
+    
     func getDataWithRange(_ range: ClosedRange<Int>,
                           progress: FileProgressAction?,
                           completion: @escaping((Result<Data, Error>) -> Void))

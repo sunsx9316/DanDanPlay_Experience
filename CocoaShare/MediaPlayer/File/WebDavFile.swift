@@ -53,6 +53,13 @@ class WebDavFile: File {
         return _fileManager
     }
     
+    var isCanDelete: Bool {
+        if self.url == WebDavFile.rootFile.url {
+            return false
+        }
+        return true
+    }
+    
     private lazy var _fileManager = WebDavFileManager()
     
     private lazy var fileSizeSemaphore = DispatchSemaphore(value: 0)

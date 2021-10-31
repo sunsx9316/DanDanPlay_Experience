@@ -33,6 +33,13 @@ class FTPFile: File {
         return FTPFileManager.shared
     }
     
+    var isCanDelete: Bool {
+        if self.url == FTPFile.rootFile.url {
+            return false
+        }
+        return true
+    }
+    
     init(with file: FileObject) {
         self.url = file.url
         self.path = file.path

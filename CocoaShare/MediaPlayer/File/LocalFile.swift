@@ -28,6 +28,13 @@ class LocalFile: File {
     
     static var rootFile: File = LocalFile(with: UIApplication.shared.documentsURL)
     
+    var isCanDelete: Bool {
+        if self.url == LocalFile.rootFile.url {
+            return false
+        }
+        return true
+    }
+    
     init(with url: URL, fileSize: Int) {
         self.url = url
         self.fileSize = fileSize

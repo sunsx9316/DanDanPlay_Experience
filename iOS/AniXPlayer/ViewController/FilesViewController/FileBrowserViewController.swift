@@ -14,6 +14,8 @@ protocol FileBrowserViewControllerDelegate: AnyObject {
 }
 
 extension FileBrowserViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.dataSource.count
     }
@@ -53,6 +55,68 @@ extension FileBrowserViewController: UITableViewDelegate, UITableViewDataSource 
             self.navigationController?.pushViewController(vc, animated: true)
         }
     }
+    
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        
+        let file = self.dataSource[indexPath.row]
+        let cell = tableView.cellForRow(at: indexPath)
+        
+        if !file.isCanDelete {
+            return nil
+        }
+        
+        return .init(actions: [.init(style: .destructive, title: NSLocalizedString("删除", comment: ""), handler: { [weak self] _, _, _ in
+            guard let self = self else { return }
+            
+            self.delete(file: file, from: cell)
+        })])
+    }
+    
+    func delete(file: File, from: UIView?) {
+        
+        let message: String
+        
+        switch file.type {
+        case .folder:
+            message = NSLocalizedString("文件夹？", comment: "")
+        case .file:
+            message = NSLocalizedString("文件？", comment: "")
+        }
+        
+        let vc = UIAlertController(title: NSLocalizedString("提示", comment: ""), message: NSLocalizedString("确定删除此", comment: "") + message, preferredStyle: .alert)
+        
+        vc.addAction(UIAlertAction(title: NSLocalizedString("确定", comment: ""), style: .default, handler: { [weak self] _ in
+            
+            guard let self = self else { return }
+            
+            let hud = self.view.showLoading()
+            
+            file.fileManager.deleteFile(file) { [weak self] (error) in
+                guard let self = self else { return }
+                
+                DispatchQueue.main.async {
+                    hud.hide(animated: true)
+                    
+                    if let error = error {
+                        self.view.showError(error)
+                        self.tableView.reloadData()
+                    } else {
+                        self.beginRefreshing()
+                    }
+                }
+            }
+        }))
+        
+        vc.addAction(UIAlertAction(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: { [weak self] _ in
+            guard let self = self else { return }
+            
+            self.tableView.reloadData()
+        }))
+        
+        vc.popoverPresentationController?.sourceView = from
+        self.present(vc, animated: true, completion: nil)
+    }
+    
 }
 
 extension FileBrowserViewController: FileBrowserViewControllerDelegate {

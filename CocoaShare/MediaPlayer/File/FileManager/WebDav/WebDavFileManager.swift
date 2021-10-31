@@ -11,6 +11,17 @@ import YYCategories
 
 class WebDavFileManager: FileManagerProtocol {
     
+    private enum WebDavError: LocalizedError {
+        case fileTypeError
+        
+        var errorDescription: String? {
+            switch self {
+            case .fileTypeError:
+                return "文件类型错误"
+            }
+        }
+    }
+    
     private lazy var client: AFWebDAVManager? = {
         
         guard let loginInfo = WebDavFileManager.loginInfo else { return nil }
@@ -134,6 +145,18 @@ class WebDavFileManager: FileManagerProtocol {
                 }
             }
         }).resume()
+    }
+    
+    func deleteFile(_ file: File, completionHandler: @escaping ((Error?) -> Void)) {
+        guard file.isCanDelete else {
+            assert(false, "文件类型错误: \(file)")
+            completionHandler(WebDavError.fileTypeError)
+            return
+        }
+        
+        self.client?.removeFile(atURLString: file.url.absoluteString, completionHandler: { _, error in
+            completionHandler(error)
+        })
     }
  
     //MARK: - private method

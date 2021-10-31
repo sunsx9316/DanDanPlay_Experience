@@ -10,6 +10,16 @@ import FilesProvider
 
 class FTPFileManager: FileManagerProtocol {
     
+    private enum FTPError: LocalizedError {
+        case fileTypeError
+        
+        var errorDescription: String? {
+            switch self {
+            case .fileTypeError:
+                return "文件类型错误"
+            }
+        }
+    }
     
     private var client: FTPFileProvider?
     
@@ -83,6 +93,16 @@ class FTPFileManager: FileManagerProtocol {
                 }
             })
         }
-        
     }
+    
+    func deleteFile(_ file: File, completionHandler: @escaping ((Error?) -> Void)) {
+        guard file.isCanDelete else {
+            assert(false, "文件类型错误: \(file)")
+            completionHandler(FTPError.fileTypeError)
+            return
+        }
+        
+        self.client?.removeItem(path: file.url.path, completionHandler: completionHandler)
+    }
+    
 }
