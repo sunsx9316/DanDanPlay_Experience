@@ -29,6 +29,8 @@ class SliderTableViewCell: TableViewCell {
     
     @IBOutlet weak var currentValueLabel: UILabel!
     
+    var step: UInt = 0
+    
     var onChangeSliderCallBack: ((SliderTableViewCell) -> Void)?
     
     var model: Model? {
@@ -39,14 +41,14 @@ class SliderTableViewCell: TableViewCell {
                 self.currentValueLabel.text = String(format: "%.1f", model.currentValue)
                 self.valueSlider.minimumValue = model.minValue
                 self.valueSlider.maximumValue = model.maxValue
-                self.valueSlider.value = model.currentValue
+                self.changeValue(model.currentValue)
             } else {
                 self.minValueLabel.text = nil
                 self.maxValueLabel.text = nil
                 self.currentValueLabel.text = nil
                 self.valueSlider.minimumValue = 0
                 self.valueSlider.maximumValue = 0
-                self.valueSlider.value = 0
+                self.changeValue(0)
             }
         }
     }
@@ -62,7 +64,28 @@ class SliderTableViewCell: TableViewCell {
     }
     
     @IBAction func onChangeSlider(_ sender: UISlider) {
+        self.changeValue(sender.value)
         self.onChangeSliderCallBack?(self)
+    }
+    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        self.step = 0
+        self.valueSlider.isContinuous = true
+    }
+    
+    private func changeValue(_ value: Float) {
+        if self.step != 0 {
+            let newStep = Float(self.step)
+            let newValue = round(value / newStep) * newStep
+            if newValue != self.valueSlider.value {
+                self.valueSlider.value = newValue
+            }
+        } else {
+            if self.valueSlider.value != value {
+                self.valueSlider.value = value
+            }
+        }
     }
     
     

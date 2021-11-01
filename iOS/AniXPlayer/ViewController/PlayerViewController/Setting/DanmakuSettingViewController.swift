@@ -16,7 +16,7 @@ protocol DanmakuSettingViewControllerDelegate: AnyObject {
     
     func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuFontSize fontSize: Double)
     
-    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuCount count: Int)
+    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, danmakuProportion: Double)
     
     func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeShowDanmaku isShow: Bool)
     
@@ -93,26 +93,50 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
                 self.delegate?.danmakuSettingViewController(self, didChangeDanmakuSpeed: currentValue)
             }
             return cell
-        case .danmakuCount:
+        case .danmakuProportion:
             let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
             cell.selectionStyle = .none
             cell.titleLabel.text = type.title
-            let model = SliderTableViewCell.Model(maxValue: Float(Preferences.shared.danmakuUnlimitCount),
-                                                  minValue: 1,
-                                                  currentValue: Float(Preferences.shared.danmakuCount))
+            cell.valueSlider.isContinuous = false
+            let maxCount = Preferences.shared.danmakuMaxStoreValue
+            let minCount = Preferences.shared.danmakuMinStoreValue
+            let currentValue = max(Preferences.shared.danmakuStoreProportion, minCount)
+            let model = SliderTableViewCell.Model(maxValue: Float(maxCount),
+                                                  minValue: Float(minCount),
+                                                  currentValue: Float(currentValue))
+            cell.step = UInt(minCount)
             
             
-            cell.model = model
+            func updateCell(_ cell: SliderTableViewCell, model aModel: SliderTableViewCell.Model) {
+                cell.model = aModel
+                cell.maxValueLabel.text = NSLocalizedString("满屏", comment: "")
+                let minRational = Rational(approximating: Double(aModel.minValue / aModel.maxValue))
+                cell.minValueLabel.text = "\(minRational.numerator)/\(minRational.denominator)" + NSLocalizedString("屏", comment: "")
+                
+                if aModel.currentValue == aModel.maxValue {
+                    cell.currentValueLabel.text = cell.maxValueLabel.text
+                } else {
+                    let rational = Rational(approximating: Double(aModel.currentValue / aModel.maxValue))
+                    cell.currentValueLabel.text = "\(rational.numerator)/\(rational.denominator)" + NSLocalizedString("屏", comment: "")
+                }
+                
+            }
+            
+            updateCell(cell, model: model)
+            
             cell.onChangeSliderCallBack = { [weak self] (aCell) in
                 guard let self = self else { return }
                 
                 let currentValue = aCell.valueSlider.value
-                Preferences.shared.danmakuCount = Int(aCell.valueSlider.value)
+                Preferences.shared.danmakuStoreProportion = Int(aCell.valueSlider.value)
                 var model = aCell.model
                 model?.currentValue = currentValue
                 aCell.model = model
+                if let model = model {
+                    updateCell(aCell, model: model)
+                }
                 
-                self.delegate?.danmakuSettingViewController(self, didChangeDanmakuCount: Int(currentValue))
+                self.delegate?.danmakuSettingViewController(self, danmakuProportion: Preferences.shared.danmakuProportion)
             }
             return cell
         
@@ -174,7 +198,7 @@ class DanmakuSettingViewController: ViewController {
         case danmakuFontSize
         case danmakuSpeed
         case danmakuAlpha
-        case danmakuCount
+        case danmakuProportion
         case showDanmaku
         case danmakuOffsetTime
         case searchDanmaku
@@ -188,7 +212,7 @@ class DanmakuSettingViewController: ViewController {
                 return NSLocalizedString("弹幕速度", comment: "")
             case .danmakuAlpha:
                 return NSLocalizedString("弹幕透明度", comment: "")
-            case .danmakuCount:
+            case .danmakuProportion:
                 return NSLocalizedString("同屏弹幕数量", comment: "")
             case .showDanmaku:
                 return NSLocalizedString("弹幕开关", comment: "")

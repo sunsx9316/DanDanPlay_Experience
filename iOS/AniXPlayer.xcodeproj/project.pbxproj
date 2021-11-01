@@ -90,6 +90,7 @@
 		8949F88F2662A1B700274520 /* FTPFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8949F88E2662A1B700274520 /* FTPFileManager.swift */; };
 		8949F8912662AA2100274520 /* WebDavLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8949F8902662AA2100274520 /* WebDavLoginHistoryViewController.swift */; };
 		8949F8932662AA8E00274520 /* FTPLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8949F8922662AA8E00274520 /* FTPLoginHistoryViewController.swift */; };
+		896BB5D82730439700C8EC43 /* Rational.swift in Sources */ = {isa = PBXBuildFile; fileRef = 896BB5D72730439700C8EC43 /* Rational.swift */; };
 		897CF529262F309D00CC297A /* PlayerSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897CF528262F309D00CC297A /* PlayerSettingViewController.swift */; };
 		897CF52D262F30D200CC297A /* DanmakuSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897CF52C262F30D200CC297A /* DanmakuSettingViewController.swift */; };
 		897CF533262F317B00CC297A /* SliderTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 897CF531262F317B00CC297A /* SliderTableViewCell.xib */; };
@@ -213,6 +214,7 @@
 		8949F88E2662A1B700274520 /* FTPFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FTPFileManager.swift; sourceTree = "<group>"; };
 		8949F8902662AA2100274520 /* WebDavLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDavLoginHistoryViewController.swift; sourceTree = "<group>"; };
 		8949F8922662AA8E00274520 /* FTPLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FTPLoginHistoryViewController.swift; sourceTree = "<group>"; };
+		896BB5D72730439700C8EC43 /* Rational.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Rational.swift; sourceTree = "<group>"; };
 		897CF528262F309D00CC297A /* PlayerSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSettingViewController.swift; sourceTree = "<group>"; };
 		897CF52C262F30D200CC297A /* DanmakuSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuSettingViewController.swift; sourceTree = "<group>"; };
 		897CF530262F317B00CC297A /* SliderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderTableViewCell.swift; sourceTree = "<group>"; };
@@ -431,6 +433,7 @@
 			children = (
 				890DF72626160A58002D8AE5 /* DanmakuModel.swift */,
 				890DF72726160A58002D8AE5 /* BaseModel.swift */,
+				896BB5D72730439700C8EC43 /* Rational.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -937,6 +940,7 @@
 				897CF529262F309D00CC297A /* PlayerSettingViewController.swift in Sources */,
 				890DF84E2618569D002D8AE5 /* Response.swift in Sources */,
 				890DF74F26160B1B002D8AE5 /* UIFont+Helper.swift in Sources */,
+				896BB5D82730439700C8EC43 /* Rational.swift in Sources */,
 				89E0D6162669143400E2337B /* TitleDetailTableViewCell.swift in Sources */,
 				8931F0EE26750D6500590569 /* UIView+HitTest.m in Sources */,
 				89E0D82C266BDB8600E2337B /* PlayerUIBottomView.swift in Sources */,

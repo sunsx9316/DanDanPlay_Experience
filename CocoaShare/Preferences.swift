@@ -37,7 +37,7 @@ class Preferences {
         case danmakuFontSize
         case danmakuSpeed
         case danmakuAlpha
-        case danmakuCount
+        case danmakuStoreProportion
         case showHomePageTips
         case playerSpeed
         case playerMode
@@ -108,8 +108,16 @@ class Preferences {
         }
     }
     
-    var danmakuUnlimitCount: Int {
+    var danmakuMaxStoreValue: Int {
         return 100
+    }
+    
+    var danmakuMinStoreValue: Int {
+        return 25
+    }
+    
+    var danmakuProportion: Double {
+        return Double(self.danmakuStoreProportion) / Double(self.danmakuMaxStoreValue)
     }
     
     @StoreWrapper(defaultValue: 1, key: .playerSpeed)
@@ -118,8 +126,8 @@ class Preferences {
     @StoreWrapper(defaultValue: true, key: .showHomePageTips)
     var showHomePageTips: Bool
     
-    @StoreWrapper(defaultValue: 0, key: .danmakuCount)
-    var danmakuCount: Int /// 弹幕显示数量
+    @StoreWrapper(defaultValue: 25, key: .danmakuStoreProportion)
+    var danmakuStoreProportion: Int /// 弹幕占比 取值 25/50/75，代表1/4 1/2 2/3
     
     @StoreWrapper(defaultValue: 1, key: .danmakuAlpha)
     var danmakuAlpha: Double

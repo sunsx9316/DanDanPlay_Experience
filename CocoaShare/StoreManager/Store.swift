@@ -49,6 +49,9 @@ open class Store {
         if valueType is Double.Type {
             let v: Double? = self.value(forKey: forKey)
             return v as? Value
+        } else if valueType is Float.Type {
+            let v: Float? = self.value(forKey: forKey)
+            return v as? Value
         } else if valueType is String.Type {
             let v: String? = self.value(forKey: forKey)
             return v as? Value

@@ -37,10 +37,16 @@ class PlayerViewController: ViewController {
         
         danmakuRender.globalFont = UIFont.systemFont(ofSize: CGFloat(Preferences.shared.danmakuFontSize))
         danmakuRender.systemSpeed = CGFloat(Preferences.shared.danmakuSpeed)
-        danmakuRender.canvas.alpha = CGFloat(Preferences.shared.danmakuAlpha)
-        danmakuRender.canvas.isHidden = !Preferences.shared.isShowDanmaku
         danmakuRender.offsetTime = TimeInterval(Preferences.shared.danmakuOffsetTime)
         return danmakuRender
+    }()
+    
+    /// 弹幕画布容器
+    private lazy var danmakuCanvas: UIView = {
+        let view = UIView()
+        view.alpha = CGFloat(Preferences.shared.danmakuAlpha)
+        view.isHidden = !Preferences.shared.isShowDanmaku
+        return view
     }()
     
     private lazy var player: MediaPlayer = {
@@ -103,8 +109,9 @@ class PlayerViewController: ViewController {
         super.viewDidLoad()
         self.view.addSubview(self.containerView)
         self.containerView.addSubview(self.player.mediaView)
-        self.containerView.addSubview(self.danmakuRender.canvas)
+        self.containerView.addSubview(self.danmakuCanvas)
         self.view.addSubview(self.uiView)
+        self.danmakuCanvas.addSubview(self.danmakuRender.canvas)
         
         self.containerView.snp.makeConstraints { (make) in
             make.top.leading.trailing.bottom.equalTo(self.view)
@@ -114,18 +121,11 @@ class PlayerViewController: ViewController {
             make.edges.equalTo(self.containerView)
         }
         
-        self.danmakuRender.canvas.snp.makeConstraints { (make) in
-            make.top.leading.trailing.equalTo(self.containerView)
-            if Preferences.shared.subtitleSafeArea {
-                make.height.equalTo(self.containerView).multipliedBy(0.85)
-            } else {
-                make.height.equalTo(self.containerView)
-            }
-        }
-        
         self.uiView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
         }
+        
+        self.layoutDanmakuCanvas()
         
         
         changeRepeatMode()
@@ -415,6 +415,24 @@ class PlayerViewController: ViewController {
         self.player.speed = speed
         self.danmakuRender.systemSpeed = CGFloat(speed)
     }
+    
+    /// 重新布局弹幕画布
+    private func layoutDanmakuCanvas() {
+        self.danmakuCanvas.snp.remakeConstraints { (make) in
+            make.top.leading.trailing.equalTo(self.containerView)
+            if Preferences.shared.subtitleSafeArea {
+                make.height.equalTo(self.containerView).multipliedBy(0.85)
+            } else {
+                make.height.equalTo(self.containerView)
+            }
+        }
+        
+        self.danmakuRender.canvas.snp.remakeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+            let danmakuProportion = Preferences.shared.danmakuProportion
+            make.height.equalToSuperview().multipliedBy(danmakuProportion)
+        }
+    }
 }
 
 extension PlayerViewController: MatchsViewControllerDelegate {
@@ -500,7 +518,7 @@ extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
     }
     
     func onTouchDanmakuSwitch(playerUIView: PlayerUIView, isOn: Bool) {
-        self.danmakuRender.canvas.isHidden = !isOn
+        self.danmakuCanvas.isHidden = !isOn
     }
     
     func onTouchSendDanmakuButton(playerUIView: PlayerUIView) {
@@ -704,7 +722,7 @@ extension PlayerViewController: JHDanmakuEngineDelegate {
 
 extension PlayerViewController: DanmakuSettingViewControllerDelegate {
     func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuAlpha alpha: Float) {
-        danmakuRender.canvas.alpha = CGFloat(alpha)
+        danmakuCanvas.alpha = CGFloat(alpha)
     }
     
     func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuSpeed speed: Float) {
@@ -716,12 +734,23 @@ extension PlayerViewController: DanmakuSettingViewControllerDelegate {
         danmakuRender.globalFont = UIFont.systemFont(ofSize: danmakuFontSize)
     }
     
-    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuCount count: Int) {
-        danmakuRender.limitCount = UInt(count == Preferences.shared.danmakuUnlimitCount ? 0 : count)
+    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, danmakuProportion: Double) {
+        UIView.animate(withDuration: 0.2) {
+            let mainColor = UIColor.mainColor
+            let backgroundColor = UIColor(red: mainColor.red, green: mainColor.green, blue: mainColor.green, alpha: 0.3)
+            self.danmakuRender.canvas.backgroundColor = backgroundColor
+            
+        } completion: { (_) in
+            UIView.animate(withDuration: 0.1) {
+                self.danmakuRender.canvas.backgroundColor = .clear
+            }
+        }
+        
+        self.layoutDanmakuCanvas()
     }
     
     func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeShowDanmaku isShow: Bool) {
-        self.danmakuRender.canvas.isHidden = !isShow
+        self.danmakuCanvas.isHidden = !isShow
     }
     
     func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuOffsetTime danmakuOffsetTime: Int) {
@@ -761,22 +790,15 @@ extension PlayerViewController: MediaSettingViewControllerDelegate {
         UIView.animate(withDuration: 0.2) {
             let mainColor = UIColor.mainColor
             let backgroundColor = UIColor(red: mainColor.red, green: mainColor.green, blue: mainColor.green, alpha: 0.3)
-            self.danmakuRender.canvas.backgroundColor = backgroundColor
+            self.danmakuCanvas.backgroundColor = backgroundColor
             
         } completion: { (_) in
             UIView.animate(withDuration: 0.1) {
-                self.danmakuRender.canvas.backgroundColor = .clear
+                self.danmakuCanvas.backgroundColor = .clear
             }
         }
 
-        self.danmakuRender.canvas.snp.remakeConstraints { (make) in
-            make.top.leading.trailing.equalTo(self.containerView)
-            if isOn {
-                make.height.equalTo(self.containerView).multipliedBy(0.85)
-            } else {
-                make.height.equalTo(self.containerView)
-            }
-        }
+        self.layoutDanmakuCanvas()
     }
     
     func mediaSettingViewController(_ vc: MediaSettingViewController, didChangePlayerSpeed speed: Double) {
