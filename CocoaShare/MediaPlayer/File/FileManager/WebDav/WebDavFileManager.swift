@@ -43,10 +43,12 @@ class WebDavFileManager: FileManagerProtocol {
     static var loginInfo: LoginInfo?
     
     func cancelTasks() {
+        ANX.logInfo(.webDav, "cancelTasks")
         self.client?.invalidateSessionCancelingTasks(true, resetSession: true)
     }
     
     func connectWithLoginInfo(_ loginInfo: LoginInfo, completionHandler: @escaping((Error?) -> Void)) {
+        ANX.logInfo(.webDav, "登录 loginInfo: %@", "\(loginInfo)")
         
         WebDavFileManager.loginInfo = loginInfo
         
@@ -67,6 +69,7 @@ class WebDavFileManager: FileManagerProtocol {
         
         self.client?.contentsOfDirectory(atURLString: directory.url.absoluteString, recursive: false, completionHandler: { res, error in
             if let error = error {
+                ANX.logError(.webDav, "contentsOfDirectory error: %@", error as NSError)
                 completion(.failure(error))
             } else {
                 
@@ -93,6 +96,8 @@ class WebDavFileManager: FileManagerProtocol {
                     return directoryURL != url
                 }).compactMap({ WebDavFile(with: $0) }) ?? []
                 
+                ANX.logInfo(.webDav, "directoryURL: %@, tmpFileslCount: %ld", String(describing: directoryURL), tmpFiles.count)
+                
                 completion(.success(tmpFiles))
             }
         })
@@ -101,6 +106,7 @@ class WebDavFileManager: FileManagerProtocol {
     func getDataWithFile(_ file: File, range: ClosedRange<Int>?, progress: FileProgressAction?, completion: @escaping ((Result<Data, Error>) -> Void)) {
         
         guard let url = URL(string: file.url.absoluteString, relativeTo: self.client?.baseURL) else {
+            ANX.logError(.webDav, "getDataWithFile URL生成失败 fileUrl: %@, relativeTo: %@", String(describing: file.url.absoluteString), String(describing: self.client?.baseURL))
             completion(.failure(URLError(.badURL)))
             return
         }
@@ -110,11 +116,12 @@ class WebDavFileManager: FileManagerProtocol {
         if let range = range {
             request.setValue("bytes=\(range.lowerBound)-\(range.upperBound)", forHTTPHeaderField: "Range")
         }
-        
+
         self.client?.dataTask(with: request, uploadProgress: nil, downloadProgress: { p in
             progress?(p.fractionCompleted)
         }, completionHandler: { _, data, error in
             if let error = error {
+                ANX.logError(.webDav, "getDataWithFile请求失败 error: %@", error as NSError)
                 completion(.failure(error))
             } else if let data = data as? Data {
                 completion(.success(data))
@@ -124,6 +131,8 @@ class WebDavFileManager: FileManagerProtocol {
     
     func getFileSize(_ file: File, completion: @escaping ((Result<Int, Error>) -> Void)) {
         guard let url = URL(string: file.url.absoluteString, relativeTo: self.client?.baseURL) else {
+            ANX.logError(.webDav, "getFileSize URL生成失败 fileUrl: %@, relativeTo: %@", String(describing: file.url.absoluteString), String(describing: self.client?.baseURL))
+            
             completion(.failure(URLError(.badURL)))
             return
         }
@@ -134,14 +143,17 @@ class WebDavFileManager: FileManagerProtocol {
         
         self.client?.dataTask(with: request, uploadProgress: nil, downloadProgress: nil, completionHandler: { res, data, error in
             if let error = error {
+                ANX.logError(.webDav, "getFileSize 请求失败 error: %@", error as NSError)
                 completion(.failure(error))
             } else if let res = res as? HTTPURLResponse {
                 if let contentRange = res.allHeaderFields["Content-Range"] as? String,
                    let fileLengthString = contentRange.components(separatedBy: "/").last {
                     let fileLength = Int(fileLengthString) ?? 0
                     completion(.success(fileLength))
+                    ANX.logInfo(.webDav, "getFileSize 请求成功 fileLength: %ld", fileLength)
                 } else {
                     completion(.failure(URLError(.zeroByteResource)))
+                    ANX.logError(.webDav, "getFileSize 请求失败 allHeaderFields: %@", res.allHeaderFields)
                 }
             }
         }).resume()
@@ -150,6 +162,7 @@ class WebDavFileManager: FileManagerProtocol {
     func deleteFile(_ file: File, completionHandler: @escaping ((Error?) -> Void)) {
         guard file.isCanDelete else {
             assert(false, "文件类型错误: \(file)")
+            ANX.logError(.webDav, "deleteFile 文件类型错误: %@", "\(file)")
             completionHandler(WebDavError.fileTypeError)
             return
         }

@@ -63,6 +63,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         return true
     }
+    
+    func applicationWillTerminate(_ application: UIApplication) {
+        ANXLogHelper.close()
+    }
+    
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        ANXLogHelper.flush()
+    }
 
     //MARK: - Private Method
     private func setup() {
@@ -125,6 +133,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         do {
             let tableView = UITableView.appearance()
             tableView.separatorColor = .separatorColor
+        }
+        
+        do {
+            ANXLogHelper.setup()
         }
     }
 }
