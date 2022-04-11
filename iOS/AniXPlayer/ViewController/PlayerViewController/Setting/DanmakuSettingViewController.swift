@@ -22,6 +22,8 @@ protocol DanmakuSettingViewControllerDelegate: AnyObject {
     
     func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuOffsetTime danmakuOffsetTime: Int)
     
+    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuDensity density: Float)
+    
     func loadDanmakuFileInDanmakuSettingViewController(vc: DanmakuSettingViewController)
     func searchDanmakuInDanmakuSettingViewController(vc: DanmakuSettingViewController)
 }
@@ -171,6 +173,26 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
                 self.delegate?.danmakuSettingViewController(self, didChangeDanmakuOffsetTime: value)
             }
             return cell
+        case .danmakuDensity:
+            let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
+            cell.selectionStyle = .none
+            cell.titleLabel.text = type.title
+            let model = SliderTableViewCell.Model(maxValue: 1,
+                                                  minValue: 0.1,
+                                                  currentValue: Float(Preferences.shared.danmakuDensity))
+            cell.model = model
+            cell.onChangeSliderCallBack = { [weak self] (aCell) in
+                guard let self = self else { return }
+                
+                let currentValue = aCell.valueSlider.value
+                Preferences.shared.danmakuDensity = currentValue
+                var model = aCell.model
+                model?.currentValue = currentValue
+                aCell.model = model
+                
+                self.delegate?.danmakuSettingViewController(self, didChangeDanmakuDensity: currentValue)
+            }
+            return cell
         case .loadDanmaku, .searchDanmaku:
             let cell = tableView.dequeueCell(class: TitleTableViewCell.self, indexPath: indexPath)
             cell.label.text = type.title
@@ -199,6 +221,7 @@ class DanmakuSettingViewController: ViewController {
         case danmakuSpeed
         case danmakuAlpha
         case danmakuProportion
+        case danmakuDensity
         case showDanmaku
         case danmakuOffsetTime
         case searchDanmaku
@@ -222,6 +245,8 @@ class DanmakuSettingViewController: ViewController {
                 return NSLocalizedString("加载本地弹幕...", comment: "")
             case .searchDanmaku:
                 return NSLocalizedString("搜索弹幕", comment: "")
+            case .danmakuDensity:
+                return NSLocalizedString("弹幕密度", comment: "")
             }
         }
     }

@@ -717,10 +717,22 @@ extension PlayerViewController: JHDanmakuEngineDelegate {
     func danmakuEngine(_ danmakuEngine: JHDanmakuEngine, didSendDanmakuAtTime time: UInt) -> [JHDanmakuProtocol] {
         return danmakuDic[time] ?? []
     }
+    
+    func danmakuEngine(_ danmakuEngine: JHDanmakuEngine, shouldSendDanmaku danmaku: JHDanmakuProtocol) -> Bool {
+        let danmakuDensity = Preferences.shared.danmakuDensity
+        let shouldSendDanmaku = Float.random(in: 0...1) <= danmakuDensity
+        return shouldSendDanmaku
+    }
+    
 }
 
 
 extension PlayerViewController: DanmakuSettingViewControllerDelegate {
+
+    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuDensity density: Float) {
+        
+    }
+    
     func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuAlpha alpha: Float) {
         danmakuCanvas.alpha = CGFloat(alpha)
     }

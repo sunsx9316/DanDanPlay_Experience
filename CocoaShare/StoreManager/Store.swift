@@ -32,6 +32,8 @@ open class Store {
     @discardableResult open func set<Value>(_ value: Value, forKey key: String) -> Bool {
         if let v = value as? Double {
             return self.set(v, forKey: key)
+        } else if let v = value as? Float {
+            return self.set(v, forKey: key)
         } else if let v = value as? String {
             return self.set(v, forKey: key)
         } else if let v = value as? Int {
@@ -79,6 +81,17 @@ open class Store {
               mmkv.contains(key: forKey) else { return nil }
         
         return mmkv.double(forKey: forKey)
+    }
+    
+    @discardableResult open func set(_ value: Float, forKey key: String) -> Bool {
+        let mmkv = self.mmkv()
+        return mmkv?.set(value, forKey: key) ?? false
+    }
+    
+    open func value(forKey: String) -> Float? {
+        guard let mmkv = self.mmkv(),
+              mmkv.contains(key: forKey) else { return nil }
+        return mmkv.float(forKey: forKey)
     }
     
     @discardableResult open func set(_ value: Int, forKey key: String) -> Bool {

@@ -51,6 +51,7 @@ class Preferences {
         case webDavLoginInfo
         case ftpLoginInfo
         case subtitleLoadOrder
+        case danmakuDensity
     }
     
     enum PlayerMode: Int, CaseIterable {
@@ -146,6 +147,9 @@ class Preferences {
     
     @StoreWrapper(defaultValue: 1, key: .danmakuSpeed)
     var danmakuSpeed: Double
+    
+    @StoreWrapper(defaultValue: 1, key: .danmakuDensity)
+    var danmakuDensity: Float
     
     var smbLoginInfos: [LoginInfo]? {
         get {
