@@ -107,7 +107,6 @@
 		89AF9C0C2631D7120037A133 /* SheetTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89AF9C0A2631D7120037A133 /* SheetTableViewCell.xib */; };
 		89AF9C0F26343BE70037A133 /* AutoScrollLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AF9C0E26343BE70037A133 /* AutoScrollLabel.swift */; };
 		89B4B445272484FE00FB1BF5 /* SpeedUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B4B444272484FE00FB1BF5 /* SpeedUpView.swift */; };
-		89C6B7D8280463EC00A3E9CF /* mars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89C6B7D7280463EC00A3E9CF /* mars.framework */; };
 		89C6B7DD2804661600A3E9CF /* ANXLogHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 89C6B7DA2804661600A3E9CF /* ANXLogHelper.mm */; };
 		89C6B81228046E8600A3E9CF /* ANXLogHelper+Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C6B81128046E8600A3E9CF /* ANXLogHelper+Swift.swift */; };
 		89E0D60E2669113400E2337B /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0D60D2669113400E2337B /* SettingViewController.swift */; };
@@ -236,7 +235,6 @@
 		89AF9C0A2631D7120037A133 /* SheetTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SheetTableViewCell.xib; sourceTree = "<group>"; };
 		89AF9C0E26343BE70037A133 /* AutoScrollLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoScrollLabel.swift; sourceTree = "<group>"; };
 		89B4B444272484FE00FB1BF5 /* SpeedUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedUpView.swift; sourceTree = "<group>"; };
-		89C6B7D7280463EC00A3E9CF /* mars.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = mars.framework; sourceTree = "<group>"; };
 		89C6B7DA2804661600A3E9CF /* ANXLogHelper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ANXLogHelper.mm; sourceTree = "<group>"; };
 		89C6B7DB2804661600A3E9CF /* ANXLogHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANXLogHelper.h; sourceTree = "<group>"; };
 		89C6B81128046E8600A3E9CF /* ANXLogHelper+Swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ANXLogHelper+Swift.swift"; sourceTree = "<group>"; };
@@ -267,7 +265,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				6F969714544C3EBD7E920F21 /* Pods_AniXPlayer.framework in Frameworks */,
-				89C6B7D8280463EC00A3E9CF /* mars.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -703,7 +700,6 @@
 				89C6B81128046E8600A3E9CF /* ANXLogHelper+Swift.swift */,
 				89C6B7DB2804661600A3E9CF /* ANXLogHelper.h */,
 				89C6B7DA2804661600A3E9CF /* ANXLogHelper.mm */,
-				89C6B7D7280463EC00A3E9CF /* mars.framework */,
 			);
 			path = Vendor;
 			sourceTree = "<group>";
