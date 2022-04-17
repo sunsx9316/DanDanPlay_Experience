@@ -163,7 +163,7 @@ typedef NS_ENUM(NSUInteger, AFWebDAVLockScope) {
  @see -HTTPRequestOperationWithRequest:success:failure:
  */
 - (NSURLSessionDataTask *)PROPFIND:(NSString *)URLString
-                       propertyNames:(NSArray *)propertyNames
+                       propertyNames:(NSArray * _Nullable)propertyNames
                                depth:(AFWebDAVDepth)depth
                              success:(void (^)(NSURLSessionDataTask *operation, id responseObject))success
                              failure:(void (^)(NSURLSessionDataTask *operation, NSError *error))failure;
@@ -213,7 +213,7 @@ typedef NS_ENUM(NSUInteger, AFWebDAVLockScope) {
 - (NSURLSessionDataTask *)COPY:(NSString *)sourceURLString
                      destination:(NSString *)destinationURLString
                        overwrite:(BOOL)overwrite
-                      conditions:(NSString *)IfHeaderFieldValue
+                      conditions:(NSString * _Nullable)IfHeaderFieldValue
                          success:(void (^)(NSURLSessionDataTask *operation, id responseObject))success
                          failure:(void (^)(NSURLSessionDataTask *operation, NSError *error))failure;
 
@@ -232,7 +232,7 @@ typedef NS_ENUM(NSUInteger, AFWebDAVLockScope) {
 - (NSURLSessionDataTask *)MOVE:(NSString *)sourceURLString
                      destination:(NSString *)destinationURLString
                        overwrite:(BOOL)overwrite
-                      conditions:(NSString *)IfHeaderFieldValue
+                      conditions:(NSString * _Nullable)IfHeaderFieldValue
                          success:(void (^)(NSURLSessionDataTask *operation, id responseObject))success
                          failure:(void (^)(NSURLSessionDataTask *operation, NSError *error))failure;
 
