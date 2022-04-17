@@ -23,6 +23,7 @@ typedef NS_ENUM(NSUInteger, ANXLogLevel) {
 typedef NSString const * ANXLogHelperModule NS_TYPED_ENUM;
 
 FOUNDATION_EXPORT ANXLogHelperModule ANXLogHelperModuleWebDav;
+FOUNDATION_EXPORT ANXLogHelperModule ANXLogHelperModuleHTTP;
 
 @interface ANXLogHelper : NSObject
 

@@ -12,6 +12,7 @@
 #import <sys/xattr.h>
 
 ANXLogHelperModule ANXLogHelperModuleWebDav = @"WebDav";
+ANXLogHelperModule ANXLogHelperModuleHTTP = @"HTTP";
 
 
 
