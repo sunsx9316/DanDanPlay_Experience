@@ -10,27 +10,47 @@ import YYCategories
 
 protocol WebDAVInputStreamDelegate: AnyObject {
     func streamDidClose(_ stream: WebDAVInputStream)
+    func streamTaskInfoDidChange(_ stream: WebDAVInputStream, taskInfo: WebDAVInputStream.TaskInfo)
 }
 
 class WebDAVInputStream: InputStream {
     
-    private class TaskInfo: CustomStringConvertible {
+    class TaskInfo: CustomStringConvertible, MediaBufferInfo {
+        
+        var startPositin: CGFloat {
+            if fileLength == 0 {
+                return 0
+            }
+            
+            return CGFloat(range.lowerBound) / CGFloat(fileLength)
+        }
+        
+        var endPositin: CGFloat {
+            if fileLength == 0 {
+                return 0
+            }
+            
+            return CGFloat(range.upperBound) / CGFloat(fileLength)
+        }
         
         var description: String {
-            return "range: \(self.range.lowerBound)-\(self.range.upperBound), index: \(self.index), isCached: \(self.isCached), isRequesting: \(self.isRequesting)"
+            return "range: \(self.range.lowerBound)-\(self.range.upperBound), index: \(self.index), isCached: \(self.isCached), isRequesting: \(self.isRequesting), fileLength: \(fileLength)"
         }
         
         let range: NSRange
         
+        let fileLength: Int
+        
         let index: Int
         
-        var isCached = false
+        @Atomic var isCached = false
         
         var isRequesting = false
         
-        init(range: NSRange, index: Int) {
+        init(range: NSRange, index: Int, fileLength: Int) {
             self.range = range
             self.index = index
+            self.fileLength = fileLength
         }
         
     }
@@ -42,9 +62,9 @@ class WebDAVInputStream: InputStream {
     
     private let defaultDownloadSize = 20 * 1024 * 1024
     
-    private var fileLength: Int
+    private(set) var fileLength: Int
     
-    private var readOffset: Int = 0 {
+    @Atomic private var readOffset: Int = 0 {
         didSet {
             self.inputStream?.setProperty(self.readOffset, forKey: .fileCurrentOffsetKey)
         }
@@ -52,15 +72,19 @@ class WebDAVInputStream: InputStream {
     
     private let url: URL
     
-    private lazy var cacheRangeDic = [Int : TaskInfo]()
+    private var cacheRangeDic = [Int : TaskInfo]()
     
-    private var inputStream: InputStream?
+    var taskInfos: [TaskInfo] {
+        return Array(self.cacheRangeDic.values).filter({ $0.isCached && !$0.isRequesting })
+    }
     
-    private var fileHandle: FileHandle?
+    @Atomic private var inputStream: InputStream?
+    
+    @Atomic private var fileHandle: FileHandle?
     
     private let rangeKey = "Range"
     
-    private var _streamStatus: Stream.Status = .notOpen
+    @Atomic private var _streamStatus: Stream.Status = .notOpen
     
     override var streamStatus: Stream.Status {
         return _streamStatus
@@ -202,6 +226,7 @@ class WebDAVInputStream: InputStream {
                     
                 } completion: { (_) in
                     count -= 1
+                    self.streamDelegate?.streamTaskInfoDidChange(self, taskInfo: aTask)
                 }
             }
             
@@ -232,7 +257,7 @@ class WebDAVInputStream: InputStream {
         var taskDic = [Int : TaskInfo](minimumCapacity: taskCount)
         
         if taskCount == 0 {
-            taskDic[0] = .init(range: .init(location: 0, length: self.fileLength - 1), index: 0)
+            taskDic[0] = .init(range: .init(location: 0, length: self.fileLength - 1), index: 0, fileLength: self.fileLength)
         } else {
             for i in 0..<taskCount {
                 
@@ -243,7 +268,7 @@ class WebDAVInputStream: InputStream {
                     tmpRange.length = fileLength - tmpRange.location - 1
                 }
                 
-                taskDic[i] = .init(range: tmpRange, index: i)
+                taskDic[i] = .init(range: tmpRange, index: i, fileLength: self.fileLength)
                 
             }
         }

@@ -710,6 +710,10 @@ extension PlayerViewController: MediaPlayerDelegate {
         uiView.updateTime()
     }
     
+    func player(_ player: MediaPlayer, file: File, bufferInfoDidChange bufferInfo: MediaBufferInfo) {
+        uiView.updateBufferInfos(file.bufferInfos)
+    }
+    
 }
 
 //MARK: - JHDanmakuEngineDelegate

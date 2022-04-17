@@ -8,7 +8,7 @@
 import Foundation
 
 #if os(iOS)
-//import MobileVLCKit
+import MobileVLCKit
 #else
 import VLCKit
 #endif
@@ -124,7 +124,7 @@ class SMBFile: File {
         }
     }
     
-    func createMedia() -> VLCMedia? {
+    func createMedia(delegate: FileDelegate) -> VLCMedia? {
         let media = VLCMedia(url: self.url)
         let auth = SMBFileManager.shared.loginInfo?.auth
         

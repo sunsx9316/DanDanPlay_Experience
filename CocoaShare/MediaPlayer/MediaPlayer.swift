@@ -20,7 +20,7 @@ fileprivate extension Timer {
 
 #if os(iOS)
 import UIKit
-//import MobileVLCKit
+import MobileVLCKit
 import AVFoundation
 typealias MediaView = UIView
 #else
@@ -33,6 +33,7 @@ protocol MediaPlayerDelegate: AnyObject {
     func player(_ player: MediaPlayer, currentTime: TimeInterval, totalTime: TimeInterval)
     func player(_ player: MediaPlayer, stateDidChange state: MediaPlayer.State)
     func player(_ player: MediaPlayer, shouldChangeMedia media: File) -> Bool
+    func player(_ player: MediaPlayer, file: File, bufferInfoDidChange bufferInfo: MediaBufferInfo)
 }
 
 protocol SubtitleProtocol {
@@ -44,6 +45,7 @@ extension MediaPlayerDelegate {
     func player(_ player: MediaPlayer, currentTime: TimeInterval, totalTime: TimeInterval) {}
     func player(_ player: MediaPlayer, stateDidChange state: MediaPlayer.State) {}
     func player(_ player: MediaPlayer, shouldChangeMedia media: File) -> Bool { return true }
+    func player(_ player: MediaPlayer, file: File, bufferInfoDidChange bufferInfo: MediaBufferInfo) {}
 }
 
 private class Coordinator: NSObject {
@@ -159,7 +161,7 @@ class MediaPlayer {
         didSet {
             self.player.stop()
             self.currentSubTitleFile = nil
-            let media = self.currentPlayItem?.createMedia()
+            let media = self.currentPlayItem?.createMedia(delegate: self)
             self.player.media = media
         }
     }
@@ -237,11 +239,11 @@ class MediaPlayer {
     var playMode = PlayMode.autoPlayNext
     var volume: Int {
         get {
-            return Int(self.player.audio.volume)
+            return Int(self.player.audio?.volume ?? 0)
         }
         
         set {
-            self.player.audio.volume = Int32(newValue)
+            self.player.audio?.volume = Int32(newValue)
         }
     }
     
@@ -267,8 +269,11 @@ class MediaPlayer {
     
     var aspectRatio: AspectRatio {
         get {
-            let str = String(cString: self.player.videoAspectRatio)
-            return AspectRatio(rawValue: str) ?? .default
+            if let videoAspectRatio = self.player.videoAspectRatio {
+                let str = String(cString: videoAspectRatio)
+                return AspectRatio(rawValue: str) ?? .default
+            }
+            return .default
         }
         
         set {
@@ -324,7 +329,7 @@ class MediaPlayer {
     }
     
     var currentTime: TimeInterval {
-        let time = self.player.time?.value?.doubleValue ?? 0
+        let time = self.player.time.value?.doubleValue ?? 0
         return time / 1000
     }
     
@@ -558,7 +563,7 @@ extension Coordinator: VLCMediaPlayerDelegate {
         self.player?.stateChanged()
     }
     
-    func mediaPlayerTimeChanged(_ aNotification: Notification!) {
+    func mediaPlayerTimeChanged(_ aNotification: Notification) {
         
         guard let player = self.player else { return }
         
@@ -580,10 +585,24 @@ extension Coordinator: VLCMediaPlayerDelegate {
         
     }
     
-    func mediaPlayerStateChanged(_ aNotification: Notification!) {
+    func mediaPlayerStateChanged(_ aNotification: Notification) {
         guard let player = self.player else { return }
         
         player.stateChanged()
 //        debugPrint("mediaPlayerStateChanged \(VLCMediaPlayerStateToString(player.player.state))")
     }
+}
+
+extension MediaPlayer: FileDelegate {
+    
+    func mediaBufferDidChange(file: File, bufferInfo: MediaBufferInfo) {
+        DispatchQueue.main.async {
+            if file.url != self.currentPlayItem?.url {
+                return
+            }
+            
+            self.delegate?.player(self, file: file, bufferInfoDidChange: bufferInfo)
+        }
+    }
+    
 }

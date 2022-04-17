@@ -21,7 +21,6 @@
 		890DF6FD26160A36002D8AE5 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF6F726160A36002D8AE5 /* ViewController.swift */; };
 		890DF6FE26160A36002D8AE5 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF6F826160A36002D8AE5 /* NavigationController.swift */; };
 		890DF72826160A58002D8AE5 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF70126160A58002D8AE5 /* Constant.swift */; };
-		890DF72926160A58002D8AE5 /* WebDavFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF70426160A58002D8AE5 /* WebDavFile.swift */; };
 		890DF72B26160A58002D8AE5 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF70626160A58002D8AE5 /* File.swift */; };
 		890DF72C26160A58002D8AE5 /* LocalFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF70726160A58002D8AE5 /* LocalFile.swift */; };
 		890DF72D26160A58002D8AE5 /* URL+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF70826160A58002D8AE5 /* URL+Extension.swift */; };
@@ -77,7 +76,6 @@
 		8931F0F92677457100590569 /* EditableTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8931F0F72677457100590569 /* EditableTableViewCell.swift */; };
 		8931F0FA2677457100590569 /* EditableTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8931F0F82677457100590569 /* EditableTableViewCell.xib */; };
 		8931F166267CF34400590569 /* PickFileNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8931F165267CF34400590569 /* PickFileNavigationController.swift */; };
-		8931F168267F943800590569 /* WebDAVInputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8931F167267F943800590569 /* WebDAVInputStream.swift */; };
 		8944E86D263AE58A00EF00B1 /* SMBFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8944E86C263AE58A00EF00B1 /* SMBFile.swift */; };
 		8944E86F263AE87000EF00B1 /* SMBFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8944E86E263AE87000EF00B1 /* SMBFileManager.swift */; };
 		8944E871263AF11A00EF00B1 /* SMBLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8944E870263AF11A00EF00B1 /* SMBLoginHistoryViewController.swift */; };
@@ -98,6 +96,7 @@
 		899A9DDF262F35EB00C54AC9 /* SliderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897CF530262F317B00CC297A /* SliderTableViewCell.swift */; };
 		899C4E97263BDDE600A17C83 /* LinkHistoryHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899C4E96263BDDE600A17C83 /* LinkHistoryHeaderView.swift */; };
 		899C4E9F263CF88700A17C83 /* NSNetService+Util.m in Sources */ = {isa = PBXBuildFile; fileRef = 899C4E9E263CF88700A17C83 /* NSNetService+Util.m */; };
+		899E385D280B2F7A00285191 /* ProgressSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899E385C280B2F7A00285191 /* ProgressSlider.swift */; };
 		89AF9BFE2631C1740037A133 /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AF9BFC2631C1740037A133 /* SwitchTableViewCell.swift */; };
 		89AF9BFF2631C1740037A133 /* SwitchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89AF9BFD2631C1740037A133 /* SwitchTableViewCell.xib */; };
 		89AF9C032631C2680037A133 /* StepTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AF9C012631C2680037A133 /* StepTableViewCell.swift */; };
@@ -110,6 +109,9 @@
 		89C6B7DD2804661600A3E9CF /* ANXLogHelper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 89C6B7DA2804661600A3E9CF /* ANXLogHelper.mm */; };
 		89C6B81228046E8600A3E9CF /* ANXLogHelper+Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C6B81128046E8600A3E9CF /* ANXLogHelper+Swift.swift */; };
 		89C6B8142804847600A3E9CF /* mars.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89C6B8132804847600A3E9CF /* mars.framework */; };
+		89DEEC3E280B1F0A007AF91D /* WebDavFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DEEC3D280B1F0A007AF91D /* WebDavFile.swift */; };
+		89DEEC40280B1F28007AF91D /* WebDAVInputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DEEC3F280B1F28007AF91D /* WebDAVInputStream.swift */; };
+		89DEEC42280B1FA8007AF91D /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DEEC41280B1FA8007AF91D /* Atomic.swift */; };
 		89E0D60E2669113400E2337B /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0D60D2669113400E2337B /* SettingViewController.swift */; };
 		89E0D6122669127B00E2337B /* SwitchDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0D6102669127A00E2337B /* SwitchDetailTableViewCell.swift */; };
 		89E0D6132669127B00E2337B /* SwitchDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89E0D6112669127B00E2337B /* SwitchDetailTableViewCell.xib */; };
@@ -145,7 +147,6 @@
 		890DF6F726160A36002D8AE5 /* ViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		890DF6F826160A36002D8AE5 /* NavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
 		890DF70126160A58002D8AE5 /* Constant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
-		890DF70426160A58002D8AE5 /* WebDavFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebDavFile.swift; sourceTree = "<group>"; };
 		890DF70626160A58002D8AE5 /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		890DF70726160A58002D8AE5 /* LocalFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalFile.swift; sourceTree = "<group>"; };
 		890DF70826160A58002D8AE5 /* URL+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "URL+Extension.swift"; sourceTree = "<group>"; };
@@ -204,7 +205,6 @@
 		8931F12D2678FD1400590569 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		8931F12E2678FD1500590569 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		8931F165267CF34400590569 /* PickFileNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickFileNavigationController.swift; sourceTree = "<group>"; };
-		8931F167267F943800590569 /* WebDAVInputStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebDAVInputStream.swift; sourceTree = "<group>"; };
 		8944E86C263AE58A00EF00B1 /* SMBFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMBFile.swift; sourceTree = "<group>"; };
 		8944E86E263AE87000EF00B1 /* SMBFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMBFileManager.swift; sourceTree = "<group>"; };
 		8944E870263AF11A00EF00B1 /* SMBLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMBLoginHistoryViewController.swift; sourceTree = "<group>"; };
@@ -227,6 +227,7 @@
 		899C4E9C263CF88600A17C83 /* AniXPlayer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AniXPlayer-Bridging-Header.h"; sourceTree = "<group>"; };
 		899C4E9D263CF88700A17C83 /* NSNetService+Util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSNetService+Util.h"; sourceTree = "<group>"; };
 		899C4E9E263CF88700A17C83 /* NSNetService+Util.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSNetService+Util.m"; sourceTree = "<group>"; };
+		899E385C280B2F7A00285191 /* ProgressSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressSlider.swift; sourceTree = "<group>"; };
 		89AF9BFC2631C1740037A133 /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
 		89AF9BFD2631C1740037A133 /* SwitchTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwitchTableViewCell.xib; sourceTree = "<group>"; };
 		89AF9C012631C2680037A133 /* StepTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepTableViewCell.swift; sourceTree = "<group>"; };
@@ -240,6 +241,9 @@
 		89C6B7DB2804661600A3E9CF /* ANXLogHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ANXLogHelper.h; sourceTree = "<group>"; };
 		89C6B81128046E8600A3E9CF /* ANXLogHelper+Swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ANXLogHelper+Swift.swift"; sourceTree = "<group>"; };
 		89C6B8132804847600A3E9CF /* mars.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = mars.framework; sourceTree = "<group>"; };
+		89DEEC3D280B1F0A007AF91D /* WebDavFile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebDavFile.swift; sourceTree = "<group>"; };
+		89DEEC3F280B1F28007AF91D /* WebDAVInputStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebDAVInputStream.swift; sourceTree = "<group>"; };
+		89DEEC41280B1FA8007AF91D /* Atomic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Atomic.swift; sourceTree = "<group>"; };
 		89E0D60D2669113400E2337B /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		89E0D6102669127A00E2337B /* SwitchDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchDetailTableViewCell.swift; sourceTree = "<group>"; };
 		89E0D6112669127B00E2337B /* SwitchDetailTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwitchDetailTableViewCell.xib; sourceTree = "<group>"; };
@@ -377,6 +381,7 @@
 		890DF70026160A58002D8AE5 /* CocoaShare */ = {
 			isa = PBXGroup;
 			children = (
+				89DEEC41280B1FA8007AF91D /* Atomic.swift */,
 				890DF70126160A58002D8AE5 /* Constant.swift */,
 				890DF70D26160A58002D8AE5 /* DanmakuManager.swift */,
 				89E0D6182669484B00E2337B /* SubtitleManager.swift */,
@@ -408,8 +413,8 @@
 			children = (
 				890DF70F26160A58002D8AE5 /* FileManager */,
 				890DF70626160A58002D8AE5 /* File.swift */,
-				890DF70426160A58002D8AE5 /* WebDavFile.swift */,
-				8931F167267F943800590569 /* WebDAVInputStream.swift */,
+				89DEEC3D280B1F0A007AF91D /* WebDavFile.swift */,
+				89DEEC3F280B1F28007AF91D /* WebDAVInputStream.swift */,
 				890DF70726160A58002D8AE5 /* LocalFile.swift */,
 				8944E86C263AE58A00EF00B1 /* SMBFile.swift */,
 				8949F88C2662A11100274520 /* FTPFile.swift */,
@@ -739,6 +744,7 @@
 				890DF76826160B3E002D8AE5 /* PlayerUIView.swift */,
 				89E0D829266BD4FC00E2337B /* PlayerUITopView.swift */,
 				89E0D82B266BDB8600E2337B /* PlayerUIBottomView.swift */,
+				899E385C280B2F7A00285191 /* ProgressSlider.swift */,
 			);
 			path = PlayerUI;
 			sourceTree = "<group>";
@@ -906,7 +912,6 @@
 				890DF76E26160B3E002D8AE5 /* FileBrowserViewController.swift in Sources */,
 				8944E879263AF6D200EF00B1 /* SMBConnectViewController.swift in Sources */,
 				89E0D6122669127B00E2337B /* SwitchDetailTableViewCell.swift in Sources */,
-				890DF72926160A58002D8AE5 /* WebDavFile.swift in Sources */,
 				89AF9C0B2631D7120037A133 /* SheetTableViewCell.swift in Sources */,
 				890DF85B26189533002D8AE5 /* Helper.swift in Sources */,
 				890DF72C26160A58002D8AE5 /* LocalFile.swift in Sources */,
@@ -916,7 +921,6 @@
 				890DF6F926160A36002D8AE5 /* Label.swift in Sources */,
 				89AF9C072631D4B00037A133 /* MediaSettingViewController.swift in Sources */,
 				8944E86F263AE87000EF00B1 /* SMBFileManager.swift in Sources */,
-				8931F168267F943800590569 /* WebDAVInputStream.swift in Sources */,
 				8931F0F02677320200590569 /* LocalFilesViewController.swift in Sources */,
 				890DF74526160A58002D8AE5 /* DanmakuModel.swift in Sources */,
 				89144817261F4DA200E26133 /* Search.swift in Sources */,
@@ -926,6 +930,7 @@
 				890DF6FC26160A36002D8AE5 /* TableView.swift in Sources */,
 				89E109B62644424800825308 /* BaseConnectSvrViewController.swift in Sources */,
 				8949F8912662AA2100274520 /* WebDavLoginHistoryViewController.swift in Sources */,
+				899E385D280B2F7A00285191 /* ProgressSlider.swift in Sources */,
 				890DF75426160B1B002D8AE5 /* UITableView+Extension.swift in Sources */,
 				89E0D82A266BD4FC00E2337B /* PlayerUITopView.swift in Sources */,
 				8949F88D2662A11100274520 /* FTPFile.swift in Sources */,
@@ -952,6 +957,7 @@
 				8944E87B263AF72400EF00B1 /* TextField.swift in Sources */,
 				8931F0F92677457100590569 /* EditableTableViewCell.swift in Sources */,
 				8931F0EB2674CD3300590569 /* HttpServerViewController.swift in Sources */,
+				89DEEC40280B1F28007AF91D /* WebDAVInputStream.swift in Sources */,
 				890DF72E26160A58002D8AE5 /* MediaPlayer.swift in Sources */,
 				89FF586E271A80B200434BD9 /* HistoryManager.swift in Sources */,
 				890DF77926160B3E002D8AE5 /* PlayerUIView.swift in Sources */,
@@ -967,6 +973,7 @@
 				89E0D82C266BDB8600E2337B /* PlayerUIBottomView.swift in Sources */,
 				890DF77526160B3E002D8AE5 /* PlayerViewController.swift in Sources */,
 				8949F88F2662A1B700274520 /* FTPFileManager.swift in Sources */,
+				89DEEC42280B1FA8007AF91D /* Atomic.swift in Sources */,
 				890DF76F26160B3E002D8AE5 /* FolderTableViewCell.swift in Sources */,
 				89FA071026E4F6750071EC9E /* AFWebDAVManager.m in Sources */,
 				8944E876263AF48C00EF00B1 /* LinkHistoryTableViewCell.swift in Sources */,
@@ -980,6 +987,7 @@
 				890DF75126160B1B002D8AE5 /* UIView+Helper.swift in Sources */,
 				8931F166267CF34400590569 /* PickFileNavigationController.swift in Sources */,
 				89AF9C0F26343BE70037A133 /* AutoScrollLabel.swift in Sources */,
+				89DEEC3E280B1F0A007AF91D /* WebDavFile.swift in Sources */,
 				89E0D827266BBA9400E2337B /* SceneDelegate.swift in Sources */,
 				890DF72B26160A58002D8AE5 /* File.swift in Sources */,
 				8914481C261F510700E26133 /* SearchViewController.swift in Sources */,

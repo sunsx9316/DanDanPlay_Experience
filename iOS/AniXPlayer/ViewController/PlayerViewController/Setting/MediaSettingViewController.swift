@@ -123,7 +123,7 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             self.delegate?.loadSubtitleFileInMediaSettingViewController(self)
         } else if type == .subtitleTrack {
             
-            guard let media = self.player?.currentPlayItem else {
+            guard let _ = self.player?.currentPlayItem else {
                 return
             }
             

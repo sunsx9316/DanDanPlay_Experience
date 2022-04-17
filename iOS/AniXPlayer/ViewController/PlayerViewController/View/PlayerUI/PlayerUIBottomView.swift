@@ -11,11 +11,13 @@ import DynamicButton
 
 class PlayerUIBottomView: UIView {
 
-    lazy var progressSlider: UISlider = {
-        let slider = UISlider()
-        slider.tintColor = UIColor.mainColor
-        slider.maximumTrackTintColor = .init(red: 2, green: 31, blue: 0)
-        slider.setThumbImage(UIImage(color: UIColor.white, size: CGSize(width: 16, height: 10))?.byRoundCornerRadius(2), for: .normal)
+    lazy var progressSlider: ProgressSlider = {
+        let slider = ProgressSlider()
+        slider.thumbTintColor = UIColor.white
+        slider.trackHighlightTintColor = .init(red: 2, green: 31, blue: 0)
+        slider.thumbHitTestSlop = .init(top: -10, left: -10, bottom: -5, right: -5)
+        slider.trackBufferColor = .init(red: 7, green: 109, blue: 0)
+        slider.curvaceousness = 0.4
         return slider
     }()
 
@@ -95,6 +97,7 @@ class PlayerUIBottomView: UIView {
         self.progressSlider.snp.makeConstraints { make in
             make.top.leading.equalTo(10)
             make.trailing.equalTo(-10)
+            make.height.equalTo(20)
         }
         
         self.playButton.snp.makeConstraints { make in

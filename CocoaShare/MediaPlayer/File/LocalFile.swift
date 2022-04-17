@@ -7,7 +7,7 @@
 
 import Foundation
 #if os(iOS)
-//import MobileVLCKit
+import MobileVLCKit
 #else
 import VLCKit
 #endif
@@ -47,7 +47,7 @@ class LocalFile: File {
         self.init(with: url, fileSize: size)
     }
     
-    func createMedia() -> VLCMedia? {
+    func createMedia(delegate: FileDelegate) -> VLCMedia? {
         return VLCMedia(url: self.url)
     }
     

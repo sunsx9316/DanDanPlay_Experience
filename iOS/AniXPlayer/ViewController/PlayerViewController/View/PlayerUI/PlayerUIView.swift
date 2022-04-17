@@ -212,8 +212,12 @@ class PlayerUIView: UIView {
         
         self.bottomView.timeLabel.text = timeFormatter.string(from: current) + "/" + timeFormatter.string(from: total)
         if !isDragingSlider {
-            self.bottomView.progressSlider.value = Float(dataSource?.playerProgress(playerUIView: self) ?? 0)
+            self.bottomView.progressSlider.value = Double(dataSource?.playerProgress(playerUIView: self) ?? 0)
         }
+    }
+    
+    func updateBufferInfos(_ bufferInfos: [MediaBufferInfo]) {
+        self.bottomView.progressSlider.bufferInfos = bufferInfos
     }
     
     func autoShowControlView(completion: (() -> ())? = nil) {
@@ -313,23 +317,23 @@ class PlayerUIView: UIView {
     
     
     //MARK: 滑动条
-    @objc private func onSliderValueChange(_ sender: UISlider) {
+    @objc private func onSliderValueChange(_ sender: ProgressSlider) {
         let totalTime = dataSource?.playerTotalTime(playerUIView: self) ?? 0
-        updateDataTimeSnapLabel(currentTime: TimeInterval(sender.value * Float(totalTime)))
+        updateDataTimeSnapLabel(currentTime: TimeInterval(sender.value * Double(totalTime)))
     }
     
-    @objc private func tapUp(slider: UISlider) {
+    @objc private func tapUp(slider: ProgressSlider) {
         delegate?.tapSlider(playerUIView: self, progress: CGFloat(slider.value))
         isDragingSlider = false
         hideTimeSnapLabel()
     }
     
-    @objc private func tapDown(slider: UISlider) {
+    @objc private func tapDown(slider: ProgressSlider) {
         isDragingSlider = true
         showTimeSnapLabel()
     }
     
-    @objc private func tapCancel(slider: UISlider) {
+    @objc private func tapCancel(slider: ProgressSlider) {
         isDragingSlider = false
         hideTimeSnapLabel()
     }
@@ -369,7 +373,7 @@ class PlayerUIView: UIView {
                 let width = self.frame.size.width
                 let diff = width > 0 ? (translation.x / width) * 0.4 : 0;
                 
-                self.bottomView.progressSlider.value += Float(diff)
+                self.bottomView.progressSlider.value += Double(diff)
                 self.onSliderValueChange(self.bottomView.progressSlider)
             case .brightness, .volume:
                 let height = self.frame.size.height

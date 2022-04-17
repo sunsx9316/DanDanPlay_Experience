@@ -7,7 +7,7 @@
 
 import Foundation
 #if os(iOS)
-//import MobileVLCKit
+import MobileVLCKit
 import FilesProvider
 #else
 import VLCKit
@@ -54,7 +54,7 @@ class FTPFile: File {
         self.type = .folder
     }
     
-    func createMedia() -> VLCMedia? {
+    func createMedia(delegate: FileDelegate) -> VLCMedia? {
         let media = VLCMedia(url: self.url)
         let auth = FTPFileManager.shared.loginInfo?.auth
         
