@@ -61,6 +61,7 @@ class SliderTableViewCell: TableViewCell {
         self.minValueLabel.textColor = .white
         self.maxValueLabel.textColor = .white
         self.currentValueLabel.textColor = .white
+        self.valueSlider.isContinuous = false
     }
     
     @IBAction func onChangeSlider(_ sender: UISlider) {
@@ -71,7 +72,7 @@ class SliderTableViewCell: TableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         self.step = 0
-        self.valueSlider.isContinuous = true
+        self.valueSlider.isContinuous = false
     }
     
     private func changeValue(_ value: Float) {

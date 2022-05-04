@@ -92,6 +92,8 @@
 		897CF529262F309D00CC297A /* PlayerSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897CF528262F309D00CC297A /* PlayerSettingViewController.swift */; };
 		897CF52D262F30D200CC297A /* DanmakuSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897CF52C262F30D200CC297A /* DanmakuSettingViewController.swift */; };
 		897CF533262F317B00CC297A /* SliderTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 897CF531262F317B00CC297A /* SliderTableViewCell.xib */; };
+		897F9B602822B2EA00130613 /* SnapshotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897F9B5F2822B2EA00130613 /* SnapshotView.swift */; };
+		897F9B662822BE3900130613 /* MediaThumbnailer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897F9B652822BE3900130613 /* MediaThumbnailer.swift */; };
 		898C71BA26711394006EB849 /* HttpServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 898C71B926711394006EB849 /* HttpServer.swift */; };
 		899A9DDF262F35EB00C54AC9 /* SliderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897CF530262F317B00CC297A /* SliderTableViewCell.swift */; };
 		899C4E97263BDDE600A17C83 /* LinkHistoryHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899C4E96263BDDE600A17C83 /* LinkHistoryHeaderView.swift */; };
@@ -222,6 +224,8 @@
 		897CF52C262F30D200CC297A /* DanmakuSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuSettingViewController.swift; sourceTree = "<group>"; };
 		897CF530262F317B00CC297A /* SliderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderTableViewCell.swift; sourceTree = "<group>"; };
 		897CF531262F317B00CC297A /* SliderTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SliderTableViewCell.xib; sourceTree = "<group>"; };
+		897F9B5F2822B2EA00130613 /* SnapshotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotView.swift; sourceTree = "<group>"; };
+		897F9B652822BE3900130613 /* MediaThumbnailer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaThumbnailer.swift; sourceTree = "<group>"; };
 		898C71B926711394006EB849 /* HttpServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpServer.swift; sourceTree = "<group>"; };
 		899C4E96263BDDE600A17C83 /* LinkHistoryHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkHistoryHeaderView.swift; sourceTree = "<group>"; };
 		899C4E9C263CF88600A17C83 /* AniXPlayer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AniXPlayer-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -403,6 +407,7 @@
 			children = (
 				890DF70326160A58002D8AE5 /* File */,
 				890DF70826160A58002D8AE5 /* URL+Extension.swift */,
+				897F9B652822BE3900130613 /* MediaThumbnailer.swift */,
 				890DF70926160A58002D8AE5 /* MediaPlayer.swift */,
 			);
 			path = MediaPlayer;
@@ -745,6 +750,7 @@
 				89E0D829266BD4FC00E2337B /* PlayerUITopView.swift */,
 				89E0D82B266BDB8600E2337B /* PlayerUIBottomView.swift */,
 				899E385C280B2F7A00285191 /* ProgressSlider.swift */,
+				897F9B5F2822B2EA00130613 /* SnapshotView.swift */,
 			);
 			path = PlayerUI;
 			sourceTree = "<group>";
@@ -897,6 +903,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				897F9B602822B2EA00130613 /* SnapshotView.swift in Sources */,
 				899C4E9F263CF88700A17C83 /* NSNetService+Util.m in Sources */,
 				89C6B7DD2804661600A3E9CF /* ANXLogHelper.mm in Sources */,
 				890DF73526160A58002D8AE5 /* WebDavFileManager.swift in Sources */,
@@ -904,6 +911,7 @@
 				899A9DDF262F35EB00C54AC9 /* SliderTableViewCell.swift in Sources */,
 				89B4B445272484FE00FB1BF5 /* SpeedUpView.swift in Sources */,
 				89AF9BFE2631C1740037A133 /* SwitchTableViewCell.swift in Sources */,
+				897F9B662822BE3900130613 /* MediaThumbnailer.swift in Sources */,
 				89E0D710266B44BE00E2337B /* TitleTableViewCell.swift in Sources */,
 				890DF6EA261609DF002D8AE5 /* TabBarController.swift in Sources */,
 				890DF6CD26160826002D8AE5 /* AppDelegate.swift in Sources */,

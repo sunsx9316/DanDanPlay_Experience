@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import JHDanmakuRender
+import DanmakuRender
 import SnapKit
 import YYCategories
 import MBProgressHUD
@@ -30,13 +30,8 @@ class PlayerViewController: ViewController {
         return view
     }()
     
-    private lazy var danmakuRender: JHDanmakuEngine = {
-        let danmakuRender = JHDanmakuEngine()
-        danmakuRender.delegate = self
-        danmakuRender.setUserInfoWithKey(JHScrollDanmakuExtraSpeedKey, value: 1)
-        
-        danmakuRender.globalFont = UIFont.systemFont(ofSize: CGFloat(Preferences.shared.danmakuFontSize))
-        danmakuRender.systemSpeed = CGFloat(Preferences.shared.danmakuSpeed)
+    private lazy var danmakuRender: DanmakuEngine = {
+        let danmakuRender = DanmakuEngine()
         danmakuRender.offsetTime = TimeInterval(Preferences.shared.danmakuOffsetTime)
         return danmakuRender
     }()
@@ -57,7 +52,7 @@ class PlayerViewController: ViewController {
     
     private var playItemMap = [URL : PlayItem]()
     //当前弹幕时间/弹幕数组映射
-    private var danmakuDic = [UInt : [JHDanmakuProtocol]]()
+    private var danmakuDic = [UInt : [DanmakuConverResult]]()
     
     private lazy var animater = PlayerControlAnimater()
     
@@ -66,8 +61,15 @@ class PlayerViewController: ViewController {
     
     ///加速指示器
     private weak var speedUpHUD: MBProgressHUD?
+    
     ///开启临时加速前的速度
     private var originSpeed: Double?
+    
+    /// 当前弹幕的时间
+    private var danmakuTime: UInt?
+    
+    /// 弹幕字体
+    private lazy var danmakuFont = UIFont.systemFont(ofSize: CGFloat(Preferences.shared.danmakuFontSize))
     
     //MARK: - life cycle
     
@@ -213,7 +215,7 @@ class PlayerViewController: ViewController {
     
     private func setPlayerProgress(_ progress: CGFloat) {
         let currentTime = self.player.setPosition(Double(progress))
-        self.danmakuRender.currentTime = currentTime
+        self.danmakuRender.time = currentTime
         self.uiView.updateTime()
     }
     
@@ -265,11 +267,12 @@ class PlayerViewController: ViewController {
     
     private func playMedia(_ media: File, episodeId: Int, danmakus: [Comment]) {
         
-        let startPlayAction = { [weak self] (_ comment: [UInt : [JHDanmakuProtocol]]) in
+        let startPlayAction = { [weak self] (_ comment: [UInt : [DanmakuConverResult]]) in
             guard let self = self else { return }
             
             self.danmakuDic = comment
-            self.danmakuRender.currentTime = 0
+            self.danmakuRender.time = 0
+            self.danmakuTime = nil
             self.player.play(media)
             
             if let playItem = self.findPlayItem(media) {
@@ -411,9 +414,11 @@ class PlayerViewController: ViewController {
         }
     }
     
+    /// 调整播放器和弹幕整体
+    /// - Parameter speed: 速度
     private func changeSpeed(_ speed: Double) {
         self.player.speed = speed
-        self.danmakuRender.systemSpeed = CGFloat(speed)
+        self.danmakuRender.speed = speed
     }
     
     /// 重新布局弹幕画布
@@ -533,7 +538,7 @@ extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
             guard let self = self else { return }
             
             guard let item = self.player.currentPlayItem,
-                  let episodeId = self.findPlayItem(item)?.episodeId else {
+                  let _ = self.findPlayItem(item)?.episodeId else {
                 
                 self.view.showHUD("需要指定视频弹幕列表，才能发弹幕哟~")
                 return
@@ -644,6 +649,10 @@ extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
     }
     
     //MARK: PlayerUIViewDataSource
+    func playerMediaThumbnailer(playerUIView: PlayerUIView) -> MediaThumbnailer? {
+        return self.player.mediaThumbnailer
+    }
+    
     func playerCurrentTime(playerUIView: PlayerUIView) -> TimeInterval {
         return player.currentTime
     }
@@ -708,28 +717,37 @@ extension PlayerViewController: MediaPlayerDelegate {
     
     func player(_ player: MediaPlayer, currentTime: TimeInterval, totalTime: TimeInterval) {
         uiView.updateTime()
+        
+        let time = UInt(currentTime)
+        if time != self.danmakuTime {
+            let danmakuDensity = Preferences.shared.danmakuDensity
+            self.danmakuTime = time
+            if let danmakus = danmakuDic[time] {
+                for danmaku in danmakus {
+                    let shouldSendDanmaku = Float.random(in: 0...1) <= danmakuDensity
+                    if shouldSendDanmaku {
+                        self.danmakuRender.send(danmaku())
+                    }
+                }
+            }
+        }
     }
     
     func player(_ player: MediaPlayer, file: File, bufferInfoDidChange bufferInfo: MediaBufferInfo) {
         uiView.updateBufferInfos(file.bufferInfos)
     }
     
-}
-
-//MARK: - JHDanmakuEngineDelegate
-extension PlayerViewController: JHDanmakuEngineDelegate {
-    func danmakuEngine(_ danmakuEngine: JHDanmakuEngine, didSendDanmakuAtTime time: UInt) -> [JHDanmakuProtocol] {
-        return danmakuDic[time] ?? []
+    //MARK: Private Method
+    /// 遍历当前的弹幕
+    /// - Parameter callBack: 回调
+    private func forEachDanmakus(_ callBack: (BaseDanmaku) -> Void) {
+        for con in danmakuRender.containers {
+            if let danmaku = con.danmaku as? BaseDanmaku {
+                callBack(danmaku)
+            }
+        }
     }
-    
-    func danmakuEngine(_ danmakuEngine: JHDanmakuEngine, shouldSendDanmaku danmaku: JHDanmakuProtocol) -> Bool {
-        let danmakuDensity = Preferences.shared.danmakuDensity
-        let shouldSendDanmaku = Float.random(in: 0...1) <= danmakuDensity
-        return shouldSendDanmaku
-    }
-    
 }
-
 
 extension PlayerViewController: DanmakuSettingViewControllerDelegate {
 
@@ -742,12 +760,18 @@ extension PlayerViewController: DanmakuSettingViewControllerDelegate {
     }
     
     func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuSpeed speed: Float) {
-        danmakuRender.systemSpeed = CGFloat(speed)
+        self.forEachDanmakus { danmaku in
+            if let scrollDanmaku = danmaku as? ScrollDanmaku {
+                scrollDanmaku.extraSpeed = CGFloat(speed)
+            }
+        }
     }
     
     func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuFontSize fontSize: Double) {
-        let danmakuFontSize = CGFloat(fontSize)
-        danmakuRender.globalFont = UIFont.systemFont(ofSize: danmakuFontSize)
+        self.danmakuFont = UIFont.systemFont(ofSize: fontSize)
+        self.forEachDanmakus { danmaku in
+            danmaku.font = self.danmakuFont
+        }
     }
     
     func danmakuSettingViewController(_ vc: DanmakuSettingViewController, danmakuProportion: Double) {

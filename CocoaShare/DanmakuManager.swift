@@ -7,12 +7,14 @@
 //
 
 import Foundation
-import JHDanmakuRender
+import DanmakuRender
 #if os(iOS)
 import YYCategories
 #else
 import DDPCategory
 #endif
+
+typealias DanmakuConverResult = () -> DanmakuProtocol
 
 private enum DanmakuError: LocalizedError {
     case parseError
@@ -31,7 +33,7 @@ class DanmakuManager {
     
     private init() {}
     
-    /// 下载本地弹幕
+    /// 加载本地弹幕
     /// - Parameters:
     ///   - file: 弹幕文件
     ///   - completion: 完成回调
@@ -80,36 +82,23 @@ class DanmakuManager {
         }
     }
     
-    func conver(_ danmakus: [Comment]) -> [UInt : [JHDanmakuProtocol]] {
-        var dic = [UInt : [JHDanmakuProtocol]]()
+    func conver(_ danmakus: [Comment]) -> [UInt : [DanmakuConverResult]] {
+        var dic = [UInt : [DanmakuConverResult]]()
         for model in danmakus {
             let intTime = UInt(model.time)
             if dic[intTime] == nil {
-                dic[intTime] = [JHDanmakuProtocol]()
+                dic[intTime] = [DanmakuConverResult]()
             }
             
-            dic[intTime]?.append(conver(model))
+            dic[intTime]?.append({
+                return self.conver(model)
+            })
         }
         
         return dic
     }
     
-    func conver(_ model: Comment) -> JHDanmakuProtocol {
-        
-        switch model.mode {
-        case .normal:
-            let aDanmaku = JHScrollDanmaku(font: nil, text: model.message, textColor: model.color, effectStyle: .glow, direction: .R2L)
-            aDanmaku.appearTime = model.time
-            return aDanmaku
-        case .bottom, .top:
-            let position: JHFloatDanmakuPosition = model.mode == .bottom ? .atBottom : .atTop
-            let aDanmaku = JHFloatDanmaku(font: nil, text: model.message, textColor: model.color, effectStyle: .glow, during: 0, position: position)
-            aDanmaku.appearTime = model.time
-            return aDanmaku
-        }
-    }
-    
-    func conver(_ danmakuURL: URL) throws -> [UInt : [JHDanmakuProtocol]] {
+    func conver(_ danmakuURL: URL) throws -> [UInt : [DanmakuConverResult]] {
         do {
             let data = try Data(contentsOf: danmakuURL)
             if let dic = NSDictionary(xml: data) {
@@ -138,6 +127,26 @@ class DanmakuManager {
             }
         } catch let error {
             throw error
+        }
+    }
+    
+    /// 将弹幕数据转为可播放的弹幕模型
+    /// - Parameter model: 弹幕数据
+    /// - Returns: 弹幕模型
+    private func conver(_ model: Comment) -> DanmakuProtocol {
+        let fontSize = CGFloat(Preferences.shared.danmakuFontSize)
+        switch model.mode {
+        case .normal:
+            let danmakuSpeed = Preferences.shared.danmakuSpeed
+            let aDanmaku = ScrollDanmaku(text: model.message, textColor: model.color, font: .systemFont(ofSize: fontSize), effectStyle: .stroke, direction: .toLeft)
+            aDanmaku.appearTime = model.time
+            aDanmaku.extraSpeed = danmakuSpeed
+            return aDanmaku
+        case .bottom, .top:
+            let position: FloatDanmaku.Position = model.mode == .bottom ? .atBottom : .atTop
+            let aDanmaku = FloatDanmaku(text: model.message, textColor: model.color, font: .systemFont(ofSize: fontSize), effectStyle: .stroke, position: position, lifeTime: 3)
+            aDanmaku.appearTime = model.time
+            return aDanmaku
         }
     }
 }

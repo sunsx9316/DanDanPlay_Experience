@@ -148,7 +148,9 @@ class Preferences {
     @StoreWrapper(defaultValue: 1, key: .danmakuSpeed)
     var danmakuSpeed: Double
     
+    
     @StoreWrapper(defaultValue: 1, key: .danmakuDensity)
+    /// 弹幕密度 取值 0.1 ~ 1
     var danmakuDensity: Float
     
     var smbLoginInfos: [LoginInfo]? {

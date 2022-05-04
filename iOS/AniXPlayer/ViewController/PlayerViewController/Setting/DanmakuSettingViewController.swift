@@ -40,6 +40,7 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
         case .danmakuAlpha:
             let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
             cell.titleLabel.text = type.title
+            cell.valueSlider.isContinuous = true
             cell.selectionStyle = .none
             let model = SliderTableViewCell.Model(maxValue: 1,
                                                   minValue: 0,
@@ -79,6 +80,7 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
             let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
             cell.selectionStyle = .none
             cell.titleLabel.text = type.title
+            cell.valueSlider.isContinuous = true
             let model = SliderTableViewCell.Model(maxValue: 3,
                                                   minValue: 1,
                                                   currentValue: Float(Preferences.shared.danmakuSpeed))
@@ -99,7 +101,6 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
             let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
             cell.selectionStyle = .none
             cell.titleLabel.text = type.title
-            cell.valueSlider.isContinuous = false
             let maxCount = Preferences.shared.danmakuMaxStoreValue
             let minCount = Preferences.shared.danmakuMinStoreValue
             let currentValue = max(Preferences.shared.danmakuStoreProportion, minCount)
