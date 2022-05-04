@@ -163,6 +163,11 @@ class MediaPlayer {
             self.currentSubTitleFile = nil
             let media = self.currentPlayItem?.createMedia(delegate: self)
             self.player.media = media
+            if let media = media {
+                self.mediaThumbnailer = .init(media: media)
+            } else {
+                self.mediaThumbnailer = nil
+            }
         }
     }
     
@@ -236,7 +241,10 @@ class MediaPlayer {
         return player
     }()
     
+    var mediaThumbnailer: MediaThumbnailer?
+    
     var playMode = PlayMode.autoPlayNext
+    
     var volume: Int {
         get {
             return Int(self.player.audio?.volume ?? 0)
@@ -604,5 +612,4 @@ extension MediaPlayer: FileDelegate {
             self.delegate?.player(self, file: file, bufferInfoDidChange: bufferInfo)
         }
     }
-    
 }

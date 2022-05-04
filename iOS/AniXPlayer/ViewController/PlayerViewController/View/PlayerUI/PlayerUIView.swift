@@ -42,6 +42,8 @@ protocol PlayerUIViewDataSource: AnyObject {
     
     func playerProgress(playerUIView: PlayerUIView) -> CGFloat
     
+    func playerMediaThumbnailer(playerUIView: PlayerUIView) -> MediaThumbnailer?
+    
 }
 
 class PlayerUIView: UIView {
