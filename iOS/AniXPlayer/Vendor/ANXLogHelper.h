@@ -24,6 +24,7 @@ typedef NSString const * ANXLogHelperModule NS_TYPED_ENUM;
 
 FOUNDATION_EXPORT ANXLogHelperModule ANXLogHelperModuleWebDav;
 FOUNDATION_EXPORT ANXLogHelperModule ANXLogHelperModuleHTTP;
+FOUNDATION_EXPORT ANXLogHelperModule ANXLogHelperModuleSubtitle;
 
 @interface ANXLogHelper : NSObject
 

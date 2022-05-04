@@ -13,7 +13,7 @@
 
 ANXLogHelperModule ANXLogHelperModuleWebDav = @"WebDav";
 ANXLogHelperModule ANXLogHelperModuleHTTP = @"HTTP";
-
+ANXLogHelperModule ANXLogHelperModuleSubtitle = @"Subtitle";
 
 
 static NSUInteger g_processID = 0;

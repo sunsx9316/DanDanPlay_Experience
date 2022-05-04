@@ -24,16 +24,20 @@ class SubtitleManager {
                 switch result {
                 case .success(let data):
                     do {
+                        ANX.logInfo(.subtitle, "字幕解析成功 \(data.count)")
                         try data.write(to: cacheURL, options: .atomic)
                         completion(.success(subtitle))
                     } catch (let error) {
+                        ANX.logInfo(.subtitle, "字幕解析失败 \(error)")
                         completion(.failure(error))
                     }
                 case .failure(let error):
+                    ANX.logInfo(.subtitle, "字幕下载失败 \(error)")
                     completion(.failure(error))
                 }
             }
         } else {
+            ANX.logInfo(.subtitle, "字幕有缓存")
             completion(.success(subtitle))
         }
     }
@@ -46,8 +50,10 @@ class SubtitleManager {
                 switch result {
                 case .success(let files):
                     let subtitleFiles = files.filter({ $0.url.lastPathComponent.contains(name) })
+                    ANX.logInfo(.subtitle, "字幕搜索成功 \(subtitleFiles)")
                     completion(.success(subtitleFiles))
                 case .failure(let error):
+                    ANX.logInfo(.subtitle, "字幕搜索失败 \(error)")
                     completion(.failure(error))
                 }
             }
