@@ -721,18 +721,21 @@ extension PlayerViewController: MediaPlayerDelegate {
         
         let danmakuRenderTime = self.danmakuRender.time
         let intTime = UInt(danmakuRenderTime)
-        if intTime != self.danmakuTime {
+        if intTime == self.danmakuTime {
+            return
+        }
+        
+        self.danmakuTime = intTime
+        if let danmakus = danmakuDic[intTime] {
             let danmakuDensity = Preferences.shared.danmakuDensity
-            self.danmakuTime = intTime
-            if let danmakus = danmakuDic[intTime] {
-                for danmakuBlock in danmakus {
-                    let shouldSendDanmaku = Float.random(in: 0...1) <= danmakuDensity
-                    if shouldSendDanmaku {
-                        let danmaku = danmakuBlock()
-                        //修复因为时间误差的问题，导致少数弹幕突然出现在屏幕上的问题
-                        danmaku.appearTime = (danmaku.appearTime - Double(intTime)) + danmakuRenderTime
-                        self.danmakuRender.send(danmaku)
-                    }
+            for danmakuBlock in danmakus {
+                /// 小于弹幕密度才允许发射
+                let shouldSendDanmaku = Float.random(in: 0...10) <= danmakuDensity
+                if shouldSendDanmaku {
+                    let danmaku = danmakuBlock()
+                    //修复因为时间误差的问题，导致少数弹幕突然出现在屏幕上的问题
+                    danmaku.appearTime = (danmaku.appearTime - Double(intTime)) + danmakuRenderTime
+                    self.danmakuRender.send(danmaku)
                 }
             }
         }
