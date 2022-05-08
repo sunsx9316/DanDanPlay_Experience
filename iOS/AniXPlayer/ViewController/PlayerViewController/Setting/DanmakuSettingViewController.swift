@@ -51,7 +51,7 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
                 
                 let currentValue = aCell.valueSlider.value
                 Preferences.shared.danmakuAlpha = Double(aCell.valueSlider.value)
-                var model = aCell.model
+                let model = aCell.model
                 model?.currentValue = currentValue
                 aCell.model = model
                 self.delegate?.danmakuSettingViewController(self, didChangeDanmakuAlpha: currentValue)
@@ -70,7 +70,7 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
                 
                 let currentValue = Int(aCell.valueSlider.value)
                 Preferences.shared.danmakuFontSize = Double(currentValue)
-                var model = aCell.model
+                let model = aCell.model
                 model?.currentValue = Float(currentValue)
                 aCell.model = model
                 self.delegate?.danmakuSettingViewController(self, didChangeDanmakuFontSize: Double(currentValue))
@@ -90,7 +90,7 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
                 
                 let currentValue = aCell.valueSlider.value
                 Preferences.shared.danmakuSpeed = Double(aCell.valueSlider.value)
-                var model = aCell.model
+                let model = aCell.model
                 model?.currentValue = currentValue
                 aCell.model = model
                 
@@ -109,35 +109,34 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
                                                   currentValue: Float(currentValue))
             cell.step = UInt(minCount)
             
-            
-            func updateCell(_ cell: SliderTableViewCell, model aModel: SliderTableViewCell.Model) {
-                cell.model = aModel
-                cell.maxValueLabel.text = NSLocalizedString("满屏", comment: "")
+            model.minValueFormattingCallBack = { aModel in
                 let minRational = Rational(approximating: Double(aModel.minValue / aModel.maxValue))
-                cell.minValueLabel.text = "\(minRational.numerator)/\(minRational.denominator)" + NSLocalizedString("屏", comment: "")
-                
-                if aModel.currentValue == aModel.maxValue {
-                    cell.currentValueLabel.text = cell.maxValueLabel.text
-                } else {
-                    let rational = Rational(approximating: Double(aModel.currentValue / aModel.maxValue))
-                    cell.currentValueLabel.text = "\(rational.numerator)/\(rational.denominator)" + NSLocalizedString("屏", comment: "")
-                }
-                
+                return "\(minRational.numerator)/\(minRational.denominator)" + NSLocalizedString("屏", comment: "")
             }
             
-            updateCell(cell, model: model)
+            model.maxValueFormattingCallBack = { _ in
+                return NSLocalizedString("满屏", comment: "")
+            }
+            
+            model.currentValueFormattingCallBack = { aModel in
+                if aModel.currentValue == aModel.maxValue {
+                    return NSLocalizedString("满屏", comment: "")
+                } else {
+                    let rational = Rational(approximating: Double(aModel.currentValue / aModel.maxValue))
+                    return "\(rational.numerator)/\(rational.denominator)" + NSLocalizedString("屏", comment: "")
+                }
+            }
+            
+            cell.model = model
             
             cell.onChangeSliderCallBack = { [weak self] (aCell) in
                 guard let self = self else { return }
                 
                 let currentValue = aCell.valueSlider.value
                 Preferences.shared.danmakuStoreProportion = Int(aCell.valueSlider.value)
-                var model = aCell.model
+                let model = aCell.model
                 model?.currentValue = currentValue
                 aCell.model = model
-                if let model = model {
-                    updateCell(aCell, model: model)
-                }
                 
                 self.delegate?.danmakuSettingViewController(self, danmakuProportion: Preferences.shared.danmakuProportion)
             }
@@ -178,16 +177,29 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
             let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
             cell.selectionStyle = .none
             cell.titleLabel.text = type.title
-            let model = SliderTableViewCell.Model(maxValue: 1,
-                                                  minValue: 0.1,
+            cell.step = 1
+            let model = SliderTableViewCell.Model(maxValue: 10,
+                                                  minValue: 1,
                                                   currentValue: Float(Preferences.shared.danmakuDensity))
+            model.minValueFormattingCallBack = { aModel in
+                return String(format: "%.0f%%", aModel.minValue * 10)
+            }
+            
+            model.maxValueFormattingCallBack = { aModel in
+                return String(format: "%.0f%%", aModel.maxValue * 10)
+            }
+            
+            model.currentValueFormattingCallBack = { aModel in
+                return String(format: "%.0f%%", aModel.currentValue * 10)
+            }
+            
             cell.model = model
             cell.onChangeSliderCallBack = { [weak self] (aCell) in
                 guard let self = self else { return }
                 
                 let currentValue = aCell.valueSlider.value
                 Preferences.shared.danmakuDensity = currentValue
-                var model = aCell.model
+                let model = aCell.model
                 model?.currentValue = currentValue
                 aCell.model = model
                 
@@ -237,7 +249,7 @@ class DanmakuSettingViewController: ViewController {
             case .danmakuAlpha:
                 return NSLocalizedString("弹幕透明度", comment: "")
             case .danmakuProportion:
-                return NSLocalizedString("同屏弹幕数量", comment: "")
+                return NSLocalizedString("显示区域", comment: "")
             case .showDanmaku:
                 return NSLocalizedString("弹幕开关", comment: "")
             case .danmakuOffsetTime:

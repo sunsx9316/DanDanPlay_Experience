@@ -7,9 +7,11 @@
 
 import UIKit
 
+typealias SliderModelFormatterAction = (SliderTableViewCell.Model) -> String
+
 class SliderTableViewCell: TableViewCell {
     
-    struct Model {
+    class Model {
         
         var maxValue: Float
         
@@ -17,6 +19,29 @@ class SliderTableViewCell: TableViewCell {
         
         var currentValue: Float
         
+        var maxValueFormattingCallBack: SliderModelFormatterAction?
+        
+        var minValueFormattingCallBack: SliderModelFormatterAction?
+
+        var currentValueFormattingCallBack: SliderModelFormatterAction?
+        
+        init(maxValue: Float, minValue: Float, currentValue: Float) {
+            self.currentValue = currentValue
+            self.minValue = minValue
+            self.maxValue = maxValue
+            
+            self.minValueFormattingCallBack = { value in
+                return String(format: "%.1f", value.minValue)
+            }
+            
+            self.maxValueFormattingCallBack = { value in
+                return String(format: "%.1f", value.maxValue)
+            }
+            
+            self.currentValueFormattingCallBack = { value in
+                return String(format: "%.1f", value.currentValue)
+            }
+        }
     }
     
     @IBOutlet weak var titleLabel: UILabel!
@@ -29,6 +54,7 @@ class SliderTableViewCell: TableViewCell {
     
     @IBOutlet weak var currentValueLabel: UILabel!
     
+    /// 步长
     var step: UInt = 0
     
     var onChangeSliderCallBack: ((SliderTableViewCell) -> Void)?
@@ -36,9 +62,9 @@ class SliderTableViewCell: TableViewCell {
     var model: Model? {
         didSet {
             if let model = self.model {
-                self.minValueLabel.text = String(format: "%.1f", model.minValue)
-                self.maxValueLabel.text = String(format: "%.1f", model.maxValue)
-                self.currentValueLabel.text = String(format: "%.1f", model.currentValue)
+                self.minValueLabel.text = model.minValueFormattingCallBack?(model) ?? ""
+                self.maxValueLabel.text = model.maxValueFormattingCallBack?(model) ?? ""
+                self.currentValueLabel.text = model.currentValueFormattingCallBack?(model) ?? ""
                 self.valueSlider.minimumValue = model.minValue
                 self.valueSlider.maximumValue = model.maxValue
                 self.changeValue(model.currentValue)

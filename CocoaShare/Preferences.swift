@@ -22,36 +22,81 @@ class Preferences {
 
         var wrappedValue: Value {
             get {
-                return Store.shared.value(forKey: key.rawValue) ?? self.value
+                return Store.shared.value(forKey: key.storeKey) ?? self.value
             }
             set {
-                _ = Store.shared.set(newValue, forKey: key.rawValue)
+                _ = Store.shared.set(newValue, forKey: key.storeKey)
             }
         }
     }
     
+    /// 偏好设置
     enum KeyName: String {
+        /// 是否开启快速匹配
         case fastMatch
+        /// 防挡字幕
         case subtitleSafeArea
+        /// 弹幕缓存时间
         case danmakuCacheDay
+        /// 弹幕字体大小
         case danmakuFontSize
+        /// 弹幕速度
         case danmakuSpeed
+        /// 弹幕透明度
         case danmakuAlpha
+        
+        /// 弹幕在屏幕中的占比
+        @available(*, deprecated, message: "已废弃 请不要使用")
         case danmakuStoreProportion
+        
+        /// 展示首页提示
         case showHomePageTips
+        
+        /// 播放速度
         case playerSpeed
+        
+        /// 播放模式 单曲循环等
         case playerMode
+        
+        /// 是否检查更新
         case checkUpdate
+        
+        /// 发送的弹幕类型
         case sendDanmakuType
+        
+        /// 发送的弹幕颜色
         case sendDanmakuColor
+        
+        /// 弹幕开关
         case showDanmaku
+        
+        /// 是否自动加载本地弹幕
         case autoLoadCustomDanmaku
+        
+        /// 弹幕偏移时间
         case danmakuOffsetTime
+        
+        /// smb登录信息
         case smbLoginInfo
+        
+        /// webdav登录信息
         case webDavLoginInfo
+        
+        /// ftp登录信息
         case ftpLoginInfo
+        
+        /// 字幕加载顺序关键字
         case subtitleLoadOrder
+        
+        /// 弹幕密度
         case danmakuDensity
+        
+        var storeKey: String {
+            if self == .danmakuDensity {
+                return "danmakuDensity_v2"
+            }
+            return self.rawValue
+        }
     }
     
     enum PlayerMode: Int, CaseIterable {
@@ -149,8 +194,8 @@ class Preferences {
     var danmakuSpeed: Double
     
     
-    @StoreWrapper(defaultValue: 1, key: .danmakuDensity)
-    /// 弹幕密度 取值 0.1 ~ 1
+    @StoreWrapper(defaultValue: 10, key: .danmakuDensity)
+    /// 弹幕密度 取值 1 ~ 10
     var danmakuDensity: Float
     
     var smbLoginInfos: [LoginInfo]? {

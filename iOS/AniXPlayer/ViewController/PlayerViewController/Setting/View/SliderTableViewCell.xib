@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="20037" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="20020"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,7 +18,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="8GM-6G-Eiu">
-                        <rect key="frame" x="53" y="42" width="324" height="34"/>
+                        <rect key="frame" x="58" y="42" width="314" height="34"/>
                         <connections>
                             <action selector="onChangeSlider:" destination="KGk-i7-Jjw" eventType="valueChanged" id="ZWL-rv-V3r"/>
                         </connections>
@@ -58,9 +58,9 @@
                     <constraint firstAttribute="bottom" secondItem="2wI-vo-gK4" secondAttribute="bottom" constant="15" id="0vX-tk-lrV"/>
                     <constraint firstItem="af3-OF-bbx" firstAttribute="leading" secondItem="wMF-ba-GKR" secondAttribute="trailing" constant="10" id="5XJ-0F-83c"/>
                     <constraint firstItem="wMF-ba-GKR" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="8av-4m-MYk"/>
-                    <constraint firstItem="mmq-Xc-AwU" firstAttribute="leading" secondItem="8GM-6G-Eiu" secondAttribute="trailing" id="HKp-HA-wsr"/>
+                    <constraint firstItem="mmq-Xc-AwU" firstAttribute="leading" secondItem="8GM-6G-Eiu" secondAttribute="trailing" constant="5" id="HKp-HA-wsr"/>
                     <constraint firstItem="mmq-Xc-AwU" firstAttribute="centerY" secondItem="2wI-vo-gK4" secondAttribute="centerY" id="U3m-dc-j5T"/>
-                    <constraint firstItem="8GM-6G-Eiu" firstAttribute="leading" secondItem="2wI-vo-gK4" secondAttribute="trailing" id="ZL0-nW-b9D"/>
+                    <constraint firstItem="8GM-6G-Eiu" firstAttribute="leading" secondItem="2wI-vo-gK4" secondAttribute="trailing" constant="5" id="ZL0-nW-b9D"/>
                     <constraint firstItem="2wI-vo-gK4" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="15" id="aHg-Re-8KX"/>
                     <constraint firstItem="2wI-vo-gK4" firstAttribute="leading" secondItem="wMF-ba-GKR" secondAttribute="leading" id="bDi-W4-h28"/>
                     <constraint firstItem="af3-OF-bbx" firstAttribute="centerY" secondItem="wMF-ba-GKR" secondAttribute="centerY" id="hAN-Yp-ufx"/>

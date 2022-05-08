@@ -69,7 +69,7 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
                 
                 let currentValue = aCell.valueSlider.value
                 Preferences.shared.playerSpeed = Double(currentValue)
-                var model = aCell.model
+                let model = aCell.model
                 model?.currentValue = currentValue
                 aCell.model = model
                 self.delegate?.mediaSettingViewController(self, didChangePlayerSpeed: Double(currentValue))
@@ -197,7 +197,7 @@ class MediaSettingViewController: ViewController {
         var title: String {
             switch self {
             case .subtitleSafeArea:
-                return NSLocalizedString("字幕保护区域", comment: "")
+                return NSLocalizedString("防挡字幕", comment: "")
             case .playerSpeed:
                 return NSLocalizedString("播放速度", comment: "")
             case .playerMode:
