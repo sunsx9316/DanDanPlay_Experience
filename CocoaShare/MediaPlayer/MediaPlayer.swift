@@ -75,6 +75,7 @@ struct ExternalSubtitle: SubtitleProtocol {
     let url: URL
     
     func load(by player: MediaPlayer) {
+        ANX.logInfo(.subtitle, "加载外部字幕 url: \(self.url)")
         player.player.addPlaybackSlave(self.url, type: .subtitle, enforce: true)
     }
 }

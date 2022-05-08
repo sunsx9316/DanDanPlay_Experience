@@ -266,35 +266,36 @@ class PlayerViewController: ViewController {
         }
     }
     
+    
+    /// 播放视频
+    /// - Parameters:
+    ///   - media: 视频
+    ///   - episodeId: 弹幕分集id
+    ///   - danmakus: 弹幕
     private func playMedia(_ media: File, episodeId: Int, danmakus: [Comment]) {
         
-        let startPlayAction = { [weak self] (_ comment: [UInt : [DanmakuConverResult]]) in
-            guard let self = self else { return }
-            
-            self.danmakuDic = comment
-            self.danmakuRender.time = 0
-            self.danmakuTime = nil
-            self.player.play(media)
-            
-            if let playItem = self.findPlayItem(media) {
-                playItem.episodeId = episodeId
-                if let watchProgressKey = playItem.watchProgressKey,
-                   let lastWatchProgress = HistoryManager.shared.watchProgress(mediaKey: watchProgressKey) {
-                    
-                    if lastWatchProgress > 0 {
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                            self.setPlayerProgress(lastWatchProgress)
-                            let hud = self.view.showHUD(NSLocalizedString("已为你定位上次观看位置", comment: ""), position: .bottomleft)
-                            hud.margin = 5
-                        }
-                    }
+        if Preferences.shared.autoLoadCustomDanmaku {
+            self.loadCustomDanmaku(media) { isSuccess, result in
+                if isSuccess, let result = result {
+                    self.startPlay(media, episodeId: episodeId, danmakus: result)
+                    self.loadCustomSubtitle(media)
+                } else {
+                    self.startPlay(media, episodeId: episodeId, danmakus: DanmakuManager.shared.conver(danmakus))
+                    self.loadCustomSubtitle(media)
                 }
             }
-            
+        } else {
+            self.startPlay(media, episodeId: episodeId, danmakus: DanmakuManager.shared.conver(danmakus))
+            self.loadCustomSubtitle(media)
         }
         
-        //加载本地弹幕
-        if Preferences.shared.autoLoadCustomDanmaku {
+    }
+    
+    /// 加载本地弹幕
+    /// - Parameters:
+    ///   - media: 视频
+    ///   - completion: 完成回调
+    private func loadCustomDanmaku(_ media: File, completion: @escaping((Bool, [UInt : [DanmakuConverResult]]?) -> Void)) {
             DanmakuManager.shared.findCustomDanmakuWithMedia(media) { [weak self] result in
                 guard let self = self else { return }
                 
@@ -302,7 +303,8 @@ class PlayerViewController: ViewController {
                 case .success(let files):
                     if files.isEmpty {
                         DispatchQueue.main.async {
-                            startPlayAction(DanmakuManager.shared.conver(danmakus))
+                            //没有匹配到本地弹幕
+                            completion(false, nil)
                         }
                         return
                     }
@@ -316,34 +318,63 @@ class PlayerViewController: ViewController {
                             do {
                                 let converResult = try DanmakuManager.shared.conver(url)
                                 DispatchQueue.main.async {
-                                    startPlayAction(converResult)
+                                    completion(true, converResult)
                                     self.view.showHUD(NSLocalizedString("加载本地弹幕成功！", comment: ""))
                                 }
-                            } catch let error {
+                            } catch {
                                 DispatchQueue.main.async {
-                                    startPlayAction(DanmakuManager.shared.conver(danmakus))
+                                    completion(false, nil)
                                     self.view.showError(error)
                                 }
                             }
                         case .failure(let error):
                             DispatchQueue.main.async {
-                                startPlayAction(DanmakuManager.shared.conver(danmakus))
+                                completion(false, nil)
                                 self.view.showError(error)
                             }
                         }
                     }
                 case .failure(let error):
                     DispatchQueue.main.async {
-                        startPlayAction(DanmakuManager.shared.conver(danmakus))
+                        completion(false, nil)
                         self.view.showError(error)
                     }
                 }
             }
-        } else {
-            startPlayAction(DanmakuManager.shared.conver(danmakus))
-        }
+    }
+    
+    /// 开始播放
+    /// - Parameters:
+    ///   - media: 视频
+    ///   - episodeId: 弹幕分级id
+    ///   - danmakus: 弹幕
+    private func startPlay(_ media: File, episodeId: Int, danmakus: [UInt : [DanmakuConverResult]]) {
         
-        //加载本地字幕
+        self.danmakuDic = danmakus
+        self.danmakuRender.time = 0
+        self.danmakuTime = nil
+        self.player.play(media)
+        
+        //定位上次播放的位置
+        if let playItem = self.findPlayItem(media) {
+            playItem.episodeId = episodeId
+            if let watchProgressKey = playItem.watchProgressKey,
+               let lastWatchProgress = HistoryManager.shared.watchProgress(mediaKey: watchProgressKey) {
+                
+                if lastWatchProgress > 0 {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                        self.setPlayerProgress(lastWatchProgress)
+                        let hud = self.view.showHUD(NSLocalizedString("已为你定位上次观看位置", comment: ""), position: .bottomleft)
+                        hud.margin = 5
+                    }
+                }
+            }
+        }
+    }
+    
+    /// 加载本地字幕
+    /// - Parameter media: 视频
+    private func loadCustomSubtitle(_ media: File) {
         SubtitleManager.shared.findCustomSubtitleWithMedia(media) { [weak self] result in
             guard let self = self else { return }
             
