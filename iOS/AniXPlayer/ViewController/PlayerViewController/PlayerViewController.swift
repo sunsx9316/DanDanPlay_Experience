@@ -32,6 +32,7 @@ class PlayerViewController: ViewController {
     
     private lazy var danmakuRender: DanmakuEngine = {
         let danmakuRender = DanmakuEngine()
+        danmakuRender.layoutStyle = .nonOverlapping
         danmakuRender.offsetTime = TimeInterval(Preferences.shared.danmakuOffsetTime)
         return danmakuRender
     }()
@@ -718,15 +719,19 @@ extension PlayerViewController: MediaPlayerDelegate {
     func player(_ player: MediaPlayer, currentTime: TimeInterval, totalTime: TimeInterval) {
         uiView.updateTime()
         
-        let time = UInt(currentTime)
-        if time != self.danmakuTime {
+        let danmakuRenderTime = self.danmakuRender.time
+        let intTime = UInt(danmakuRenderTime)
+        if intTime != self.danmakuTime {
             let danmakuDensity = Preferences.shared.danmakuDensity
-            self.danmakuTime = time
-            if let danmakus = danmakuDic[time] {
-                for danmaku in danmakus {
+            self.danmakuTime = intTime
+            if let danmakus = danmakuDic[intTime] {
+                for danmakuBlock in danmakus {
                     let shouldSendDanmaku = Float.random(in: 0...1) <= danmakuDensity
                     if shouldSendDanmaku {
-                        self.danmakuRender.send(danmaku())
+                        let danmaku = danmakuBlock()
+                        //修复因为时间误差的问题，导致少数弹幕突然出现在屏幕上的问题
+                        danmaku.appearTime = (danmaku.appearTime - Double(intTime)) + danmakuRenderTime
+                        self.danmakuRender.send(danmaku)
                     }
                 }
             }

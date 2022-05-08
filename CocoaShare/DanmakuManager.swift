@@ -14,7 +14,8 @@ import YYCategories
 import DDPCategory
 #endif
 
-typealias DanmakuConverResult = () -> DanmakuProtocol
+typealias DanmakuEntity = BaseDanmaku
+typealias DanmakuConverResult = () -> DanmakuEntity
 
 private enum DanmakuError: LocalizedError {
     case parseError
@@ -133,7 +134,7 @@ class DanmakuManager {
     /// 将弹幕数据转为可播放的弹幕模型
     /// - Parameter model: 弹幕数据
     /// - Returns: 弹幕模型
-    private func conver(_ model: Comment) -> DanmakuProtocol {
+    private func conver(_ model: Comment) -> DanmakuEntity {
         let fontSize = CGFloat(Preferences.shared.danmakuFontSize)
         switch model.mode {
         case .normal:
