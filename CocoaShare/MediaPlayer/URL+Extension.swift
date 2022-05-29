@@ -15,13 +15,9 @@ import CoreServices
 public extension URL {
     
     var isSubtitleFile: Bool {
-        let pathExtension = self.pathExtension as CFString
-        if let fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension, nil) {
-            if UTTypeConformsTo(fileUTI.takeRetainedValue(), kUTTypePlainText) {
-                return true
-            }
-        }
-        return false
+        let subtitleExtensions = ["srt", "sub", "cdg", "idx", "ass", "ssa", "aqt", "jss", "psb", "rt", "smi"]
+        let pathExtension = self.pathExtension.lowercased()
+        return subtitleExtensions.contains(pathExtension)
     }
     
     var isMediaFile: Bool {
