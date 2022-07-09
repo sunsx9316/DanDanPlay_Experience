@@ -160,9 +160,9 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
             cell.selectionStyle = .none
             cell.titleLabel.text = type.title
             let danmakuOffsetTime = Preferences.shared.danmakuOffsetTime
-            cell.stepper.value = Double(danmakuOffsetTime)
             cell.stepper.minimumValue = -500
             cell.stepper.maximumValue = 500
+            cell.stepper.value = Double(danmakuOffsetTime)
             cell.valueLabel.text = "\(Int(danmakuOffsetTime))s"
             cell.onTouchStepperCallBack = { [weak self] (aCell) in
                 guard let self = self else { return }

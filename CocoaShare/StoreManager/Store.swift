@@ -96,7 +96,7 @@ open class Store {
     
     @discardableResult open func set(_ value: Int, forKey key: String) -> Bool {
         let mmkv = self.mmkv()
-        return mmkv?.set(Int64(value), forKey: key) ?? false
+        return mmkv?.set(Int32(value), forKey: key) ?? false
     }
     
     open func value(forKey: String) -> Int? {

@@ -751,6 +751,11 @@ extension PlayerViewController: MediaPlayerDelegate {
         uiView.updateTime()
         
         let danmakuRenderTime = self.danmakuRender.time
+        
+        if danmakuRenderTime < 0 {
+            return
+        }
+        
         let intTime = UInt(danmakuRenderTime)
         if intTime == self.danmakuTime {
             return
