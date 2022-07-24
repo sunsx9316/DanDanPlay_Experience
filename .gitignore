@@ -67,3 +67,5 @@ fastlane/test_output
 
 iOSInjectionProject/
 AppConfig.dart
+Pods
+Podfile.lock
