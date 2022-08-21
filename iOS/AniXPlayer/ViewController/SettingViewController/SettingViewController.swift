@@ -48,6 +48,11 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = type.subtitle
             return cell
+        case .host:
+            let cell = tableView.dequeueCell(class: TitleDetailTableViewCell.self, indexPath: indexPath)
+            cell.titleLabel.text = type.title
+            cell.subtitleLabel.text = type.subtitle
+            return cell
         }
     }
     
@@ -83,6 +88,29 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
             }))
             vc.popoverPresentationController?.sourceView = tableView.cellForRow(at: indexPath)
             self.present(vc, animated: true, completion: nil)
+        } else if type == .host {
+            let vc = UIAlertController(title: type.title, message: nil, preferredStyle: .alert)
+            weak var aTextField: UITextField?
+            vc.addTextField { textField in
+                textField.keyboardType = .numberPad
+                textField.placeholder = NSLocalizedString("例：\(DefaultHost)", comment: "")
+                textField.text = Preferences.shared.host
+                aTextField = textField
+            }
+
+            vc.addAction(.init(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: { (_) in
+                
+            }))
+            
+            vc.addAction(.init(title: NSLocalizedString("确定", comment: ""), style: .destructive, handler: { (_) in
+                
+                let host = aTextField?.text ?? ""
+
+                Preferences.shared.host = host.isEmpty ? DefaultHost : host
+                self.tableView.reloadData()
+            }))
+            vc.popoverPresentationController?.sourceView = tableView.cellForRow(at: indexPath)
+            self.present(vc, animated: true, completion: nil)
         } else if type == .subtitleLoadOrder {
             let vc = SubtitleOrderViewController()
             self.navigationController?.pushViewController(vc, animated: true)
@@ -98,6 +126,7 @@ class SettingViewController: ViewController {
         case autoLoadCustomDanmaku
         case danmakuCacheDay
         case subtitleLoadOrder
+        case host
         
         var title: String {
             switch self {
@@ -109,6 +138,8 @@ class SettingViewController: ViewController {
                 return NSLocalizedString("自动加载本地弹幕", comment: "")
             case .subtitleLoadOrder:
                 return NSLocalizedString("字幕加载顺序", comment: "")
+            case .host:
+                return NSLocalizedString("请求域名", comment: "")
             }
         }
         
@@ -141,6 +172,8 @@ class SettingViewController: ViewController {
                     return NSLocalizedString("未指定", comment: "")
                 }
                 return desc
+            case .host:
+                return Preferences.shared.host
             }
         }
     }

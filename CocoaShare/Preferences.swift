@@ -91,6 +91,9 @@ class Preferences {
         /// 弹幕密度
         case danmakuDensity
         
+        /// 域名
+        case host
+        
         var storeKey: String {
             if self == .danmakuDensity {
                 return "danmakuDensity_v2"
@@ -119,6 +122,9 @@ class Preferences {
     
     @StoreWrapper(defaultValue: true, key: .checkUpdate)
     var checkUpdate: Bool
+    
+    @StoreWrapper(defaultValue: DefaultHost, key: .host)
+    var host: String
     
     var sendDanmakuType: DanmakuModel.Mode {
         get {

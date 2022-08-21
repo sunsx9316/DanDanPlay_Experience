@@ -12,7 +12,10 @@ class NetworkManager {
     
     static let shared = NetworkManager()
     
-    private let baseURL = "https://api.acplay.net/api/v2"
+    private var baseURL: String {
+        let url = URL(string: Preferences.shared.host)
+        return url?.appendingPathComponent("api/v2").absoluteString ?? ""
+    }
     
     private lazy var defaultSession: Alamofire.Session = {
         let configuration = URLSessionConfiguration.default

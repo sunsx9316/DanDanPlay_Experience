@@ -64,3 +64,6 @@ struct LoginInfo: Codable, Equatable {
     var auth: Auth?
     
 }
+
+//默认请求域名
+let DefaultHost = "https://api.dandanplay.net"
