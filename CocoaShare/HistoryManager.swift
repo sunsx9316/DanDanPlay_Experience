@@ -23,6 +23,11 @@ class HistoryManager {
         self.store()
     }
     
+    func cleanWatchProgress(mediaKey: String) {
+        self.storeObject[mediaKey] = nil
+        self.store()
+    }
+    
     func watchProgress(mediaKey: String) -> Double? {
         return self.storeObject[mediaKey]
     }

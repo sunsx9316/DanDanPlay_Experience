@@ -191,7 +191,7 @@ public class ProgressSlider: UIControl {
     fileprivate let thumbLayer = ThumbLayer()
     
     fileprivate var thumbWidth: CGFloat {
-        return CGFloat(bounds.height)
+        return min(CGFloat(bounds.height), 20)
     }
     
     override public var frame: CGRect {
@@ -234,7 +234,7 @@ public class ProgressSlider: UIControl {
         trackLayer.setNeedsDisplay()
         
         let lowerThumbCenter = CGFloat(positionForValue(self.value))
-        thumbLayer.frame = CGRect(x: lowerThumbCenter - thumbWidth/2.0, y: 0.0, width: thumbWidth, height: thumbWidth)
+        thumbLayer.frame = CGRect(x: lowerThumbCenter - thumbWidth/2.0, y: (bounds.height - thumbWidth) / 2, width: thumbWidth, height: thumbWidth)
         thumbLayer.setNeedsDisplay()
     }
     

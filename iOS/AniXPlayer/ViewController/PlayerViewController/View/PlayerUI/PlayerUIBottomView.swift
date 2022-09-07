@@ -15,7 +15,7 @@ class PlayerUIBottomView: UIView {
         let slider = ProgressSlider()
         slider.thumbTintColor = UIColor.white
         slider.trackHighlightTintColor = .init(red: 2, green: 31, blue: 0)
-        slider.thumbHitTestSlop = .init(top: -10, left: -10, bottom: -5, right: -5)
+        slider.thumbHitTestSlop = .init(top: -20, left: -50, bottom: -10, right: -50)
         slider.trackBufferColor = .init(red: 7, green: 109, blue: 0)
         slider.curvaceousness = 0.4
         return slider
@@ -95,9 +95,9 @@ class PlayerUIBottomView: UIView {
         }
         
         self.progressSlider.snp.makeConstraints { make in
-            make.top.leading.equalTo(10)
+            make.top.leading.equalTo(0)
             make.trailing.equalTo(-10)
-            make.height.equalTo(20)
+            make.height.equalTo(30)
         }
         
         self.playButton.snp.makeConstraints { make in

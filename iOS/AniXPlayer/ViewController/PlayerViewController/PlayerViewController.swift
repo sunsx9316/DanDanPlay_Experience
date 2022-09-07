@@ -363,9 +363,23 @@ class PlayerViewController: ViewController {
                 
                 if lastWatchProgress > 0 {
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        self.setPlayerProgress(lastWatchProgress)
-                        let hud = self.view.showHUD(NSLocalizedString("已为你定位上次观看位置", comment: ""), position: .bottomleft)
-                        hud.margin = 5
+                        
+                        func lastTimeString() -> String {
+                            let timeFormatter = DateFormatter()
+                            timeFormatter.dateFormat = "mm:ss"
+                            return timeFormatter.string(from: Date(timeIntervalSince1970: self.player.length * lastWatchProgress))
+                        }
+                        
+                        let customView = GotoLastWatchPointView()
+                        customView.timeString = NSLocalizedString("上次观看时间：", comment: "") + lastTimeString()
+                        customView.didClickGotoButton = { [weak self] in
+                            guard let self = self else { return }
+                            
+                            self.setPlayerProgress(lastWatchProgress)
+                            self.uiView.autoShowControlView()
+                        }
+                        
+                        customView.show(from: self.view)
                     }
                 }
             }
@@ -442,7 +456,14 @@ class PlayerViewController: ViewController {
         if let currentPlayItem = self.player.currentPlayItem,
            let playItem = self.findPlayItem(currentPlayItem),
             let watchProgressKey = playItem.watchProgressKey {
-            HistoryManager.shared.storeWatchProgress(mediaKey: watchProgressKey, progress: self.player.position)
+            
+            let position = self.player.position
+            //播放结束不保存进度
+            if position >= 0.99 {
+                HistoryManager.shared.cleanWatchProgress(mediaKey: watchProgressKey)
+            } else {
+                HistoryManager.shared.storeWatchProgress(mediaKey: watchProgressKey, progress: position)
+            }
         }
     }
     

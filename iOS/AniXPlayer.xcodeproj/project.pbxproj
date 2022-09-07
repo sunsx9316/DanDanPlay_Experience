@@ -95,6 +95,7 @@
 		897F9B602822B2EA00130613 /* SnapshotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897F9B5F2822B2EA00130613 /* SnapshotView.swift */; };
 		897F9B662822BE3900130613 /* MediaThumbnailer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897F9B652822BE3900130613 /* MediaThumbnailer.swift */; };
 		898C71BA26711394006EB849 /* HttpServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 898C71B926711394006EB849 /* HttpServer.swift */; };
+		89945FDD28C8E7C6009AC640 /* GotoLastWatchPointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89945FDC28C8E7C6009AC640 /* GotoLastWatchPointView.swift */; };
 		899A9DDF262F35EB00C54AC9 /* SliderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897CF530262F317B00CC297A /* SliderTableViewCell.swift */; };
 		899C4E97263BDDE600A17C83 /* LinkHistoryHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899C4E96263BDDE600A17C83 /* LinkHistoryHeaderView.swift */; };
 		899C4E9F263CF88700A17C83 /* NSNetService+Util.m in Sources */ = {isa = PBXBuildFile; fileRef = 899C4E9E263CF88700A17C83 /* NSNetService+Util.m */; };
@@ -227,6 +228,7 @@
 		897F9B5F2822B2EA00130613 /* SnapshotView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotView.swift; sourceTree = "<group>"; };
 		897F9B652822BE3900130613 /* MediaThumbnailer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MediaThumbnailer.swift; sourceTree = "<group>"; };
 		898C71B926711394006EB849 /* HttpServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpServer.swift; sourceTree = "<group>"; };
+		89945FDC28C8E7C6009AC640 /* GotoLastWatchPointView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GotoLastWatchPointView.swift; sourceTree = "<group>"; };
 		899C4E96263BDDE600A17C83 /* LinkHistoryHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkHistoryHeaderView.swift; sourceTree = "<group>"; };
 		899C4E9C263CF88600A17C83 /* AniXPlayer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AniXPlayer-Bridging-Header.h"; sourceTree = "<group>"; };
 		899C4E9D263CF88700A17C83 /* NSNetService+Util.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSNetService+Util.h"; sourceTree = "<group>"; };
@@ -524,6 +526,7 @@
 				890DF76C26160B3E002D8AE5 /* VolumeControlView.swift */,
 				89AF9C0E26343BE70037A133 /* AutoScrollLabel.swift */,
 				89B4B444272484FE00FB1BF5 /* SpeedUpView.swift */,
+				89945FDC28C8E7C6009AC640 /* GotoLastWatchPointView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -989,6 +992,7 @@
 				890DF6FA26160A36002D8AE5 /* RefreshHeader.swift in Sources */,
 				890DF73126160A58002D8AE5 /* DanmakuManager.swift in Sources */,
 				890DF75226160B1B002D8AE5 /* UIDevice+Helper.swift in Sources */,
+				89945FDD28C8E7C6009AC640 /* GotoLastWatchPointView.swift in Sources */,
 				890DF823261617D0002D8AE5 /* PickFileTableViewCell.swift in Sources */,
 				890DF72826160A58002D8AE5 /* Constant.swift in Sources */,
 				890DF77326160B3E002D8AE5 /* SendDanmakuViewController.swift in Sources */,
@@ -1160,7 +1164,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2022082101;
+				CURRENT_PROJECT_VERSION = 2022090801;
 				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1190,7 +1194,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2022082101;
+				CURRENT_PROJECT_VERSION = 2022090801;
 				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
