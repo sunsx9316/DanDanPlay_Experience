@@ -15,11 +15,9 @@ target 'AniXPlayer' do
   pod 'YYCategories'
   pod 'MBProgressHUD'
   pod 'YYKeyboardManager'
-  # pod 'Masonry'
   pod 'IQKeyboardManager'
   pod 'NKOColorPickerView'
   pod 'MMKV'
-  # pod 'JHDanmakuRender'
   pod 'DanmakuRender-Swift'
   pod 'HandyJSON'
   pod 'MJRefresh'
@@ -33,12 +31,15 @@ target 'AniXPlayer' do
   pod 'DynamicButton'
   pod 'AFNetworking'
   pod 'Ono'
+  pod 'ANXLog', :path => '../Share/ANXLog'
+
   # install_all_flutter_pods(flutter_application_path)
 end
 
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |config|
+      config.build_settings['ENABLE_BITCODE'] = 'NO'
       if Gem::Version.new('8.0') > Gem::Version.new(config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'])
         config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '8.0'
       end
