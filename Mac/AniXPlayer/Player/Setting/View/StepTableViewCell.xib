@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="20037" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="21225" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="20037"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21225"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -20,7 +20,7 @@
                         <action selector="onTouchStepper:" target="c22-O7-iKe" id="PSZ-e7-6Ly"/>
                     </connections>
                 </stepper>
-                <textField horizontalHuggingPriority="253" verticalHuggingPriority="750" horizontalCompressionResistancePriority="752" translatesAutoresizingMaskIntoConstraints="NO" id="wi2-I7-OjV">
+                <textField horizontalHuggingPriority="253" verticalHuggingPriority="750" horizontalCompressionResistancePriority="752" translatesAutoresizingMaskIntoConstraints="NO" id="wi2-I7-OjV" customClass="TextField" customModule="AniXPlayer" customModuleProvider="target">
                     <rect key="frame" x="152" y="36" width="37" height="16"/>
                     <textFieldCell key="cell" lineBreakMode="clipping" title="Label" id="yRY-oS-6CU">
                         <font key="font" metaFont="system"/>
@@ -28,7 +28,7 @@
                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                     </textFieldCell>
                 </textField>
-                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8Wc-kJ-JsX">
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="8Wc-kJ-JsX" customClass="TextField" customModule="AniXPlayer" customModuleProvider="target">
                     <rect key="frame" x="8" y="36" width="37" height="16"/>
                     <textFieldCell key="cell" lineBreakMode="clipping" title="Label" id="YgP-CW-7nU">
                         <font key="font" metaFont="system"/>

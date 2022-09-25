@@ -42,6 +42,7 @@ class PlayerViewController: ViewController {
             
             self.openURLs(urls)
         }
+            
         return view
     }()
     
@@ -69,7 +70,7 @@ class PlayerViewController: ViewController {
     }()
     
     /// 弹幕画布容器
-    private lazy var danmakuCanvas: NSView = {
+    @objc private lazy var danmakuCanvas: NSView = {
         let view = BaseView()
         view.wantsLayer = true
         view.alphaValue = CGFloat(Preferences.shared.danmakuAlpha)
@@ -142,10 +143,10 @@ class PlayerViewController: ViewController {
         }
         
         self.layoutDanmakuCanvas()
-        self.changeRepeatMode()
         self.uiView.autoShowControlView()
+        self.playerListDidChange(self.player)
+        self.changeRepeatMode()
         self.setupMenu()
-        self.reloadUIByPlayList()
     }
     
     override func mouseMoved(with event: NSEvent) {
@@ -504,16 +505,6 @@ class PlayerViewController: ViewController {
         }
     }
     
-    private func reloadUIByPlayList() {
-//        if self.player.playList.isEmpty {
-//            self.containerView.isHidden = true
-//            self.uiView.isHidden = true
-//        } else {
-//            self.containerView.isHidden = false
-//            self.uiView.isHidden = false
-//        }
-    }
-    
     private func onToggleFullScreen() {
         let window = view.window
         window?.collectionBehavior = .fullScreenPrimary
@@ -543,7 +534,7 @@ class PlayerViewController: ViewController {
     }
     
     private func setupMenu() {
-        let fileItem = NSMenuItem(title: NSLocalizedString("打开...", comment: ""), action: #selector(openMediaFiles(_:)), keyEquivalent: "n")
+        let fileItem = NSMenuItem(title: NSLocalizedString("打开...", comment: ""), action: #selector(pickFile), keyEquivalent: "n")
         fileItem.target = self
         NSApp.appDelegate?.fileMenu?.addItem(fileItem)
         
@@ -551,7 +542,8 @@ class PlayerViewController: ViewController {
         
     }
     
-    @objc private func openMediaFiles(_ item: NSMenuItem) {
+    /// 文件拾取器
+    @objc private func pickFile() {
         
         let currentPlayItem = self.player.currentPlayItem ?? LocalFile.rootFile
 
@@ -619,8 +611,9 @@ class PlayerViewController: ViewController {
     /// - Parameter urls: url集合
     private func openURLs(_ files: [File]) {
         self.loadItems(files)
-        if let firstItem = self.player.playList.first {
-            self.tryParseMedia(firstItem)
+        if !files.isEmpty &&
+            self.player.playList.contains(where: { $0.url == files.first?.url }) {
+            self.tryParseMedia(files[0])
         }
     }
 }
@@ -683,42 +676,19 @@ extension PlayerViewController: PlayerUIViewDataSource {
     }
 }
 
-// MARK: - PlayerListViewControllerDelegate
-extension PlayerViewController: PlayerListViewControllerDelegate {
-    func numberOfRowAtPlayerListViewController() -> Int {
-        return self.player.playList.count
-    }
-    
-    func playerListViewController(_ viewController: PlayerListViewController, titleAtRow: Int) -> String {
-        return self.player.playList[titleAtRow].fileName
-    }
-    
-    func playerListViewController(_ viewController: PlayerListViewController, didSelectedRow: Int) {
-        self.dismissPresented()
-        
-        let file = self.player.playList[didSelectedRow]
-        self.tryParseMedia(file)
-    }
-    
-    func playerListViewController(_ viewController: PlayerListViewController, didDeleteRowIndexSet: IndexSet) {
-        for row in didDeleteRowIndexSet {
-            let file = self.player.playList[row]
-            self.player.removeMediaFromPlayList(file)
-        }
-    }
-    
-    func currentPlayIndexAtPlayerListViewController(_ viewController: PlayerListViewController) -> Int? {
-        return self.player.playList.firstIndex(where: { $0.url == self.player.currentPlayItem?.url })
-    }
-}
-
 // MARK: - PlayerUIViewDelegate
 extension PlayerViewController: PlayerUIViewDelegate {
+    
+    func openButtonDidClick(playerUIView: PlayerUIView, button: NSButton) {
+        self.pickFile()
+    }
+    
     func onTouchDanmakuSettingButton(playerUIView: PlayerUIView, button: NSButton) {
         self.dismissPresented()
         
         let vc = DanmakuSettingViewController()
         vc.delegate = self
+        
         self.present(vc, asPopoverRelativeTo: .zero, of: button, preferredEdge: .minY, behavior: .transient)
     }
     
@@ -815,11 +785,40 @@ extension PlayerViewController: PlayerUIViewDelegate {
     }
 }
 
+// MARK: - PlayerListViewControllerDelegate
+extension PlayerViewController: PlayerListViewControllerDelegate {
+    func numberOfRowAtPlayerListViewController() -> Int {
+        return self.player.playList.count
+    }
+    
+    func playerListViewController(_ viewController: PlayerListViewController, titleAtRow: Int) -> String {
+        return self.player.playList[titleAtRow].fileName
+    }
+    
+    func playerListViewController(_ viewController: PlayerListViewController, didSelectedRow: Int) {
+        self.dismissPresented()
+        
+        let file = self.player.playList[didSelectedRow]
+        self.tryParseMedia(file)
+    }
+    
+    func playerListViewController(_ viewController: PlayerListViewController, didDeleteRowIndexSet: IndexSet) {
+        for row in didDeleteRowIndexSet {
+            let file = self.player.playList[row]
+            self.player.removeMediaFromPlayList(file)
+        }
+    }
+    
+    func currentPlayIndexAtPlayerListViewController(_ viewController: PlayerListViewController) -> Int? {
+        return self.player.playList.firstIndex(where: { $0.url == self.player.currentPlayItem?.url })
+    }
+}
+
 //MARK: - MediaPlayerDelegate
 extension PlayerViewController: MediaPlayerDelegate {
     
     func playerListDidChange(_ player: MediaPlayer) {
-        self.reloadUIByPlayList()
+        self.uiView.showOpenButton = player.playList.isEmpty
     }
     
     func player(_ player: MediaPlayer, stateDidChange state: MediaPlayer.State) {
@@ -915,18 +914,15 @@ extension PlayerViewController: DanmakuSettingViewControllerDelegate {
     
     func danmakuSettingViewController(_ vc: DanmakuSettingViewController, danmakuProportion: Double) {
         
-        NSAnimationContext.runAnimationGroup { ctx in
-            ctx.duration = 0.2
-            
-            let mainColor = NSColor.mainColor
-            let backgroundColor = NSColor(red: mainColor.redComponent, green: mainColor.greenComponent, blue: mainColor.blueComponent, alpha: 0.3)
-            self.danmakuRender.canvas.animator().bgColor = backgroundColor
-        } completionHandler: {
-            NSAnimationContext.runAnimationGroup { ctx in
-                ctx.duration = 0.1
-                self.danmakuRender.canvas.animator().bgColor = .clear
-            }
-        }
+        let animate = CAKeyframeAnimation(keyPath: "backgroundColor")
+        let mainColor = NSColor.mainColor
+        animate.values = [
+            NSColor(red: mainColor.redComponent, green: mainColor.greenComponent, blue: mainColor.blueComponent, alpha: 0.3).cgColor,
+            NSColor.clear.cgColor
+        ]
+        animate.duration = 0.5
+        animate.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        self.danmakuRender.canvas.layer?.add(animate, forKey: "CAKeyframeAnimation")
         
         self.layoutDanmakuCanvas()
     }
@@ -945,7 +941,10 @@ extension PlayerViewController: DanmakuSettingViewControllerDelegate {
         if let item = self.player.currentPlayItem ?? self.player.playList.first {
             self.popMatchWindowController(with: nil, file: item)
         }
-        
+    }
+    
+    func loadDanmakuFileInDanmakuSettingViewController(vc: DanmakuSettingViewController) {
+        self.pickFile()
     }
 }
 
@@ -956,19 +955,21 @@ extension PlayerViewController: MediaSettingViewControllerDelegate {
         self.player.currentSubtitle = subtitle
     }
     
+    func loadSubtitleFileInMediaSettingViewController(_ vc: MediaSettingViewController) {
+        self.pickFile()
+    }
+    
     func mediaSettingViewController(_ vc: MediaSettingViewController, didChangeSubtitleSafeArea isOn: Bool) {
         
-        NSAnimationContext.runAnimationGroup { ctx in
-            ctx.duration = 0.2
-            let mainColor = NSColor.mainColor
-            let backgroundColor = NSColor(red: mainColor.redComponent, green: mainColor.greenComponent, blue: mainColor.blueComponent, alpha: 0.3)
-            self.danmakuCanvas.animator().bgColor = backgroundColor
-        } completionHandler: {
-            NSAnimationContext.runAnimationGroup { ctx in
-                ctx.duration = 0.1
-                self.danmakuCanvas.animator().bgColor = .clear
-            }
-        }
+        let animate = CAKeyframeAnimation(keyPath: "backgroundColor")
+        let mainColor = NSColor.mainColor
+        animate.values = [
+            NSColor(red: mainColor.redComponent, green: mainColor.greenComponent, blue: mainColor.blueComponent, alpha: 0.3).cgColor,
+            NSColor.clear.cgColor
+        ]
+        animate.duration = 0.5
+        animate.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        self.danmakuCanvas.layer?.add(animate, forKey: "CAKeyframeAnimation")
 
         self.layoutDanmakuCanvas()
     }

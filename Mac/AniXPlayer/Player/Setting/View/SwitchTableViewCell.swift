@@ -16,5 +16,10 @@ class SwitchTableViewCell: NSView {
     @IBAction func onTouchSwitch(_ sender: NSButton) {
         self.onTouchSliderCallBack?(self)
     }
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.aSwitch.font = .ddp_normal
+    }
  
 }

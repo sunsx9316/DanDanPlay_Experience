@@ -24,6 +24,8 @@ protocol DanmakuSettingViewControllerDelegate: AnyObject {
     
     func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuDensity density: Float)
     
+    func loadDanmakuFileInDanmakuSettingViewController(vc: DanmakuSettingViewController)
+    
     func searchDanmakuInDanmakuSettingViewController(vc: DanmakuSettingViewController)
 }
 
@@ -205,7 +207,7 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
                 self.delegate?.danmakuSettingViewController(self, didChangeDanmakuDensity: currentValue)
             }
             return cell
-        case .searchDanmaku:
+        case .loadDanmaku, .searchDanmaku:
             let cell = tableView.dequeueCell(nibClass: TitleTableViewCell.self)
             cell.label.text = type.title
             return cell
@@ -225,6 +227,7 @@ class DanmakuSettingViewController: ViewController {
         case showDanmaku
         case danmakuOffsetTime
         case searchDanmaku
+        case loadDanmaku
         
         var title: String {
             switch self {
@@ -240,6 +243,8 @@ class DanmakuSettingViewController: ViewController {
                 return NSLocalizedString("弹幕开关", comment: "")
             case .danmakuOffsetTime:
                 return NSLocalizedString("弹幕偏移时间", comment: "")
+            case .loadDanmaku:
+                return NSLocalizedString("加载本地弹幕...", comment: "")
             case .searchDanmaku:
                 return NSLocalizedString("搜索弹幕", comment: "")
             case .danmakuDensity:
@@ -250,8 +255,8 @@ class DanmakuSettingViewController: ViewController {
         var rowHeight: CGFloat {
             switch self {
             case .danmakuFontSize, .danmakuSpeed, .danmakuAlpha, .danmakuProportion, .danmakuDensity:
-                return 60
-            case .showDanmaku, .danmakuOffsetTime, .searchDanmaku:
+                return 80
+            case .showDanmaku, .danmakuOffsetTime, .searchDanmaku, .loadDanmaku:
                 return 40
             }
         }
@@ -289,7 +294,7 @@ class DanmakuSettingViewController: ViewController {
     }
 
     override func loadView() {
-        self.view = .init(frame: .init(x: 0, y: 0, width: 400, height: 500))
+        self.view = .init(frame: .init(x: 0, y: 0, width: 400, height: 600))
     }
     
     @objc private func doubleClickTableView(_ tableView: NSTableView) {
@@ -300,7 +305,9 @@ class DanmakuSettingViewController: ViewController {
         
         let type = self.dataSource[row]
 
-        if type == .searchDanmaku {
+        if type == .loadDanmaku {
+            self.delegate?.loadDanmakuFileInDanmakuSettingViewController(vc: self)
+        } else if type == .searchDanmaku {
             self.delegate?.searchDanmakuInDanmakuSettingViewController(vc: self)
         }
     }

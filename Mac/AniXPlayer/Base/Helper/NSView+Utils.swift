@@ -10,7 +10,7 @@ import QuartzCore
 
 extension NSView {
     
-    var bgColor: NSColor? {
+    @objc var bgColor: NSColor? {
         set {
             if self.wantsLayer == false {
                 self.wantsLayer = true

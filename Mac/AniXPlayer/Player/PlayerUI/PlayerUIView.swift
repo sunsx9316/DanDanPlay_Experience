@@ -31,6 +31,8 @@ protocol PlayerUIViewDelegate: AnyObject {
     func tapSlider(playerUIView: PlayerUIView, progress: CGFloat)
     
     func playerUIView(_ playerUIView: PlayerUIView, didChangeControlViewState show: Bool)
+    
+    func openButtonDidClick(playerUIView: PlayerUIView, button: NSButton)
 }
 
 protocol PlayerUIViewDataSource: AnyObject {
@@ -84,6 +86,20 @@ class PlayerUIView: BaseView {
         singleTap.numberOfClicksRequired = 1
         singleTap.delegate = self
         return singleTap
+    }()
+    
+    private lazy var openButton: Button = {
+        var openButton = Button.custom()
+        openButton.bezelStyle = .texturedSquare
+        openButton.title = NSLocalizedString("打开...", comment: "")
+        openButton.isBordered = true
+        openButton.showsBorderOnlyWhileMouseInside = true
+        openButton.addAction( { [weak self] (button) in
+            guard let self = self, let button = button as? NSButton else { return }
+            
+            self.delegate?.openButtonDidClick(playerUIView: self, button: button)
+        })
+        return openButton
     }()
     
     private lazy var gestureView: BaseView = {
@@ -141,6 +157,12 @@ class PlayerUIView: BaseView {
     }
     
     private var hiddenTime: TimeInterval = 4
+    
+    var showOpenButton: Bool = true {
+        didSet {
+            self.openButton.isHidden = !showOpenButton
+        }
+    }
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -315,6 +337,12 @@ class PlayerUIView: BaseView {
         self.addSubview(self.gestureView)
         self.addSubview(self.topView)
         self.addSubview(self.bottomView)
+        self.addSubview(openButton)
+        
+        self.openButton.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.size.equalTo(CGSize(width: 150, height: 60))
+        }
         
         self.gestureView.snp.makeConstraints { make in
             make.edges.equalToSuperview()

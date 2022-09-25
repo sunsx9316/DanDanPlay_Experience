@@ -11,7 +11,7 @@ class Button: NSButton {
     
     static func custom() -> Button {
         let button = Button()
-        button.bezelStyle = .rounded
+        button.bezelStyle = .texturedSquare
         button.isBordered = false
         return button
     }

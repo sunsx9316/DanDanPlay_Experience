@@ -28,6 +28,8 @@ protocol MediaSettingViewControllerDelegate: AnyObject {
     
     func mediaSettingViewController(_ vc: MediaSettingViewController, didChangePlayerMode mode: Preferences.PlayerMode)
     
+    func loadSubtitleFileInMediaSettingViewController(_ vc: MediaSettingViewController)
+    
     func mediaSettingViewController(_ vc: MediaSettingViewController, didOpenSubtitle subtitle: SubtitleProtocol)
     
 }
@@ -91,6 +93,10 @@ extension MediaSettingViewController: NSTableViewDelegate, NSTableViewDataSource
                 self.delegate?.mediaSettingViewController(self, didChangePlayerMode: type)
             }
             return cell
+        case .loadSubtitle:
+            let cell = tableView.dequeueCell(nibClass: TitleTableViewCell.self)
+            cell.label.text = type.title
+            return cell
         case .subtitleTrack:
             let cell = tableView.dequeueCell(nibClass: SheetTableViewCell.self)
             cell.titleLabel.text = type.title
@@ -134,6 +140,7 @@ class MediaSettingViewController: ViewController {
         case audioTrack
         case playerSpeed
         case playerMode
+        case loadSubtitle
         
         var title: String {
             switch self {
@@ -143,6 +150,8 @@ class MediaSettingViewController: ViewController {
                 return NSLocalizedString("播放速度", comment: "")
             case .playerMode:
                 return NSLocalizedString("播放模式", comment: "")
+            case .loadSubtitle:
+                return NSLocalizedString("加载本地字幕...", comment: "")
             case .subtitleTrack:
                 return NSLocalizedString("字幕轨道", comment: "")
             case .audioTrack:
@@ -153,8 +162,8 @@ class MediaSettingViewController: ViewController {
         var rowHeight: CGFloat {
             switch self {
             case .playerSpeed:
-                return 60
-            case .subtitleSafeArea, .subtitleTrack, .audioTrack, .playerMode:
+                return 80
+            case .subtitleSafeArea, .subtitleTrack, .audioTrack, .playerMode, .loadSubtitle:
                 return 40
             }
         }
@@ -201,7 +210,7 @@ class MediaSettingViewController: ViewController {
     }
     
     override func loadView() {
-        self.view = .init(frame: .init(x: 0, y: 0, width: 400, height: 300))
+        self.view = .init(frame: .init(x: 0, y: 0, width: 400, height: 340))
     }
 
     // MARK: Private Method
@@ -212,7 +221,9 @@ class MediaSettingViewController: ViewController {
             return
         }
         
-//        let type = self.dataSource[row]
-        
+        let type = self.dataSource[row]
+        if type == .loadSubtitle {
+           self.delegate?.loadSubtitleFileInMediaSettingViewController(self)
+       }
     }
 }
