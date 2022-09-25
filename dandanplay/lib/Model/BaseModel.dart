@@ -1,8 +1,0 @@
-
-class BaseModel {
-
-}
-
-class BaseModelCollection {
-
-}

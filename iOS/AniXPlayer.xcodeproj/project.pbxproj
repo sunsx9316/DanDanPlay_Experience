@@ -98,21 +98,6 @@
 		8994614D28CC783C009AC640 /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994611428CC783C009AC640 /* Search.swift */; };
 		8994614E28CC783C009AC640 /* NetworkConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994611528CC783C009AC640 /* NetworkConstant.swift */; };
 		8994614F28CC783C009AC640 /* SubtitleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994611628CC783C009AC640 /* SubtitleManager.swift */; };
-		8994615028CC783C009AC640 /* BecomeKeyWindowMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994611A28CC783C009AC640 /* BecomeKeyWindowMessage.swift */; };
-		8994615128CC783C009AC640 /* NaviBackMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994611B28CC783C009AC640 /* NaviBackMessage.swift */; };
-		8994615228CC783C009AC640 /* LoadFilesMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994611C28CC783C009AC640 /* LoadFilesMessage.swift */; };
-		8994615328CC783C009AC640 /* HUDMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994611D28CC783C009AC640 /* HUDMessage.swift */; };
-		8994615428CC783C009AC640 /* AppVersionMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994611E28CC783C009AC640 /* AppVersionMessage.swift */; };
-		8994615528CC783C009AC640 /* SyncSettingMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994611F28CC783C009AC640 /* SyncSettingMessage.swift */; };
-		8994615628CC783C009AC640 /* LoadCustomDanmakuMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994612028CC783C009AC640 /* LoadCustomDanmakuMessage.swift */; };
-		8994615728CC783C009AC640 /* LoadDanmakuMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994612128CC783C009AC640 /* LoadDanmakuMessage.swift */; };
-		8994615828CC783C009AC640 /* InputDanmakuMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994612228CC783C009AC640 /* InputDanmakuMessage.swift */; };
-		8994615928CC783C009AC640 /* SendDanmakuMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994612428CC783C009AC640 /* SendDanmakuMessage.swift */; };
-		8994615A28CC783C009AC640 /* SetInitialRouteMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994612528CC783C009AC640 /* SetInitialRouteMessage.swift */; };
-		8994615B28CC783C009AC640 /* MessageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994612628CC783C009AC640 /* MessageProtocol.swift */; };
-		8994615C28CC783C009AC640 /* ReloadMatchWidgetMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994612728CC783C009AC640 /* ReloadMatchWidgetMessage.swift */; };
-		8994615D28CC783C009AC640 /* ParseFileMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994612828CC783C009AC640 /* ParseFileMessage.swift */; };
-		8994615E28CC783C009AC640 /* RequestAppVersionMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994612928CC783C009AC640 /* RequestAppVersionMessage.swift */; };
 		8994615F28CC783C009AC640 /* DanmakuModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994612A28CC783C009AC640 /* DanmakuModel.swift */; };
 		8994616028CC783C009AC640 /* BaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994612B28CC783C009AC640 /* BaseModel.swift */; };
 		8994616128CC783C009AC640 /* Rational.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994612C28CC783C009AC640 /* Rational.swift */; };
@@ -246,21 +231,6 @@
 		8994611428CC783C009AC640 /* Search.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
 		8994611528CC783C009AC640 /* NetworkConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkConstant.swift; sourceTree = "<group>"; };
 		8994611628CC783C009AC640 /* SubtitleManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubtitleManager.swift; sourceTree = "<group>"; };
-		8994611A28CC783C009AC640 /* BecomeKeyWindowMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BecomeKeyWindowMessage.swift; sourceTree = "<group>"; };
-		8994611B28CC783C009AC640 /* NaviBackMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NaviBackMessage.swift; sourceTree = "<group>"; };
-		8994611C28CC783C009AC640 /* LoadFilesMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadFilesMessage.swift; sourceTree = "<group>"; };
-		8994611D28CC783C009AC640 /* HUDMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HUDMessage.swift; sourceTree = "<group>"; };
-		8994611E28CC783C009AC640 /* AppVersionMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppVersionMessage.swift; sourceTree = "<group>"; };
-		8994611F28CC783C009AC640 /* SyncSettingMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncSettingMessage.swift; sourceTree = "<group>"; };
-		8994612028CC783C009AC640 /* LoadCustomDanmakuMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadCustomDanmakuMessage.swift; sourceTree = "<group>"; };
-		8994612128CC783C009AC640 /* LoadDanmakuMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadDanmakuMessage.swift; sourceTree = "<group>"; };
-		8994612228CC783C009AC640 /* InputDanmakuMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputDanmakuMessage.swift; sourceTree = "<group>"; };
-		8994612428CC783C009AC640 /* SendDanmakuMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendDanmakuMessage.swift; sourceTree = "<group>"; };
-		8994612528CC783C009AC640 /* SetInitialRouteMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetInitialRouteMessage.swift; sourceTree = "<group>"; };
-		8994612628CC783C009AC640 /* MessageProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageProtocol.swift; sourceTree = "<group>"; };
-		8994612728CC783C009AC640 /* ReloadMatchWidgetMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReloadMatchWidgetMessage.swift; sourceTree = "<group>"; };
-		8994612828CC783C009AC640 /* ParseFileMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseFileMessage.swift; sourceTree = "<group>"; };
-		8994612928CC783C009AC640 /* RequestAppVersionMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestAppVersionMessage.swift; sourceTree = "<group>"; };
 		8994612A28CC783C009AC640 /* DanmakuModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DanmakuModel.swift; sourceTree = "<group>"; };
 		8994612B28CC783C009AC640 /* BaseModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseModel.swift; sourceTree = "<group>"; };
 		8994612C28CC783C009AC640 /* Rational.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rational.swift; sourceTree = "<group>"; };
@@ -740,47 +710,8 @@
 				8994612B28CC783C009AC640 /* BaseModel.swift */,
 				8994612A28CC783C009AC640 /* DanmakuModel.swift */,
 				8994612C28CC783C009AC640 /* Rational.swift */,
-				8994611828CC783C009AC640 /* Message */,
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		8994611828CC783C009AC640 /* Message */ = {
-			isa = PBXGroup;
-			children = (
-				8994611928CC783C009AC640 /* Receive */,
-				8994612328CC783C009AC640 /* Send */,
-			);
-			path = Message;
-			sourceTree = "<group>";
-		};
-		8994611928CC783C009AC640 /* Receive */ = {
-			isa = PBXGroup;
-			children = (
-				8994611E28CC783C009AC640 /* AppVersionMessage.swift */,
-				8994611A28CC783C009AC640 /* BecomeKeyWindowMessage.swift */,
-				8994611D28CC783C009AC640 /* HUDMessage.swift */,
-				8994612228CC783C009AC640 /* InputDanmakuMessage.swift */,
-				8994612028CC783C009AC640 /* LoadCustomDanmakuMessage.swift */,
-				8994612128CC783C009AC640 /* LoadDanmakuMessage.swift */,
-				8994611C28CC783C009AC640 /* LoadFilesMessage.swift */,
-				8994611B28CC783C009AC640 /* NaviBackMessage.swift */,
-				8994611F28CC783C009AC640 /* SyncSettingMessage.swift */,
-			);
-			path = Receive;
-			sourceTree = "<group>";
-		};
-		8994612328CC783C009AC640 /* Send */ = {
-			isa = PBXGroup;
-			children = (
-				8994612628CC783C009AC640 /* MessageProtocol.swift */,
-				8994612828CC783C009AC640 /* ParseFileMessage.swift */,
-				8994612728CC783C009AC640 /* ReloadMatchWidgetMessage.swift */,
-				8994612928CC783C009AC640 /* RequestAppVersionMessage.swift */,
-				8994612428CC783C009AC640 /* SendDanmakuMessage.swift */,
-				8994612528CC783C009AC640 /* SetInitialRouteMessage.swift */,
-			);
-			path = Send;
 			sourceTree = "<group>";
 		};
 		8994612F28CC783C009AC640 /* Helper */ = {
@@ -970,9 +901,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8994614928CC783C009AC640 /* NetworkManager.swift in Sources */,
-				8994615428CC783C009AC640 /* AppVersionMessage.swift in Sources */,
 				897F9B602822B2EA00130613 /* SnapshotView.swift in Sources */,
-				8994615728CC783C009AC640 /* LoadDanmakuMessage.swift in Sources */,
 				890DF77726160B3E002D8AE5 /* PlayerControlAnimater.swift in Sources */,
 				899A9DDF262F35EB00C54AC9 /* SliderTableViewCell.swift in Sources */,
 				8994616328CC783C009AC640 /* PathUtils.swift in Sources */,
@@ -981,7 +910,6 @@
 				89AF9BFE2631C1740037A133 /* SwitchTableViewCell.swift in Sources */,
 				8994614128CC783C009AC640 /* URL+Extension.swift in Sources */,
 				89E0D710266B44BE00E2337B /* TitleTableViewCell.swift in Sources */,
-				8994615328CC783C009AC640 /* HUDMessage.swift in Sources */,
 				8994613428CC783C009AC640 /* Constant.swift in Sources */,
 				890DF6EA261609DF002D8AE5 /* TabBarController.swift in Sources */,
 				890DF6CD26160826002D8AE5 /* AppDelegate.swift in Sources */,
@@ -1003,36 +931,27 @@
 				8931F0F02677320200590569 /* LocalFilesViewController.swift in Sources */,
 				8994614028CC783C009AC640 /* LocalFile.swift in Sources */,
 				8994607628CC6CE1009AC640 /* HttpServer.swift in Sources */,
-				8994615D28CC783C009AC640 /* ParseFileMessage.swift in Sources */,
 				8994614E28CC783C009AC640 /* NetworkConstant.swift in Sources */,
 				890DF77D26160B3E002D8AE5 /* VolumeControlView.swift in Sources */,
 				8994613D28CC783C009AC640 /* AFWebDAVManager.m in Sources */,
-				8994615628CC783C009AC640 /* LoadCustomDanmakuMessage.swift in Sources */,
 				890DF6FC26160A36002D8AE5 /* TableView.swift in Sources */,
 				8994614428CC783C009AC640 /* Store.swift in Sources */,
 				89E109B62644424800825308 /* BaseConnectSvrViewController.swift in Sources */,
-				8994615828CC783C009AC640 /* InputDanmakuMessage.swift in Sources */,
-				8994615B28CC783C009AC640 /* MessageProtocol.swift in Sources */,
 				89A1C63B28D4F71000DC514E /* ANXLogHelperModule+Utils.swift in Sources */,
 				8994616028CC783C009AC640 /* BaseModel.swift in Sources */,
 				8994613C28CC783C009AC640 /* WebDavFileManager.swift in Sources */,
 				8994614B28CC783C009AC640 /* Match.swift in Sources */,
 				8994616128CC783C009AC640 /* Rational.swift in Sources */,
-				8994615928CC783C009AC640 /* SendDanmakuMessage.swift in Sources */,
 				8994614328CC783C009AC640 /* MediaPlayer.swift in Sources */,
 				8949F8912662AA2100274520 /* WebDavLoginHistoryViewController.swift in Sources */,
 				899E385D280B2F7A00285191 /* ProgressSlider.swift in Sources */,
-				8994615528CC783C009AC640 /* SyncSettingMessage.swift in Sources */,
 				890DF75426160B1B002D8AE5 /* UITableView+Extension.swift in Sources */,
 				89E0D82A266BD4FC00E2337B /* PlayerUITopView.swift in Sources */,
-				8994615A28CC783C009AC640 /* SetInitialRouteMessage.swift in Sources */,
 				890DF86F2618B922002D8AE5 /* AnimatesTableViewCell.swift in Sources */,
 				8931F0F626773A2300590569 /* SubtitleOrderViewController.swift in Sources */,
 				899C4E97263BDDE600A17C83 /* LinkHistoryHeaderView.swift in Sources */,
-				8994615E28CC783C009AC640 /* RequestAppVersionMessage.swift in Sources */,
 				8994613B28CC783C009AC640 /* FTPFileManager.swift in Sources */,
 				890DF77E26160B3E002D8AE5 /* PlayerNavigationController.swift in Sources */,
-				8994615C28CC783C009AC640 /* ReloadMatchWidgetMessage.swift in Sources */,
 				8931F0E52674CA6A00590569 /* UIBarButtonItem+Helper.swift in Sources */,
 				890DF81C2616174C002D8AE5 /* PickFileViewController.swift in Sources */,
 				890DF6FE26160A36002D8AE5 /* NavigationController.swift in Sources */,
@@ -1045,7 +964,6 @@
 				8944E871263AF11A00EF00B1 /* SMBLoginHistoryViewController.swift in Sources */,
 				890DF6FB26160A36002D8AE5 /* TableViewCell.swift in Sources */,
 				890DF86526189D26002D8AE5 /* EpisodeTableViewCell.swift in Sources */,
-				8994615128CC783C009AC640 /* NaviBackMessage.swift in Sources */,
 				89AF9C032631C2680037A133 /* StepTableViewCell.swift in Sources */,
 				8994616428CC783C009AC640 /* NSNetService+Utils.m in Sources */,
 				8944E87B263AF72400EF00B1 /* TextField.swift in Sources */,
@@ -1060,7 +978,6 @@
 				8994614728CC783C009AC640 /* Preferences.swift in Sources */,
 				897CF529262F309D00CC297A /* PlayerSettingViewController.swift in Sources */,
 				890DF74F26160B1B002D8AE5 /* UIFont+Helper.swift in Sources */,
-				8994615228CC783C009AC640 /* LoadFilesMessage.swift in Sources */,
 				89E0D6162669143400E2337B /* TitleDetailTableViewCell.swift in Sources */,
 				8931F0EE26750D6500590569 /* UIView+HitTest.m in Sources */,
 				89E0D82C266BDB8600E2337B /* PlayerUIBottomView.swift in Sources */,
@@ -1076,7 +993,6 @@
 				890DF77326160B3E002D8AE5 /* SendDanmakuViewController.swift in Sources */,
 				890DF75126160B1B002D8AE5 /* UIView+Helper.swift in Sources */,
 				8931F166267CF34400590569 /* PickFileNavigationController.swift in Sources */,
-				8994615028CC783C009AC640 /* BecomeKeyWindowMessage.swift in Sources */,
 				8994613828CC783C009AC640 /* SMBFileManager.swift in Sources */,
 				89AF9C0F26343BE70037A133 /* AutoScrollLabel.swift in Sources */,
 				89E0D827266BBA9400E2337B /* SceneDelegate.swift in Sources */,

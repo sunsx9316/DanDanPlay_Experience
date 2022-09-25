@@ -55,21 +55,6 @@
 		899460D928CC77F1009AC640 /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899460A028CC77F1009AC640 /* Search.swift */; };
 		899460DA28CC77F1009AC640 /* NetworkConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899460A128CC77F1009AC640 /* NetworkConstant.swift */; };
 		899460DB28CC77F1009AC640 /* SubtitleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899460A228CC77F1009AC640 /* SubtitleManager.swift */; };
-		899460DC28CC77F1009AC640 /* BecomeKeyWindowMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899460A628CC77F1009AC640 /* BecomeKeyWindowMessage.swift */; };
-		899460DD28CC77F1009AC640 /* NaviBackMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899460A728CC77F1009AC640 /* NaviBackMessage.swift */; };
-		899460DE28CC77F1009AC640 /* LoadFilesMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899460A828CC77F1009AC640 /* LoadFilesMessage.swift */; };
-		899460DF28CC77F1009AC640 /* HUDMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899460A928CC77F1009AC640 /* HUDMessage.swift */; };
-		899460E028CC77F1009AC640 /* AppVersionMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899460AA28CC77F1009AC640 /* AppVersionMessage.swift */; };
-		899460E128CC77F1009AC640 /* SyncSettingMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899460AB28CC77F1009AC640 /* SyncSettingMessage.swift */; };
-		899460E228CC77F1009AC640 /* LoadCustomDanmakuMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899460AC28CC77F1009AC640 /* LoadCustomDanmakuMessage.swift */; };
-		899460E328CC77F1009AC640 /* LoadDanmakuMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899460AD28CC77F1009AC640 /* LoadDanmakuMessage.swift */; };
-		899460E428CC77F1009AC640 /* InputDanmakuMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899460AE28CC77F1009AC640 /* InputDanmakuMessage.swift */; };
-		899460E528CC77F1009AC640 /* SendDanmakuMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899460B028CC77F1009AC640 /* SendDanmakuMessage.swift */; };
-		899460E628CC77F1009AC640 /* SetInitialRouteMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899460B128CC77F1009AC640 /* SetInitialRouteMessage.swift */; };
-		899460E728CC77F1009AC640 /* MessageProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899460B228CC77F1009AC640 /* MessageProtocol.swift */; };
-		899460E828CC77F1009AC640 /* ReloadMatchWidgetMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899460B328CC77F1009AC640 /* ReloadMatchWidgetMessage.swift */; };
-		899460E928CC77F1009AC640 /* ParseFileMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899460B428CC77F1009AC640 /* ParseFileMessage.swift */; };
-		899460EA28CC77F1009AC640 /* RequestAppVersionMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899460B528CC77F1009AC640 /* RequestAppVersionMessage.swift */; };
 		899460EB28CC77F1009AC640 /* DanmakuModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899460B628CC77F1009AC640 /* DanmakuModel.swift */; };
 		899460EC28CC77F1009AC640 /* BaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899460B728CC77F1009AC640 /* BaseModel.swift */; };
 		899460ED28CC77F1009AC640 /* Rational.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899460B828CC77F1009AC640 /* Rational.swift */; };
@@ -171,21 +156,6 @@
 		899460A028CC77F1009AC640 /* Search.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
 		899460A128CC77F1009AC640 /* NetworkConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkConstant.swift; sourceTree = "<group>"; };
 		899460A228CC77F1009AC640 /* SubtitleManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubtitleManager.swift; sourceTree = "<group>"; };
-		899460A628CC77F1009AC640 /* BecomeKeyWindowMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BecomeKeyWindowMessage.swift; sourceTree = "<group>"; };
-		899460A728CC77F1009AC640 /* NaviBackMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NaviBackMessage.swift; sourceTree = "<group>"; };
-		899460A828CC77F1009AC640 /* LoadFilesMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadFilesMessage.swift; sourceTree = "<group>"; };
-		899460A928CC77F1009AC640 /* HUDMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HUDMessage.swift; sourceTree = "<group>"; };
-		899460AA28CC77F1009AC640 /* AppVersionMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppVersionMessage.swift; sourceTree = "<group>"; };
-		899460AB28CC77F1009AC640 /* SyncSettingMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SyncSettingMessage.swift; sourceTree = "<group>"; };
-		899460AC28CC77F1009AC640 /* LoadCustomDanmakuMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadCustomDanmakuMessage.swift; sourceTree = "<group>"; };
-		899460AD28CC77F1009AC640 /* LoadDanmakuMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadDanmakuMessage.swift; sourceTree = "<group>"; };
-		899460AE28CC77F1009AC640 /* InputDanmakuMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InputDanmakuMessage.swift; sourceTree = "<group>"; };
-		899460B028CC77F1009AC640 /* SendDanmakuMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendDanmakuMessage.swift; sourceTree = "<group>"; };
-		899460B128CC77F1009AC640 /* SetInitialRouteMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SetInitialRouteMessage.swift; sourceTree = "<group>"; };
-		899460B228CC77F1009AC640 /* MessageProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageProtocol.swift; sourceTree = "<group>"; };
-		899460B328CC77F1009AC640 /* ReloadMatchWidgetMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReloadMatchWidgetMessage.swift; sourceTree = "<group>"; };
-		899460B428CC77F1009AC640 /* ParseFileMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParseFileMessage.swift; sourceTree = "<group>"; };
-		899460B528CC77F1009AC640 /* RequestAppVersionMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RequestAppVersionMessage.swift; sourceTree = "<group>"; };
 		899460B628CC77F1009AC640 /* DanmakuModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DanmakuModel.swift; sourceTree = "<group>"; };
 		899460B728CC77F1009AC640 /* BaseModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseModel.swift; sourceTree = "<group>"; };
 		899460B828CC77F1009AC640 /* Rational.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rational.swift; sourceTree = "<group>"; };
@@ -423,47 +393,8 @@
 				899460B728CC77F1009AC640 /* BaseModel.swift */,
 				899460B628CC77F1009AC640 /* DanmakuModel.swift */,
 				899460B828CC77F1009AC640 /* Rational.swift */,
-				899460A428CC77F1009AC640 /* Message */,
 			);
 			path = Model;
-			sourceTree = "<group>";
-		};
-		899460A428CC77F1009AC640 /* Message */ = {
-			isa = PBXGroup;
-			children = (
-				899460A528CC77F1009AC640 /* Receive */,
-				899460AF28CC77F1009AC640 /* Send */,
-			);
-			path = Message;
-			sourceTree = "<group>";
-		};
-		899460A528CC77F1009AC640 /* Receive */ = {
-			isa = PBXGroup;
-			children = (
-				899460AA28CC77F1009AC640 /* AppVersionMessage.swift */,
-				899460A628CC77F1009AC640 /* BecomeKeyWindowMessage.swift */,
-				899460A928CC77F1009AC640 /* HUDMessage.swift */,
-				899460AE28CC77F1009AC640 /* InputDanmakuMessage.swift */,
-				899460AC28CC77F1009AC640 /* LoadCustomDanmakuMessage.swift */,
-				899460AD28CC77F1009AC640 /* LoadDanmakuMessage.swift */,
-				899460A828CC77F1009AC640 /* LoadFilesMessage.swift */,
-				899460A728CC77F1009AC640 /* NaviBackMessage.swift */,
-				899460AB28CC77F1009AC640 /* SyncSettingMessage.swift */,
-			);
-			path = Receive;
-			sourceTree = "<group>";
-		};
-		899460AF28CC77F1009AC640 /* Send */ = {
-			isa = PBXGroup;
-			children = (
-				899460B228CC77F1009AC640 /* MessageProtocol.swift */,
-				899460B428CC77F1009AC640 /* ParseFileMessage.swift */,
-				899460B328CC77F1009AC640 /* ReloadMatchWidgetMessage.swift */,
-				899460B528CC77F1009AC640 /* RequestAppVersionMessage.swift */,
-				899460B028CC77F1009AC640 /* SendDanmakuMessage.swift */,
-				899460B128CC77F1009AC640 /* SetInitialRouteMessage.swift */,
-			);
-			path = Send;
 			sourceTree = "<group>";
 		};
 		899460BB28CC77F1009AC640 /* Helper */ = {
@@ -752,7 +683,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				899460E428CC77F1009AC640 /* InputDanmakuMessage.swift in Sources */,
 				8917059B28CF70A90075ECD9 /* NSControl+Utils.swift in Sources */,
 				89A1C63928D4F65300DC514E /* ANXLogHelperModule+Utils.swift in Sources */,
 				899460C128CC77F1009AC640 /* WebDavFile.swift in Sources */,
@@ -768,7 +698,6 @@
 				899461F128CCBFA6009AC640 /* MatchItem.swift in Sources */,
 				8943150428D373010031619C /* TitleTableViewCell.swift in Sources */,
 				8994620328CCE2B0009AC640 /* Helper.swift in Sources */,
-				899460E328CC77F1009AC640 /* LoadDanmakuMessage.swift in Sources */,
 				899460CB28CC77F1009AC640 /* FTPFile.swift in Sources */,
 				899460C228CC77F1009AC640 /* WebDAVInputStream.swift in Sources */,
 				899460EB28CC77F1009AC640 /* DanmakuModel.swift in Sources */,
@@ -776,12 +705,9 @@
 				8994617B28CC7CFD009AC640 /* NSView+Utils.swift in Sources */,
 				8917059528CF6CF10075ECD9 /* PlayerUIBottomView.swift in Sources */,
 				899461E628CC8A29009AC640 /* MatchsViewController.swift in Sources */,
-				899460DF28CC77F1009AC640 /* HUDMessage.swift in Sources */,
 				899460D728CC77F1009AC640 /* Match.swift in Sources */,
 				89A1C60128D4C32300DC514E /* PlayerListTableViewCell.swift in Sources */,
 				899461F828CCC353009AC640 /* NSColor+Utils.swift in Sources */,
-				899460E728CC77F1009AC640 /* MessageProtocol.swift in Sources */,
-				899460E128CC77F1009AC640 /* SyncSettingMessage.swift in Sources */,
 				8917059628CF6CF10075ECD9 /* SnapshotView.swift in Sources */,
 				899461F628CCC322009AC640 /* TextField.swift in Sources */,
 				899460CD28CC77F1009AC640 /* URL+Extension.swift in Sources */,
@@ -797,12 +723,10 @@
 				89A1C5EB28D37AFE00DC514E /* NSTextField+Utils.swift in Sources */,
 				8917059928CF6F3E0075ECD9 /* Button.swift in Sources */,
 				89A1C68F28D5E38500DC514E /* NSApp+Utils.swift in Sources */,
-				899460EA28CC77F1009AC640 /* RequestAppVersionMessage.swift in Sources */,
 				8917059D28CF717A0075ECD9 /* ImageView.swift in Sources */,
 				899460EF28CC77F1009AC640 /* PathUtils.swift in Sources */,
 				8994617528CC7B31009AC640 /* BaseView.swift in Sources */,
 				899461FA28CCC40E009AC640 /* NSFont+Utils.swift in Sources */,
-				899460DE28CC77F1009AC640 /* LoadFilesMessage.swift in Sources */,
 				8943150128D370000031619C /* ScrollView.swift in Sources */,
 				8994620F28CCE7F9009AC640 /* SendDanmakuViewController.swift in Sources */,
 				899460D528CC77F1009AC640 /* NetworkManager.swift in Sources */,
@@ -810,12 +734,10 @@
 				89A1C60328D4CF6C00DC514E /* TimeTipsView.swift in Sources */,
 				899460D228CC77F1009AC640 /* CacheManager.swift in Sources */,
 				899460C728CC77F1009AC640 /* FTPFileManager.swift in Sources */,
-				899460DD28CC77F1009AC640 /* NaviBackMessage.swift in Sources */,
 				899460D028CC77F1009AC640 /* Store.swift in Sources */,
 				899460F128CC77F1009AC640 /* HistoryManager.swift in Sources */,
 				8917059428CF6CF10075ECD9 /* PlayerUITopView.swift in Sources */,
 				899461AF28CC852F009AC640 /* ViewController.swift in Sources */,
-				899460E528CC77F1009AC640 /* SendDanmakuMessage.swift in Sources */,
 				899460D128CC77F1009AC640 /* DanmakuManager.swift in Sources */,
 				899460EE28CC77F1009AC640 /* Atomic.swift in Sources */,
 				8994617928CC7B5E009AC640 /* NSTableView+Utils.swift in Sources */,
@@ -829,13 +751,9 @@
 				8943150C28D375A30031619C /* SwitchTableViewCell.swift in Sources */,
 				8917059F28CF85DF0075ECD9 /* PlayerSlider.swift in Sources */,
 				89A1C67028D5D3E100DC514E /* main.swift in Sources */,
-				899460E828CC77F1009AC640 /* ReloadMatchWidgetMessage.swift in Sources */,
-				899460E628CC77F1009AC640 /* SetInitialRouteMessage.swift in Sources */,
 				8994621328CCE865009AC640 /* DanmakuSettingViewController.swift in Sources */,
 				899460D328CC77F1009AC640 /* Preferences.swift in Sources */,
-				899460E228CC77F1009AC640 /* LoadCustomDanmakuMessage.swift in Sources */,
 				89A1C5FF28D4C32300DC514E /* PlayerListViewController.swift in Sources */,
-				899460E928CC77F1009AC640 /* ParseFileMessage.swift in Sources */,
 				899460F028CC77F1009AC640 /* NSNetService+Utils.m in Sources */,
 				899460C928CC77F1009AC640 /* AFWebDAVManager.m in Sources */,
 				899460CE28CC77F1009AC640 /* MediaThumbnailer.swift in Sources */,
@@ -844,9 +762,7 @@
 				899460DB28CC77F1009AC640 /* SubtitleManager.swift in Sources */,
 				89A1C5EF28D38B0300DC514E /* NSMenuItem+Utils.swift in Sources */,
 				899461F428CCC278009AC640 /* MatchsCell.swift in Sources */,
-				899460DC28CC77F1009AC640 /* BecomeKeyWindowMessage.swift in Sources */,
 				8994622428CCF088009AC640 /* GotoLastWatchPointView.swift in Sources */,
-				899460E028CC77F1009AC640 /* AppVersionMessage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
