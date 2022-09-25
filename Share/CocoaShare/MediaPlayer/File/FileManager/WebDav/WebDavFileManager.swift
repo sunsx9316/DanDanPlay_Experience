@@ -10,8 +10,13 @@
 import Foundation
 import FilesProvider
 import YYCategories
+import ANXLog
 
 class WebDavFileManager: FileManagerProtocol {
+    
+    static let shared = WebDavFileManager()
+    
+    init() {}
     
     private enum WebDavError: LocalizedError {
         case fileTypeError
@@ -26,13 +31,13 @@ class WebDavFileManager: FileManagerProtocol {
     
     private lazy var client: AFWebDAVManager? = {
         
-        guard let loginInfo = WebDavFileManager.loginInfo else { return nil }
-        
+        guard let loginInfo = self.loginInfo else { return nil }
+
         let client = self.createDefaultClient(with: loginInfo)
         return client
     }()
     
-    private(set) var loginInfo: LoginInfo?
+    private var loginInfo: LoginInfo?
     
     var desc: String {
         return NSLocalizedString("WebDav", comment: "")
@@ -42,7 +47,6 @@ class WebDavFileManager: FileManagerProtocol {
         return "服务器地址：http://example"
     }
     
-    static var loginInfo: LoginInfo?
     
     func cancelTasks() {
         ANX.logInfo(.webDav, "cancelTasks")
@@ -52,7 +56,7 @@ class WebDavFileManager: FileManagerProtocol {
     func connectWithLoginInfo(_ loginInfo: LoginInfo, completionHandler: @escaping((Error?) -> Void)) {
         ANX.logInfo(.webDav, "登录 loginInfo: %@", "\(loginInfo)")
         
-        WebDavFileManager.loginInfo = loginInfo
+        self.loginInfo = loginInfo
         
         self.contentsOfDirectory(at: WebDavFile.rootFile) { [weak self] res in
             guard let self = self else { return }
@@ -202,6 +206,10 @@ class WebDavFileManager: FileManagerProtocol {
         })
         
         return client
+    }
+    
+    func pickFiles(_ directory: File?, from viewController: ANXViewController, filterType: URLFilterType?, completion: @escaping ((Result<[File], Error>) -> Void)) {
+        assert(false)
     }
 }
 

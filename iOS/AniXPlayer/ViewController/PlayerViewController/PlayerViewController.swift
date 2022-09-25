@@ -433,7 +433,7 @@ class PlayerViewController: ViewController {
     
     /// 弹出文件选择器
     /// - Parameter type: 筛选文件类型
-    private func showFilesVCWithType(_ type: FileBrowserViewController.FilterType) {
+    private func showFilesVCWithType(_ type: URLFilterType) {
         
         if let presentedViewController = self.presentedViewController {
             presentedViewController.dismiss(animated: true, completion: nil)
@@ -842,7 +842,7 @@ extension PlayerViewController: DanmakuSettingViewControllerDelegate {
     func danmakuSettingViewController(_ vc: DanmakuSettingViewController, danmakuProportion: Double) {
         UIView.animate(withDuration: 0.2) {
             let mainColor = UIColor.mainColor
-            let backgroundColor = UIColor(red: mainColor.red, green: mainColor.green, blue: mainColor.green, alpha: 0.3)
+            let backgroundColor = UIColor(red: mainColor.red, green: mainColor.green, blue: mainColor.blue, alpha: 0.3)
             self.danmakuRender.canvas.backgroundColor = backgroundColor
             
         } completion: { (_) in
@@ -894,7 +894,7 @@ extension PlayerViewController: MediaSettingViewControllerDelegate {
         
         UIView.animate(withDuration: 0.2) {
             let mainColor = UIColor.mainColor
-            let backgroundColor = UIColor(red: mainColor.red, green: mainColor.green, blue: mainColor.green, alpha: 0.3)
+            let backgroundColor = UIColor(red: mainColor.red, green: mainColor.green, blue: mainColor.blue, alpha: 0.3)
             self.danmakuCanvas.backgroundColor = backgroundColor
             
         } completion: { (_) in

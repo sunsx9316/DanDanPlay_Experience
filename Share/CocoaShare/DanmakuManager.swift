@@ -69,7 +69,7 @@ class DanmakuManager {
     func findCustomDanmakuWithMedia(_ media: File, completion: @escaping((Result<[File], Error>) -> Void)) {
         if let parentFile = media.parentFile {
             let name = media.url.deletingPathExtension().lastPathComponent
-            media.fileManager.danmakusOfDirectory(at: parentFile) { result in
+            type(of: media).fileManager.danmakusOfDirectory(at: parentFile) { result in
                 switch result {
                 case .success(let files):
                     let danmakuFiles = files.filter({ $0.url.lastPathComponent.contains(name) })

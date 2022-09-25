@@ -107,6 +107,9 @@ class FTPFileManager: FileManagerProtocol {
         self.client?.removeItem(path: file.url.path, completionHandler: completionHandler)
     }
     
+    func pickFiles(_ directory: File?, from viewController: ANXViewController, filterType: URLFilterType?, completion: @escaping ((Result<[File], Error>) -> Void)) {
+        assert(false)
+    }
 }
 
 #endif

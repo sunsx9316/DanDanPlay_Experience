@@ -47,7 +47,7 @@ class SubtitleManager {
         //加载本地弹幕
         if let parentFile = media.parentFile {
             let name = media.url.deletingPathExtension().lastPathComponent
-            media.fileManager.subtitlesOfDirectory(at: parentFile) { result in
+            type(of: media).fileManager.subtitlesOfDirectory(at: parentFile) { result in
                 switch result {
                 case .success(let files):
                     let subtitleFiles = files.filter({ $0.url.lastPathComponent.contains(name) })

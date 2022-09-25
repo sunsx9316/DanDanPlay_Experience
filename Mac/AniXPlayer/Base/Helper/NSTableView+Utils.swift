@@ -6,10 +6,10 @@
 //  Copyright © 2020 The Flutter Authors. All rights reserved.
 //
 
-import Foundation
+import Cocoa
 
 extension NSTableView {
-    func dequeueReusableCell<T: NSView>(withCellClass cellClass: T.Type) -> T {
+    func dequeueCell<T: NSView>(cellClass: T.Type) -> T {
         let id = NSUserInterfaceItemIdentifier("\(cellClass.self)")
         if let cell = self.makeView(withIdentifier: id, owner: self) as? T {
             return cell
@@ -20,7 +20,7 @@ extension NSTableView {
         return cell
     }
     
-    func dequeueReusableCell<T: NSView>(withNibClass nibClass: T.Type) -> T {
+    func dequeueCell<T: NSView>(nibClass: T.Type) -> T {
         let id = NSUserInterfaceItemIdentifier("\(nibClass.self)")
         if let cell = self.makeView(withIdentifier: id, owner: self) as? T {
             return cell

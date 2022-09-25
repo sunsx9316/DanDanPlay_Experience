@@ -14,7 +14,9 @@ import VLCKit
 
 class LocalFile: File {
 
-    lazy var fileManager: FileManagerProtocol = LocalFileManager()
+    static var fileManager: FileManagerProtocol {
+        return LocalFileManager.shared
+    }
     
     let type: FileType
     

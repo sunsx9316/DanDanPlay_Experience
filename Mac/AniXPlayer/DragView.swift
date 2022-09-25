@@ -10,7 +10,7 @@ import Cocoa
 
 class DragView: BaseView {
     
-    var dragFilesCallBack: (([URL]) -> Void)?
+    var dragFilesCallBack: (([File]) -> Void)?
     
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
@@ -50,7 +50,7 @@ class DragView: BaseView {
         }
         
         if !paths.isEmpty {
-            dragFilesCallBack?(paths)
+            dragFilesCallBack?(paths.compactMap({ LocalFile(with: $0) }))
         }
         
         return true

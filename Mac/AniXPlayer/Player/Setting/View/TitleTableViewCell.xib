@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="20037" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="20037"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="TitleTableViewCell" customModule="AniXPlayer" customModuleProvider="target"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="c22-O7-iKe" customClass="TitleTableViewCell" customModule="AniXPlayer" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="425" height="36"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="z3M-42-QE4" customClass="TextField" customModule="AniXPlayer" customModuleProvider="target">
+                    <rect key="frame" x="8" y="10" width="37" height="16"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" title="Label" id="6vo-Yv-xg5">
+                        <font key="font" usesAppearanceFont="YES"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <constraints>
+                <constraint firstItem="z3M-42-QE4" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="10" id="EG1-SP-Vrp"/>
+                <constraint firstAttribute="bottom" secondItem="z3M-42-QE4" secondAttribute="bottom" constant="10" id="ISm-pb-8kA"/>
+                <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="z3M-42-QE4" secondAttribute="trailing" constant="10" id="TQa-0M-U9h"/>
+                <constraint firstItem="z3M-42-QE4" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="10" id="uh4-EA-6uh"/>
+            </constraints>
+            <connections>
+                <outlet property="label" destination="z3M-42-QE4" id="wSG-Xo-ttO"/>
+            </connections>
+            <point key="canvasLocation" x="51.5" y="245.5"/>
+        </customView>
+    </objects>
+</document>

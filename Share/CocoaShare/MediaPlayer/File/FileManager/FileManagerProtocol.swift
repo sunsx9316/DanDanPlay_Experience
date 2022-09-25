@@ -20,6 +20,8 @@ protocol FileManagerProtocol {
     func connectWithLoginInfo(_ loginInfo: LoginInfo, completionHandler: @escaping((Error?) -> Void))
     
     func deleteFile(_ file: File, completionHandler: @escaping((Error?) -> Void))
+    
+    func pickFiles(_ directory: File?, from viewController: ANXViewController, filterType: URLFilterType?, completion: @escaping ((Result<[File], Error>) -> Void))
 }
 
 extension FileManagerProtocol {

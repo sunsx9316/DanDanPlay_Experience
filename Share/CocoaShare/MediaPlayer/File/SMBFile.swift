@@ -28,7 +28,7 @@ class SMBFile: File {
     
     let shareName: String
     
-    var fileManager: FileManagerProtocol {
+    static var fileManager: FileManagerProtocol {
         return SMBFileManager.shared
     }
     

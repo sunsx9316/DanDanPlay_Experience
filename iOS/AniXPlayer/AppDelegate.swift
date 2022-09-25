@@ -7,6 +7,7 @@
 
 import UIKit
 import Bugly
+import ANXLog
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {

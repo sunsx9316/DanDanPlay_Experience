@@ -31,8 +31,8 @@ class WebDavFile: File {
         return WebDavFile(url: self.url.deletingLastPathComponent(), fileSize: 0)
     }
     
-    var fileManager: FileManagerProtocol {
-        return _fileManager
+    static var fileManager: FileManagerProtocol {
+        return WebDavFileManager.shared
     }
     
     var isCanDelete: Bool {
@@ -45,8 +45,6 @@ class WebDavFile: File {
     var bufferInfos: [MediaBufferInfo] {
         return inputStream?.taskInfos ?? []
     }
-    
-    private lazy var _fileManager = WebDavFileManager()
     
     private weak var fileDelegate: FileDelegate?
     
@@ -87,7 +85,7 @@ class WebDavFile: File {
     }
     
     func getFileSizeSync() -> Int {
-        _fileManager.getFileSize(self) { res in
+        WebDavFileManager.shared.getFileSize(self) { res in
             
             switch res {
             case .success(let size):

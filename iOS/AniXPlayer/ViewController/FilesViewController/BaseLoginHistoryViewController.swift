@@ -68,7 +68,7 @@ class BaseLoginHistoryViewController<F: File>: ViewController, UITableViewDelega
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = F.rootFile.fileManager.desc
+        self.title = F.fileManager.desc
         self.view.addSubview(self.tableView)
         self.tableView.snp.makeConstraints { (make) in
             make.edges.equalTo(self.view.safeAreaLayoutGuide.snp.edges)
@@ -91,7 +91,7 @@ class BaseLoginHistoryViewController<F: File>: ViewController, UITableViewDelega
     }
     
     private func jumpToConnectViewController(_ loginInfo: LoginInfo? = nil) {
-        let vc = BaseConnectSvrViewController(loginInfo: loginInfo, fileManager: F.rootFile.fileManager)
+        let vc = BaseConnectSvrViewController(loginInfo: loginInfo, fileManager: F.fileManager)
         vc.delegate = self
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)

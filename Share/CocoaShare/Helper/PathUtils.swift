@@ -12,7 +12,7 @@ struct PathUtils {
 #if os(iOS)
         return UIApplication.shared.cachesURL
 #else
-        return URL(string: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .allDomainsMask, true)[0])!
+        return URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .allDomainsMask, true)[0])
 #endif
     }
     
@@ -20,7 +20,7 @@ struct PathUtils {
 #if os(iOS)
         return UIApplication.shared.documentsURL
 #else
-        return URL(string: NSSearchPathForDirectoriesInDomains(.documentDirectory, .allDomainsMask, true)[0])!
+        return URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.documentDirectory, .allDomainsMask, true)[0])
 #endif
     }
 }

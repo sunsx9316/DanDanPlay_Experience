@@ -5,17 +5,29 @@
 //  Created by jimhuang on 2021/2/17.
 //
 
-import Foundation
+#if os(iOS)
+import UIKit
+#else
+import Cocoa
+#endif
 
 class LocalFileManager: FileManagerProtocol {
     
+    static let shared = LocalFileManager()
+    
+    private init() {}
+    
     private enum LocalError: LocalizedError {
         case fileTypeError
+        
+        case pickFileTypeError
         
         var errorDescription: String? {
             switch self {
             case .fileTypeError:
                 return "文件类型错误"
+            case .pickFileTypeError:
+                return "选择文件失败"
             }
         }
     }
@@ -101,6 +113,67 @@ class LocalFileManager: FileManagerProtocol {
         }
         
         completionHandler(error)
+    }
+    
+    func pickFiles(_ directory: File?, from viewController: ANXViewController, filterType: URLFilterType?, completion: @escaping ((Result<[File], Error>) -> Void)) {
+#if os(iOS)
+        
+#else
+        guard let window = viewController.view.window else { return }
+        
+        let panel = NSOpenPanel()
+        panel.canChooseDirectories = true
+        panel.directoryURL = directory?.url
+        panel.beginSheetModal(for: window) { [weak self] res in
+            guard let self = self else { return }
+            
+            if res != .OK {
+                completion(.failure(LocalError.pickFileTypeError))
+                return
+            }
+            
+            var files = [File]()
+            var directorys = [File]()
+            for file in panel.urls.compactMap({ LocalFile(with: $0) }) {
+                if file.type == .folder {
+                    directorys.append(file)
+                } else {
+                    files.append(file)
+                }
+            }
+            
+            let group = DispatchGroup()
+            for file in directorys {
+                group.enter()
+                self.contentsOfDirectory(at: file) { result in
+                    switch result {
+                    case .success(let f1):
+                        files.append(contentsOf: f1)
+                    case .failure(_):
+                        break
+                    }
+                    
+                    group.leave()
+                }
+            }
+            
+            _ = group.wait(timeout: .distantFuture)
+            
+            let results: [File]
+            if let filterType = filterType {
+                results = files.filter({ $0.url.isThisType(filterType) }).sorted { (f1, f2) -> Bool in
+                    return f1.url.path.compare(f2.url.path) == .orderedAscending
+                }
+            } else {
+                results = files.sorted { (f1, f2) -> Bool in
+                    return f1.url.path.compare(f2.url.path) == .orderedAscending
+                }
+            }
+            
+            completion(.success(results))
+        }
+        
+#endif
     }
     
 }

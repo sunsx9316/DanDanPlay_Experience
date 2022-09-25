@@ -35,6 +35,7 @@ protocol FileDelegate: AnyObject {
 }
 
 protocol File {
+    
     var url: URL { get }
     
     var fileSize: Int { get }
@@ -43,7 +44,7 @@ protocol File {
     
     var type: FileType { get }
     
-    var fileManager: FileManagerProtocol { get }
+    static var fileManager: FileManagerProtocol { get }
     
     static var rootFile: File { get }
     
@@ -106,7 +107,7 @@ extension File {
     func getDataWithRange(_ range: ClosedRange<Int>,
                           progress: FileProgressAction?,
                           completion: @escaping((Result<Data, Error>) -> Void)) {
-        self.fileManager.getDataWithFile(self, range: range, progress: progress, completion: completion)
+        Swift.type(of: self).fileManager.getDataWithFile(self, range: range, progress: progress, completion: completion)
     }
     
     
@@ -115,6 +116,6 @@ extension File {
     ///   - progress: 下载进度
     ///   - completion: 完成回调
     func getDataWithProgress(_ progress: FileProgressAction?, completion: @escaping ((Result<Data, Error>) -> Void)) {
-        self.fileManager.getDataWithFile(self, range: nil, progress: progress, completion: completion)
+        Swift.type(of: self).fileManager.getDataWithFile(self, range: nil, progress: progress, completion: completion)
     }
 }

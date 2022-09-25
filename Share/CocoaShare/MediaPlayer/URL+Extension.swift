@@ -12,7 +12,7 @@ import MobileCoreServices
 import CoreServices
 #endif
 
-public extension URL {
+extension URL {
     
     var isSubtitleFile: Bool {
         let subtitleExtensions = ["srt", "sub", "cdg", "idx", "ass", "ssa", "aqt", "jss", "psb", "rt", "smi"]
@@ -45,4 +45,22 @@ public extension URL {
             return str.compare(pathExtension, options: .caseInsensitive, range: nil, locale: nil) == .orderedSame
         }
     }
+    
+    func isThisType(_ type: URLFilterType) -> Bool {
+        
+        if type.contains(.video) && self.isMediaFile {
+            return true
+        }
+        
+        if type.contains(.subtitle) && self.isSubtitleFile {
+            return true
+        }
+        
+        if type.contains(.danmaku) && self.isDanmakuFile {
+            return true
+        }
+        
+        return false
+    }
+    
 }

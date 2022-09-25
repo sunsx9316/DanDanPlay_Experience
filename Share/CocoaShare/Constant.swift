@@ -12,11 +12,13 @@ import UIKit
 typealias ANXColor = UIColor
 typealias ANXView = UIView
 typealias ANXImage = UIImage
+typealias ANXViewController = UIViewController
 #else
 import Cocoa
 typealias ANXColor = NSColor
 typealias ANXView = NSView
 typealias ANXImage = NSImage
+typealias ANXViewController = NSViewController
 #endif
 
 enum MessageType: String {
@@ -67,6 +69,16 @@ struct LoginInfo: Codable, Equatable {
     
     var auth: Auth?
     
+}
+
+struct URLFilterType: OptionSet {
+    let rawValue: Int
+    
+    static let video = URLFilterType(rawValue: 1 << 0)
+    static let subtitle = URLFilterType(rawValue: 1 << 1)
+    static let danmaku = URLFilterType(rawValue: 1 << 2)
+    
+    static let all: URLFilterType = [.video, .subtitle, .danmaku]
 }
 
 //默认请求域名

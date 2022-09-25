@@ -31,6 +31,7 @@ protocol MediaPlayerDelegate: AnyObject {
     func player(_ player: MediaPlayer, stateDidChange state: MediaPlayer.State)
     func player(_ player: MediaPlayer, shouldChangeMedia media: File) -> Bool
     func player(_ player: MediaPlayer, file: File, bufferInfoDidChange bufferInfo: MediaBufferInfo)
+    func playerListDidChange(_ player: MediaPlayer)
 }
 
 protocol SubtitleProtocol {
@@ -43,6 +44,7 @@ extension MediaPlayerDelegate {
     func player(_ player: MediaPlayer, stateDidChange state: MediaPlayer.State) {}
     func player(_ player: MediaPlayer, shouldChangeMedia media: File) -> Bool { return true }
     func player(_ player: MediaPlayer, file: File, bufferInfoDidChange bufferInfo: MediaBufferInfo) {}
+    func playerListDidChange(_ player: MediaPlayer) {}
 }
 
 private class Coordinator: NSObject {
@@ -367,7 +369,9 @@ class MediaPlayer {
         didSet {
             if let fontSize = self.fontSize {
                 let sel = Selector(("setTextRendererFontSize:"))
-                player.perform(sel, with: fontSize)
+                if player.responds(to: sel) {
+                    player.perform(sel, with: fontSize)                    
+                }
             }
         }
     }
@@ -420,10 +424,8 @@ class MediaPlayer {
     }
     
     func play(_ media: File) {
-        
-        if !self.playList.contains(where: { $0.url == media.url }) {
-            self.playList.append(media)
-        }
+
+        self.addMediaToPlayList(media)
         
         self.currentPlayItem = media
         self.player.play()
@@ -444,11 +446,13 @@ class MediaPlayer {
     func addMediaToPlayList(_ media: File) {
         if !self.playList.contains(where: { $0.url == media.url }) {
             self.playList.append(media)
+            self.delegate?.playerListDidChange(self)
         }
     }
     
     func removeMediaFromPlayList(_ media: File) {
         self.playList.removeAll(where: { $0.url == media.url })
+        self.delegate?.playerListDidChange(self)
     }
     
     //MARK: Private Method

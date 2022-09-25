@@ -28,7 +28,7 @@ class FTPFile: File {
         return FTPFile(url: self.url.deletingLastPathComponent(), fileSize: 0)
     }
     
-    var fileManager: FileManagerProtocol {
+    static var fileManager: FileManagerProtocol {
         return FTPFileManager.shared
     }
     

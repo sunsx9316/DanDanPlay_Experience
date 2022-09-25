@@ -91,7 +91,7 @@ extension FileBrowserViewController: UITableViewDelegate, UITableViewDataSource 
             
             let hud = self.view.showLoading()
             
-            file.fileManager.deleteFile(file) { [weak self] (error) in
+            type(of: file).fileManager.deleteFile(file) { [weak self] (error) in
                 guard let self = self else { return }
                 
                 DispatchQueue.main.async {
@@ -129,16 +129,6 @@ extension FileBrowserViewController: FileBrowserViewControllerDelegate {
 /// 文件浏览器
 class FileBrowserViewController: ViewController {
     
-    struct FilterType: OptionSet {
-        let rawValue: Int
-        
-        static let video = FilterType(rawValue: 1 << 0)
-        static let subtitle = FilterType(rawValue: 1 << 1)
-        static let danmaku = FilterType(rawValue: 1 << 2)
-        
-        static let all: FilterType = [.video, .subtitle, .danmaku]
-    }
-    
     private lazy var tableView: TableView = {
         let tableView = TableView(frame: .zero, style: .plain)
         tableView.delegate = self
@@ -157,7 +147,7 @@ class FileBrowserViewController: ViewController {
     
     private var selectedFile: File?
     
-    private(set) var filterType: FilterType?
+    private(set) var filterType: URLFilterType?
     
     private var dataSource = [File]()
     
@@ -166,11 +156,11 @@ class FileBrowserViewController: ViewController {
     weak var delegate: FileBrowserViewControllerDelegate?
     
     
-    init(with rootFile: File, selectedFile: File?, filterType: FilterType? = nil) {
+    init(with rootFile: File, selectedFile: File?, filterType: URLFilterType? = nil) {
         self.rootFile = rootFile
         self.selectedFile = selectedFile
         self.filterType = filterType
-        self.manager = rootFile.fileManager
+        self.manager = type(of: rootFile).fileManager
         super.init(nibName: nil, bundle: nil)
     }
     

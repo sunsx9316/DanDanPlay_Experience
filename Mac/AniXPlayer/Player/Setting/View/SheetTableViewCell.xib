@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="20037" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="20037"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="SheetTableViewCell" customModule="AniXPlayer" customModuleProvider="target"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="c22-O7-iKe" customClass="SheetTableViewCell" customModule="AniXPlayer" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="337" height="46"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="INC-cS-NAc" customClass="TextField" customModule="AniXPlayer" customModuleProvider="target">
+                    <rect key="frame" x="8" y="20" width="37" height="16"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" title="Label" id="tb3-rS-38S">
+                        <font key="font" usesAppearanceFont="YES"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <popUpButton verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="cNj-NY-dbx">
+                    <rect key="frame" x="292" y="14" width="39" height="25"/>
+                    <popUpButtonCell key="cell" type="push" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" id="j0r-Q3-z64">
+                        <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
+                        <font key="font" metaFont="menu"/>
+                        <menu key="menu" id="Ijn-Mk-IWj"/>
+                    </popUpButtonCell>
+                    <connections>
+                        <action selector="onClickButton:" target="c22-O7-iKe" id="yiB-m2-B8h"/>
+                    </connections>
+                </popUpButton>
+            </subviews>
+            <constraints>
+                <constraint firstItem="INC-cS-NAc" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="10" id="E9d-aK-i84"/>
+                <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="INC-cS-NAc" secondAttribute="bottom" constant="10" id="Yom-gZ-pwK"/>
+                <constraint firstItem="INC-cS-NAc" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="10" id="ddR-OE-v1g"/>
+                <constraint firstAttribute="trailing" secondItem="cNj-NY-dbx" secondAttribute="trailing" constant="10" id="g0S-ur-Mhc"/>
+                <constraint firstItem="cNj-NY-dbx" firstAttribute="centerY" secondItem="INC-cS-NAc" secondAttribute="centerY" id="iiq-ki-O9P"/>
+            </constraints>
+            <connections>
+                <outlet property="popUpButton" destination="cNj-NY-dbx" id="ixp-DW-ZAc"/>
+                <outlet property="titleLabel" destination="INC-cS-NAc" id="BKP-9x-FSX"/>
+            </connections>
+            <point key="canvasLocation" x="68.5" y="342"/>
+        </customView>
+    </objects>
+</document>

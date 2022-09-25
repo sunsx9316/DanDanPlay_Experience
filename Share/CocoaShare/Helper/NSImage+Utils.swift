@@ -5,9 +5,9 @@
 //  Created by jimhuang on 2022/9/10.
 //
 
-import Foundation
-
 #if os(macOS)
+
+import Cocoa
 
 extension NSImage {
     convenience init(cgImage: CGImage) {
