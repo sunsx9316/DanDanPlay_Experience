@@ -13,8 +13,12 @@ class NetworkManager {
     
     static let shared = NetworkManager()
     
+    private var host: String {
+        return Preferences.shared.host
+    }
+    
     private var baseURL: String {
-        let url = URL(string: Preferences.shared.host)
+        let url = URL(string: self.host)
         return url?.appendingPathComponent("api/v2").absoluteString ?? ""
     }
     
@@ -207,6 +211,30 @@ class NetworkManager {
             case .failure(let error):
                 completion(nil, error)
                 ANX.logInfo(.HTTP, "搜索 请求失败: \(error)")
+            }
+        }
+    }
+    
+    /// 检查更新
+    /// - Parameter completion: 回调
+    func checkUpdate(_ completion: @escaping((UpdateInfo?, Error?) -> Void)) {
+        ANX.logInfo(.HTTP, "检查更新")
+
+        self.defaultSession.request(self.host + "/api/v1/update/mac", method: .get).responseData { (response) in
+            switch response.result {
+            case .success(let data):
+                do {
+                    let asJSON = try JSONSerialization.jsonObject(with: data)
+                    let result = Response<UpdateInfo>(with: asJSON)
+                    completion(result.result, result.error)
+                    ANX.logInfo(.HTTP, "更新信息 请求成功 \(result)")
+                } catch {
+                    completion(nil, error)
+                    ANX.logInfo(.HTTP, "更新信息 解析失败: \(error)")
+                }
+            case .failure(let error):
+                completion(nil, error)
+                ANX.logInfo(.HTTP, "更新信息 请求失败: \(error)")
             }
         }
     }

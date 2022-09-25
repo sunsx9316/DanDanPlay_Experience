@@ -29,6 +29,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.setupMenu()
         self.mainWindowController.showWindow(nil)
         self.mainWindowController.window?.center()
+        
+        self.checkUpdate()
     }
 
     func applicationWillTerminate(_ aNotification: Notification) {
@@ -41,6 +43,49 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
         return true
+    }
+    
+    private func showAppVersionVC(_ info: UpdateInfo) {
+        let vc = AppVersionViewController(appVersiotn: info)
+        vc.onClickCancelCallBack = { vc in
+            vc.dismiss(nil)
+            UserDefaults.standard.set(info.version, forKey: "lastUpdateVersion")
+        }
+        
+        vc.onClickOKCallBack = { vc in
+            vc.dismiss(nil)
+            UserDefaults.standard.set(info.version, forKey: "lastUpdateVersion")
+        }
+        
+        self.mainWindowController.contentViewController?.presentAsModalWindow(vc)
+    }
+    
+    @objc private func checkUpdate() {
+        
+        NetworkManager.shared.checkUpdate { [weak self] info, error in
+            guard let self = self else { return }
+            
+            if let info = info,
+               let appVersion = InfoPlistUtils.appBuildNumber {
+                //有版本更新
+                if info.version.compare(appVersion, options: .numeric) == .orderedDescending {
+                    //上次更新的版本
+                    if let lastUpdateVersion = UserDefaults.standard.string(forKey: "lastUpdateVersion") {
+                        //是否忽略此版本更新
+                        let isIgnoreThisVersion = info.version == lastUpdateVersion
+                        if !isIgnoreThisVersion {
+                            DispatchQueue.main.async {
+                                self.showAppVersionVC(info)
+                            }
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            self.showAppVersionVC(info)
+                        }
+                    }
+                }
+            }
+        }
     }
     
 
@@ -82,7 +127,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
        
 
         NSApp.mainMenu = mainMenu
-        
     }
 
 }

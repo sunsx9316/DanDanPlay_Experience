@@ -11,4 +11,8 @@ class InfoPlistUtils {
     static var appName: String {
         return Bundle.main.infoDictionary?["CFBundleName"] as? String ?? "AniXPlayer"
     }
+    
+    static var appBuildNumber: String? {
+        return Bundle.main.infoDictionary?["CFBundleVersion"] as? String
+    }
 }
