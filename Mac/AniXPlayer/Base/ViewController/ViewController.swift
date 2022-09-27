@@ -23,7 +23,7 @@ class ViewController: NSViewController {
         if self.nibBundle?.path(forResource: self.nibName, ofType: "nib") != nil {
             super.loadView()
         } else {
-            self.view = .init(frame: .zero)
+            self.view = .init(frame: .init(x: 0, y: 0, width: 500, height: 500))
         }
     }
     

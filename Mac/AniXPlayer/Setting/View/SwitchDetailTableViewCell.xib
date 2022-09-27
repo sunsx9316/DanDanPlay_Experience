@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="21225" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="21225"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="SwitchDetailTableViewCell" customModule="AniXPlayer" customModuleProvider="target"/>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <customView id="c22-O7-iKe" customClass="SwitchDetailTableViewCell" customModule="AniXPlayer" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="413" height="83"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <subviews>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="64z-Ec-VQX" customClass="TextField" customModule="AniXPlayer" customModuleProvider="target">
+                    <rect key="frame" x="8" y="57" width="37" height="16"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" title="Label" id="Mdh-SK-0Bt">
+                        <font key="font" usesAppearanceFont="YES"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+                <switch horizontalHuggingPriority="750" verticalHuggingPriority="750" baseWritingDirection="leftToRight" alignment="left" translatesAutoresizingMaskIntoConstraints="NO" id="lSn-2u-Dun">
+                    <rect key="frame" x="363" y="29" width="42" height="25"/>
+                    <connections>
+                        <action selector="onTouchSwitch:" target="c22-O7-iKe" id="lEu-cM-eIh"/>
+                    </connections>
+                </switch>
+                <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="lEU-KH-Yyh" customClass="TextField" customModule="AniXPlayer" customModuleProvider="target">
+                    <rect key="frame" x="8" y="10" width="37" height="16"/>
+                    <textFieldCell key="cell" lineBreakMode="clipping" title="Label" id="kvP-b5-woi">
+                        <font key="font" usesAppearanceFont="YES"/>
+                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                    </textFieldCell>
+                </textField>
+            </subviews>
+            <constraints>
+                <constraint firstAttribute="bottom" secondItem="lEU-KH-Yyh" secondAttribute="bottom" constant="10" id="GTn-dC-zJ9"/>
+                <constraint firstItem="lSn-2u-Dun" firstAttribute="centerY" secondItem="c22-O7-iKe" secondAttribute="centerY" id="VWx-5T-mcM"/>
+                <constraint firstItem="lEU-KH-Yyh" firstAttribute="leading" secondItem="64z-Ec-VQX" secondAttribute="leading" id="YCH-MJ-VYx"/>
+                <constraint firstItem="lEU-KH-Yyh" firstAttribute="top" relation="greaterThanOrEqual" secondItem="64z-Ec-VQX" secondAttribute="bottom" constant="10" id="aR2-GA-DQy"/>
+                <constraint firstItem="64z-Ec-VQX" firstAttribute="top" secondItem="c22-O7-iKe" secondAttribute="top" constant="10" id="guS-XB-7it"/>
+                <constraint firstAttribute="trailing" secondItem="lSn-2u-Dun" secondAttribute="trailing" constant="10" id="jNr-HS-okF"/>
+                <constraint firstItem="64z-Ec-VQX" firstAttribute="leading" secondItem="c22-O7-iKe" secondAttribute="leading" constant="10" id="rog-lc-2qk"/>
+            </constraints>
+            <connections>
+                <outlet property="aSwitch" destination="lSn-2u-Dun" id="csj-n6-OQr"/>
+                <outlet property="subtitleLabel" destination="lEU-KH-Yyh" id="MKg-BT-svD"/>
+                <outlet property="titleLabel" destination="64z-Ec-VQX" id="s7z-Np-O7h"/>
+            </connections>
+            <point key="canvasLocation" x="-90.5" y="351.5"/>
+        </customView>
+    </objects>
+</document>

@@ -12,7 +12,7 @@ protocol PlayerListViewControllerDelegate: AnyObject {
     func numberOfRowAtPlayerListViewController() -> Int
     func playerListViewController(_ viewController: PlayerListViewController, titleAtRow: Int) -> String
     func playerListViewController(_ viewController: PlayerListViewController, didSelectedRow: Int)
-    func playerListViewController(_ viewController: PlayerListViewController, didDeleteRowIndexSet: IndexSet)
+    func playerListViewController(_ viewController: PlayerListViewController, didDeleteRow: Int)
     func currentPlayIndexAtPlayerListViewController(_ viewController: PlayerListViewController) -> Int?
 }
 
@@ -21,7 +21,7 @@ extension PlayerListViewControllerDelegate {
         
     }
     
-    func playerListViewController(_ viewController: PlayerListViewController, didDeleteRowIndexSet: IndexSet) {
+    func playerListViewController(_ viewController: PlayerListViewController, didDeleteRow: Int) {
         
     }
     
@@ -49,7 +49,7 @@ class PlayerListViewController: ViewController, NSTableViewDelegate, NSTableView
         menu.addItem(NSMenuItem(title: NSLocalizedString("删除", comment: ""), action: { [weak self] _ in
             guard let self = self else { return }
             
-            self.delegate?.playerListViewController(self, didDeleteRowIndexSet: tableView.selectedRowIndexes)
+            self.delegate?.playerListViewController(self, didDeleteRow: tableView.clickedRow)
             self.scrollView.containerView.reloadData()
         }))
         

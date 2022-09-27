@@ -28,6 +28,13 @@
 		8944159A28E0BE4C00480172 /* UpdateInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8944159928E0BE4C00480172 /* UpdateInfo.swift */; };
 		8944159D28E0C6C400480172 /* AppVersionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8944159C28E0C6C400480172 /* AppVersionViewController.swift */; };
 		8944159F28E0C6EC00480172 /* AppVersionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8944159E28E0C6EC00480172 /* AppVersionViewController.xib */; };
+		894415DE28E34A1700480172 /* GlobalSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894415DD28E34A1700480172 /* GlobalSettingViewController.swift */; };
+		894415E128E34BD200480172 /* SwitchDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894415E028E34BD200480172 /* SwitchDetailTableViewCell.swift */; };
+		894415E328E34C0700480172 /* SwitchDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 894415E228E34C0700480172 /* SwitchDetailTableViewCell.xib */; };
+		894415E528E34EDF00480172 /* TitleDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894415E428E34EDF00480172 /* TitleDetailTableViewCell.swift */; };
+		894415E728E34EEC00480172 /* TitleDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 894415E628E34EEC00480172 /* TitleDetailTableViewCell.xib */; };
+		894415E928E34FF100480172 /* NSSwitch+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894415E828E34FF100480172 /* NSSwitch+Utils.swift */; };
+		894415EB28E3569100480172 /* SubtitleOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894415EA28E3569100480172 /* SubtitleOrderViewController.swift */; };
 		89945FEB28CA3BAE009AC640 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89945FEA28CA3BAE009AC640 /* AppDelegate.swift */; };
 		89945FED28CA3BAE009AC640 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89945FEC28CA3BAE009AC640 /* PlayerViewController.swift */; };
 		89945FEF28CA3BAF009AC640 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 89945FEE28CA3BAF009AC640 /* Assets.xcassets */; };
@@ -128,6 +135,13 @@
 		8944159928E0BE4C00480172 /* UpdateInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateInfo.swift; sourceTree = "<group>"; };
 		8944159C28E0C6C400480172 /* AppVersionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersionViewController.swift; sourceTree = "<group>"; };
 		8944159E28E0C6EC00480172 /* AppVersionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AppVersionViewController.xib; sourceTree = "<group>"; };
+		894415DD28E34A1700480172 /* GlobalSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettingViewController.swift; sourceTree = "<group>"; };
+		894415E028E34BD200480172 /* SwitchDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchDetailTableViewCell.swift; sourceTree = "<group>"; };
+		894415E228E34C0700480172 /* SwitchDetailTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwitchDetailTableViewCell.xib; sourceTree = "<group>"; };
+		894415E428E34EDF00480172 /* TitleDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleDetailTableViewCell.swift; sourceTree = "<group>"; };
+		894415E628E34EEC00480172 /* TitleDetailTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TitleDetailTableViewCell.xib; sourceTree = "<group>"; };
+		894415E828E34FF100480172 /* NSSwitch+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSSwitch+Utils.swift"; sourceTree = "<group>"; };
+		894415EA28E3569100480172 /* SubtitleOrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtitleOrderViewController.swift; sourceTree = "<group>"; };
 		89945FE728CA3BAE009AC640 /* AniXPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AniXPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		89945FEA28CA3BAE009AC640 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		89945FEC28CA3BAE009AC640 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
@@ -269,6 +283,27 @@
 			path = Update;
 			sourceTree = "<group>";
 		};
+		894415DC28E349F900480172 /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+				894415DF28E34BBD00480172 /* View */,
+				894415DD28E34A1700480172 /* GlobalSettingViewController.swift */,
+				894415EA28E3569100480172 /* SubtitleOrderViewController.swift */,
+			);
+			path = Setting;
+			sourceTree = "<group>";
+		};
+		894415DF28E34BBD00480172 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				894415E028E34BD200480172 /* SwitchDetailTableViewCell.swift */,
+				894415E228E34C0700480172 /* SwitchDetailTableViewCell.xib */,
+				894415E428E34EDF00480172 /* TitleDetailTableViewCell.swift */,
+				894415E628E34EEC00480172 /* TitleDetailTableViewCell.xib */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		89945FDE28CA3BAE009AC640 = {
 			isa = PBXGroup;
 			children = (
@@ -296,6 +331,7 @@
 				8994607E28CC77F1009AC640 /* CocoaShare */,
 				89945FEA28CA3BAE009AC640 /* AppDelegate.swift */,
 				89A1C66F28D5D3E100DC514E /* main.swift */,
+				894415DC28E349F900480172 /* Setting */,
 				8944159B28E0C65500480172 /* Update */,
 				8994617328CC7B1E009AC640 /* Base */,
 				8994617028CC7AFD009AC640 /* Player */,
@@ -484,6 +520,7 @@
 				89A1C5EE28D38B0300DC514E /* NSMenuItem+Utils.swift */,
 				89A1C67128D5DA8F00DC514E /* InfoPlistUtils.swift */,
 				89A1C68E28D5E38500DC514E /* NSApp+Utils.swift */,
+				894415E828E34FF100480172 /* NSSwitch+Utils.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -644,6 +681,8 @@
 				89945FEF28CA3BAF009AC640 /* Assets.xcassets in Resources */,
 				89A1C5E928D377AD00DC514E /* SheetTableViewCell.xib in Resources */,
 				8994621028CCE7F9009AC640 /* SendDanmakuViewController.xib in Resources */,
+				894415E728E34EEC00480172 /* TitleDetailTableViewCell.xib in Resources */,
+				894415E328E34C0700480172 /* SwitchDetailTableViewCell.xib in Resources */,
 				89A1C5FE28D4C32300DC514E /* PlayerListTableViewCell.xib in Resources */,
 				8994620128CCD8FB009AC640 /* SearchViewController.xib in Resources */,
 				8943150628D3730D0031619C /* TitleTableViewCell.xib in Resources */,
@@ -709,6 +748,8 @@
 				89945FEB28CA3BAE009AC640 /* AppDelegate.swift in Sources */,
 				899460C428CC77F1009AC640 /* SMBFileManager.swift in Sources */,
 				8994616728CC793E009AC640 /* NSImage+Utils.swift in Sources */,
+				894415E928E34FF100480172 /* NSSwitch+Utils.swift in Sources */,
+				894415E528E34EDF00480172 /* TitleDetailTableViewCell.swift in Sources */,
 				89A1C5ED28D37CED00DC514E /* NSButton+Utils.swift in Sources */,
 				8994617228CC7B06009AC640 /* DragView.swift in Sources */,
 				899460C028CC77F1009AC640 /* Constant.swift in Sources */,
@@ -739,6 +780,7 @@
 				899460D928CC77F1009AC640 /* Search.swift in Sources */,
 				899460D828CC77F1009AC640 /* Response.swift in Sources */,
 				8994621728CCE8F7009AC640 /* MediaSettingViewController.swift in Sources */,
+				894415DE28E34A1700480172 /* GlobalSettingViewController.swift in Sources */,
 				899460CA28CC77F1009AC640 /* SMBFile.swift in Sources */,
 				89A1C5EB28D37AFE00DC514E /* NSTextField+Utils.swift in Sources */,
 				8917059928CF6F3E0075ECD9 /* Button.swift in Sources */,
@@ -770,10 +812,12 @@
 				894314FF28D36F590031619C /* TableView.swift in Sources */,
 				8943150C28D375A30031619C /* SwitchTableViewCell.swift in Sources */,
 				8917059F28CF85DF0075ECD9 /* PlayerSlider.swift in Sources */,
+				894415EB28E3569100480172 /* SubtitleOrderViewController.swift in Sources */,
 				89A1C67028D5D3E100DC514E /* main.swift in Sources */,
 				8994621328CCE865009AC640 /* DanmakuSettingViewController.swift in Sources */,
 				899460D328CC77F1009AC640 /* Preferences.swift in Sources */,
 				89A1C5FF28D4C32300DC514E /* PlayerListViewController.swift in Sources */,
+				894415E128E34BD200480172 /* SwitchDetailTableViewCell.swift in Sources */,
 				899460F028CC77F1009AC640 /* NSNetService+Utils.m in Sources */,
 				899460C928CC77F1009AC640 /* AFWebDAVManager.m in Sources */,
 				899460CE28CC77F1009AC640 /* MediaThumbnailer.swift in Sources */,

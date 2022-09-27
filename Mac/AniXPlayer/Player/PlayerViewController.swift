@@ -802,11 +802,9 @@ extension PlayerViewController: PlayerListViewControllerDelegate {
         self.tryParseMedia(file)
     }
     
-    func playerListViewController(_ viewController: PlayerListViewController, didDeleteRowIndexSet: IndexSet) {
-        for row in didDeleteRowIndexSet {
-            let file = self.player.playList[row]
-            self.player.removeMediaFromPlayList(file)
-        }
+    func playerListViewController(_ viewController: PlayerListViewController, didDeleteRow: Int) {
+        let file = self.player.playList[didDeleteRow]
+        self.player.removeMediaFromPlayList(file)
     }
     
     func currentPlayIndexAtPlayerListViewController(_ viewController: PlayerListViewController) -> Int? {

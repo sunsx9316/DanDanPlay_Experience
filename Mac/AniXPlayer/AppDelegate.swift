@@ -12,6 +12,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     weak var fileMenu: NSMenu?
     
+    weak var danmakuMenu: NSMenu?
+    
+    weak var playerMenu: NSMenu?
+    
     private lazy var mainWindowController: WindowController = {
         let mainWindowController = WindowController()
         mainWindowController.contentViewController = PlayerViewController()
@@ -88,7 +92,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let appMenu = NSMenu()
             appMenu.addItem(withTitle: NSLocalizedString("关于", comment: "") + InfoPlistUtils.appName, action: nil, keyEquivalent: "")
             appMenu.addItem(NSMenuItem.separator())
-            appMenu.addItem(withTitle: NSLocalizedString("偏好设置", comment: ""), action: nil, keyEquivalent: ",")
+            appMenu.addItem(withTitle: NSLocalizedString("偏好设置", comment: ""), action: #selector(onGlobalSettingItemDidClick(_:)), keyEquivalent: ",")
             appMenu.addItem(NSMenuItem.separator())
             appMenu.addItem(withTitle: NSLocalizedString("隐藏", comment: ""), action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
             appMenu.addItem({ () -> NSMenuItem in
@@ -116,9 +120,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let mainMenu = NSMenu()
         mainMenu.addItem(appItem())
         mainMenu.addItem(fileItem())
-       
 
         NSApp.mainMenu = mainMenu
+    }
+    
+    @objc private func onGlobalSettingItemDidClick(_ item: NSMenuItem) {
+        let vc = GlobalSettingViewController()
+        self.mainWindowController.contentViewController?.presentAsModalWindow(vc)
     }
 
 }
