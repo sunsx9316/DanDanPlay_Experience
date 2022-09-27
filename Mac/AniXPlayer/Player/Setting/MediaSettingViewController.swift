@@ -50,7 +50,7 @@ extension MediaSettingViewController: NSTableViewDelegate, NSTableViewDataSource
         
         switch type {
         case .subtitleSafeArea:
-            let cell = tableView.dequeueCell(nibClass: SwitchTableViewCell.self)
+            let cell = tableView.dequeueReusableCell(class: SwitchTableViewCell.self)
             cell.aSwitch.isOn = Preferences.shared.subtitleSafeArea
             cell.aSwitch.title = type.title
             cell.onTouchSliderCallBack = { [weak self] (aCell) in
@@ -62,7 +62,7 @@ extension MediaSettingViewController: NSTableViewDelegate, NSTableViewDataSource
             }
             return cell
         case .playerSpeed:
-            let cell = tableView.dequeueCell(nibClass: SliderTableViewCell.self)
+            let cell = tableView.dequeueReusableCell(class: SliderTableViewCell.self)
             cell.titleLabel.text = type.title
             let model = SliderTableViewCell.Model(maxValue: 3,
                                                   minValue: 0.5,
@@ -80,7 +80,7 @@ extension MediaSettingViewController: NSTableViewDelegate, NSTableViewDataSource
             }
             return cell
         case .playerMode:
-            let cell = tableView.dequeueCell(nibClass: SheetTableViewCell.self)
+            let cell = tableView.dequeueReusableCell(class: SheetTableViewCell.self)
             cell.titleLabel.text = type.title
             
             let allItems = Preferences.PlayerMode.allCases
@@ -94,11 +94,11 @@ extension MediaSettingViewController: NSTableViewDelegate, NSTableViewDataSource
             }
             return cell
         case .loadSubtitle:
-            let cell = tableView.dequeueCell(nibClass: TitleTableViewCell.self)
+            let cell = tableView.dequeueReusableCell(class: TitleTableViewCell.self)
             cell.label.text = type.title
             return cell
         case .subtitleTrack:
-            let cell = tableView.dequeueCell(nibClass: SheetTableViewCell.self)
+            let cell = tableView.dequeueReusableCell(class: SheetTableViewCell.self)
             cell.titleLabel.text = type.title
             
             let allItems = self.player?.subtitleList ?? []
@@ -113,7 +113,7 @@ extension MediaSettingViewController: NSTableViewDelegate, NSTableViewDataSource
             
             return cell
         case .audioTrack:
-            let cell = tableView.dequeueCell(nibClass: SheetTableViewCell.self)
+            let cell = tableView.dequeueReusableCell(class: SheetTableViewCell.self)
             cell.titleLabel.text = type.title
             
             let allItems = self.player?.audioChannelList ?? []
@@ -181,6 +181,11 @@ class MediaSettingViewController: ViewController {
         tableView.addTableColumn(column)
         tableView.target = self
         tableView.doubleAction = #selector(onClickTableView(_:))
+        
+        tableView.registerNibCell(class: SwitchTableViewCell.self)
+        tableView.registerNibCell(class: SliderTableViewCell.self)
+        tableView.registerNibCell(class: SheetTableViewCell.self)
+        tableView.registerNibCell(class: TitleTableViewCell.self)
         
         var scrollView = ScrollView(containerView: tableView)
         return scrollView

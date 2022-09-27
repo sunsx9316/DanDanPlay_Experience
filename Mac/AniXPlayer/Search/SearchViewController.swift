@@ -62,6 +62,7 @@ class SearchViewController: ViewController {
         
         self.view.window?.title = NSLocalizedString("搜索结果", comment: "")
         
+        self.outlineView.registerClassCell(class: MatchsCell.self)
         self.outlineView.target = self
         self.outlineView.doubleAction = #selector(doubleAction(_:))
         self.searchField.target = self
@@ -141,7 +142,7 @@ extension SearchViewController: NSOutlineViewDataSource {
 extension SearchViewController: NSOutlineViewDelegate {
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         if let item = item as? MatchItem {
-            let cell = outlineView.dequeueCell(cellClass: MatchsCell.self)
+            let cell = outlineView.dequeueReusableCell(class: MatchsCell.self)
             cell.model = item
             return cell
         }

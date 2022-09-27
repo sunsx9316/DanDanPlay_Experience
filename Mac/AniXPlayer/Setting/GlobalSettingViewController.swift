@@ -25,7 +25,7 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
         
         switch type {
         case .fastMatch:
-            let cell = tableView.dequeueCell(nibClass: SwitchDetailTableViewCell.self)
+            let cell = tableView.dequeueReusableCell(class: SwitchDetailTableViewCell.self)
             cell.aSwitch.isOn = Preferences.shared.fastMatch
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = type.subtitle
@@ -35,7 +35,7 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
             }
             return cell
         case .autoLoadCustomDanmaku:
-            let cell = tableView.dequeueCell(nibClass: SwitchDetailTableViewCell.self)
+            let cell = tableView.dequeueReusableCell(class: SwitchDetailTableViewCell.self)
             cell.aSwitch.isOn = Preferences.shared.autoLoadCustomDanmaku
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = type.subtitle
@@ -45,17 +45,17 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
             }
             return cell
         case .danmakuCacheDay:
-            let cell = tableView.dequeueCell(nibClass: TitleDetailTableViewCell.self)
+            let cell = tableView.dequeueReusableCell(class: TitleDetailTableViewCell.self)
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = type.subtitle
             return cell
         case .subtitleLoadOrder:
-            let cell = tableView.dequeueCell(nibClass: TitleDetailTableViewCell.self)
+            let cell = tableView.dequeueReusableCell(class: TitleDetailTableViewCell.self)
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = type.subtitle
             return cell
         case .host:
-            let cell = tableView.dequeueCell(nibClass: TitleDetailTableViewCell.self)
+            let cell = tableView.dequeueReusableCell(class: TitleDetailTableViewCell.self)
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = type.subtitle
             return cell
@@ -202,6 +202,8 @@ class GlobalSettingViewController: ViewController {
         let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: ""))
         column.isEditable = false
         tableView.addTableColumn(column)
+        tableView.registerNibCell(class: SwitchDetailTableViewCell.self)
+        tableView.registerNibCell(class: TitleDetailTableViewCell.self)
         
         tableView.target = self
         tableView.doubleAction = #selector(doubleClickTableView(_:))

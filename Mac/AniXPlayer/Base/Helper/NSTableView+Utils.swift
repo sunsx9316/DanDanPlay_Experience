@@ -8,26 +8,56 @@
 
 import Cocoa
 
+private var RegisterClassKey = 0
+
 extension NSTableView {
-    func dequeueCell<T: NSView>(cellClass: T.Type) -> T {
-        let id = NSUserInterfaceItemIdentifier("\(cellClass.self)")
-        if let cell = self.makeView(withIdentifier: id, owner: self) as? T {
-            return cell
+    
+    //[NSUserInterfaceItemIdentifier: AnyClass]
+    private var registerClassDic: NSMutableDictionary {
+        get {
+            if let dic = objc_getAssociatedObject(self, &RegisterClassKey) as? NSMutableDictionary {
+                return dic
+            }
+            
+            let dic = NSMutableDictionary()
+            self.registerClassDic = dic
+            return dic
         }
         
-        let cell = cellClass.init(frame: CGRect(x: 0, y: 0, width: self.frame.width, height: self.rowHeight))
-        cell.identifier = id
-        return cell
+        set {
+            objc_setAssociatedObject(self, &RegisterClassKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
     }
     
-    func dequeueCell<T: NSView>(nibClass: T.Type) -> T {
-        let id = NSUserInterfaceItemIdentifier("\(nibClass.self)")
+    /// 注册一种从Nib中加载的Cell
+    func registerNibCell<T: NSView>(class type: T.Type) {
+        let id = identifier(class: type)
+        self.register(NSNib(nibNamed: id.rawValue, bundle: Bundle(for: T.self)), forIdentifier: id)
+    }
+    
+    /// 注册一种代码创建的Cell
+    func registerClassCell<T: NSView>(class type: T.Type) {
+        let id = identifier(class: type)
+        self.registerClassDic[id] = type
+    }
+    
+    func dequeueReusableCell<T: NSView>(class type: T.Type) -> T {
+        let id = identifier(class: type)
         if let cell = self.makeView(withIdentifier: id, owner: self) as? T {
             return cell
         }
         
-        let cell = nibClass.loadFromNib()!
-        cell.identifier = id
-        return cell
+        if let registerClass = self.registerClassDic[id] as? T.Type {
+            let cell = registerClass.init(frame: .zero)
+            cell.identifier = id
+            return cell
+        }
+        
+        return T()
+    }
+     
+    private func identifier(class type: AnyClass) -> NSUserInterfaceItemIdentifier {
+        let className = String(describing: type)
+        return NSUserInterfaceItemIdentifier(rawValue: className)
     }
 }

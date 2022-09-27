@@ -46,7 +46,7 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
         
         switch type {
         case .danmakuAlpha:
-            let cell = tableView.dequeueCell(nibClass: SliderTableViewCell.self)
+            let cell = tableView.dequeueReusableCell(class: SliderTableViewCell.self)
             cell.titleLabel.text = type.title
             cell.valueSlider.isContinuous = true
             let model = SliderTableViewCell.Model(maxValue: 1,
@@ -65,7 +65,7 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
             }
             return cell
         case .danmakuFontSize:
-            let cell = tableView.dequeueCell(nibClass: SliderTableViewCell.self)
+            let cell = tableView.dequeueReusableCell(class: SliderTableViewCell.self)
             cell.titleLabel.text = type.title
             let model = SliderTableViewCell.Model(maxValue: 40,
                                                   minValue: 10,
@@ -83,7 +83,7 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
             }
             return cell
         case .danmakuSpeed:
-            let cell = tableView.dequeueCell(nibClass: SliderTableViewCell.self)
+            let cell = tableView.dequeueReusableCell(class: SliderTableViewCell.self)
             cell.titleLabel.text = type.title
             cell.valueSlider.isContinuous = true
             let model = SliderTableViewCell.Model(maxValue: 3,
@@ -103,7 +103,7 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
             }
             return cell
         case .danmakuProportion:
-            let cell = tableView.dequeueCell(nibClass: SliderTableViewCell.self)
+            let cell = tableView.dequeueReusableCell(class: SliderTableViewCell.self)
             cell.titleLabel.text = type.title
             let maxCount = Preferences.shared.danmakuMaxStoreValue
             let minCount = Preferences.shared.danmakuMinStoreValue
@@ -147,7 +147,7 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
             return cell
         
         case .showDanmaku:
-            let cell = tableView.dequeueCell(nibClass: SwitchTableViewCell.self)
+            let cell = tableView.dequeueReusableCell(class: SwitchTableViewCell.self)
             cell.aSwitch.isOn = Preferences.shared.isShowDanmaku
             cell.aSwitch.title = type.title
             cell.onTouchSliderCallBack = { [weak self] (aCell) in
@@ -159,7 +159,7 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
             }
             return cell
         case .danmakuOffsetTime:
-            let cell = tableView.dequeueCell(nibClass: StepTableViewCell.self)
+            let cell = tableView.dequeueReusableCell(class: StepTableViewCell.self)
             cell.titleLabel.text = type.title
             let danmakuOffsetTime = Preferences.shared.danmakuOffsetTime
             cell.stepper.minValue = -500
@@ -176,7 +176,7 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
             }
             return cell
         case .danmakuDensity:
-            let cell = tableView.dequeueCell(nibClass: SliderTableViewCell.self)
+            let cell = tableView.dequeueReusableCell(class: SliderTableViewCell.self)
             cell.titleLabel.text = type.title
             cell.step = 1
             let model = SliderTableViewCell.Model(maxValue: 10,
@@ -208,7 +208,7 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
             }
             return cell
         case .loadDanmaku, .searchDanmaku:
-            let cell = tableView.dequeueCell(nibClass: TitleTableViewCell.self)
+            let cell = tableView.dequeueReusableCell(class: TitleTableViewCell.self)
             cell.label.text = type.title
             return cell
         }
@@ -275,6 +275,10 @@ class DanmakuSettingViewController: ViewController {
         
         tableView.target = self
         tableView.doubleAction = #selector(doubleClickTableView(_:))
+        tableView.registerNibCell(class: SliderTableViewCell.self)
+        tableView.registerNibCell(class: SwitchTableViewCell.self)
+        tableView.registerNibCell(class: StepTableViewCell.self)
+        tableView.registerNibCell(class: TitleTableViewCell.self)
         
         var scrollView = ScrollView(containerView: tableView)
         return scrollView

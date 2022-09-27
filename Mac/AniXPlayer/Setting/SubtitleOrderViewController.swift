@@ -16,7 +16,7 @@ extension SubtitleOrderViewController: NSTableViewDelegate, NSTableViewDataSourc
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         let name = self.dataSource[row]
         
-        let cell = tableView.dequeueCell(nibClass: TitleTableViewCell.self)
+        let cell = tableView.dequeueReusableCell(class: TitleTableViewCell.self)
         cell.label.text = name
         return cell
     }
@@ -107,6 +107,7 @@ class SubtitleOrderViewController: ViewController {
         tableView.dataSource = self
         tableView.headerView = nil
         tableView.registerForDraggedTypes([dragDropType])
+        tableView.registerNibCell(class: TitleTableViewCell.self)
         
         let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: ""))
         column.isEditable = false

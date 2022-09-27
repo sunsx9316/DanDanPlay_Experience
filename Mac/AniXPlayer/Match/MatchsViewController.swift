@@ -69,6 +69,7 @@ class MatchsViewController: ViewController {
         
         self.outlineView.target = self
         self.outlineView.doubleAction = #selector(doubleAction(_:))
+        self.outlineView.registerClassCell(class: MatchsCell.self)
         
         let menu = NSMenu()
         menu.addItem(withTitle: NSLocalizedString("刷新", comment: ""), action: #selector(startRequestData), keyEquivalent: "")
@@ -216,7 +217,7 @@ extension MatchsViewController: NSOutlineViewDataSource {
 extension MatchsViewController: NSOutlineViewDelegate {
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         if let item = item as? MatchItem {
-            let cell = outlineView.dequeueCell(cellClass: MatchsCell.self)
+            let cell = outlineView.dequeueReusableCell(class: MatchsCell.self)
             cell.model = item
             return cell
         }

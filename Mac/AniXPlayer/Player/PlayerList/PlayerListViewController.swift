@@ -43,6 +43,7 @@ class PlayerListViewController: ViewController, NSTableViewDelegate, NSTableView
         tableView.addTableColumn(column)
         tableView.target = self
         tableView.doubleAction = #selector(onDoubleClickTableRow(_:))
+        tableView.registerNibCell(class: PlayerListTableViewCell.self)
         
         let menu = NSMenu()
         
@@ -85,7 +86,7 @@ class PlayerListViewController: ViewController, NSTableViewDelegate, NSTableView
     }
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        let cell = tableView.dequeueCell(nibClass: PlayerListTableViewCell.self)
+        let cell = tableView.dequeueReusableCell(class: PlayerListTableViewCell.self)
         cell.string = delegate?.playerListViewController(self, titleAtRow: row)
         cell.showPoint = delegate?.currentPlayIndexAtPlayerListViewController(self) == row
         return cell
