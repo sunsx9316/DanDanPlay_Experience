@@ -1,0 +1,13 @@
+use_frameworks!
+
+platform :ios, '10.0'
+
+target 'ANXLog_Example' do
+  pod 'ANXLog', :path => '../'
+
+  target 'ANXLog_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
