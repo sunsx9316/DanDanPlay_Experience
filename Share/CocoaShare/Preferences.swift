@@ -94,6 +94,9 @@ class Preferences {
         /// 域名
         case host
         
+        /// 上次更新的版本号
+        case lastUpdateVersion
+        
         var storeKey: String {
             if self == .danmakuDensity {
                 return "danmakuDensity_v2"
@@ -110,6 +113,9 @@ class Preferences {
     
     static let shared = Preferences()
     private init() {}
+    
+    @StoreWrapper(defaultValue: "0", key: .lastUpdateVersion)
+    var lastUpdateVersion: String
     
     @StoreWrapper(defaultValue: 0, key: .danmakuOffsetTime)
     var danmakuOffsetTime: Int

@@ -49,12 +49,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let vc = AppVersionViewController(appVersiotn: info)
         vc.onClickCancelCallBack = { vc in
             vc.dismiss(nil)
-            UserDefaults.standard.set(info.version, forKey: "lastUpdateVersion")
+            Preferences.shared.lastUpdateVersion = info.version
         }
         
         vc.onClickOKCallBack = { vc in
             vc.dismiss(nil)
-            UserDefaults.standard.set(info.version, forKey: "lastUpdateVersion")
+            Preferences.shared.lastUpdateVersion = info.version
         }
         
         self.mainWindowController.contentViewController?.presentAsModalWindow(vc)
@@ -69,16 +69,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                let appVersion = InfoPlistUtils.appBuildNumber {
                 //有版本更新
                 if info.version.compare(appVersion, options: .numeric) == .orderedDescending {
-                    //上次更新的版本
-                    if let lastUpdateVersion = UserDefaults.standard.string(forKey: "lastUpdateVersion") {
-                        //是否忽略此版本更新
-                        let isIgnoreThisVersion = info.version == lastUpdateVersion
-                        if !isIgnoreThisVersion {
-                            DispatchQueue.main.async {
-                                self.showAppVersionVC(info)
-                            }
-                        }
-                    } else {
+                    //是否忽略此版本更新
+                    if info.version != Preferences.shared.lastUpdateVersion {
                         DispatchQueue.main.async {
                             self.showAppVersionVC(info)
                         }
