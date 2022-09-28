@@ -1,2 +1,3 @@
-# DanDanPlay_Experience
-弹弹play体验版 write in flutter
+# AniXPlayer
+
+iOS/Mac版本的弹弹Play，包含基础播放、设置功能
