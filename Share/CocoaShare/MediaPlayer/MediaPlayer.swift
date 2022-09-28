@@ -163,6 +163,9 @@ class MediaPlayer {
             self.currentSubTitleFile = nil
             let media = self.currentPlayItem?.createMedia(delegate: self)
             self.player.media = media
+#if os(macOS)
+            media?.synchronousParse()
+#endif
             if let media = media {
                 self.mediaThumbnailer = .init(media: media)
             } else {
