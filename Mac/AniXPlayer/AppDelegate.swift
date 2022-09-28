@@ -111,6 +111,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let mainFileMenuItem = NSMenuItem(title: "", action: nil, keyEquivalent: "")
             
             let fileMenu = NSMenu(title: NSLocalizedString("文件", comment: ""))
+           
+            let fileItem = NSMenuItem(title: NSLocalizedString("打开...", comment: ""), action: nil, keyEquivalent: "n")
+            fileItem.tag = MenuTag.fileOpen.rawValue
+            fileMenu.addItem(fileItem)
+            
             self.fileMenu = fileMenu
             mainFileMenuItem.submenu = fileMenu
             

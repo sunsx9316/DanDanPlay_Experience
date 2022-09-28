@@ -534,12 +534,10 @@ class PlayerViewController: ViewController {
     }
     
     private func setupMenu() {
-        let fileItem = NSMenuItem(title: NSLocalizedString("打开...", comment: ""), action: #selector(pickFile), keyEquivalent: "n")
-        fileItem.target = self
-        NSApp.appDelegate?.fileMenu?.addItem(fileItem)
-        
-        NSApp.appDelegate?.fileMenu?.addItem(NSMenuItem.separator())
-        
+        if let fileItem = NSApp.appDelegate?.fileMenu?.item(withTag: MenuTag.fileOpen.rawValue) {
+            fileItem.target = self
+            fileItem.action = #selector(pickFile)
+        }
     }
     
     /// 文件拾取器

@@ -39,7 +39,7 @@ extension NSView {
         }
     }
     
-    static func loadFromNib() -> Self? {
+    static func loadFromNib() -> Self {
         
         let bundle = Bundle(for: self)
         let nibName = "\(self.self)"
@@ -56,6 +56,6 @@ extension NSView {
             }
         }
         
-        return nil
+        fatalError("xib不存在 nibName:\(nibName)")
     }
 }

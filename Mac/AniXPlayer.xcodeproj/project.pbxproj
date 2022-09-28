@@ -35,6 +35,8 @@
 		894415E728E34EEC00480172 /* TitleDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 894415E628E34EEC00480172 /* TitleDetailTableViewCell.xib */; };
 		894415E928E34FF100480172 /* NSSwitch+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894415E828E34FF100480172 /* NSSwitch+Utils.swift */; };
 		894415EB28E3569100480172 /* SubtitleOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894415EA28E3569100480172 /* SubtitleOrderViewController.swift */; };
+		894415F028E4821400480172 /* NSGestureRecognizer+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894415EF28E4821400480172 /* NSGestureRecognizer+Utils.swift */; };
+		894415F328E488CA00480172 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894415F228E488CA00480172 /* Constants.swift */; };
 		89945FEB28CA3BAE009AC640 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89945FEA28CA3BAE009AC640 /* AppDelegate.swift */; };
 		89945FED28CA3BAE009AC640 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89945FEC28CA3BAE009AC640 /* PlayerViewController.swift */; };
 		89945FEF28CA3BAF009AC640 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 89945FEE28CA3BAF009AC640 /* Assets.xcassets */; };
@@ -142,6 +144,8 @@
 		894415E628E34EEC00480172 /* TitleDetailTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TitleDetailTableViewCell.xib; sourceTree = "<group>"; };
 		894415E828E34FF100480172 /* NSSwitch+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSSwitch+Utils.swift"; sourceTree = "<group>"; };
 		894415EA28E3569100480172 /* SubtitleOrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtitleOrderViewController.swift; sourceTree = "<group>"; };
+		894415EF28E4821400480172 /* NSGestureRecognizer+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSGestureRecognizer+Utils.swift"; sourceTree = "<group>"; };
+		894415F228E488CA00480172 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		89945FE728CA3BAE009AC640 /* AniXPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AniXPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		89945FEA28CA3BAE009AC640 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		89945FEC28CA3BAE009AC640 /* PlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
@@ -304,6 +308,14 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		894415F128E488C000480172 /* Constants */ = {
+			isa = PBXGroup;
+			children = (
+				894415F228E488CA00480172 /* Constants.swift */,
+			);
+			path = Constants;
+			sourceTree = "<group>";
+		};
 		89945FDE28CA3BAE009AC640 = {
 			isa = PBXGroup;
 			children = (
@@ -327,6 +339,7 @@
 			children = (
 				899461E228CC884A009AC640 /* Info.plist */,
 				8994606F28CA3DC2009AC640 /* AniXPlayer-Bridging-Header.h */,
+				894415F128E488C000480172 /* Constants */,
 				8994616828CC7A79009AC640 /* Vendor */,
 				8994607E28CC77F1009AC640 /* CocoaShare */,
 				89945FEA28CA3BAE009AC640 /* AppDelegate.swift */,
@@ -521,6 +534,7 @@
 				89A1C67128D5DA8F00DC514E /* InfoPlistUtils.swift */,
 				89A1C68E28D5E38500DC514E /* NSApp+Utils.swift */,
 				894415E828E34FF100480172 /* NSSwitch+Utils.swift */,
+				894415EF28E4821400480172 /* NSGestureRecognizer+Utils.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -767,6 +781,7 @@
 				899461E628CC8A29009AC640 /* MatchsViewController.swift in Sources */,
 				899460D728CC77F1009AC640 /* Match.swift in Sources */,
 				89A1C60128D4C32300DC514E /* PlayerListTableViewCell.swift in Sources */,
+				894415F028E4821400480172 /* NSGestureRecognizer+Utils.swift in Sources */,
 				899461F828CCC353009AC640 /* NSColor+Utils.swift in Sources */,
 				8917059628CF6CF10075ECD9 /* SnapshotView.swift in Sources */,
 				899461F628CCC322009AC640 /* TextField.swift in Sources */,
@@ -815,6 +830,7 @@
 				894415EB28E3569100480172 /* SubtitleOrderViewController.swift in Sources */,
 				89A1C67028D5D3E100DC514E /* main.swift in Sources */,
 				8994621328CCE865009AC640 /* DanmakuSettingViewController.swift in Sources */,
+				894415F328E488CA00480172 /* Constants.swift in Sources */,
 				899460D328CC77F1009AC640 /* Preferences.swift in Sources */,
 				89A1C5FF28D4C32300DC514E /* PlayerListViewController.swift in Sources */,
 				894415E128E34BD200480172 /* SwitchDetailTableViewCell.swift in Sources */,
