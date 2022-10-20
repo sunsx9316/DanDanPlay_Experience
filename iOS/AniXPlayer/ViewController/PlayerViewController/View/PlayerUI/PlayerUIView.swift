@@ -57,9 +57,9 @@ class PlayerUIView: UIView {
     var title: String? {
         didSet {
             if let title = self.title {
-                self.topView.titleLabel.attributedString = .init(string: title, attributes: [.font : UIFont.systemFont(ofSize: 15), .foregroundColor : UIColor.white])
+                self.topView.titleLabel.attributedText = .init(string: title, attributes: [.font : UIFont.systemFont(ofSize: 15), .foregroundColor : UIColor.white])
             } else {
-                self.topView.titleLabel.attributedString = nil
+                self.topView.titleLabel.attributedText = nil
             }
         }
     }

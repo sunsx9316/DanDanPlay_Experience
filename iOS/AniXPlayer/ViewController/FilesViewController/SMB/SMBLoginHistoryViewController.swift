@@ -69,8 +69,7 @@ extension SMBLoginHistoryViewController: UITableViewDelegate, UITableViewDataSou
                 }
                 
                 vc.addAction(UIAlertAction(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: nil))
-                vc.popoverPresentationController?.sourceView = tableView.cellForRow(at: indexPath)
-                self.present(vc, animated: true, completion: nil)
+                self.present(vc, atView: tableView.cellForRow(at: indexPath))
             } else if (addressModels.count == 1) {
                 let loginInfo = addressModels[0].loginInfo
                 self.jumpToConnectViewController(loginInfo)
@@ -302,8 +301,7 @@ class SMBLoginHistoryViewController: ViewController {
         vc.addAction(UIAlertAction(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: { action in
             self.tableView.reloadData()
         }))
-        vc.popoverPresentationController?.sourceView = view
-        self.present(vc, animated: true, completion: nil)
+        self.present(vc, atView: view)
     }
     
 }

@@ -6,7 +6,8 @@
 //
 
 import UIKit
-import Bugly
+import FirebaseCore
+import FirebaseCrashlytics
 import ANXLog
 
 @main
@@ -18,11 +19,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         self.setup()
         
-//        if #available(iOS 13.0, *) {
-//
-//        } else {
-//            let vc = TabBarController()
-        
         let vc = PickFileViewController()
         let nav = PickFileNavigationController(rootViewController: vc)
         nav.navigationBar.prefersLargeTitles = true
@@ -30,7 +26,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window = UIWindow(frame: UIScreen.main.bounds)
         self.window?.rootViewController = nav
         self.window?.makeKeyAndVisible()
-//        }
         
         return true
     }
@@ -44,10 +39,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        config.delegateClass = SceneDelegate.self
 //        return config
 //    }
-
-    func application(_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
-        return .allButUpsideDown
-    }
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         
@@ -72,21 +63,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidEnterBackground(_ application: UIApplication) {
         ANXLogHelper.flush()
     }
+    
 
     //MARK: - Private Method
     private func setup() {
         
-        let isDevelop: Bool
-        
-        #if DEBUG
-        isDevelop = true
-        #else
-        isDevelop = false
-        #endif
-        
-        let config = BuglyConfig()
-        config.channel = "AppStore"
-        Bugly.start(withAppId: "a72dd7c16d", developmentDevice: isDevelop, config: config)
+        FirebaseApp.configure()
         
         do {
 //            let navBarAppearance = UINavigationBar.appearance()

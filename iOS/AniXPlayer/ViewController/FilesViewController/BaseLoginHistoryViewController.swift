@@ -113,8 +113,8 @@ class BaseLoginHistoryViewController<F: File>: ViewController, UITableViewDelega
         vc.addAction(UIAlertAction(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: { action in
             self.tableView.reloadData()
         }))
-        vc.popoverPresentationController?.sourceView = view
-        self.present(vc, animated: true, completion: nil)
+        
+        self.present(vc, atView: view)
     }
     
     //MARK: UITableViewDelegate, UITableViewDataSource

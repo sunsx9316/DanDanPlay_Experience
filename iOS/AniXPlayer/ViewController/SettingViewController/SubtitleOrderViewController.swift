@@ -118,7 +118,7 @@ class SubtitleOrderViewController: ViewController {
             }
         }))
         
-        vc.popoverPresentationController?.barButtonItem = item
+        self.present(vc, atItem: item)
         self.present(vc, animated: true, completion: nil)
     }
     

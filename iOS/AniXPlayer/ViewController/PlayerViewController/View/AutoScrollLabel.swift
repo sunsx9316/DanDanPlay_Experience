@@ -53,9 +53,9 @@ class AutoScrollLabel: UIView {
         setupInit()
     }
     
-    var attributedString: NSAttributedString? {
+    var attributedText: NSAttributedString? {
         didSet {
-            if let attributedString = self.attributedString {
+            if let attributedString = self.attributedText {
                 let rect = attributedString.boundingRect(with: .init(width: .max, height: .max), options: [], context: nil)
                 let labelModel1 = LabelModel(attributedString: attributedString, frame: rect)
                 

@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		6F969714544C3EBD7E920F21 /* Pods_AniXPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6620BF43605B5DDE3E8B15B6 /* Pods_AniXPlayer.framework */; };
+		89044755290180110088886B /* VLCPlayerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89044754290180110088886B /* VLCPlayerWrapper.swift */; };
+		89044759290186B40088886B /* UIViewController+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89044758290186B40088886B /* UIViewController+Helper.swift */; };
+		8904475B290189CD0088886B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8904475A290189CD0088886B /* GoogleService-Info.plist */; };
 		890DF6CD26160826002D8AE5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF6CC26160826002D8AE5 /* AppDelegate.swift */; };
 		890DF6D426160826002D8AE5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 890DF6D226160826002D8AE5 /* Main.storyboard */; };
 		890DF6D626160827002D8AE5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 890DF6D526160827002D8AE5 /* Assets.xcassets */; };
@@ -134,6 +137,9 @@
 
 /* Begin PBXFileReference section */
 		6620BF43605B5DDE3E8B15B6 /* Pods_AniXPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AniXPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		89044754290180110088886B /* VLCPlayerWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VLCPlayerWrapper.swift; sourceTree = "<group>"; };
+		89044758290186B40088886B /* UIViewController+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Helper.swift"; sourceTree = "<group>"; };
+		8904475A290189CD0088886B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		890DF6C926160826002D8AE5 /* AniXPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AniXPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		890DF6CC26160826002D8AE5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		890DF6D326160826002D8AE5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -289,6 +295,14 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		89044753290180110088886B /* Wrapper */ = {
+			isa = PBXGroup;
+			children = (
+				89044754290180110088886B /* VLCPlayerWrapper.swift */,
+			);
+			path = Wrapper;
+			sourceTree = "<group>";
+		};
 		890DF6C026160826002D8AE5 = {
 			isa = PBXGroup;
 			children = (
@@ -343,6 +357,7 @@
 		890DF6EC26160A1A002D8AE5 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
+				8904475A290189CD0088886B /* GoogleService-Info.plist */,
 				890DF6ED26160A25002D8AE5 /* RefreshText.plist */,
 			);
 			path = Resource;
@@ -491,6 +506,7 @@
 				8931F0E42674CA6A00590569 /* UIBarButtonItem+Helper.swift */,
 				8931F0EC26750D6500590569 /* UIView+HitTest.h */,
 				8931F0ED26750D6500590569 /* UIView+HitTest.m */,
+				89044758290186B40088886B /* UIViewController+Helper.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -631,6 +647,7 @@
 		899460F428CC783C009AC640 /* MediaPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				89044753290180110088886B /* Wrapper */,
 				8994610728CC783C009AC640 /* MediaPlayer.swift */,
 				8994610628CC783C009AC640 /* MediaThumbnailer.swift */,
 				8994610528CC783C009AC640 /* URL+Extension.swift */,
@@ -782,6 +799,7 @@
 				890DF6C626160826002D8AE5 /* Frameworks */,
 				890DF6C726160826002D8AE5 /* Resources */,
 				CC9BA52668FD7D5F30AC3E4B /* [CP] Embed Pods Frameworks */,
+				8904475C29018AE90088886B /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -842,6 +860,7 @@
 				890DF77126160B3E002D8AE5 /* FileTableViewCell.xib in Resources */,
 				8931F0F42677388600590569 /* TitleDetailMoreTableViewCell.xib in Resources */,
 				890DF6D626160827002D8AE5 /* Assets.xcassets in Resources */,
+				8904475B290189CD0088886B /* GoogleService-Info.plist in Resources */,
 				890DF824261617D0002D8AE5 /* PickFileTableViewCell.xib in Resources */,
 				89AF9C042631C2680037A133 /* StepTableViewCell.xib in Resources */,
 				897CF533262F317B00CC297A /* SliderTableViewCell.xib in Resources */,
@@ -854,6 +873,23 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		8904475C29018AE90088886B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\n\"${PODS_ROOT}/FirebaseCrashlytics/run\"\n";
+		};
 		CC9BA52668FD7D5F30AC3E4B /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -942,10 +978,12 @@
 				8994613C28CC783C009AC640 /* WebDavFileManager.swift in Sources */,
 				8994614B28CC783C009AC640 /* Match.swift in Sources */,
 				8994616128CC783C009AC640 /* Rational.swift in Sources */,
+				89044759290186B40088886B /* UIViewController+Helper.swift in Sources */,
 				8994614328CC783C009AC640 /* MediaPlayer.swift in Sources */,
 				8949F8912662AA2100274520 /* WebDavLoginHistoryViewController.swift in Sources */,
 				899E385D280B2F7A00285191 /* ProgressSlider.swift in Sources */,
 				890DF75426160B1B002D8AE5 /* UITableView+Extension.swift in Sources */,
+				89044755290180110088886B /* VLCPlayerWrapper.swift in Sources */,
 				89E0D82A266BD4FC00E2337B /* PlayerUITopView.swift in Sources */,
 				890DF86F2618B922002D8AE5 /* AnimatesTableViewCell.swift in Sources */,
 				8931F0F626773A2300590569 /* SubtitleOrderViewController.swift in Sources */,

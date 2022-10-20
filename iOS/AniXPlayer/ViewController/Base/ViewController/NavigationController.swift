@@ -21,6 +21,18 @@ class NavigationController: UINavigationController {
         self.setupNavigationItem()
     }
     
+    override var shouldAutorotate: Bool {
+        return true
+    }
+    
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        return [.landscapeRight, .landscapeLeft]
+    }
+    
+    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
+        return .landscapeRight
+    }
+    
     private func setupNavigationItem() {
         let backImage = UIImage(named: "Public/go_back")?.byTintColor(.navItemColor)?.withRenderingMode(.alwaysOriginal)
         self.navigationBar.backIndicatorImage = backImage

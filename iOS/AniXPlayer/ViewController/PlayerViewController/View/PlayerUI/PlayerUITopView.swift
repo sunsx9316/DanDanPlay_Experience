@@ -61,7 +61,7 @@ class PlayerUITopView: UIView {
         self.addSubview(containerView)
         
         containerView.snp.makeConstraints { make in
-            make.top.equalTo(self.safeAreaLayoutGuide.snp.top)
+            make.top.equalTo(self.snp.top)
             make.bottom.equalToSuperview()
             make.leading.equalTo(self.safeAreaLayoutGuide.snp.leading)
             make.trailing.equalTo(self.safeAreaLayoutGuide.snp.trailing)

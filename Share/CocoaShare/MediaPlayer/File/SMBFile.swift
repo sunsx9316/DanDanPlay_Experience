@@ -88,16 +88,14 @@ class SMBFile: File {
         self.shareName = shareName
         self.path = file[.pathKey] as? String ?? ""
         
-        var urlComponents: URLComponents?
-        
+        var svrURL: URL?
         if let loginInfo = SMBFileManager.shared.loginInfo {
-            var svrURL = loginInfo.url
-            svrURL.appendPathComponent(shareName)
-            svrURL.appendPathComponent(self.path)
-            urlComponents = .init(url: svrURL, resolvingAgainstBaseURL: false)
+            svrURL = loginInfo.url
+            svrURL?.appendPathComponent(shareName)
+            svrURL?.appendPathComponent(self.path)
         }
         
-        if let url = urlComponents?.url {
+        if let url = svrURL {
             self.url = url
         } else {
             self.url = URL(fileURLWithPath: "")

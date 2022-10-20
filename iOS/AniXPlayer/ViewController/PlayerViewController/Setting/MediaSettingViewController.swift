@@ -117,8 +117,8 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             vc.addAction(.init(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: { (_) in
                 
             }))
-            vc.popoverPresentationController?.sourceView = tableView.cellForRow(at: indexPath)
-            self.present(vc, animated: true, completion: nil)
+            
+            self.present(vc, atView: tableView.cellForRow(at: indexPath))
         } else if type == .loadSubtitle {
             self.delegate?.loadSubtitleFileInMediaSettingViewController(self)
         } else if type == .subtitleTrack {
@@ -148,9 +148,7 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             }
             
             vc.addAction(.init(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: { (_) in }))
-            vc.popoverPresentationController?.sourceView = tableView.cellForRow(at: indexPath)
-            self.present(vc, animated: true, completion: nil)
-            
+            self.present(vc, atView: tableView.cellForRow(at: indexPath))
         } else if type == .audioTrack {
             guard let audioChannelList = self.player?.audioChannelList,
                   !audioChannelList.isEmpty else { return }
@@ -171,8 +169,7 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             vc.addAction(.init(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: { (_) in
                 
             }))
-            vc.popoverPresentationController?.sourceView = tableView.cellForRow(at: indexPath)
-            self.present(vc, animated: true, completion: nil)
+            self.present(vc, atView: tableView.cellForRow(at: indexPath))
         }
     }
     

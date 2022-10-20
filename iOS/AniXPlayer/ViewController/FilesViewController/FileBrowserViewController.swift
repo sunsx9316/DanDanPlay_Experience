@@ -113,8 +113,7 @@ extension FileBrowserViewController: UITableViewDelegate, UITableViewDataSource 
             self.tableView.reloadData()
         }))
         
-        vc.popoverPresentationController?.sourceView = from
-        self.present(vc, animated: true, completion: nil)
+        self.present(vc, atView: from)
     }
     
 }

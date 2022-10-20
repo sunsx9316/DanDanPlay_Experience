@@ -26,12 +26,12 @@ target 'AniXPlayer' do
   pod 'Alamofire'
   pod 'AMSMB2'
   pod 'FilesProvider'
-  pod 'Bugly'
   pod "GCDWebServer/WebUploader"
   pod 'DynamicButton'
   pod 'AFNetworking'
   pod 'Ono'
   pod 'ANXLog', :path => '../Share/ANXLog'
+  pod 'FirebaseCrashlytics'
 
   # install_all_flutter_pods(flutter_application_path)
 end

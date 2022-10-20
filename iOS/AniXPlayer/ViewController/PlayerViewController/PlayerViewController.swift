@@ -46,7 +46,7 @@ class PlayerViewController: ViewController {
     }()
     
     private lazy var player: MediaPlayer = {
-        let player = MediaPlayer()
+        let player = MediaPlayer(coreType: .vlc)
         player.delegate = self
         return player
     }()
@@ -703,7 +703,7 @@ extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
     
     //MARK: PlayerUIViewDataSource
     func playerMediaThumbnailer(playerUIView: PlayerUIView) -> MediaThumbnailer? {
-        return self.player.mediaThumbnailer
+        return nil
     }
     
     func playerCurrentTime(playerUIView: PlayerUIView) -> TimeInterval {
@@ -745,7 +745,7 @@ extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
 //MARK: - MediaPlayerDelegate
 extension PlayerViewController: MediaPlayerDelegate {
     
-    func player(_ player: MediaPlayer, stateDidChange state: MediaPlayer.State) {
+    func player(_ player: MediaPlayer, stateDidChange state: PlayerState) {
         switch state {
         case .playing:
             danmakuRender.start()

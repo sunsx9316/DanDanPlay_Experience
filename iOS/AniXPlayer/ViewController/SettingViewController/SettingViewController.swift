@@ -6,6 +6,14 @@
 //
 
 import UIKit
+import ANXLog
+
+extension SettingViewController: UIDocumentPickerDelegate {
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        let activityViewController = UIActivityViewController(activityItems: urls, applicationActivities: nil)
+        self.present(activityViewController, animated: true, completion: nil)
+    }
+}
 
 extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -53,6 +61,11 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = type.subtitle
             return cell
+        case .log:
+            let cell = tableView.dequeueCell(class: TitleDetailTableViewCell.self, indexPath: indexPath)
+            cell.titleLabel.text = type.title
+            cell.subtitleLabel.text = type.subtitle
+            return cell
         }
     }
     
@@ -86,8 +99,7 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
                 Preferences.shared.danmakuCacheDay = day
                 self.tableView.reloadData()
             }))
-            vc.popoverPresentationController?.sourceView = tableView.cellForRow(at: indexPath)
-            self.present(vc, animated: true, completion: nil)
+            self.present(vc, atView: tableView.cellForRow(at: indexPath))
         } else if type == .host {
             let vc = UIAlertController(title: type.title, message: nil, preferredStyle: .alert)
             weak var aTextField: UITextField?
@@ -109,11 +121,18 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
                 Preferences.shared.host = host.isEmpty ? DefaultHost : host
                 self.tableView.reloadData()
             }))
-            vc.popoverPresentationController?.sourceView = tableView.cellForRow(at: indexPath)
-            self.present(vc, animated: true, completion: nil)
+            self.present(vc, atView: tableView.cellForRow(at: indexPath))
         } else if type == .subtitleLoadOrder {
             let vc = SubtitleOrderViewController()
             self.navigationController?.pushViewController(vc, animated: true)
+        } else if type == .log {
+            let vc = UIDocumentPickerViewController(documentTypes: [String("public.data")], in: .import)
+            vc.delegate = self
+            vc.allowsMultipleSelection = true
+            if #available(iOS 13.0, *) {
+                vc.directoryURL = URL(fileURLWithPath: ANXLogHelper.logPath())
+            }
+            self.present(vc, animated: true)
         }
     }
     
@@ -127,6 +146,7 @@ class SettingViewController: ViewController {
         case danmakuCacheDay
         case subtitleLoadOrder
         case host
+        case log
         
         var title: String {
             switch self {
@@ -140,6 +160,8 @@ class SettingViewController: ViewController {
                 return NSLocalizedString("字幕加载顺序", comment: "")
             case .host:
                 return NSLocalizedString("请求域名", comment: "")
+            case .log:
+                return NSLocalizedString("日志", comment: "")
             }
         }
         
@@ -174,6 +196,8 @@ class SettingViewController: ViewController {
                 return desc
             case .host:
                 return Preferences.shared.host
+            case .log:
+                return "将.xlog文件提供给开发者"
             }
         }
     }

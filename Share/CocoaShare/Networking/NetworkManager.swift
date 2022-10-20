@@ -215,6 +215,7 @@ class NetworkManager {
         }
     }
     
+    #if os(macOS)
     /// 检查更新
     /// - Parameter completion: 回调
     func checkUpdate(_ completion: @escaping((UpdateInfo?, Error?) -> Void)) {
@@ -238,5 +239,7 @@ class NetworkManager {
             }
         }
     }
+    
+    #endif
     
 }

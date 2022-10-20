@@ -86,6 +86,9 @@ class DanmakuManager {
     func conver(_ danmakus: [Comment]) -> [UInt : [DanmakuConverResult]] {
         var dic = [UInt : [DanmakuConverResult]]()
         for model in danmakus {
+            if model.time < 0 {
+                continue
+            }
             let intTime = UInt(model.time)
             if dic[intTime] == nil {
                 dic[intTime] = [DanmakuConverResult]()
