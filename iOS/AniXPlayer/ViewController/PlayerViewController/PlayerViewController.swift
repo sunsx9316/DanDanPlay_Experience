@@ -33,15 +33,12 @@ class PlayerViewController: ViewController {
     private lazy var danmakuRender: DanmakuEngine = {
         let danmakuRender = DanmakuEngine()
         danmakuRender.layoutStyle = .nonOverlapping
-        danmakuRender.offsetTime = TimeInterval(Preferences.shared.danmakuOffsetTime)
         return danmakuRender
     }()
     
     /// 弹幕画布容器
     private lazy var danmakuCanvas: UIView = {
         let view = UIView()
-        view.alpha = CGFloat(Preferences.shared.danmakuAlpha)
-        view.isHidden = !Preferences.shared.isShowDanmaku
         return view
     }()
     
@@ -128,8 +125,7 @@ class PlayerViewController: ViewController {
             make.edges.equalToSuperview()
         }
         
-        self.layoutDanmakuCanvas()
-        
+        self.applyPreferences()
         
         changeRepeatMode()
         uiView.autoShowControlView()
@@ -490,6 +486,16 @@ class PlayerViewController: ViewController {
             let danmakuProportion = Preferences.shared.danmakuProportion
             make.height.equalToSuperview().multipliedBy(danmakuProportion)
         }
+    }
+    
+    /// 应用偏好设置
+    private func applyPreferences() {
+        self.danmakuCanvas.alpha = CGFloat(Preferences.shared.danmakuAlpha)
+        self.danmakuCanvas.isHidden = !Preferences.shared.isShowDanmaku
+        self.danmakuFont = UIFont.systemFont(ofSize: CGFloat(Preferences.shared.danmakuFontSize))
+        self.danmakuRender.offsetTime = TimeInterval(Preferences.shared.danmakuOffsetTime)
+        self.changeSpeed(Preferences.shared.playerSpeed)
+        self.layoutDanmakuCanvas()
     }
 }
 
