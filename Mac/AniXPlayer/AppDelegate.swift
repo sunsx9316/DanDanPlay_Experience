@@ -7,6 +7,7 @@
 
 import Cocoa
 import ANXLog
+import FirebaseCore
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     
@@ -30,6 +31,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         UserDefaults.standard.register(defaults: ["NSApplicationCrashOnExceptions": true])
+        FirebaseApp.configure()
+        
         self.setupMenu()
         self.mainWindowController.showWindow(nil)
         self.mainWindowController.window?.center()

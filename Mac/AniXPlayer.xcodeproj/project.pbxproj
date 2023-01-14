@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8904475E2901A6E20088886B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8904475D2901A6E20088886B /* GoogleService-Info.plist */; };
+		89044761290300C70088886B /* MPVPlayerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89044760290300C70088886B /* MPVPlayerWrapper.swift */; };
+		8909829B28EC943A0040F8BE /* VLCVideoLayerView+Bugfix.m in Sources */ = {isa = PBXBuildFile; fileRef = 8909829A28EC943A0040F8BE /* VLCVideoLayerView+Bugfix.m */; };
 		8917059328CF6CF10075ECD9 /* PlayerUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8917058E28CF6CF10075ECD9 /* PlayerUIView.swift */; };
 		8917059428CF6CF10075ECD9 /* PlayerUITopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8917058F28CF6CF10075ECD9 /* PlayerUITopView.swift */; };
 		8917059528CF6CF10075ECD9 /* PlayerUIBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8917059028CF6CF10075ECD9 /* PlayerUIBottomView.swift */; };
@@ -109,6 +112,7 @@
 		89A1C67028D5D3E100DC514E /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A1C66F28D5D3E100DC514E /* main.swift */; };
 		89A1C67228D5DA8F00DC514E /* InfoPlistUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A1C67128D5DA8F00DC514E /* InfoPlistUtils.swift */; };
 		89A1C68F28D5E38500DC514E /* NSApp+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A1C68E28D5E38500DC514E /* NSApp+Utils.swift */; };
+		89EC6B9228E8A10C00CFB60F /* VLCPlayerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89EC6B9128E8A10C00CFB60F /* VLCPlayerWrapper.swift */; };
 		F7CC679A78A31AB0A704CFA9 /* Pods_AniXPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F82727D2DE868C53427D0F5 /* Pods_AniXPlayer.framework */; };
 /* End PBXBuildFile section */
 
@@ -116,6 +120,10 @@
 		2F82727D2DE868C53427D0F5 /* Pods_AniXPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AniXPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B0EEE5086C5A5898ED1ED6D /* Pods-AniXPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.release.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.release.xcconfig"; sourceTree = "<group>"; };
 		5B03693BC2791417EF80AE28 /* Pods-AniXPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.debug.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.debug.xcconfig"; sourceTree = "<group>"; };
+		8904475D2901A6E20088886B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		89044760290300C70088886B /* MPVPlayerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVPlayerWrapper.swift; sourceTree = "<group>"; };
+		8909829928EC943A0040F8BE /* VLCVideoLayerView+Bugfix.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "VLCVideoLayerView+Bugfix.h"; sourceTree = "<group>"; };
+		8909829A28EC943A0040F8BE /* VLCVideoLayerView+Bugfix.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "VLCVideoLayerView+Bugfix.m"; sourceTree = "<group>"; };
 		8917058E28CF6CF10075ECD9 /* PlayerUIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerUIView.swift; sourceTree = "<group>"; };
 		8917058F28CF6CF10075ECD9 /* PlayerUITopView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerUITopView.swift; sourceTree = "<group>"; };
 		8917059028CF6CF10075ECD9 /* PlayerUIBottomView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerUIBottomView.swift; sourceTree = "<group>"; };
@@ -224,6 +232,7 @@
 		89A1C66F28D5D3E100DC514E /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		89A1C67128D5DA8F00DC514E /* InfoPlistUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoPlistUtils.swift; sourceTree = "<group>"; };
 		89A1C68E28D5E38500DC514E /* NSApp+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSApp+Utils.swift"; sourceTree = "<group>"; };
+		89EC6B9128E8A10C00CFB60F /* VLCPlayerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VLCPlayerWrapper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -338,6 +347,7 @@
 			isa = PBXGroup;
 			children = (
 				899461E228CC884A009AC640 /* Info.plist */,
+				8904475D2901A6E20088886B /* GoogleService-Info.plist */,
 				8994606F28CA3DC2009AC640 /* AniXPlayer-Bridging-Header.h */,
 				894415F128E488C000480172 /* Constants */,
 				8994616828CC7A79009AC640 /* Vendor */,
@@ -379,10 +389,13 @@
 		8994608028CC77F1009AC640 /* MediaPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				89EC6B9328E8A12100CFB60F /* Wrapper */,
 				8994609328CC77F1009AC640 /* MediaPlayer.swift */,
 				8994609228CC77F1009AC640 /* MediaThumbnailer.swift */,
 				8994609128CC77F1009AC640 /* URL+Extension.swift */,
 				8994608128CC77F1009AC640 /* File */,
+				8909829928EC943A0040F8BE /* VLCVideoLayerView+Bugfix.h */,
+				8909829A28EC943A0040F8BE /* VLCVideoLayerView+Bugfix.m */,
 			);
 			path = MediaPlayer;
 			sourceTree = "<group>";
@@ -620,6 +633,15 @@
 			path = PlayerList;
 			sourceTree = "<group>";
 		};
+		89EC6B9328E8A12100CFB60F /* Wrapper */ = {
+			isa = PBXGroup;
+			children = (
+				89EC6B9128E8A10C00CFB60F /* VLCPlayerWrapper.swift */,
+				89044760290300C70088886B /* MPVPlayerWrapper.swift */,
+			);
+			path = Wrapper;
+			sourceTree = "<group>";
+		};
 		E8141592C1C6FA59A9A560BE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -640,6 +662,7 @@
 				89945FE428CA3BAE009AC640 /* Frameworks */,
 				89945FE528CA3BAE009AC640 /* Resources */,
 				50EEF590C9774F872E54B481 /* [CP] Embed Pods Frameworks */,
+				8904475F2901A7360088886B /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -702,6 +725,7 @@
 				8943150628D3730D0031619C /* TitleTableViewCell.xib in Resources */,
 				8943151228D3762C0031619C /* StepTableViewCell.xib in Resources */,
 				8943150A28D374020031619C /* SliderTableViewCell.xib in Resources */,
+				8904475E2901A6E20088886B /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -724,6 +748,23 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		8904475F2901A7360088886B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\"${PODS_ROOT}/FirebaseCrashlytics/run\"\n";
 		};
 		AC3946C394D05326C25AED27 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -798,6 +839,7 @@
 				894415DE28E34A1700480172 /* GlobalSettingViewController.swift in Sources */,
 				899460CA28CC77F1009AC640 /* SMBFile.swift in Sources */,
 				89A1C5EB28D37AFE00DC514E /* NSTextField+Utils.swift in Sources */,
+				89EC6B9228E8A10C00CFB60F /* VLCPlayerWrapper.swift in Sources */,
 				8917059928CF6F3E0075ECD9 /* Button.swift in Sources */,
 				89A1C68F28D5E38500DC514E /* NSApp+Utils.swift in Sources */,
 				8917059D28CF717A0075ECD9 /* ImageView.swift in Sources */,
@@ -821,6 +863,7 @@
 				899460C628CC77F1009AC640 /* FileManagerProtocol.swift in Sources */,
 				89A1C60528D4E83900DC514E /* WindowController.swift in Sources */,
 				8943150828D373FC0031619C /* SliderTableViewCell.swift in Sources */,
+				8909829B28EC943A0040F8BE /* VLCVideoLayerView+Bugfix.m in Sources */,
 				899460DA28CC77F1009AC640 /* NetworkConstant.swift in Sources */,
 				8943151028D376260031619C /* StepTableViewCell.swift in Sources */,
 				899460ED28CC77F1009AC640 /* Rational.swift in Sources */,
@@ -834,6 +877,7 @@
 				899460D328CC77F1009AC640 /* Preferences.swift in Sources */,
 				89A1C5FF28D4C32300DC514E /* PlayerListViewController.swift in Sources */,
 				894415E128E34BD200480172 /* SwitchDetailTableViewCell.swift in Sources */,
+				89044761290300C70088886B /* MPVPlayerWrapper.swift in Sources */,
 				899460F028CC77F1009AC640 /* NSNetService+Utils.m in Sources */,
 				899460C928CC77F1009AC640 /* AFWebDAVManager.m in Sources */,
 				899460CE28CC77F1009AC640 /* MediaThumbnailer.swift in Sources */,
