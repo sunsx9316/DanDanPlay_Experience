@@ -25,6 +25,7 @@
 #if TARGET_OS_IPHONE
 
 #import "ONOXMLDocument.h"
+#import "ANXLogHelperModule+Utils.h"
 
 static NSString * const AFWebDAVXMLDeclarationString = @"<?xml version=\"1.0\" encoding=\"utf-8\"?>";
 
@@ -95,6 +96,7 @@ static NSString * AFWebDAVStringForLockType(AFWebDAVLockType type) {
             if ([responseObject isKindOfClass:[NSArray class]]) {
                 completionHandler(responseObject, nil);
             } else {
+                ANXLogError(ANXLogHelperModuleWebDav, @"请求目录失败 responseObject: %@", responseObject);
                 completionHandler(@[], nil);
             }
         }
