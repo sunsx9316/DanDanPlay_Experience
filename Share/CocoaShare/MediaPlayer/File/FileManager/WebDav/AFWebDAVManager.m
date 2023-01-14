@@ -92,7 +92,11 @@ static NSString * AFWebDAVStringForLockType(AFWebDAVLockType type) {
 {
     [self PROPFIND:URLString propertyNames:nil depth:(recursive ? AFWebDAVInfinityDepth : AFWebDAVOneDepth) success:^(__unused NSURLSessionDataTask *operation, id responseObject) {
         if (completionHandler) {
-            completionHandler(responseObject, nil);
+            if ([responseObject isKindOfClass:[NSArray class]]) {
+                completionHandler(responseObject, nil);
+            } else {
+                completionHandler(@[], nil);
+            }
         }
     } failure:^(__unused NSURLSessionDataTask *operation, NSError *error) {
         if (completionHandler) {
