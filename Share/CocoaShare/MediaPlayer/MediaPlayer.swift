@@ -316,7 +316,7 @@ class MediaPlayer {
         case .vlc:
             self.player = VLCPlayerWarrper()
         case .mpv:
-            fatalError("暂未支持的内核类型")
+            self.player = MPVPlayerWrapper()
         }
         self.setupInit()
     }

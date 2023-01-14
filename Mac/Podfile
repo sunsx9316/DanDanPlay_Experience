@@ -18,6 +18,7 @@ target 'AniXPlayer' do
   pod 'ANXLog', :path => '../Share/ANXLog'
   pod 'ProgressHUD', :path => 'LocalPods/ProgressHUD'
   pod 'FirebaseCrashlytics'
+  pod 'MPVPlayer', :path => 'LocalPods/MPVPlayer'
   # Pods for AniXPlayer
 
 end
