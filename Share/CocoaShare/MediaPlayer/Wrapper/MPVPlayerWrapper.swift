@@ -5,6 +5,8 @@
 //  Created by jimhuang on 2022/10/22.
 //
 
+#if os(macOS)
+
 import Cocoa
 import MPVPlayer
 
@@ -141,3 +143,5 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
     
 
 }
+
+#endif

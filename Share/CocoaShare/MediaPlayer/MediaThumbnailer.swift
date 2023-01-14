@@ -79,7 +79,7 @@ class MediaThumbnailer: NSObject {
     func start() {
         if media.parsedStatus == .`init` {
             media.delegate = self
-            media.parse(withOptions: VLCMediaParsingOptions(VLCMediaParseLocal | VLCMediaParseNetwork))
+            media.parse(options: [[], .parseNetwork], timeout: 5)
         } else {
             self.snapshotTaskDic.values.forEach({ $0.start() })
         }
