@@ -53,6 +53,6 @@ public struct ANX {
     
     private static func log(_ module: ANXLogHelperModule, message: String, fileName: String, line: Int, funcName: String, level: ANXLogLevel) {
         
-        ANXLogHelper.__log(with: level, moduleName: module.rawValue, fileName: (fileName as NSString).utf8String!, lineNumber: Int32(line), funcName: (funcName as NSString).utf8String!, message: message)
+        ANXLogHelper.__log(with: level, moduleName: module, fileName: (fileName as NSString).utf8String!, lineNumber: Int32(line), funcName: (funcName as NSString).utf8String!, message: message)
     }
 }

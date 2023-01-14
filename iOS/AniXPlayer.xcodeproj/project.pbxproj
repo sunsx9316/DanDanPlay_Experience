@@ -111,8 +111,8 @@
 		899A9DDF262F35EB00C54AC9 /* SliderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897CF530262F317B00CC297A /* SliderTableViewCell.swift */; };
 		899C4E97263BDDE600A17C83 /* LinkHistoryHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899C4E96263BDDE600A17C83 /* LinkHistoryHeaderView.swift */; };
 		899E385D280B2F7A00285191 /* ProgressSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899E385C280B2F7A00285191 /* ProgressSlider.swift */; };
-		89A1C63B28D4F71000DC514E /* ANXLogHelperModule+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A1C63A28D4F71000DC514E /* ANXLogHelperModule+Utils.swift */; };
 		89AAA20A29727DC0008CD8AD /* MPVPlayerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AAA20929727DC0008CD8AD /* MPVPlayerWrapper.swift */; };
+		89AAA20D2972F4E0008CD8AD /* ANXLogHelperModule+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 89AAA20C2972F4E0008CD8AD /* ANXLogHelperModule+Utils.m */; };
 		89AF9BFE2631C1740037A133 /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AF9BFC2631C1740037A133 /* SwitchTableViewCell.swift */; };
 		89AF9BFF2631C1740037A133 /* SwitchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89AF9BFD2631C1740037A133 /* SwitchTableViewCell.xib */; };
 		89AF9C032631C2680037A133 /* StepTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AF9C012631C2680037A133 /* StepTableViewCell.swift */; };
@@ -249,8 +249,9 @@
 		899C4E96263BDDE600A17C83 /* LinkHistoryHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkHistoryHeaderView.swift; sourceTree = "<group>"; };
 		899C4E9C263CF88600A17C83 /* AniXPlayer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AniXPlayer-Bridging-Header.h"; sourceTree = "<group>"; };
 		899E385C280B2F7A00285191 /* ProgressSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressSlider.swift; sourceTree = "<group>"; };
-		89A1C63A28D4F71000DC514E /* ANXLogHelperModule+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ANXLogHelperModule+Utils.swift"; sourceTree = "<group>"; };
 		89AAA20929727DC0008CD8AD /* MPVPlayerWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPVPlayerWrapper.swift; sourceTree = "<group>"; };
+		89AAA20B2972F4E0008CD8AD /* ANXLogHelperModule+Utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ANXLogHelperModule+Utils.h"; sourceTree = "<group>"; };
+		89AAA20C2972F4E0008CD8AD /* ANXLogHelperModule+Utils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ANXLogHelperModule+Utils.m"; sourceTree = "<group>"; };
 		89AF9BFC2631C1740037A133 /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
 		89AF9BFD2631C1740037A133 /* SwitchTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwitchTableViewCell.xib; sourceTree = "<group>"; };
 		89AF9C012631C2680037A133 /* StepTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepTableViewCell.swift; sourceTree = "<group>"; };
@@ -737,10 +738,11 @@
 		8994612F28CC783C009AC640 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
-				89A1C63A28D4F71000DC514E /* ANXLogHelperModule+Utils.swift */,
 				8994613028CC783C009AC640 /* NSNetService+Utils.h */,
 				8994613228CC783C009AC640 /* NSNetService+Utils.m */,
 				8994613128CC783C009AC640 /* PathUtils.swift */,
+				89AAA20B2972F4E0008CD8AD /* ANXLogHelperModule+Utils.h */,
+				89AAA20C2972F4E0008CD8AD /* ANXLogHelperModule+Utils.m */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -976,12 +978,12 @@
 				890DF6FC26160A36002D8AE5 /* TableView.swift in Sources */,
 				8994614428CC783C009AC640 /* Store.swift in Sources */,
 				89E109B62644424800825308 /* BaseConnectSvrViewController.swift in Sources */,
-				89A1C63B28D4F71000DC514E /* ANXLogHelperModule+Utils.swift in Sources */,
 				8994616028CC783C009AC640 /* BaseModel.swift in Sources */,
 				8994613C28CC783C009AC640 /* WebDavFileManager.swift in Sources */,
 				8994614B28CC783C009AC640 /* Match.swift in Sources */,
 				8994616128CC783C009AC640 /* Rational.swift in Sources */,
 				89044759290186B40088886B /* UIViewController+Helper.swift in Sources */,
+				89AAA20D2972F4E0008CD8AD /* ANXLogHelperModule+Utils.m in Sources */,
 				8994614328CC783C009AC640 /* MediaPlayer.swift in Sources */,
 				8949F8912662AA2100274520 /* WebDavLoginHistoryViewController.swift in Sources */,
 				899E385D280B2F7A00285191 /* ProgressSlider.swift in Sources */,

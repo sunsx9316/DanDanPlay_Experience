@@ -26,14 +26,14 @@ typedef NS_ENUM(NSUInteger, ANXLogLevel) {
 @interface ANXLogHelper : NSObject
 
 + (void)logWithLevel:(ANXLogLevel)logLevel
-          moduleName:(NSString *)moduleName
+          moduleName:(ANXLogHelperModule)moduleName
             fileName:(const char *)fileName
           lineNumber:(int)lineNumber
             funcName:(const char *)funcName
              message:(NSString *)message NS_REFINED_FOR_SWIFT;
 
 + (void)logWithLevel:(ANXLogLevel)logLevel
-          moduleName:(NSString *)moduleName
+          moduleName:(ANXLogHelperModule)moduleName
             fileName:(const char *)fileName
           lineNumber:(int)lineNumber
             funcName:(const char *)funcName
@@ -50,13 +50,13 @@ typedef NS_ENUM(NSUInteger, ANXLogLevel) {
 #define LogInternal(level, module, file, line, func, prefix, format, ...) \
 do { \
     NSString *aMessage = [NSString stringWithFormat:@"%@%@", prefix, [NSString stringWithFormat:format, ##__VA_ARGS__, nil]]; \
-    [LogHelper logWithLevel:level moduleName:module fileName:file lineNumber:line funcName:func message:aMessage]; \
+    [ANXLogHelper logWithLevel:level moduleName:module fileName:file lineNumber:line funcName:func message:aMessage]; \
 } while(0)
 
 
-#define ANXLogError(module, format, ...) LogInternal(ANXLogLevelError, module, __FILENAME__, __LINE__, __FUNCTION__, @"Error:", format, ##__VA_ARGS__)
-#define ANXLogWarning(module, format, ...) LogInternal(ANXLogLevelWarn, module, __FILENAME__, __LINE__, __FUNCTION__, @"Warning:", format, ##__VA_ARGS__)
-#define ANXLogInfo(module, format, ...) LogInternal(ANXLogLevelInfo, module, __FILENAME__, __LINE__, __FUNCTION__, @"Info:", format, ##__VA_ARGS__)
-#define ANXLogDebug(module, format, ...) LogInternal(ANXLogLevelDebug, module, __FILENAME__, __LINE__, __FUNCTION__, @"Debug:", format, ##__VA_ARGS__)
+#define ANXLogError(module, format, ...) LogInternal(ANXLogLevelError, module, __FILE__, __LINE__, __FUNCTION__, @"Error:", format, ##__VA_ARGS__)
+#define ANXLogWarning(module, format, ...) LogInternal(ANXLogLevelWarn, module, __FILE__, __LINE__, __FUNCTION__, @"Warning:", format, ##__VA_ARGS__)
+#define ANXLogInfo(module, format, ...) LogInternal(ANXLogLevelInfo, module, __FILE__, __LINE__, __FUNCTION__, @"Info:", format, ##__VA_ARGS__)
+#define ANXLogDebug(module, format, ...) LogInternal(ANXLogLevelDebug, module, __FILE__, __LINE__, __FUNCTION__, @"Debug:", format, ##__VA_ARGS__)
 
 NS_ASSUME_NONNULL_END
