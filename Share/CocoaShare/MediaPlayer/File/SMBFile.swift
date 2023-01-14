@@ -91,15 +91,13 @@ class SMBFile: File {
         var svrURL: URL?
         if let loginInfo = SMBFileManager.shared.loginInfo {
             svrURL = loginInfo.url
-            if svrURL?.absoluteString.isEmpty != false {
-                if !shareName.isEmpty {
-                    svrURL?.appendPathComponent(shareName)
-                }
-                
-                if !self.path.isEmpty {
-                    svrURL?.appendPathComponent(self.path)                    
-                }
-                
+
+            if !shareName.isEmpty {
+                svrURL?.appendPathComponent(shareName)
+            }
+            
+            if !self.path.isEmpty {
+                svrURL?.appendPathComponent(self.path)
             }
         }
         
