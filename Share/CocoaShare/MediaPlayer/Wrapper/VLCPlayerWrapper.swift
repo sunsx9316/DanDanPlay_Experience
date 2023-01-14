@@ -14,51 +14,6 @@ import YYCategories
 import VLCKit
 #endif
 
-//private class TestView: ANXView {
-//
-//    class TestLayer: CALayer {
-//
-//        var openGLLayer: CAOpenGLLayer?
-//
-//        override func layoutSublayers() {
-//            super.layoutSublayers()
-//
-//            let sublayers = self.sublayers ?? []
-//            for ll in sublayers {
-//                if let openGLLayer = ll as? CAOpenGLLayer {
-//                    self.openGLLayer = openGLLayer
-//                }
-//                ll.frame = self.bounds
-//            }
-//        }
-//    }
-//
-//    override init(frame frameRect: NSRect) {
-//        super.init(frame: frameRect)
-//        self.layer = TestLayer()
-//    }
-//
-//    required init?(coder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-//
-//
-//    override func layout() {
-//        super.layout()
-//
-////        let ll = self.layer as! TestLayer
-////        let oo = ll.openGLLayer
-////        ll.openGLLayer?.isAsynchronous = true
-////        ll.openGLLayer?.isAsynchronous = false
-//
-////        if let sublayers = self.layer?.sublayers {
-////            for ll in sublayers {
-////                ll.frame = self.bounds
-////            }
-////        }
-//    }
-//}
-
 fileprivate extension Timer {
     class func mp_scheduledTimer(timeInterval ti: TimeInterval, repeats yesOrNo: Bool, action: @escaping((Timer) -> Void)) -> Timer {
         return Timer.scheduledTimer(timeInterval: ti, target: self, selector: #selector(mp_timerStart(_:)), userInfo: action, repeats: yesOrNo)
