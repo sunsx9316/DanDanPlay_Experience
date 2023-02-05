@@ -88,25 +88,24 @@ class SMBFile: File {
         self.shareName = shareName
         self.path = file[.pathKey] as? String ?? ""
         
-        var svrURL: URL?
+        var svrURL: URL
         if let loginInfo = SMBFileManager.shared.loginInfo {
             svrURL = loginInfo.url
 
-            if !shareName.isEmpty {
-                svrURL?.appendPathComponent(shareName)
-            }
-            
-            if !self.path.isEmpty {
-                svrURL?.appendPathComponent(self.path)
-            }
+        } else {
+            svrURL = URL(fileURLWithPath: "/")
+            ANX.logError(.SMB, "loginfo初始化失败")
         }
         
-        if let url = svrURL {
-            self.url = url
+        if #available(iOS 16.0, *) {
+            svrURL.append(path: shareName)
+            svrURL.append(path: self.path)
         } else {
-            self.url = URL(fileURLWithPath: "")
-            assert(false, "url初始化失败 file:\(file)")
+            svrURL.appendPathComponent(shareName)
+            svrURL.appendPathComponent(self.path)
         }
+        
+        self.url = svrURL
         
         if let size = file[.fileSizeKey] as? NSNumber {
             self.fileSize = size.intValue

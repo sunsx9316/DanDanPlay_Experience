@@ -10,3 +10,4 @@
 ANXLogHelperModule ANXLogHelperModuleWebDav = @"WebDav";
 ANXLogHelperModule ANXLogHelperModuleHTTP = @"HTTP";
 ANXLogHelperModule ANXLogHelperModuleSubtitle = @"Subtitle";
+ANXLogHelperModule ANXLogHelperModuleSMB = @"SMB";
