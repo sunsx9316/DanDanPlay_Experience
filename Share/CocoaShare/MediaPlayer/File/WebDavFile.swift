@@ -28,8 +28,19 @@ class WebDavFile: File {
     static var rootFile: File = WebDavFile(url: URL(string: "/")!, fileSize: 0)
     
     var parentFile: File? {
-        return WebDavFile(url: self.url.deletingLastPathComponent(), fileSize: 0)
+        get {
+            if let _parentFile = self._parentFile {
+                return _parentFile
+            }
+            return WebDavFile(url: self.url.deletingLastPathComponent(), fileSize: 0)
+        }
+        
+        set {
+            self._parentFile = newValue as? (File & AnyObject)
+        }
     }
+    
+    private weak var _parentFile: (File & AnyObject)?
     
     static var fileManager: FileManagerProtocol {
         return WebDavFileManager.shared

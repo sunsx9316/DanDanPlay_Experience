@@ -29,13 +29,9 @@ class WebDavFileManager: FileManagerProtocol {
         }
     }
     
-    private lazy var client: AFWebDAVManager? = {
-        
-        guard let loginInfo = self.loginInfo else { return nil }
-
-        let client = self.createDefaultClient(with: loginInfo)
-        return client
-    }()
+    private var client: AFWebDAVManager?
+    
+    private var listClient: WebDAVFileProvider?
     
     private var loginInfo: LoginInfo?
     
@@ -51,12 +47,21 @@ class WebDavFileManager: FileManagerProtocol {
     func cancelTasks() {
         ANX.logInfo(.webDav, "cancelTasks")
         self.client?.invalidateSessionCancelingTasks(true, resetSession: true)
+        self.listClient = nil
     }
     
     func connectWithLoginInfo(_ loginInfo: LoginInfo, completionHandler: @escaping((Error?) -> Void)) {
         ANX.logInfo(.webDav, "登录 loginInfo: %@", "\(loginInfo)")
         
         self.loginInfo = loginInfo
+        
+        self.client = self.createDefaultClient(with: loginInfo)
+
+        var credential: URLCredential?
+        if let auth = loginInfo.auth {
+            credential = .init(user: auth.userName ?? "", password: auth.password ?? "", persistence: .forSession)
+        }
+        self.listClient = .init(baseURL: loginInfo.url, credential: credential)
         
         self.contentsOfDirectory(at: WebDavFile.rootFile) { [weak self] res in
             guard let self = self else { return }
@@ -73,37 +78,17 @@ class WebDavFileManager: FileManagerProtocol {
     
     func contentsOfDirectory(at directory: File, completion: @escaping ((Result<[File], Error>) -> Void)) {
         
-        self.client?.contentsOfDirectory(atURLString: directory.url.absoluteString, recursive: false, completionHandler: { res, error in
+        self.listClient?.contentsOfDirectory(path: directory.url.path, completionHandler: { files, error in
             if let error = error {
-                ANX.logError(.webDav, "contentsOfDirectory error: %@", error as NSError)
                 completion(.failure(error))
+                ANX.logError(.webDav, "contentsOfDirectory error: %@", error as NSError)
             } else {
-                
-                let directoryURL: URL?
-                
-                if !directory.url.absoluteString.hasSuffix("/") {
-                    directoryURL = URL(string: directory.url.absoluteString + "/", relativeTo: self.client?.baseURL)
-                } else {
-                    directoryURL = URL(string: directory.url.absoluteString, relativeTo: self.client?.baseURL)
+                let tmpFiles = files.compactMap { e in
+                    let f = WebDavFile(with: e)
+                    f.parentFile = directory
+                    return f
                 }
-                
-                let tmpFiles = res?.filter({ response in
-                    
-                    guard let subUrl = response.url else { return false }
-                    
-                    let url: URL?
-                    
-                    if subUrl.absoluteString.hasSuffix("/") {
-                        url = URL(string: subUrl.absoluteString, relativeTo: self.client?.baseURL)
-                    } else {
-                        url = URL(string: subUrl.absoluteString + "/", relativeTo: self.client?.baseURL)
-                    }
-                    
-                    return directoryURL != url
-                }).compactMap({ WebDavFile(with: $0) }) ?? []
-                
-                ANX.logInfo(.webDav, "directoryURL: %@, tmpFileslCount: %ld", String(describing: directoryURL), tmpFiles.count)
-                
+                ANX.logInfo(.webDav, "directoryURL: %@, tmpFileslCount: %ld", String(describing: directory.url), tmpFiles.count)
                 completion(.success(tmpFiles))
             }
         })
@@ -173,9 +158,7 @@ class WebDavFileManager: FileManagerProtocol {
             return
         }
         
-        self.client?.removeFile(atURLString: file.url.absoluteString, completionHandler: { _, error in
-            completionHandler(error)
-        })
+        self.listClient?.removeItem(path: file.url.path, completionHandler: completionHandler)
     }
  
     //MARK: - private method
