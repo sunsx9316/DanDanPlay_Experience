@@ -96,7 +96,10 @@ static NSString * AFWebDAVStringForLockType(AFWebDAVLockType type) {
             if ([responseObject isKindOfClass:[NSArray class]]) {
                 completionHandler(responseObject, nil);
             } else {
-                ANXLogError(ANXLogHelperModuleWebDav, @"请求目录失败 responseObject: %@", responseObject);
+                if ([responseObject isKindOfClass:[NSData class]]) {
+                    responseObject = [[NSString alloc] initWithData:responseObject encoding:NSUTF8StringEncoding];
+                }
+                ANXLogError(ANXLogHelperModuleWebDav, @"请求目录失败 type:%@, responseObject: %@", [responseObject class], responseObject);
                 completionHandler(@[], nil);
             }
         }
