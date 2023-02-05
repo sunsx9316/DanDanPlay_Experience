@@ -18,6 +18,8 @@ class WebDavFile: File {
     
     var url: URL
     
+    var path: String
+    
     var fileSize = 0
     
     fileprivate var inputStream: WebDAVInputStream?
@@ -63,12 +65,14 @@ class WebDavFile: File {
     
     init(with file: FileObject) {
         self.url = file.url
+        self.path = file.path
         self.fileSize = Int(file.size)
         self.type = (file.isDirectory || file.isSymLink) ? .folder : .file
     }
     
     init(with file: AFWebDAVMultiStatusResponse) {
         self.url = file.url ?? URL(fileURLWithPath: "")
+        self.path = self.url.path
         self.type = file.isCollection ? .folder : .file
         if self.type == .file {
             self.fileSize = Int(file.contentLength)
@@ -79,6 +83,7 @@ class WebDavFile: File {
         self.url = url
         self.fileSize = fileSize
         self.type = .folder
+        self.path = self.url.path
     }
     
     func createMedia(delegate: FileDelegate) -> VLCMedia? {

@@ -78,7 +78,12 @@ class WebDavFileManager: FileManagerProtocol {
     
     func contentsOfDirectory(at directory: File, completion: @escaping ((Result<[File], Error>) -> Void)) {
         
-        self.listClient?.contentsOfDirectory(path: directory.url.path, completionHandler: { files, error in
+        guard let directory = directory as? WebDavFile else {
+            completion(.failure(WebDavError.fileTypeError))
+            return
+        }
+        
+        self.listClient?.contentsOfDirectory(path: directory.path, completionHandler: { files, error in
             if let error = error {
                 completion(.failure(error))
                 ANX.logError(.webDav, "contentsOfDirectory error: %@", error as NSError)
