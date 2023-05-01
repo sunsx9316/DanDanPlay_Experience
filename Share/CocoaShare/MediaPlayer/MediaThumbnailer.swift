@@ -41,13 +41,13 @@ class MediaThumbnailer: NSObject {
         }
         
         //MARK: VLCMediaThumbnailerDelegate
-        func mediaThumbnailerDidTimeOut(_ mediaThumbnailer: VLCMediaThumbnailer!) {
+        func mediaThumbnailerDidTimeOut(_ mediaThumbnailer: VLCMediaThumbnailer) {
             DispatchQueue.main.async {
                 self.isFinish = true
             }
         }
         
-        func mediaThumbnailer(_ mediaThumbnailer: VLCMediaThumbnailer!, didFinishThumbnail thumbnail: CGImage!) {
+        func mediaThumbnailer(_ mediaThumbnailer: VLCMediaThumbnailer, didFinishThumbnail thumbnail: CGImage) {
             let img = ANXImage(cgImage: thumbnail)
             DispatchQueue.main.async {
                 self.snapshot = img

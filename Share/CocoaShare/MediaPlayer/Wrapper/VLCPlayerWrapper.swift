@@ -143,7 +143,10 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     }
     
     var position: Double {
-        return Double(self.player.position)
+        if self.length == 0 {
+            return 0
+        }
+        return self.currentTime / self.length
     }
     
     var length: TimeInterval {
@@ -381,7 +384,9 @@ extension VLCPlayerWarrper: VLCMediaPlayerDelegate {
         let nowTime = self.currentTime
         let length = self.length
         
-        self.timeChangedCallBack?(self, self.position)
+        let position = length > 0 ? nowTime / length : 0
+        
+        self.timeChangedCallBack?(self, position)
         self.playerTimer?.invalidate()
         self.playerTimer = Timer.mp_scheduledTimer(timeInterval: 1, repeats: false) { [weak self] (aTimer) in
             guard let self = self else { return }
