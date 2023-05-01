@@ -12,6 +12,25 @@ import YYCategories
 import MBProgressHUD
 import DynamicButton
 
+private class PlayItem {
+    
+    var watchProgressKey: String? {
+        return episodeId == 0 ? nil : "\(episodeId)"
+    }
+    
+    private let media: File
+    var playImmediately = false
+    var mediaId: String {
+        return self.media.url.path
+    }
+    
+    var episodeId = 0
+    
+    init(item: File) {
+        self.media = item
+    }
+}
+
 class PlayerViewController: ViewController {
     
     private let kShortJumpValue: Int32 = 5
@@ -130,12 +149,7 @@ class PlayerViewController: ViewController {
         changeRepeatMode()
         uiView.autoShowControlView()
         
-        if let selectedItem = self.selectedItem {
-            self.tryParseMedia(selectedItem)
-            self.selectedItem = nil
-        } else if let firstItem = self.player.playList.first {
-            self.tryParseMedia(firstItem)
-        }
+        parseMediaAtInit()
     }
     
     override var prefersStatusBarHidden: Bool {
@@ -171,6 +185,15 @@ class PlayerViewController: ViewController {
     
     
     //MARK: - Private
+    /// 在初始化时尝试解析视频
+    private func parseMediaAtInit() {
+        if let selectedItem = self.selectedItem {
+            self.tryParseMedia(selectedItem)
+        } else if let firstItem = self.player.playList.first {
+            self.tryParseMedia(firstItem)
+        }
+    }
+    
     private func loadItems(_ items: [File]) {
         for item in items {
             
@@ -256,19 +279,21 @@ class PlayerViewController: ViewController {
                     self.view.showError(error)
                 } else {
                     let danmakus = collection?.collection ?? []
-                    self.playMedia(media, episodeId: episodeId, danmakus: danmakus)
+                    self.setupPlayer(media, episodeId: episodeId, danmakus: danmakus)
                 }
             }
         }
     }
     
     
-    /// 播放视频
+    /// 初始化播放器（字幕、弹幕等）
     /// - Parameters:
     ///   - media: 视频
     ///   - episodeId: 弹幕分集id
     ///   - danmakus: 弹幕
-    private func playMedia(_ media: File, episodeId: Int, danmakus: [Comment]) {
+    private func setupPlayer(_ media: File, episodeId: Int, danmakus: [Comment]) {
+        
+        self.selectedItem = nil
         
         if Preferences.shared.autoLoadCustomDanmaku {
             self.loadCustomDanmaku(media) { isSuccess, result in
@@ -497,9 +522,28 @@ class PlayerViewController: ViewController {
         self.changeSpeed(Preferences.shared.playerSpeed)
         self.layoutDanmakuCanvas()
     }
+    
+    
+    /// 播放 / 暂停
+    private func playOrPauseStateChange() {
+        
+        if self.player.currentPlayItem != nil {
+            if self.player.isPlaying {
+                self.player.pause()
+                self.showPauseHUD()
+            } else {
+                self.player.play()
+            }
+        } else {
+            /// 当前没有播放的对象，尝试解析视频
+            self.parseMediaAtInit()
+        }
+        
+    }
 }
 
 extension PlayerViewController: MatchsViewControllerDelegate {
+    // MARK: - MatchsViewControllerDelegate
     
     func matchsViewController(_ matchsViewController: MatchsViewController, didSelectedEpisodeId episodeId: Int) {
         
@@ -533,7 +577,7 @@ extension PlayerViewController: MatchsViewControllerDelegate {
                     hud.label.text = "即将开始播放"
                     hud.progress = 1
                     hud.hide(animated: true, afterDelay: 0.5)
-                    self.playMedia(matchsViewController.file, episodeId: episodeId, danmakus: danmakus)
+                    self.setupPlayer(matchsViewController.file, episodeId: episodeId, danmakus: danmakus)
                 }
             }
         }
@@ -541,33 +585,12 @@ extension PlayerViewController: MatchsViewControllerDelegate {
     
     func playNowInMatchsViewController(_ matchsViewController: MatchsViewController) {
         matchsViewController.navigationController?.popToRootViewController(animated: true)
-        self.playMedia(matchsViewController.file, episodeId: 0, danmakus: [])
-    }
-}
-
-extension PlayerViewController {
-    private class PlayItem {
-        
-        var watchProgressKey: String? {
-            return episodeId == 0 ? nil : "\(episodeId)"
-        }
-        
-        private let media: File
-        var playImmediately = false
-        var mediaId: String {
-            return self.media.url.path
-        }
-        
-        var episodeId = 0
-        
-        init(item: File) {
-            self.media = item
-        }
+        self.setupPlayer(matchsViewController.file, episodeId: 0, danmakus: [])
     }
 }
 
 extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
-    //MARK: PlayerUIViewDelegate
+    //MARK: - PlayerUIViewDelegate
     func onTouchMoreButton(playerUIView: PlayerUIView) {
         let vc = PlayerSettingViewController(player: self.player)
         vc.delegate = self
@@ -625,12 +648,7 @@ extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
     }
     
     func onTouchPlayButton(playerUIView: PlayerUIView, isSelected: Bool) {
-        if self.player.isPlaying {
-            self.player.pause()
-            self.showPauseHUD()
-        } else {
-            self.player.play()
-        }
+        self.playOrPauseStateChange()
     }
     
     func onTouchNextButton(playerUIView: PlayerUIView) {
@@ -643,12 +661,7 @@ extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
     }
     
     func doubleTap(playerUIView: PlayerUIView) {
-        if player.isPlaying {
-            player.pause()
-            self.showPauseHUD()
-        } else {
-            player.play()
-        }
+        self.playOrPauseStateChange()
     }
     
     func longPress(playerUIView: PlayerUIView, isBegin: Bool) {
@@ -707,7 +720,7 @@ extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
         self.player.volume += Int(diffValue)
     }
     
-    //MARK: PlayerUIViewDataSource
+    //MARK: - PlayerUIViewDataSource
     func playerMediaThumbnailer(playerUIView: PlayerUIView) -> MediaThumbnailer? {
         return nil
     }
@@ -748,8 +761,8 @@ extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
     }
 }
 
-//MARK: - MediaPlayerDelegate
 extension PlayerViewController: MediaPlayerDelegate {
+    //MARK: - MediaPlayerDelegate
     
     func player(_ player: MediaPlayer, stateDidChange state: PlayerState) {
         switch state {
@@ -777,7 +790,7 @@ extension PlayerViewController: MediaPlayerDelegate {
     func player(_ player: MediaPlayer, currentTime: TimeInterval, totalTime: TimeInterval) {
         uiView.updateTime()
         
-        let danmakuRenderTime = self.danmakuRender.time
+        let danmakuRenderTime = currentTime
         
         if danmakuRenderTime < 0 {
             return
@@ -808,7 +821,6 @@ extension PlayerViewController: MediaPlayerDelegate {
         uiView.updateBufferInfos(file.bufferInfos)
     }
     
-    //MARK: Private Method
     /// 遍历当前的弹幕
     /// - Parameter callBack: 回调
     private func forEachDanmakus(_ callBack: (BaseDanmaku) -> Void) {
@@ -821,7 +833,7 @@ extension PlayerViewController: MediaPlayerDelegate {
 }
 
 extension PlayerViewController: DanmakuSettingViewControllerDelegate {
-
+    // MARK: - DanmakuSettingViewControllerDelegate
     func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuDensity density: Float) {
         
     }
@@ -891,7 +903,7 @@ extension PlayerViewController: DanmakuSettingViewControllerDelegate {
 }
 
 extension PlayerViewController: MediaSettingViewControllerDelegate {
-    
+    // MARK: - MediaSettingViewControllerDelegate
     func mediaSettingViewController(_ vc: MediaSettingViewController, didOpenSubtitle subtitle: SubtitleProtocol) {
         self.player.currentSubtitle = subtitle
     }
@@ -927,6 +939,7 @@ extension PlayerViewController: MediaSettingViewControllerDelegate {
 }
 
 extension PlayerViewController: FileBrowserViewControllerDelegate {
+    // MARK: - FileBrowserViewControllerDelegate
     func fileBrowserViewController(_ vc: FileBrowserViewController, didSelectFile: File, allFiles: [File]) {
         
         if didSelectFile.url.isMediaFile {
