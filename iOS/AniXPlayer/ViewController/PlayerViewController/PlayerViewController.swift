@@ -790,13 +790,14 @@ extension PlayerViewController: MediaPlayerDelegate {
     func player(_ player: MediaPlayer, currentTime: TimeInterval, totalTime: TimeInterval) {
         uiView.updateTime()
         
-        let danmakuRenderTime = currentTime
+        let danmakuRenderTime = currentTime + self.danmakuRender.offsetTime
         
         if danmakuRenderTime < 0 {
             return
         }
         
         let intTime = UInt(danmakuRenderTime)
+        /// 一秒只发射一次弹幕
         if intTime == self.danmakuTime {
             return
         }
@@ -809,8 +810,8 @@ extension PlayerViewController: MediaPlayerDelegate {
                 let shouldSendDanmaku = Float.random(in: 0...10) <= danmakuDensity
                 if shouldSendDanmaku {
                     let danmaku = danmakuBlock()
-                    //修复因为时间误差的问题，导致少数弹幕突然出现在屏幕上的问题
-                    danmaku.appearTime = (danmaku.appearTime - Double(intTime)) + danmakuRenderTime
+                    /// 修复因为时间误差的问题，导致少数弹幕突然出现在屏幕上的问题
+                    danmaku.appearTime = danmakuRenderTime + (danmaku.appearTime - Double(intTime))
                     self.danmakuRender.send(danmaku)
                 }
             }
