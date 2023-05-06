@@ -117,13 +117,12 @@ class NetworkManager {
             requestMatchWithFileHashBlock(hash)
         } else {
             ANX.logInfo(.HTTP, "根据文件返回匹配的结果 获取文件解析字节")
-            file.getParseDataWithProgress(parseDataProgress) { (result) in
+            file.getFileHashWithProgress(parseDataProgress) { result in
                 switch result {
                 case .failure(let error):
                     completion(nil, error)
                     ANX.logInfo(.HTTP, "根据文件返回匹配的结果 失败 error: \(error)")
-                case .success(let parseData):
-                    let hash = (parseData as NSData).md5String()
+                case .success(let hash):
                     ANX.logInfo(.HTTP, "根据文件返回匹配的结果 成功 hash: \(hash)")
                     CacheManager.shared.setMatchHashWithFile(file, hash: hash)
                     requestMatchWithFileHashBlock(hash)

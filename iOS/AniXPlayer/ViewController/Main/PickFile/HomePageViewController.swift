@@ -1,5 +1,5 @@
 //
-//  PickFileViewController.swift
+//  HomePageViewController.swift
 //  AniXPlayer
 //
 //  Created by jimhuang on 2021/4/1.
@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import YYCategories
 
-extension PickFileViewController: UITableViewDelegate, UITableViewDataSource {
+extension HomePageViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.dataSource.count
     }
@@ -47,12 +47,16 @@ extension PickFileViewController: UITableViewDelegate, UITableViewDataSource {
             let vc = FTPLoginHistoryViewController()
             vc.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(vc, animated: true)
+        case .pc:
+            let vc = PCLoginHistoryViewController()
+            vc.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController(vc, animated: true)
         }
     }
     
 }
 
-extension PickFileViewController: FileBrowserViewControllerDelegate {
+extension HomePageViewController: FileBrowserViewControllerDelegate {
     func fileBrowserViewController(_ vc: FileBrowserViewController, didSelectFile: File, allFiles: [File]) {
         let nvc = PlayerNavigationController(items: allFiles, selectedItem: didSelectFile)
         self.present(nvc, animated: true, completion: nil)
@@ -60,13 +64,14 @@ extension PickFileViewController: FileBrowserViewControllerDelegate {
     
 }
 
-class PickFileViewController: ViewController {
+class HomePageViewController: ViewController {
     
     private enum CellType: CaseIterable {
         case localFile
         case smb
         case webDav
         case ftp
+        case pc
         
         var name: String {
             switch self {
@@ -78,6 +83,8 @@ class PickFileViewController: ViewController {
                 return NSLocalizedString("WebDav", comment: "")
             case .ftp:
                 return NSLocalizedString("FTP", comment: "")
+            case .pc:
+                return NSLocalizedString("电脑端", comment: "")
             }
         }
         
@@ -91,6 +98,8 @@ class PickFileViewController: ViewController {
                 return "PickFile/webdav"
             case .ftp:
                 return "PickFile/ftp"
+            case .pc:
+                return "PickFile/computer"
             }
             
         }

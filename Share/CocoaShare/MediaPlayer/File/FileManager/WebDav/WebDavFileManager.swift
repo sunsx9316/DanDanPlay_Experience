@@ -63,7 +63,7 @@ class WebDavFileManager: FileManagerProtocol {
         }
         self.listClient = .init(baseURL: loginInfo.url, credential: credential)
         
-        self.contentsOfDirectory(at: WebDavFile.rootFile) { [weak self] res in
+        self.contentsOfDirectory(at: WebDavFile.rootFile, filterType: nil) { [weak self] res in
             guard let self = self else { return }
             
             switch res {
@@ -76,7 +76,8 @@ class WebDavFileManager: FileManagerProtocol {
         }
     }
     
-    func contentsOfDirectory(at directory: File, completion: @escaping ((Result<[File], Error>) -> Void)) {
+    
+    func contentsOfDirectory(at directory: File, filterType: URLFilterType?, completion: @escaping ((Result<[File], Error>) -> Void)) {
         
         guard let directory = directory as? WebDavFile else {
             completion(.failure(WebDavError.fileTypeError))
@@ -91,6 +92,11 @@ class WebDavFileManager: FileManagerProtocol {
                 let tmpFiles = files.compactMap { e in
                     let f = WebDavFile(with: e)
                     f.parentFile = directory
+                    
+                    if let filterType = filterType, f.type == .file {
+                        return f.url.isThisType(filterType) ? f : nil
+                    }
+                    
                     return f
                 }
                 ANX.logInfo(.webDav, "directoryURL: %@, tmpFileslCount: %ld", String(describing: directory.url), tmpFiles.count)

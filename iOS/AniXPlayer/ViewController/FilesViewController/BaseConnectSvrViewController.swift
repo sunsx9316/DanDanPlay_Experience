@@ -45,7 +45,11 @@ class BaseConnectSvrViewController: ViewController {
     
     weak var delegate: BaseConnectSvrViewControllerDelegate?
     
-    private var loginInfo: LoginInfo?
+    private var loginInfo: LoginInfo? {
+        didSet {
+            self.update(with: self.loginInfo)
+        }
+    }
     
     private let fileManager: FileManagerProtocol
     
@@ -69,7 +73,11 @@ class BaseConnectSvrViewController: ViewController {
         stackView.alignment = .fill
         stackView.spacing = 15
         stackView.addArrangedSubview(self.addressLabel)
-        stackView.addArrangedSubview(self.userNameLabel)
+        
+        if self.fileManager.isRequiredUserName {
+            stackView.addArrangedSubview(self.userNameLabel)
+        }
+        
         stackView.addArrangedSubview(self.passwordLabel)
         stackView.addArrangedSubview(self.loginButton)
         self.view.addSubview(stackView)
@@ -84,8 +92,10 @@ class BaseConnectSvrViewController: ViewController {
             make.height.equalTo(40)
         }
         
-        self.userNameLabel.snp.makeConstraints { make in
-            make.height.equalTo(self.addressLabel)
+        if self.fileManager.isRequiredUserName {
+            self.userNameLabel.snp.makeConstraints { make in
+                make.height.equalTo(self.addressLabel)
+            }
         }
         
         self.passwordLabel.snp.makeConstraints { make in
@@ -96,12 +106,21 @@ class BaseConnectSvrViewController: ViewController {
             make.height.equalTo(self.addressLabel)
         }
         
-        self.userNameLabel.text = self.loginInfo?.auth?.userName
-        self.passwordLabel.text = self.loginInfo?.auth?.password
-        self.addressLabel.text = self.loginInfo?.url.absoluteString
         let addressPlaceholder = self.fileManager.addressExampleDesc
         self.addressLabel.attributedPlaceholder = .init(string: addressPlaceholder,
                                                      attributes: [.foregroundColor : UIColor.lightGray])
+        
+        let passwordPlaceholder = self.fileManager.passwordDesc
+        self.passwordLabel.attributedPlaceholder = .init(string: passwordPlaceholder,
+                                                         attributes: [.foregroundColor : UIColor.lightGray])
+        
+        self.update(with: self.loginInfo)
+    }
+    
+    func update(with loginInfo: LoginInfo?) {
+        self.userNameLabel.text = loginInfo?.auth?.userName
+        self.passwordLabel.text = loginInfo?.auth?.password
+        self.addressLabel.text = loginInfo?.url.absoluteString
     }
     
     //MARK: Private Method

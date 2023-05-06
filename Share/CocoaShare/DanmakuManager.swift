@@ -67,19 +67,13 @@ class DanmakuManager {
     ///   - media: 视频
     ///   - completion: 完成回调
     func findCustomDanmakuWithMedia(_ media: File, completion: @escaping((Result<[File], Error>) -> Void)) {
-        if let parentFile = media.parentFile {
-            let name = media.url.deletingPathExtension().lastPathComponent
-            type(of: media).fileManager.danmakusOfDirectory(at: parentFile) { result in
-                switch result {
-                case .success(let files):
-                    let danmakuFiles = files.filter({ $0.url.lastPathComponent.contains(name) })
-                    completion(.success(danmakuFiles))
-                case .failure(let error):
-                    completion(.failure(error))
-                }
+        type(of: media).fileManager.danmakusOfMedia(media) { result in
+            switch result {
+            case .success(let files):
+                completion(.success(files))
+            case .failure(let error):
+                completion(.failure(error))
             }
-        } else {
-            completion(.success([]))
         }
     }
     

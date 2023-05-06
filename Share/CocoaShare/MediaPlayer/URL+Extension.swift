@@ -16,18 +16,23 @@ extension URL {
     
     var isSubtitleFile: Bool {
         let subtitleExtensions = ["srt", "sub", "cdg", "idx", "ass", "ssa", "aqt", "jss", "psb", "rt", "smi"]
-        let pathExtension = self.pathExtension.lowercased()
+        
+        let decodeStr = self.absoluteString.removingPercentEncoding as NSString? ?? ""
+        
+        let pathExtension = decodeStr.pathExtension.lowercased()
         return subtitleExtensions.contains(pathExtension)
     }
     
     var isMediaFile: Bool {
         
+        let decodeStr = self.absoluteString.removingPercentEncoding as NSString? ?? ""
+        
         //fix mkv不展示的问题
-        if self.pathExtension.compare("mkv", options: .caseInsensitive, range: nil, locale: nil) == .orderedSame {
+        if decodeStr.pathExtension.compare("mkv", options: .caseInsensitive, range: nil, locale: nil) == .orderedSame {
             return true
         }
         
-        let pathExtension = self.pathExtension as CFString
+        let pathExtension = decodeStr.pathExtension as CFString
         
         if let fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension, nil) {
             if UTTypeConformsTo(fileUTI.takeRetainedValue(), kUTTypeMovie) {
@@ -39,7 +44,10 @@ extension URL {
     
     var isDanmakuFile: Bool {
         let danmakuTypes = ["xml"]
-        let pathExtension = self.pathExtension
+        
+        let decodeStr = self.absoluteString.removingPercentEncoding as NSString? ?? ""
+        
+        let pathExtension = decodeStr.pathExtension
 
         return danmakuTypes.contains { (str) -> Bool in
             return str.compare(pathExtension, options: .caseInsensitive, range: nil, locale: nil) == .orderedSame

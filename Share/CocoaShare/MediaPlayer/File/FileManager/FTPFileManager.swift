@@ -61,13 +61,18 @@ class FTPFileManager: FileManagerProtocol {
         })
     }
     
-    func contentsOfDirectory(at directory: File, completion: @escaping ((Result<[File], Error>) -> Void)) {
-        
+    func contentsOfDirectory(at directory: File, filterType: URLFilterType?, completion: @escaping ((Result<[File], Error>) -> Void)) {
         self.client?.contentsOfDirectory(path: directory.url.path, completionHandler: { files, error in
             if let error = error {
                 completion(.failure(error))
             } else {
-                let tmpFiles = files.compactMap({ FTPFile(with: $0) })
+                let tmpFiles = files.compactMap { obj in
+                    let f = FTPFile(with: obj)
+                    if let filterType = filterType, f.type == .file {
+                        return f.url.isThisType(filterType) ? f : nil
+                    }
+                    return f
+                }
                 completion(.success(tmpFiles))
             }
         })

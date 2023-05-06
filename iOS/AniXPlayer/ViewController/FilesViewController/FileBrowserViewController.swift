@@ -144,6 +144,7 @@ class FileBrowserViewController: ViewController {
     
     private let rootFile: File
     
+    /// 当前选中的文件，用与高亮展示
     private var selectedFile: File?
     
     private(set) var filterType: URLFilterType?
@@ -198,68 +199,40 @@ class FileBrowserViewController: ViewController {
         self.beginRefreshing()
     }
     
-    private func isThisType(_ url: URL) -> Bool {
-        guard let filterType = self.filterType else { return true }
-        
-        if isShowAllFile {
-            return true
-        }
-        
-        if url.isMediaFile {
-            return filterType.contains(.video)
-        }
-        
-        if url.isDanmakuFile {
-            return filterType.contains(.danmaku)
-        }
-        
-        if url.isSubtitleFile {
-            return filterType.contains(.subtitle)
-        }
-        
-        return false
-    }
-    
     @objc private func beginRefreshing() {
-        self.manager.contentsOfDirectory(at: self.rootFile) { [weak self] result in
+        self.manager.contentsOfDirectory(at: self.rootFile, filterType: self.isShowAllFile ? nil : self.filterType) { [weak self] result in
             guard let self = self else { return }
             
-                switch result {
-                case .success(let files):
-                    
-                    var filterFiles = files.filter { file in
-                        if file.type == .file {
-                            return self.isThisType(file.url)
+            switch result {
+            case .success(let files):
+                
+                var filterFiles = files
+                
+                filterFiles.sort { f1, f2 in
+                    if f1.type == .folder && f2.type == .file {
+                        return true
+                    } else if f1.type == .file && f2.type == .folder {
+                        return false
+                    } else {
+                        if f1.pathExtension == f2.pathExtension {
+                            return f1.fileName < f2.fileName
                         } else {
-                            return true
+                            return f1.pathExtension < f2.pathExtension
                         }
                     }
-                    
-                    filterFiles.sort { f1, f2 in
-                        if f1.type == .folder && f2.type == .file {
-                            return true
-                        } else if f1.type == .file && f2.type == .folder {
-                            return false
-                        } else {
-                            if f1.pathExtension == f2.pathExtension {
-                                return f1.url.absoluteString < f2.url.absoluteString
-                            } else {
-                                return f1.pathExtension < f2.pathExtension
-                            }
-                        }
-                    }
-                    
-                    DispatchQueue.main.async {
-                        self.dataSource = filterFiles
-                        self.tableView.mj_header?.endRefreshing()
-                        self.tableView.reloadData()
-                    }
-                case .failure(let error):
-                    DispatchQueue.main.async {
-                        self.view.showError(error)
-                        self.tableView.mj_header?.endRefreshing()
-                        self.tableView.reloadData()
-                    }
+                }
+                
+                DispatchQueue.main.async {
+                    self.dataSource = filterFiles
+                    self.tableView.mj_header?.endRefreshing()
+                    self.tableView.reloadData()
+                }
+            case .failure(let error):
+                DispatchQueue.main.async {
+                    self.view.showError(error)
+                    self.tableView.mj_header?.endRefreshing()
+                    self.tableView.reloadData()
+                }
             }
         }
     }

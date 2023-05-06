@@ -19,8 +19,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         self.setup()
         
-        let vc = PickFileViewController()
-        let nav = PickFileNavigationController(rootViewController: vc)
+        let vc = HomePageViewController()
+        let nav = HomePageNavigationController(rootViewController: vc)
         nav.navigationBar.prefersLargeTitles = true
         
         self.window = UIWindow(frame: UIScreen.main.bounds)

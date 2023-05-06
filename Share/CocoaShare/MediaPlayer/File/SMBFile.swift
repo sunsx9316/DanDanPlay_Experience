@@ -59,13 +59,6 @@ class SMBFile: File {
         }
     }
     
-    var isCanDelete: Bool {
-        if self.url == SMBFile.rootFile.url {
-            return false
-        }
-        return self.pathType == .normal
-    }
-    
     init(shareName: String) {
         self.pathType = .share
         self.type = .folder
@@ -133,6 +126,20 @@ class SMBFile: File {
         options["smb-pwd"] = auth?.password
         media.addOptions(options)
         return media
+    }
+    
+    func getFileHashWithProgress(_ progress: FileProgressAction?,
+                                 completion: @escaping((Result<String, Error>) -> Void)) {
+        let length = parseFileLength + 1
+        self.getDataWithRange(0...length, progress: progress) { result in
+            switch result {
+            case .success(let data):
+                let hash = (data as NSData).md5String()
+                completion(.success(hash))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
     }
     
     //MARK: Private Method

@@ -436,7 +436,7 @@ class PlayerViewController: ViewController {
                     case .success(let subtitle):
                     DispatchQueue.main.async {
                         self.player.currentSubtitle = subtitle
-                        self.view.showHUD(NSLocalizedString("加载本地字幕成功！", comment: ""))
+                        self.view.showHUD(NSLocalizedString("加载字幕成功！", comment: ""))
                     }
                     case .failure(let error):
                         DispatchQueue.main.async {
@@ -982,7 +982,7 @@ extension PlayerViewController: FileBrowserViewControllerDelegate {
                 DispatchQueue.main.async {
                     self.player.currentSubtitle = subtitle
                     vc.dismiss(animated: true, completion: nil)
-                    self.view.showHUD(NSLocalizedString("加载本地字幕成功！", comment: ""))
+                    self.view.showHUD(NSLocalizedString("加载字幕成功！", comment: ""))
                 }
                 case .failure(let error):
                     DispatchQueue.main.async {

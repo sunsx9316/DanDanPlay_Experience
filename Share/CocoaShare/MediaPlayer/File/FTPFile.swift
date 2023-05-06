@@ -32,13 +32,6 @@ class FTPFile: File {
         return FTPFileManager.shared
     }
     
-    var isCanDelete: Bool {
-        if self.url == FTPFile.rootFile.url {
-            return false
-        }
-        return true
-    }
-    
     init(with file: FileObject) {
         self.url = file.url
         self.path = file.path
@@ -64,9 +57,18 @@ class FTPFile: File {
         return media
     }
     
-    func getParseDataWithProgress(_ progress: FileProgressAction?, completion: @escaping ((Result<Data, Error>) -> Void)) {
+    func getFileHashWithProgress(_ progress: FileProgressAction?,
+                                 completion: @escaping((Result<String, Error>) -> Void)) {
         let length = parseFileLength
-        self.getDataWithRange(0...length, progress: progress, completion: completion)
+        self.getDataWithRange(0...length, progress: progress) { result in
+            switch result {
+            case .success(let data):
+                let hash = (data as NSData).md5String()
+                completion(.success(hash))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
     }
 }
 

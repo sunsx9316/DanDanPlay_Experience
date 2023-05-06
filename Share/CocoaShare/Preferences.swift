@@ -85,6 +85,9 @@ class Preferences {
         /// ftp登录信息
         case ftpLoginInfo
         
+        /// 电脑端登录信息
+        case pcLoginInfo
+        
         /// 字幕加载顺序关键字
         case subtitleLoadOrder
         
@@ -209,6 +212,33 @@ class Preferences {
     @StoreWrapper(defaultValue: 10, key: .danmakuDensity)
     /// 弹幕密度 取值 1 ~ 10
     var danmakuDensity: Float
+    
+    var pcLoginInfos: [LoginInfo]? {
+        get {
+            if let jsonData: Data = Store.shared.value(forKey: KeyName.pcLoginInfo.rawValue) {
+                do {
+                    let loginInfo = try JSONDecoder().decode([LoginInfo].self, from: jsonData)
+                    return loginInfo
+                } catch let error {
+                    debugPrint("读取 pcLoginInfos 失败 error: \(error)")
+                }
+            }
+            return nil
+        }
+        
+        set {
+            if let newValue = newValue {
+                do {
+                    let data = try JSONEncoder().encode(newValue)
+                    Store.shared.set(data, forKey: KeyName.pcLoginInfo.rawValue)
+                } catch let error {
+                    debugPrint("设置 pcLoginInfos 失败 error: \(error)")
+                }
+            } else {
+                Store.shared.remove(KeyName.pcLoginInfo.rawValue)
+            }
+        }
+    }
     
     var smbLoginInfos: [LoginInfo]? {
         get {

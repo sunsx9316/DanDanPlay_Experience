@@ -80,6 +80,13 @@ class BaseLoginHistoryViewController<F: File>: ViewController, UITableViewDelega
         self.beginRefreshing()
     }
     
+    func jumpToConnectViewController(_ loginInfo: LoginInfo? = nil) {
+        let vc = BaseConnectSvrViewController(loginInfo: loginInfo, fileManager: F.fileManager)
+        vc.delegate = self
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
     //MARK: Private Method
     @objc private func beginRefreshing() {
         self.historyLoginInfos = self.dataSource
@@ -88,13 +95,6 @@ class BaseLoginHistoryViewController<F: File>: ViewController, UITableViewDelega
     
     @objc private func onTouchAddButton() {
         self.jumpToConnectViewController()
-    }
-    
-    private func jumpToConnectViewController(_ loginInfo: LoginInfo? = nil) {
-        let vc = BaseConnectSvrViewController(loginInfo: loginInfo, fileManager: F.fileManager)
-        vc.delegate = self
-        vc.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     private func deleteLoginInfo(_ info: LoginInfo, at view: UIView?) {

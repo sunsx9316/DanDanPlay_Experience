@@ -1,5 +1,5 @@
 //
-//  PickFileNavigationController.swift
+//  HomePageNavigationController.swift
 //  AniXPlayer
 //
 //  Created by jimhuang on 2021/6/18.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class PickFileNavigationController: NavigationController {
+class HomePageNavigationController: NavigationController {
 
     override var shouldAutorotate: Bool {
         return UIDevice.current.isPad

@@ -200,7 +200,7 @@ class MediaSettingViewController: ViewController {
             case .playerMode:
                 return NSLocalizedString("播放模式", comment: "")
             case .loadSubtitle:
-                return NSLocalizedString("加载本地字幕...", comment: "")
+                return NSLocalizedString("加载字幕...", comment: "")
             case .subtitleTrack:
                 return NSLocalizedString("字幕轨道", comment: "")
             case .audioTrack:

@@ -71,8 +71,7 @@ class SMBFileManager: FileManagerProtocol {
         })
     }
     
-    func contentsOfDirectory(at directory: File, completion: @escaping ((Result<[File], Error>) -> Void)) {
-        
+    func contentsOfDirectory(at directory: File, filterType: URLFilterType?, completion: @escaping ((Result<[File], Error>) -> Void)) {
         guard let directory = directory as? SMBFile else {
             assert(false, "文件类型错误: \(directory)")
             completion(.failure(SMBError.fileTypeError))
@@ -102,7 +101,14 @@ class SMBFileManager: FileManagerProtocol {
                         switch res {
                         case .success(let result):
                             //过滤隐藏文件
-                            let files = result.compactMap({ SMBFile(file: $0, shareName: path) }).filter({ !$0.fileName.hasPrefix(".") })
+                            let files = result.compactMap({ obj in
+                                let f = SMBFile(file: obj, shareName: path)
+                                if let filterType = filterType, f.type == .file {
+                                    return f.url.isThisType(filterType) ? f : nil
+                                }
+                                return f
+                            }).filter({ !$0.fileName.hasPrefix(".") })
+                            
                             completion(.success(files))
                         case .failure(let error):
                             completion(.failure(error))
@@ -122,7 +128,15 @@ class SMBFileManager: FileManagerProtocol {
                     self.client?.contentsOfDirectory(atPath: path, completionHandler: { res in
                         switch res {
                         case .success(let result):
-                            let files = result.compactMap({ SMBFile(file: $0, shareName: shareName) }).filter({ !$0.fileName.hasPrefix(".") })
+                            //过滤隐藏文件
+                            let files = result.compactMap({ obj in
+                                let f = SMBFile(file: obj, shareName: shareName)
+                                if let filterType = filterType, f.type == .file {
+                                    return f.url.isThisType(filterType) ? f : nil
+                                }
+                                return f
+                            }).filter({ !$0.fileName.hasPrefix(".") })
+                            
                             completion(.success(files))
                         case .failure(let error):
                             completion(.failure(error))
@@ -131,9 +145,8 @@ class SMBFileManager: FileManagerProtocol {
                 }
             })
         }
-        
     }
-    
+
     func getDataWithFile(_ file: File, range: ClosedRange<Int>?, progress: FileProgressAction?, completion: @escaping ((Result<Data, Error>) -> Void)) {
         
         guard let file = file as? SMBFile else {

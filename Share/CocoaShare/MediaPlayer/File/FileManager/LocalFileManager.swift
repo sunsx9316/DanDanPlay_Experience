@@ -40,8 +40,7 @@ class LocalFileManager: FileManagerProtocol {
         return NSLocalizedString("本地文件", comment: "")
     }
     
-    func contentsOfDirectory(at directory: File, completion: @escaping ((Result<[File], Error>) -> Void)) {
-            
+    func contentsOfDirectory(at directory: File, filterType: URLFilterType?, completion: @escaping ((Result<[File], Error>) -> Void)) {
         do {
             
             let url = directory.url
@@ -59,6 +58,9 @@ class LocalFileManager: FileManagerProtocol {
                 }
                 
                 let file = LocalFile(with: aURL)
+                if let filterType = filterType, file.type == .file {
+                    return file.url.isThisType(filterType) ? file : nil
+                }
                 return file
             }
             completion(.success(files))

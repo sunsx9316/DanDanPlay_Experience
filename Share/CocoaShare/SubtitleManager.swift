@@ -45,21 +45,15 @@ class SubtitleManager {
     
     func findCustomSubtitleWithMedia(_ media: File, completion: @escaping((Result<[File], Error>) -> Void)) {
         //加载本地弹幕
-        if let parentFile = media.parentFile {
-            let name = media.url.deletingPathExtension().lastPathComponent
-            type(of: media).fileManager.subtitlesOfDirectory(at: parentFile) { result in
-                switch result {
-                case .success(let files):
-                    let subtitleFiles = files.filter({ $0.url.lastPathComponent.contains(name) })
-                    ANX.logInfo(.subtitle, "字幕搜索成功 \(subtitleFiles)")
-                    completion(.success(subtitleFiles))
-                case .failure(let error):
-                    ANX.logInfo(.subtitle, "字幕搜索失败 \(error)")
-                    completion(.failure(error))
-                }
+        type(of: media).fileManager.subtitlesOfMedia(media) { result in
+            switch result {
+            case .success(let files):
+                ANX.logInfo(.subtitle, "字幕搜索成功 \(files)")
+                completion(.success(files))
+            case .failure(let error):
+                ANX.logInfo(.subtitle, "字幕搜索失败 \(error)")
+                completion(.failure(error))
             }
-        } else {
-            completion(.success([]))
         }
     }
 }

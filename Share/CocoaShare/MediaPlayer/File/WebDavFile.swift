@@ -48,13 +48,6 @@ class WebDavFile: File {
         return WebDavFileManager.shared
     }
     
-    var isCanDelete: Bool {
-        if self.url == WebDavFile.rootFile.url {
-            return false
-        }
-        return true
-    }
-    
     var bufferInfos: [MediaBufferInfo] {
         return inputStream?.taskInfos ?? []
     }
@@ -95,9 +88,18 @@ class WebDavFile: File {
         return VLCMedia(stream: inputStream!)
     }
     
-    func getParseDataWithProgress(_ progress: FileProgressAction?, completion: @escaping ((Result<Data, Error>) -> Void)) {
+    func getFileHashWithProgress(_ progress: FileProgressAction?,
+                                 completion: @escaping((Result<String, Error>) -> Void)) {
         let length = parseFileLength
-        self.getDataWithRange(0...length, progress: progress, completion: completion)
+        self.getDataWithRange(0...length, progress: progress) { result in
+            switch result {
+            case .success(let data):
+                let hash = (data as NSData).md5String()
+                completion(.success(hash))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
     }
     
     func getFileSizeSync() -> Int {

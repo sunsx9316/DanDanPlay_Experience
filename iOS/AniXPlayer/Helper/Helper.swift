@@ -13,4 +13,7 @@ class Helper {
     
     weak var playerViewController: PlayerViewController?
     
+    static var appDisplayName: String? {
+        return Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName") as? String
+    }
 }

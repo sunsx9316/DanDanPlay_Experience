@@ -67,12 +67,12 @@ protocol File {
                           progress: FileProgressAction?,
                           completion: @escaping((Result<Data, Error>) -> Void))
     
-    /// 获取弹弹解析所需字节流
+    /// 获取弹弹解析的文件哈希
     /// - Parameters:
     ///   - progress: 进度
     ///   - completion: 完成回调
-    func getParseDataWithProgress(_ progress: FileProgressAction?,
-                          completion: @escaping((Result<Data, Error>) -> Void))
+    func getFileHashWithProgress(_ progress: FileProgressAction?,
+                                 completion: @escaping((Result<String, Error>) -> Void))
     
     /// 创建播放的媒体文件
     /// - Parameter delegate: 媒体代理
@@ -82,11 +82,11 @@ protocol File {
 
 extension File {
     var fileName: String {
-        return self.url.lastPathComponent
+        return (self.url.absoluteString.removingPercentEncoding as NSString?)?.lastPathComponent ?? ""
     }
     
     var pathExtension: String {
-        return self.url.pathExtension.uppercased()
+        return (self.url.absoluteString.removingPercentEncoding as NSString?)?.pathExtension.uppercased() ?? ""
     }
     
     var fileHash: String {
@@ -97,11 +97,11 @@ extension File {
         return []
     }
     
-    //弹弹解析文件需要的文件长度
-    func getParseDataWithProgress(_ progress: FileProgressAction? = nil,
-                          completion: @escaping((Result<Data, Error>) -> Void)) {
-        let length = parseFileLength + 1
-        self.getDataWithRange(0...length, progress: progress, completion: completion)
+    var isCanDelete: Bool {
+        if self.url == Swift.type(of: self).rootFile.url {
+            return false
+        }
+        return true
     }
     
     func getDataWithRange(_ range: ClosedRange<Int>,
