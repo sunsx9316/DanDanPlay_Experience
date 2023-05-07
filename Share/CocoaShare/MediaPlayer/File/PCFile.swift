@@ -24,7 +24,11 @@ class PCFile: File {
     
     var parentFile: File?
     
-    private(set) var libraryModel: PCLibraryModel?
+    var animeId: Int
+    
+    var mediaId: String
+    
+    private var libraryModel: PCLibraryModel?
     
     private(set) var downloadURL: URL
     
@@ -38,11 +42,17 @@ class PCFile: File {
         self.type = .folder
         self.fileName = ""
         self.downloadURL = URL(fileURLWithPath: "/")
+        self.animeId = 0
+        self.mediaId = ""
     }
     
     init(subtitleModel: PCSubtitleModel, media: PCFile) {
+        
+        self.mediaId = media.libraryModel?.id ?? ""
+        self.animeId = media.libraryModel?.animeId ?? 0
+        
         var url = PCFileManager.shared.loginInfo?.url
-        url = url?.appendingPathComponent("/api/v1/subtitle/file/\(media.libraryModel?.id ?? "")")
+        url = url?.appendingPathComponent("/api/v1/subtitle/file/\(self.mediaId)")
         
         var playURLComponents = URLComponents(string: url?.absoluteString ?? "")
         playURLComponents?.queryItems = [.init(name: "fileName", value: subtitleModel.fileName)]
@@ -52,6 +62,16 @@ class PCFile: File {
         self.type = .file
         self.fileName = subtitleModel.fileName
         self.downloadURL = self.url
+    }
+    
+    init(animeId: Int, animeName: String) {
+        self.url = URL(string: "anixpc://\(animeId)") ?? URL(fileURLWithPath: "/")
+        self.type = .folder
+        self.fileName = animeName
+        self.downloadURL = self.url
+        self.fileSize = 0
+        self.animeId = animeId
+        self.mediaId = ""
     }
     
     init(libraryModel: PCLibraryModel) {
@@ -74,6 +94,8 @@ class PCFile: File {
         self.type = .file
         self.libraryModel = libraryModel
         self.fileName = self.libraryModel?.name ?? ""
+        self.mediaId = libraryModel.id
+        self.animeId = libraryModel.animeId
     }
     
     

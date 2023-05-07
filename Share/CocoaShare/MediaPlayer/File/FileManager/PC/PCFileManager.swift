@@ -53,40 +53,105 @@ class PCFileManager: FileManagerProtocol {
     }()
     
     func contentsOfDirectory(at directory: File, filterType: URLFilterType?, completion: @escaping ((Result<[File], Error>) -> Void)) {
-        let parameters: [String: String]? = nil
         
-        let header = self.defualtHeader()
+        guard let directory = directory as? PCFile else {
+            completion(.failure(PCError.fileTypeError))
+            return
+        }
         
-        self.defaultSession.request(self.appendingURL("/api/v1/library"), method: .get, parameters: parameters, encoder: JSONParameterEncoder.default, headers: header).responseData { response in
-            switch response.result {
-            case .success(let data):
-                do {
-                    let asJSON = try JSONSerialization.jsonObject(with: data)
-                    if let asJSON = asJSON as? NSArray {
-                        let libraryModel = [PCLibraryModel].deserialize(from: asJSON)
-                        let files: [PCFile] = libraryModel?.compactMap({ obj in
-                            if let obj = obj {
-                                let f = PCFile(libraryModel: obj)
-                                /// PC的远程登录只有一级目录，父文件夹设置成自己便于查找关联的字幕文件
-                                f.parentFile = f
+        let group = DispatchGroup()
+        
+        var files = [File]()
+        var error: Error?
+        
+        /// 请求视频
+        if filterType == nil || filterType?.contains(.video) == true {
+            
+            group.enter()
+            
+            let parameters: [String: String]? = nil
+            
+            let header = self.defualtHeader()
+            
+            self.defaultSession.request(self.appendingURL("/api/v1/library"), method: .get, parameters: parameters, encoder: JSONParameterEncoder.default, headers: header).responseData { response in
+                switch response.result {
+                case .success(let data):
+                    do {
+                        let asJSON = try JSONSerialization.jsonObject(with: data)
+                        if let asJSON = asJSON as? NSArray {
+                            let libraryModels = [PCLibraryModel].deserialize(from: asJSON) ?? []
+                            
+                            var fileDic = [Int: PCFile]()
+                            /// 根目录展示文件夹
+                            if directory.url == PCFile.rootFile.url {
                                 
-                                if let filterType = filterType, f.type == .file {
-                                    return f.url.isThisType(filterType) ? f : nil
+                                for model in libraryModels {
+                                    if let model = model {
+                                        var parentFile: PCFile
+                                        
+                                        if let tmpParentFile = fileDic[model.animeId]    {
+                                            parentFile = tmpParentFile
+                                        } else {
+                                            parentFile = .init(animeId: model.animeId, animeName: model.animeTitle)
+                                            fileDic[model.animeId] = parentFile
+                                        }
+                                    }
                                 }
                                 
-                                return f
+                                files.append(contentsOf: Array<PCFile>(fileDic.values))
+                                /// 子目录展示番剧
+                            } else {
+                                let tmpFiles = libraryModels.compactMap({ obj in
+                                    if let obj = obj {
+                                        let f = PCFile(libraryModel: obj)
+                                        /// PC的远程登录只有一级目录，父文件夹设置成自己便于查找关联的字幕文件
+                                        f.parentFile = f
+                                        
+                                        if let filterType = filterType,
+                                           f.type == .file,
+                                           f.url.isThisType(filterType),
+                                           f.animeId == directory.animeId {
+                                            return f
+                                        }
+                                    }
+                                    return nil
+                                })
+                                
+                                files.append(contentsOf: tmpFiles)
                             }
-                            return nil
-                        }) ?? []
-                        completion(.success(files))
-                    } else {
-                        completion(.success([PCFile]()))
+                        }
+                    } catch (let err) {
+                        error = err
                     }
-                } catch {
-                    completion(.failure(error))
+                case .failure(let err):
+                    error = err
                 }
-            case .failure(let error):
+                
+                group.leave()
+            }
+        }
+        
+        /// 请求字幕
+        if filterType == nil || filterType?.contains(.subtitle) == true {
+            group.enter()
+            
+            self.subtitlesOfMedia(directory) {  result in
+                switch result {
+                case .success(let success):
+                    files.append(contentsOf: success)
+                case .failure(let failure):
+                    error = failure
+                }
+                
+                group.leave()
+            }
+        }
+        
+        group.notify(queue: .main) {
+            if let error = error {
                 completion(.failure(error))
+            } else {
+                completion(.success(files))
             }
         }
     }
@@ -170,7 +235,7 @@ class PCFileManager: FileManagerProtocol {
         
         let header = self.defualtHeader()
         
-        self.defaultSession.request(self.appendingURL("/api/v1/subtitle/info/\(file.libraryModel?.id ?? "")"), method: .get, parameters: parameters, encoder: JSONParameterEncoder.default, headers: header).responseData { (response) in
+        self.defaultSession.request(self.appendingURL("/api/v1/subtitle/info/\(file.mediaId)"), method: .get, parameters: parameters, encoder: JSONParameterEncoder.default, headers: header).responseData { (response) in
             switch response.result {
             case .success(let data):
                 
