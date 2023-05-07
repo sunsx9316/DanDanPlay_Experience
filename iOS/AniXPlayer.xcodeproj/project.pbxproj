@@ -39,7 +39,6 @@
 		890DF76E26160B3E002D8AE5 /* FileBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF75726160B3E002D8AE5 /* FileBrowserViewController.swift */; };
 		890DF76F26160B3E002D8AE5 /* FolderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF75A26160B3E002D8AE5 /* FolderTableViewCell.swift */; };
 		890DF77026160B3E002D8AE5 /* FileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF75B26160B3E002D8AE5 /* FileTableViewCell.swift */; };
-		890DF77126160B3E002D8AE5 /* FileTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 890DF75C26160B3E002D8AE5 /* FileTableViewCell.xib */; };
 		890DF77226160B3E002D8AE5 /* FolderTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 890DF75D26160B3E002D8AE5 /* FolderTableViewCell.xib */; };
 		890DF77326160B3E002D8AE5 /* SendDanmakuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF75F26160B3E002D8AE5 /* SendDanmakuViewController.swift */; };
 		890DF77526160B3E002D8AE5 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF76126160B3E002D8AE5 /* PlayerViewController.swift */; };
@@ -181,7 +180,6 @@
 		890DF75726160B3E002D8AE5 /* FileBrowserViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileBrowserViewController.swift; sourceTree = "<group>"; };
 		890DF75A26160B3E002D8AE5 /* FolderTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FolderTableViewCell.swift; sourceTree = "<group>"; };
 		890DF75B26160B3E002D8AE5 /* FileTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileTableViewCell.swift; sourceTree = "<group>"; };
-		890DF75C26160B3E002D8AE5 /* FileTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FileTableViewCell.xib; sourceTree = "<group>"; };
 		890DF75D26160B3E002D8AE5 /* FolderTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FolderTableViewCell.xib; sourceTree = "<group>"; };
 		890DF75F26160B3E002D8AE5 /* SendDanmakuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SendDanmakuViewController.swift; sourceTree = "<group>"; };
 		890DF76126160B3E002D8AE5 /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
@@ -476,7 +474,6 @@
 			isa = PBXGroup;
 			children = (
 				890DF75B26160B3E002D8AE5 /* FileTableViewCell.swift */,
-				890DF75C26160B3E002D8AE5 /* FileTableViewCell.xib */,
 				890DF75A26160B3E002D8AE5 /* FolderTableViewCell.swift */,
 				890DF75D26160B3E002D8AE5 /* FolderTableViewCell.xib */,
 				8944E874263AF48C00EF00B1 /* LinkHistoryTableViewCell.swift */,
@@ -923,7 +920,6 @@
 				890DF77226160B3E002D8AE5 /* FolderTableViewCell.xib in Resources */,
 				89AF9C0C2631D7120037A133 /* SheetTableViewCell.xib in Resources */,
 				8944E877263AF48C00EF00B1 /* LinkHistoryTableViewCell.xib in Resources */,
-				890DF77126160B3E002D8AE5 /* FileTableViewCell.xib in Resources */,
 				8931F0F42677388600590569 /* TitleDetailMoreTableViewCell.xib in Resources */,
 				890DF6D626160827002D8AE5 /* Assets.xcassets in Resources */,
 				8904475B290189CD0088886B /* GoogleService-Info.plist in Resources */,

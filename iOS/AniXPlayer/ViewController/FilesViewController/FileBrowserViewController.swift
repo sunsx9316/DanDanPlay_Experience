@@ -133,7 +133,7 @@ class FileBrowserViewController: ViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.registerNibCell(class: FolderTableViewCell.self)
-        tableView.registerNibCell(class: FileTableViewCell.self)
+        tableView.registerClassCell(class: FileTableViewCell.self)
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
         tableView.mj_header = RefreshHeader(refreshingTarget: self, refreshingAction: #selector(beginRefreshing))

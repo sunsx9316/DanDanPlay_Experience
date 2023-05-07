@@ -42,6 +42,8 @@ protocol File {
     
     var fileName: String { get }
     
+    var subtitle: String { get }
+    
     var type: FileType { get }
     
     static var fileManager: FileManagerProtocol { get }
@@ -83,6 +85,10 @@ protocol File {
 extension File {
     var fileName: String {
         return (self.url.absoluteString.removingPercentEncoding as NSString?)?.lastPathComponent ?? ""
+    }
+    
+    var subtitle: String {
+        return ""
     }
     
     var pathExtension: String {

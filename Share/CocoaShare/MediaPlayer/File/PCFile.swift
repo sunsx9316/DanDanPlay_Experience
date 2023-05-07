@@ -28,6 +28,8 @@ class PCFile: File {
     
     var mediaId: String
     
+    var subtitle: String = ""
+    
     private var libraryModel: PCLibraryModel?
     
     private(set) var downloadURL: URL
@@ -94,6 +96,8 @@ class PCFile: File {
         self.type = .file
         self.libraryModel = libraryModel
         self.fileName = self.libraryModel?.name ?? ""
+        self.subtitle = self.libraryModel?.episodeTitle ?? ""
+        
         self.mediaId = libraryModel.id
         self.animeId = libraryModel.animeId
     }
