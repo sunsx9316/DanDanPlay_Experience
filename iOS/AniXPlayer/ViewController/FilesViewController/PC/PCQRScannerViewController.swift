@@ -46,7 +46,7 @@ class PCQRScannerViewController: ViewController {
         
         if JHQRCodeReader.isAuthorization() == false {
             
-            let appName = Helper.appDisplayName ?? ""
+            let appName = AppInfoHelper.appDisplayName ?? ""
             let vc = UIAlertController(title: NSLocalizedString("提示", comment: ""), message: "请在设置-\(appName)中允许\(appName)访问您的相机~", preferredStyle: .alert)
             vc.addAction(UIAlertAction(title: NSLocalizedString("好的", comment: ""), style: .default, handler: { _ in
                 UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)

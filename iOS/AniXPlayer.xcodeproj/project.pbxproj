@@ -115,6 +115,10 @@
 		8994616328CC783C009AC640 /* PathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994613128CC783C009AC640 /* PathUtils.swift */; };
 		8994616428CC783C009AC640 /* NSNetService+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 8994613228CC783C009AC640 /* NSNetService+Utils.m */; };
 		8994616528CC783C009AC640 /* HistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994613328CC783C009AC640 /* HistoryManager.swift */; };
+		899A11B12A18B703009B2953 /* AppInfoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899A11B02A18B703009B2953 /* AppInfoHelper.swift */; };
+		899A11BE2A18C0A5009B2953 /* TitleDetailOpertationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899A11BC2A18C0A5009B2953 /* TitleDetailOpertationTableViewCell.swift */; };
+		899A11C12A18C0DC009B2953 /* TitleDetailOpertationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 899A11C02A18C0DC009B2953 /* TitleDetailOpertationTableViewCell.xib */; };
+		899A11C32A18C854009B2953 /* IPModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899A11C22A18C854009B2953 /* IPModel.swift */; };
 		899A9DDF262F35EB00C54AC9 /* SliderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897CF530262F317B00CC297A /* SliderTableViewCell.swift */; };
 		899C4E97263BDDE600A17C83 /* LinkHistoryHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899C4E96263BDDE600A17C83 /* LinkHistoryHeaderView.swift */; };
 		899E385D280B2F7A00285191 /* ProgressSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899E385C280B2F7A00285191 /* ProgressSlider.swift */; };
@@ -262,6 +266,14 @@
 		8994613128CC783C009AC640 /* PathUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathUtils.swift; sourceTree = "<group>"; };
 		8994613228CC783C009AC640 /* NSNetService+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSNetService+Utils.m"; sourceTree = "<group>"; };
 		8994613328CC783C009AC640 /* HistoryManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryManager.swift; sourceTree = "<group>"; };
+		899A11B02A18B703009B2953 /* AppInfoHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppInfoHelper.swift; sourceTree = "<group>"; };
+		899A11B42A18BE18009B2953 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		899A11B62A18BE1E009B2953 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		899A11B82A18BE24009B2953 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		899A11BA2A18BE2C009B2953 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
+		899A11BC2A18C0A5009B2953 /* TitleDetailOpertationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleDetailOpertationTableViewCell.swift; sourceTree = "<group>"; };
+		899A11C02A18C0DC009B2953 /* TitleDetailOpertationTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TitleDetailOpertationTableViewCell.xib; sourceTree = "<group>"; };
+		899A11C22A18C854009B2953 /* IPModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPModel.swift; sourceTree = "<group>"; };
 		899C4E96263BDDE600A17C83 /* LinkHistoryHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkHistoryHeaderView.swift; sourceTree = "<group>"; };
 		899C4E9C263CF88600A17C83 /* AniXPlayer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AniXPlayer-Bridging-Header.h"; sourceTree = "<group>"; };
 		899E385C280B2F7A00285191 /* ProgressSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressSlider.swift; sourceTree = "<group>"; };
@@ -779,6 +791,7 @@
 				8994611228CC783C009AC640 /* Match.swift */,
 				8994611328CC783C009AC640 /* Response.swift */,
 				8994611428CC783C009AC640 /* Search.swift */,
+				899A11C22A18C854009B2953 /* IPModel.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -801,6 +814,7 @@
 				8994613128CC783C009AC640 /* PathUtils.swift */,
 				89AAA20B2972F4E0008CD8AD /* ANXLogHelperModule+Utils.h */,
 				89AAA20C2972F4E0008CD8AD /* ANXLogHelperModule+Utils.m */,
+				899A11B02A18B703009B2953 /* AppInfoHelper.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -822,6 +836,8 @@
 				89E0D6112669127B00E2337B /* SwitchDetailTableViewCell.xib */,
 				89E0D6142669143400E2337B /* TitleDetailTableViewCell.swift */,
 				89E0D6152669143400E2337B /* TitleDetailTableViewCell.xib */,
+				899A11BC2A18C0A5009B2953 /* TitleDetailOpertationTableViewCell.swift */,
+				899A11C02A18C0DC009B2953 /* TitleDetailOpertationTableViewCell.xib */,
 				8931F0F12677388600590569 /* TitleDetailMoreTableViewCell.swift */,
 				8931F0F22677388600590569 /* TitleDetailMoreTableViewCell.xib */,
 				8931F0F72677457100590569 /* EditableTableViewCell.swift */,
@@ -845,6 +861,10 @@
 		A36E3F8730C441A1F2AC3DAF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				899A11BA2A18BE2C009B2953 /* CoreTelephony.framework */,
+				899A11B82A18BE24009B2953 /* CoreFoundation.framework */,
+				899A11B62A18BE1E009B2953 /* SystemConfiguration.framework */,
+				899A11B42A18BE18009B2953 /* Foundation.framework */,
 				6620BF43605B5DDE3E8B15B6 /* Pods_AniXPlayer.framework */,
 			);
 			name = Frameworks;
@@ -924,6 +944,7 @@
 				890DF6D626160827002D8AE5 /* Assets.xcassets in Resources */,
 				8904475B290189CD0088886B /* GoogleService-Info.plist in Resources */,
 				890DF824261617D0002D8AE5 /* PickFileTableViewCell.xib in Resources */,
+				899A11C12A18C0DC009B2953 /* TitleDetailOpertationTableViewCell.xib in Resources */,
 				89AF9C042631C2680037A133 /* StepTableViewCell.xib in Resources */,
 				897CF533262F317B00CC297A /* SliderTableViewCell.xib in Resources */,
 				89E0D711266B44BE00E2337B /* TitleTableViewCell.xib in Resources */,
@@ -1008,6 +1029,7 @@
 				89B4B445272484FE00FB1BF5 /* SpeedUpView.swift in Sources */,
 				89AF9BFE2631C1740037A133 /* SwitchTableViewCell.swift in Sources */,
 				8994614128CC783C009AC640 /* URL+Extension.swift in Sources */,
+				899A11C32A18C854009B2953 /* IPModel.swift in Sources */,
 				89E0D710266B44BE00E2337B /* TitleTableViewCell.swift in Sources */,
 				8994613428CC783C009AC640 /* Constant.swift in Sources */,
 				890DF6CD26160826002D8AE5 /* AppDelegate.swift in Sources */,
@@ -1063,6 +1085,7 @@
 				89E0D60E2669113400E2337B /* SettingViewController.swift in Sources */,
 				890886CA29FFE6D9005EDBD6 /* PCWelcomeModel.swift in Sources */,
 				890886C429FFE30A005EDBD6 /* PCFile.swift in Sources */,
+				899A11BE2A18C0A5009B2953 /* TitleDetailOpertationTableViewCell.swift in Sources */,
 				8994613F28CC783C009AC640 /* FTPFile.swift in Sources */,
 				89E109B426443F4F00825308 /* BaseLoginHistoryViewController.swift in Sources */,
 				890DF77A26160B3E002D8AE5 /* SliderControlView.swift in Sources */,
@@ -1105,6 +1128,7 @@
 				8931F166267CF34400590569 /* HomePageNavigationController.swift in Sources */,
 				8994613828CC783C009AC640 /* SMBFileManager.swift in Sources */,
 				89AF9C0F26343BE70037A133 /* AutoScrollLabel.swift in Sources */,
+				899A11B12A18B703009B2953 /* AppInfoHelper.swift in Sources */,
 				89E0D827266BBA9400E2337B /* SceneDelegate.swift in Sources */,
 				8994613E28CC783C009AC640 /* SMBFile.swift in Sources */,
 				8914481C261F510700E26133 /* SearchViewController.swift in Sources */,

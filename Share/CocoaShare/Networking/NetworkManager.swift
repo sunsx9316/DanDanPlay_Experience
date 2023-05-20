@@ -25,6 +25,8 @@ class NetworkManager {
     private lazy var defaultSession: Alamofire.Session = {
         let configuration = URLSessionConfiguration.default
         configuration.timeoutIntervalForRequest = 10
+        let version = AppInfoHelper.appVersion ?? "1.0.0"
+        configuration.headers.add(.userAgent("dandanplay/ios \(version)"))
         let manager = Alamofire.Session(configuration: configuration)
         return manager
     }()
@@ -240,5 +242,28 @@ class NetworkManager {
     }
     
     #endif
+    
+    
+    /// 获取备用ip
+    /// - Parameter completion: 完成回调
+    func getBackupIps(_ completion: @escaping((IPResponse?, Error?) -> Void)) {
+        self.defaultSession.request("https://dns.alidns.com/resolve?name=cn.api.dandanplay.net&type=16", method: .get).responseData { (response) in
+            switch response.result {
+            case .success(let data):
+                do {
+                    let asJSON = try JSONSerialization.jsonObject(with: data) as? NSDictionary
+                    let result = IPResponse.deserialize(from: asJSON)
+                    completion(result, nil)
+                    ANX.logInfo(.HTTP, "获取备用ip成功: \(String(describing: result))")
+                } catch {
+                    completion(nil, error)
+                    ANX.logInfo(.HTTP, "获取备用ip失败: \(error)")
+                }
+            case .failure(let error):
+                completion(nil, error)
+                ANX.logInfo(.HTTP, "获取备用ip失败: \(error)")
+            }
+        }
+    }
     
 }

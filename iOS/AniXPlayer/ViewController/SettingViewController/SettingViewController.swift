@@ -57,9 +57,38 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
             cell.subtitleLabel.text = type.subtitle
             return cell
         case .host:
-            let cell = tableView.dequeueCell(class: TitleDetailTableViewCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: TitleDetailOpertationTableViewCell.self, indexPath: indexPath)
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = type.subtitle
+            cell.button.setTitle(NSLocalizedString("备用地址", comment: ""), for: .normal)
+            cell.touchButtonCallBack = { [weak self] aCell in
+                guard let self = self else { return }
+                
+                aCell.isShowLoading = true
+                
+                self.resolverAddress { ips in
+                    aCell.isShowLoading = false
+                    
+                    
+                    if let ips = ips, !ips.isEmpty {
+                        let vc = UIAlertController(title:  NSLocalizedString("使用备用地址", comment: ""), message: nil, preferredStyle: .alert)
+                        
+                        vc.addAction(.init(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: { (_) in
+                            
+                        }))
+                        
+                        for ip in ips {
+                            vc.addAction(.init(title: ip, style: .destructive, handler: { (_) in
+                                Preferences.shared.host = ip
+                                self.tableView.reloadData()
+                            }))
+                        }
+                        
+                        self.present(vc, atView: aCell)
+                    }
+
+                }
+            }
             return cell
         case .log:
             let cell = tableView.dequeueCell(class: TitleDetailTableViewCell.self, indexPath: indexPath)
@@ -211,6 +240,7 @@ class SettingViewController: ViewController {
         tableView.registerNibCell(class: SwitchDetailTableViewCell.self)
         tableView.registerNibCell(class: TitleDetailTableViewCell.self)
         tableView.registerNibCell(class: TitleDetailMoreTableViewCell.self)
+        tableView.registerNibCell(class: TitleDetailOpertationTableViewCell.self)
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
         return tableView
@@ -232,6 +262,22 @@ class SettingViewController: ViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.tableView.reloadData()
+    }
+    
+    private func resolverAddress(completion: @escaping(([String]?) -> Void)) {
+        NetworkManager.shared.getBackupIps { res, error in
+            if let error = error {
+                DispatchQueue.main.async {
+                    self.view.showError(error)
+                    completion(nil)
+                }
+            } else {
+                let ips = res?.answers.compactMap({ $0.data })
+                DispatchQueue.main.async {
+                    completion(ips)
+                }
+            }
+        }
     }
 
 }
