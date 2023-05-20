@@ -382,8 +382,9 @@ class PlayerUIView: UIView {
                 let diff = height > 0 ? -translation.y / height : 0;
                 
                 if panType == .brightness {
-                    UIScreen.main.brightness += diff
-                    self.brightnessView.progress = UIScreen.main.brightness
+                    let progressValue = self.brightnessView.progress + diff
+                    self.brightnessView.progress = min(max(progressValue, 0), 1)
+                    UIScreen.main.brightness = self.brightnessView.progress
                 } else {
                     self.volumeView.progress += diff
                 }
