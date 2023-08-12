@@ -33,8 +33,8 @@ class NetworkManager {
     
     /// 根据文件直接搜索弹幕
     func danmakuWithFile(_ file: File,
-                       progress: FileProgressAction? = nil,
-                       matchCompletion: @escaping((MatchCollection?, Error?) -> Void),
+                         progress: FileProgressAction? = nil,
+                         matchCompletion: @escaping((MatchCollection?, Error?) -> Void),
                          danmakuCompletion: @escaping((CommentCollection?, _ episodeId: Int, Error?) -> Void)) {
         
         ANX.logInfo(.HTTP, "根据文件直接搜索弹幕 file: \(file)")
@@ -100,7 +100,15 @@ class NetworkManager {
                     do {
                         let asJSON = try JSONSerialization.jsonObject(with: data)
                         let result = Response<MatchCollection>(with: asJSON)
-                        completion(result.result, result.error)
+                        
+                        let collection = result.result
+                        
+                        /// 精确匹配，缓存结果
+                        if collection?.isMatched == true && collection?.collection.count == 1 {
+                            CacheManager.shared.setMatchResultWithHash(fileHash, data: data)
+                        }
+                        
+                        completion(collection, result.error)
                         ANX.logInfo(.HTTP, "根据文件返回匹配的结果 请求成功")
                     } catch {
                         completion(nil, error)
@@ -116,7 +124,22 @@ class NetworkManager {
         if Preferences.shared.fastMatch,
            let hash = CacheManager.shared.matchHashWithFile(file) {
             ANX.logInfo(.HTTP, "根据文件返回匹配的结果 快速匹配 hash：\(hash)")
-            requestMatchWithFileHashBlock(hash)
+            
+            if let data = CacheManager.shared.matchResultWithHash(hash) {
+                do {
+                    let asJSON = try JSONSerialization.jsonObject(with: data)
+                    let result = Response<MatchCollection>(with: asJSON)
+                    
+                    completion(result.result, nil)
+                    ANX.logInfo(.HTTP, "根据缓存返回匹配的结果 请求成功")
+                } catch {
+                    ANX.logInfo(.HTTP, "根据缓存返回匹配的结果 解析失败 \(error)，继续进行网络请求")
+                    requestMatchWithFileHashBlock(hash)
+                }
+            } else {
+                requestMatchWithFileHashBlock(hash)
+            }
+            
         } else {
             ANX.logInfo(.HTTP, "根据文件返回匹配的结果 获取文件解析字节")
             file.getFileHashWithProgress(parseDataProgress) { result in

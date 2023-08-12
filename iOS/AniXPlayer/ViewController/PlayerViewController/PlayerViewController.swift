@@ -69,7 +69,7 @@ class PlayerViewController: ViewController {
     
     private var playItemMap = [URL : PlayItem]()
     //当前弹幕时间/弹幕数组映射
-    private var danmakuDic = [UInt : [DanmakuConverResult]]()
+    private var danmakuDic = DanmakuMapResult()
     
     /// 记录当前屏幕展示的弹幕
     private lazy var danmuOnScreenMap = NSMapTable<NSString, BaseDanmaku>.strongToWeakObjects()
@@ -192,6 +192,7 @@ class PlayerViewController: ViewController {
     private func parseMediaAtInit() {
         if let selectedItem = self.selectedItem {
             self.tryParseMedia(selectedItem)
+            self.selectedItem = nil
         } else if let firstItem = self.player.playList.first {
             self.tryParseMedia(firstItem)
         }
@@ -255,7 +256,7 @@ class PlayerViewController: ViewController {
         hud.progress = 0
         hud.show(animated: true)
         
-        NetworkManager.shared.danmakuWithFile(media) { (progress) in
+        DanmakuManager.shared.loadDanmaku(media) { progress in
             DispatchQueue.main.async {
                 hud.progress = Float(progress)
                 if progress == 0.7 {
@@ -274,105 +275,52 @@ class PlayerViewController: ViewController {
                     self.navigationController?.pushViewController(vc, animated: true)
                 }
             }
-        } danmakuCompletion: { (collection, episodeId, error) in
+        } danmakuCompletion: { result, episodeId, error in
             DispatchQueue.main.async {
                 hud.hide(animated: true)
                 
                 if let error = error {
                     self.view.showError(error)
                 } else {
-                    let danmakus = collection?.collection ?? []
-                    self.setupPlayer(media, episodeId: episodeId, danmakus: danmakus)
+                    self.setupPlayer(media, episodeId: episodeId, danmakus: result ?? [:])
                 }
             }
         }
+
     }
     
     
-    /// 初始化播放器（字幕、弹幕等）
+    /// 初始化播放器（字幕）
     /// - Parameters:
     ///   - media: 视频
     ///   - episodeId: 弹幕分集id
     ///   - danmakus: 弹幕
-    private func setupPlayer(_ media: File, episodeId: Int, danmakus: [Comment]) {
+    private func setupPlayer(_ media: File, episodeId: Int, danmakus: DanmakuMapResult) {
         
-        self.selectedItem = nil
-        
-        if Preferences.shared.autoLoadCustomDanmaku {
-            self.loadCustomDanmaku(media) { isSuccess, result in
-                if isSuccess, let result = result {
-                    self.startPlay(media, episodeId: episodeId, danmakus: result)
-                    self.loadCustomSubtitle(media)
-                } else {
-                    self.startPlay(media, episodeId: episodeId, danmakus: DanmakuManager.shared.conver(danmakus))
-                    self.loadCustomSubtitle(media)
-                }
+        SubtitleManager.shared.loadLocalSubtitle(media) { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let subtitle):
+                self.player.currentSubtitle = subtitle
+                self.view.showHUD(NSLocalizedString("加载字幕成功！", comment: ""))
+            case .failure(_):
+                break
             }
-        } else {
-            self.startPlay(media, episodeId: episodeId, danmakus: DanmakuManager.shared.conver(danmakus))
-            self.loadCustomSubtitle(media)
+            
+            self.startPlay(media, episodeId: episodeId, danmakus: danmakus)
         }
-        
+
     }
     
-    /// 加载本地弹幕
-    /// - Parameters:
-    ///   - media: 视频
-    ///   - completion: 完成回调
-    private func loadCustomDanmaku(_ media: File, completion: @escaping((Bool, [UInt : [DanmakuConverResult]]?) -> Void)) {
-            DanmakuManager.shared.findCustomDanmakuWithMedia(media) { [weak self] result in
-                guard let self = self else { return }
-                
-                switch result {
-                case .success(let files):
-                    if files.isEmpty {
-                        DispatchQueue.main.async {
-                            //没有匹配到本地弹幕
-                            completion(false, nil)
-                        }
-                        return
-                    }
-                    
-                    DanmakuManager.shared.downCustomDanmaku(files[0]) { [weak self] result1 in
-                        
-                        guard let self = self else { return }
-                        
-                        switch result1 {
-                        case .success(let url):
-                            do {
-                                let converResult = try DanmakuManager.shared.conver(url)
-                                DispatchQueue.main.async {
-                                    completion(true, converResult)
-                                    self.view.showHUD(NSLocalizedString("加载本地弹幕成功！", comment: ""))
-                                }
-                            } catch {
-                                DispatchQueue.main.async {
-                                    completion(false, nil)
-                                    self.view.showError(error)
-                                }
-                            }
-                        case .failure(let error):
-                            DispatchQueue.main.async {
-                                completion(false, nil)
-                                self.view.showError(error)
-                            }
-                        }
-                    }
-                case .failure(let error):
-                    DispatchQueue.main.async {
-                        completion(false, nil)
-                        self.view.showError(error)
-                    }
-                }
-            }
-    }
+    
     
     /// 开始播放
     /// - Parameters:
     ///   - media: 视频
     ///   - episodeId: 弹幕分级id
     ///   - danmakus: 弹幕
-    private func startPlay(_ media: File, episodeId: Int, danmakus: [UInt : [DanmakuConverResult]]) {
+    private func startPlay(_ media: File, episodeId: Int, danmakus: DanmakuMapResult) {
         
         self.danmakuDic = danmakus
         self.danmakuRender.time = 0
@@ -405,51 +353,6 @@ class PlayerViewController: ViewController {
                         
                         customView.show(from: self.view)
                     }
-                }
-            }
-        }
-    }
-    
-    /// 加载本地字幕
-    /// - Parameter media: 视频
-    private func loadCustomSubtitle(_ media: File) {
-        SubtitleManager.shared.findCustomSubtitleWithMedia(media) { [weak self] result in
-            guard let self = self else { return }
-            
-            switch result {
-            case .success(let files):
-                if files.isEmpty {
-                    return
-                }
-                
-                var subtitleFile = files[0]
-                
-                //按照优先级加载字幕
-                if let subtitleLoadOrder = Preferences.shared.subtitleLoadOrder {
-                    for keyName in subtitleLoadOrder {
-                        if let matched = files.first(where: { $0.fileName.contains(keyName) }) {
-                            subtitleFile = matched
-                            break
-                        }
-                    }
-                }
-                
-                SubtitleManager.shared.downCustomSubtitle(subtitleFile) { result1 in
-                    switch result1 {
-                    case .success(let subtitle):
-                    DispatchQueue.main.async {
-                        self.player.currentSubtitle = subtitle
-                        self.view.showHUD(NSLocalizedString("加载字幕成功！", comment: ""))
-                    }
-                    case .failure(let error):
-                        DispatchQueue.main.async {
-                            self.view.showError(error)
-                        }
-                    }
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    self.view.showError(error)
                 }
             }
         }
@@ -580,7 +483,7 @@ extension PlayerViewController: MatchsViewControllerDelegate {
                     hud.label.text = "即将开始播放"
                     hud.progress = 1
                     hud.hide(animated: true, afterDelay: 0.5)
-                    self.setupPlayer(matchsViewController.file, episodeId: episodeId, danmakus: danmakus)
+                    self.setupPlayer(matchsViewController.file, episodeId: episodeId, danmakus: DanmakuManager.shared.conver(danmakus))
                 }
             }
         }
@@ -588,7 +491,7 @@ extension PlayerViewController: MatchsViewControllerDelegate {
     
     func playNowInMatchsViewController(_ matchsViewController: MatchsViewController) {
         matchsViewController.navigationController?.popToRootViewController(animated: true)
-        self.setupPlayer(matchsViewController.file, episodeId: 0, danmakus: [])
+        self.setupPlayer(matchsViewController.file, episodeId: 0, danmakus: [:])
     }
 }
 

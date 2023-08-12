@@ -8,11 +8,71 @@
 import Foundation
 import ANXLog
 
+private enum SubtitleLoadError: LocalizedError {
+    case notMatch
+    
+    var errorDescription: String? {
+        switch self {
+        case .notMatch:
+            return "没有匹配到本地字幕"
+        }
+    }
+}
+
 class SubtitleManager {
     
     static let shared = SubtitleManager()
     
     private init() {}
+    
+    /// 加载本地字幕
+    /// - Parameter media: 视频
+    func loadLocalSubtitle(_ media: File, completion: @escaping((Result<SubtitleProtocol, Error>) -> Void)) {
+        if Preferences.shared.autoLoadCustomDanmaku {
+            self.findCustomSubtitleWithMedia(media) { [weak self] result in
+                guard self != nil else { return }
+                
+                switch result {
+                case .success(let files):
+                    if files.isEmpty {
+                        completion(.failure(SubtitleLoadError.notMatch))
+                        return
+                    }
+                    
+                    var subtitleFile = files[0]
+                    
+                    //按照优先级加载字幕
+                    if let subtitleLoadOrder = Preferences.shared.subtitleLoadOrder {
+                        for keyName in subtitleLoadOrder {
+                            if let matched = files.first(where: { $0.fileName.contains(keyName) }) {
+                                subtitleFile = matched
+                                break
+                            }
+                        }
+                    }
+                    
+                    SubtitleManager.shared.downCustomSubtitle(subtitleFile) { result1 in
+                        switch result1 {
+                        case .success(let subtitle):
+                            DispatchQueue.main.async {
+                                completion(.success(subtitle))
+                            }
+                        case .failure(let error):
+                            DispatchQueue.main.async {
+                                completion(.failure(error))
+                            }
+                        }
+                    }
+                case .failure(let error):
+                    DispatchQueue.main.async {
+                        completion(.failure(error))
+                    }
+                }
+            }
+        } else {
+            completion(.failure(SubtitleLoadError.notMatch))
+        }
+    }
     
     func downCustomSubtitle(_ file: File, completion: @escaping((Result<SubtitleProtocol, Error>) -> Void)) {
         var cacheURL = PathUtils.cacheURL
@@ -43,7 +103,9 @@ class SubtitleManager {
         }
     }
     
-    func findCustomSubtitleWithMedia(_ media: File, completion: @escaping((Result<[File], Error>) -> Void)) {
+    // MARK: Private Method
+    
+    private func findCustomSubtitleWithMedia(_ media: File, completion: @escaping((Result<[File], Error>) -> Void)) {
         //加载本地弹幕
         type(of: media).fileManager.subtitlesOfMedia(media) { result in
             switch result {

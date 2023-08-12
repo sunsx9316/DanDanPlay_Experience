@@ -72,6 +72,35 @@ class CacheManager {
         }
     }
     
+    func matchResultWithHash(_ hash: String) -> Data? {
+        let episodeFolderURL = PathUtils.cacheURL.appendingPathComponent("matchResult").appendingPathComponent(hash)
+        
+        do {
+            let data = try Data(contentsOf: episodeFolderURL)
+            return data
+        } catch {
+            return nil
+        }
+    }
+    
+    func setMatchResultWithHash(_ hash: String, data: Data) {
+        let episodeFolderURL = PathUtils.cacheURL.appendingPathComponent("matchResult")
+        
+        if !FileManager.default.fileExists(atPath: episodeFolderURL.path) {
+            do {
+                try FileManager.default.createDirectory(at: episodeFolderURL, withIntermediateDirectories: true)
+            } catch {
+                debugPrint("创建缓存文件失败 hash:\(hash) error:\(error)")
+            }
+        }
+        
+        do {
+            try data.write(to: episodeFolderURL.appendingPathComponent(hash))
+        } catch let error {
+            debugPrint("写入缓存失败 hash:\(hash) error:\(error)")
+        }
+    }
+    
     func cleanupCache() {
         do {
             try FileManager.default.removeItem(at: PathUtils.cacheURL)

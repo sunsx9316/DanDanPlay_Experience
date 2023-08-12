@@ -202,7 +202,7 @@ class SettingViewController: ViewController {
             case .danmakuCacheDay:
                 return NSLocalizedString("弹幕缓存时间", comment: "")
             case .autoLoadCustomDanmaku:
-                return NSLocalizedString("自动加载本地弹幕", comment: "")
+                return NSLocalizedString("自动加载本地弹幕/字幕", comment: "")
             case .subtitleLoadOrder:
                 return NSLocalizedString("字幕加载顺序", comment: "")
             case .host:
@@ -228,7 +228,7 @@ class SettingViewController: ViewController {
                 }
                 return str
             case .autoLoadCustomDanmaku:
-                return NSLocalizedString("自动加载本地弹幕", comment: "")
+                return NSLocalizedString("自动加载本地弹幕/字幕", comment: "")
             case .subtitleLoadOrder:
                 let desc = Preferences.shared.subtitleLoadOrder?.reduce("", { result, str in
                     
@@ -246,9 +246,9 @@ class SettingViewController: ViewController {
             case .host:
                 return Preferences.shared.host
             case .log:
-                return "将.xlog文件提供给开发者"
+                return NSLocalizedString("将.xlog文件提供给开发者", comment: "")
             case .cleanupCache:
-                return "清除本地匹配记录、弹幕缓存等"
+                return NSLocalizedString("清除本地匹配记录、弹幕缓存等", comment: "")
             }
         }
     }

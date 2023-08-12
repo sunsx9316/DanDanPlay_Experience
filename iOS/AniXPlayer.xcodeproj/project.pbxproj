@@ -135,6 +135,7 @@
 		89B4B445272484FE00FB1BF5 /* SpeedUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B4B444272484FE00FB1BF5 /* SpeedUpView.swift */; };
 		89BFF04B2A06C0A00076C676 /* PCSubtitleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BFF04A2A06C0A00076C676 /* PCSubtitleModel.swift */; };
 		89C79B922A87D3AA0040FEDA /* Launcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C79B912A87D3AA0040FEDA /* Launcher.swift */; };
+		89C79B942A881B200040FEDA /* DanmakuLoadUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C79B932A881B200040FEDA /* DanmakuLoadUtil.swift */; };
 		89E0D60E2669113400E2337B /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0D60D2669113400E2337B /* SettingViewController.swift */; };
 		89E0D6122669127B00E2337B /* SwitchDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0D6102669127A00E2337B /* SwitchDetailTableViewCell.swift */; };
 		89E0D6132669127B00E2337B /* SwitchDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89E0D6112669127B00E2337B /* SwitchDetailTableViewCell.xib */; };
@@ -292,6 +293,7 @@
 		89B4B444272484FE00FB1BF5 /* SpeedUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedUpView.swift; sourceTree = "<group>"; };
 		89BFF04A2A06C0A00076C676 /* PCSubtitleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCSubtitleModel.swift; sourceTree = "<group>"; };
 		89C79B912A87D3AA0040FEDA /* Launcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Launcher.swift; sourceTree = "<group>"; };
+		89C79B932A881B200040FEDA /* DanmakuLoadUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuLoadUtil.swift; sourceTree = "<group>"; };
 		89E0D60D2669113400E2337B /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		89E0D6102669127A00E2337B /* SwitchDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchDetailTableViewCell.swift; sourceTree = "<group>"; };
 		89E0D6112669127B00E2337B /* SwitchDetailTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwitchDetailTableViewCell.xib; sourceTree = "<group>"; };
@@ -503,6 +505,7 @@
 				897CF527262F308300CC297A /* Setting */,
 				890DF76D26160B3E002D8AE5 /* PlayerNavigationController.swift */,
 				890DF76126160B3E002D8AE5 /* PlayerViewController.swift */,
+				89C79B932A881B200040FEDA /* DanmakuLoadUtil.swift */,
 				890DF75F26160B3E002D8AE5 /* SendDanmakuViewController.swift */,
 				890DF76226160B3E002D8AE5 /* Manager */,
 				890DF76426160B3E002D8AE5 /* Model */,
@@ -1107,6 +1110,7 @@
 				897CF52D262F30D200CC297A /* DanmakuSettingViewController.swift in Sources */,
 				8994616528CC783C009AC640 /* HistoryManager.swift in Sources */,
 				8994616228CC783C009AC640 /* Atomic.swift in Sources */,
+				89C79B942A881B200040FEDA /* DanmakuLoadUtil.swift in Sources */,
 				890DF77B26160B3E002D8AE5 /* SevenSwitch.swift in Sources */,
 				8994613628CC783C009AC640 /* WebDAVInputStream.swift in Sources */,
 				8994614728CC783C009AC640 /* Preferences.swift in Sources */,
