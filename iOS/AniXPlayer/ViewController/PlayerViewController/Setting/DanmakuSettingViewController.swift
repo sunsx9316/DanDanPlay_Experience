@@ -24,7 +24,10 @@ protocol DanmakuSettingViewControllerDelegate: AnyObject {
     
     func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuDensity density: Float)
     
+    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeMergeSameDanmakuState isOn: Bool)
+    
     func loadDanmakuFileInDanmakuSettingViewController(vc: DanmakuSettingViewController)
+    
     func searchDanmakuInDanmakuSettingViewController(vc: DanmakuSettingViewController)
 }
 
@@ -210,6 +213,19 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
             let cell = tableView.dequeueCell(class: TitleTableViewCell.self, indexPath: indexPath)
             cell.label.text = type.title
             return cell
+        case .mergeSameDanmaku:
+            let cell = tableView.dequeueCell(class: SwitchTableViewCell.self, indexPath: indexPath)
+            cell.selectionStyle = .none
+            cell.aSwitch.isOn = Preferences.shared.isMergeSameDanmaku
+            cell.titleLabel.text = type.title
+            cell.onTouchSliderCallBack = { [weak self] (aCell) in
+                guard let self = self else { return }
+                
+                let isOn = aCell.aSwitch.isOn
+                Preferences.shared.isMergeSameDanmaku = isOn
+                self.delegate?.danmakuSettingViewController(self, didChangeMergeSameDanmakuState: isOn)
+            }
+            return cell
         }
     }
     
@@ -239,6 +255,7 @@ class DanmakuSettingViewController: ViewController {
         case danmakuOffsetTime
         case searchDanmaku
         case loadDanmaku
+        case mergeSameDanmaku
         
         var title: String {
             switch self {
@@ -260,6 +277,8 @@ class DanmakuSettingViewController: ViewController {
                 return NSLocalizedString("搜索弹幕", comment: "")
             case .danmakuDensity:
                 return NSLocalizedString("弹幕密度", comment: "")
+            case .mergeSameDanmaku:
+                return NSLocalizedString("合并重复弹幕", comment: "")
             }
         }
     }

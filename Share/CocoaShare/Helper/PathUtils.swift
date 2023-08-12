@@ -10,7 +10,7 @@ import Foundation
 struct PathUtils {
     static var cacheURL: URL {
 #if os(iOS)
-        return UIApplication.shared.cachesURL
+        return UIApplication.shared.cachesURL.appendingPathComponent("anx_data")
 #else
         return URL(fileURLWithPath: NSSearchPathForDirectoriesInDomains(.cachesDirectory, .allDomainsMask, true)[0])
 #endif

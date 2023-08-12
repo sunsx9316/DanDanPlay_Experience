@@ -71,4 +71,12 @@ class CacheManager {
             debugPrint("写入缓存失败  file:\(file), hash:\(hash) error:\(error)")
         }
     }
+    
+    func cleanupCache() {
+        do {
+            try FileManager.default.removeItem(at: PathUtils.cacheURL)
+        } catch {
+            debugPrint("缓存删除失败 error:\(error)")
+        }
+    }
 }

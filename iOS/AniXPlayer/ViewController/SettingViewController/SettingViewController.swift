@@ -95,6 +95,11 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = type.subtitle
             return cell
+        case .cleanupCache:
+            let cell = tableView.dequeueCell(class: TitleDetailTableViewCell.self, indexPath: indexPath)
+            cell.titleLabel.text = type.title
+            cell.subtitleLabel.text = type.subtitle
+            return cell
         }
     }
     
@@ -162,6 +167,18 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
                 vc.directoryURL = URL(fileURLWithPath: ANXLogHelper.logPath())
             }
             self.present(vc, animated: true)
+        } else if type == .cleanupCache {
+            let vc = UIAlertController(title: NSLocalizedString("提示", comment: ""), message: NSLocalizedString("确定清除缓存吗？", comment: ""), preferredStyle: .alert)
+
+            vc.addAction(.init(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: { (_) in
+                
+            }))
+            
+            vc.addAction(.init(title: NSLocalizedString("确定", comment: ""), style: .destructive, handler: { (_)  in
+                CacheManager.shared.cleanupCache()
+            }))
+            
+            self.present(vc, atView: tableView.cellForRow(at: indexPath))
         }
     }
     
@@ -176,6 +193,7 @@ class SettingViewController: ViewController {
         case subtitleLoadOrder
         case host
         case log
+        case cleanupCache
         
         var title: String {
             switch self {
@@ -191,6 +209,8 @@ class SettingViewController: ViewController {
                 return NSLocalizedString("请求域名", comment: "")
             case .log:
                 return NSLocalizedString("日志", comment: "")
+            case .cleanupCache:
+                return NSLocalizedString("清除缓存", comment: "")
             }
         }
         
@@ -227,6 +247,8 @@ class SettingViewController: ViewController {
                 return Preferences.shared.host
             case .log:
                 return "将.xlog文件提供给开发者"
+            case .cleanupCache:
+                return "清除本地匹配记录、弹幕缓存等"
             }
         }
     }

@@ -71,6 +71,9 @@ class PlayerViewController: ViewController {
     //当前弹幕时间/弹幕数组映射
     private var danmakuDic = [UInt : [DanmakuConverResult]]()
     
+    /// 记录当前屏幕展示的弹幕
+    private lazy var danmuOnScreenMap = NSMapTable<NSString, BaseDanmaku>.strongToWeakObjects()
+    
     private lazy var animater = PlayerControlAnimater()
     
     /// 初始化时选择的视频
@@ -812,7 +815,26 @@ extension PlayerViewController: MediaPlayerDelegate {
                     let danmaku = danmakuBlock()
                     /// 修复因为时间误差的问题，导致少数弹幕突然出现在屏幕上的问题
                     danmaku.appearTime = danmakuRenderTime + (danmaku.appearTime - Double(intTime))
-                    self.danmakuRender.send(danmaku)
+                    
+                    
+                    /// 合并弹幕启用时，查找屏幕上与本弹幕文案相同的弹幕，进行更新
+                    if Preferences.shared.isMergeSameDanmaku {
+                        let danmakuTextKey = danmaku.text as NSString
+
+                        /// 文案与当前弹幕相同
+                        if let oldDanmaku = self.danmuOnScreenMap.object(forKey: danmakuTextKey) as? DanmakuEntity {
+                            oldDanmaku.repeatDanmakuInfo?.repeatCount += 1
+                            self.danmakuRender.update(oldDanmaku)
+                        } else {
+                            danmaku.repeatDanmakuInfo = .init(danmaku: danmaku)
+                            
+                            self.danmakuRender.send(danmaku)
+                            self.danmuOnScreenMap.setObject(danmaku, forKey: danmakuTextKey)
+                        }
+                    } else {
+                        self.danmakuRender.send(danmaku)
+                    }
+                    
                 }
             }
         }
@@ -883,6 +905,10 @@ extension PlayerViewController: DanmakuSettingViewControllerDelegate {
     
     func loadDanmakuFileInDanmakuSettingViewController(vc: DanmakuSettingViewController) {
         self.showFilesVCWithType(.danmaku)
+    }
+    
+    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeMergeSameDanmakuState isOn: Bool) {
+        
     }
     
     func searchDanmakuInDanmakuSettingViewController(vc: DanmakuSettingViewController) {

@@ -134,6 +134,7 @@
 		89AF9C0F26343BE70037A133 /* AutoScrollLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AF9C0E26343BE70037A133 /* AutoScrollLabel.swift */; };
 		89B4B445272484FE00FB1BF5 /* SpeedUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B4B444272484FE00FB1BF5 /* SpeedUpView.swift */; };
 		89BFF04B2A06C0A00076C676 /* PCSubtitleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89BFF04A2A06C0A00076C676 /* PCSubtitleModel.swift */; };
+		89C79B922A87D3AA0040FEDA /* Launcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C79B912A87D3AA0040FEDA /* Launcher.swift */; };
 		89E0D60E2669113400E2337B /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0D60D2669113400E2337B /* SettingViewController.swift */; };
 		89E0D6122669127B00E2337B /* SwitchDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0D6102669127A00E2337B /* SwitchDetailTableViewCell.swift */; };
 		89E0D6132669127B00E2337B /* SwitchDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89E0D6112669127B00E2337B /* SwitchDetailTableViewCell.xib */; };
@@ -290,6 +291,7 @@
 		89AF9C0E26343BE70037A133 /* AutoScrollLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoScrollLabel.swift; sourceTree = "<group>"; };
 		89B4B444272484FE00FB1BF5 /* SpeedUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedUpView.swift; sourceTree = "<group>"; };
 		89BFF04A2A06C0A00076C676 /* PCSubtitleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCSubtitleModel.swift; sourceTree = "<group>"; };
+		89C79B912A87D3AA0040FEDA /* Launcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Launcher.swift; sourceTree = "<group>"; };
 		89E0D60D2669113400E2337B /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		89E0D6102669127A00E2337B /* SwitchDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchDetailTableViewCell.swift; sourceTree = "<group>"; };
 		89E0D6112669127B00E2337B /* SwitchDetailTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwitchDetailTableViewCell.xib; sourceTree = "<group>"; };
@@ -815,6 +817,7 @@
 				89AAA20B2972F4E0008CD8AD /* ANXLogHelperModule+Utils.h */,
 				89AAA20C2972F4E0008CD8AD /* ANXLogHelperModule+Utils.m */,
 				899A11B02A18B703009B2953 /* AppInfoHelper.swift */,
+				89C79B912A87D3AA0040FEDA /* Launcher.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -1077,6 +1080,7 @@
 				8931F0F626773A2300590569 /* SubtitleOrderViewController.swift in Sources */,
 				899C4E97263BDDE600A17C83 /* LinkHistoryHeaderView.swift in Sources */,
 				8994613B28CC783C009AC640 /* FTPFileManager.swift in Sources */,
+				89C79B922A87D3AA0040FEDA /* Launcher.swift in Sources */,
 				890DF77E26160B3E002D8AE5 /* PlayerNavigationController.swift in Sources */,
 				89AAA20A29727DC0008CD8AD /* MPVPlayerWrapper.swift in Sources */,
 				8931F0E52674CA6A00590569 /* UIBarButtonItem+Helper.swift in Sources */,

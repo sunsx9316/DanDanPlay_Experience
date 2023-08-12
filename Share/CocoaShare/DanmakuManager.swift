@@ -14,8 +14,61 @@ import YYCategories
 import DDPCategory
 #endif
 
-typealias DanmakuEntity = BaseDanmaku
+typealias DanmakuEntity = (BaseDanmaku & RepeatDanmakuInfoProtocol)
 typealias DanmakuConverResult = () -> DanmakuEntity
+
+class RepeatDanmakuInfo {
+    
+    weak var danmaku: BaseDanmaku?
+    
+    /// 原始文案
+    let originText: NSString
+    
+    /// 重复次数
+    var repeatCount = 0 {
+        didSet {
+            if self.repeatCount > 0 {
+                self.danmaku?.text = (self.originText as String) + ": \(self.repeatCount)"
+            }
+        }
+    }
+    
+    init(danmaku: BaseDanmaku) {
+        self.danmaku = danmaku
+        self.originText = danmaku.text as NSString
+    }
+    
+}
+
+protocol RepeatDanmakuInfoProtocol: AnyObject {
+    
+    var repeatDanmakuInfo: RepeatDanmakuInfo? { set get }
+    
+}
+
+private class _ScrollDanmaku: ScrollDanmaku, RepeatDanmakuInfoProtocol {
+    
+    var repeatDanmakuInfo: RepeatDanmakuInfo?
+    
+    override func willMoveOutCanvas(_ context: DanmakuContext) {
+        super.willMoveOutCanvas(context)
+        self.repeatDanmakuInfo = nil
+    }
+    
+}
+ 
+
+private class _FloatDanmaku: FloatDanmaku, RepeatDanmakuInfoProtocol {
+    
+    var repeatDanmakuInfo: RepeatDanmakuInfo?
+    
+    override func willMoveOutCanvas(_ context: DanmakuContext) {
+        super.willMoveOutCanvas(context)
+        
+        self.repeatDanmakuInfo = nil
+    }
+    
+}
 
 private enum DanmakuError: LocalizedError {
     case parseError
@@ -133,16 +186,17 @@ class DanmakuManager {
     /// - Returns: 弹幕模型
     private func conver(_ model: Comment) -> DanmakuEntity {
         let fontSize = CGFloat(Preferences.shared.danmakuFontSize)
+        
         switch model.mode {
         case .normal:
             let danmakuSpeed = Preferences.shared.danmakuSpeed
-            let aDanmaku = ScrollDanmaku(text: model.message, textColor: model.color, font: .systemFont(ofSize: fontSize), effectStyle: .stroke, direction: .toLeft)
+            let aDanmaku = _ScrollDanmaku(text: model.message, textColor: model.color, font: .systemFont(ofSize: fontSize), effectStyle: .stroke, direction: .toLeft)
             aDanmaku.appearTime = model.time
             aDanmaku.extraSpeed = danmakuSpeed
             return aDanmaku
         case .bottom, .top:
             let position: FloatDanmaku.Position = model.mode == .bottom ? .atBottom : .atTop
-            let aDanmaku = FloatDanmaku(text: model.message, textColor: model.color, font: .systemFont(ofSize: fontSize), effectStyle: .stroke, position: position, lifeTime: 3)
+            let aDanmaku = _FloatDanmaku(text: model.message, textColor: model.color, font: .systemFont(ofSize: fontSize), effectStyle: .stroke, position: position, lifeTime: 3)
             aDanmaku.appearTime = model.time
             return aDanmaku
         }

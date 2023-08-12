@@ -6,8 +6,6 @@
 //
 
 import UIKit
-import FirebaseCore
-import FirebaseCrashlytics
 import ANXLog
 
 @main
@@ -17,7 +15,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         
-        self.setup()
+        Launcher.launch()
         
         let vc = HomePageViewController()
         let nav = HomePageNavigationController(rootViewController: vc)
@@ -64,63 +62,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         ANXLogHelper.flush()
     }
     
-
-    //MARK: - Private Method
-    private func setup() {
-        
-        FirebaseApp.configure()
-        
-        do {
-//            let navBarAppearance = UINavigationBar.appearance()
-
-//            let backImage = UIImage(named: "Public/go_back")?.byTintColor(.navItemColor)?.withRenderingMode(.alwaysOriginal)
-//            navBarAppearance.backIndicatorImage = backImage
-//            navBarAppearance.backIndicatorTransitionMaskImage = backImage
-            
-            let barButtonAppearance = UIBarButtonItem.appearance()
-            barButtonAppearance.setBackButtonTitlePositionAdjustment(UIOffset(horizontal: 0, vertical: -5), for: .default)
-        }
-        
-        do {
-            let tabbarAppearance = UITabBar.appearance()
-            tabbarAppearance.barTintColor = .backgroundColor
-        }
-        
-        do {
-            let windowAppearance = UIWindow.appearance()
-            windowAppearance.backgroundColor = .backgroundColor
-        }
-        
-        //搜索框
-//        do {
-//            let placeholderAttributes: [NSAttributedString.Key : Any] = [.font : UIFont.ddp_normal, .foregroundColor : UIColor.placeholderColor]
-//            let barButtonItemAppearance = UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self])
-//            barButtonItemAppearance.tintColor = UIColor.navigationTitleColor
-//            barButtonItemAppearance.title = "取消"
-//            barButtonItemAppearance.setTitleTextAttributes(placeholderAttributes, for: .normal)
-//        }
-        
-        // 滚动条
-        do {
-            let sliderAppearance = UISlider.appearance()
-            sliderAppearance.tintColor = .mainColor
-        }
-        
-        // 开关
-        
-        do {
-            let switchAppearance = UISwitch.appearance()
-            switchAppearance.onTintColor = .mainColor
-        }
-        
-        do {
-            let tableView = UITableView.appearance()
-            tableView.separatorColor = .separatorColor
-        }
-        
-        do {
-            ANXLogHelper.setup()
-        }
-    }
 }
 

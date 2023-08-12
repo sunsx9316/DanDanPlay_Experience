@@ -100,6 +100,9 @@ class Preferences {
         /// 上次更新的版本号
         case lastUpdateVersion
         
+        /// 合并重复弹幕
+        case mergeSameDanmaku
+        
         var storeKey: String {
             if self == .danmakuDensity {
                 return "danmakuDensity_v2"
@@ -134,6 +137,9 @@ class Preferences {
     
     @StoreWrapper(defaultValue: DefaultHost, key: .host)
     var host: String
+    
+    @StoreWrapper(defaultValue: true, key: .mergeSameDanmaku)
+    var isMergeSameDanmaku: Bool
     
     var sendDanmakuType: DanmakuModel.Mode {
         get {
