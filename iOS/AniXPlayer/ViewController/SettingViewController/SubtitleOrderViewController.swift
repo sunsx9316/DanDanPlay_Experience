@@ -119,7 +119,6 @@ class SubtitleOrderViewController: ViewController {
         }))
         
         self.present(vc, atItem: item)
-        self.present(vc, animated: true, completion: nil)
     }
     
     @objc private func onTouchEditItem(_ item: UIBarButtonItem) {
