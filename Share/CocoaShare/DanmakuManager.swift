@@ -33,25 +33,28 @@ private enum DanmakuLoadError: LocalizedError {
 }
 
 
+/// 重复弹幕信息
 class RepeatDanmakuInfo {
     
     weak var danmaku: BaseDanmaku?
     
     /// 原始文案
-    let originText: NSString
+    let originText: String
     
     /// 重复次数
     var repeatCount = 0 {
         didSet {
             if self.repeatCount > 0 {
-                self.danmaku?.text = (self.originText as String) + ": \(self.repeatCount)"
+                self.danmaku?.text = self.originText + ": \(self.repeatCount)"
+            } else {
+                self.danmaku?.text = self.originText
             }
         }
     }
     
     init(danmaku: BaseDanmaku) {
         self.danmaku = danmaku
-        self.originText = danmaku.text as NSString
+        self.originText = danmaku.text
     }
     
 }
@@ -80,7 +83,6 @@ private class _FloatDanmaku: FloatDanmaku, RepeatDanmakuInfoProtocol {
     
     override func willMoveOutCanvas(_ context: DanmakuContext) {
         super.willMoveOutCanvas(context)
-        
         self.repeatDanmakuInfo = nil
     }
     

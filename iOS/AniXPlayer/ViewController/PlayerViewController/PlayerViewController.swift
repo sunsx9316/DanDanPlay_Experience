@@ -716,9 +716,11 @@ extension PlayerViewController: MediaPlayerDelegate {
                 let shouldSendDanmaku = Float.random(in: 0...10) <= danmakuDensity
                 if shouldSendDanmaku {
                     let danmaku = danmakuBlock()
-                    /// 修复因为时间误差的问题，导致少数弹幕突然出现在屏幕上的问题
-                    danmaku.appearTime = danmakuRenderTime + (danmaku.appearTime - Double(intTime))
                     
+                    /// 修复因为时间误差的问题，导致少数弹幕突然出现在屏幕上的问题
+                    if danmaku.appearTime > 0 {
+                        danmaku.appearTime = self.danmakuRender.time + (danmaku.appearTime - Double(intTime))
+                    }
                     
                     /// 合并弹幕启用时，查找屏幕上与本弹幕文案相同的弹幕，进行更新
                     if Preferences.shared.isMergeSameDanmaku {
