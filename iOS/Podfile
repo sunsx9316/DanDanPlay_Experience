@@ -15,6 +15,7 @@ target 'AniXPlayer' do
   pod 'NKOColorPickerView'
   pod 'MMKV'
   pod 'DanmakuRender-Swift'
+  # pod 'DanmakuRender-Swift', :path => '../../../DanmakuRender-Swift'
   pod 'HandyJSON'
   pod 'MJRefresh'
   pod 'MobileVLCKit'
