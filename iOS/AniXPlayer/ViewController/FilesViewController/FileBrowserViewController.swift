@@ -9,6 +9,30 @@ import UIKit
 import SnapKit
 import MJRefresh
 
+private class _FileWrapper: NSObject {
+    
+    let file: File
+    
+    @objc var name: String {
+        return self.file.fileName
+    }
+    
+    var type: FileType {
+        return self.file.type
+    }
+    
+    var pathExtension: String {
+        return self.file.pathExtension
+    }
+    
+    
+    init(file: File) {
+        self.file = file
+        super.init()
+    }
+    
+}
+
 protocol FileBrowserViewControllerDelegate: AnyObject {
     func fileBrowserViewController(_ vc: FileBrowserViewController, didSelectFile: File, allFiles: [File])
 }
@@ -17,11 +41,23 @@ extension FileBrowserViewController: UITableViewDelegate, UITableViewDataSource 
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.dataSource[section].count
+    }
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
         return self.dataSource.count
     }
     
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return self.sortTitleArr[section]
+    }
+    
+    func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        return self.sortTitleArr
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let file = self.dataSource[indexPath.row]
+        let file = self.dataSource[indexPath.section][indexPath.row].file
         
         switch file.type {
         case .file:
@@ -43,11 +79,12 @@ extension FileBrowserViewController: UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let file = self.dataSource[indexPath.row]
+        let file = self.dataSource[indexPath.section][indexPath.row].file
         
         switch file.type {
         case .file:
-            let files = self.dataSource.filter({ $0.type == .file })
+            let files = self.dataSource.flatMap({ $0 }).compactMap({ $0.file }).filter({ $0.type == .file })
+            
             self.delegate?.fileBrowserViewController(self, didSelectFile: file, allFiles: files)
         case .folder:
             let vc = FileBrowserViewController(with: file, selectedFile: self.selectedFile, filterType: self.filterType)
@@ -58,7 +95,7 @@ extension FileBrowserViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         
-        let file = self.dataSource[indexPath.row]
+        let file = self.dataSource[indexPath.section][indexPath.row].file
         let cell = tableView.cellForRow(at: indexPath)
         
         if !file.isCanDelete {
@@ -115,7 +152,6 @@ extension FileBrowserViewController: UITableViewDelegate, UITableViewDataSource 
         
         self.present(vc, atView: from)
     }
-    
 }
 
 extension FileBrowserViewController: FileBrowserViewControllerDelegate {
@@ -149,7 +185,9 @@ class FileBrowserViewController: ViewController {
     
     private(set) var filterType: URLFilterType?
     
-    private var dataSource = [File]()
+    private var dataSource = [[_FileWrapper]]()
+    
+    private var sortTitleArr = [String]()
     
     private var isShowAllFile = false
     
@@ -205,25 +243,50 @@ class FileBrowserViewController: ViewController {
             
             switch result {
             case .success(let files):
+        
+                let tmpIndexedCollation = UILocalizedIndexedCollation.current()
                 
-                var filterFiles = files
+                var dataSourceMap = [String: [_FileWrapper]]()
+                var dataSourceArr = [[_FileWrapper]]()
                 
-                filterFiles.sort { f1, f2 in
-                    if f1.type == .folder && f2.type == .file {
-                        return true
-                    } else if f1.type == .file && f2.type == .folder {
-                        return false
-                    } else {
-                        if f1.pathExtension == f2.pathExtension {
-                            return f1.fileName < f2.fileName
-                        } else {
-                            return f1.pathExtension < f2.pathExtension
+                
+                for file in files {
+                    let wrapper = _FileWrapper(file: file)
+                    let section = tmpIndexedCollation.section(for: wrapper, collationStringSelector: #selector(getter: _FileWrapper.name))
+                    let key = tmpIndexedCollation.sectionIndexTitles[section]
+                    if dataSourceMap[key] == nil {
+                        dataSourceMap[key] = .init()
+                    }
+                    dataSourceMap[key]?.append(wrapper)
+                }
+                
+                let sortTitleArr = dataSourceMap.keys.sorted(by: { $0 > $1 })
+                
+                for key in sortTitleArr {
+                    
+                    if let sortArr = tmpIndexedCollation.sortedArray(from: dataSourceMap[key] ?? [], collationStringSelector: #selector(getter: _FileWrapper.name)) as? [_FileWrapper] {
+                        
+                        let tmpArr = sortArr.sorted { f1, f2 in
+                            if f1.type == .folder && f2.type == .file {
+                                return true
+                            } else if f1.type == .file && f2.type == .folder {
+                                return false
+                            } else {
+                                if f1.pathExtension == f2.pathExtension {
+                                    return f1.name < f2.name
+                                } else {
+                                    return f1.pathExtension < f2.pathExtension
+                                }
+                            }
                         }
+                        
+                        dataSourceArr.append(tmpArr)
                     }
                 }
                 
                 DispatchQueue.main.async {
-                    self.dataSource = filterFiles
+                    self.sortTitleArr = sortTitleArr
+                    self.dataSource = dataSourceArr
                     self.tableView.mj_header?.endRefreshing()
                     self.tableView.reloadData()
                 }
