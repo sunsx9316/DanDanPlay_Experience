@@ -28,7 +28,7 @@ class SubtitleManager {
     /// 加载本地字幕
     /// - Parameter media: 视频
     func loadLocalSubtitle(_ media: File, completion: @escaping((Result<SubtitleProtocol, Error>) -> Void)) {
-        if Preferences.shared.autoLoadCustomDanmaku {
+        if Preferences.shared.autoLoadCustomSubtitle {
             self.findCustomSubtitleWithMedia(media) { [weak self] result in
                 guard self != nil else { return }
                 

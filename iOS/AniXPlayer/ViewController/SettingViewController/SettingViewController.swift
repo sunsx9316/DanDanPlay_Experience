@@ -46,6 +46,17 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
                 Preferences.shared.autoLoadCustomDanmaku = isOn
             }
             return cell
+        case .autoLoadCustomSubtitle:
+            let cell = tableView.dequeueCell(class: SwitchDetailTableViewCell.self, indexPath: indexPath)
+            cell.aSwitch.isOn = Preferences.shared.autoLoadCustomSubtitle
+            cell.titleLabel.text = type.title
+            cell.subtitleLabel.text = type.subtitle
+            cell.selectionStyle = .none
+            cell.onTouchSliderCallBack = { (aCell) in
+                let isOn = aCell.aSwitch.isOn
+                Preferences.shared.autoLoadCustomSubtitle = isOn
+            }
+            return cell
         case .danmakuCacheDay:
             let cell = tableView.dequeueCell(class: TitleDetailTableViewCell.self, indexPath: indexPath)
             cell.titleLabel.text = type.title
@@ -189,6 +200,7 @@ class SettingViewController: ViewController {
     private enum CellType: CaseIterable {
         case fastMatch
         case autoLoadCustomDanmaku
+        case autoLoadCustomSubtitle
         case danmakuCacheDay
         case subtitleLoadOrder
         case host
@@ -202,7 +214,7 @@ class SettingViewController: ViewController {
             case .danmakuCacheDay:
                 return NSLocalizedString("弹幕缓存时间", comment: "")
             case .autoLoadCustomDanmaku:
-                return NSLocalizedString("自动加载本地弹幕/字幕", comment: "")
+                return NSLocalizedString("自动加载本地弹幕", comment: "")
             case .subtitleLoadOrder:
                 return NSLocalizedString("字幕加载顺序", comment: "")
             case .host:
@@ -211,6 +223,8 @@ class SettingViewController: ViewController {
                 return NSLocalizedString("日志", comment: "")
             case .cleanupCache:
                 return NSLocalizedString("清除缓存", comment: "")
+            case .autoLoadCustomSubtitle:
+                return NSLocalizedString("自动加载本地字幕", comment: "")
             }
         }
         
@@ -228,7 +242,9 @@ class SettingViewController: ViewController {
                 }
                 return str
             case .autoLoadCustomDanmaku:
-                return NSLocalizedString("自动加载本地弹幕/字幕", comment: "")
+                return NSLocalizedString("自动加载本地弹幕", comment: "")
+            case .autoLoadCustomSubtitle:
+                return NSLocalizedString("自动加载本地字幕", comment: "")
             case .subtitleLoadOrder:
                 let desc = Preferences.shared.subtitleLoadOrder?.reduce("", { result, str in
                     

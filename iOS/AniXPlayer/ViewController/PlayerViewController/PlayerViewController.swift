@@ -282,33 +282,9 @@ class PlayerViewController: ViewController {
                 if let error = error {
                     self.view.showError(error)
                 } else {
-                    self.setupPlayer(media, episodeId: episodeId, danmakus: result ?? [:])
+                    self.startPlay(media, episodeId: episodeId, danmakus: result ?? [:])
                 }
             }
-        }
-
-    }
-    
-    
-    /// 初始化播放器（字幕）
-    /// - Parameters:
-    ///   - media: 视频
-    ///   - episodeId: 弹幕分集id
-    ///   - danmakus: 弹幕
-    private func setupPlayer(_ media: File, episodeId: Int, danmakus: DanmakuMapResult) {
-        
-        SubtitleManager.shared.loadLocalSubtitle(media) { [weak self] result in
-            guard let self = self else { return }
-            
-            switch result {
-            case .success(let subtitle):
-                self.player.currentSubtitle = subtitle
-                self.view.showHUD(NSLocalizedString("加载字幕成功！", comment: ""))
-            case .failure(_):
-                break
-            }
-            
-            self.startPlay(media, episodeId: episodeId, danmakus: danmakus)
         }
 
     }
@@ -326,6 +302,18 @@ class PlayerViewController: ViewController {
         self.danmakuRender.time = 0
         self.danmakuTime = nil
         self.player.play(media)
+        
+        SubtitleManager.shared.loadLocalSubtitle(media) { [weak self] result in
+            guard let self = self else { return }
+            
+            switch result {
+            case .success(let subtitle):
+                self.player.currentSubtitle = subtitle
+                self.view.showHUD(NSLocalizedString("加载字幕成功！", comment: ""))
+            case .failure(_):
+                break
+            }
+        }
         
         //定位上次播放的位置
         if let playItem = self.findPlayItem(media) {
@@ -483,7 +471,7 @@ extension PlayerViewController: MatchsViewControllerDelegate {
                     hud.label.text = "即将开始播放"
                     hud.progress = 1
                     hud.hide(animated: true, afterDelay: 0.5)
-                    self.setupPlayer(matchsViewController.file, episodeId: episodeId, danmakus: DanmakuManager.shared.conver(danmakus))
+                    self.startPlay(matchsViewController.file, episodeId: episodeId, danmakus: DanmakuManager.shared.conver(danmakus))
                 }
             }
         }
@@ -491,7 +479,7 @@ extension PlayerViewController: MatchsViewControllerDelegate {
     
     func playNowInMatchsViewController(_ matchsViewController: MatchsViewController) {
         matchsViewController.navigationController?.popToRootViewController(animated: true)
-        self.setupPlayer(matchsViewController.file, episodeId: 0, danmakus: [:])
+        self.startPlay(matchsViewController.file, episodeId: 0, danmakus: [:])
     }
 }
 

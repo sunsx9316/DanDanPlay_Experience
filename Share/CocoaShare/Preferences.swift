@@ -73,6 +73,9 @@ class Preferences {
         /// 是否自动加载本地弹幕
         case autoLoadCustomDanmaku
         
+        /// 是否自动加载本地字幕
+        case autoLoadCustomSubtitle
+        
         /// 弹幕偏移时间
         case danmakuOffsetTime
         
@@ -128,6 +131,9 @@ class Preferences {
     
     @StoreWrapper(defaultValue: true, key: .autoLoadCustomDanmaku)
     var autoLoadCustomDanmaku: Bool
+    
+    @StoreWrapper(defaultValue: true, key: .autoLoadCustomSubtitle)
+    var autoLoadCustomSubtitle: Bool
     
     @StoreWrapper(defaultValue: true, key: .showDanmaku)
     var isShowDanmaku: Bool
