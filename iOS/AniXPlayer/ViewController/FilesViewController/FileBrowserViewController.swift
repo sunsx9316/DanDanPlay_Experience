@@ -49,10 +49,16 @@ extension FileBrowserViewController: UITableViewDelegate, UITableViewDataSource 
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if self.sortTitleArr.count <= 1 {
+            return nil
+        }
         return self.sortTitleArr[section]
     }
     
     func sectionIndexTitles(for tableView: UITableView) -> [String]? {
+        if self.sortTitleArr.count <= 1 {
+            return nil
+        }
         return self.sortTitleArr
     }
     
@@ -260,7 +266,7 @@ class FileBrowserViewController: ViewController {
                     dataSourceMap[key]?.append(wrapper)
                 }
                 
-                let sortTitleArr = dataSourceMap.keys.sorted(by: { $0 > $1 })
+                let sortTitleArr = dataSourceMap.keys.sorted(by: { $0 < $1 })
                 
                 for key in sortTitleArr {
                     
