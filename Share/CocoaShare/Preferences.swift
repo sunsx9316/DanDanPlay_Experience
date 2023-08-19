@@ -106,6 +106,15 @@ class Preferences {
         /// 合并重复弹幕
         case mergeSameDanmaku
         
+        /// 自动跳过片头片尾
+        case autoJumpTitleEnding
+        
+        /// 自动跳过片头时长
+        case jumpTitleDuration
+        
+        /// 自动跳过片尾时长
+        case jumpEndingDuration
+        
         var storeKey: String {
             if self == .danmakuDensity {
                 return "danmakuDensity_v2"
@@ -146,6 +155,15 @@ class Preferences {
     
     @StoreWrapper(defaultValue: true, key: .mergeSameDanmaku)
     var isMergeSameDanmaku: Bool
+    
+    @StoreWrapper(defaultValue: false, key: .autoJumpTitleEnding)
+    var autoJumpTitleEnding: Bool
+    
+    @StoreWrapper(defaultValue: 0.0, key: .jumpTitleDuration)
+    var jumpTitleDuration: Double
+    
+    @StoreWrapper(defaultValue: 0.0, key: .jumpEndingDuration)
+    var jumpEndingDuration: Double
     
     var sendDanmakuType: DanmakuModel.Mode {
         get {

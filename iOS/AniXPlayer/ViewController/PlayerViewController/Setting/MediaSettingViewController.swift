@@ -94,6 +94,100 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             cell.titleLabel.text = type.title
             cell.valueLabel.text = self.player?.currentAudioChannel?.name ?? NSLocalizedString("无", comment: "")
             return cell
+        case .autoJumpTitleEnding:
+            let cell = tableView.dequeueCell(class: SwitchTableViewCell.self, indexPath: indexPath)
+            cell.aSwitch.isOn = Preferences.shared.autoJumpTitleEnding
+            cell.titleLabel.text = type.title
+            cell.selectionStyle = .none
+            cell.onTouchSliderCallBack = { [weak self] (aCell) in
+                guard let self = self else { return }
+                
+                let isOn = aCell.aSwitch.isOn
+                Preferences.shared.autoJumpTitleEnding = isOn
+                self.tableView.reloadData()
+            }
+            return cell
+        case .jumpTitleDuration:
+            let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
+            cell.titleLabel.text = type.title
+            cell.selectionStyle = .none
+            cell.step = 1
+            let model = SliderTableViewCell.Model(maxValue: 600,
+                                                  minValue: 0,
+                                                  currentValue: Float(Preferences.shared.jumpTitleDuration))
+            
+            model.minValueFormattingCallBack = { [weak self] aModel in
+                guard let self = self else { return "" }
+                
+                let date = Date(timeIntervalSince1970: TimeInterval(aModel.minValue))
+                return self.dateFormatter.string(from: date)
+            }
+            
+            model.maxValueFormattingCallBack = { [weak self] aModel in
+                guard let self = self else { return "" }
+                
+                let date = Date(timeIntervalSince1970: TimeInterval(aModel.maxValue))
+                return self.dateFormatter.string(from: date)
+            }
+            
+            model.currentValueFormattingCallBack = { [weak self] aModel in
+                guard let self = self else { return "" }
+                
+                let date = Date(timeIntervalSince1970: TimeInterval(aModel.currentValue))
+                return self.dateFormatter.string(from: date)
+            }
+            
+            cell.model = model
+            cell.onChangeSliderCallBack = { (aCell) in
+                
+                let currentValue = aCell.valueSlider.value
+                Preferences.shared.jumpTitleDuration = Double(currentValue)
+                let model = aCell.model
+                model?.currentValue = currentValue
+                aCell.model = model
+            }
+            return cell
+        case .jumpEndingDuration:
+            let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
+            cell.titleLabel.text = type.title
+            cell.selectionStyle = .none
+            cell.step = 1
+            let model = SliderTableViewCell.Model(maxValue: 600,
+                                                  minValue: 0,
+                                                  currentValue: Float(Preferences.shared.jumpEndingDuration))
+            
+            model.minValueFormattingCallBack = { [weak self] aModel in
+                guard let self = self else { return "" }
+                
+                let date = Date(timeIntervalSince1970: TimeInterval(aModel.minValue))
+                return self.dateFormatter.string(from: date)
+            }
+            
+            model.maxValueFormattingCallBack = { [weak self] aModel in
+                guard let self = self else { return "" }
+                
+                let date = Date(timeIntervalSince1970: TimeInterval(aModel.maxValue))
+                return self.dateFormatter.string(from: date)
+            }
+            
+            model.currentValueFormattingCallBack = { [weak self] aModel in
+                guard let self = self else { return "" }
+                
+                let date = Date(timeIntervalSince1970: TimeInterval(aModel.currentValue))
+                return self.dateFormatter.string(from: date)
+            }
+            
+            cell.model = model
+            
+            cell.onChangeSliderCallBack = { (aCell) in
+                
+                let currentValue = aCell.valueSlider.value
+                Preferences.shared.jumpEndingDuration = Double(currentValue)
+                let model = aCell.model
+                model?.currentValue = currentValue
+                aCell.model = model
+            }
+            return cell
         }
     }
     
@@ -190,6 +284,9 @@ class MediaSettingViewController: ViewController {
         case playerSpeed
         case playerMode
         case loadSubtitle
+        case autoJumpTitleEnding
+        case jumpTitleDuration
+        case jumpEndingDuration
         
         var title: String {
             switch self {
@@ -205,6 +302,12 @@ class MediaSettingViewController: ViewController {
                 return NSLocalizedString("字幕轨道", comment: "")
             case .audioTrack:
                 return NSLocalizedString("音频轨道", comment: "")
+            case .autoJumpTitleEnding:
+                return NSLocalizedString("自动跳过片头/片尾", comment: "")
+            case .jumpTitleDuration:
+                return NSLocalizedString("跳过片头时长", comment: "")
+            case .jumpEndingDuration:
+                return NSLocalizedString("跳过片尾时长", comment: "")
             }
         }
     }
@@ -231,6 +334,12 @@ class MediaSettingViewController: ViewController {
     private weak var player: MediaPlayer?
 
     weak var delegate: MediaSettingViewControllerDelegate?
+    
+    private lazy var dateFormatter: DateFormatter = {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "mm:ss"
+        return dateFormatter
+    }()
     
     
     init(player: MediaPlayer?) {

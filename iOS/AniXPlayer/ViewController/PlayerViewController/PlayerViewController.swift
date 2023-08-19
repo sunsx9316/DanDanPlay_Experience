@@ -243,6 +243,17 @@ class PlayerViewController: ViewController {
         self.uiView.updateTime()
     }
     
+    private func setPlayerProgress(diffValue: CGFloat, from: CGFloat? = nil) {
+        let length = self.player.length
+        
+        let fromValue = from ?? CGFloat(self.player.currentTime)
+        
+        if length > 0 {
+            let progress = (fromValue + diffValue) / CGFloat(length)
+            self.setPlayerProgress(progress)
+        }
+    }
+    
     private func tryParseMedia(_ media: File) {
         
         self.storeProgress()
@@ -303,6 +314,18 @@ class PlayerViewController: ViewController {
         self.danmakuTime = nil
         self.player.play(media)
         
+        self.loadSubtitle(media)
+        let loadLastWatchProgressSuccess = self.loadLastWatchProgress(media, episodeId: episodeId)
+        if !loadLastWatchProgressSuccess {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.autoJumpTitle()
+            }
+        }
+    }
+    
+    
+    /// 加载外挂字幕
+    private func loadSubtitle(_ media: File) {
         SubtitleManager.shared.loadLocalSubtitle(media) { [weak self] result in
             guard let self = self else { return }
             
@@ -314,8 +337,10 @@ class PlayerViewController: ViewController {
                 break
             }
         }
-        
-        //定位上次播放的位置
+    }
+    
+    /// 定位上次播放的位置
+    private func loadLastWatchProgress(_ media: File, episodeId: Int) -> Bool {
         if let playItem = self.findPlayItem(media) {
             playItem.episodeId = episodeId
             if let watchProgressKey = playItem.watchProgressKey,
@@ -341,6 +366,37 @@ class PlayerViewController: ViewController {
                         
                         customView.show(from: self.view)
                     }
+                    
+                    return true
+                }
+            }
+        }
+        
+        return false
+    }
+    
+    private func autoJumpTitle() {
+        if Preferences.shared.autoJumpTitleEnding {
+            let duration = Preferences.shared.jumpTitleDuration
+            
+            if duration > 0 && self.player.length > 0 && duration < self.player.length {
+                self.setPlayerProgress(diffValue: duration, from: 0)
+            }
+        }
+    }
+    
+    private func autoJumpEnding() {
+        if Preferences.shared.autoJumpTitleEnding {
+            let duration = Preferences.shared.jumpEndingDuration
+            
+            if duration > 0 && self.player.length > 0 {
+                
+                let shouldJumpEnding = self.player.currentTime + duration >= self.player.length &&
+                duration < self.player.length &&
+                self.player.length - self.player.currentTime > 2
+                
+                if shouldJumpEnding {
+                    self.setPlayerProgress(diffValue: self.player.length - 1, from: 0)
                 }
             }
         }
@@ -432,7 +488,58 @@ class PlayerViewController: ViewController {
             /// 当前没有播放的对象，尝试解析视频
             self.parseMediaAtInit()
         }
+    }
+    
+    
+    /// 发送弹幕
+    private func sendDanmakus(at currentTime: TimeInterval) {
+        let danmakuRenderTime = currentTime + self.danmakuRender.offsetTime
         
+        if danmakuRenderTime < 0 {
+            return
+        }
+        
+        let intTime = UInt(danmakuRenderTime)
+        /// 一秒只发射一次弹幕
+        if intTime == self.danmakuTime {
+            return
+        }
+        
+        self.danmakuTime = intTime
+        if let danmakus = danmakuDic[intTime] {
+            let danmakuDensity = Preferences.shared.danmakuDensity
+            for danmakuBlock in danmakus {
+                /// 小于弹幕密度才允许发射
+                let shouldSendDanmaku = Float.random(in: 0...10) <= danmakuDensity
+                if shouldSendDanmaku {
+                    let danmaku = danmakuBlock()
+                    
+                    /// 修复因为时间误差的问题，导致少数弹幕突然出现在屏幕上的问题
+                    if danmaku.appearTime > 0 {
+                        danmaku.appearTime = self.danmakuRender.time + (danmaku.appearTime - Double(intTime))
+                    }
+                    
+                    /// 合并弹幕启用时，查找屏幕上与本弹幕文案相同的弹幕，进行更新
+                    if Preferences.shared.isMergeSameDanmaku {
+                        let danmakuTextKey = danmaku.text as NSString
+
+                        /// 文案与当前弹幕相同
+                        if let oldDanmaku = self.danmuOnScreenMap.object(forKey: danmakuTextKey) as? DanmakuEntity {
+                            oldDanmaku.repeatDanmakuInfo?.repeatCount += 1
+                            self.danmakuRender.update(oldDanmaku)
+                        } else {
+                            danmaku.repeatDanmakuInfo = .init(danmaku: danmaku)
+                            
+                            self.danmakuRender.send(danmaku)
+                            self.danmuOnScreenMap.setObject(danmaku, forKey: danmakuTextKey)
+                        }
+                    } else {
+                        self.danmakuRender.send(danmaku)
+                    }
+                    
+                }
+            }
+        }
     }
 }
 
@@ -599,11 +706,7 @@ extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
     }
     
     func changeProgress(playerUIView: PlayerUIView, diffValue: CGFloat) {
-        let length = self.player.length
-        if length > 0 {
-            let progress = (CGFloat(self.player.currentTime) + diffValue) / CGFloat(length)
-            self.setPlayerProgress(progress)
-        }
+        self.setPlayerProgress(diffValue: diffValue)
     }
     
     func changeBrightness(playerUIView: PlayerUIView, diffValue: CGFloat) {
@@ -683,54 +786,8 @@ extension PlayerViewController: MediaPlayerDelegate {
     
     func player(_ player: MediaPlayer, currentTime: TimeInterval, totalTime: TimeInterval) {
         uiView.updateTime()
-        
-        let danmakuRenderTime = currentTime + self.danmakuRender.offsetTime
-        
-        if danmakuRenderTime < 0 {
-            return
-        }
-        
-        let intTime = UInt(danmakuRenderTime)
-        /// 一秒只发射一次弹幕
-        if intTime == self.danmakuTime {
-            return
-        }
-        
-        self.danmakuTime = intTime
-        if let danmakus = danmakuDic[intTime] {
-            let danmakuDensity = Preferences.shared.danmakuDensity
-            for danmakuBlock in danmakus {
-                /// 小于弹幕密度才允许发射
-                let shouldSendDanmaku = Float.random(in: 0...10) <= danmakuDensity
-                if shouldSendDanmaku {
-                    let danmaku = danmakuBlock()
-                    
-                    /// 修复因为时间误差的问题，导致少数弹幕突然出现在屏幕上的问题
-                    if danmaku.appearTime > 0 {
-                        danmaku.appearTime = self.danmakuRender.time + (danmaku.appearTime - Double(intTime))
-                    }
-                    
-                    /// 合并弹幕启用时，查找屏幕上与本弹幕文案相同的弹幕，进行更新
-                    if Preferences.shared.isMergeSameDanmaku {
-                        let danmakuTextKey = danmaku.text as NSString
-
-                        /// 文案与当前弹幕相同
-                        if let oldDanmaku = self.danmuOnScreenMap.object(forKey: danmakuTextKey) as? DanmakuEntity {
-                            oldDanmaku.repeatDanmakuInfo?.repeatCount += 1
-                            self.danmakuRender.update(oldDanmaku)
-                        } else {
-                            danmaku.repeatDanmakuInfo = .init(danmaku: danmaku)
-                            
-                            self.danmakuRender.send(danmaku)
-                            self.danmuOnScreenMap.setObject(danmaku, forKey: danmakuTextKey)
-                        }
-                    } else {
-                        self.danmakuRender.send(danmaku)
-                    }
-                    
-                }
-            }
-        }
+        self.sendDanmakus(at: currentTime)
+        self.autoJumpEnding()
     }
     
     func player(_ player: MediaPlayer, file: File, bufferInfoDidChange bufferInfo: MediaBufferInfo) {
