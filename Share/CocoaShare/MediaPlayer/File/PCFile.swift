@@ -89,8 +89,8 @@ class PCFile: File {
         
         self.downloadURL = playURLComponents?.url ?? URL(fileURLWithPath: "/")
         
-        let itemURLComponents = URLComponents(string: "anxpc://\(libraryModel.id)/\(libraryModel.name)")
-        self.url = itemURLComponents?.url ?? URL(fileURLWithPath: "/")
+        let tempPath = "anxpc://\(libraryModel.id)/\(libraryModel.name)".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? ""
+        self.url = URL(string: tempPath) ?? URL(fileURLWithPath: "/")
         
         self.fileSize = libraryModel.size
         self.type = .file
