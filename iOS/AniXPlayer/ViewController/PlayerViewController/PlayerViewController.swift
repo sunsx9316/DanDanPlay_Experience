@@ -15,7 +15,10 @@ import DynamicButton
 private class PlayItem {
     
     var watchProgressKey: String? {
-        return episodeId == 0 ? nil : "\(episodeId)"
+        if episodeId != 0 {
+            return "\(episodeId)"
+        }
+        return media.fileHash
     }
     
     private let media: File
