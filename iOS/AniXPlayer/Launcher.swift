@@ -10,7 +10,7 @@ import FirebaseCore
 import FirebaseCrashlytics
 import ANXLog
 
-/// 启动器，在app启东时会被调用
+/// 启动器，在app启动时会被调用
 class Launcher {
     
     static func launch() {

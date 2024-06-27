@@ -121,7 +121,6 @@
 		899A9DDF262F35EB00C54AC9 /* SliderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897CF530262F317B00CC297A /* SliderTableViewCell.swift */; };
 		899C4E97263BDDE600A17C83 /* LinkHistoryHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899C4E96263BDDE600A17C83 /* LinkHistoryHeaderView.swift */; };
 		899E385D280B2F7A00285191 /* ProgressSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899E385C280B2F7A00285191 /* ProgressSlider.swift */; };
-		89AAA20A29727DC0008CD8AD /* MPVPlayerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AAA20929727DC0008CD8AD /* MPVPlayerWrapper.swift */; };
 		89AAA20D2972F4E0008CD8AD /* ANXLogHelperModule+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 89AAA20C2972F4E0008CD8AD /* ANXLogHelperModule+Utils.m */; };
 		89AF9BFE2631C1740037A133 /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AF9BFC2631C1740037A133 /* SwitchTableViewCell.swift */; };
 		89AF9BFF2631C1740037A133 /* SwitchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89AF9BFD2631C1740037A133 /* SwitchTableViewCell.xib */; };
@@ -277,7 +276,6 @@
 		899C4E96263BDDE600A17C83 /* LinkHistoryHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkHistoryHeaderView.swift; sourceTree = "<group>"; };
 		899C4E9C263CF88600A17C83 /* AniXPlayer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AniXPlayer-Bridging-Header.h"; sourceTree = "<group>"; };
 		899E385C280B2F7A00285191 /* ProgressSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressSlider.swift; sourceTree = "<group>"; };
-		89AAA20929727DC0008CD8AD /* MPVPlayerWrapper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MPVPlayerWrapper.swift; sourceTree = "<group>"; };
 		89AAA20B2972F4E0008CD8AD /* ANXLogHelperModule+Utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ANXLogHelperModule+Utils.h"; sourceTree = "<group>"; };
 		89AAA20C2972F4E0008CD8AD /* ANXLogHelperModule+Utils.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "ANXLogHelperModule+Utils.m"; sourceTree = "<group>"; };
 		89AF9BFC2631C1740037A133 /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
@@ -332,7 +330,6 @@
 		89044753290180110088886B /* Wrapper */ = {
 			isa = PBXGroup;
 			children = (
-				89AAA20929727DC0008CD8AD /* MPVPlayerWrapper.swift */,
 				89044754290180110088886B /* VLCPlayerWrapper.swift */,
 			);
 			path = Wrapper;
@@ -405,6 +402,7 @@
 				890DF6EC26160A1A002D8AE5 /* Resource */,
 				890DF6E8261609B5002D8AE5 /* ViewController */,
 				890DF6CC26160826002D8AE5 /* AppDelegate.swift */,
+				89C79B912A87D3AA0040FEDA /* Launcher.swift */,
 				89E0D826266BBA9400E2337B /* SceneDelegate.swift */,
 				890DF6D226160826002D8AE5 /* Main.storyboard */,
 				890DF6D526160827002D8AE5 /* Assets.xcassets */,
@@ -817,7 +815,6 @@
 				89AAA20B2972F4E0008CD8AD /* ANXLogHelperModule+Utils.h */,
 				89AAA20C2972F4E0008CD8AD /* ANXLogHelperModule+Utils.m */,
 				899A11B02A18B703009B2953 /* AppInfoHelper.swift */,
-				89C79B912A87D3AA0040FEDA /* Launcher.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -1080,7 +1077,6 @@
 				8994613B28CC783C009AC640 /* FTPFileManager.swift in Sources */,
 				89C79B922A87D3AA0040FEDA /* Launcher.swift in Sources */,
 				890DF77E26160B3E002D8AE5 /* PlayerNavigationController.swift in Sources */,
-				89AAA20A29727DC0008CD8AD /* MPVPlayerWrapper.swift in Sources */,
 				8931F0E52674CA6A00590569 /* UIBarButtonItem+Helper.swift in Sources */,
 				890DF81C2616174C002D8AE5 /* HomePageViewController.swift in Sources */,
 				890DF6FE26160A36002D8AE5 /* NavigationController.swift in Sources */,

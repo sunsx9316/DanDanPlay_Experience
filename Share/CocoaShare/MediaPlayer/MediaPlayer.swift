@@ -316,11 +316,7 @@ class MediaPlayer {
         case .vlc:
             self.player = VLCPlayerWarrper()
         case .mpv:
-            #if os(macOS)
-            self.player = MPVPlayerWrapper()
-            #else
             fatalError("暂未支持的内核类型")
-            #endif
         }
         self.setupInit()
     }

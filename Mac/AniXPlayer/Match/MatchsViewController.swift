@@ -121,10 +121,11 @@ class MatchsViewController: ViewController {
     }
     
     @objc private func startRequestData() {
-        let hud = self.view.showLoading("")
-        self.requestData { [weak hud] in
-            guard let hud = hud else { return }
-            hud.hide(true)
+        self.view.showLoading(statusText: "")
+        self.requestData { [weak self] in
+            guard let self = self else { return }
+            
+            self.view.dismiss(delay: 0)
         }
     }
     
@@ -147,7 +148,7 @@ class MatchsViewController: ViewController {
                 }
             } else if let error = error {
                 DispatchQueue.main.async {
-                    self.view.showError(error)
+                    self.view.show(error: error)
                     completion()
                 }
             }

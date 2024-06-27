@@ -11,14 +11,13 @@ target 'AniXPlayer' do
   pod 'SnapKit'
   pod 'MMKV'
   pod 'DanmakuRender-Swift'
-  pod 'HandyJSON'
   pod 'VLCKit'
   pod 'Alamofire'
   pod 'DDPCategory', :path => 'LocalPods/DDPCategory'
   pod 'ANXLog', :path => '../Share/ANXLog'
   pod 'ProgressHUD', :path => 'LocalPods/ProgressHUD'
   pod 'FirebaseCrashlytics'
-  pod 'MPVPlayer', :path => 'LocalPods/MPVPlayer'
+  # pod 'MPVPlayer', :path => 'LocalPods/MPVPlayer'
   # Pods for AniXPlayer
 
 end

@@ -6,6 +6,7 @@
 //
 
 import Cocoa
+import ProgressHUD
 
 protocol SearchViewControllerDelegate: AnyObject {
     func searchViewController(_ searchViewController: SearchViewController, didSelectedEpisodeId episodeId: Int)
@@ -93,7 +94,7 @@ class SearchViewController: ViewController {
             
             if let error = error {
                 DispatchQueue.main.async {
-                    self.view.showError(error)
+                    self.view.show(error: error)
                 }
                 return
             }

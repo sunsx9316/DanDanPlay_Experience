@@ -8,4 +8,6 @@
 #ifndef AniXPlayer_Bridging_Header_h
 #define AniXPlayer_Bridging_Header_h
 
+#import "ANXLogHelperModule+Utils.h"
+
 #endif /* AniXPlayer_Bridging_Header_h */

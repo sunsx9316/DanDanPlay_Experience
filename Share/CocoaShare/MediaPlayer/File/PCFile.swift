@@ -5,6 +5,8 @@
 //  Created by jimhuang on 2023/5/1.
 //
 
+#if os(iOS)
+
 import MobileVLCKit
 import YYCategories
 
@@ -127,3 +129,5 @@ class PCFile: File {
     }
     
 }
+
+#endif

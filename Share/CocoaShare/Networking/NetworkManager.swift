@@ -216,15 +216,9 @@ class NetworkManager {
         self.defaultSession.request(self.host + "/api/v1/update/mac", method: .get).responseData { (response) in
             switch response.result {
             case .success(let data):
-                do {
-                    let asJSON = try JSONSerialization.jsonObject(with: data)
-                    let result = Response<UpdateInfo>(with: asJSON)
-                    completion(result.result, result.error)
-                    ANX.logInfo(.HTTP, "更新信息 请求成功 \(result)")
-                } catch {
-                    completion(nil, error)
-                    ANX.logInfo(.HTTP, "更新信息 解析失败: \(error)")
-                }
+                let result = Response<UpdateInfo>(with: data)
+                completion(result.result, result.error)
+                ANX.logInfo(.HTTP, "更新信息 请求成功 \(result)")
             case .failure(let error):
                 completion(nil, error)
                 ANX.logInfo(.HTTP, "更新信息 请求失败: \(error)")

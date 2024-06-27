@@ -103,9 +103,7 @@ class SubtitleManager {
         }
     }
     
-    // MARK: Private Method
-    
-    private func findCustomSubtitleWithMedia(_ media: File, completion: @escaping((Result<[File], Error>) -> Void)) {
+    func findCustomSubtitleWithMedia(_ media: File, completion: @escaping((Result<[File], Error>) -> Void)) {
         //加载本地弹幕
         type(of: media).fileManager.subtitlesOfMedia(media) { result in
             switch result {

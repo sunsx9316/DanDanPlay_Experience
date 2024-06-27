@@ -5,20 +5,18 @@
 //  Created by jimhuang on 2022/9/26.
 //
 
-import HandyJSON
-
-struct UpdateInfo: HandyJSON {
-    var url = ""
+struct UpdateInfo: Decodable {
+    @Default<String> var url: String
     
     /// "2022092601"
-    var version = ""
+    @Default<String> var version: String
     
     /// "1.0"
-    var shortVersion = ""
+    @Default<String> var shortVersion: String
     
-    var desc = ""
+    @Default<String> var desc: String
     
-    var hash = ""
+    @Default<String> var hash: String
     
-    var forceUpdate = false
+    @Default<Bool> var forceUpdate: Bool
 }

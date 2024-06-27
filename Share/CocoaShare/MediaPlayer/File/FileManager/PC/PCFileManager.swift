@@ -5,7 +5,8 @@
 //  Created by jimhuang on 2023/5/1.
 //
 
-import UIKit
+#if os(iOS)
+
 import Alamofire
 
 class PCFileManager: FileManagerProtocol {
@@ -262,3 +263,5 @@ class PCFileManager: FileManagerProtocol {
     }
 
 }
+
+#endif

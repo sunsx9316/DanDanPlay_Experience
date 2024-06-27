@@ -147,7 +147,7 @@ class LocalFileManager: FileManagerProtocol {
             let group = DispatchGroup()
             for file in directorys {
                 group.enter()
-                self.contentsOfDirectory(at: file) { result in
+                self.contentsOfDirectory(at: file, filterType: filterType) { result in
                     switch result {
                     case .success(let f1):
                         files.append(contentsOf: f1)

@@ -295,7 +295,7 @@ class DanmakuManager {
     /// - Parameters:
     ///   - media: 视频
     ///   - completion: 完成回调
-    private func findCustomDanmakuWithMedia(_ media: File, completion: @escaping((Result<[File], Error>) -> Void)) {
+    func findCustomDanmakuWithMedia(_ media: File, completion: @escaping((Result<[File], Error>) -> Void)) {
         type(of: media).fileManager.danmakusOfMedia(media) { result in
             switch result {
             case .success(let files):

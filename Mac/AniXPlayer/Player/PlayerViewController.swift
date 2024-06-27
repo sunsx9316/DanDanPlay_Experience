@@ -9,6 +9,7 @@ import Cocoa
 import SnapKit
 import DanmakuRender
 import Carbon
+import ProgressHUD
 
 private class PlayItem {
     
@@ -231,32 +232,35 @@ class PlayerViewController: ViewController {
         
         self.uiView.title = media.fileName
         
-        let hud = self.view.showProgress(NSLocalizedString("解析视频中...", comment: ""))
-        hud.progress = 0
+        self.view.show(progress: 0, statusText: NSLocalizedString("解析视频中...", comment: ""))
         
-        NetworkManager.shared.danmakuWithFile(media) { (progress) in
+        NetworkManager.shared.danmakuWithFile(media) { [weak self] (progress) in
             DispatchQueue.main.async {
-                hud.progress = Double(Float(progress))
-                if progress == 0.7 {
-                    hud.setStatus(NSLocalizedString("加载弹幕中...", comment: ""))
-                }
+                guard let self = self else { return }
+                
+                self.view.show(progress: Double(Float(progress)),
+                         statusText: progress >= 0.7 ? NSLocalizedString("加载弹幕中...", comment: "") : NSLocalizedString("解析视频中...", comment: ""))
             }
-        } matchCompletion: { (collection, error) in
+        } matchCompletion: { [weak self] (collection, error) in
             DispatchQueue.main.async {
-                hud.hide(true, dismissAfterDelay: 2)
+                guard let self = self else { return }
+                
+                self.view.dismiss(delay: 2)
                 
                 if let error = error {
-                    self.view.showError(error)
+                    self.view.show(error: error)
                 } else if let collection = collection {
                     self.popMatchWindowController(with: collection, file: media)
                 }
             }
-        } danmakuCompletion: { (collection, episodeId, error) in
+        } danmakuCompletion: { [weak self] (collection, episodeId, error) in
             DispatchQueue.main.async {
-                hud.hide(true)
+                guard let self = self else { return }
+                
+                self.view.dismiss(delay: 2)
                 
                 if let error = error {
-                    self.view.showError(error)
+                    self.view.show(error: error)
                 } else {
                     let danmakus = collection?.collection ?? []
                     self.playMedia(media, episodeId: episodeId, danmakus: danmakus)
@@ -318,25 +322,25 @@ class PlayerViewController: ViewController {
                                 let converResult = try DanmakuManager.shared.conver(url)
                                 DispatchQueue.main.async {
                                     completion(true, converResult)
-                                    self.view.showHUD(NSLocalizedString("加载本地弹幕成功！", comment: ""))
+                                    self.view.show(text: NSLocalizedString("加载本地弹幕成功！", comment: ""))
                                 }
                             } catch {
                                 DispatchQueue.main.async {
                                     completion(false, nil)
-                                    self.view.showError(error)
+                                    self.view.show(error: error)
                                 }
                             }
                         case .failure(let error):
                             DispatchQueue.main.async {
                                 completion(false, nil)
-                                self.view.showError(error)
+                                self.view.show(error: error)
                             }
                         }
                     }
                 case .failure(let error):
                     DispatchQueue.main.async {
                         completion(false, nil)
-                        self.view.showError(error)
+                        self.view.show(error: error)
                     }
                 }
             }
@@ -422,17 +426,17 @@ class PlayerViewController: ViewController {
                     case .success(let subtitle):
                     DispatchQueue.main.async {
                         self.player.currentSubtitle = subtitle
-                        self.view.showHUD(NSLocalizedString("加载本地字幕成功！", comment: ""))
+                        self.view.show(text: NSLocalizedString("加载本地字幕成功！", comment: ""))
                     }
                     case .failure(let error):
                         DispatchQueue.main.async {
-                            self.view.showError(error)
+                            self.view.show(error: error)
                         }
                     }
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
-                    self.view.showError(error)
+                    self.view.show(error: error)
                 }
             }
         }
@@ -559,11 +563,11 @@ class PlayerViewController: ViewController {
                         case .success(let subtitle):
                             DispatchQueue.main.async {
                                 self.player.currentSubtitle = subtitle
-                                self.view.showHUD(NSLocalizedString("加载本地字幕成功！", comment: ""))
+                                self.view.show(text: NSLocalizedString("加载本地字幕成功！", comment: ""))
                             }
                         case .failure(let error):
                             DispatchQueue.main.async {
-                                self.view.showError(error)
+                                self.view.show(error: error)
                             }
                         }
                     }
@@ -578,16 +582,16 @@ class PlayerViewController: ViewController {
                                 let converResult = try DanmakuManager.shared.conver(url)
                                 DispatchQueue.main.async {
                                     self.danmakuDic = converResult
-                                    self.view.showHUD(NSLocalizedString("加载本地弹幕成功！", comment: ""))
+                                    self.view.show(text: NSLocalizedString("加载本地弹幕成功！", comment: ""))
                                 }
                             } catch let error {
                                 DispatchQueue.main.async {
-                                    self.view.showError(error)
+                                    self.view.show(error: error)
                                 }
                             }
                         case .failure(let error):
                             DispatchQueue.main.async {
-                                self.view.showError(error)
+                                self.view.show(error: error)
                             }
                         }
                     }
@@ -623,9 +627,7 @@ extension PlayerViewController: MatchsViewControllerDelegate {
         
         self.closeMatchWindow()
         
-        let hud = self.view.showProgress()
-        hud.setStatus(NSLocalizedString("加载弹幕中...", comment: ""))
-        hud.progress = 0.5
+        self.view.show(progress: 0.5, statusText: NSLocalizedString("加载弹幕中...", comment: ""))
 
         NetworkManager.shared.danmakuWithEpisodeId(episodeId) { [weak self] (collection, error) in
             
@@ -633,16 +635,15 @@ extension PlayerViewController: MatchsViewControllerDelegate {
             
             if let error = error {
                 DispatchQueue.main.async {
-                    hud.progress = 1
-                    hud.hide(true)
-                    self.view.showError(error)
+                    self.view.show(progress: 1, statusText: NSLocalizedString("加载弹幕中...", comment: ""))
+                    self.view.dismiss(delay: 0)
+                    self.view.show(error: error)
                 }
             } else {
                 let danmakus = collection?.collection ?? []
                 DispatchQueue.main.async {
-                    hud.setStatus(NSLocalizedString("即将开始播放", comment: ""))
-                    hud.progress = 1
-                    hud.hide(true, dismissAfterDelay: 0.5)
+                    self.view.show(progress: 1, statusText: NSLocalizedString("即将开始播放", comment: ""))
+                    self.view.dismiss(delay: 0)
                     self.playMedia(matchsViewController.file, episodeId: episodeId, danmakus: danmakus)
                 }
             }
@@ -717,7 +718,7 @@ extension PlayerViewController: PlayerUIViewDelegate {
     func onTouchSendDanmakuButton(playerUIView: PlayerUIView) {
         guard let item = self.player.currentPlayItem,
               self.findPlayItem(item)?.episodeId != nil else {
-            self.view.showHUD("需要指定视频弹幕列表，才能发弹幕哟~")
+            self.view.show(text: NSLocalizedString("需要指定视频弹幕列表，才能发弹幕哟~", comment: ""))
             return
         }
         
