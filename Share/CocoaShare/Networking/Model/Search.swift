@@ -6,54 +6,53 @@
 //
 
 import Foundation
-import HandyJSON
 
-struct Search: HandyJSON {
+struct Search: Decodable {
     
     /// 剧集ID（弹幕库编号）
-    var id = 0
+    @Default<Int> var id: Int
     
     /// 剧集标题
-    var episodeTitle = ""
+    @Default<String> var episodeTitle: String
     
-    mutating func mapping(mapper: HelpingMapper) {
-        mapper <<<
-            self.id <-- "episodeId"
+    private enum CodingKeys: String, CodingKey {
+        case id = "episodeId"
+        case episodeTitle
     }
 }
 
-struct SearchCollection: HandyJSON {
+struct SearchCollection: Decodable {
     
     /// 作品编号
-    var animeId = 0
+    @Default<Int> var animeId: Int
     
     ///  作品标题
-    var animeTitle = ""
+    @Default<String> var animeTitle: String
     
     /// 作品类型
-    var type = EpisodeType.unknown
+    @Default<EpisodeType> var type: EpisodeType
     
     /// 类型描述
-    var typeDescription = ""
+    @Default<String> var typeDescription: String
     
     /// 此作品的剧集列表
-    var collection = [Search]()
+    @Default<[Search]> var collection: [Search]
     
-    mutating func mapping(mapper: HelpingMapper) {
-        mapper <<<
-            self.collection <-- "episodes"
+    private enum CodingKeys: String, CodingKey {
+        case collection = "episodes"
+        case animeId, animeTitle, type, typeDescription
     }
 }
 
-struct SearchResult: HandyJSON {
+struct SearchResult: Decodable {
     
     /// 是否有更多未显示的搜索结果，当结果集过大时，hasMore属性为true，这时客户端应该提示用户填写更详细的信息以缩小搜索范围。
-    var hasMore = false
+    @Default<Bool> var hasMore: Bool
     
-    var collection = [SearchCollection]()
+    @Default<[SearchCollection]> var collection: [SearchCollection]
     
-    mutating func mapping(mapper: HelpingMapper) {
-        mapper <<<
-            self.collection <-- "animes"
+    private enum CodingKeys: String, CodingKey {
+        case collection = "animes"
+        case hasMore
     }
 }

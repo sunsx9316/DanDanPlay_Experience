@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import HandyJSON
 
 private enum NetworkError: LocalizedError {
     case dataFormat
@@ -19,14 +18,24 @@ private enum NetworkError: LocalizedError {
     }
 }
 
-struct Response<S: HandyJSON> {
+struct Response<S: Decodable> {
     
-    struct Error: LocalizedError, HandyJSON {
-        var code = 0
-        var message: String?
+    struct Error: LocalizedError, Decodable {
+        var code: Int
+        var message: String
         
-        var errorDescription: String? {
+        var errorDescription: String {
             return self.message
+        }
+        
+        private enum CodingKeys: String, CodingKey {
+            case code, message
+        }
+        
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            code = try container.decodeIfPresent(Int.self, forKey: .code) ?? 0
+            message = try container.decodeIfPresent(String.self, forKey: .message) ?? ""
         }
     }
     
@@ -34,15 +43,13 @@ struct Response<S: HandyJSON> {
     
     var error: Swift.Error?
     
-    init(with data: Any) {
-        if let data = data as? NSDictionary {
-            self.result = S.deserialize(from: data)
-            let err = Error.deserialize(from: data)
-            if err?.code != 0 {
-                self.error = err
-            }
-        } else {
-            self.error = NetworkError.dataFormat
+    init(with data: Data) {
+        let decoder = JSONDecoder()
+        
+        self.result = try? decoder.decode(S.self, from: data)
+        let err = try? decoder.decode(Error.self, from: data)
+        if err?.code != 0 {
+            self.error = err
         }
     }
     

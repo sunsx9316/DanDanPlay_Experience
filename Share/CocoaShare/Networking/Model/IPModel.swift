@@ -7,26 +7,35 @@
 
 import Foundation
 import Alamofire
-import HandyJSON
 
-struct IPResponse: HandyJSON {
+struct IPResponse: Decodable {
     
-    var answers = [IPModel]()
+    @Default<[IPModel]> var answers: [IPModel]
     
-    mutating func mapping(mapper: HelpingMapper) {
-        mapper <<<
-            self.answers <-- "Answer"
+    private enum CodingKeys: String, CodingKey {
+        case answers = "Answer"
     }
     
 }
 
-struct IPModel: HandyJSON {
+struct IPModel: Decodable {
     
-    var name = ""
+    var name: String
     
-    var data = ""
+    var data: String
     
-    mutating func didFinishMapping() {
-        self.data = self.data.replacingOccurrences(of: "\"", with: "")
+    private enum CodingKeys: String, CodingKey {
+        case name
+        case data
+    }
+    
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.name = try container.decodeIfPresent(String.self, forKey: .name) ?? ""
+        if let data = try container.decodeIfPresent(String.self, forKey: .data) {
+            self.data = data.replacingOccurrences(of: "\"", with: "")
+        } else {
+            self.data = ""
+        }
     }
 }

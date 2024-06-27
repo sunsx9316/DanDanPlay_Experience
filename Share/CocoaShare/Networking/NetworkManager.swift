@@ -97,23 +97,17 @@ class NetworkManager {
             self.defaultSession.request(self.baseURL + "/match", method: .post, parameters: parameters, encoder: JSONParameterEncoder.default).responseData { (response) in
                 switch response.result {
                 case .success(let data):
-                    do {
-                        let asJSON = try JSONSerialization.jsonObject(with: data)
-                        let result = Response<MatchCollection>(with: asJSON)
-                        
-                        let collection = result.result
-                        
-                        /// 精确匹配，缓存结果
-                        if collection?.isMatched == true && collection?.collection.count == 1 {
-                            CacheManager.shared.setMatchResultWithHash(fileHash, data: data)
-                        }
-                        
-                        completion(collection, result.error)
-                        ANX.logInfo(.HTTP, "根据文件返回匹配的结果 请求成功")
-                    } catch {
-                        completion(nil, error)
-                        ANX.logInfo(.HTTP, "根据文件返回匹配的结果 解析失败: \(error)")
+                    let result = Response<MatchCollection>(with: data)
+                    
+                    let collection = result.result
+                    
+                    /// 精确匹配，缓存结果
+                    if collection?.isMatched == true && collection?.collection.count == 1 {
+                        CacheManager.shared.setMatchResultWithHash(fileHash, data: data)
                     }
+                    
+                    completion(collection, result.error)
+                    ANX.logInfo(.HTTP, "根据文件返回匹配的结果 请求成功")
                 case .failure(let error):
                     completion(nil, error)
                     ANX.logInfo(.HTTP, "根据文件返回匹配的结果 请求失败: \(error)")
@@ -126,16 +120,10 @@ class NetworkManager {
             ANX.logInfo(.HTTP, "根据文件返回匹配的结果 快速匹配 hash：\(hash)")
             
             if let data = CacheManager.shared.matchResultWithHash(hash) {
-                do {
-                    let asJSON = try JSONSerialization.jsonObject(with: data)
-                    let result = Response<MatchCollection>(with: asJSON)
-                    
-                    completion(result.result, nil)
-                    ANX.logInfo(.HTTP, "根据缓存返回匹配的结果 请求成功")
-                } catch {
-                    ANX.logInfo(.HTTP, "根据缓存返回匹配的结果 解析失败 \(error)，继续进行网络请求")
-                    requestMatchWithFileHashBlock(hash)
-                }
+                let result = Response<MatchCollection>(with: data)
+                
+                completion(result.result, nil)
+                ANX.logInfo(.HTTP, "根据缓存返回匹配的结果 请求成功")
             } else {
                 requestMatchWithFileHashBlock(hash)
             }
@@ -177,35 +165,22 @@ class NetworkManager {
         
         let md5Str = ("\(parameters)" as NSString).md5() ?? ""
         if let data = CacheManager.shared.danmakuCacheWithEpisodeId(episodeId, parametersHash: md5Str) {
-            
-            do {
-                let jsonObj = try JSONSerialization.jsonObject(with: data, options: [])
-                ANX.logInfo(.HTTP, "根据文件下载弹幕 匹配到缓存 episodeId: \(episodeId) md5Str: \(md5Str)")
-                let result = Response<CommentCollection>(with: jsonObj)
-                completion(result.result, nil)
-                return
-            } catch {
-                ANX.logInfo(.HTTP, "根据文件下载弹幕 匹配缓存失败 error: \(error)")
-            }
+            ANX.logInfo(.HTTP, "根据文件下载弹幕 匹配到缓存 episodeId: \(episodeId) md5Str: \(md5Str)")
+            let result = Response<CommentCollection>(with: data)
+            completion(result.result, nil)
+            return
         }
 
         ANX.logInfo(.HTTP, "根据文件下载弹幕 请求 parameters: \(parameters)")
         self.defaultSession.request(self.baseURL + "/comment/\(episodeId)", method: .get, parameters: parameters, encoder: URLEncodedFormParameterEncoder.default).responseData { (response) in
             switch response.result {
             case .success(let data):
-                
-                do {
-                    let asJSON = try JSONSerialization.jsonObject(with: data)
-                    let result = Response<CommentCollection>(with: asJSON)
-                    if result.error == nil {
-                        CacheManager.shared.setDanmakuCacheWithEpisodeId(episodeId, parametersHash: md5Str, data: response.data)
-                    }
-                    completion(result.result, result.error)
-                    ANX.logInfo(.HTTP, "根据文件下载弹幕 请求成功")
-                } catch {
-                    completion(nil, error)
-                    ANX.logInfo(.HTTP, "根据文件下载弹幕 解析失败: \(error)")
+                let result = Response<CommentCollection>(with: data)
+                if result.error == nil {
+                    CacheManager.shared.setDanmakuCacheWithEpisodeId(episodeId, parametersHash: md5Str, data: response.data)
                 }
+                completion(result.result, result.error)
+                ANX.logInfo(.HTTP, "根据文件下载弹幕 请求成功")
             case .failure(let error):
                 completion(nil, error)
                 ANX.logInfo(.HTTP, "根据文件下载弹幕 请求失败: \(error)")
@@ -222,16 +197,9 @@ class NetworkManager {
         self.defaultSession.request(self.baseURL + "/search/episodes", method: .get, parameters: parameters, encoder: URLEncodedFormParameterEncoder.default).responseData { (response) in
             switch response.result {
             case .success(let data):
-                
-                do {
-                    let asJSON = try JSONSerialization.jsonObject(with: data)
-                    let result = Response<SearchResult>(with: asJSON)
-                    completion(result.result, result.error)
-                    ANX.logInfo(.HTTP, "搜索 请求成功")
-                } catch {
-                    completion(nil, error)
-                    ANX.logInfo(.HTTP, "搜索 解析失败: \(error)")
-                }
+                let result = Response<SearchResult>(with: data)
+                completion(result.result, result.error)
+                ANX.logInfo(.HTTP, "搜索 请求成功")
             case .failure(let error):
                 completion(nil, error)
                 ANX.logInfo(.HTTP, "搜索 请求失败: \(error)")
@@ -274,8 +242,8 @@ class NetworkManager {
             switch response.result {
             case .success(let data):
                 do {
-                    let asJSON = try JSONSerialization.jsonObject(with: data) as? NSDictionary
-                    let result = IPResponse.deserialize(from: asJSON)
+                    let jsonDecoder = JSONDecoder()
+                    let result = try jsonDecoder.decode(IPResponse.self, from: data)
                     completion(result, nil)
                     ANX.logInfo(.HTTP, "获取备用ip成功: \(String(describing: result))")
                 } catch {

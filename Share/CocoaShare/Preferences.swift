@@ -165,10 +165,10 @@ class Preferences {
     @StoreWrapper(defaultValue: 0.0, key: .jumpEndingDuration)
     var jumpEndingDuration: Double
     
-    var sendDanmakuType: DanmakuModel.Mode {
+    var sendDanmakuType: Comment.Mode {
         get {
-            let rawValue: Int = Store.shared.value(forKey: KeyName.sendDanmakuType.rawValue) ?? DanmakuModel.Mode.normal.rawValue
-            return DanmakuModel.Mode(rawValue: rawValue) ?? .normal
+            let rawValue: Int = Store.shared.value(forKey: KeyName.sendDanmakuType.rawValue) ?? Comment.Mode.normal.rawValue
+            return Comment.Mode(rawValue: rawValue) ?? .normal
         }
         
         set {

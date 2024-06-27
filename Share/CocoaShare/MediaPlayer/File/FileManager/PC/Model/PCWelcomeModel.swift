@@ -5,16 +5,14 @@
 //  Created by jimhuang on 2023/5/1.
 //
 
-import HandyJSON
-
-struct PCWelcomeModel: HandyJSON {
+struct PCWelcomeModel: Decodable {
     
-    var message = ""
+    @Default<String> var message: String
     
-    var version = ""
+    @Default<String> var version: String
     
-    var time = ""
+    @Default<String> var time: String
     
-    var tokenRequired = false
+    @Default<Bool> var tokenRequired: Bool
     
 }

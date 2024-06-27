@@ -6,56 +6,46 @@
 //
 
 import UIKit
-import HandyJSON
 
-struct PCLibraryModel: HandyJSON {
+struct PCLibraryModel: Decodable {
 
-    var id = ""
+    @Default<String> var id: String
     
-    var animeId = 0
+    @Default<Int> var animeId: Int
     
-    var episodeId = 0
+    @Default<Int> var episodeId: Int
     
-    var animeTitle = ""
+    @Default<String> var animeTitle: String
     
-    var episodeTitle = ""
+    @Default<String> var episodeTitle: String
     
-    var hash = ""
+    @Default<String> var hash: String
     
-    var name = ""
+    @Default<String> var name: String
     
-    var size = 0
+    @Default<Int> var size: Int
     
-    var path = ""
+    @Default<String> var path: String
     
-    mutating func mapping(mapper: HelpingMapper) {
+    private enum CodingKeys: String, CodingKey {
         
-        mapper <<<
-            animeId <-- "AnimeId"
+        case animeId = "AnimeId"
         
-        mapper <<<
-            episodeId <-- "EpisodeId"
+        case episodeId = "EpisodeId"
         
-        mapper <<<
-            animeTitle <-- "AnimeTitle"
+        case animeTitle = "AnimeTitle"
         
-        mapper <<<
-            episodeTitle <-- "EpisodeTitle"
+        case episodeTitle = "EpisodeTitle"
         
-        mapper <<<
-            id <-- "Id"
+        case id = "Id"
         
-        mapper <<<
-            hash <-- "Hash"
+        case hash = "Hash"
         
-        mapper <<<
-            name <-- "Name"
+        case name = "Name"
         
-        mapper <<<
-            size <-- "Size"
+        case size = "Size"
         
-        mapper <<<
-            path <-- "Path"
+        case path = "Path"
     }
     
 }

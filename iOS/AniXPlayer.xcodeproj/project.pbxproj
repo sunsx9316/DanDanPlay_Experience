@@ -75,6 +75,7 @@
 		8944E87D263BD69800EF00B1 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8944E87C263BD69700EF00B1 /* Button.swift */; };
 		8949F8912662AA2100274520 /* WebDavLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8949F8902662AA2100274520 /* WebDavLoginHistoryViewController.swift */; };
 		8949F8932662AA8E00274520 /* FTPLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8949F8922662AA8E00274520 /* FTPLoginHistoryViewController.swift */; };
+		895A6B2C2C2C700200B81510 /* Define.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A6B2B2C2C700200B81510 /* Define.swift */; };
 		897CF529262F309D00CC297A /* PlayerSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897CF528262F309D00CC297A /* PlayerSettingViewController.swift */; };
 		897CF52D262F30D200CC297A /* DanmakuSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897CF52C262F30D200CC297A /* DanmakuSettingViewController.swift */; };
 		897CF533262F317B00CC297A /* SliderTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 897CF531262F317B00CC297A /* SliderTableViewCell.xib */; };
@@ -108,8 +109,6 @@
 		8994614D28CC783C009AC640 /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994611428CC783C009AC640 /* Search.swift */; };
 		8994614E28CC783C009AC640 /* NetworkConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994611528CC783C009AC640 /* NetworkConstant.swift */; };
 		8994614F28CC783C009AC640 /* SubtitleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994611628CC783C009AC640 /* SubtitleManager.swift */; };
-		8994615F28CC783C009AC640 /* DanmakuModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994612A28CC783C009AC640 /* DanmakuModel.swift */; };
-		8994616028CC783C009AC640 /* BaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994612B28CC783C009AC640 /* BaseModel.swift */; };
 		8994616128CC783C009AC640 /* Rational.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994612C28CC783C009AC640 /* Rational.swift */; };
 		8994616228CC783C009AC640 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994612D28CC783C009AC640 /* Atomic.swift */; };
 		8994616328CC783C009AC640 /* PathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994613128CC783C009AC640 /* PathUtils.swift */; };
@@ -225,6 +224,7 @@
 		8944E87C263BD69700EF00B1 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		8949F8902662AA2100274520 /* WebDavLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDavLoginHistoryViewController.swift; sourceTree = "<group>"; };
 		8949F8922662AA8E00274520 /* FTPLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FTPLoginHistoryViewController.swift; sourceTree = "<group>"; };
+		895A6B2B2C2C700200B81510 /* Define.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Define.swift; sourceTree = "<group>"; };
 		897CF528262F309D00CC297A /* PlayerSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSettingViewController.swift; sourceTree = "<group>"; };
 		897CF52C262F30D200CC297A /* DanmakuSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuSettingViewController.swift; sourceTree = "<group>"; };
 		897CF530262F317B00CC297A /* SliderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderTableViewCell.swift; sourceTree = "<group>"; };
@@ -260,8 +260,6 @@
 		8994611428CC783C009AC640 /* Search.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
 		8994611528CC783C009AC640 /* NetworkConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkConstant.swift; sourceTree = "<group>"; };
 		8994611628CC783C009AC640 /* SubtitleManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubtitleManager.swift; sourceTree = "<group>"; };
-		8994612A28CC783C009AC640 /* DanmakuModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DanmakuModel.swift; sourceTree = "<group>"; };
-		8994612B28CC783C009AC640 /* BaseModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseModel.swift; sourceTree = "<group>"; };
 		8994612C28CC783C009AC640 /* Rational.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rational.swift; sourceTree = "<group>"; };
 		8994612D28CC783C009AC640 /* Atomic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Atomic.swift; sourceTree = "<group>"; };
 		8994613028CC783C009AC640 /* NSNetService+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNetService+Utils.h"; sourceTree = "<group>"; };
@@ -707,6 +705,7 @@
 				8994612D28CC783C009AC640 /* Atomic.swift */,
 				8994610B28CC783C009AC640 /* CacheManager.swift */,
 				899460F328CC783C009AC640 /* Constant.swift */,
+				895A6B2B2C2C700200B81510 /* Define.swift */,
 				8994610A28CC783C009AC640 /* DanmakuManager.swift */,
 				8994613328CC783C009AC640 /* HistoryManager.swift */,
 				8994610C28CC783C009AC640 /* Preferences.swift */,
@@ -804,8 +803,6 @@
 		8994611728CC783C009AC640 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				8994612B28CC783C009AC640 /* BaseModel.swift */,
-				8994612A28CC783C009AC640 /* DanmakuModel.swift */,
 				8994612C28CC783C009AC640 /* Rational.swift */,
 			);
 			path = Model;
@@ -1048,7 +1045,6 @@
 				890DF85B26189533002D8AE5 /* Helper.swift in Sources */,
 				890DF86B2618A406002D8AE5 /* MatchItem.swift in Sources */,
 				890DF75026160B1B002D8AE5 /* UIColor+Helper.swift in Sources */,
-				8994615F28CC783C009AC640 /* DanmakuModel.swift in Sources */,
 				890DF6F926160A36002D8AE5 /* Label.swift in Sources */,
 				89AF9C072631D4B00037A133 /* MediaSettingViewController.swift in Sources */,
 				8994614C28CC783C009AC640 /* Response.swift in Sources */,
@@ -1065,7 +1061,6 @@
 				89E109B62644424800825308 /* BaseConnectSvrViewController.swift in Sources */,
 				890886D92A011971005EDBD6 /* PCQRScannerViewController.swift in Sources */,
 				89BFF04B2A06C0A00076C676 /* PCSubtitleModel.swift in Sources */,
-				8994616028CC783C009AC640 /* BaseModel.swift in Sources */,
 				8994613C28CC783C009AC640 /* WebDavFileManager.swift in Sources */,
 				8994614B28CC783C009AC640 /* Match.swift in Sources */,
 				8994616128CC783C009AC640 /* Rational.swift in Sources */,
@@ -1089,6 +1084,7 @@
 				8931F0E52674CA6A00590569 /* UIBarButtonItem+Helper.swift in Sources */,
 				890DF81C2616174C002D8AE5 /* HomePageViewController.swift in Sources */,
 				890DF6FE26160A36002D8AE5 /* NavigationController.swift in Sources */,
+				895A6B2C2C2C700200B81510 /* Define.swift in Sources */,
 				89E0D60E2669113400E2337B /* SettingViewController.swift in Sources */,
 				890886CA29FFE6D9005EDBD6 /* PCWelcomeModel.swift in Sources */,
 				890886C429FFE30A005EDBD6 /* PCFile.swift in Sources */,

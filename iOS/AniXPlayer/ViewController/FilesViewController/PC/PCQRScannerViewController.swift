@@ -30,6 +30,9 @@ class PCQRScannerViewController: ViewController {
     private lazy var cropLayer = CAShapeLayer()
     
     private lazy var shapeLayer = CAShapeLayer()
+    
+    private lazy var jsonEncoder = JSONEncoder()
+    private lazy var jsonDecoder = JSONDecoder()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -116,8 +119,8 @@ class PCQRScannerViewController: ViewController {
     
     
     private func scanResult(_ text: String?) {
-        if let asJSON = text?.jsonValueDecoded() as? NSDictionary,
-           let model = PCQRModel.deserialize(from: asJSON) {
+        if let obj = text?.data(using: .utf8),
+           let model = try? jsonDecoder.decode(PCQRModel.self, from: obj) {
             
             if !model.ip.isEmpty {
                 self.qrCodeReader.stopScanning()

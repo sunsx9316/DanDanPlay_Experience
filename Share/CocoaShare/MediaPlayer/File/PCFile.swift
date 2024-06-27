@@ -110,14 +110,18 @@ class PCFile: File {
     func getFileHashWithProgress(_ progress: FileProgressAction?,
                                  completion: @escaping((Result<String, Error>) -> Void)) {
         
-        let length = parseFileLength
-        self.getDataWithRange(0...length, progress: progress) { result in
-            switch result {
-            case .success(let data):
-                let hash = (data as NSData).md5String()
-                completion(.success(hash))
-            case .failure(let error):
-                completion(.failure(error))
+        if let hash = self.libraryModel?.hash, !hash.isEmpty {
+            completion(.success(hash))
+        } else {
+            let length = parseFileLength
+            self.getDataWithRange(0...length, progress: progress) { result in
+                switch result {
+                case .success(let data):
+                    let hash = (data as NSData).md5String()
+                    completion(.success(hash))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
             }
         }
     }

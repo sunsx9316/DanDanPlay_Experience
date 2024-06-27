@@ -77,48 +77,44 @@ class PCFileManager: FileManagerProtocol {
                 switch response.result {
                 case .success(let data):
                     do {
-                        let asJSON = try JSONSerialization.jsonObject(with: data)
-                        if let asJSON = asJSON as? NSArray {
-                            let libraryModels = [PCLibraryModel].deserialize(from: asJSON) ?? []
+                        
+                        let decoder = JSONDecoder()
+                        
+                        let libraryModels = try decoder.decode([PCLibraryModel].self, from: data)
+                        
+                        var fileDic = [Int: PCFile]()
+                        /// 根目录展示文件夹
+                        if directory.url == PCFile.rootFile.url {
                             
-                            var fileDic = [Int: PCFile]()
-                            /// 根目录展示文件夹
-                            if directory.url == PCFile.rootFile.url {
+                            for model in libraryModels {
+                                var parentFile: PCFile
                                 
-                                for model in libraryModels {
-                                    if let model = model {
-                                        var parentFile: PCFile
-                                        
-                                        if let tmpParentFile = fileDic[model.animeId]    {
-                                            parentFile = tmpParentFile
-                                        } else {
-                                            parentFile = .init(animeId: model.animeId, animeName: model.animeTitle)
-                                            fileDic[model.animeId] = parentFile
-                                        }
-                                    }
+                                if let tmpParentFile = fileDic[model.animeId]    {
+                                    parentFile = tmpParentFile
+                                } else {
+                                    parentFile = .init(animeId: model.animeId, animeName: model.animeTitle)
+                                    fileDic[model.animeId] = parentFile
                                 }
-                                
-                                files.append(contentsOf: Array<PCFile>(fileDic.values))
-                                /// 子目录展示番剧
-                            } else {
-                                let tmpFiles = libraryModels.compactMap({ obj in
-                                    if let obj = obj {
-                                        let f = PCFile(libraryModel: obj)
-                                        /// PC的远程登录只有一级目录，父文件夹设置成自己便于查找关联的字幕文件
-                                        f.parentFile = f
-                                        
-                                        if let filterType = filterType,
-                                           f.type == .file,
-                                           f.url.isThisType(filterType),
-                                           f.animeId == directory.animeId {
-                                            return f
-                                        }
-                                    }
-                                    return nil
-                                })
-                                
-                                files.append(contentsOf: tmpFiles)
                             }
+                            
+                            files.append(contentsOf: Array<PCFile>(fileDic.values))
+                            /// 子目录展示番剧
+                        } else {
+                            let tmpFiles = libraryModels.compactMap({ obj in
+                                let f = PCFile(libraryModel: obj)
+                                /// PC的远程登录只有一级目录，父文件夹设置成自己便于查找关联的字幕文件
+                                f.parentFile = f
+                                
+                                if let filterType = filterType,
+                                   f.type == .file,
+                                   f.url.isThisType(filterType),
+                                   f.animeId == directory.animeId {
+                                    return f
+                                }
+                                return nil
+                            })
+                            
+                            files.append(contentsOf: tmpFiles)
                         }
                     } catch (let err) {
                         error = err
@@ -199,17 +195,12 @@ class PCFileManager: FileManagerProtocol {
         self.defaultSession.request(self.appendingURL("/api/v1/welcome"), method: .get, parameters: parameters, encoder: JSONParameterEncoder.default, headers: header).responseData { (response) in
             switch response.result {
             case .success(let data):
-                do {
-                    let asJSON = try JSONSerialization.jsonObject(with: data)
-                    let result = Response<PCWelcomeModel>(with: asJSON)
-                    let notInputToken = result.result?.tokenRequired == true && !(loginInfo.auth?.password?.isEmpty == false)
-                    if notInputToken {
-                        completionHandler(PCError.needInputTokenError)
-                    } else {
-                        completionHandler(result.error)
-                    }
-                } catch {
-                    completionHandler(error)
+                let result = Response<PCWelcomeModel>(with: data)
+                let notInputToken = result.result?.tokenRequired == true && !(loginInfo.auth?.password?.isEmpty == false)
+                if notInputToken {
+                    completionHandler(PCError.needInputTokenError)
+                } else {
+                    completionHandler(result.error)
                 }
             case .failure(let error):
                 completionHandler(error)
@@ -240,13 +231,10 @@ class PCFileManager: FileManagerProtocol {
             case .success(let data):
                 
                 do {
-                    let asJSON = try JSONSerialization.jsonObject(with: data)
                     
-                    if let result = PCSubtitleCollectionModel.deserialize(from: asJSON as? NSDictionary) {
-                        completion(.success(result.subtitles.compactMap({ PCFile(subtitleModel: $0, media: file) })))
-                    } else {
-                        completion(.success([]))
-                    }
+                    let jsonDecode = JSONDecoder()
+                    let result = try jsonDecode.decode(PCSubtitleCollectionModel.self, from: data)
+                    completion(.success(result.subtitles.compactMap({ PCFile(subtitleModel: $0, media: file) })))
                 } catch {
                     completion(.failure(error))
                 }

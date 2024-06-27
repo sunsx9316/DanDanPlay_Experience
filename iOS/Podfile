@@ -16,7 +16,7 @@ target 'AniXPlayer' do
   pod 'MMKV'
   pod 'DanmakuRender-Swift'
   # pod 'DanmakuRender-Swift', :path => '../../../DanmakuRender-Swift'
-  pod 'HandyJSON', :git => 'https://github.com/Miles-Matheson/HandyJSON.git'
+  # pod 'HandyJSON', :git => 'https://github.com/Miles-Matheson/HandyJSON.git'
   pod 'MJRefresh'
   pod 'MobileVLCKit'
   # pod 'MobileVLCKit', '3.3.10'

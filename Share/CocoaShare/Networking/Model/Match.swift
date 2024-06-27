@@ -6,9 +6,8 @@
 //
 
 import Foundation
-import HandyJSON
 
-enum EpisodeType: String, HandyJSONEnum, DefaultValue {
+enum EpisodeType: String, Codable, DefaultValue {
     static let defaultValue = EpisodeType.unknown
     
     case tvSeries = "tvseries"
@@ -23,30 +22,30 @@ enum EpisodeType: String, HandyJSONEnum, DefaultValue {
     case unknown
 }
 
-struct Match: HandyJSON {
+struct Match: Decodable {
     
-    var episodeId = 0
+    @Default<Int> var episodeId: Int
     
-    var animeId = 0
+    @Default<Int> var animeId: Int
     
-    var animeTitle = ""
+    @Default<String> var animeTitle: String
     
-    var episodeTitle = ""
+    @Default<String> var episodeTitle: String
     
-    var type = EpisodeType.unknown
+    @Default<EpisodeType> var type: EpisodeType
     
-    var typeDescription = ""
+    @Default<String> var typeDescription: String
     
-    var shift = 0
+    @Default<Int> var shift: Int
 }
 
-struct MatchCollection: HandyJSON {
-    var isMatched = false
-    var collection = [Match]()
+struct MatchCollection: Decodable {
+    @Default<Bool> var isMatched: Bool
+    @Default<[Match]> var collection: [Match]
     
-    mutating func mapping(mapper: HelpingMapper) {
-        mapper <<<
-            self.collection <-- "matches"
+    private enum CodingKeys: String, CodingKey {
+        case collection = "matches"
+        case isMatched
     }
     
 }

@@ -6,21 +6,19 @@
 //
 
 import Foundation
-import HandyJSON
 
-struct PCQRModel: HandyJSON {
+struct PCQRModel: Decodable {
     
-    var ip = [String]()
+    @Default<[String]> var ip: [String]
     
-    var port = 0
+    @Default<Int> var port: Int
     
-    var tokenRequired = false
+    @Default<Bool> var tokenRequired: Bool
     
-    var name = ""
+    @Default<String> var name: String
     
-    mutating func mapping(mapper: HelpingMapper) {
-        mapper <<<
-            name <-- "machineName"
+    private enum CodingKeys: String, CodingKey {
+        case ip, port, tokenRequired, name = "machineName"
     }
     
 }

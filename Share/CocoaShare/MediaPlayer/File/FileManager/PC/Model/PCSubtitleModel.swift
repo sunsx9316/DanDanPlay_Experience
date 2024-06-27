@@ -6,16 +6,17 @@
 //
 
 import Foundation
-import HandyJSON
 
-struct PCSubtitleCollectionModel: HandyJSON {
-    var subtitles = [PCSubtitleModel]()
+struct PCSubtitleCollectionModel: Decodable {
+    
+    @Default<[PCSubtitleModel]> var subtitles: [PCSubtitleModel]
+    
 }
 
-struct PCSubtitleModel: HandyJSON {
+struct PCSubtitleModel: Decodable {
     
-    var fileName = ""
+    @Default<String> var fileName: String
     
-    var fileSize = 0
+    @Default<Int> var fileSize : Int
     
 }
