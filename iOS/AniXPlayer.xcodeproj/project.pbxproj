@@ -76,6 +76,8 @@
 		8949F8912662AA2100274520 /* WebDavLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8949F8902662AA2100274520 /* WebDavLoginHistoryViewController.swift */; };
 		8949F8932662AA8E00274520 /* FTPLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8949F8922662AA8E00274520 /* FTPLoginHistoryViewController.swift */; };
 		895A6B2C2C2C700200B81510 /* Define.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A6B2B2C2C700200B81510 /* Define.swift */; };
+		897291D32C2FAF340016CA1F /* ANXColor+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897291D22C2FAF340016CA1F /* ANXColor+Utils.swift */; };
+		897291D52C2FAF650016CA1F /* Decodable+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897291D42C2FAF650016CA1F /* Decodable+Utils.swift */; };
 		897CF529262F309D00CC297A /* PlayerSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897CF528262F309D00CC297A /* PlayerSettingViewController.swift */; };
 		897CF52D262F30D200CC297A /* DanmakuSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897CF52C262F30D200CC297A /* DanmakuSettingViewController.swift */; };
 		897CF533262F317B00CC297A /* SliderTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 897CF531262F317B00CC297A /* SliderTableViewCell.xib */; };
@@ -109,7 +111,7 @@
 		8994614D28CC783C009AC640 /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994611428CC783C009AC640 /* Search.swift */; };
 		8994614E28CC783C009AC640 /* NetworkConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994611528CC783C009AC640 /* NetworkConstant.swift */; };
 		8994614F28CC783C009AC640 /* SubtitleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994611628CC783C009AC640 /* SubtitleManager.swift */; };
-		8994616128CC783C009AC640 /* Rational.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994612C28CC783C009AC640 /* Rational.swift */; };
+		8994616128CC783C009AC640 /* NumberUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994612C28CC783C009AC640 /* NumberUtils.swift */; };
 		8994616228CC783C009AC640 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994612D28CC783C009AC640 /* Atomic.swift */; };
 		8994616328CC783C009AC640 /* PathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994613128CC783C009AC640 /* PathUtils.swift */; };
 		8994616428CC783C009AC640 /* NSNetService+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 8994613228CC783C009AC640 /* NSNetService+Utils.m */; };
@@ -224,6 +226,8 @@
 		8949F8902662AA2100274520 /* WebDavLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDavLoginHistoryViewController.swift; sourceTree = "<group>"; };
 		8949F8922662AA8E00274520 /* FTPLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FTPLoginHistoryViewController.swift; sourceTree = "<group>"; };
 		895A6B2B2C2C700200B81510 /* Define.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Define.swift; sourceTree = "<group>"; };
+		897291D22C2FAF340016CA1F /* ANXColor+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ANXColor+Utils.swift"; sourceTree = "<group>"; };
+		897291D42C2FAF650016CA1F /* Decodable+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Decodable+Utils.swift"; sourceTree = "<group>"; };
 		897CF528262F309D00CC297A /* PlayerSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSettingViewController.swift; sourceTree = "<group>"; };
 		897CF52C262F30D200CC297A /* DanmakuSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuSettingViewController.swift; sourceTree = "<group>"; };
 		897CF530262F317B00CC297A /* SliderTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderTableViewCell.swift; sourceTree = "<group>"; };
@@ -259,7 +263,7 @@
 		8994611428CC783C009AC640 /* Search.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
 		8994611528CC783C009AC640 /* NetworkConstant.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkConstant.swift; sourceTree = "<group>"; };
 		8994611628CC783C009AC640 /* SubtitleManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubtitleManager.swift; sourceTree = "<group>"; };
-		8994612C28CC783C009AC640 /* Rational.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Rational.swift; sourceTree = "<group>"; };
+		8994612C28CC783C009AC640 /* NumberUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NumberUtils.swift; sourceTree = "<group>"; };
 		8994612D28CC783C009AC640 /* Atomic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Atomic.swift; sourceTree = "<group>"; };
 		8994613028CC783C009AC640 /* NSNetService+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSNetService+Utils.h"; sourceTree = "<group>"; };
 		8994613128CC783C009AC640 /* PathUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PathUtils.swift; sourceTree = "<group>"; };
@@ -652,6 +656,15 @@
 			path = WebDAV;
 			sourceTree = "<group>";
 		};
+		897291D62C2FAFB00016CA1F /* Preferences */ = {
+			isa = PBXGroup;
+			children = (
+				8994610928CC783C009AC640 /* Store.swift */,
+				8994610C28CC783C009AC640 /* Preferences.swift */,
+			);
+			path = Preferences;
+			sourceTree = "<group>";
+		};
 		897CF527262F308300CC297A /* Setting */ = {
 			isa = PBXGroup;
 			children = (
@@ -700,19 +713,17 @@
 		899460F228CC783C009AC640 /* CocoaShare */ = {
 			isa = PBXGroup;
 			children = (
+				897291D62C2FAFB00016CA1F /* Preferences */,
 				8994612D28CC783C009AC640 /* Atomic.swift */,
-				8994610B28CC783C009AC640 /* CacheManager.swift */,
 				899460F328CC783C009AC640 /* Constant.swift */,
 				895A6B2B2C2C700200B81510 /* Define.swift */,
+				8994610B28CC783C009AC640 /* CacheManager.swift */,
 				8994610A28CC783C009AC640 /* DanmakuManager.swift */,
 				8994613328CC783C009AC640 /* HistoryManager.swift */,
-				8994610C28CC783C009AC640 /* Preferences.swift */,
 				8994611628CC783C009AC640 /* SubtitleManager.swift */,
 				8994612F28CC783C009AC640 /* Helper */,
 				899460F428CC783C009AC640 /* MediaPlayer */,
-				8994611728CC783C009AC640 /* Model */,
 				8994610E28CC783C009AC640 /* Networking */,
-				8994610828CC783C009AC640 /* StoreManager */,
 			);
 			name = CocoaShare;
 			path = ../../Share/CocoaShare;
@@ -768,14 +779,6 @@
 			path = WebDav;
 			sourceTree = "<group>";
 		};
-		8994610828CC783C009AC640 /* StoreManager */ = {
-			isa = PBXGroup;
-			children = (
-				8994610928CC783C009AC640 /* Store.swift */,
-			);
-			path = StoreManager;
-			sourceTree = "<group>";
-		};
 		8994610E28CC783C009AC640 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
@@ -798,23 +801,18 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		8994611728CC783C009AC640 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				8994612C28CC783C009AC640 /* Rational.swift */,
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
 		8994612F28CC783C009AC640 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
+				8994612C28CC783C009AC640 /* NumberUtils.swift */,
 				8994613028CC783C009AC640 /* NSNetService+Utils.h */,
 				8994613228CC783C009AC640 /* NSNetService+Utils.m */,
 				8994613128CC783C009AC640 /* PathUtils.swift */,
 				89AAA20B2972F4E0008CD8AD /* ANXLogHelperModule+Utils.h */,
 				89AAA20C2972F4E0008CD8AD /* ANXLogHelperModule+Utils.m */,
 				899A11B02A18B703009B2953 /* AppInfoHelper.swift */,
+				897291D22C2FAF340016CA1F /* ANXColor+Utils.swift */,
+				897291D42C2FAF650016CA1F /* Decodable+Utils.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -1059,8 +1057,9 @@
 				890886D92A011971005EDBD6 /* PCQRScannerViewController.swift in Sources */,
 				89BFF04B2A06C0A00076C676 /* PCSubtitleModel.swift in Sources */,
 				8994613C28CC783C009AC640 /* WebDavFileManager.swift in Sources */,
+				897291D32C2FAF340016CA1F /* ANXColor+Utils.swift in Sources */,
 				8994614B28CC783C009AC640 /* Match.swift in Sources */,
-				8994616128CC783C009AC640 /* Rational.swift in Sources */,
+				8994616128CC783C009AC640 /* NumberUtils.swift in Sources */,
 				89044759290186B40088886B /* UIViewController+Helper.swift in Sources */,
 				890886DB2A011C8B005EDBD6 /* PCQRModel.swift in Sources */,
 				89AAA20D2972F4E0008CD8AD /* ANXLogHelperModule+Utils.m in Sources */,
@@ -1095,6 +1094,7 @@
 				890DF86526189D26002D8AE5 /* EpisodeTableViewCell.swift in Sources */,
 				89AF9C032631C2680037A133 /* StepTableViewCell.swift in Sources */,
 				8994616428CC783C009AC640 /* NSNetService+Utils.m in Sources */,
+				897291D52C2FAF650016CA1F /* Decodable+Utils.swift in Sources */,
 				8944E87B263AF72400EF00B1 /* TextField.swift in Sources */,
 				8931F0F92677457100590569 /* EditableTableViewCell.swift in Sources */,
 				8931F0EB2674CD3300590569 /* HttpServerViewController.swift in Sources */,

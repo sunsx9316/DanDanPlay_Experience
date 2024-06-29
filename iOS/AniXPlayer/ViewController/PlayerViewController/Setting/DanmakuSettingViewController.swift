@@ -113,7 +113,7 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
             cell.step = UInt(minCount)
             
             model.minValueFormattingCallBack = { aModel in
-                let minRational = Rational(approximating: Double(aModel.minValue / aModel.maxValue))
+                let minRational = NumberUtils.conver(approximating: Double(aModel.minValue / aModel.maxValue))
                 return "\(minRational.numerator)/\(minRational.denominator)" + NSLocalizedString("屏", comment: "")
             }
             
@@ -125,7 +125,7 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
                 if aModel.currentValue == aModel.maxValue {
                     return NSLocalizedString("满屏", comment: "")
                 } else {
-                    let rational = Rational(approximating: Double(aModel.currentValue / aModel.maxValue))
+                    let rational = NumberUtils.conver(approximating: Double(aModel.currentValue / aModel.maxValue))
                     return "\(rational.numerator)/\(rational.denominator)" + NSLocalizedString("屏", comment: "")
                 }
             }

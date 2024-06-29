@@ -6,12 +6,14 @@
 //  Copyright © 2020 The Flutter Authors. All rights reserved.
 //
 
-public enum WebDavKey: String {
-    case url
-    case user = "web_dav_user"
-    case password = "web_dav_password"
-}
+//public enum WebDavKey: String {
+//    case url
+//    case user = "web_dav_user"
+//    case password = "web_dav_password"
+//}
 
+
+/// 认证信息
 struct Auth: Codable, Equatable {
     let userName: String?
     
@@ -23,6 +25,8 @@ struct Auth: Codable, Equatable {
     }
 }
 
+
+/// 登录信息
 struct LoginInfo: Codable, Equatable {
     
     var url: URL
@@ -31,6 +35,8 @@ struct LoginInfo: Codable, Equatable {
     
 }
 
+
+/// 文件筛选类型
 struct URLFilterType: OptionSet {
     let rawValue: Int
     
