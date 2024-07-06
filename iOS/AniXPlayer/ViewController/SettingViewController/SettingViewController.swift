@@ -303,7 +303,9 @@ class SettingViewController: ViewController {
     }
     
     private func resolverAddress(completion: @escaping(([String]?) -> Void)) {
-        NetworkManager.shared.getBackupIps { res, error in
+        ConfigNetworkHandle.getBackupIps { [weak self] res, error in
+            guard let self = self else { return }
+            
             if let error = error {
                 DispatchQueue.main.async {
                     self.view.showError(error)

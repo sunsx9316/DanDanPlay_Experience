@@ -234,7 +234,7 @@ class PlayerViewController: ViewController {
         
         self.view.show(progress: 0, statusText: NSLocalizedString("解析视频中...", comment: ""))
         
-        NetworkManager.shared.danmakuWithFile(media) { [weak self] (progress) in
+        MatchNetworkHandle.matchAndGetDanmakuWithFile(media) { [weak self] (progress) in
             DispatchQueue.main.async {
                 guard let self = self else { return }
                 
@@ -253,7 +253,7 @@ class PlayerViewController: ViewController {
                     self.popMatchWindowController(with: collection, file: media)
                 }
             }
-        } danmakuCompletion: { [weak self] (collection, episodeId, error) in
+        } getDanmakuCompletion: { [weak self] (collection, episodeId, error) in
             DispatchQueue.main.async {
                 guard let self = self else { return }
                 
@@ -629,7 +629,7 @@ extension PlayerViewController: MatchsViewControllerDelegate {
         
         self.view.show(progress: 0.5, statusText: NSLocalizedString("加载弹幕中...", comment: ""))
 
-        NetworkManager.shared.danmakuWithEpisodeId(episodeId) { [weak self] (collection, error) in
+        CommentNetworkHandle.getDanmaku(with: episodeId) { [weak self] (collection, error) in
             
             guard let self = self else { return }
             

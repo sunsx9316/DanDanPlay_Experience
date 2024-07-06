@@ -13,7 +13,7 @@ class NetworkManager {
     
     static let shared = NetworkManager()
     
-    private var host: String {
+    var host: String {
         return Preferences.shared.host
     }
     
@@ -31,224 +31,68 @@ class NetworkManager {
         return manager
     }()
     
-    /// 根据文件直接搜索弹幕
-    func danmakuWithFile(_ file: File,
-                         progress: FileProgressAction? = nil,
-                         matchCompletion: @escaping((MatchCollection?, Error?) -> Void),
-                         danmakuCompletion: @escaping((CommentCollection?, _ episodeId: Int, Error?) -> Void)) {
-        
-        ANX.logInfo(.HTTP, "根据文件直接搜索弹幕 file: \(file)")
-        
-        self.matchWithFile(file) { (progressValue) in
-            progress?(0.5 * progressValue)
-        } completion: { [weak self] (collection, error) in
-            
-            guard let self = self else {
-                progress?(1)
-                return
-            }
-            
-            if let error = error {
-                ANX.logInfo(.HTTP, "根据文件直接搜索弹幕 请求失败 error: \(error)")
-                progress?(1)
-                matchCompletion(collection, error)
-                return
-            }
-            
-            //精确匹配
-            if collection?.isMatched == true &&
-                collection?.collection.count == 1 &&
-                Preferences.shared.fastMatch {
-                progress?(0.7)
-                let matched = collection!.collection[0]
+    
+    /// 发起Get请求
+    /// - Parameters:
+    ///   - url: url
+    ///   - parameters: 参数
+    ///   - complection: 完成回调
+    func get(url: String, parameters: Encodable = [String: String](), complection: @escaping((Result<Data, Error>) -> Void)) {
+        ANX.logInfo(.HTTP, "发起 get 请求 url: \(url), 参数: \(parameters)")
+        self.defaultSession.request(url, method: .get, parameters: parameters, encoder: URLEncodedFormParameterEncoder.default).responseData { (response) in
+            switch response.result {
+            case .success(let data):
+                ANX.logInfo(.HTTP, "get 请求成功 url: \(url), 参数: \(parameters)")
                 
-                ANX.logInfo(.HTTP, "根据文件直接搜索弹幕 精确匹配 matched: \(matched)")
+                complection(.success(data))
+            case .failure(let error):
+                ANX.logInfo(.HTTP, "get 请求失败 url: \(url), 参数: \(parameters), error:\(error)")
                 
-                self.danmakuWithEpisodeId(matched.episodeId) { (damakus, error) in
-                    progress?(1)
-                    danmakuCompletion(damakus, matched.episodeId, error)
-                }
-            } else {
-                progress?(1)
-                matchCompletion(collection, error)
-                ANX.logInfo(.HTTP, "根据文件直接搜索弹幕 请求成功 collection数量: \(String(describing: collection?.collection.count))")
+                complection(.failure(error))
             }
         }
     }
     
-    /// 根据文件返回匹配的结果
-    func matchWithFile(_ file: File,
-                       matchMode: MatchMode = .hashAndFileName,
-                       parseDataProgress: FileProgressAction? = nil,
-                       completion: @escaping((MatchCollection?, Error?) -> Void)) {
-        
-        let requestMatchWithFileHashBlock = { [weak self] (_ fileHash: String) in
-            
-            guard let self = self else { return }
-            
-            var parameters = [String : String]()
-            parameters["fileName"] = file.fileName
-            parameters["fileHash"] = fileHash
-            parameters["fileSize"] = "\(file.fileSize)"
-            parameters["matchMode"] = matchMode.rawValue
-            
-            ANX.logInfo(.HTTP, "根据文件返回匹配的结果 请求参数: \(parameters)")
-            
-            self.defaultSession.request(self.baseURL + "/match", method: .post, parameters: parameters, encoder: JSONParameterEncoder.default).responseData { (response) in
-                switch response.result {
-                case .success(let data):
-                    let result = Response<MatchCollection>(with: data)
-                    
-                    let collection = result.result
-                    
-                    /// 精确匹配，缓存结果
-                    if collection?.isMatched == true && collection?.collection.count == 1 {
-                        CacheManager.shared.setMatchResultWithHash(fileHash, data: data)
-                    }
-                    
-                    completion(collection, result.error)
-                    ANX.logInfo(.HTTP, "根据文件返回匹配的结果 请求成功")
-                case .failure(let error):
-                    completion(nil, error)
-                    ANX.logInfo(.HTTP, "根据文件返回匹配的结果 请求失败: \(error)")
-                }
-            }
-        }
-        
-        if Preferences.shared.fastMatch,
-           let hash = CacheManager.shared.matchHashWithFile(file) {
-            ANX.logInfo(.HTTP, "根据文件返回匹配的结果 快速匹配 hash：\(hash)")
-            
-            if let data = CacheManager.shared.matchResultWithHash(hash) {
-                let result = Response<MatchCollection>(with: data)
+    /// 发起Post请求
+    /// - Parameters:
+    ///   - url: url
+    ///   - parameters: 参数
+    ///   - complection: 完成回调
+    func post(url: String, parameters: Encodable = [String: String](), complection: @escaping((Result<Data, Error>) -> Void)) {
+        ANX.logInfo(.HTTP, "发起 post 请求 url: \(url), 参数: \(parameters)")
+        self.defaultSession.request(url, method: .post, parameters: parameters, encoder: JSONParameterEncoder.default).responseData { (response) in
+            switch response.result {
+            case .success(let data):
+                ANX.logInfo(.HTTP, "post 请求成功 url: \(url), 参数: \(parameters)")
                 
-                completion(result.result, nil)
-                ANX.logInfo(.HTTP, "根据缓存返回匹配的结果 请求成功")
-            } else {
-                requestMatchWithFileHashBlock(hash)
-            }
-            
-        } else {
-            ANX.logInfo(.HTTP, "根据文件返回匹配的结果 获取文件解析字节")
-            file.getFileHashWithProgress(parseDataProgress) { result in
-                switch result {
-                case .failure(let error):
-                    completion(nil, error)
-                    ANX.logInfo(.HTTP, "根据文件返回匹配的结果 失败 error: \(error)")
-                case .success(let hash):
-                    ANX.logInfo(.HTTP, "根据文件返回匹配的结果 成功 hash: \(hash)")
-                    CacheManager.shared.setMatchHashWithFile(file, hash: hash)
-                    requestMatchWithFileHashBlock(hash)
-                }
-            }
-        }
-        
-    }
-    
-    /// 根据文件下载弹幕
-    func danmakuWithEpisodeId(_ episodeId: Int,
-                              from: Int? = nil,
-                              withRelated: Bool = true,
-                              lanConvert: LanConvert? = nil,
-                              completion: @escaping((CommentCollection?, Error?) -> Void)) {
-
-        var parameters = [String : String]()
-        parameters["withRelated"] = withRelated ? "true" : "false"
-
-        if let from = from {
-            parameters["from"] = "\(from)"
-        }
-
-        if let lanConvert = lanConvert {
-            parameters["chConvert"] = "\(lanConvert.rawValue)"
-        }
-        
-        let md5Str = ("\(parameters)" as NSString).md5() ?? ""
-        if let data = CacheManager.shared.danmakuCacheWithEpisodeId(episodeId, parametersHash: md5Str) {
-            ANX.logInfo(.HTTP, "根据文件下载弹幕 匹配到缓存 episodeId: \(episodeId) md5Str: \(md5Str)")
-            let result = Response<CommentCollection>(with: data)
-            completion(result.result, nil)
-            return
-        }
-
-        ANX.logInfo(.HTTP, "根据文件下载弹幕 请求 parameters: \(parameters)")
-        self.defaultSession.request(self.baseURL + "/comment/\(episodeId)", method: .get, parameters: parameters, encoder: URLEncodedFormParameterEncoder.default).responseData { (response) in
-            switch response.result {
-            case .success(let data):
-                let result = Response<CommentCollection>(with: data)
-                if result.error == nil {
-                    CacheManager.shared.setDanmakuCacheWithEpisodeId(episodeId, parametersHash: md5Str, data: response.data)
-                }
-                completion(result.result, result.error)
-                ANX.logInfo(.HTTP, "根据文件下载弹幕 请求成功")
+                complection(.success(data))
             case .failure(let error):
-                completion(nil, error)
-                ANX.logInfo(.HTTP, "根据文件下载弹幕 请求失败: \(error)")
+                ANX.logInfo(.HTTP, "post 请求失败 url: \(url), 参数: \(parameters), error:\(error)")
+                
+                complection(.failure(error))
             }
         }
     }
     
-    /// 搜索
-    func searchWithKeyword(_ keyword: String, completion: @escaping((SearchResult?, Error?) -> Void)) {
-        var parameters = [String : String]()
-        parameters["anime"] = keyword
-        
-        ANX.logInfo(.HTTP, "搜索 parameters: \(parameters)")
-        self.defaultSession.request(self.baseURL + "/search/episodes", method: .get, parameters: parameters, encoder: URLEncodedFormParameterEncoder.default).responseData { (response) in
-            switch response.result {
-            case .success(let data):
-                let result = Response<SearchResult>(with: data)
-                completion(result.result, result.error)
-                ANX.logInfo(.HTTP, "搜索 请求成功")
-            case .failure(let error):
-                completion(nil, error)
-                ANX.logInfo(.HTTP, "搜索 请求失败: \(error)")
-            }
-        }
+    
+    /// 基于baseurl 拼接 additionUrl发起Get请求
+    /// - Parameters:
+    ///   - additionUrl: 附加路径，需要自己加/分隔符
+    ///   - parameters: 参数
+    ///   - complection: 完成回调
+    func getOnBaseURL(additionUrl: String, parameters: Encodable = [String: String](), complection: @escaping((Result<Data, Error>) -> Void)) {
+        self.get(url: self.baseURL + additionUrl, parameters: parameters, complection: complection)
     }
     
-    #if os(macOS)
-    /// 检查更新
-    /// - Parameter completion: 回调
-    func checkUpdate(_ completion: @escaping((UpdateInfo?, Error?) -> Void)) {
-        ANX.logInfo(.HTTP, "检查更新")
+    
+    /// 基于baseurl 拼接 additionUrl发起Post请求
+    /// - Parameters:
+    ///   - additionUrl: 附加路径，需要自己加/分隔符
+    ///   - parameters: 参数
+    ///   - complection: 完成回调
+    func postOnBaseURL(additionUrl: String, parameters: Encodable = [String: String](), complection: @escaping((Result<Data, Error>) -> Void)) {
+        self.post(url: self.baseURL + additionUrl, parameters: parameters, complection: complection)
+    }
 
-        self.defaultSession.request(self.host + "/api/v1/update/mac", method: .get).responseData { (response) in
-            switch response.result {
-            case .success(let data):
-                let result = Response<UpdateInfo>(with: data)
-                completion(result.result, result.error)
-                ANX.logInfo(.HTTP, "更新信息 请求成功 \(result)")
-            case .failure(let error):
-                completion(nil, error)
-                ANX.logInfo(.HTTP, "更新信息 请求失败: \(error)")
-            }
-        }
-    }
-    
-    #endif
-    
-    
-    /// 获取备用ip
-    /// - Parameter completion: 完成回调
-    func getBackupIps(_ completion: @escaping((IPResponse?, Error?) -> Void)) {
-        self.defaultSession.request("https://dns.alidns.com/resolve?name=cn.api.dandanplay.net&type=16", method: .get).responseData { (response) in
-            switch response.result {
-            case .success(let data):
-                do {
-                    let jsonDecoder = JSONDecoder()
-                    let result = try jsonDecoder.decode(IPResponse.self, from: data)
-                    completion(result, nil)
-                    ANX.logInfo(.HTTP, "获取备用ip成功: \(String(describing: result))")
-                } catch {
-                    completion(nil, error)
-                    ANX.logInfo(.HTTP, "获取备用ip失败: \(error)")
-                }
-            case .failure(let error):
-                completion(nil, error)
-                ANX.logInfo(.HTTP, "获取备用ip失败: \(error)")
-            }
-        }
-    }
     
 }

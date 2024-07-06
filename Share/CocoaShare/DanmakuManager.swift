@@ -121,18 +121,20 @@ class DanmakuManager {
             self.loadLocalDanmaku(media) { [weak self] result, error in
                 guard let self = self else { return }
                 
-                if result?.isEmpty == false {
+                let hasLocalDanmaku = result?.isEmpty == false
+                
+                if hasLocalDanmaku {
                     progress?(0.7)
                     
                     /// 尝试进行网络请求，如果失败，则会使用本地弹幕
-                    NetworkManager.shared.danmakuWithFile(media) { [weak self] matchCollection, error in
+                    MatchNetworkHandle.matchAndGetDanmakuWithFile(media) { [weak self] matchCollection, error in
                         guard self != nil else { return }
                         
                         /// 进这里说明匹配到多个结果，或关闭了快速匹配
                         progress?(1)
                         danmakuCompletion(result, 0, nil)
                         
-                    } danmakuCompletion: { [weak self] collection, episodeId, error in
+                    } getDanmakuCompletion: { [weak self] collection, episodeId, error in
                         guard let self = self else { return }
                         
                         progress?(1)
@@ -146,13 +148,13 @@ class DanmakuManager {
                     }
                     
                 } else {
-                    NetworkManager.shared.danmakuWithFile(media, progress: progress, matchCompletion: matchCompletion) { collection, episodeId, error in
+                    MatchNetworkHandle.matchAndGetDanmakuWithFile(media, progress: progress, matchCompletion: matchCompletion) { collection, episodeId, error in
                         danmakuCompletion(DanmakuManager.shared.conver(collection?.collection ?? []), episodeId, error)
                     }
                 }
             }
         } else {
-            NetworkManager.shared.danmakuWithFile(media, progress: progress, matchCompletion: matchCompletion) { collection, episodeId, error in
+            MatchNetworkHandle.matchAndGetDanmakuWithFile(media, progress: progress, matchCompletion: matchCompletion) { collection, episodeId, error in
                 danmakuCompletion(DanmakuManager.shared.conver(collection?.collection ?? []), episodeId, error)
             }
         }

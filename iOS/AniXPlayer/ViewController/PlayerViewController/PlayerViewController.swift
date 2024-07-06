@@ -565,7 +565,7 @@ extension PlayerViewController: MatchsViewControllerDelegate {
         hud.progress = 0.5
         hud.show(animated: true)
 
-        NetworkManager.shared.danmakuWithEpisodeId(episodeId) { [weak self] (collection, error) in
+        CommentNetworkHandle.getDanmaku(with: episodeId) { [weak self] (collection, error) in
             
             guard let self = self else { return }
             

@@ -130,8 +130,7 @@ class MatchsViewController: ViewController {
     }
     
     private func requestData(completion: @escaping(() -> Void)) {
-        
-        NetworkManager.shared.matchWithFile(file) { (_) in
+        MatchNetworkHandle.match(with: file) { (_) in
             
         } completion: { [weak self] (collection, error) in
             

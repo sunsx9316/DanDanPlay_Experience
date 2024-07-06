@@ -180,7 +180,7 @@ class SearchViewController: ViewController {
     @objc private func beginRefresh() {
         if let text = self.navigationItem.searchController?.searchBar.text,
            text.isEmpty == false {
-            NetworkManager.shared.searchWithKeyword(text) { [weak self] (result, error) in
+            SearchNetworkHandle.searchWithKeyword(text) { [weak self] (result, error) in
                 
                 guard let self = self else { return }
                 

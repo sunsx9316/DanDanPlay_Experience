@@ -88,7 +88,7 @@ class SearchViewController: ViewController {
             return
         }
         
-        NetworkManager.shared.searchWithKeyword(text) { [weak self] (result, error) in
+        SearchNetworkHandle.searchWithKeyword(text) { [weak self] (result, error) in
             
             guard let self = self else { return }
             

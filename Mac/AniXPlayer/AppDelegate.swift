@@ -68,8 +68,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @objc private func checkUpdate() {
-        
-        NetworkManager.shared.checkUpdate { [weak self] info, error in
+        ConfigNetworkHandle.checkUpdate { [weak self] info, error in
             guard let self = self else { return }
             
             if let info = info,
