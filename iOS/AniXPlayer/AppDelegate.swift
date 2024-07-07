@@ -17,12 +17,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         Launcher.launch()
         
-        let vc = HomePageViewController()
-        let nav = HomePageNavigationController(rootViewController: vc)
-        nav.navigationBar.prefersLargeTitles = true
-        
         self.window = UIWindow(frame: UIScreen.main.bounds)
-        self.window?.rootViewController = nav
+        self.window?.rootViewController = MainViewController()
         self.window?.makeKeyAndVisible()
         
         return true

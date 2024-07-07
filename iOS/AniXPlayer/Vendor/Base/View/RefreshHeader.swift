@@ -16,32 +16,28 @@ class RefreshHeader: MJRefreshNormalHeader {
         }
         return []
     }()
-
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        self.setupInit()
-    }
-    
-    required init?(coder: NSCoder) {
-        super.init(coder: coder)
-        self.setupInit()
-    }
     
     override var state: MJRefreshState {
         didSet {
             if self.state == .refreshing {
                 self.labelLeftInset = 20
                 self.setTitle(self.refreshTexts.randomElement()!, for: .refreshing)
-                self.loadingView?.isHidden = true
+                self.loadingView?.isHidden = false
             } else {
                 self.labelLeftInset = 0
-                self.loadingView?.isHidden = false
+                self.loadingView?.isHidden = true
             }
         }
     }
     
+    override func prepare() {
+        super.prepare()
+        setupInit()
+    }
+    
     private func setupInit() {
         self.lastUpdatedTimeLabel?.isHidden = true
+        self.loadingView?.isHidden = true
         self.isAutomaticallyChangeAlpha = true
         self.stateLabel?.font = .ddp_normal
         self.setTitle("", for: .idle)

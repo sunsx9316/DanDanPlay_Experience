@@ -70,26 +70,29 @@
 
 #pragma mark - Initializing the AV Components
 
-- (void)setupAVComponents
-{
-  self.defaultDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
-
-  if (_defaultDevice) {
-    self.defaultDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:_defaultDevice error:nil];
-    self.metadataOutput     = [[AVCaptureMetadataOutput alloc] init];
-    self.session            = [[AVCaptureSession alloc] init];
-    self.previewLayer       = [AVCaptureVideoPreviewLayer layerWithSession:self.session];
-
-    for (AVCaptureDevice *device in [AVCaptureDevice devicesWithMediaType:AVMediaTypeVideo]) {
-      if (device.position == AVCaptureDevicePositionFront) {
-        self.frontDevice = device;
-      }
+- (void)setupAVComponents {
+    self.defaultDevice = [AVCaptureDevice defaultDeviceWithMediaType:AVMediaTypeVideo];
+    
+    if (_defaultDevice) {
+        self.defaultDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:_defaultDevice error:nil];
+        self.metadataOutput     = [[AVCaptureMetadataOutput alloc] init];
+        self.session            = [[AVCaptureSession alloc] init];
+        self.previewLayer       = [AVCaptureVideoPreviewLayer layerWithSession:self.session];
+        
+        AVCaptureDeviceDiscoverySession *captureDeviceDiscoverySession = [AVCaptureDeviceDiscoverySession discoverySessionWithDeviceTypes:@[AVCaptureDeviceTypeBuiltInWideAngleCamera]
+                                              mediaType:AVMediaTypeVideo
+                                               position:AVCaptureDevicePositionBack];
+        
+        for (AVCaptureDevice *device in captureDeviceDiscoverySession.devices) {
+            if (device.position == AVCaptureDevicePositionFront) {
+                self.frontDevice = device;
+            }
+        }
+        
+        if (_frontDevice) {
+            self.frontDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:_frontDevice error:nil];
+        }
     }
-
-    if (_frontDevice) {
-      self.frontDeviceInput = [AVCaptureDeviceInput deviceInputWithDevice:_frontDevice error:nil];
-    }
-  }
 }
 
 - (void)configureDefaultComponents

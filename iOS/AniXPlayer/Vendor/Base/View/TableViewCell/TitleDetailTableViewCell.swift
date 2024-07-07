@@ -13,7 +13,6 @@ class TitleDetailTableViewCell: TableViewCell {
     
     @IBOutlet weak var subtitleLabel: UILabel!
     
-
     override func awakeFromNib() {
         super.awakeFromNib()
         

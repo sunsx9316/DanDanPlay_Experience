@@ -27,4 +27,40 @@ class NumberUtils {
         }
         return (numerator: h, denominator: k)
     }
+    
+    /// 数字转中文
+    /// - Parameter number: 数字
+    /// - Returns: 中文
+    static func numberToChinese(_ number: Int) -> String {
+        let chineseNumbers = ["零", "一", "二", "三", "四", "五", "六", "七", "八", "九"]
+        let units = ["", "十", "百", "千", "万", "十", "百", "千", "亿"]
+        
+        var num = number
+        var result = ""
+        var unitPosition = 0
+        var lastDigit = 0
+
+        while num > 0 {
+            let digit = num % 10
+            
+            if digit == 0 {
+                if !result.hasPrefix(chineseNumbers[0]) && !result.isEmpty {
+                    result = chineseNumbers[0] + result
+                }
+            } else {
+                let unit = (unitPosition > 0 && digit == 1 && unitPosition == 1 && lastDigit == 0) ? "" : chineseNumbers[digit]
+                result = unit + units[unitPosition] + result
+            }
+            
+            lastDigit = digit
+            num /= 10
+            unitPosition += 1
+        }
+        
+        if result.hasPrefix("一十") {
+            result = String(result.dropFirst(1))
+        }
+        
+        return result
+    }
 }

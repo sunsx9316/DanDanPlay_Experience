@@ -1,5 +1,5 @@
 //
-//  HomePageNavigationController.swift
+//  MediaLibNavigationController.swift
 //  AniXPlayer
 //
 //  Created by jimhuang on 2021/6/18.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class HomePageNavigationController: NavigationController {
+class MediaLibNavigationController: NavigationController {
 
     override var shouldAutorotate: Bool {
         return UIDevice.current.isPad

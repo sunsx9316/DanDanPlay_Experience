@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="HomePageFunctionCollectionViewCell" customModule="AniXPlayer" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="228" height="230"/>
+            <autoresizingMask key="autoresizingMask"/>
+            <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                <rect key="frame" x="0.0" y="0.0" width="228" height="230"/>
+                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                <subviews>
+                    <stackView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" horizontalCompressionResistancePriority="748" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="iPw-in-vUH">
+                        <rect key="frame" x="52" y="72.333333333333343" width="124" height="85.333333333333343"/>
+                        <subviews>
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" placeholderIntrinsicWidth="60" placeholderIntrinsicHeight="60" translatesAutoresizingMaskIntoConstraints="NO" id="vd6-Vc-m1v">
+                                <rect key="frame" x="0.0" y="0.0" width="124" height="60"/>
+                            </imageView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="256" verticalHuggingPriority="251" horizontalCompressionResistancePriority="755" text="LabelLabelLabel" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rsT-E4-H2B" customClass="Label" customModule="AniXPlayer" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="65.000000000000014" width="124" height="20.333333333333329"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                    </stackView>
+                </subviews>
+            </view>
+            <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
+            <constraints>
+                <constraint firstItem="iPw-in-vUH" firstAttribute="centerX" secondItem="gTV-IL-0wX" secondAttribute="centerX" id="6V6-nQ-O2d"/>
+                <constraint firstItem="iPw-in-vUH" firstAttribute="centerY" secondItem="gTV-IL-0wX" secondAttribute="centerY" id="xlh-Pl-fok"/>
+            </constraints>
+            <size key="customSize" width="228" height="230"/>
+            <connections>
+                <outlet property="imgView" destination="vd6-Vc-m1v" id="fnr-Ca-dpk"/>
+                <outlet property="nameLabel" destination="rsT-E4-H2B" id="Lb4-yo-82W"/>
+            </connections>
+            <point key="canvasLocation" x="-317.55725190839695" y="50.70422535211268"/>
+        </collectionViewCell>
+    </objects>
+</document>

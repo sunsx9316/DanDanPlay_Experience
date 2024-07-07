@@ -1,5 +1,5 @@
 //
-//  HomePageViewController.swift
+//  MediaLibViewController.swift
 //  AniXPlayer
 //
 //  Created by jimhuang on 2021/4/1.
@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 import YYCategories
 
-extension HomePageViewController: UITableViewDelegate, UITableViewDataSource {
+extension MediaLibViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.dataSource.count
     }
@@ -56,7 +56,7 @@ extension HomePageViewController: UITableViewDelegate, UITableViewDataSource {
     
 }
 
-extension HomePageViewController: FileBrowserViewControllerDelegate {
+extension MediaLibViewController: FileBrowserViewControllerDelegate {
     func fileBrowserViewController(_ vc: FileBrowserViewController, didSelectFile: File, allFiles: [File]) {
         let nvc = PlayerNavigationController(items: allFiles, selectedItem: didSelectFile)
         self.present(nvc, animated: true, completion: nil)
@@ -64,7 +64,7 @@ extension HomePageViewController: FileBrowserViewControllerDelegate {
     
 }
 
-class HomePageViewController: ViewController {
+class MediaLibViewController: ViewController {
     
     private enum CellType: CaseIterable {
         case localFile
@@ -119,7 +119,7 @@ class HomePageViewController: ViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = NSLocalizedString("媒体", comment: "")
+        self.title = NSLocalizedString("媒体库", comment: "")
         
         self.navigationItem.leftBarButtonItem = nil
 

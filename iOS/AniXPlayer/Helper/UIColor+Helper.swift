@@ -64,4 +64,8 @@ extension UIColor {
     static var cellHighlightColor: UIColor {
         return .byName("Color/cellHighlightColor")
     }
+    
+    static var shadowColor: UIColor {
+        return UIColor(red: 0, green: 0, blue: 0, alpha: 1)
+    }
 }
