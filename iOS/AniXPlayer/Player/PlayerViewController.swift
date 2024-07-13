@@ -150,11 +150,8 @@ class PlayerViewController: ViewController {
             make.edges.equalToSuperview()
         }
         
-        self.applyPreferences()
-        
-        changeRepeatMode()
+        self.initPreferences()
         uiView.autoShowControlView()
-        
         parseMediaAtInit()
     }
     
@@ -229,8 +226,8 @@ class PlayerViewController: ViewController {
         return self.playItemMap[protocolItem.url]
     }
     
-    private func changeRepeatMode() {
-        switch Preferences.shared.playerMode {
+    private func changeRepeatMode(playerMode: Preferences.PlayerMode) {
+        switch playerMode {
         case .notRepeat:
             player.playMode = .autoPlayNext
         case .repeatAllItem:
@@ -448,6 +445,10 @@ class PlayerViewController: ViewController {
         self.danmakuRender.speed = speed
     }
     
+    private func changeSubtltleDelay(subtitleDelay: Int) {
+        self.player.subtitleDelay = Double(subtitleDelay)
+    }
+    
     /// 重新布局弹幕画布
     private func layoutDanmakuCanvas() {
         self.danmakuCanvas.snp.remakeConstraints { (make) in
@@ -467,11 +468,12 @@ class PlayerViewController: ViewController {
     }
     
     /// 应用偏好设置
-    private func applyPreferences() {
+    private func initPreferences() {
         self.danmakuCanvas.alpha = CGFloat(Preferences.shared.danmakuAlpha)
         self.danmakuCanvas.isHidden = !Preferences.shared.isShowDanmaku
         self.danmakuFont = UIFont.systemFont(ofSize: CGFloat(Preferences.shared.danmakuFontSize))
         self.danmakuRender.offsetTime = TimeInterval(Preferences.shared.danmakuOffsetTime)
+        self.changeRepeatMode(playerMode: Preferences.shared.playerMode)
         self.changeSpeed(Preferences.shared.playerSpeed)
         self.layoutDanmakuCanvas()
     }
@@ -492,6 +494,7 @@ class PlayerViewController: ViewController {
             self.parseMediaAtInit()
         }
     }
+
     
     
     /// 发送弹幕
@@ -883,6 +886,11 @@ extension PlayerViewController: DanmakuSettingViewControllerDelegate {
 }
 
 extension PlayerViewController: MediaSettingViewControllerDelegate {
+    
+    func mediaSettingViewController(_ vc: MediaSettingViewController, didChangeSubtitleOffsetTime subtitleOffsetTime: Int) {
+        changeSubtltleDelay(subtitleDelay: subtitleOffsetTime)
+    }
+    
     // MARK: - MediaSettingViewControllerDelegate
     func mediaSettingViewController(_ vc: MediaSettingViewController, didOpenSubtitle subtitle: SubtitleProtocol) {
         self.player.currentSubtitle = subtitle
@@ -909,7 +917,7 @@ extension PlayerViewController: MediaSettingViewControllerDelegate {
     }
     
     func mediaSettingViewController(_ vc: MediaSettingViewController, didChangePlayerMode mode: Preferences.PlayerMode) {
-        self.changeRepeatMode()
+        self.changeRepeatMode(playerMode: mode)
     }
     
     func loadSubtitleFileInMediaSettingViewController(_ vc: MediaSettingViewController) {

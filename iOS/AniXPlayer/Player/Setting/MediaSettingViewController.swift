@@ -28,6 +28,8 @@ protocol MediaSettingViewControllerDelegate: AnyObject {
     
     func mediaSettingViewController(_ vc: MediaSettingViewController, didChangePlayerMode mode: Preferences.PlayerMode)
     
+    func mediaSettingViewController(_ vc: MediaSettingViewController, didChangeSubtitleOffsetTime subtitleOffsetTime: Int)
+    
     func loadSubtitleFileInMediaSettingViewController(_ vc: MediaSettingViewController)
     
     func mediaSettingViewController(_ vc: MediaSettingViewController, didOpenSubtitle subtitle: SubtitleProtocol)
@@ -188,6 +190,24 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
                 aCell.model = model
             }
             return cell
+        case .subtitleDelay:
+            let cell = tableView.dequeueCell(class: StepTableViewCell.self, indexPath: indexPath)
+            cell.selectionStyle = .none
+            cell.titleLabel.text = type.title
+            let offsetTime = Preferences.shared.subtitleOffsetTime
+            cell.stepper.minimumValue = -500
+            cell.stepper.maximumValue = 500
+            cell.stepper.value = Double(offsetTime)
+            cell.valueLabel.text = "\(Int(offsetTime))s"
+            cell.onTouchStepperCallBack = { [weak self] (aCell) in
+                guard let self = self else { return }
+                
+                let value = Int(aCell.stepper.value)
+                Preferences.shared.subtitleOffsetTime = value
+                aCell.valueLabel.text = "\(value)s"
+                self.delegate?.mediaSettingViewController(self, didChangeSubtitleOffsetTime: value)
+            }
+            return cell
         }
     }
     
@@ -282,6 +302,7 @@ class MediaSettingViewController: ViewController {
         case subtitleTrack
         case audioTrack
         case playerSpeed
+        case subtitleDelay
         case playerMode
         case loadSubtitle
         case autoJumpTitleEnding
@@ -308,6 +329,8 @@ class MediaSettingViewController: ViewController {
                 return NSLocalizedString("跳过片头时长", comment: "")
             case .jumpEndingDuration:
                 return NSLocalizedString("跳过片尾时长", comment: "")
+            case .subtitleDelay:
+                return NSLocalizedString("字幕偏移时间", comment: "")
             }
         }
     }
@@ -322,6 +345,7 @@ class MediaSettingViewController: ViewController {
         tableView.registerNibCell(class: SwitchTableViewCell.self)
         tableView.registerNibCell(class: SheetTableViewCell.self)
         tableView.registerNibCell(class: TitleTableViewCell.self)
+        tableView.registerNibCell(class: StepTableViewCell.self)
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
         tableView.backgroundColor = .clear
