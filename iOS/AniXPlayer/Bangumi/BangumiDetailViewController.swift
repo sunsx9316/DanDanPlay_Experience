@@ -59,6 +59,24 @@ extension BangumiDetailViewController: UITableViewDataSource {
         case .info:
             let cell = tableView.dequeueCell(class: BangumiDetailInfoViewCell.self, indexPath: indexPath)
             cell.update(item: self.detail, ratingNumberFormatter: self.ratingNumberFormatter)
+            cell.didTouchLikeButton = { [weak self] (aCell, isLike) in
+                guard let self = self, let animeId = aCell.item?.animeId else { return }
+                
+                aCell.favoritedButton.isUserInteractionEnabled = false
+                
+                FavoriteNetworkHandle.changeFavorite(animateId: animeId, isLike: isLike) { [weak self, weak aCell] error in
+                    guard let self = self, let aCell = aCell else { return }
+                    
+                    DispatchQueue.main.async {
+                        aCell.favoritedButton.isUserInteractionEnabled = true
+                        if let error = error {
+                            self.view.showError(error)
+                        } else {
+                            aCell.item?.isFavorited = isLike
+                        }
+                    }
+                }
+            }
             return cell
         case .episodes:
             let cell = tableView.dequeueCell(class: TitleDetailMoreTableViewCell.self, indexPath: indexPath)

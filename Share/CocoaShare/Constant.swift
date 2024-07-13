@@ -49,3 +49,7 @@ struct URLFilterType: OptionSet {
 
 //默认请求域名
 let DefaultHost = "https://api.dandanplay.net"
+
+extension NSNotification.Name {
+    static let AnixUserLoginStateDidChange = NSNotification.Name(rawValue: "userLoginStateDidChange")
+}

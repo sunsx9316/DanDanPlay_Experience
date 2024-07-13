@@ -11,6 +11,7 @@ struct HomePageFunctionItem {
     
     enum ItemType {
         case timeLine
+        case favorite
     }
     
     var itemType: ItemType

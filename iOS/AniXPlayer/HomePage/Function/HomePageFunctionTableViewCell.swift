@@ -37,15 +37,11 @@ extension HomePageFunctionTableViewCell: UICollectionViewDelegateFlowLayout {
 
 class HomePageFunctionTableViewCell: TableViewCell {
     
-    private lazy var dataSource: [HomePageFunctionItem] = {
-        var dataSource = [HomePageFunctionItem]()
-        if let svgImage = SVGKImage(named: "Timeline.svg") {
-            svgImage.size = CGSize(width: 60, height: 60)
-            dataSource.append(.init(itemType: .timeLine, img: svgImage.uiImage, name: NSLocalizedString("新番时间表", comment: "")))
+    private var dataSource = [HomePageFunctionItem]() {
+        didSet {
+            self.collectionView.reloadData()
         }
-        
-        return dataSource
-    }()
+    }
 
     private lazy var collectionView: CollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -84,6 +80,30 @@ class HomePageFunctionTableViewCell: TableViewCell {
             make.edges.equalToSuperview()
         }
         
+        NotificationCenter.default.addObserver(self, selector: #selector(reloadData), name: .AnixUserLoginStateDidChange, object: nil)
+        reloadData()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    @objc private func reloadData() {
+        var dataSource = [HomePageFunctionItem]()
+        if let svgImage = SVGKImage(named: "Timeline.svg") {
+            svgImage.size = CGSize(width: 60, height: 60)
+            dataSource.append(.init(itemType: .timeLine, img: svgImage.uiImage, name: NSLocalizedString("新番时间表", comment: "")))
+        }
+        
+        /// 登录才展示关注
+        if Preferences.shared.loginInfo != nil {
+            if let svgImage = SVGKImage(named: "Favorited.svg") {
+                svgImage.size = CGSize(width: 60, height: 60)
+                dataSource.append(.init(itemType: .favorite, img: svgImage.uiImage, name: NSLocalizedString("我的关注", comment: "")))
+            }
+        }
+        
+        self.dataSource = dataSource
     }
     
 }

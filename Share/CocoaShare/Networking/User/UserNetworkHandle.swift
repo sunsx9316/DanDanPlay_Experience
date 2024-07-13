@@ -16,7 +16,7 @@ class UserNetworkHandle {
     ///   - userName: 用户名
     ///   - password: 密码
     ///   - completion: 完成回调
-    static func login(userName: String, password: String, completion: @escaping((LoginResponse?, Error?) -> Void)) {
+    static func login(userName: String, password: String, completion: @escaping((AnixLoginInfo?, Error?) -> Void)) {
         
         var parameters = [String : String]()
         parameters["userName"] = userName
@@ -27,10 +27,25 @@ class UserNetworkHandle {
         parameters["unixTimestamp"] = "\(time)"
         parameters["hash"] = hash(userName: userName, password: password, unixTimestamp: time)
         
-        NetworkManager.shared.postOnBaseURL(additionUrl: "/login") { result in
+        NetworkManager.shared.postOnBaseURL(additionUrl: "/login", parameters: parameters) { result in
             switch result {
             case .success(let data):
-                let rsp = Response<LoginResponse>(with: data)
+                let rsp = Response<AnixLoginInfo>(with: data)
+                completion(rsp.result, rsp.error)
+            case .failure(let error):
+                completion(nil, error)
+            }
+        }
+    }
+    
+    
+    /// 刷新登录tokenb
+    /// - Parameter completion: 完成回调
+    static func renew(completion: @escaping((AnixLoginInfo?, Error?) -> Void)) {
+        NetworkManager.shared.getOnBaseURL(additionUrl: "/login/renew") { result in
+            switch result {
+            case .success(let data):
+                let rsp = Response<AnixLoginInfo>(with: data)
                 completion(rsp.result, rsp.error)
             case .failure(let error):
                 completion(nil, error)
@@ -40,7 +55,7 @@ class UserNetworkHandle {
     
     
     private static func hash(userName: String, password: String, unixTimestamp: Int64) -> String {
-        let str = AppKey.appId + password + "\(unixTimestamp)" + "userName"
+        let str = AppKey.appId + password + "\(unixTimestamp)" + userName + AppKey.appSec
         return (str as NSString).md5() ?? ""
     }
     

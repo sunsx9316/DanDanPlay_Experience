@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class LoginViewController: UIViewController {
+class LoginViewController: ViewController {
     
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -43,8 +43,12 @@ class LoginViewController: UIViewController {
         button.setBackgroundImage(UIImage(color: .mainColor), for: .normal)
         button.setBackgroundImage(UIImage(color: .mainColor.withAlphaComponent(0.6)), for: .normal)
         button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+        button.layer.cornerRadius = 4
+        button.layer.masksToBounds = true
         return button
     }()
+    
+    var didLoginCallBack: ((LoginViewController, AnixLoginInfo) -> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -94,7 +98,25 @@ class LoginViewController: UIViewController {
     }
     
     @objc private func loginButtonTapped() {
-        // 处理登录逻辑
-        print(NSLocalizedString("登录按钮被点击", comment: "Login button tapped"))
+        
+        guard let userName = usernameTextField.text, !userName.isEmpty else {
+            self.view.showHUD(NSLocalizedString("请输入用户名", comment: ""))
+            return
+        }
+        
+        guard let password = passwordTextField.text, !password.isEmpty else {
+            self.view.showHUD(NSLocalizedString("请输入密码", comment: ""))
+            return
+        }
+        
+        UserNetworkHandle.login(userName: userName, password: password) { res, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    self.view.showError(error)
+                } else if let res = res {
+                    self.didLoginCallBack?(self, res)
+                }
+            }
+        }
     }
 }

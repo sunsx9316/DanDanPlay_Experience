@@ -29,7 +29,7 @@ class MainViewController: UITabBarController {
             secondViewController.tabBarItem = UITabBarItem(title: NSLocalizedString("媒体库", comment: ""), image: svgImage.uiImage, selectedImage: nil)
         }
         
-        let thirdViewController = NavigationController(rootViewController: LoginViewController())
+        let thirdViewController = NavigationController(rootViewController: UserInfoViewController())
         thirdViewController.navigationBar.prefersLargeTitles = true
         if let svgImage = SVGKImage(named: "User.svg") {
             svgImage.size = CGSize(width: 26, height: 26)
@@ -37,6 +37,25 @@ class MainViewController: UITabBarController {
         }
         
         viewControllers = [firstViewController, secondViewController, thirdViewController]
+        
+        renewLoginInfo()
+    }
+    
+    
+    /// 刷新登录信息
+    private func renewLoginInfo() {
+        /// 每次启动， 刷新token
+        if Preferences.shared.loginInfo != nil {
+            UserNetworkHandle.renew { loginInfo, error in
+                DispatchQueue.main.async {
+                    if let error = error {
+                        self.view.showError(error)
+                    } else {
+                        Preferences.shared.loginInfo = loginInfo
+                    }
+                }
+            }
+        }
     }
     
 }

@@ -35,6 +35,10 @@ extension HomePageViewController: UITableViewDataSource {
                     vc.dataSource = self.dataSource?.shinBangumiList
                     vc.hidesBottomBarWhenPushed = true
                     self.navigationController?.pushViewController(vc, animated: true)
+                case .favorite:
+                    let vc = FavoriteViewController()
+                    vc.hidesBottomBarWhenPushed = true
+                    self.navigationController?.pushViewController(vc, animated: true)
                 }
             }
             return cell

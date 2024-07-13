@@ -26,7 +26,7 @@ class BangumiDetailInfoViewCell: TableViewCell {
     
     @IBOutlet weak var arrowButton: Button!
     
-    var didTouchLikeButton: ((Bool) -> Void)?
+    var didTouchLikeButton: ((BangumiDetailInfoViewCell, Bool) -> Void)?
     
     var touchArrowButton: (() -> Void)?
     
@@ -43,22 +43,6 @@ class BangumiDetailInfoViewCell: TableViewCell {
         self.ratingLabel.text = ratingNumberFormatter.string(from: NSNumber(value: self.item?.rating ?? 0))
         self.isOnAirLabel.text = self.item?.isOnAir == true ? NSLocalizedString("连载中", comment: "") : "已完结"
         
-        if self.item?.isFavorited == true {
-            if let svgImage = SVGKImage(named: "Like.svg", withCacheKey: "Like.svg") {
-                svgImage.size = CGSize(width: 20, height: 20)
-                self.favoritedButton.setImage(svgImage.uiImage.byTintColor(.mainColor), for: .normal)
-            } else {
-                self.favoritedButton.setImage(nil, for: .normal)
-            }
-        } else {
-            if let svgImage = SVGKImage(named: "Unlike.svg", withCacheKey: "Unlike.svg") {
-                svgImage.size = CGSize(width: 20, height: 20)
-                self.favoritedButton.setImage(svgImage.uiImage.byTintColor(.mainColor), for: .normal)
-            } else {
-                self.favoritedButton.setImage(nil, for: .normal)
-            }
-        }
-        
         if let tags = item?.tags {
             let sortTags = tags.sorted { tag1, tag2 in
                 return tag1.count > tag2.count
@@ -73,9 +57,11 @@ class BangumiDetailInfoViewCell: TableViewCell {
         } else {
             self.tagsLabel.text = nil
         }
+        
+        changeFavoritedStatus(isFavorited: self.item?.isFavorited == true)
     }
     
-    private(set) var item: BangumiDetail?
+    var item: BangumiDetail?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -100,11 +86,30 @@ class BangumiDetailInfoViewCell: TableViewCell {
 
     @IBAction func onTouchLikeButton(_ sender: Button) {
         let isFavorited = self.item?.isFavorited == true
-        self.didTouchLikeButton?(!isFavorited)
+        changeFavoritedStatus(isFavorited: !isFavorited)
+        self.didTouchLikeButton?(self, !isFavorited)
     }
 
     @IBAction func onTouchArrowButton(_ sender: UIButton) {
         self.touchArrowButton?()
+    }
+    
+    private func changeFavoritedStatus(isFavorited: Bool) {
+        if isFavorited {
+            if let svgImage = SVGKImage(named: "Like.svg", withCacheKey: "Like.svg") {
+                svgImage.size = CGSize(width: 20, height: 20)
+                self.favoritedButton.setImage(svgImage.uiImage.byTintColor(.mainColor), for: .normal)
+            } else {
+                self.favoritedButton.setImage(nil, for: .normal)
+            }
+        } else {
+            if let svgImage = SVGKImage(named: "Unlike.svg", withCacheKey: "Unlike.svg") {
+                svgImage.size = CGSize(width: 20, height: 20)
+                self.favoritedButton.setImage(svgImage.uiImage.byTintColor(.mainColor), for: .normal)
+            } else {
+                self.favoritedButton.setImage(nil, for: .normal)
+            }
+        }
     }
     
 }

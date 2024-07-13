@@ -118,6 +118,9 @@ class Preferences {
         /// 自动跳过片尾时长
         case jumpEndingDuration
         
+        /// 登录信息
+        case loginInfo
+        
         var storeKey: String {
             if self == .danmakuDensity {
                 return "danmakuDensity_v2"
@@ -170,6 +173,23 @@ class Preferences {
     
     @StoreWrapper(defaultValue: 0.0, key: .jumpEndingDuration)
     var jumpEndingDuration: Double
+    
+    
+    var loginInfo: AnixLoginInfo? {
+        get {
+            let rawValue: Data? = Store.shared.value(forKey: KeyName.loginInfo.rawValue)
+            if let rawValue = rawValue {
+                return try? JSONDecoder().decode(AnixLoginInfo.self, from: rawValue)
+            }
+            return nil
+        }
+        
+        set {
+            let data = try? JSONEncoder().encode(newValue)
+            _ = Store.shared.set(data, forKey: KeyName.loginInfo.rawValue)
+            NotificationCenter.default.post(name: .AnixUserLoginStateDidChange, object: nil)
+        }
+    }
     
     var sendDanmakuType: Comment.Mode {
         get {

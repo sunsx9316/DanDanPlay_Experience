@@ -149,8 +149,6 @@
 		89A688C02C399FC2002B7CA3 /* Timeline.svg in Resources */ = {isa = PBXBuildFile; fileRef = 89A688BF2C399FC2002B7CA3 /* Timeline.svg */; };
 		89A688C32C39A251002B7CA3 /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A688C22C39A251002B7CA3 /* TimelineViewController.swift */; };
 		89A688C52C39B395002B7CA3 /* TimelineItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A688C42C39B395002B7CA3 /* TimelineItemViewController.swift */; };
-		89A688C82C39B437002B7CA3 /* TimelineItemCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89A688C72C39B437002B7CA3 /* TimelineItemCollectionViewCell.xib */; };
-		89A688C92C39B437002B7CA3 /* TimelineItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A688C62C39B437002B7CA3 /* TimelineItemCollectionViewCell.swift */; };
 		89A688CC2C39B4F1002B7CA3 /* Like.svg in Resources */ = {isa = PBXBuildFile; fileRef = 89A688CA2C39B4F1002B7CA3 /* Like.svg */; };
 		89A688CD2C39B4F1002B7CA3 /* Unlike.svg in Resources */ = {isa = PBXBuildFile; fileRef = 89A688CB2C39B4F1002B7CA3 /* Unlike.svg */; };
 		89A688D02C3A3F15002B7CA3 /* Bangumi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A688CF2C3A3F15002B7CA3 /* Bangumi.swift */; };
@@ -166,6 +164,16 @@
 		89A6896B2C42634E002B7CA3 /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A6896A2C42634E002B7CA3 /* Login.swift */; };
 		89A6896D2C426420002B7CA3 /* UserNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A6896C2C426420002B7CA3 /* UserNetworkHandle.swift */; };
 		89A6896F2C4265E1002B7CA3 /* AppKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A6896E2C4265E1002B7CA3 /* AppKey.swift */; };
+		89A689722C4271B5002B7CA3 /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A689712C4271B5002B7CA3 /* UserInfoViewController.swift */; };
+		89A689742C428791002B7CA3 /* DateFormatter+Helper.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A689732C428791002B7CA3 /* DateFormatter+Helper.swift.swift */; };
+		89A689772C429A09002B7CA3 /* Favorite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A689762C429A09002B7CA3 /* Favorite.swift */; };
+		89A689792C429AB3002B7CA3 /* FavoriteNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A689782C429AB3002B7CA3 /* FavoriteNetworkHandle.swift */; };
+		89A6897B2C42E08D002B7CA3 /* Favorited.svg in Resources */ = {isa = PBXBuildFile; fileRef = 89A6897A2C42E08D002B7CA3 /* Favorited.svg */; };
+		89A689802C42E1D3002B7CA3 /* FavoriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A6897D2C42E1D3002B7CA3 /* FavoriteViewController.swift */; };
+		89A689812C42E1D3002B7CA3 /* FavoriteCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A6897E2C42E1D3002B7CA3 /* FavoriteCollectionViewCell.swift */; };
+		89A689872C42E443002B7CA3 /* TimelineItemCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89A689862C42E443002B7CA3 /* TimelineItemCollectionViewCell.xib */; };
+		89A689882C42E443002B7CA3 /* TimelineItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A689852C42E443002B7CA3 /* TimelineItemCollectionViewCell.swift */; };
+		89A6898A2C42E588002B7CA3 /* FavoriteCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89A689892C42E588002B7CA3 /* FavoriteCollectionViewCell.xib */; };
 		89AF9BFE2631C1740037A133 /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AF9BFC2631C1740037A133 /* SwitchTableViewCell.swift */; };
 		89AF9BFF2631C1740037A133 /* SwitchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89AF9BFD2631C1740037A133 /* SwitchTableViewCell.xib */; };
 		89AF9C032631C2680037A133 /* StepTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AF9C012631C2680037A133 /* StepTableViewCell.swift */; };
@@ -348,8 +356,6 @@
 		89A688BF2C399FC2002B7CA3 /* Timeline.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Timeline.svg; sourceTree = "<group>"; };
 		89A688C22C39A251002B7CA3 /* TimelineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewController.swift; sourceTree = "<group>"; };
 		89A688C42C39B395002B7CA3 /* TimelineItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineItemViewController.swift; sourceTree = "<group>"; };
-		89A688C62C39B437002B7CA3 /* TimelineItemCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineItemCollectionViewCell.swift; sourceTree = "<group>"; };
-		89A688C72C39B437002B7CA3 /* TimelineItemCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TimelineItemCollectionViewCell.xib; sourceTree = "<group>"; };
 		89A688CA2C39B4F1002B7CA3 /* Like.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Like.svg; sourceTree = "<group>"; };
 		89A688CB2C39B4F1002B7CA3 /* Unlike.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Unlike.svg; sourceTree = "<group>"; };
 		89A688CF2C3A3F15002B7CA3 /* Bangumi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bangumi.swift; sourceTree = "<group>"; };
@@ -365,6 +371,16 @@
 		89A6896A2C42634E002B7CA3 /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
 		89A6896C2C426420002B7CA3 /* UserNetworkHandle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNetworkHandle.swift; sourceTree = "<group>"; };
 		89A6896E2C4265E1002B7CA3 /* AppKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppKey.swift; sourceTree = "<group>"; };
+		89A689712C4271B5002B7CA3 /* UserInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoViewController.swift; sourceTree = "<group>"; };
+		89A689732C428791002B7CA3 /* DateFormatter+Helper.swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+Helper.swift.swift"; sourceTree = "<group>"; };
+		89A689762C429A09002B7CA3 /* Favorite.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Favorite.swift; sourceTree = "<group>"; };
+		89A689782C429AB3002B7CA3 /* FavoriteNetworkHandle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoriteNetworkHandle.swift; sourceTree = "<group>"; };
+		89A6897A2C42E08D002B7CA3 /* Favorited.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Favorited.svg; sourceTree = "<group>"; };
+		89A6897D2C42E1D3002B7CA3 /* FavoriteViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteViewController.swift; sourceTree = "<group>"; };
+		89A6897E2C42E1D3002B7CA3 /* FavoriteCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteCollectionViewCell.swift; sourceTree = "<group>"; };
+		89A689852C42E443002B7CA3 /* TimelineItemCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineItemCollectionViewCell.swift; sourceTree = "<group>"; };
+		89A689862C42E443002B7CA3 /* TimelineItemCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TimelineItemCollectionViewCell.xib; sourceTree = "<group>"; };
+		89A689892C42E588002B7CA3 /* FavoriteCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FavoriteCollectionViewCell.xib; sourceTree = "<group>"; };
 		89AF9BFC2631C1740037A133 /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
 		89AF9BFD2631C1740037A133 /* SwitchTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwitchTableViewCell.xib; sourceTree = "<group>"; };
 		89AF9C012631C2680037A133 /* StepTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepTableViewCell.swift; sourceTree = "<group>"; };
@@ -589,9 +605,9 @@
 		890DF81E2616175B002D8AE5 /* Main */ = {
 			isa = PBXGroup;
 			children = (
+				89A689702C42718E002B7CA3 /* User */,
 				890DF820261617AE002D8AE5 /* MediaLib */,
 				89A688942C394FC5002B7CA3 /* MainViewController.swift */,
-				89A689652C425C70002B7CA3 /* LoginViewController.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -750,6 +766,7 @@
 				89A688202C394C10002B7CA3 /* NSNetService+Utils.m */,
 				89A688212C394C10002B7CA3 /* NumberUtils.swift */,
 				89A688222C394C10002B7CA3 /* PathUtils.swift */,
+				89A689732C428791002B7CA3 /* DateFormatter+Helper.swift.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -889,6 +906,7 @@
 		89A688542C394C10002B7CA3 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				89A689752C429983002B7CA3 /* Favorite */,
 				89A689692C426341002B7CA3 /* User */,
 				89A688CE2C3A3F06002B7CA3 /* Bangumi */,
 				89A688442C394C10002B7CA3 /* Comment */,
@@ -933,6 +951,7 @@
 		89A688962C395419002B7CA3 /* HomePage */ = {
 			isa = PBXGroup;
 			children = (
+				89A6897C2C42E1C3002B7CA3 /* Favorite */,
 				89A688C12C39A205002B7CA3 /* Timeline */,
 				89A688BA2C3992F6002B7CA3 /* Function */,
 				89A688B72C398604002B7CA3 /* Banner */,
@@ -945,6 +964,7 @@
 		89A688992C397E41002B7CA3 /* SVG */ = {
 			isa = PBXGroup;
 			children = (
+				89A6897A2C42E08D002B7CA3 /* Favorited.svg */,
 				89A688CA2C39B4F1002B7CA3 /* Like.svg */,
 				89A688CB2C39B4F1002B7CA3 /* Unlike.svg */,
 				89A688BF2C399FC2002B7CA3 /* Timeline.svg */,
@@ -989,8 +1009,8 @@
 			children = (
 				89A688C22C39A251002B7CA3 /* TimelineViewController.swift */,
 				89A688C42C39B395002B7CA3 /* TimelineItemViewController.swift */,
-				89A688C62C39B437002B7CA3 /* TimelineItemCollectionViewCell.swift */,
-				89A688C72C39B437002B7CA3 /* TimelineItemCollectionViewCell.xib */,
+				89A689852C42E443002B7CA3 /* TimelineItemCollectionViewCell.swift */,
+				89A689862C42E443002B7CA3 /* TimelineItemCollectionViewCell.xib */,
 			);
 			path = Timeline;
 			sourceTree = "<group>";
@@ -1060,6 +1080,34 @@
 				89A6896E2C4265E1002B7CA3 /* AppKey.swift */,
 			);
 			path = User;
+			sourceTree = "<group>";
+		};
+		89A689702C42718E002B7CA3 /* User */ = {
+			isa = PBXGroup;
+			children = (
+				89A689652C425C70002B7CA3 /* LoginViewController.swift */,
+				89A689712C4271B5002B7CA3 /* UserInfoViewController.swift */,
+			);
+			path = User;
+			sourceTree = "<group>";
+		};
+		89A689752C429983002B7CA3 /* Favorite */ = {
+			isa = PBXGroup;
+			children = (
+				89A689762C429A09002B7CA3 /* Favorite.swift */,
+				89A689782C429AB3002B7CA3 /* FavoriteNetworkHandle.swift */,
+			);
+			path = Favorite;
+			sourceTree = "<group>";
+		};
+		89A6897C2C42E1C3002B7CA3 /* Favorite */ = {
+			isa = PBXGroup;
+			children = (
+				89A6897E2C42E1D3002B7CA3 /* FavoriteCollectionViewCell.swift */,
+				89A689892C42E588002B7CA3 /* FavoriteCollectionViewCell.xib */,
+				89A6897D2C42E1D3002B7CA3 /* FavoriteViewController.swift */,
+			);
+			path = Favorite;
 			sourceTree = "<group>";
 		};
 		89E0D60C2669111500E2337B /* Setting */ = {
@@ -1157,12 +1205,14 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				89A689872C42E443002B7CA3 /* TimelineItemCollectionViewCell.xib in Resources */,
 				89E0D6172669143400E2337B /* TitleDetailTableViewCell.xib in Resources */,
 				89A688CC2C39B4F1002B7CA3 /* Like.svg in Resources */,
 				8931F0FA2677457100590569 /* EditableTableViewCell.xib in Resources */,
 				890DF6D926160827002D8AE5 /* LaunchScreen.storyboard in Resources */,
 				89A689682C42603A002B7CA3 /* User.svg in Resources */,
 				89AF9BFF2631C1740037A133 /* SwitchTableViewCell.xib in Resources */,
+				89A6897B2C42E08D002B7CA3 /* Favorited.svg in Resources */,
 				89E0D6132669127B00E2337B /* SwitchDetailTableViewCell.xib in Resources */,
 				89A688B42C3984F5002B7CA3 /* Media.svg in Resources */,
 				890DF77226160B3E002D8AE5 /* FolderTableViewCell.xib in Resources */,
@@ -1177,6 +1227,7 @@
 				89A688BD2C39931A002B7CA3 /* HomePageFunctionCollectionViewCell.xib in Resources */,
 				890DF824261617D0002D8AE5 /* PickFileTableViewCell.xib in Resources */,
 				899A11C12A18C0DC009B2953 /* TitleDetailOpertationTableViewCell.xib in Resources */,
+				89A6898A2C42E588002B7CA3 /* FavoriteCollectionViewCell.xib in Resources */,
 				89AF9C042631C2680037A133 /* StepTableViewCell.xib in Resources */,
 				89A688C02C399FC2002B7CA3 /* Timeline.svg in Resources */,
 				89A688B22C3984EB002B7CA3 /* Home.svg in Resources */,
@@ -1184,7 +1235,6 @@
 				897CF533262F317B00CC297A /* SliderTableViewCell.xib in Resources */,
 				89E0D711266B44BE00E2337B /* TitleTableViewCell.xib in Resources */,
 				890DF6D426160826002D8AE5 /* Main.storyboard in Resources */,
-				89A688C82C39B437002B7CA3 /* TimelineItemCollectionViewCell.xib in Resources */,
 				890DF6EE26160A25002D8AE5 /* RefreshText.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1259,8 +1309,11 @@
 				89A688E32C3A6628002B7CA3 /* BangumiDetailMetadataViewController.swift in Sources */,
 				89A688662C394C10002B7CA3 /* PathUtils.swift in Sources */,
 				897F9B602822B2EA00130613 /* SnapshotView.swift in Sources */,
+				89A689792C429AB3002B7CA3 /* FavoriteNetworkHandle.swift in Sources */,
+				89A689882C42E443002B7CA3 /* TimelineItemCollectionViewCell.swift in Sources */,
 				89A688772C394C10002B7CA3 /* WebDavFile.swift in Sources */,
 				890DF77726160B3E002D8AE5 /* PlayerControlAnimater.swift in Sources */,
+				89A689802C42E1D3002B7CA3 /* FavoriteViewController.swift in Sources */,
 				899A9DDF262F35EB00C54AC9 /* SliderTableViewCell.swift in Sources */,
 				89B4B445272484FE00FB1BF5 /* SpeedUpView.swift in Sources */,
 				89AF9BFE2631C1740037A133 /* SwitchTableViewCell.swift in Sources */,
@@ -1299,12 +1352,14 @@
 				8949F8912662AA2100274520 /* WebDavLoginHistoryViewController.swift in Sources */,
 				899E385D280B2F7A00285191 /* ProgressSlider.swift in Sources */,
 				89A688C52C39B395002B7CA3 /* TimelineItemViewController.swift in Sources */,
+				89A689812C42E1D3002B7CA3 /* FavoriteCollectionViewCell.swift in Sources */,
 				89A6887A2C394C10002B7CA3 /* MediaPlayer.swift in Sources */,
 				89A688752C394C10002B7CA3 /* PCFile.swift in Sources */,
 				89A6887D2C394C10002B7CA3 /* Comment.swift in Sources */,
 				89A688E52C3A70BF002B7CA3 /* BangumiDetailEpisodeViewController.swift in Sources */,
 				89A688E12C3A5EDF002B7CA3 /* BangumiDetailRelatedTableViewCell.swift in Sources */,
 				89A688622C394C10002B7CA3 /* AppInfoHelper.swift in Sources */,
+				89A689772C429A09002B7CA3 /* Favorite.swift in Sources */,
 				890DF75426160B1B002D8AE5 /* UITableView+Extension.swift in Sources */,
 				89E0D82A266BD4FC00E2337B /* PlayerUITopView.swift in Sources */,
 				89A688862C394C10002B7CA3 /* Search.swift in Sources */,
@@ -1323,7 +1378,6 @@
 				89A688672C394C10002B7CA3 /* PCLibraryModel.swift in Sources */,
 				89A688832C394C10002B7CA3 /* Match.swift in Sources */,
 				8931F0E52674CA6A00590569 /* UIBarButtonItem+Helper.swift in Sources */,
-				89A688C92C39B437002B7CA3 /* TimelineItemCollectionViewCell.swift in Sources */,
 				890DF81C2616174C002D8AE5 /* MediaLibViewController.swift in Sources */,
 				890DF6FE26160A36002D8AE5 /* NavigationController.swift in Sources */,
 				89A688892C394C10002B7CA3 /* Preferences.swift in Sources */,
@@ -1349,6 +1403,7 @@
 				89A6888A2C394C10002B7CA3 /* Store.swift in Sources */,
 				8931F0EB2674CD3300590569 /* HttpServerViewController.swift in Sources */,
 				89A688762C394C10002B7CA3 /* SMBFile.swift in Sources */,
+				89A689722C4271B5002B7CA3 /* UserInfoViewController.swift in Sources */,
 				89A688DA2C3A5947002B7CA3 /* BangumiDetailInfoViewCell.swift in Sources */,
 				890DF77926160B3E002D8AE5 /* PlayerUIView.swift in Sources */,
 				897CF52D262F30D200CC297A /* DanmakuSettingViewController.swift in Sources */,
@@ -1358,6 +1413,7 @@
 				890886D42A0118A4005EDBD6 /* JHQRCodeReader.m in Sources */,
 				89A688D02C3A3F15002B7CA3 /* Bangumi.swift in Sources */,
 				897CF529262F309D00CC297A /* PlayerSettingViewController.swift in Sources */,
+				89A689742C428791002B7CA3 /* DateFormatter+Helper.swift.swift in Sources */,
 				89A688732C394C10002B7CA3 /* FTPFile.swift in Sources */,
 				890DF74F26160B1B002D8AE5 /* UIFont+Helper.swift in Sources */,
 				89A6888B2C394C10002B7CA3 /* Atomic.swift in Sources */,

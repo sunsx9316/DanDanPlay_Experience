@@ -18,26 +18,27 @@ private enum NetworkError: LocalizedError {
     }
 }
 
-struct Response<S: Decodable> {
+struct ResponseError: LocalizedError, Decodable {
+    var errorCode: Int
+    var errorMessage: String
     
-    struct Error: LocalizedError, Decodable {
-        var code: Int
-        var message: String
-        
-        var errorDescription: String {
-            return self.message
-        }
-        
-        private enum CodingKeys: String, CodingKey {
-            case code, message
-        }
-        
-        init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: CodingKeys.self)
-            code = try container.decodeIfPresent(Int.self, forKey: .code) ?? 0
-            message = try container.decodeIfPresent(String.self, forKey: .message) ?? ""
-        }
+    var errorDescription: String? {
+        return self.errorMessage
     }
+    
+    private enum CodingKeys: String, CodingKey {
+        case errorCode = "errorCode"
+        case errorMessage = "errorMessage"
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        errorCode = try container.decodeIfPresent(Int.self, forKey: .errorCode) ?? 0
+        errorMessage = try container.decodeIfPresent(String.self, forKey: .errorMessage) ?? ""
+    }
+}
+
+struct Response<S: Decodable> {
     
     var result: S?
     
@@ -47,8 +48,8 @@ struct Response<S: Decodable> {
         let decoder = JSONDecoder()
         
         self.result = try? decoder.decode(S.self, from: data)
-        let err = try? decoder.decode(Error.self, from: data)
-        if err?.code != 0 {
+        let err = try? decoder.decode(ResponseError.self, from: data)
+        if err?.errorCode != 0 {
             self.error = err
         }
     }

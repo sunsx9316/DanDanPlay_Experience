@@ -1,5 +1,5 @@
 //
-//  TimelineItemViewController.swift
+//  FavoriteViewController.swift
 //  AniXPlayer
 //
 //  Created by jimhuang on 2024/7/7.
@@ -7,9 +7,9 @@
 
 import UIKit
 import SnapKit
-import JXCategoryView
+import MJRefresh
 
-extension TimelineItemViewController: UICollectionViewDataSource {
+extension FavoriteViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return self.dataSources?.count ?? 0
     }
@@ -18,8 +18,8 @@ extension TimelineItemViewController: UICollectionViewDataSource {
         
         let model = self.dataSources?[indexPath.item]
         
-        let cell = collectionView.dequeueCell(class: TimelineItemCollectionViewCell.self, indexPath: indexPath)
-        cell.update(item: model, ratingNumberFormatter: self.ratingNumberFormatter)
+        let cell = collectionView.dequeueCell(class: FavoriteCollectionViewCell.self, indexPath: indexPath)
+        cell.update(item: model, ratingNumberFormatter: self.ratingNumberFormatter, dateFormatter: self.dateFormatter)
         cell.didTouchLikeButton = { [weak self] (aCell, isLike) in
             guard let animeId = aCell.item?.animeId else { return }
             
@@ -33,7 +33,7 @@ extension TimelineItemViewController: UICollectionViewDataSource {
                     if let error = error {
                         self.view.showError(error)
                     } else {
-                        aCell.item?.isFavorited = isLike
+                        aCell.item?.favoriteStatus = isLike ? .favorited : .unknow
                     }
                 }
             }
@@ -42,17 +42,9 @@ extension TimelineItemViewController: UICollectionViewDataSource {
     }
 }
 
-extension TimelineItemViewController: UICollectionViewDelegateFlowLayout {
+extension FavoriteViewController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        
-        switch self.scrollDirection {
-        case .vertical:
-            return CGSize(width: collectionView.bounds.size.width, height: 140)
-        case .horizontal:
-            return CGSize(width: collectionView.bounds.size.width * 0.8, height: collectionView.bounds.height - 10)
-        @unknown default:
-            return CGSize(width: collectionView.bounds.size.width, height: 140)
-        }
+        return CGSize(width: collectionView.bounds.size.width, height: 140)
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -68,28 +60,36 @@ extension TimelineItemViewController: UICollectionViewDelegateFlowLayout {
     }
 }
 
-extension TimelineItemViewController: JXCategoryListContentViewDelegate {
-    func listView() -> UIView! {
-        return self.view
-    }
-}
-
-class TimelineItemViewController: ViewController {
+class FavoriteViewController: ViewController {
     
     private lazy var collectionView: CollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumLineSpacing = 0
         layout.minimumInteritemSpacing = 0
         layout.sectionInset = .init(top: 5, left: 0, bottom: 5, right: 0)
-        layout.scrollDirection = self.scrollDirection
+        layout.scrollDirection = .vertical
         
         let collectionView = CollectionView(frame: self.view.bounds, collectionViewLayout: layout)
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.isPagingEnabled = false
-        collectionView.registerNibCell(class: TimelineItemCollectionViewCell.self)
+        collectionView.registerNibCell(class: FavoriteCollectionViewCell.self)
+        collectionView.mj_header = RefreshHeader(refreshingTarget: self, refreshingAction: #selector(startRefresh))
         return collectionView
     }()
+    
+    @objc private func startRefresh() {
+        FavoriteNetworkHandle.getFavoriteList { res, error in
+            DispatchQueue.main.async {
+                self.collectionView.mj_header?.endRefreshing()
+                if let error = error {
+                    self.view.showError(error)
+                } else {
+                    self.dataSources = res?.favorites
+                }
+            }
+        }
+    }
     
     private lazy var ratingNumberFormatter: NumberFormatter = {
         var ratingNumberFormatter = NumberFormatter()
@@ -99,7 +99,13 @@ class TimelineItemViewController: ViewController {
         return ratingNumberFormatter
     }()
     
-    var dataSources: [BangumiIntro]? {
+    private lazy var dateFormatter: DateFormatter = {
+        var dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "YYYY-MM-dd HH:mm:ss"
+        return dateFormatter
+    }()
+    
+    var dataSources: [UserFavoriteItem]? {
         didSet {
             self.collectionView.reloadData()
         }
@@ -107,21 +113,10 @@ class TimelineItemViewController: ViewController {
     
     var didSelectedAnimateCallBack: ((Int) -> Void)?
     
-    private var scrollDirection = UICollectionView.ScrollDirection.vertical
-    
-    init(scrollDirection: UICollectionView.ScrollDirection, dataSources: [BangumiIntro]?) {
-        super.init(nibName: nil, bundle: nil)
-        
-        self.dataSources = dataSources
-        self.scrollDirection = scrollDirection
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.title = NSLocalizedString("我的关注", comment: "")
         
         self.view.addSubview(self.collectionView)
         self.collectionView.snp.makeConstraints { make in
@@ -129,5 +124,6 @@ class TimelineItemViewController: ViewController {
         }
         
         self.collectionView.reloadData()
+        self.collectionView.mj_header?.beginRefreshing()
     }
 }

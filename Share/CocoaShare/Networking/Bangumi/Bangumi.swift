@@ -94,19 +94,44 @@ struct BangumiSeason: Decodable {
 
 struct BangumiEpisode: Decodable {
     /// 剧集ID（弹幕库编号）
-    @Default<Int> var episodeId: Int
+    var episodeId: Int
     
     /// 剧集完整标题
-    @Default<String> var episodeTitle: String
+    var episodeTitle: String
     
     /// 剧集短标题（可以用来排序，非纯数字，可能包含字母）
-    @Default<String> var episodeNumber: String
+    var episodeNumber: String
     
     /// 上次观看时间（服务器时间，即北京时间）
-    @Default<String> var lastWatched: String
+    var lastWatched: Date?
     
     /// 本集上映时间（当地时间）
-    @Default<String> var airDate: String
+    var airDate: Date?
+    
+    private enum CodingKeys: CodingKey {
+        case episodeId
+        case episodeTitle
+        case episodeNumber
+        case lastWatched
+        case airDate
+    }
+    
+    init(from decoder: any Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.episodeId = try container.decodeIfPresent(Int.self, forKey: .episodeId) ?? 0
+        self.episodeTitle = try container.decodeIfPresent(String.self, forKey: .episodeTitle) ?? ""
+        self.episodeNumber = try container.decodeIfPresent(String.self, forKey: .episodeNumber) ?? ""
+        
+        let formatter = DateFormatter.anix_YYYY_MM_dd_T_HH_mm_ssFormatter
+        
+        if let lastWatched = try container.decodeIfPresent(String.self, forKey: .lastWatched) {
+            self.lastWatched = formatter.date(from: lastWatched)
+        }
+        
+        if let airDate = try container.decodeIfPresent(String.self, forKey: .airDate) {
+            self.airDate = formatter.date(from: airDate)
+        }
+    }
 }
 
 struct BangumiTitle: Decodable {
@@ -169,16 +194,6 @@ struct BangumiRatingDetails: Decodable, DefaultValue {
 
 
 struct BangumiDetail: Decodable {
-    
-    enum FavoriteStatus: String, Decodable, DefaultValue {
-        
-        static var defaultValue = FavoriteStatus.unknow
-        
-        case unknow
-        case favorited = "favorited"
-        case finished = "finished"
-        case abandoned = "abandoned"
-    }
     
     /// 作品类型
     @Default<EpisodeType> var type: EpisodeType

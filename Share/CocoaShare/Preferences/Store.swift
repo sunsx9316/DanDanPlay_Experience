@@ -45,6 +45,7 @@ extension Preferences {
             } else if let v = value as? Data {
                 return self.set(v, forKey: key)
             }
+            assert(false, "未支持的数据类型")
             return false
         }
         

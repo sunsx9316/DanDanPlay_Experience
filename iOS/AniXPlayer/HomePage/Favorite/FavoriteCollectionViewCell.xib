@@ -10,7 +10,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="TimelineItemCollectionViewCell" customModule="AniXPlayer" customModuleProvider="target">
+        <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="gTV-IL-0wX" customClass="FavoriteCollectionViewCell" customModule="AniXPlayer" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="418" height="228"/>
             <autoresizingMask key="autoresizingMask"/>
             <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
@@ -53,11 +53,19 @@
                             <constraint firstAttribute="height" constant="120" id="hmh-Y2-6FJ"/>
                         </constraints>
                     </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="上次观看时间" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rbs-aE-7wV" customClass="Label" customModule="AniXPlayer" customModuleProvider="target">
+                        <rect key="frame" x="120" y="76.333333333333329" width="104" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
             </view>
             <viewLayoutGuide key="safeArea" id="ZTg-uK-7eu"/>
             <constraints>
+                <constraint firstItem="Rbs-aE-7wV" firstAttribute="leading" secondItem="mNL-nJ-VsW" secondAttribute="leading" id="1q9-sP-fb2"/>
                 <constraint firstItem="5ky-Uo-WhY" firstAttribute="leading" secondItem="ols-6R-Sdg" secondAttribute="trailing" constant="10" id="5LT-Xc-hCH"/>
+                <constraint firstItem="Rbs-aE-7wV" firstAttribute="top" secondItem="mNL-nJ-VsW" secondAttribute="bottom" constant="10" id="CXN-0V-eLy"/>
                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="5ky-Uo-WhY" secondAttribute="trailing" constant="10" id="Juy-8S-cw4"/>
                 <constraint firstItem="ols-6R-Sdg" firstAttribute="leading" secondItem="utO-Hm-aEJ" secondAttribute="trailing" constant="10" id="JwC-ep-TRx"/>
                 <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="Tzl-il-CpZ" secondAttribute="bottom" constant="10" id="LM7-a6-9B3"/>
@@ -75,6 +83,7 @@
                 <outlet property="favoritedButton" destination="5ky-Uo-WhY" id="vst-7U-2jN"/>
                 <outlet property="imgView" destination="Tzl-il-CpZ" id="6ac-eZ-emz"/>
                 <outlet property="isOnAirLabel" destination="mNL-nJ-VsW" id="Txp-gw-W8D"/>
+                <outlet property="lastWatchTimeLabel" destination="Rbs-aE-7wV" id="ShB-86-OGc"/>
                 <outlet property="ratingLabel" destination="ols-6R-Sdg" id="g1O-54-Cwf"/>
                 <outlet property="titleLabel" destination="utO-Hm-aEJ" id="Eoi-HU-6V4"/>
             </connections>

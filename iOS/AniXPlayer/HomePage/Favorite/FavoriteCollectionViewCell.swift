@@ -10,7 +10,7 @@ import SDWebImage
 import SVGKit
 import YYCategories
 
-class TimelineItemCollectionViewCell: CollectionViewCell {
+class FavoriteCollectionViewCell: CollectionViewCell {
     
     @IBOutlet weak var imgView: UIImageView!
     
@@ -22,9 +22,11 @@ class TimelineItemCollectionViewCell: CollectionViewCell {
     
     @IBOutlet weak var isOnAirLabel: UILabel!
     
-    var didTouchLikeButton: ((TimelineItemCollectionViewCell, Bool) -> Void)?
+    @IBOutlet weak var lastWatchTimeLabel: UILabel!
     
-    func update(item: BangumiIntro?, ratingNumberFormatter: NumberFormatter) {
+    var didTouchLikeButton: ((FavoriteCollectionViewCell, Bool) -> Void)?
+    
+    func update(item: UserFavoriteItem?, ratingNumberFormatter: NumberFormatter, dateFormatter: DateFormatter) {
         self.item = item
         
         if let url = self.item?.imageUrl {
@@ -36,10 +38,15 @@ class TimelineItemCollectionViewCell: CollectionViewCell {
         self.titleLabel.text = self.item?.animeTitle
         self.ratingLabel.text = ratingNumberFormatter.string(from: NSNumber(value: self.item?.rating ?? 0))
         self.isOnAirLabel.text = self.item?.isOnAir == true ? NSLocalizedString("连载中", comment: "") : "已完结"
-        changeFavoritedStatus(isFavorited: self.item?.isFavorited == true)
+        changeFavoritedStatus(isFavorited: self.item?.favoriteStatus == .favorited)
+        if let lastWatchTimeDate = self.item?.lastWatchTime {
+            self.lastWatchTimeLabel.text = NSLocalizedString("上次观看时间：", comment: "") + dateFormatter.string(from: lastWatchTimeDate)
+        } else {
+            self.lastWatchTimeLabel.text = nil
+        }
     }
     
-    var item: BangumiIntro?
+    var item: UserFavoriteItem?
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -54,7 +61,7 @@ class TimelineItemCollectionViewCell: CollectionViewCell {
     }
 
     @IBAction func onTouchLikeButton(_ sender: Button) {
-        let isFavorited = self.item?.isFavorited == true
+        let isFavorited = self.item?.favoriteStatus == .favorited
         self.didTouchLikeButton?(self, !isFavorited)
         changeFavoritedStatus(isFavorited: !isFavorited)
     }

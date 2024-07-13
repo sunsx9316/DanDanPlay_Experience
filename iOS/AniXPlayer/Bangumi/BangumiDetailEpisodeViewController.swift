@@ -28,12 +28,12 @@ extension BangumiDetailEpisodeViewController: UITableViewDataSource {
             
             var str = NSLocalizedString("分集: ", comment: "") + data.episodeNumber
             
-            if !data.lastWatched.isEmpty && (self.dateFormatter.date(from: data.lastWatched) != nil) {
-                str.append("\n" + NSLocalizedString("上次观看时间: ", comment: "") + data.lastWatched)
+            if let lastWatched = data.lastWatched {
+                str.append("\n" + NSLocalizedString("上次观看时间: ", comment: "") + self.dateFormatter.string(from: lastWatched))
             }
             
-            if !data.airDate.isEmpty && (self.dateFormatter.date(from: data.airDate) != nil)  {
-                str.append("\n" + NSLocalizedString("上映时间: ", comment: "") + data.airDate)
+            if let airDate = data.airDate  {
+                str.append("\n" + NSLocalizedString("上映时间: ", comment: "") + self.dateFormatter.string(from: airDate))
             }
             
             cell.subtitleLabel.text = str
@@ -58,8 +58,7 @@ class BangumiDetailEpisodeViewController: ViewController {
     
     private lazy var dateFormatter: DateFormatter = {
         var dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss"
-        dateFormatter.timeZone = TimeZone(abbreviation: "UTC")
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         return dateFormatter
     }()
 
