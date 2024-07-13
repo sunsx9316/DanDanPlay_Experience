@@ -161,6 +161,11 @@
 		89A688E12C3A5EDF002B7CA3 /* BangumiDetailRelatedTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A688E02C3A5EDF002B7CA3 /* BangumiDetailRelatedTableViewCell.swift */; };
 		89A688E32C3A6628002B7CA3 /* BangumiDetailMetadataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A688E22C3A6628002B7CA3 /* BangumiDetailMetadataViewController.swift */; };
 		89A688E52C3A70BF002B7CA3 /* BangumiDetailEpisodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A688E42C3A70BF002B7CA3 /* BangumiDetailEpisodeViewController.swift */; };
+		89A689662C425C70002B7CA3 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A689652C425C70002B7CA3 /* LoginViewController.swift */; };
+		89A689682C42603A002B7CA3 /* User.svg in Resources */ = {isa = PBXBuildFile; fileRef = 89A689672C42603A002B7CA3 /* User.svg */; };
+		89A6896B2C42634E002B7CA3 /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A6896A2C42634E002B7CA3 /* Login.swift */; };
+		89A6896D2C426420002B7CA3 /* UserNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A6896C2C426420002B7CA3 /* UserNetworkHandle.swift */; };
+		89A6896F2C4265E1002B7CA3 /* AppKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A6896E2C4265E1002B7CA3 /* AppKey.swift */; };
 		89AF9BFE2631C1740037A133 /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AF9BFC2631C1740037A133 /* SwitchTableViewCell.swift */; };
 		89AF9BFF2631C1740037A133 /* SwitchTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89AF9BFD2631C1740037A133 /* SwitchTableViewCell.xib */; };
 		89AF9C032631C2680037A133 /* StepTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AF9C012631C2680037A133 /* StepTableViewCell.swift */; };
@@ -355,6 +360,11 @@
 		89A688E02C3A5EDF002B7CA3 /* BangumiDetailRelatedTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiDetailRelatedTableViewCell.swift; sourceTree = "<group>"; };
 		89A688E22C3A6628002B7CA3 /* BangumiDetailMetadataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiDetailMetadataViewController.swift; sourceTree = "<group>"; };
 		89A688E42C3A70BF002B7CA3 /* BangumiDetailEpisodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiDetailEpisodeViewController.swift; sourceTree = "<group>"; };
+		89A689652C425C70002B7CA3 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		89A689672C42603A002B7CA3 /* User.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = User.svg; sourceTree = "<group>"; };
+		89A6896A2C42634E002B7CA3 /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
+		89A6896C2C426420002B7CA3 /* UserNetworkHandle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNetworkHandle.swift; sourceTree = "<group>"; };
+		89A6896E2C4265E1002B7CA3 /* AppKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppKey.swift; sourceTree = "<group>"; };
 		89AF9BFC2631C1740037A133 /* SwitchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchTableViewCell.swift; sourceTree = "<group>"; };
 		89AF9BFD2631C1740037A133 /* SwitchTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwitchTableViewCell.xib; sourceTree = "<group>"; };
 		89AF9C012631C2680037A133 /* StepTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepTableViewCell.swift; sourceTree = "<group>"; };
@@ -581,6 +591,7 @@
 			children = (
 				890DF820261617AE002D8AE5 /* MediaLib */,
 				89A688942C394FC5002B7CA3 /* MainViewController.swift */,
+				89A689652C425C70002B7CA3 /* LoginViewController.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -878,6 +889,7 @@
 		89A688542C394C10002B7CA3 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
+				89A689692C426341002B7CA3 /* User */,
 				89A688CE2C3A3F06002B7CA3 /* Bangumi */,
 				89A688442C394C10002B7CA3 /* Comment */,
 				89A688482C394C10002B7CA3 /* Config */,
@@ -937,6 +949,7 @@
 				89A688CB2C39B4F1002B7CA3 /* Unlike.svg */,
 				89A688BF2C399FC2002B7CA3 /* Timeline.svg */,
 				89A688B12C3984EB002B7CA3 /* Home.svg */,
+				89A689672C42603A002B7CA3 /* User.svg */,
 				89A688B32C3984F5002B7CA3 /* Media.svg */,
 			);
 			path = SVG;
@@ -1039,6 +1052,16 @@
 			path = TableViewCell;
 			sourceTree = "<group>";
 		};
+		89A689692C426341002B7CA3 /* User */ = {
+			isa = PBXGroup;
+			children = (
+				89A6896A2C42634E002B7CA3 /* Login.swift */,
+				89A6896C2C426420002B7CA3 /* UserNetworkHandle.swift */,
+				89A6896E2C4265E1002B7CA3 /* AppKey.swift */,
+			);
+			path = User;
+			sourceTree = "<group>";
+		};
 		89E0D60C2669111500E2337B /* Setting */ = {
 			isa = PBXGroup;
 			children = (
@@ -1138,6 +1161,7 @@
 				89A688CC2C39B4F1002B7CA3 /* Like.svg in Resources */,
 				8931F0FA2677457100590569 /* EditableTableViewCell.xib in Resources */,
 				890DF6D926160827002D8AE5 /* LaunchScreen.storyboard in Resources */,
+				89A689682C42603A002B7CA3 /* User.svg in Resources */,
 				89AF9BFF2631C1740037A133 /* SwitchTableViewCell.xib in Resources */,
 				89E0D6132669127B00E2337B /* SwitchDetailTableViewCell.xib in Resources */,
 				89A688B42C3984F5002B7CA3 /* Media.svg in Resources */,
@@ -1252,9 +1276,11 @@
 				890DF85B26189533002D8AE5 /* Helper.swift in Sources */,
 				89A688602C394C10002B7CA3 /* ANXColor+Utils.swift in Sources */,
 				89A688C32C39A251002B7CA3 /* TimelineViewController.swift in Sources */,
+				89A6896B2C42634E002B7CA3 /* Login.swift in Sources */,
 				89A6886A2C394C10002B7CA3 /* PCWelcomeModel.swift in Sources */,
 				890DF86B2618A406002D8AE5 /* MatchItem.swift in Sources */,
 				89A688A52C398339002B7CA3 /* HomePageFunctionTableViewCell.swift in Sources */,
+				89A6896F2C4265E1002B7CA3 /* AppKey.swift in Sources */,
 				89A6886F2C394C10002B7CA3 /* FTPFileManager.swift in Sources */,
 				89A688782C394C10002B7CA3 /* WebDAVInputStream.swift in Sources */,
 				89A688B62C39851E002B7CA3 /* UICollectionView+Helper.swift in Sources */,
@@ -1349,9 +1375,11 @@
 				890DF76F26160B3E002D8AE5 /* FolderTableViewCell.swift in Sources */,
 				8944E876263AF48C00EF00B1 /* LinkHistoryTableViewCell.swift in Sources */,
 				89A688632C394C10002B7CA3 /* Decodable+Utils.swift in Sources */,
+				89A6896D2C426420002B7CA3 /* UserNetworkHandle.swift in Sources */,
 				890DF77026160B3E002D8AE5 /* FileTableViewCell.swift in Sources */,
 				890DF6FA26160A36002D8AE5 /* RefreshHeader.swift in Sources */,
 				890DF75226160B1B002D8AE5 /* UIDevice+Helper.swift in Sources */,
+				89A689662C425C70002B7CA3 /* LoginViewController.swift in Sources */,
 				89A6888E2C394C10002B7CA3 /* DanmakuManager.swift in Sources */,
 				89945FDD28C8E7C6009AC640 /* GotoLastWatchPointView.swift in Sources */,
 				89A6886E2C394C10002B7CA3 /* FileManagerProtocol.swift in Sources */,

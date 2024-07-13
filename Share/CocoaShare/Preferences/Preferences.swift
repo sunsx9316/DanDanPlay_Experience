@@ -79,6 +79,9 @@ class Preferences {
         /// 弹幕偏移时间
         case danmakuOffsetTime
         
+        /// 弹幕偏移时间
+        case subtitleOffsetTime
+        
         /// smb登录信息
         case smbLoginInfo
         
@@ -137,6 +140,9 @@ class Preferences {
     
     @StoreWrapper(defaultValue: 0, key: .danmakuOffsetTime)
     var danmakuOffsetTime: Int
+    
+    @StoreWrapper(defaultValue: 0, key: .subtitleOffsetTime)
+    var subtitleOffsetTime: Int
     
     @StoreWrapper(defaultValue: true, key: .autoLoadCustomDanmaku)
     var autoLoadCustomDanmaku: Bool
