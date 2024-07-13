@@ -70,3 +70,4 @@ AppConfig.dart
 Pods
 Podfile.lock
 AniXPlayer.xcscheme
+Share/CocoaShare/Networking/User/AppKey.swift
