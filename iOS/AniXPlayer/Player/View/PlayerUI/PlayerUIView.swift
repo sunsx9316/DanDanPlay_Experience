@@ -32,6 +32,10 @@ protocol PlayerUIViewDelegate: AnyObject {
     func tapSlider(playerUIView: PlayerUIView, progress: CGFloat)
     
     func playerUIView(_ playerUIView: PlayerUIView, didChangeControlViewState show: Bool)
+    
+    func playerUIView(_ playerUIView: PlayerUIView, didChangeScale scale: Double)
+    
+    func playerUIViewDidRestScale(_ playerUIView: PlayerUIView)
 }
 
 protocol PlayerUIViewDataSource: AnyObject {
@@ -44,6 +48,22 @@ protocol PlayerUIViewDataSource: AnyObject {
     
     func playerMediaThumbnailer(playerUIView: PlayerUIView) -> MediaThumbnailer?
     
+    func shouldShowResetScaleButton(playerUIView: PlayerUIView) -> Bool
+    
+}
+
+extension PlayerUIView: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        if gestureRecognizer is UIPanGestureRecognizer && otherGestureRecognizer is UIPinchGestureRecognizer {
+            return true
+        }
+        
+        if gestureRecognizer is UIPinchGestureRecognizer && otherGestureRecognizer is UIPanGestureRecognizer {
+            return true
+        }
+        
+        return false
+    }
 }
 
 class PlayerUIView: UIView {
@@ -91,12 +111,18 @@ class PlayerUIView: UIView {
         singleTap.require(toFail: doubleTap)
         
         let panGes = UIPanGestureRecognizer(target: self, action: #selector(panGesture(_:)))
+        panGes.maximumNumberOfTouches = 1
+        panGes.delegate = self
+        
+        let pinch = UIPinchGestureRecognizer(target: self, action: #selector(pinchGes(_:)))
+        pinch.delegate = self
         
         let gestureView = UIView()
         gestureView.addGestureRecognizer(doubleTap)
         gestureView.addGestureRecognizer(singleTap)
         gestureView.addGestureRecognizer(panGes)
         gestureView.addGestureRecognizer(longPress)
+        gestureView.addGestureRecognizer(pinch)
         return gestureView
     }()
     
@@ -104,6 +130,7 @@ class PlayerUIView: UIView {
         let topView = PlayerUITopView()
         topView.backButton.addTarget(self, action: #selector(onTouchBackButton(_:)), for: .touchUpInside)
         topView.settingButton.addTarget(self, action: #selector(onTouchMoreButton(_:)), for: .touchUpInside)
+        topView.resetScaleButton.addTarget(self, action: #selector(onResetScaleButtonDidTouch), for: .touchUpInside)
         return topView
     }()
     
@@ -251,6 +278,14 @@ class PlayerUIView: UIView {
             }
         }
     }
+    
+    private func reloadResetScaleButton() {
+        if self.dataSource?.shouldShowResetScaleButton(playerUIView: self) == true {
+            self.topView.resetScaleButton.isHidden = false
+        } else {
+            self.topView.resetScaleButton.isHidden = true
+        }
+    }
         
     func autoHideControlView() {
         DispatchQueue.main.async {
@@ -264,7 +299,9 @@ class PlayerUIView: UIView {
                     self.bottomView.transform = CGAffineTransform(translationX: 0, y: self.bottomView.frame.height)
                     self.topView.alpha = 0
                     self.bottomView.alpha = 0
-                })
+                }) { finish in
+                    
+                }
             }
         }
     }
@@ -401,6 +438,25 @@ class PlayerUIView: UIView {
         }
     }
     
+    //MARK: 捏和
+    
+    @objc private func onResetScaleButtonDidTouch() {
+        self.delegate?.playerUIViewDidRestScale(self)
+        self.reloadResetScaleButton()
+    }
+    
+    @objc private func pinchGes(_ pinch: UIPinchGestureRecognizer) {
+        // 当双指 touch
+        if pinch.numberOfTouches == 2 {
+            // 开始接触和接触中
+            if pinch.state == .began || pinch.state == .changed {
+                self.delegate?.playerUIView(self, didChangeScale: pinch.scale)
+                pinch.scale = 1
+                self.reloadResetScaleButton()
+            }
+        }
+    }
+    
     //MARK: 其他私有方法
     private func setupInit() {
         
@@ -437,6 +493,8 @@ class PlayerUIView: UIView {
             controlView.dismissAfter(1)
             controlView.progress = CGFloat(volume)
         }
+        
+        reloadResetScaleButton()
     }
     
     private func suspendTimer() {

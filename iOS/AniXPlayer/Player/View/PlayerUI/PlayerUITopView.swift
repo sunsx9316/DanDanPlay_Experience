@@ -35,6 +35,14 @@ class PlayerUITopView: UIView {
         return button
     }()
     
+    lazy var resetScaleButton: Button = {
+        var button = Button(type: .custom)
+        button.layer.cornerRadius = 4
+        button.layer.masksToBounds = true
+        button.setTitle(NSLocalizedString("恢复视频大小", comment: ""), for: .normal)
+        return button
+    }()
+    
     private lazy var bgView: UIView = {
         let bgView = UIView()
         bgView.backgroundColor = UIColor(white: 0, alpha: 0.4)
@@ -56,8 +64,16 @@ class PlayerUITopView: UIView {
         self.addSubview(self.bgView)
         let containerView = UIView()
         containerView.addSubview(self.titleLabel)
-        containerView.addSubview(self.settingButton)
         containerView.addSubview(self.backButton)
+        
+        let rightStackView = UIStackView()
+        rightStackView.axis = .horizontal
+        rightStackView.spacing = 10
+        rightStackView.addArrangedSubview(self.resetScaleButton)
+        rightStackView.addArrangedSubview(self.settingButton)
+        
+        containerView.addSubview(rightStackView)
+        
         self.addSubview(containerView)
         
         containerView.snp.makeConstraints { make in
@@ -84,11 +100,15 @@ class PlayerUITopView: UIView {
             make.top.bottom.equalToSuperview()
         }
         
-        self.settingButton.snp.makeConstraints { make in
+        rightStackView.snp.makeConstraints { make in
             make.trailing.equalToSuperview()
             make.width.greaterThanOrEqualTo(30)
             make.centerY.equalTo(self.backButton)
             make.leading.equalTo(self.titleLabel.snp.trailing).offset(5)
+        }
+        
+        self.settingButton.snp.makeConstraints { make in
+            make.width.greaterThanOrEqualTo(30)
         }
     }
     

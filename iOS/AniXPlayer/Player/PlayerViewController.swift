@@ -597,6 +597,18 @@ extension PlayerViewController: MatchsViewControllerDelegate {
 }
 
 extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
+    func playerUIViewDidRestScale(_ playerUIView: PlayerUIView) {
+        self.player.mediaView.transform = .identity
+    }
+    
+    func shouldShowResetScaleButton(playerUIView: PlayerUIView) -> Bool {
+        return self.player.mediaView.transform != .identity
+    }
+    
+    func playerUIView(_ playerUIView: PlayerUIView, didChangeScale scale: Double) {
+        self.player.mediaView.transform = self.player.mediaView.transform.scaledBy(x: scale, y: scale)
+    }
+    
     //MARK: - PlayerUIViewDelegate
     func onTouchMoreButton(playerUIView: PlayerUIView) {
         let vc = PlayerSettingViewController(player: self.player)

@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import YYCategories
 
 class UserNetworkHandle {
     
