@@ -34,6 +34,8 @@ protocol MediaSettingViewControllerDelegate: AnyObject {
     
     func mediaSettingViewController(_ vc: MediaSettingViewController, didOpenSubtitle subtitle: SubtitleProtocol)
     
+    func mediaSettingViewController(_ vc: MediaSettingViewController, didChangeSubtitleMargin subtitleMargin: Int)
+    
 }
 
 extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource {
@@ -208,6 +210,28 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
                 self.delegate?.mediaSettingViewController(self, didChangeSubtitleOffsetTime: value)
             }
             return cell
+        case .subtitleMargin:
+            let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
+            cell.titleLabel.text = type.title
+            cell.selectionStyle = .none
+            cell.step = 1
+            let model = SliderTableViewCell.Model(maxValue: 1000,
+                                                  minValue: 0,
+                                                  currentValue: Float(Preferences.shared.subtitleMargin))
+            
+            cell.model = model
+            
+            cell.onChangeSliderCallBack = { (aCell) in
+                
+                let currentValue = aCell.valueSlider.value
+                Preferences.shared.subtitleMargin = Int(currentValue)
+                let model = aCell.model
+                model?.currentValue = currentValue
+                aCell.model = model
+                
+                self.delegate?.mediaSettingViewController(self, didChangeSubtitleMargin: Preferences.shared.subtitleMargin)
+            }
+            return cell
         }
     }
     
@@ -308,6 +332,7 @@ class MediaSettingViewController: ViewController {
         case autoJumpTitleEnding
         case jumpTitleDuration
         case jumpEndingDuration
+        case subtitleMargin
         
         var title: String {
             switch self {
@@ -330,7 +355,9 @@ class MediaSettingViewController: ViewController {
             case .jumpEndingDuration:
                 return NSLocalizedString("跳过片尾时长", comment: "")
             case .subtitleDelay:
-                return NSLocalizedString("字幕偏移时间", comment: "")
+                return NSLocalizedString("字幕时间偏移", comment: "")
+            case .subtitleMargin:
+                return NSLocalizedString("字幕Y轴偏移", comment: "")
             }
         }
     }

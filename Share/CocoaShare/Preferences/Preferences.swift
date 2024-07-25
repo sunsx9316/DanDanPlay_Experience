@@ -121,6 +121,9 @@ class Preferences {
         /// 登录信息
         case loginInfo
         
+        /// 字幕偏移
+        case subtitleMargin
+        
         var storeKey: String {
             if self == .danmakuDensity {
                 return "danmakuDensity_v2"
@@ -173,6 +176,9 @@ class Preferences {
     
     @StoreWrapper(defaultValue: 0.0, key: .jumpEndingDuration)
     var jumpEndingDuration: Double
+    
+    @StoreWrapper(defaultValue: 0, key: .subtitleMargin)
+    var subtitleMargin: Int
     
     
     var loginInfo: AnixLoginInfo? {

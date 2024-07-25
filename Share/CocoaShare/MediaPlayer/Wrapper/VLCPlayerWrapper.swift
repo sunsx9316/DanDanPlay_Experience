@@ -41,12 +41,24 @@ struct ExternalSubtitle: SubtitleProtocol {
 
 class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     
-    fileprivate lazy var player: VLCMediaPlayer = {
-        var player = VLCMediaPlayer()
-        player.drawable = self.mediaView
-        player.delegate = self
-        return player
-    }()
+    private enum Options: String {
+        case subtitleMargin = "--sub-margin"
+        case subtitleTextScale = "--sub-text-scale"
+        case subtitleColor = "--freetype-color"
+        case subtitleName = "--freetype-font"
+    }
+    
+    private enum InitAction {
+        case currentSubtitle
+        case volume
+        case subtitleDelay
+        case speed
+        case currentAudioChannel
+        case aspectRatio
+    }
+
+    
+    private var player: VLCMediaPlayer?
     
     fileprivate var playerTimer: Timer?
     
@@ -61,12 +73,24 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     
     lazy var mediaView: ANXView = ANXView()
     
+    private lazy var mediaOptionsDic = [Options: Any]()
+    
+    private lazy var initActionDic = [InitAction: () -> Void]()
+    
     var currentPlayItem: File? {
         didSet {
-            self.player.stop()
+            
+            if self.player == nil {
+                self.player = self.createPlayerInstance()
+                for (_, initAction) in self.initActionDic {
+                    initAction()
+                }
+            }
+            
+            self.player?.stop()
             self.currentSubTitleFile = nil
             let media = self.currentPlayItem?.createMedia(delegate: self)
-            self.player.media = media
+            self.player?.media = media
 #if os(macOS)
             media?.synchronousParse()
 #endif
@@ -79,17 +103,20 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     }
     
     var subtitleList: [SubtitleProtocol] {
-        return self.player.videoSubTitlesIndexes.indices.compactMap({ subtitleWithIndexInPlayer($0) })
+        return self.player?.videoSubTitlesIndexes.indices.compactMap({ subtitleWithIndexInPlayer($0) }) ?? []
     }
     
     var currentSubtitle: SubtitleProtocol? {
         get {
+            
+            guard let player = self.player else { return nil }
+            
             if let currentSubTitleFile = self.currentSubTitleFile {
                 return currentSubTitleFile
             }
             
-            let currentVideoSubTitleIndex = self.player.currentVideoSubTitleIndex
-            if let fristIndex = self.player.videoSubTitlesIndexes.firstIndex(where: { (value) -> Bool in
+            let currentVideoSubTitleIndex = player.currentVideoSubTitleIndex
+            if let fristIndex = player.videoSubTitlesIndexes.firstIndex(where: { (value) -> Bool in
                 if let value = value as? Int, value == currentVideoSubTitleIndex {
                     return true
                 }
@@ -103,42 +130,88 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         set {
             self.currentSubTitleFile = newValue
             
-            if let sub = newValue as? Subtitle {
-                self.player.currentVideoSubTitleIndex = Int32(sub.index)
-            } else if let sub = newValue as? ExternalSubtitle {
-                ANX.logInfo(.subtitle, "加载外部字幕 url: \(sub.url)")
-                self.player.addPlaybackSlave(sub.url, type: .subtitle, enforce: true)
+            func setup() {
+                if let sub = newValue as? Subtitle {
+                    self.player?.currentVideoSubTitleIndex = Int32(sub.index)
+                } else if let sub = newValue as? ExternalSubtitle {
+                    ANX.logInfo(.subtitle, "加载外部字幕 url: \(sub.url)")
+                    self.player?.addPlaybackSlave(sub.url, type: .subtitle, enforce: true)
+                }
+            }
+            
+            if self.player != nil {
+                setup()
+            }
+            
+            self.initActionDic[.currentSubtitle] = setup
+        }
+    }
+    
+    var subtitleMargin: Int {
+        get {
+            return Int(self.mediaOptionsDic[.subtitleMargin] as? Int ?? 0)
+        }
+        
+        set {
+            if newValue != (self.mediaOptionsDic[.subtitleMargin] as? Int) {
+                self.mediaOptionsDic[.subtitleMargin] = newValue
+                self.reloadOptionAndCreatePlayer()
             }
         }
     }
     
     var volume: Int {
         get {
-            return Int(self.player.audio?.volume ?? 0)
+            return Int(self.player?.audio?.volume ?? 0)
         }
         
         set {
-            self.player.audio?.volume = Int32(newValue)
+            
+            func setup() {
+                self.player?.audio?.volume = Int32(newValue)
+            }
+            
+            if self.player != nil {
+                setup()
+            }
+            
+            self.initActionDic[.volume] = setup
         }
     }
     
     var subtitleDelay: Double {
         get {
-            return Double(self.player.currentVideoSubTitleDelay) / 1000000.0
+            return Double(self.player?.currentVideoSubTitleDelay ?? 0) / 1000000.0
         }
         
         set {
-            self.player.currentVideoSubTitleDelay = Int(newValue * 1000000.0)
+            func setup() {
+                self.player?.currentVideoSubTitleDelay = Int(newValue * 1000000.0)
+            }
+            
+            if self.player != nil {
+                setup()
+            }
+            
+            self.initActionDic[.subtitleDelay] = setup
         }
     }
     
     var speed: Double {
         get {
-            return Double(self.player.rate)
+            return Double(self.player?.rate ?? 0)
         }
         
         set {
-            self.player.rate = Float(newValue)
+            func setup() {
+                self.player?.rate = Float(newValue)
+            }
+            
+            if self.player != nil {
+                setup()
+            }
+            
+            self.initActionDic[.speed] = setup
         }
     }
     
@@ -150,56 +223,73 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     }
     
     var length: TimeInterval {
-        let length = self.player.media?.length.value?.doubleValue ?? 0
+        let length = self.player?.media?.length.value?.doubleValue ?? 0
         return length / 1000
     }
     
     var currentTime: TimeInterval {
-        let time = self.player.time.value?.doubleValue ?? 0
+        let time = self.player?.time.value?.doubleValue ?? 0
         return time / 1000
     }
     
     var isPlaying: Bool {
-        return self.player.isPlaying
+        return self.player?.isPlaying ?? false
     }
     
+    /// 10 .. 500
     var fontSize: Int? {
-        didSet {
-            if let fontSize = self.fontSize {
-                let sel = Selector(("setTextRendererFontSize:"))
-                if player.responds(to: sel) {
-                    player.perform(sel, with: fontSize)
-                }
+        get {
+            return self.mediaOptionsDic[.subtitleTextScale] as? Int
+        }
+        
+        set {
+            if newValue != (self.mediaOptionsDic[.subtitleTextScale] as? Int) {
+                self.mediaOptionsDic[.subtitleTextScale] = newValue
+                self.reloadOptionAndCreatePlayer()
             }
         }
     }
     
     var fontName: String? {
-        didSet {
-            if let fontName = self.fontName {
-                let sel = Selector(("setTextRendererFont:"))
-                player.perform(sel, with: fontName)
+        get {
+            return self.mediaOptionsDic[.subtitleName] as? String
+        }
+        
+        set {
+            if newValue != (self.mediaOptionsDic[.subtitleName] as? String) {
+                self.mediaOptionsDic[.subtitleName] = newValue
+                self.reloadOptionAndCreatePlayer()
             }
         }
     }
     
     var fontColor: ANXColor? {
-        didSet {
-            if let fontColor = self.fontColor {
-                let sel = Selector(("setTextRendererFontColor:"))
-                player.perform(sel, with: fontColor.rgbValue)
+        get {
+            if let colorValue = self.mediaOptionsDic[.subtitleColor] as? Int {
+                return ANXColor(rgb: colorValue)
+            }
+            return nil
+        }
+        
+        set {
+            let colorValue = newValue?.rgbValue
+            if colorValue != (self.mediaOptionsDic[.subtitleColor] as? Int) {
+                self.mediaOptionsDic[.subtitleColor] = colorValue
+                self.reloadOptionAndCreatePlayer()
             }
         }
     }
     
     var audioChannelList: [AudioChannel] {
-        return self.player.audioTrackIndexes.indices.compactMap({ audioChannelWithIndexInPlayer($0) })
+        return self.player?.audioTrackIndexes.indices.compactMap({ audioChannelWithIndexInPlayer($0) }) ?? []
     }
     
     var currentAudioChannel: AudioChannel? {
         get {
-            let currentAudioTrackIndex = self.player.currentAudioTrackIndex
-            if let fristIndex = self.player.audioTrackIndexes.firstIndex(where: { (value) -> Bool in
+            guard let player = self.player else { return nil }
+            
+            let currentAudioTrackIndex = player.currentAudioTrackIndex
+            if let fristIndex = player.audioTrackIndexes.firstIndex(where: { (value) -> Bool in
                 if let value = value as? Int, value == currentAudioTrackIndex {
                     return true
                 }
@@ -211,11 +301,19 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         }
         
         set {
-            if let audioChannel = newValue {
-                self.player.currentAudioTrackIndex = Int32(audioChannel.index)
-            } else {
-                self.player.currentAudioTrackIndex = -1
+            func setup() {
+                if let audioChannel = newValue {
+                    self.player?.currentAudioTrackIndex = Int32(audioChannel.index)
+                } else {
+                    self.player?.currentAudioTrackIndex = -1
+                }
             }
+            
+            if self.player != nil {
+                setup()
+            }
+            
+            self.initActionDic[.currentAudioChannel] = setup
         }
     }
     
@@ -225,9 +323,11 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     
     var bufferInfoDidChangeCallBack: ((MediaPlayerProtocol, File, MediaBufferInfo) -> Void)?
     
+    var positionChangedCallBack: ((any MediaPlayerProtocol, Double, Double) -> Void)?
+    
     var aspectRatio: PlayerAspectRatio {
         get {
-            if let videoAspectRatio = self.player.videoAspectRatio {
+            if let videoAspectRatio = self.player?.videoAspectRatio {
                 let str = String(cString: videoAspectRatio)
                 return PlayerAspectRatio(rawValue: str) ?? .default
             }
@@ -235,50 +335,66 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         }
         
         set {
-            switch newValue {
-            case .default:
-                self.player.scaleFactor = 0
-                self.player.videoAspectRatio = nil
-                self.player.videoCropGeometry = nil
-            case .fillToScreen:
-                if let window = self.mediaView.window {
-                    self.player.videoAspectRatio = nil
-                    
-                    let windowSize = window.frame.size
-                    let videoSize = self.player.videoSize
-                    let ar = videoSize.width / videoSize.height
-                    let dar = windowSize.width / windowSize.height
-                    
-                    let scale: CGFloat
-                    
-                    if (dar >= ar) {
-                        scale = windowSize.width / videoSize.width;
-                    } else {
-                        scale = windowSize.height / videoSize.height;
+            func setup() {
+                switch newValue {
+                case .default:
+                    self.player?.scaleFactor = 0
+                    self.player?.videoAspectRatio = nil
+                    self.player?.videoCropGeometry = nil
+                case .fillToScreen:
+                    if let window = self.mediaView.window {
+                        self.player?.videoAspectRatio = nil
+                        
+                        var windowSize = window.frame.size
+                        var videoSize = self.player?.videoSize ?? .zero
+                        
+                        if videoSize == .zero {
+                            videoSize = .init(width: 1, height: 1)
+                        }
+                        
+                        if windowSize == .zero {
+                            windowSize = .init(width: 1, height: 1)
+                        }
+                        
+                        let ar = videoSize.width / videoSize.height
+                        let dar = windowSize.width / windowSize.height
+                        
+                        let scale: CGFloat
+                        
+                        if (dar >= ar) {
+                            scale = windowSize.width / videoSize.width;
+                        } else {
+                            scale = windowSize.height / videoSize.height;
+                        }
+                        
+                        let windowScale: CGFloat
+                        
+                        #if os(iOS)
+                        windowScale = window.contentScaleFactor
+                        #else
+                        windowScale = window.backingScaleFactor
+                        #endif
+                        
+                        self.player?.scaleFactor = Float(scale * windowScale)
                     }
-                    
-                    
-                    let windowScale: CGFloat
-                    
-                    #if os(iOS)
-                    windowScale = window.contentScaleFactor
-                    #else
-                    windowScale = window.backingScaleFactor
-                    #endif
-                    
-                    self.player.scaleFactor = Float(scale * windowScale)
+                
+                case .fourToThree, .sixteenToNine, .sixteenToTen, .other(_, _):
+                    self.player?.scaleFactor = 0
+                    self.player?.videoCropGeometry = nil
+                    self.player?.videoAspectRatio = UnsafeMutablePointer(mutating: (newValue.rawValue as NSString).utf8String)
                 }
-            
-            case .fourToThree, .sixteenToNine, .sixteenToTen, .other(_, _):
-                self.player.scaleFactor = 0
-                self.player.videoCropGeometry = nil
-                self.player.videoAspectRatio = UnsafeMutablePointer(mutating: (newValue.rawValue as NSString).utf8String)
             }
+            
+            if self.player != nil {
+                setup()
+            }
+            
+            self.initActionDic[.aspectRatio] = setup
         }
     }
     
     var state: PlayerState {
-        switch self.player.state {
+        switch self.player?.state {
         case .stopped:
             return .stop
         case .paused:
@@ -296,27 +412,27 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         }
     }
     
-    func setPosition(_ position: Double) -> TimeInterval {
+    func setPosition(_ position: Double) {
         let position = max(min(position, 1), 0)
-        self.player.position = Float(position)
-        return self.length * TimeInterval(position)
+        self.player?.position = Float(position)
+        self.positionChangedCallBack?(self, position, self.length * TimeInterval(position))
     }
     
     func play(_ media: File) {
         self.currentPlayItem = media
-        self.player.play()
+        self.player?.play()
     }
     
     func play() {
-        self.player.play()
+        self.player?.play()
     }
     
     func pause() {
-        self.player.pause()
+        self.player?.pause()
     }
     
     func stop() {
-        self.player.stop()
+        self.player?.stop()
     }
     
     func isPlayAtEnd() -> Bool {
@@ -329,12 +445,14 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     
     //MARK: Private Method
     private func subtitleWithIndexInPlayer(_ index: Int) -> Subtitle? {
-        if index < self.player.videoSubTitlesIndexes.count,
-           let indexNumber = self.player.videoSubTitlesIndexes[index] as? Int {
+        guard let player = self.player else { return nil }
+        
+        if index < player.videoSubTitlesIndexes.count,
+           let indexNumber = player.videoSubTitlesIndexes[index] as? Int {
             
             let name: String
-            if index < self.player.videoSubTitlesNames.count {
-                name = self.player.videoSubTitlesNames[index] as? String ?? "未知名称"
+            if index < player.videoSubTitlesNames.count {
+                name = player.videoSubTitlesNames[index] as? String ?? "未知名称"
             } else {
                 name = "未知名称"
             }
@@ -346,12 +464,14 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     }
     
     private func audioChannelWithIndexInPlayer(_ index: Int) -> AudioChannel? {
-        if index < self.player.audioTrackIndexes.count,
-           let indexNumber = self.player.audioTrackIndexes[index] as? Int {
+        guard let player = self.player else { return nil }
+        
+        if index < player.audioTrackIndexes.count,
+           let indexNumber = player.audioTrackIndexes[index] as? Int {
             
             let name: String
-            if index < self.player.audioTrackNames.count {
-                name = self.player.audioTrackNames[index] as? String ?? "未知名称"
+            if index < player.audioTrackNames.count {
+                name = player.audioTrackNames[index] as? String ?? "未知名称"
             } else {
                 name = "未知名称"
             }
@@ -360,6 +480,31 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         } else {
             return nil
         }
+    }
+    
+    private func reloadOptionAndCreatePlayer() {
+        guard let item = self.currentPlayItem else { return }
+        
+        let position = self.position
+        
+        self.player = self.createPlayerInstance()
+        for (_, initAction) in self.initActionDic {
+            initAction()
+        }
+        self.play(item)
+        self.setPosition(position)
+    }
+    
+    private func createPlayerInstance() -> VLCMediaPlayer {
+        let options = self.mediaOptionsDic.compactMap { option in
+            return "\(option.key.rawValue)=\(option.value)"
+        }
+        
+        let player = VLCMediaPlayer(options: options)
+        player.drawable = self.mediaView
+        player.delegate = self
+        
+        return player
     }
     
 }

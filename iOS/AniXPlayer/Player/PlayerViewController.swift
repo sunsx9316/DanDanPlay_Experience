@@ -238,8 +238,7 @@ class PlayerViewController: ViewController {
     }
     
     private func setPlayerProgress(_ progress: CGFloat) {
-        let currentTime = self.player.setPosition(Double(progress))
-        self.danmakuRender.time = currentTime
+        self.player.setPosition(Double(progress))
         self.uiView.updateTime()
     }
     
@@ -449,6 +448,10 @@ class PlayerViewController: ViewController {
         self.player.subtitleDelay = Double(subtitleDelay)
     }
     
+    private func changeSubtitleMargin(subtitleMargin: Int) {
+        self.player.subtitleMargin = subtitleMargin
+    }
+    
     /// 重新布局弹幕画布
     private func layoutDanmakuCanvas() {
         self.danmakuCanvas.snp.remakeConstraints { (make) in
@@ -475,6 +478,8 @@ class PlayerViewController: ViewController {
         self.danmakuRender.offsetTime = TimeInterval(Preferences.shared.danmakuOffsetTime)
         self.changeRepeatMode(playerMode: Preferences.shared.playerMode)
         self.changeSpeed(Preferences.shared.playerSpeed)
+        self.changeSubtltleDelay(subtitleDelay: Preferences.shared.subtitleOffsetTime)
+        self.changeSubtitleMargin(subtitleMargin: Preferences.shared.subtitleMargin)
         self.layoutDanmakuCanvas()
     }
     
@@ -799,7 +804,10 @@ extension PlayerViewController: MediaPlayerDelegate {
     
     func player(_ player: MediaPlayer, mediaDidChange media: File?) {
         
-        
+    }
+    
+    func player(_ player: MediaPlayer, didChangePosition: Double, mediaTime: TimeInterval) {
+        self.danmakuRender.time = mediaTime
     }
     
     func player(_ player: MediaPlayer, currentTime: TimeInterval, totalTime: TimeInterval) {
@@ -898,6 +906,10 @@ extension PlayerViewController: DanmakuSettingViewControllerDelegate {
 }
 
 extension PlayerViewController: MediaSettingViewControllerDelegate {
+    
+    func mediaSettingViewController(_ vc: MediaSettingViewController, didChangeSubtitleMargin subtitleMargin: Int) {
+        changeSubtitleMargin(subtitleMargin: subtitleMargin)
+    }
     
     func mediaSettingViewController(_ vc: MediaSettingViewController, didChangeSubtitleOffsetTime subtitleOffsetTime: Int) {
         changeSubtltleDelay(subtitleDelay: subtitleOffsetTime)

@@ -17,6 +17,7 @@ protocol MediaPlayerDelegate: AnyObject {
     func player(_ player: MediaPlayer, shouldChangeMedia media: File) -> Bool
     func player(_ player: MediaPlayer, file: File, bufferInfoDidChange bufferInfo: MediaBufferInfo)
     func playerListDidChange(_ player: MediaPlayer)
+    func player(_ player: MediaPlayer, didChangePosition: Double, mediaTime: TimeInterval)
 }
 
 protocol SubtitleProtocol {
@@ -52,6 +53,8 @@ protocol MediaPlayerProtocol: AnyObject {
     
     var bufferInfoDidChangeCallBack: ((MediaPlayerProtocol, File, MediaBufferInfo) -> Void)? { set get }
     
+    var positionChangedCallBack: ((MediaPlayerProtocol, Double, Double) -> Void)? { set get }
+    
     var volume: Int { set get }
     
     var subtitleDelay: Double { set get }
@@ -59,6 +62,8 @@ protocol MediaPlayerProtocol: AnyObject {
     var speed: Double { set get }
     
     var aspectRatio: PlayerAspectRatio { set get }
+    
+    var subtitleMargin: Int { set get }
     
     var position: Double { get }
     
@@ -77,7 +82,7 @@ protocol MediaPlayerProtocol: AnyObject {
     
     var fontColor: ANXColor? { set get }
     
-    func setPosition(_ position: Double) -> TimeInterval
+    func setPosition(_ position: Double)
     
     func play(_ media: File)
     
@@ -213,6 +218,16 @@ class MediaPlayer {
     
     var playMode = PlayerMode.autoPlayNext
     
+    var subtitleMargin: Int  {
+        get {
+            return self.player.subtitleMargin
+        }
+        
+        set {
+            self.player.subtitleMargin = newValue
+        }
+    }
+    
     var volume: Int {
         get {
             return self.player.volume
@@ -327,12 +342,11 @@ class MediaPlayer {
         debugPrint("player deinit")
     }
     
-    func setPosition(_ position: Double) -> TimeInterval {
-        let time = self.player.setPosition(position)
+    func setPosition(_ position: Double) {
+        self.player.setPosition(position)
         if self.player.isPlayAtEnd() {
             self.tryPlayNextItem()
         }
-        return time
     }
     
     func play(_ media: File) {
@@ -384,7 +398,6 @@ class MediaPlayer {
     
     //MARK: Private Method
     private func setupInit() {
-        self.fontSize = 20
 #if os(iOS)
         NotificationCenter.default.addObserver(self, selector: #selector(handleInterreption(_:)), name: AVAudioSession.interruptionNotification, object: nil)
 #endif
@@ -408,6 +421,12 @@ class MediaPlayer {
             guard let self = self else { return }
             
             self.delegate?.player(self, currentTime: self.currentTime, totalTime: self.length)
+        }
+        
+        self.player.positionChangedCallBack = { [weak self] (_, position, time) in
+            guard let self = self else { return }
+            
+            self.delegate?.player(self, didChangePosition: position, mediaTime: time)
         }
     }
     
