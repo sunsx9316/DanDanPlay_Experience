@@ -20,10 +20,6 @@ protocol MediaPlayerDelegate: AnyObject {
     func player(_ player: MediaPlayer, didChangePosition: Double, mediaTime: TimeInterval)
 }
 
-protocol SubtitleProtocol {
-    var name: String { get }
-}
-
 extension MediaPlayerDelegate {
     func player(_ player: MediaPlayer, currentTime: TimeInterval, totalTime: TimeInterval) {}
     func player(_ player: MediaPlayer, stateDidChange state: PlayerState) {}
@@ -43,9 +39,9 @@ protocol MediaPlayerProtocol: AnyObject {
     
     var currentSubtitle: SubtitleProtocol? { set get }
     
-    var audioChannelList: [AudioChannel] { get }
+    var audioChannelList: [AudioChannelProtocol] { get }
     
-    var currentAudioChannel: AudioChannel?  { set get }
+    var currentAudioChannel: AudioChannelProtocol?  { set get }
     
     var timeChangedCallBack: ((MediaPlayerProtocol, Double) -> Void)? { set get }
     
@@ -76,7 +72,7 @@ protocol MediaPlayerProtocol: AnyObject {
     var isPlaying: Bool { get }
     
     /// 字体大小 值越大 字体越小
-    var fontSize: Int? { set get }
+    var fontSize: Float? { set get }
     
     var fontName: String? { set get }
     
@@ -108,9 +104,13 @@ enum PlayerState {
     case stop
 }
 
-struct AudioChannel {
-    let index: Int
-    let name: String
+protocol SubtitleProtocol {
+    var subtitleName: String { get }
+}
+
+protocol AudioChannelProtocol {
+    var audioName: String { get }
+    var audioId: Int32 { get }
 }
 
 enum PlayerAspectRatio: RawRepresentable {
@@ -202,11 +202,11 @@ class MediaPlayer {
         }
     }
     
-    var audioChannelList: [AudioChannel] {
+    var audioChannelList: [AudioChannelProtocol] {
         return self.player.audioChannelList
     }
     
-    var currentAudioChannel: AudioChannel?  {
+    var currentAudioChannel: AudioChannelProtocol?  {
         get {
             return self.player.currentAudioChannel
         }
@@ -289,7 +289,7 @@ class MediaPlayer {
     }
     
     /// 字体大小 值越大 字体越小
-    var fontSize: Int? {
+    var fontSize: Float? {
         set {
             self.player.fontSize = newValue
         }

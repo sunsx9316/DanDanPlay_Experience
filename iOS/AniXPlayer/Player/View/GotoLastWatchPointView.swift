@@ -77,7 +77,7 @@ class GotoLastWatchPointView: UIView {
         self.layoutIfNeeded()
         
         UIView.animate(withDuration: 0.4, delay: 0, options: .curveEaseInOut) {
-            self.transform = .init(translationX: self.frame.width, y: 0)
+            self.transform = .init(translationX: self.frame.width + self.safeAreaInsets.left, y: 0)
         } completion: { _ in
             self.dismissTimer = .scheduledTimer(withTimeInterval: 5, block: { [weak self] _ in
                 guard let self = self else { return }

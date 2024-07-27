@@ -80,6 +80,7 @@
 		899A9DDF262F35EB00C54AC9 /* SliderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897CF530262F317B00CC297A /* SliderTableViewCell.swift */; };
 		899C4E97263BDDE600A17C83 /* LinkHistoryHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899C4E96263BDDE600A17C83 /* LinkHistoryHeaderView.swift */; };
 		899E385D280B2F7A00285191 /* ProgressSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899E385C280B2F7A00285191 /* ProgressSlider.swift */; };
+		89A119F22C54F37A00581793 /* VLCMediaPlayer+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 89A119F12C54F37A00581793 /* VLCMediaPlayer+Private.m */; };
 		89A688602C394C10002B7CA3 /* ANXColor+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A6881A2C394C10002B7CA3 /* ANXColor+Utils.swift */; };
 		89A688612C394C10002B7CA3 /* ANXLogHelperModule+Utils.m in Sources */ = {isa = PBXBuildFile; fileRef = 89A6881C2C394C10002B7CA3 /* ANXLogHelperModule+Utils.m */; };
 		89A688622C394C10002B7CA3 /* AppInfoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A6881D2C394C10002B7CA3 /* AppInfoHelper.swift */; };
@@ -284,6 +285,8 @@
 		899C4E96263BDDE600A17C83 /* LinkHistoryHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LinkHistoryHeaderView.swift; sourceTree = "<group>"; };
 		899C4E9C263CF88600A17C83 /* AniXPlayer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AniXPlayer-Bridging-Header.h"; sourceTree = "<group>"; };
 		899E385C280B2F7A00285191 /* ProgressSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressSlider.swift; sourceTree = "<group>"; };
+		89A119F02C54F37A00581793 /* VLCMediaPlayer+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "VLCMediaPlayer+Private.h"; sourceTree = "<group>"; };
+		89A119F12C54F37A00581793 /* VLCMediaPlayer+Private.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "VLCMediaPlayer+Private.m"; sourceTree = "<group>"; };
 		89A6881A2C394C10002B7CA3 /* ANXColor+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ANXColor+Utils.swift"; sourceTree = "<group>"; };
 		89A6881B2C394C10002B7CA3 /* ANXLogHelperModule+Utils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ANXLogHelperModule+Utils.h"; sourceTree = "<group>"; };
 		89A6881C2C394C10002B7CA3 /* ANXLogHelperModule+Utils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "ANXLogHelperModule+Utils.m"; sourceTree = "<group>"; };
@@ -833,6 +836,8 @@
 			isa = PBXGroup;
 			children = (
 				89A6883C2C394C10002B7CA3 /* VLCPlayerWrapper.swift */,
+				89A119F02C54F37A00581793 /* VLCMediaPlayer+Private.h */,
+				89A119F12C54F37A00581793 /* VLCMediaPlayer+Private.m */,
 			);
 			path = Wrapper;
 			sourceTree = "<group>";
@@ -1450,6 +1455,7 @@
 				89AF9C0F26343BE70037A133 /* AutoScrollLabel.swift in Sources */,
 				89A688842C394C10002B7CA3 /* MatchNetworkHandle.swift in Sources */,
 				89A6888D2C394C10002B7CA3 /* Constant.swift in Sources */,
+				89A119F22C54F37A00581793 /* VLCMediaPlayer+Private.m in Sources */,
 				89A688D52C3A5384002B7CA3 /* BangumiDetailViewController.swift in Sources */,
 				89A688712C394C10002B7CA3 /* SMBFileManager.swift in Sources */,
 				89A688AF2C3983ED002B7CA3 /* HomePageBannerItemCell.swift in Sources */,

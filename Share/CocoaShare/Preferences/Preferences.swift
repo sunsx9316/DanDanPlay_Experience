@@ -124,6 +124,9 @@ class Preferences {
         /// 字幕偏移
         case subtitleMargin
         
+        /// 字幕字体大小
+        case subtitleFontSize
+        
         var storeKey: String {
             if self == .danmakuDensity {
                 return "danmakuDensity_v2"
@@ -179,6 +182,9 @@ class Preferences {
     
     @StoreWrapper(defaultValue: 0, key: .subtitleMargin)
     var subtitleMargin: Int
+    
+    @StoreWrapper(defaultValue: 20, key: .subtitleFontSize)
+    var subtitleFontSize: Float
     
     
     var loginInfo: AnixLoginInfo? {

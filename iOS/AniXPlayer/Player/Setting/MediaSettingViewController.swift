@@ -36,15 +36,26 @@ protocol MediaSettingViewControllerDelegate: AnyObject {
     
     func mediaSettingViewController(_ vc: MediaSettingViewController, didChangeSubtitleMargin subtitleMargin: Int)
     
+    func mediaSettingViewController(_ vc: MediaSettingViewController, didChangeSubtitleFontSize subtitleFontSize: Float)
+    
 }
 
 extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
         return self.dataSource.count
     }
     
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return self.dataSource[section].title
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.dataSource[section].dataSource.count
+    }
+    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let type = self.dataSource[indexPath.row]
+        let type = self.dataSource[indexPath.section].dataSource[indexPath.row]
         
         switch type {
         case .subtitleSafeArea:
@@ -91,12 +102,12 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
         case .subtitleTrack:
             let cell = tableView.dequeueCell(class: SheetTableViewCell.self, indexPath: indexPath)
             cell.titleLabel.text = type.title
-            cell.valueLabel.text = self.player?.currentSubtitle?.name ?? NSLocalizedString("无", comment: "")
+            cell.valueLabel.text = self.player?.currentSubtitle?.subtitleName ?? NSLocalizedString("无", comment: "")
             return cell
         case .audioTrack:
             let cell = tableView.dequeueCell(class: SheetTableViewCell.self, indexPath: indexPath)
             cell.titleLabel.text = type.title
-            cell.valueLabel.text = self.player?.currentAudioChannel?.name ?? NSLocalizedString("无", comment: "")
+            cell.valueLabel.text = self.player?.currentAudioChannel?.audioName ?? NSLocalizedString("无", comment: "")
             return cell
         case .autoJumpTitleEnding:
             let cell = tableView.dequeueCell(class: SwitchTableViewCell.self, indexPath: indexPath)
@@ -232,13 +243,34 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
                 self.delegate?.mediaSettingViewController(self, didChangeSubtitleMargin: Preferences.shared.subtitleMargin)
             }
             return cell
+        case .subtitleFontSize:
+            let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
+            cell.titleLabel.text = type.title
+            cell.selectionStyle = .none
+            cell.step = 1
+            let model = SliderTableViewCell.Model(maxValue: 500,
+                                                  minValue: 10,
+                                                  currentValue: Float(Preferences.shared.subtitleFontSize))
+            
+            cell.model = model
+            cell.onChangeSliderCallBack = { (aCell) in
+                
+                let currentValue = aCell.valueSlider.value
+                Preferences.shared.subtitleFontSize = currentValue
+                let model = aCell.model
+                model?.currentValue = currentValue
+                aCell.model = model
+                
+                self.delegate?.mediaSettingViewController(self, didChangeSubtitleFontSize: currentValue)
+            }
+            return cell
         }
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         
-        let type = self.dataSource[indexPath.item]
+        let type = self.dataSource[indexPath.section].dataSource[indexPath.row]
         
         if type == .playerMode {
             let vc = UIAlertController(title: type.title, message: nil, preferredStyle: .actionSheet)
@@ -276,7 +308,7 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             
             //加载本地字幕
             for subtitle in localSubtitleList {
-                let action = UIAlertAction(title: subtitle.name, style: .default) { (UIAlertAction) in
+                let action = UIAlertAction(title: subtitle.subtitleName, style: .default) { (UIAlertAction) in
                     DispatchQueue.main.async {
                         self.player?.currentSubtitle = subtitle
                         self.tableView.reloadData()
@@ -294,7 +326,7 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             let vc = UIAlertController(title: type.title, message: nil, preferredStyle: .actionSheet)
             
             let actions = audioChannelList.compactMap { (mode) -> UIAlertAction? in
-                return UIAlertAction(title: mode.name, style: .default) { (UIAlertAction) in
+                return UIAlertAction(title: mode.audioName, style: .default) { (UIAlertAction) in
                     self.player?.currentAudioChannel = mode
                     self.tableView.reloadData()
                 }
@@ -320,19 +352,28 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
 }
 
 class MediaSettingViewController: ViewController {
+    
+    private struct CellTypeInfo {
+        var title: String
+        var dataSource: [CellType]
+    }
 
     private enum CellType: CaseIterable {
-        case subtitleSafeArea
-        case subtitleTrack
-        case audioTrack
+        
         case playerSpeed
-        case subtitleDelay
         case playerMode
-        case loadSubtitle
         case autoJumpTitleEnding
         case jumpTitleDuration
         case jumpEndingDuration
+        
+        case subtitleSafeArea
+        case subtitleTrack
         case subtitleMargin
+        case subtitleFontSize
+        case subtitleDelay
+        case loadSubtitle
+        
+        case audioTrack
         
         var title: String {
             switch self {
@@ -358,11 +399,24 @@ class MediaSettingViewController: ViewController {
                 return NSLocalizedString("字幕时间偏移", comment: "")
             case .subtitleMargin:
                 return NSLocalizedString("字幕Y轴偏移", comment: "")
+            case .subtitleFontSize:
+                return NSLocalizedString("字幕大小", comment: "")
             }
         }
     }
     
-    private lazy var dataSource = CellType.allCases
+    private lazy var dataSource: [CellTypeInfo] = {
+        var dataSource = [CellTypeInfo]()
+        
+        dataSource.append(CellTypeInfo(title: NSLocalizedString("播放设置", comment: ""),
+                                       dataSource: [.playerSpeed, .autoJumpTitleEnding, .jumpTitleDuration, .jumpEndingDuration, .playerMode]))
+        dataSource.append(CellTypeInfo(title: NSLocalizedString("字幕设置", comment: ""),
+                                       dataSource: [.subtitleSafeArea, .subtitleTrack, .subtitleDelay, .subtitleMargin, .loadSubtitle]))
+        dataSource.append(CellTypeInfo(title: NSLocalizedString("音频设置", comment: ""),
+                                       dataSource: [.audioTrack]))
+        
+        return dataSource
+    }()
     
     private lazy var tableView: TableView = {
         let tableView = TableView(frame: .zero, style: .plain)

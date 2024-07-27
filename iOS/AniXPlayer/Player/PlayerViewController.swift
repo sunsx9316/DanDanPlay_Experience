@@ -452,6 +452,10 @@ class PlayerViewController: ViewController {
         self.player.subtitleMargin = subtitleMargin
     }
     
+    private func changeSubtitleFontSize(fontSize: Float) {
+        self.player.fontSize = fontSize
+    }
+    
     /// 重新布局弹幕画布
     private func layoutDanmakuCanvas() {
         self.danmakuCanvas.snp.remakeConstraints { (make) in
@@ -480,6 +484,7 @@ class PlayerViewController: ViewController {
         self.changeSpeed(Preferences.shared.playerSpeed)
         self.changeSubtltleDelay(subtitleDelay: Preferences.shared.subtitleOffsetTime)
         self.changeSubtitleMargin(subtitleMargin: Preferences.shared.subtitleMargin)
+        self.changeSubtitleFontSize(fontSize: Preferences.shared.subtitleFontSize)
         self.layoutDanmakuCanvas()
     }
     
@@ -906,6 +911,10 @@ extension PlayerViewController: DanmakuSettingViewControllerDelegate {
 }
 
 extension PlayerViewController: MediaSettingViewControllerDelegate {
+    
+    func mediaSettingViewController(_ vc: MediaSettingViewController, didChangeSubtitleFontSize subtitleFontSize: Float) {
+        changeSubtitleFontSize(fontSize: subtitleFontSize)
+    }
     
     func mediaSettingViewController(_ vc: MediaSettingViewController, didChangeSubtitleMargin subtitleMargin: Int) {
         changeSubtitleMargin(subtitleMargin: subtitleMargin)

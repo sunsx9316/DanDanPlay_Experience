@@ -27,25 +27,31 @@ fileprivate extension Timer {
 
 /// 内嵌字幕
 private struct Subtitle: SubtitleProtocol {
-    let index: Int
+    let subtitleName: String
     
-    let name: String
+    let index: Int
 }
 
 /// 外挂字幕
 struct ExternalSubtitle: SubtitleProtocol {
-    let name: String
+    let subtitleName: String
     
     let url: URL
+}
+
+struct AudioChannel: AudioChannelProtocol {
+    let audioName: String
+    
+    let audioId: Int32
 }
 
 class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     
     private enum Options: String {
         case subtitleMargin = "--sub-margin"
-        case subtitleTextScale = "--sub-text-scale"
-        case subtitleColor = "--freetype-color"
-        case subtitleName = "--freetype-font"
+//        case subtitleTextScale = "--sub-text-scale"
+//        case subtitleColor = "--freetype-color"
+//        case subtitleName = "--freetype-font"
     }
     
     private enum InitAction {
@@ -237,54 +243,35 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     }
     
     /// 10 .. 500
-    var fontSize: Int? {
-        get {
-            return self.mediaOptionsDic[.subtitleTextScale] as? Int
-        }
-        
-        set {
-            if newValue != (self.mediaOptionsDic[.subtitleTextScale] as? Int) {
-                self.mediaOptionsDic[.subtitleTextScale] = newValue
-                self.reloadOptionAndCreatePlayer()
+    var fontSize: Float? {
+        didSet {
+            if let fontSize = self.fontSize {
+                self.player?.anx_setTextRendererFontSize(fontSize as NSNumber)
             }
         }
     }
     
     var fontName: String? {
-        get {
-            return self.mediaOptionsDic[.subtitleName] as? String
-        }
-        
-        set {
-            if newValue != (self.mediaOptionsDic[.subtitleName] as? String) {
-                self.mediaOptionsDic[.subtitleName] = newValue
-                self.reloadOptionAndCreatePlayer()
+        didSet {
+            if let fontName = self.fontName {
+                self.player?.anx_setTextRendererFont(fontName)
             }
         }
     }
     
     var fontColor: ANXColor? {
-        get {
-            if let colorValue = self.mediaOptionsDic[.subtitleColor] as? Int {
-                return ANXColor(rgb: colorValue)
-            }
-            return nil
-        }
-        
-        set {
-            let colorValue = newValue?.rgbValue
-            if colorValue != (self.mediaOptionsDic[.subtitleColor] as? Int) {
-                self.mediaOptionsDic[.subtitleColor] = colorValue
-                self.reloadOptionAndCreatePlayer()
+        didSet {
+            if let fontColor = self.fontColor {
+                self.player?.anx_setTextRendererFontColor(fontColor.rgbValue as NSNumber)
             }
         }
     }
     
-    var audioChannelList: [AudioChannel] {
+    var audioChannelList: [AudioChannelProtocol] {
         return self.player?.audioTrackIndexes.indices.compactMap({ audioChannelWithIndexInPlayer($0) }) ?? []
     }
     
-    var currentAudioChannel: AudioChannel? {
+    var currentAudioChannel: AudioChannelProtocol? {
         get {
             guard let player = self.player else { return nil }
             
@@ -303,7 +290,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         set {
             func setup() {
                 if let audioChannel = newValue {
-                    self.player?.currentAudioTrackIndex = Int32(audioChannel.index)
+                    self.player?.currentAudioTrackIndex = audioChannel.audioId
                 } else {
                     self.player?.currentAudioTrackIndex = -1
                 }
@@ -457,17 +444,17 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
                 name = "未知名称"
             }
             
-            return Subtitle(index: indexNumber, name: name)
+            return Subtitle(subtitleName: name, index: indexNumber)
         } else {
             return nil
         }
     }
     
-    private func audioChannelWithIndexInPlayer(_ index: Int) -> AudioChannel? {
+    private func audioChannelWithIndexInPlayer(_ index: Int) -> AudioChannelProtocol? {
         guard let player = self.player else { return nil }
         
         if index < player.audioTrackIndexes.count,
-           let indexNumber = player.audioTrackIndexes[index] as? Int {
+           let indexNumber = player.audioTrackIndexes[index] as? Int32 {
             
             let name: String
             if index < player.audioTrackNames.count {
@@ -476,7 +463,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
                 name = "未知名称"
             }
             
-            return AudioChannel(index: indexNumber, name: name)
+            return AudioChannel(audioName: name, audioId: indexNumber)
         } else {
             return nil
         }

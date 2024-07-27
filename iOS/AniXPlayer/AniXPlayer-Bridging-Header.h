@@ -8,3 +8,4 @@
 #import "AFWebDAVManager.h"
 #import "ANXLogHelperModule+Utils.h"
 #import "JHQRCodeReader.h"
+#import "VLCMediaPlayer+Private.h"
