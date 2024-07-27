@@ -219,8 +219,7 @@ class PlayerViewController: ViewController {
     }
     
     private func setPlayerProgress(_ progress: CGFloat) {
-        let currentTime = self.player.setPosition(Double(progress))
-        self.danmakuRender.time = currentTime
+        self.player.setPosition(Double(progress))
         self.uiView.updateTime()
     }
     
@@ -838,7 +837,10 @@ extension PlayerViewController: MediaPlayerDelegate {
     
     func player(_ player: MediaPlayer, mediaDidChange media: File?) {
         
-        
+    }
+    
+    func player(_ player: MediaPlayer, didChangePosition: Double, mediaTime: TimeInterval) {
+        self.danmakuRender.time = mediaTime
     }
     
     func player(_ player: MediaPlayer, currentTime: TimeInterval, totalTime: TimeInterval) {
@@ -869,6 +871,10 @@ extension PlayerViewController: MediaPlayerDelegate {
                 }
             }
         }
+    }
+    
+    func player(_ player: MediaPlayer, file: any File, bufferInfoDidChange bufferInfo: any MediaBufferInfo) {
+        
     }
     
     //MARK: Private Method

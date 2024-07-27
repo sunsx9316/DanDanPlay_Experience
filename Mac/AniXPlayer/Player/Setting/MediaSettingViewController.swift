@@ -102,8 +102,8 @@ extension MediaSettingViewController: NSTableViewDelegate, NSTableViewDataSource
             cell.titleLabel.text = type.title
             
             let allItems = self.player?.subtitleList ?? []
-            let titles = allItems.compactMap { $0.name }
-            cell.setItems(titles, selectedItem: self.player?.currentSubtitle?.name)
+            let titles = allItems.compactMap { $0.subtitleName }
+            cell.setItems(titles, selectedItem: self.player?.currentSubtitle?.subtitleName)
             cell.onClickButtonCallBack = { [weak self] (idx) in
                 guard let self = self else { return }
                 
@@ -117,8 +117,8 @@ extension MediaSettingViewController: NSTableViewDelegate, NSTableViewDataSource
             cell.titleLabel.text = type.title
             
             let allItems = self.player?.audioChannelList ?? []
-            let titles = allItems.compactMap { $0.name }
-            cell.setItems(titles, selectedItem: self.player?.currentAudioChannel?.name)
+            let titles = allItems.compactMap { $0.audioName }
+            cell.setItems(titles, selectedItem: self.player?.currentAudioChannel?.audioName)
             cell.onClickButtonCallBack = { [weak self] (idx) in
                 guard let self = self else { return }
                 

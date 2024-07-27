@@ -20,14 +20,6 @@ protocol MediaPlayerDelegate: AnyObject {
     func player(_ player: MediaPlayer, didChangePosition: Double, mediaTime: TimeInterval)
 }
 
-extension MediaPlayerDelegate {
-    func player(_ player: MediaPlayer, currentTime: TimeInterval, totalTime: TimeInterval) {}
-    func player(_ player: MediaPlayer, stateDidChange state: PlayerState) {}
-    func player(_ player: MediaPlayer, shouldChangeMedia media: File) -> Bool { return true }
-    func player(_ player: MediaPlayer, file: File, bufferInfoDidChange bufferInfo: MediaBufferInfo) {}
-    func playerListDidChange(_ player: MediaPlayer) {}
-}
-
 
 protocol MediaPlayerProtocol: AnyObject {
     

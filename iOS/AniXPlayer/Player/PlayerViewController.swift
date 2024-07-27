@@ -787,6 +787,7 @@ extension PlayerViewController: PlayerUIViewDelegate, PlayerUIViewDataSource {
 }
 
 extension PlayerViewController: MediaPlayerDelegate {
+    
     //MARK: - MediaPlayerDelegate
     
     func player(_ player: MediaPlayer, stateDidChange state: PlayerState) {
@@ -823,6 +824,10 @@ extension PlayerViewController: MediaPlayerDelegate {
     
     func player(_ player: MediaPlayer, file: File, bufferInfoDidChange bufferInfo: MediaBufferInfo) {
         uiView.updateBufferInfos(file.bufferInfos)
+    }
+    
+    func playerListDidChange(_ player: MediaPlayer) {
+        
     }
     
     /// 遍历当前的弹幕
