@@ -155,7 +155,7 @@ class PlayerModel {
     // MARK: 工具方法
     /// 应用偏好设置
     func initPreferences() {
-        self.danmakuFont = UIFont.systemFont(ofSize: CGFloat(Preferences.shared.danmakuFontSize))
+        self.danmakuFont = DRFont.systemFont(ofSize: CGFloat(Preferences.shared.danmakuFontSize))
         self.danmakuRender.offsetTime = TimeInterval(Preferences.shared.danmakuOffsetTime)
         self.changeRepeatMode(playerMode: Preferences.shared.playerMode)
         self.changeSpeed(Preferences.shared.playerSpeed)

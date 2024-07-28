@@ -233,12 +233,21 @@ class PlayerViewController: ViewController {
         
         self.view.show(progress: 0, statusText: NSLocalizedString("解析视频中...", comment: ""))
         
-        MatchNetworkHandle.matchAndGetDanmakuWithFile(media) { [weak self] (progress) in
+        MatchNetworkHandle.matchAndGetDanmakuWithFile(media) { [weak self] (state) in
             DispatchQueue.main.async {
                 guard let self = self else { return }
                 
-                self.view.show(progress: Double(Float(progress)),
-                         statusText: progress >= 0.7 ? NSLocalizedString("加载弹幕中...", comment: "") : NSLocalizedString("解析视频中...", comment: ""))
+                switch state {
+                case .parseMedia:
+                    self.view.show(progress: 0, statusText: NSLocalizedString("开始解析...", comment: ""))
+                case .downloadLocalDanmaku:
+                    self.view.show(progress: 0.2, statusText: NSLocalizedString("下载本地弹幕...", comment: ""))
+                case .matchMedia(progress: let progress):
+                    self.view.show(progress: 0.2 + 0.6 * progress, statusText: NSLocalizedString("解析视频中...", comment: ""))
+                case .downloadDanmaku:
+                    self.view.show(progress: 0.9, statusText: NSLocalizedString("解析视频中...", comment: ""))
+                }
+                
             }
         } matchCompletion: { [weak self] (collection, error) in
             DispatchQueue.main.async {
