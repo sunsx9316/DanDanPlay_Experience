@@ -251,11 +251,14 @@ class DanmakuSettingViewController: ViewController {
         case danmakuAlpha
         case danmakuProportion
         case danmakuDensity
+        
         case showDanmaku
+        case mergeSameDanmaku
+        
         case danmakuOffsetTime
+        
         case searchDanmaku
         case loadDanmaku
-        case mergeSameDanmaku
         
         var title: String {
             switch self {

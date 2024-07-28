@@ -422,8 +422,8 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         self.player?.stop()
     }
     
-    func isPlayAtEnd() -> Bool {
-        return self.position >= self.endFlagProgress
+    func isEndPosition(_ position: Double) -> Bool {
+        return position >= self.endFlagProgress
     }
     
     deinit {

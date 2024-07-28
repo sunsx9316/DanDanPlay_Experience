@@ -102,12 +102,12 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
         case .subtitleTrack:
             let cell = tableView.dequeueCell(class: SheetTableViewCell.self, indexPath: indexPath)
             cell.titleLabel.text = type.title
-            cell.valueLabel.text = self.player?.currentSubtitle?.subtitleName ?? NSLocalizedString("无", comment: "")
+            cell.valueLabel.text = self.playerModel?.currentSubtitle?.subtitleName ?? NSLocalizedString("无", comment: "")
             return cell
         case .audioTrack:
             let cell = tableView.dequeueCell(class: SheetTableViewCell.self, indexPath: indexPath)
             cell.titleLabel.text = type.title
-            cell.valueLabel.text = self.player?.currentAudioChannel?.audioName ?? NSLocalizedString("无", comment: "")
+            cell.valueLabel.text = self.playerModel?.currentAudioChannel?.audioName ?? NSLocalizedString("无", comment: "")
             return cell
         case .autoJumpTitleEnding:
             let cell = tableView.dequeueCell(class: SwitchTableViewCell.self, indexPath: indexPath)
@@ -293,11 +293,11 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             self.delegate?.loadSubtitleFileInMediaSettingViewController(self)
         } else if type == .subtitleTrack {
             
-            guard let _ = self.player?.currentPlayItem else {
+            if (try? self.playerModel?.media.value()) == nil  {
                 return
             }
             
-            let localSubtitleList = self.player?.subtitleList ?? []
+            let localSubtitleList = self.playerModel?.subtitleList ?? []
             
             //本地没有字幕，不响应。
             if localSubtitleList.isEmpty {
@@ -310,7 +310,7 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             for subtitle in localSubtitleList {
                 let action = UIAlertAction(title: subtitle.subtitleName, style: .default) { (UIAlertAction) in
                     DispatchQueue.main.async {
-                        self.player?.currentSubtitle = subtitle
+                        self.playerModel?.currentSubtitle = subtitle
                         self.tableView.reloadData()
                     }
                 }
@@ -320,14 +320,14 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             vc.addAction(.init(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: { (_) in }))
             self.present(vc, atView: tableView.cellForRow(at: indexPath))
         } else if type == .audioTrack {
-            guard let audioChannelList = self.player?.audioChannelList,
+            guard let audioChannelList = self.playerModel?.audioChannelList,
                   !audioChannelList.isEmpty else { return }
             
             let vc = UIAlertController(title: type.title, message: nil, preferredStyle: .actionSheet)
             
             let actions = audioChannelList.compactMap { (mode) -> UIAlertAction? in
                 return UIAlertAction(title: mode.audioName, style: .default) { (UIAlertAction) in
-                    self.player?.currentAudioChannel = mode
+                    self.playerModel?.currentAudioChannel = mode
                     self.tableView.reloadData()
                 }
             }
@@ -436,7 +436,7 @@ class MediaSettingViewController: ViewController {
         return tableView
     }()
     
-    private weak var player: MediaPlayer?
+    private weak var playerModel: PlayerModel?
 
     weak var delegate: MediaSettingViewControllerDelegate?
     
@@ -447,8 +447,8 @@ class MediaSettingViewController: ViewController {
     }()
     
     
-    init(player: MediaPlayer?) {
-        self.player = player
+    init(playerModel: PlayerModel?) {
+        self.playerModel = playerModel
         super.init(nibName: nil, bundle: nil)
     }
     

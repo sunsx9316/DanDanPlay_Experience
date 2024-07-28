@@ -17,6 +17,14 @@ import DDPCategory
 typealias DanmakuEntity = (BaseDanmaku & RepeatDanmakuInfoProtocol)
 typealias DanmakuConverResult = () -> DanmakuEntity
 typealias DanmakuMapResult = [UInt : [DanmakuConverResult]]
+typealias LoadingProgressAction = ((LoadingState) -> Void)
+
+enum LoadingState {
+    case parseMedia
+    case downloadLocalDanmaku
+    case matchMedia(progress: Double)
+    case downloadDanmaku
+}
 
 private enum DanmakuLoadError: LocalizedError {
     case notMatch
@@ -112,32 +120,29 @@ class DanmakuManager {
     ///   - matchCompletion: 当匹配多个视频时会进行回调
     ///   - danmakuCompletion: 弹幕加载回调
     func loadDanmaku(_ media: File,
-                     progress: FileProgressAction?,
+                     progress: LoadingProgressAction?,
                      matchCompletion: @escaping((MatchCollection?, Error?) -> Void),
                      danmakuCompletion: @escaping((DanmakuMapResult?, _ episodeId: Int, Error?) -> Void)) {
+        progress?(.parseMedia)
         
         if Preferences.shared.autoLoadCustomDanmaku {
+            progress?(.downloadLocalDanmaku)
+            
             /// 优先进行本地弹幕的加载
             self.loadLocalDanmaku(media) { [weak self] result, error in
                 guard let self = self else { return }
                 
                 let hasLocalDanmaku = result?.isEmpty == false
-                
                 if hasLocalDanmaku {
-                    progress?(0.7)
-                    
                     /// 尝试进行网络请求，如果失败，则会使用本地弹幕
-                    MatchNetworkHandle.matchAndGetDanmakuWithFile(media) { [weak self] matchCollection, error in
+                    MatchNetworkHandle.matchAndGetDanmakuWithFile(media, progress: progress) { [weak self] matchCollection, error in
                         guard self != nil else { return }
                         
                         /// 进这里说明匹配到多个结果，或关闭了快速匹配
-                        progress?(1)
                         danmakuCompletion(result, 0, nil)
                         
                     } getDanmakuCompletion: { [weak self] collection, episodeId, error in
                         guard let self = self else { return }
-                        
-                        progress?(1)
                         
                         /// 如果下载到网络弹幕则使用，否则使用本地弹幕
                         if let collection = collection {

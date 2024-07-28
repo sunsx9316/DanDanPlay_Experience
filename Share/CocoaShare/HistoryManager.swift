@@ -32,6 +32,12 @@ class HistoryManager {
         return self.storeObject[mediaKey]
     }
     
+    /// 清空历史记录
+    func cleanUpAllWatchProgress() {
+        self.storeObject.removeAll()
+        self.store()
+    }
+    
     private func store() {
         UserDefaults.standard.set(self.storeObject, forKey: storeKey)
     }

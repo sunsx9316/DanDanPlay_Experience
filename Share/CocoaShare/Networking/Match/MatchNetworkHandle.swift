@@ -25,18 +25,19 @@ class MatchNetworkHandle {
     ///   - matchCompletion: 当匹配结果 > 1时回调，不再继续往下走
     ///   - getDanmakuCompletion: 获取弹幕回调
     static func matchAndGetDanmakuWithFile(_ file: File,
-                                           progress: FileProgressAction? = nil,
+                                           progress: LoadingProgressAction?,
                                            matchCompletion: @escaping((MatchCollection?, Error?) -> Void),
                                            getDanmakuCompletion: @escaping((CommentCollection?, _ episodeId: Int, Error?) -> Void)) {
         
         ANX.logInfo(.HTTP, "根据文件直接搜索弹幕 file: \(file)")
         
         self.match(with: file) { (progressValue) in
-            progress?(0.5 * progressValue)
+            progress?(.matchMedia(progress: 0.5 * progressValue))
         } completion: { (collection, error) in
             
+            progress?(.matchMedia(progress: 1))
+            
             if let error = error {
-                progress?(1)
                 matchCompletion(collection, error)
                 return
             }
@@ -45,17 +46,16 @@ class MatchNetworkHandle {
             if collection?.isMatched == true &&
                 collection?.collection.count == 1 &&
                 Preferences.shared.fastMatch {
-                progress?(0.7)
+                progress?(.downloadDanmaku)
                 let matched = collection!.collection[0]
                 
                 ANX.logInfo(.HTTP, "根据文件直接搜索弹幕 精确匹配 matched: \(matched)")
                 
                 CommentNetworkHandle.getDanmaku(with: matched.episodeId) { damakus, error in
-                    progress?(1)
                     getDanmakuCompletion(damakus, matched.episodeId, error)
                 }
             } else {
-                progress?(1)
+                
                 matchCompletion(collection, error)
                 ANX.logInfo(.HTTP, "根据文件直接搜索弹幕 请求成功 collection数量: \(String(describing: collection?.collection.count))")
             }

@@ -32,6 +32,8 @@ target 'AniXPlayer' do
   pod 'SDWebImage'
   pod 'FSPagerView'
   pod 'JXCategoryView'
+  pod 'RxSwift'
+  pod 'RxCocoa'
 
 end
 

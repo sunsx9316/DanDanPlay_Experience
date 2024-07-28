@@ -44,7 +44,7 @@ class PlayerSettingViewController: ViewController {
                 vc.delegate = self.delegate
                 vcs.append(vc)
             case .mediaSetting:
-                let vc = MediaSettingViewController(player: self.player)
+                let vc = MediaSettingViewController(playerModel: self.playerModel)
                 vc.delegate = self.delegate
                 vcs.append(vc)
             }
@@ -60,7 +60,7 @@ class PlayerSettingViewController: ViewController {
         return blurVuew
     }()
     
-    private weak var player: MediaPlayer?
+    private weak var playerModel: PlayerModel?
     
     weak var delegate: (DanmakuSettingViewControllerDelegate & MediaSettingViewControllerDelegate)?
     
@@ -72,8 +72,8 @@ class PlayerSettingViewController: ViewController {
         return .landscapeLeft
     }
     
-    init(player: MediaPlayer?) {
-        self.player = player
+    init(playerModel: PlayerModel?) {
+        self.playerModel = playerModel
         super.init(nibName: nil, bundle: nil)
     }
     

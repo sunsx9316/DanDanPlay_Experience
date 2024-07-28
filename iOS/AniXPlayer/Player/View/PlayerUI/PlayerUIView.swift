@@ -534,6 +534,4 @@ class PlayerUIView: UIView {
         let total = Date(timeIntervalSince1970: totalTime)
         self.timeSnapHUD?.label.text = timeFormatter.string(from: current) + "/" + timeFormatter.string(from: total)
     }
-
-    
 }

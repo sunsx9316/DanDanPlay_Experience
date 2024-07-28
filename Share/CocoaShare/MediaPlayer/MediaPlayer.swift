@@ -80,7 +80,7 @@ protocol MediaPlayerProtocol: AnyObject {
     
     func stop()
     
-    func isPlayAtEnd() -> Bool
+    func isEndPosition(_ position: Double) -> Bool
 }
 
 enum PlayerMode {
@@ -336,7 +336,8 @@ class MediaPlayer {
     
     func setPosition(_ position: Double) {
         self.player.setPosition(position)
-        if self.player.isPlayAtEnd() {
+        
+        if self.player.isEndPosition(position) {
             self.tryPlayNextItem()
         }
     }
@@ -398,7 +399,7 @@ class MediaPlayer {
             guard let self = self else { return }
             
             self.delegate?.player(self, stateDidChange: newState)
-            if ins.isPlayAtEnd() {
+            if ins.isEndPosition(self.position) {
                 self.tryPlayNextItem()
             }
         }

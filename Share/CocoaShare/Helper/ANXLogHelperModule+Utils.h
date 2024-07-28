@@ -13,5 +13,6 @@ FOUNDATION_EXPORT ANXLogHelperModule ANXLogHelperModuleWebDav;
 FOUNDATION_EXPORT ANXLogHelperModule ANXLogHelperModuleHTTP;
 FOUNDATION_EXPORT ANXLogHelperModule ANXLogHelperModuleSubtitle;
 FOUNDATION_EXPORT ANXLogHelperModule ANXLogHelperModuleSMB;
+FOUNDATION_EXPORT ANXLogHelperModule ANXLogHelperModuleUI;
 
 NS_ASSUME_NONNULL_END

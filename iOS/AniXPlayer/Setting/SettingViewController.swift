@@ -187,6 +187,9 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
             
             vc.addAction(.init(title: NSLocalizedString("确定", comment: ""), style: .destructive, handler: { (_)  in
                 CacheManager.shared.cleanupCache()
+                HistoryManager.shared.cleanUpAllWatchProgress()
+                
+                self.view.showHUD(NSLocalizedString("清除成功！", comment: ""))
             }))
             
             self.present(vc, atView: tableView.cellForRow(at: indexPath))
