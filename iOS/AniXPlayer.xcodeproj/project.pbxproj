@@ -577,21 +577,12 @@
 				897CF527262F308300CC297A /* Setting */,
 				890DF76D26160B3E002D8AE5 /* PlayerNavigationController.swift */,
 				890DF76126160B3E002D8AE5 /* PlayerViewController.swift */,
-				89C0C27E2C551383008136A6 /* PlayerModel.swift */,
 				89C79B932A881B200040FEDA /* DanmakuLoadUtil.swift */,
 				890DF75F26160B3E002D8AE5 /* SendDanmakuViewController.swift */,
-				890DF76426160B3E002D8AE5 /* Model */,
+				890DF76526160B3E002D8AE5 /* PlayerControlAnimater.swift */,
 				890DF76626160B3E002D8AE5 /* View */,
 			);
 			path = Player;
-			sourceTree = "<group>";
-		};
-		890DF76426160B3E002D8AE5 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				890DF76526160B3E002D8AE5 /* PlayerControlAnimater.swift */,
-			);
-			path = Model;
 			sourceTree = "<group>";
 		};
 		890DF76626160B3E002D8AE5 /* View */ = {
@@ -727,19 +718,11 @@
 		897CF527262F308300CC297A /* Setting */ = {
 			isa = PBXGroup;
 			children = (
-				897CF52F262F316900CC297A /* View */,
 				897CF528262F309D00CC297A /* PlayerSettingViewController.swift */,
 				897CF52C262F30D200CC297A /* DanmakuSettingViewController.swift */,
 				89AF9C062631D4B00037A133 /* MediaSettingViewController.swift */,
 			);
 			path = Setting;
-			sourceTree = "<group>";
-		};
-		897CF52F262F316900CC297A /* View */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = View;
 			sourceTree = "<group>";
 		};
 		8994607328CC6CE1009AC640 /* Vendor */ = {
@@ -944,8 +927,9 @@
 				89A688412C394C10002B7CA3 /* MediaPlayer */,
 				89A688542C394C10002B7CA3 /* Networking */,
 				89A688572C394C10002B7CA3 /* Preferences */,
-				89A688582C394C10002B7CA3 /* Atomic.swift */,
+				89C0C2802C569EC3008136A6 /* Player */,
 				89A688592C394C10002B7CA3 /* CacheManager.swift */,
+				89A688582C394C10002B7CA3 /* Atomic.swift */,
 				89A6885A2C394C10002B7CA3 /* Constant.swift */,
 				89A6885B2C394C10002B7CA3 /* DanmakuManager.swift */,
 				89A6885C2C394C10002B7CA3 /* Define.swift */,
@@ -1116,6 +1100,14 @@
 				89A6897D2C42E1D3002B7CA3 /* FavoriteViewController.swift */,
 			);
 			path = Favorite;
+			sourceTree = "<group>";
+		};
+		89C0C2802C569EC3008136A6 /* Player */ = {
+			isa = PBXGroup;
+			children = (
+				89C0C27E2C551383008136A6 /* PlayerModel.swift */,
+			);
+			path = Player;
 			sourceTree = "<group>";
 		};
 		89E0D60C2669111500E2337B /* Setting */ = {
