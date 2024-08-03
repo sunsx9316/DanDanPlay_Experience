@@ -185,6 +185,9 @@
 		89AF9C0F26343BE70037A133 /* AutoScrollLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AF9C0E26343BE70037A133 /* AutoScrollLabel.swift */; };
 		89B4B445272484FE00FB1BF5 /* SpeedUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B4B444272484FE00FB1BF5 /* SpeedUpView.swift */; };
 		89C0C27F2C551383008136A6 /* PlayerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C0C27E2C551383008136A6 /* PlayerModel.swift */; };
+		89C0C3152C5DC932008136A6 /* PlayerDanmakuModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C0C3142C5DC932008136A6 /* PlayerDanmakuModel.swift */; };
+		89C0C3182C5DE2D1008136A6 /* Store+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C0C3172C5DE2D1008136A6 /* Store+Extension.swift */; };
+		89C0C3B82C5DFFEB008136A6 /* PlayerMediaModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C0C3B72C5DFFEB008136A6 /* PlayerMediaModel.swift */; };
 		89C79B922A87D3AA0040FEDA /* Launcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C79B912A87D3AA0040FEDA /* Launcher.swift */; };
 		89C79B942A881B200040FEDA /* DanmakuLoadUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C79B932A881B200040FEDA /* DanmakuLoadUtil.swift */; };
 		89E0D60E2669113400E2337B /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0D60D2669113400E2337B /* SettingViewController.swift */; };
@@ -395,6 +398,9 @@
 		89AF9C0E26343BE70037A133 /* AutoScrollLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoScrollLabel.swift; sourceTree = "<group>"; };
 		89B4B444272484FE00FB1BF5 /* SpeedUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedUpView.swift; sourceTree = "<group>"; };
 		89C0C27E2C551383008136A6 /* PlayerModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerModel.swift; sourceTree = "<group>"; };
+		89C0C3142C5DC932008136A6 /* PlayerDanmakuModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerDanmakuModel.swift; sourceTree = "<group>"; };
+		89C0C3172C5DE2D1008136A6 /* Store+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Store+Extension.swift"; sourceTree = "<group>"; };
+		89C0C3B72C5DFFEB008136A6 /* PlayerMediaModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerMediaModel.swift; sourceTree = "<group>"; };
 		89C79B912A87D3AA0040FEDA /* Launcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Launcher.swift; sourceTree = "<group>"; };
 		89C79B932A881B200040FEDA /* DanmakuLoadUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuLoadUtil.swift; sourceTree = "<group>"; };
 		89E0D60D2669113400E2337B /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
@@ -916,6 +922,7 @@
 			children = (
 				89A688552C394C10002B7CA3 /* Preferences.swift */,
 				89A688562C394C10002B7CA3 /* Store.swift */,
+				89C0C3172C5DE2D1008136A6 /* Store+Extension.swift */,
 			);
 			path = Preferences;
 			sourceTree = "<group>";
@@ -1106,6 +1113,8 @@
 			isa = PBXGroup;
 			children = (
 				89C0C27E2C551383008136A6 /* PlayerModel.swift */,
+				89C0C3142C5DC932008136A6 /* PlayerDanmakuModel.swift */,
+				89C0C3B72C5DFFEB008136A6 /* PlayerMediaModel.swift */,
 			);
 			path = Player;
 			sourceTree = "<group>";
@@ -1360,6 +1369,7 @@
 				89A688E52C3A70BF002B7CA3 /* BangumiDetailEpisodeViewController.swift in Sources */,
 				89A688E12C3A5EDF002B7CA3 /* BangumiDetailRelatedTableViewCell.swift in Sources */,
 				89A688622C394C10002B7CA3 /* AppInfoHelper.swift in Sources */,
+				89C0C3182C5DE2D1008136A6 /* Store+Extension.swift in Sources */,
 				89A689772C429A09002B7CA3 /* Favorite.swift in Sources */,
 				890DF75426160B1B002D8AE5 /* UITableView+Extension.swift in Sources */,
 				89E0D82A266BD4FC00E2337B /* PlayerUITopView.swift in Sources */,
@@ -1397,6 +1407,7 @@
 				890DF6FB26160A36002D8AE5 /* TableViewCell.swift in Sources */,
 				89A688702C394C10002B7CA3 /* LocalFileManager.swift in Sources */,
 				890DF86526189D26002D8AE5 /* EpisodeTableViewCell.swift in Sources */,
+				89C0C3152C5DC932008136A6 /* PlayerDanmakuModel.swift in Sources */,
 				89AF9C032631C2680037A133 /* StepTableViewCell.swift in Sources */,
 				8944E87B263AF72400EF00B1 /* TextField.swift in Sources */,
 				8931F0F92677457100590569 /* EditableTableViewCell.swift in Sources */,
@@ -1425,6 +1436,7 @@
 				89A6887C2C394C10002B7CA3 /* URL+Extension.swift in Sources */,
 				89E0D82C266BDB8600E2337B /* PlayerUIBottomView.swift in Sources */,
 				89A688982C39546E002B7CA3 /* HomePageViewController.swift in Sources */,
+				89C0C3B82C5DFFEB008136A6 /* PlayerMediaModel.swift in Sources */,
 				890DF77526160B3E002D8AE5 /* PlayerViewController.swift in Sources */,
 				89A688682C394C10002B7CA3 /* PCQRModel.swift in Sources */,
 				89A688D22C3A517F002B7CA3 /* BangumiNetworkHandle.swift in Sources */,

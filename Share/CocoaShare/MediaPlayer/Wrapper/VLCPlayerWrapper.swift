@@ -310,8 +310,6 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     
     var bufferInfoDidChangeCallBack: ((MediaPlayerProtocol, File, MediaBufferInfo) -> Void)?
     
-    var positionChangedCallBack: ((any MediaPlayerProtocol, Double, Double) -> Void)?
-    
     var aspectRatio: PlayerAspectRatio {
         get {
             if let videoAspectRatio = self.player?.videoAspectRatio {
@@ -402,7 +400,6 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     func setPosition(_ position: Double) {
         let position = max(min(position, 1), 0)
         self.player?.position = Float(position)
-        self.positionChangedCallBack?(self, position, self.length * TimeInterval(position))
     }
     
     func play(_ media: File) {

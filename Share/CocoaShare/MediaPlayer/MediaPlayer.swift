@@ -17,7 +17,6 @@ protocol MediaPlayerDelegate: AnyObject {
     func player(_ player: MediaPlayer, shouldChangeMedia media: File) -> Bool
     func player(_ player: MediaPlayer, file: File, bufferInfoDidChange bufferInfo: MediaBufferInfo)
     func playerListDidChange(_ player: MediaPlayer)
-    func player(_ player: MediaPlayer, didChangePosition: Double, mediaTime: TimeInterval)
 }
 
 
@@ -40,8 +39,6 @@ protocol MediaPlayerProtocol: AnyObject {
     var stateChangedCallBack: ((MediaPlayerProtocol, PlayerState) -> Void)? { set get }
     
     var bufferInfoDidChangeCallBack: ((MediaPlayerProtocol, File, MediaBufferInfo) -> Void)? { set get }
-    
-    var positionChangedCallBack: ((MediaPlayerProtocol, Double, Double) -> Void)? { set get }
     
     var volume: Int { set get }
     
@@ -83,11 +80,24 @@ protocol MediaPlayerProtocol: AnyObject {
     func isEndPosition(_ position: Double) -> Bool
 }
 
-enum PlayerMode {
+enum PlayerMode: Int, CaseIterable {
     case playOnce
-    case autoPlayNext
     case repeatCurrentItem
+    case autoPlayNext
     case repeatList
+    
+    var title: String {
+        switch self {
+        case .playOnce:
+            return NSLocalizedString("无", comment: "")
+        case .repeatCurrentItem:
+            return NSLocalizedString("重复播放当前视频", comment: "")
+        case .repeatList:
+            return NSLocalizedString("自动播放（列表循环）", comment: "")
+        case .autoPlayNext:
+            return NSLocalizedString("自动播放（不循环）", comment: "")
+        }
+    }
 }
 
 enum PlayerState {
@@ -414,12 +424,6 @@ class MediaPlayer {
             guard let self = self else { return }
             
             self.delegate?.player(self, currentTime: self.currentTime, totalTime: self.length)
-        }
-        
-        self.player.positionChangedCallBack = { [weak self] (_, position, time) in
-            guard let self = self else { return }
-            
-            self.delegate?.player(self, didChangePosition: position, mediaTime: time)
         }
     }
     

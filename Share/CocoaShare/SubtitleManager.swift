@@ -78,7 +78,7 @@ class SubtitleManager {
         var cacheURL = PathUtils.cacheURL
         cacheURL.appendPathComponent(file.fileHash)
         
-        let subtitle = ExternalSubtitle(subtitleName: file.url.lastPathComponent, url: cacheURL)
+        let subtitle = ExternalSubtitle(subtitleName: NSLocalizedString("(外部字幕) \(file.url.lastPathComponent)", comment: ""), url: cacheURL)
         
         if !FileManager.default.fileExists(atPath: cacheURL.path) {
             file.getDataWithProgress(nil) { result in

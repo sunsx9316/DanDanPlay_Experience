@@ -87,6 +87,7 @@ class UserInfoViewController: ViewController {
         let isLogin = Preferences.shared.loginInfo != nil
         if !isLogin {
             let vc = LoginViewController()
+            vc.hidesBottomBarWhenPushed = true
             vc.didLoginCallBack = { [weak self] vc, info in
                 guard let self = self else { return }
                 

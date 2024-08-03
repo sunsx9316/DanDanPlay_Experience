@@ -40,7 +40,7 @@ class PlayerSettingViewController: ViewController {
         for type in VCType.allCases {
             switch type {
             case .danmakuSetting:
-                let vc = DanmakuSettingViewController()
+                let vc = DanmakuSettingViewController(playerModel: self.playerModel)
                 vc.delegate = self.delegate
                 vcs.append(vc)
             case .mediaSetting:
@@ -60,9 +60,7 @@ class PlayerSettingViewController: ViewController {
         return blurVuew
     }()
     
-    private weak var playerModel: PlayerModel?
-    
-    weak var delegate: (DanmakuSettingViewControllerDelegate & MediaSettingViewControllerDelegate)?
+    private var playerModel: PlayerModel!
     
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
         return .landscape
@@ -72,7 +70,9 @@ class PlayerSettingViewController: ViewController {
         return .landscapeLeft
     }
     
-    init(playerModel: PlayerModel?) {
+    weak var delegate: (DanmakuSettingViewControllerDelegate & MediaSettingViewControllerDelegate)?
+    
+    init(playerModel: PlayerModel) {
         self.playerModel = playerModel
         super.init(nibName: nil, bundle: nil)
     }

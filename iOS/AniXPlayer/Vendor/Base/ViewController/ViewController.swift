@@ -30,4 +30,8 @@ class ViewController: UIViewController {
         self.navigationController?.popToRootViewController(animated: true)
     }
     
+    deinit {
+        debugPrint("\(self) deinit")
+    }
+    
 }

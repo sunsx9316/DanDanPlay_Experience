@@ -98,7 +98,7 @@ struct AnixLoginInfo: Codable {
         
         
         if let date = self.tokenExpireTime {
-            let dateFormatter = DateFormatter.anix_YYYY_MM_dd_T_HH_mm_ssFormatter
+            let dateFormatter = DateFormatter.anix_YYYY_MM_dd_T_HH_mm_ss_SSSZFormatter
             let dateString = dateFormatter.string(from: date)
             try container.encode(dateString, forKey:.tokenExpireTime)
         }
@@ -118,7 +118,7 @@ struct AnixLoginInfo: Codable {
         self.legacyTokenNumber = try container.decodeIfPresent(Int.self, forKey: .legacyTokenNumber) ?? 0
         self.token = try container.decodeIfPresent(String.self, forKey: .token) ?? ""
         
-        let dateFormatter = DateFormatter.anix_YYYY_MM_dd_T_HH_mm_ssFormatter
+        let dateFormatter = DateFormatter.anix_YYYY_MM_dd_T_HH_mm_ss_SSSZFormatter
         if let dateString = try container.decodeIfPresent(String.self, forKey: .tokenExpireTime),
            let date = dateFormatter.date(from: dateString) {
             self.tokenExpireTime = date

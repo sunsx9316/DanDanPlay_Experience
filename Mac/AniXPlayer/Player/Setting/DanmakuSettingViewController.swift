@@ -16,7 +16,7 @@ protocol DanmakuSettingViewControllerDelegate: AnyObject {
     
     func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuFontSize fontSize: Double)
     
-    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, danmakuProportion: Double)
+    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, danmakuArea: DanmakuArea)
     
     func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeShowDanmaku isShow: Bool)
     
@@ -103,46 +103,16 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
             }
             return cell
         case .danmakuProportion:
-            let cell = tableView.dequeueReusableCell(class: SliderTableViewCell.self)
+            let cell = tableView.dequeueReusableCell(class: SheetTableViewCell.self)
             cell.titleLabel.text = type.title
-            let maxCount = Preferences.shared.danmakuMaxStoreValue
-            let minCount = Preferences.shared.danmakuMinStoreValue
-            let currentValue = max(Preferences.shared.danmakuStoreProportion, minCount)
-            let model = SliderTableViewCell.Model(maxValue: Float(maxCount),
-                                                  minValue: Float(minCount),
-                                                  currentValue: Float(currentValue))
-            cell.step = UInt(minCount)
-            
-            model.minValueFormattingCallBack = { aModel in
-                let minRational = NumberUtils.conver(approximating: Double(aModel.minValue / aModel.maxValue))
-                return "\(minRational.numerator)/\(minRational.denominator)" + NSLocalizedString("屏", comment: "")
-            }
-            
-            model.maxValueFormattingCallBack = { _ in
-                return NSLocalizedString("满屏", comment: "")
-            }
-            
-            model.currentValueFormattingCallBack = { aModel in
-                if aModel.currentValue == aModel.maxValue {
-                    return NSLocalizedString("满屏", comment: "")
-                } else {
-                    let rational = NumberUtils.conver(approximating: Double(aModel.currentValue / aModel.maxValue))
-                    return "\(rational.numerator)/\(rational.denominator)" + NSLocalizedString("屏", comment: "")
-                }
-            }
-            
-            cell.model = model
-            
-            cell.onChangeSliderCallBack = { [weak self] (aCell) in
-                guard let self = self else { return }
-                
-                let currentValue = aCell.valueSlider.floatValue
-                Preferences.shared.danmakuStoreProportion = Int(aCell.valueSlider.floatValue)
-                let model = aCell.model
-                model?.currentValue = currentValue
-                aCell.model = model
-                
-                self.delegate?.danmakuSettingViewController(self, danmakuProportion: Preferences.shared.danmakuProportion)
+            let allItems = DanmakuArea.allCases
+            let titles = allItems.compactMap { $0.title }
+            cell.setItems(titles, selectedItem: Preferences.shared.danmakuArea.title)
+            cell.onClickButtonCallBack = { (idx) in
+                let type = allItems[idx]
+                Preferences.shared.danmakuArea = type
+                self.scrollView.containerView.reloadData()
+                self.delegate?.danmakuSettingViewController(self, danmakuArea: type)
             }
             return cell
         
@@ -279,6 +249,8 @@ class DanmakuSettingViewController: ViewController {
         tableView.registerNibCell(class: SwitchTableViewCell.self)
         tableView.registerNibCell(class: StepTableViewCell.self)
         tableView.registerNibCell(class: TitleTableViewCell.self)
+        tableView.registerNibCell(class: SheetTableViewCell.self)
+        
         
         var scrollView = ScrollView(containerView: tableView)
         return scrollView

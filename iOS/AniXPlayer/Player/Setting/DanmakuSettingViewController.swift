@@ -7,240 +7,13 @@
 
 import UIKit
 import SnapKit
+import RxSwift
 
 protocol DanmakuSettingViewControllerDelegate: AnyObject {
-    
-    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuAlpha alpha: Float)
-    
-    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuSpeed speed: Float)
-    
-    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuFontSize fontSize: Double)
-    
-    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, danmakuProportion: Double)
-    
-    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeShowDanmaku isShow: Bool)
-    
-    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuOffsetTime danmakuOffsetTime: Int)
-    
-    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuDensity density: Float)
-    
-    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeMergeSameDanmakuState isOn: Bool)
     
     func loadDanmakuFileInDanmakuSettingViewController(vc: DanmakuSettingViewController)
     
     func searchDanmakuInDanmakuSettingViewController(vc: DanmakuSettingViewController)
-}
-
-extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.dataSource.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let type = self.dataSource[indexPath.row]
-        
-        switch type {
-        case .danmakuAlpha:
-            let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
-            cell.titleLabel.text = type.title
-            cell.valueSlider.isContinuous = true
-            cell.selectionStyle = .none
-            let model = SliderTableViewCell.Model(maxValue: 1,
-                                                  minValue: 0,
-                                                  currentValue: Float(Preferences.shared.danmakuAlpha))
-            cell.model = model
-            cell.onChangeSliderCallBack = { [weak self] (aCell) in
-                guard let self = self else { return }
-                
-                let currentValue = aCell.valueSlider.value
-                Preferences.shared.danmakuAlpha = Double(aCell.valueSlider.value)
-                let model = aCell.model
-                model?.currentValue = currentValue
-                aCell.model = model
-                self.delegate?.danmakuSettingViewController(self, didChangeDanmakuAlpha: currentValue)
-            }
-            return cell
-        case .danmakuFontSize:
-            let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
-            cell.selectionStyle = .none
-            cell.titleLabel.text = type.title
-            let model = SliderTableViewCell.Model(maxValue: 40,
-                                                  minValue: 10,
-                                                  currentValue: Float(Preferences.shared.danmakuFontSize))
-            cell.model = model
-            cell.onChangeSliderCallBack = { [weak self] (aCell) in
-                guard let self = self else { return }
-                
-                let currentValue = Int(aCell.valueSlider.value)
-                Preferences.shared.danmakuFontSize = Double(currentValue)
-                let model = aCell.model
-                model?.currentValue = Float(currentValue)
-                aCell.model = model
-                self.delegate?.danmakuSettingViewController(self, didChangeDanmakuFontSize: Double(currentValue))
-            }
-            return cell
-        case .danmakuSpeed:
-            let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
-            cell.selectionStyle = .none
-            cell.titleLabel.text = type.title
-            cell.valueSlider.isContinuous = true
-            let model = SliderTableViewCell.Model(maxValue: 3,
-                                                  minValue: 1,
-                                                  currentValue: Float(Preferences.shared.danmakuSpeed))
-            cell.model = model
-            cell.onChangeSliderCallBack = { [weak self] (aCell) in
-                guard let self = self else { return }
-                
-                let currentValue = aCell.valueSlider.value
-                Preferences.shared.danmakuSpeed = Double(aCell.valueSlider.value)
-                let model = aCell.model
-                model?.currentValue = currentValue
-                aCell.model = model
-                
-                self.delegate?.danmakuSettingViewController(self, didChangeDanmakuSpeed: currentValue)
-            }
-            return cell
-        case .danmakuProportion:
-            let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
-            cell.selectionStyle = .none
-            cell.titleLabel.text = type.title
-            let maxCount = Preferences.shared.danmakuMaxStoreValue
-            let minCount = Preferences.shared.danmakuMinStoreValue
-            let currentValue = max(Preferences.shared.danmakuStoreProportion, minCount)
-            let model = SliderTableViewCell.Model(maxValue: Float(maxCount),
-                                                  minValue: Float(minCount),
-                                                  currentValue: Float(currentValue))
-            cell.step = UInt(minCount)
-            
-            model.minValueFormattingCallBack = { aModel in
-                let minRational = NumberUtils.conver(approximating: Double(aModel.minValue / aModel.maxValue))
-                return "\(minRational.numerator)/\(minRational.denominator)" + NSLocalizedString("屏", comment: "")
-            }
-            
-            model.maxValueFormattingCallBack = { _ in
-                return NSLocalizedString("满屏", comment: "")
-            }
-            
-            model.currentValueFormattingCallBack = { aModel in
-                if aModel.currentValue == aModel.maxValue {
-                    return NSLocalizedString("满屏", comment: "")
-                } else {
-                    let rational = NumberUtils.conver(approximating: Double(aModel.currentValue / aModel.maxValue))
-                    return "\(rational.numerator)/\(rational.denominator)" + NSLocalizedString("屏", comment: "")
-                }
-            }
-            
-            cell.model = model
-            
-            cell.onChangeSliderCallBack = { [weak self] (aCell) in
-                guard let self = self else { return }
-                
-                let currentValue = aCell.valueSlider.value
-                Preferences.shared.danmakuStoreProportion = Int(aCell.valueSlider.value)
-                let model = aCell.model
-                model?.currentValue = currentValue
-                aCell.model = model
-                
-                self.delegate?.danmakuSettingViewController(self, danmakuProportion: Preferences.shared.danmakuProportion)
-            }
-            return cell
-        
-        case .showDanmaku:
-            let cell = tableView.dequeueCell(class: SwitchTableViewCell.self, indexPath: indexPath)
-            cell.selectionStyle = .none
-            cell.aSwitch.isOn = Preferences.shared.isShowDanmaku
-            cell.titleLabel.text = type.title
-            cell.onTouchSliderCallBack = { [weak self] (aCell) in
-                guard let self = self else { return }
-                
-                let isOn = aCell.aSwitch.isOn
-                Preferences.shared.isShowDanmaku = isOn
-                self.delegate?.danmakuSettingViewController(self, didChangeShowDanmaku: isOn)
-            }
-            return cell
-        case .danmakuOffsetTime:
-            let cell = tableView.dequeueCell(class: StepTableViewCell.self, indexPath: indexPath)
-            cell.selectionStyle = .none
-            cell.titleLabel.text = type.title
-            let danmakuOffsetTime = Preferences.shared.danmakuOffsetTime
-            cell.stepper.minimumValue = -500
-            cell.stepper.maximumValue = 500
-            cell.stepper.value = Double(danmakuOffsetTime)
-            cell.valueLabel.text = "\(Int(danmakuOffsetTime))s"
-            cell.onTouchStepperCallBack = { [weak self] (aCell) in
-                guard let self = self else { return }
-                
-                let value = Int(aCell.stepper.value)
-                Preferences.shared.danmakuOffsetTime = value
-                aCell.valueLabel.text = "\(value)s"
-                self.delegate?.danmakuSettingViewController(self, didChangeDanmakuOffsetTime: value)
-            }
-            return cell
-        case .danmakuDensity:
-            let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
-            cell.selectionStyle = .none
-            cell.titleLabel.text = type.title
-            cell.step = 1
-            let model = SliderTableViewCell.Model(maxValue: 10,
-                                                  minValue: 1,
-                                                  currentValue: Float(Preferences.shared.danmakuDensity))
-            model.minValueFormattingCallBack = { aModel in
-                return String(format: "%.0f%%", aModel.minValue * 10)
-            }
-            
-            model.maxValueFormattingCallBack = { aModel in
-                return String(format: "%.0f%%", aModel.maxValue * 10)
-            }
-            
-            model.currentValueFormattingCallBack = { aModel in
-                return String(format: "%.0f%%", aModel.currentValue * 10)
-            }
-            
-            cell.model = model
-            cell.onChangeSliderCallBack = { [weak self] (aCell) in
-                guard let self = self else { return }
-                
-                let currentValue = aCell.valueSlider.value
-                Preferences.shared.danmakuDensity = currentValue
-                let model = aCell.model
-                model?.currentValue = currentValue
-                aCell.model = model
-                
-                self.delegate?.danmakuSettingViewController(self, didChangeDanmakuDensity: currentValue)
-            }
-            return cell
-        case .loadDanmaku, .searchDanmaku:
-            let cell = tableView.dequeueCell(class: TitleTableViewCell.self, indexPath: indexPath)
-            cell.label.text = type.title
-            return cell
-        case .mergeSameDanmaku:
-            let cell = tableView.dequeueCell(class: SwitchTableViewCell.self, indexPath: indexPath)
-            cell.selectionStyle = .none
-            cell.aSwitch.isOn = Preferences.shared.isMergeSameDanmaku
-            cell.titleLabel.text = type.title
-            cell.onTouchSliderCallBack = { [weak self] (aCell) in
-                guard let self = self else { return }
-                
-                let isOn = aCell.aSwitch.isOn
-                Preferences.shared.isMergeSameDanmaku = isOn
-                self.delegate?.danmakuSettingViewController(self, didChangeMergeSameDanmakuState: isOn)
-            }
-            return cell
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        
-        let type = self.dataSource[indexPath.row]
-        
-        if type == .loadDanmaku {
-            self.delegate?.loadDanmakuFileInDanmakuSettingViewController(vc: self)
-        } else if type == .searchDanmaku {
-            self.delegate?.searchDanmakuInDanmakuSettingViewController(vc: self)
-        }
-    }
-    
 }
 
 class DanmakuSettingViewController: ViewController {
@@ -249,13 +22,13 @@ class DanmakuSettingViewController: ViewController {
         case danmakuFontSize
         case danmakuSpeed
         case danmakuAlpha
-        case danmakuProportion
         case danmakuDensity
         
         case showDanmaku
         case mergeSameDanmaku
         
         case danmakuOffsetTime
+        case danmakuArea
         
         case searchDanmaku
         case loadDanmaku
@@ -268,7 +41,7 @@ class DanmakuSettingViewController: ViewController {
                 return NSLocalizedString("弹幕速度", comment: "")
             case .danmakuAlpha:
                 return NSLocalizedString("弹幕透明度", comment: "")
-            case .danmakuProportion:
+            case .danmakuArea:
                 return NSLocalizedString("显示区域", comment: "")
             case .showDanmaku:
                 return NSLocalizedString("弹幕开关", comment: "")
@@ -296,6 +69,7 @@ class DanmakuSettingViewController: ViewController {
         tableView.registerNibCell(class: SwitchTableViewCell.self)
         tableView.registerNibCell(class: StepTableViewCell.self)
         tableView.registerNibCell(class: TitleTableViewCell.self)
+        tableView.registerNibCell(class: SheetTableViewCell.self)
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
         tableView.backgroundColor = .clear
@@ -305,7 +79,24 @@ class DanmakuSettingViewController: ViewController {
         return tableView
     }()
 
+    private var danmakuModel: PlayerDanmakuModel {
+        return self.playerModel.danmakuModel
+    }
+    
+    private var playerModel: PlayerModel!
+    
+    private lazy var disposeBag = DisposeBag()
+    
     weak var delegate: DanmakuSettingViewControllerDelegate?
+    
+    init(playerModel: PlayerModel) {
+        self.playerModel = playerModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -315,7 +106,194 @@ class DanmakuSettingViewController: ViewController {
         self.tableView.snp.makeConstraints { (make) in
             make.edges.equalTo(self.view.safeAreaLayoutGuide.snp.edges)
         }
+        
+        self.tableView.reloadData()
     }
 
 
+}
+
+extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.dataSource.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let type = self.dataSource[indexPath.row]
+        
+        switch type {
+        case .danmakuAlpha:
+            let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
+            cell.titleLabel.text = type.title
+            cell.valueSlider.isContinuous = true
+            cell.selectionStyle = .none
+            let model = SliderTableViewCell.Model(maxValue: 1,
+                                                  minValue: 0,
+                                                  currentValue: self.danmakuModel.danmakuAlpha)
+            cell.model = model
+            cell.onChangeSliderCallBack = { [weak self] (aCell) in
+                guard let self = self else { return }
+                
+                let currentValue = aCell.valueSlider.value
+                let model = aCell.model
+                model?.currentValue = currentValue
+                aCell.model = model
+                
+                self.danmakuModel.onChangeDanmakuAlpha(currentValue)
+            }
+            return cell
+        case .danmakuFontSize:
+            let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
+            cell.selectionStyle = .none
+            cell.titleLabel.text = type.title
+            let model = SliderTableViewCell.Model(maxValue: 40,
+                                                  minValue: 10,
+                                                  currentValue: Float(self.danmakuModel.danmakuFontSize))
+            cell.model = model
+            cell.onChangeSliderCallBack = { [weak self] (aCell) in
+                guard let self = self else { return }
+                
+                let currentValue = Int(aCell.valueSlider.value)
+                let model = aCell.model
+                model?.currentValue = Float(currentValue)
+                aCell.model = model
+                
+                self.danmakuModel.onChangeDanmakuFontSize(Double(currentValue))
+            }
+            return cell
+        case .danmakuSpeed:
+            let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
+            cell.selectionStyle = .none
+            cell.titleLabel.text = type.title
+            cell.valueSlider.isContinuous = true
+            let model = SliderTableViewCell.Model(maxValue: 3,
+                                                  minValue: 1,
+                                                  currentValue: Float(self.danmakuModel.danmakuSpeed))
+            cell.model = model
+            cell.onChangeSliderCallBack = { [weak self] (aCell) in
+                guard let self = self else { return }
+                
+                let currentValue = aCell.valueSlider.value
+                let model = aCell.model
+                model?.currentValue = currentValue
+                aCell.model = model
+                
+                self.danmakuModel.onChangeDanmakuSpeed(Double(currentValue))
+            }
+            return cell
+        case .danmakuArea:
+            let cell = tableView.dequeueCell(class: SheetTableViewCell.self, indexPath: indexPath)
+            cell.titleLabel.text = type.title
+            cell.valueLabel.text = self.danmakuModel.danmakuArea.title
+            return cell
+        case .showDanmaku:
+            let cell = tableView.dequeueCell(class: SwitchTableViewCell.self, indexPath: indexPath)
+            cell.selectionStyle = .none
+            cell.aSwitch.isOn = self.danmakuModel.isShowDanmaku
+            cell.titleLabel.text = type.title
+            cell.onTouchSliderCallBack = { [weak self] (aCell) in
+                guard let self = self else { return }
+                
+                let isOn = aCell.aSwitch.isOn
+                self.danmakuModel.onChangeIsShowDanmaku(isOn)
+            }
+            return cell
+        case .danmakuOffsetTime:
+            let cell = tableView.dequeueCell(class: StepTableViewCell.self, indexPath: indexPath)
+            cell.selectionStyle = .none
+            cell.titleLabel.text = type.title
+            let danmakuOffsetTime = self.danmakuModel.danmakuOffsetTime
+            cell.stepper.minimumValue = -500
+            cell.stepper.maximumValue = 500
+            cell.stepper.value = Double(danmakuOffsetTime)
+            cell.valueLabel.text = "\(Int(danmakuOffsetTime))s"
+            cell.onTouchStepperCallBack = { [weak self] (aCell) in
+                guard let self = self else { return }
+                
+                let value = Int(aCell.stepper.value)
+                aCell.valueLabel.text = "\(value)s"
+                self.danmakuModel.onChangeDanmakuOffsetTime(value)
+            }
+            return cell
+        case .danmakuDensity:
+            let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
+            cell.selectionStyle = .none
+            cell.titleLabel.text = type.title
+            cell.step = 1
+            let model = SliderTableViewCell.Model(maxValue: 10,
+                                                  minValue: 1,
+                                                  currentValue: Float(self.danmakuModel.danmakuDensity))
+            model.minValueFormattingCallBack = { aModel in
+                return String(format: "%.0f%%", aModel.minValue * 10)
+            }
+            
+            model.maxValueFormattingCallBack = { aModel in
+                return String(format: "%.0f%%", aModel.maxValue * 10)
+            }
+            
+            model.currentValueFormattingCallBack = { aModel in
+                return String(format: "%.0f%%", aModel.currentValue * 10)
+            }
+            
+            cell.model = model
+            cell.onChangeSliderCallBack = { [weak self] (aCell) in
+                guard let self = self else { return }
+                
+                let currentValue = aCell.valueSlider.value
+                let model = aCell.model
+                model?.currentValue = currentValue
+                aCell.model = model
+                
+                self.danmakuModel.onChangeDanmakuDensity(currentValue)
+            }
+            return cell
+        case .loadDanmaku, .searchDanmaku:
+            let cell = tableView.dequeueCell(class: TitleTableViewCell.self, indexPath: indexPath)
+            cell.label.text = type.title
+            return cell
+        case .mergeSameDanmaku:
+            let cell = tableView.dequeueCell(class: SwitchTableViewCell.self, indexPath: indexPath)
+            cell.selectionStyle = .none
+            cell.aSwitch.isOn = self.danmakuModel.isMergeSameDanmaku
+            cell.titleLabel.text = type.title
+            cell.onTouchSliderCallBack = { [weak self] (aCell) in
+                guard let self = self else { return }
+                
+                let isOn = aCell.aSwitch.isOn
+                self.danmakuModel.onChangeIsMergeSameDanmaku(isOn)
+            }
+            return cell
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+        
+        let type = self.dataSource[indexPath.row]
+        
+        if type == .loadDanmaku {
+            self.delegate?.loadDanmakuFileInDanmakuSettingViewController(vc: self)
+        } else if type == .searchDanmaku {
+            self.delegate?.searchDanmakuInDanmakuSettingViewController(vc: self)
+        } else if type == .danmakuArea {
+            let vc = UIAlertController(title: type.title, message: nil, preferredStyle: .actionSheet)
+            let actions = DanmakuArea.allCases.compactMap { (mode) -> UIAlertAction? in
+                return UIAlertAction(title: mode.title, style: .default) { (UIAlertAction) in
+                    self.danmakuModel.onChangeDanmakuArea(mode)
+                    self.tableView.reloadData()
+                }
+            }
+            
+            for action in actions {
+                vc.addAction(action)
+            }
+            
+            vc.addAction(.init(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: { (_) in
+                
+            }))
+            
+            self.present(vc, atView: tableView.cellForRow(at: indexPath))
+        }
+    }
+    
 }

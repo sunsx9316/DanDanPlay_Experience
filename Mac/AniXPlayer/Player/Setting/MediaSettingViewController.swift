@@ -7,26 +7,13 @@
 
 import Cocoa
 
-private extension Preferences.PlayerMode {
-    var title: String {
-        switch self {
-        case .notRepeat:
-            return NSLocalizedString("自动播放（不循环）", comment: "")
-        case .repeatCurrentItem:
-            return NSLocalizedString("视频洗脑循环", comment: "")
-        case .repeatAllItem:
-            return NSLocalizedString("重复整个列表", comment: "")
-        }
-    }
-}
-
 protocol MediaSettingViewControllerDelegate: AnyObject {
     
     func mediaSettingViewController(_ vc: MediaSettingViewController, didChangeSubtitleSafeArea isOn: Bool)
     
     func mediaSettingViewController(_ vc: MediaSettingViewController, didChangePlayerSpeed speed: Double)
     
-    func mediaSettingViewController(_ vc: MediaSettingViewController, didChangePlayerMode mode: Preferences.PlayerMode)
+    func mediaSettingViewController(_ vc: MediaSettingViewController, didChangePlayerMode mode: PlayerMode)
     
     func loadSubtitleFileInMediaSettingViewController(_ vc: MediaSettingViewController)
     
@@ -83,7 +70,7 @@ extension MediaSettingViewController: NSTableViewDelegate, NSTableViewDataSource
             let cell = tableView.dequeueReusableCell(class: SheetTableViewCell.self)
             cell.titleLabel.text = type.title
             
-            let allItems = Preferences.PlayerMode.allCases
+            let allItems = PlayerMode.allCases
             let titles = allItems.compactMap { $0.title }
             cell.setItems(titles, selectedItem: Preferences.shared.playerMode.title)
             cell.onClickButtonCallBack = { (idx) in

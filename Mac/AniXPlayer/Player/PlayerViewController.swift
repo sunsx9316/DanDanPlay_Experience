@@ -208,14 +208,7 @@ class PlayerViewController: ViewController {
     }
     
     private func changeRepeatMode() {
-        switch Preferences.shared.playerMode {
-        case .notRepeat:
-            player.playMode = .autoPlayNext
-        case .repeatAllItem:
-            player.playMode = .repeatList
-        case .repeatCurrentItem:
-            player.playMode = .repeatCurrentItem
-        }
+        player.playMode = Preferences.shared.playerMode
     }
     
     private func setPlayerProgress(_ progress: CGFloat) {
@@ -512,7 +505,7 @@ class PlayerViewController: ViewController {
         
         self.danmakuRender.canvas.snp.remakeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
-            let danmakuProportion = Preferences.shared.danmakuProportion
+            let danmakuProportion = Preferences.shared.danmakuArea.value
             make.height.equalToSuperview().multipliedBy(danmakuProportion)
         }
     }
@@ -900,6 +893,20 @@ extension PlayerViewController: MediaPlayerDelegate {
 
 // MARK: - DanmakuSettingViewControllerDelegate
 extension PlayerViewController: DanmakuSettingViewControllerDelegate {
+    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, danmakuArea: DanmakuArea) {
+        let animate = CAKeyframeAnimation(keyPath: "backgroundColor")
+        let mainColor = NSColor.mainColor
+        animate.values = [
+            NSColor(red: mainColor.redComponent, green: mainColor.greenComponent, blue: mainColor.blueComponent, alpha: 0.3).cgColor,
+            NSColor.clear.cgColor
+        ]
+        animate.duration = 0.5
+        animate.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+        self.danmakuRender.canvas.layer?.add(animate, forKey: "CAKeyframeAnimation")
+        
+        self.layoutDanmakuCanvas()
+    }
+    
 
     func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuDensity density: Float) {
         
@@ -922,21 +929,6 @@ extension PlayerViewController: DanmakuSettingViewControllerDelegate {
         self.forEachDanmakus { danmaku in
             danmaku.font = self.danmakuFont
         }
-    }
-    
-    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, danmakuProportion: Double) {
-        
-        let animate = CAKeyframeAnimation(keyPath: "backgroundColor")
-        let mainColor = NSColor.mainColor
-        animate.values = [
-            NSColor(red: mainColor.redComponent, green: mainColor.greenComponent, blue: mainColor.blueComponent, alpha: 0.3).cgColor,
-            NSColor.clear.cgColor
-        ]
-        animate.duration = 0.5
-        animate.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-        self.danmakuRender.canvas.layer?.add(animate, forKey: "CAKeyframeAnimation")
-        
-        self.layoutDanmakuCanvas()
     }
     
     func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeShowDanmaku isShow: Bool) {
@@ -990,7 +982,7 @@ extension PlayerViewController: MediaSettingViewControllerDelegate {
         self.changeSpeed(speed)
     }
     
-    func mediaSettingViewController(_ vc: MediaSettingViewController, didChangePlayerMode mode: Preferences.PlayerMode) {
+    func mediaSettingViewController(_ vc: MediaSettingViewController, didChangePlayerMode mode: PlayerMode) {
         self.changeRepeatMode()
     }
     

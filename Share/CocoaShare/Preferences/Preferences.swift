@@ -10,26 +10,6 @@ import Foundation
 
 class Preferences {
     
-    @propertyWrapper
-    struct StoreWrapper<Value> {
-        private var value: Value
-        private var key: KeyName
-        
-        init(defaultValue: Value, key: KeyName) {
-            self.value = defaultValue
-            self.key = key
-        }
-
-        var wrappedValue: Value {
-            get {
-                return Store.shared.value(forKey: key.storeKey) ?? self.value
-            }
-            set {
-                _ = Store.shared.set(newValue, forKey: key.storeKey)
-            }
-        }
-    }
-    
     /// 偏好设置
     enum KeyName: String {
         /// 是否开启快速匹配
@@ -45,9 +25,8 @@ class Preferences {
         /// 弹幕透明度
         case danmakuAlpha
         
-        /// 弹幕在屏幕中的占比
-        @available(*, deprecated, message: "已废弃 请不要使用")
-        case danmakuStoreProportion
+        /// 弹幕在屏幕中的展示区域
+        case danmakuArea
         
         /// 展示首页提示
         case showHomePageTips
@@ -98,7 +77,7 @@ class Preferences {
         case subtitleLoadOrder
         
         /// 弹幕密度
-        case danmakuDensity
+        case danmakuDensity = "danmakuDensity_v2"
         
         /// 域名
         case host
@@ -128,17 +107,8 @@ class Preferences {
         case subtitleFontSize
         
         var storeKey: String {
-            if self == .danmakuDensity {
-                return "danmakuDensity_v2"
-            }
             return self.rawValue
         }
-    }
-    
-    enum PlayerMode: Int, CaseIterable {
-        case notRepeat
-        case repeatCurrentItem
-        case repeatAllItem
     }
     
     static let shared = Preferences()
@@ -186,68 +156,22 @@ class Preferences {
     @StoreWrapper(defaultValue: 20, key: .subtitleFontSize)
     var subtitleFontSize: Float
     
-    
+    @StoreWrapper(defaultValue: nil, key: .loginInfo)
     var loginInfo: AnixLoginInfo? {
-        get {
-            let rawValue: Data? = Store.shared.value(forKey: KeyName.loginInfo.rawValue)
-            if let rawValue = rawValue {
-                return try? JSONDecoder().decode(AnixLoginInfo.self, from: rawValue)
-            }
-            return nil
-        }
-        
-        set {
-            let data = try? JSONEncoder().encode(newValue)
-            _ = Store.shared.set(data, forKey: KeyName.loginInfo.rawValue)
+        didSet {
             NotificationCenter.default.post(name: .AnixUserLoginStateDidChange, object: nil)
         }
     }
     
-    var sendDanmakuType: Comment.Mode {
-        get {
-            let rawValue: Int = Store.shared.value(forKey: KeyName.sendDanmakuType.rawValue) ?? Comment.Mode.normal.rawValue
-            return Comment.Mode(rawValue: rawValue) ?? .normal
-        }
-        
-        set {
-            _ = Store.shared.set(newValue.rawValue, forKey: KeyName.sendDanmakuType.rawValue)
-        }
-    }
     
-    var sendDanmakuColor: ANXColor {
-        get {
-            let rawValue: Int = Store.shared.value(forKey: KeyName.sendDanmakuColor.rawValue) ?? 0
-            return ANXColor(rgba: UInt32(rawValue))
-        }
-        
-        set {
-            _ = Store.shared.set(newValue.rgbaValue(), forKey: KeyName.sendDanmakuColor.rawValue)
-        }
-    }
+    @StoreWrapper(defaultValue: Comment.Mode.normal, key: .sendDanmakuType)
+    var sendDanmakuType: Comment.Mode
     
+    @StoreWrapper(defaultValue: ANXColor.white, key: .sendDanmakuColor)
+    var sendDanmakuColor: ANXColor
     
-    var playerMode: PlayerMode {
-        get {
-            let rawValue: Int = Store.shared.value(forKey: KeyName.playerMode.rawValue) ?? PlayerMode.notRepeat.rawValue
-            return PlayerMode(rawValue: rawValue) ?? .notRepeat
-        }
-        
-        set {
-            _ = Store.shared.set(newValue.rawValue, forKey: KeyName.playerMode.rawValue)
-        }
-    }
-    
-    var danmakuMaxStoreValue: Int {
-        return 100
-    }
-    
-    var danmakuMinStoreValue: Int {
-        return 25
-    }
-    
-    var danmakuProportion: Double {
-        return Double(self.danmakuStoreProportion) / Double(self.danmakuMaxStoreValue)
-    }
+    @StoreWrapper(defaultValue: PlayerMode.autoPlayNext, key: .playerMode)
+    var playerMode: PlayerMode
     
     @StoreWrapper(defaultValue: 1, key: .playerSpeed)
     var playerSpeed: Double
@@ -255,8 +179,8 @@ class Preferences {
     @StoreWrapper(defaultValue: true, key: .showHomePageTips)
     var showHomePageTips: Bool
     
-    @StoreWrapper(defaultValue: 25, key: .danmakuStoreProportion)
-    var danmakuStoreProportion: Int /// 弹幕占比 取值 25/50/75，代表1/4 1/2 2/3
+    @StoreWrapper(defaultValue: DanmakuArea.area_1_1, key: .danmakuArea)
+    var danmakuArea: DanmakuArea
     
     @StoreWrapper(defaultValue: 1, key: .danmakuAlpha)
     var danmakuAlpha: Double
@@ -276,9 +200,8 @@ class Preferences {
     @StoreWrapper(defaultValue: 1, key: .danmakuSpeed)
     var danmakuSpeed: Double
     
-    
-    @StoreWrapper(defaultValue: 10, key: .danmakuDensity)
     /// 弹幕密度 取值 1 ~ 10
+    @StoreWrapper(defaultValue: 10, key: .danmakuDensity)
     var danmakuDensity: Float
     
     var pcLoginInfos: [LoginInfo]? {
@@ -416,4 +339,27 @@ class Preferences {
         }
     }
     
+}
+
+extension Preferences {
+    @propertyWrapper
+    struct StoreWrapper<Value: Storeable> {
+        
+        private var value: Value
+        private var key: KeyName
+        
+        init(defaultValue: Value, key: KeyName) {
+            self.value = defaultValue
+            self.key = key
+        }
+
+        var wrappedValue: Value {
+            get {
+                return Store.shared.value(forKey: key.storeKey) ?? self.value
+            }
+            set {
+                _ = Store.shared.set(newValue, forKey: key.storeKey)
+            }
+        }
+    }
 }

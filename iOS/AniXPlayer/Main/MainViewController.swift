@@ -44,8 +44,8 @@ class MainViewController: UITabBarController {
     
     /// 刷新登录信息
     private func renewLoginInfo() {
-        /// 每次启动， 刷新token
-        if Preferences.shared.loginInfo != nil {
+        
+        func renew() {
             UserNetworkHandle.renew { loginInfo, error in
                 DispatchQueue.main.async {
                     if let error = error {
@@ -54,6 +54,20 @@ class MainViewController: UITabBarController {
                         Preferences.shared.loginInfo = loginInfo
                     }
                 }
+            }
+        }
+        
+        /// token 过期，请求新的token
+        if let loginInfo = Preferences.shared.loginInfo {
+            
+            if let tokenExpireTime = loginInfo.tokenExpireTime {
+                let date = Date()
+                ANX.logInfo(.UI, "date:\(date) | JWT Token 过期时间：\(tokenExpireTime)")
+                if date > tokenExpireTime {
+                    renew()
+                }
+            } else {
+                renew()
             }
         }
     }
