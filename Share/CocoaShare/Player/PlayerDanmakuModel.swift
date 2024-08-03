@@ -48,6 +48,48 @@ enum DanmakuArea: Int, CaseIterable {
     }
 }
 
+
+/// 弹幕设置项
+enum DanmakuSetting: CaseIterable {
+    case danmakuFontSize
+    case danmakuSpeed
+    case danmakuAlpha
+    case danmakuDensity
+    
+    case danmakuArea
+    case showDanmaku
+    case mergeSameDanmaku
+    
+    case danmakuOffsetTime
+    case searchDanmaku
+    case loadDanmaku
+    
+    var title: String {
+        switch self {
+        case .danmakuFontSize:
+            return NSLocalizedString("弹幕字体大小", comment: "")
+        case .danmakuSpeed:
+            return NSLocalizedString("弹幕速度", comment: "")
+        case .danmakuAlpha:
+            return NSLocalizedString("弹幕透明度", comment: "")
+        case .danmakuArea:
+            return NSLocalizedString("显示区域", comment: "")
+        case .showDanmaku:
+            return NSLocalizedString("弹幕开关", comment: "")
+        case .danmakuOffsetTime:
+            return NSLocalizedString("弹幕偏移时间", comment: "")
+        case .loadDanmaku:
+            return NSLocalizedString("加载本地弹幕...", comment: "")
+        case .searchDanmaku:
+            return NSLocalizedString("搜索弹幕", comment: "")
+        case .danmakuDensity:
+            return NSLocalizedString("弹幕密度", comment: "")
+        case .mergeSameDanmaku:
+            return NSLocalizedString("合并重复弹幕", comment: "")
+        }
+    }
+}
+
 class PlayerDanmakuContext {
     
     lazy var danmakuAlpha = BehaviorSubject<Float>(value: Float(Preferences.shared.danmakuAlpha))
@@ -106,6 +148,10 @@ extension PlayerDanmakuModel {
     
     var danmakuAlpha: Float {
         return (try? self.context.danmakuAlpha.value()) ?? 0
+    }
+    
+    var danmakuSetting: [DanmakuSetting] {
+        return DanmakuSetting.allCases
     }
 }
 

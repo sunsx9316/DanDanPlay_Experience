@@ -7,6 +7,29 @@
 
 import Foundation
 
+public class ProgressHUDBuilder {
+    
+    public var progress: CGFloat = 0 {
+        didSet {
+            self.view?.setup()
+            ProgressHUD.show(progress: progress)
+        }
+    }
+    
+    public var statusText: String? {
+        didSet {
+            self.view?.setup()
+            ProgressHUD.setStatus(statusText ?? "")
+        }
+    }
+    
+    private weak var view: NSView?
+    
+    fileprivate init(view: NSView) {
+        self.view = view
+    }
+}
+
 extension NSView {
     
     public func showLoading(statusText: String) {
@@ -14,9 +37,8 @@ extension NSView {
         ProgressHUD.show(withStatus: statusText)
     }
     
-    public func show(progress: Double, statusText: String) {
-        setup()
-        ProgressHUD.show(progress: progress, status: statusText)
+    public func showProgress() -> ProgressHUDBuilder {
+        return ProgressHUDBuilder(view: self)
     }
     
     public func show(error: Error) {
@@ -33,7 +55,7 @@ extension NSView {
         ProgressHUD.dismiss(delay: delay)
     }
     
-    private func setup() {
+    fileprivate func setup() {
         ProgressHUD.setDefaultStyle(.dark)
         ProgressHUD.setContainerView(self.window?.contentView)
     }

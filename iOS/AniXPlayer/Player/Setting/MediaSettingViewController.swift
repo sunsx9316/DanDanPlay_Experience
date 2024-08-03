@@ -17,54 +17,7 @@ class MediaSettingViewController: ViewController {
     
     private struct CellTypeInfo {
         var title: String
-        var dataSource: [CellType]
-    }
-
-    private enum CellType: CaseIterable {
-        
-        case playerSpeed
-        case playerMode
-        case autoJumpTitleEnding
-        case jumpTitleDuration
-        case jumpEndingDuration
-        
-        case subtitleSafeArea
-        case subtitleTrack
-        case subtitleMargin
-        case subtitleFontSize
-        case subtitleDelay
-        case loadSubtitle
-        
-        case audioTrack
-        
-        var title: String {
-            switch self {
-            case .subtitleSafeArea:
-                return NSLocalizedString("防挡字幕", comment: "")
-            case .playerSpeed:
-                return NSLocalizedString("播放速度", comment: "")
-            case .playerMode:
-                return NSLocalizedString("播放模式", comment: "")
-            case .loadSubtitle:
-                return NSLocalizedString("加载字幕...", comment: "")
-            case .subtitleTrack:
-                return NSLocalizedString("字幕轨道", comment: "")
-            case .audioTrack:
-                return NSLocalizedString("音频轨道", comment: "")
-            case .autoJumpTitleEnding:
-                return NSLocalizedString("自动跳过片头/片尾", comment: "")
-            case .jumpTitleDuration:
-                return NSLocalizedString("跳过片头时长", comment: "")
-            case .jumpEndingDuration:
-                return NSLocalizedString("跳过片尾时长", comment: "")
-            case .subtitleDelay:
-                return NSLocalizedString("字幕时间偏移", comment: "")
-            case .subtitleMargin:
-                return NSLocalizedString("字幕Y轴偏移", comment: "")
-            case .subtitleFontSize:
-                return NSLocalizedString("字幕大小", comment: "")
-            }
-        }
+        var dataSource: [MediaSetting]
     }
     
     private lazy var dataSource: [CellTypeInfo] = {

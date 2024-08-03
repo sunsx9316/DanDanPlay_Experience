@@ -33,6 +33,55 @@ private class PlayMediaInfo {
     }
 }
 
+/// 媒体设置项
+enum MediaSetting: CaseIterable {
+    
+    case playerSpeed
+    case subtitleMargin
+    case subtitleFontSize
+    
+    case autoJumpTitleEnding
+    case jumpTitleDuration
+    case jumpEndingDuration
+    
+    case playerMode
+    case subtitleTrack
+    case audioTrack
+    case subtitleSafeArea
+    case subtitleDelay
+    case loadSubtitle
+    
+    
+    var title: String {
+        switch self {
+        case .subtitleSafeArea:
+            return NSLocalizedString("防挡字幕", comment: "")
+        case .playerSpeed:
+            return NSLocalizedString("播放速度", comment: "")
+        case .playerMode:
+            return NSLocalizedString("播放模式", comment: "")
+        case .loadSubtitle:
+            return NSLocalizedString("加载字幕...", comment: "")
+        case .subtitleTrack:
+            return NSLocalizedString("字幕轨道", comment: "")
+        case .audioTrack:
+            return NSLocalizedString("音频轨道", comment: "")
+        case .autoJumpTitleEnding:
+            return NSLocalizedString("自动跳过片头/片尾", comment: "")
+        case .jumpTitleDuration:
+            return NSLocalizedString("跳过片头时长", comment: "")
+        case .jumpEndingDuration:
+            return NSLocalizedString("跳过片尾时长", comment: "")
+        case .subtitleDelay:
+            return NSLocalizedString("字幕时间偏移", comment: "")
+        case .subtitleMargin:
+            return NSLocalizedString("字幕Y轴偏移", comment: "")
+        case .subtitleFontSize:
+            return NSLocalizedString("字幕大小", comment: "")
+        }
+    }
+}
+
 class PlayerMediaContext {
     
     /// 时间信息
@@ -48,6 +97,8 @@ class PlayerMediaContext {
     lazy var buffer = BehaviorSubject<[MediaBufferInfo]?>(value: nil)
     
     lazy var media = BehaviorSubject<File?>(value: nil)
+    
+    lazy var playList = BehaviorSubject<[File]?>(value: nil)
     
     
     lazy var subtitleSafeArea = BehaviorSubject<Bool>(value: Preferences.shared.subtitleSafeArea)
@@ -68,8 +119,16 @@ class PlayerMediaContext {
     
     lazy var jumpEndingDuration = BehaviorSubject<Double>(value: Preferences.shared.jumpEndingDuration)
     
+    lazy var volume = BehaviorSubject<Int>(value: self.player?.volume ?? 0)
+    
     /// 播放文件事件
     lazy var playMediaEvent = PublishSubject<File>()
+    
+    private weak var player: MediaPlayer?
+    
+    init(player: MediaPlayer) {
+        self.player = player
+    }
 }
 
 // MARK: - 便捷接口
@@ -165,11 +224,31 @@ extension PlayerMediaModel {
     var isPlaying: Bool {
         return self.player.isPlaying
     }
+    
+    var volume: Int {
+        return self.player.volume
+    }
+    
+    var mediaSetting: [MediaSetting] {
+        return MediaSetting.allCases.filter { cellType in
+            if cellType == .subtitleFontSize {
+                return false
+            }
+            
+            if !self.autoJumpTitleEnding {
+                if cellType == .jumpTitleDuration || cellType == .jumpEndingDuration {
+                    return false
+                }
+            }
+            
+            return true
+        }
+    }
 }
 
 class PlayerMediaModel {
     
-    lazy var context = PlayerMediaContext()
+    lazy var context = PlayerMediaContext(player: self.player)
     
     private var playMediaInfo = [URL : PlayMediaInfo]()
     
@@ -238,6 +317,11 @@ class PlayerMediaModel {
         self.context.jumpEndingDuration.onNext(jumpEndingDuration)
     }
     
+    func onChangeVolume(_ addBy: CGFloat) {
+        self.player.volume += Int(addBy)
+        self.context.volume.onNext(self.player.volume)
+    }
+    
 
     /// 加载视频到了列表中
     /// - Parameter medias: 视频
@@ -253,6 +337,7 @@ class PlayerMediaModel {
                 let playItem = PlayMediaInfo(media: item)
                 self.playMediaInfo[url] = playItem
                 self.player.addMediaToPlayList(item)
+                self.context.playList.onNext(self.playList)
             }
         }
     }
@@ -362,6 +447,12 @@ class PlayerMediaModel {
             
             return Disposables.create()
         }
+    }
+    
+    /// 移除文件
+    /// - Parameter media: 文件
+    func removeMediaFromPlayList(_ media: File) {
+        self.player.removeMediaFromPlayList(media)
     }
     
     // MARK: - Private
@@ -520,7 +611,7 @@ extension PlayerMediaModel {
     
     /// 更改播放状态
     /// - Returns: 是否是暂停
-    func changePlayState() -> PlayerState {
+    @discardableResult func changePlayState() -> PlayerState {
         if self.player.currentPlayItem != nil {
             if self.player.isPlaying {
                 self.player.pause()

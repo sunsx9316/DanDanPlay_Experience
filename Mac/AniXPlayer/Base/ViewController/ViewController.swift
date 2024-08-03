@@ -15,6 +15,10 @@ class ViewController: NSViewController {
         super.init(nibName: nibName, bundle: bundle)
     }
     
+    deinit {
+        debugPrint("\(self) deinit")
+    }
+    
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }

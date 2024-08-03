@@ -18,48 +18,9 @@ protocol DanmakuSettingViewControllerDelegate: AnyObject {
 
 class DanmakuSettingViewController: ViewController {
     
-    private enum CellType: CaseIterable {
-        case danmakuFontSize
-        case danmakuSpeed
-        case danmakuAlpha
-        case danmakuDensity
-        
-        case showDanmaku
-        case mergeSameDanmaku
-        
-        case danmakuOffsetTime
-        case danmakuArea
-        
-        case searchDanmaku
-        case loadDanmaku
-        
-        var title: String {
-            switch self {
-            case .danmakuFontSize:
-                return NSLocalizedString("弹幕字体大小", comment: "")
-            case .danmakuSpeed:
-                return NSLocalizedString("弹幕速度", comment: "")
-            case .danmakuAlpha:
-                return NSLocalizedString("弹幕透明度", comment: "")
-            case .danmakuArea:
-                return NSLocalizedString("显示区域", comment: "")
-            case .showDanmaku:
-                return NSLocalizedString("弹幕开关", comment: "")
-            case .danmakuOffsetTime:
-                return NSLocalizedString("弹幕偏移时间", comment: "")
-            case .loadDanmaku:
-                return NSLocalizedString("加载本地弹幕...", comment: "")
-            case .searchDanmaku:
-                return NSLocalizedString("搜索弹幕", comment: "")
-            case .danmakuDensity:
-                return NSLocalizedString("弹幕密度", comment: "")
-            case .mergeSameDanmaku:
-                return NSLocalizedString("合并重复弹幕", comment: "")
-            }
-        }
+    private var dataSource: [DanmakuSetting] {
+        return self.danmakuModel.danmakuSetting
     }
-    
-    private lazy var dataSource = CellType.allCases
     
     private lazy var tableView: TableView = {
         let tableView = TableView(frame: .zero, style: .plain)

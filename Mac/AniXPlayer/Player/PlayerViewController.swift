@@ -7,34 +7,11 @@
 
 import Cocoa
 import SnapKit
-import DanmakuRender
 import Carbon
 import ProgressHUD
-
-private class PlayItem {
-    
-    var watchProgressKey: String? {
-        return episodeId == 0 ? nil : "\(episodeId)"
-    }
-    
-    private let media: File
-    var playImmediately = false
-    var mediaId: String {
-        return self.media.url.path
-    }
-    
-    var episodeId = 0
-    
-    init(item: File) {
-        self.media = item
-    }
-}
+import RxSwift
 
 class PlayerViewController: ViewController {
-    
-    private let kShortJumpValue: Int32 = 5
-    
-    private let kVolumeAddingValue: CGFloat = 20
     
     private lazy var dragView: DragView = {
         let view = DragView()
@@ -63,55 +40,46 @@ class PlayerViewController: ViewController {
         return view
     }()
     
-    private lazy var danmakuRender: DanmakuEngine = {
-        let danmakuRender = DanmakuEngine()
-        danmakuRender.layoutStyle = .nonOverlapping
-        danmakuRender.offsetTime = TimeInterval(Preferences.shared.danmakuOffsetTime)
-        return danmakuRender
-    }()
+    private lazy var playerModel = PlayerModel()
     
+    private var danmakuModel: PlayerDanmakuModel {
+        return self.playerModel.danmakuModel
+    }
+    
+    private var mediaModel: PlayerMediaModel {
+        return self.playerModel.mediaModel
+    }
+    
+    
+    private lazy var disposeBag = DisposeBag()
+    
+    private weak var gotoLastWatchPointView: GotoLastWatchPointView?
+    
+
     /// 弹幕画布容器
-    @objc private lazy var danmakuCanvas: NSView = {
+    private lazy var danmakuCanvas: NSView = {
         let view = BaseView()
         view.wantsLayer = true
-        view.alphaValue = CGFloat(Preferences.shared.danmakuAlpha)
-        view.isHidden = !Preferences.shared.isShowDanmaku
         return view
     }()
-    
-    private lazy var player: MediaPlayer = {
-        let player = MediaPlayer(coreType: .vlc)
-        player.delegate = self
-        return player
-    }()
-    
-    private var playItemMap = [URL : PlayItem]()
-    //当前弹幕时间/弹幕数组映射
-    private var danmakuDic = [UInt : [DanmakuConverResult]]()
-    
-    /// 当前弹幕的时间
-    private var danmakuTime: UInt?
-    
-    /// 弹幕字体
-    private lazy var danmakuFont = NSFont.systemFont(ofSize: CGFloat(Preferences.shared.danmakuFontSize))
     
     private var matchWindowController: WindowController?
     
     //MARK: - life cycle
     
     deinit {
-        self.storeProgress()
         self.closeMatchWindow()
     }
 
     override func viewWillDisappear() {
         super.viewWillDisappear()
 
-        if self.player.isPlaying {
-            self.player.pause()
+        
+        if self.mediaModel.isPlaying {
+            self.playerModel.mediaModel.pause()
         }
         
-        self.storeProgress()
+        self.mediaModel.storeProgress()
     }
     
     override func loadView() {
@@ -127,26 +95,24 @@ class PlayerViewController: ViewController {
         }
         
         self.view.addSubview(self.containerView)
-        self.containerView.addSubview(self.player.mediaView)
+        self.containerView.addSubview(self.mediaModel.mediaView)
         self.containerView.addSubview(self.danmakuCanvas)
-        self.danmakuCanvas.addSubview(self.danmakuRender.canvas)
         self.view.addSubview(self.uiView)
+        self.danmakuCanvas.addSubview(self.danmakuModel.danmakuView)
         
         self.containerView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
         }
         
-        self.player.mediaView.frame = self.view.bounds
-        self.player.mediaView.autoresizingMask = [.maxYMargin, .maxXMargin, .width, .height]
+        self.mediaModel.mediaView.frame = self.view.bounds
+        self.mediaModel.mediaView.autoresizingMask = [.maxYMargin, .maxXMargin, .width, .height]
         
         self.uiView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
         
-        self.layoutDanmakuCanvas()
+        self.bindModel()
         self.uiView.autoShowControlView()
-        self.playerListDidChange(self.player)
-        self.changeRepeatMode()
         self.setupMenu()
     }
     
@@ -165,282 +131,143 @@ class PlayerViewController: ViewController {
         case kVK_Return:
             self.onToggleFullScreen()
         case kVK_Space:
-            self.onClickPlayButton()
+            self.mediaModel.changePlayState()
         case kVK_LeftArrow, kVK_RightArrow:
-            let jumpTime = keyCode == kVK_LeftArrow ? TimeInterval(-kShortJumpValue) : TimeInterval(kShortJumpValue)
-            let position = self.player.length == 0 ? 0 : (self.player.currentTime + jumpTime) / self.player.length
-            self.setPlayerProgress(CGFloat(position))
+            let shortJumpValue: Int32 = 5
+            
+            let jumpTime = keyCode == kVK_LeftArrow ? TimeInterval(-shortJumpValue) : TimeInterval(shortJumpValue)
+            self.playerModel.changePosition(diffValue: jumpTime)
         case kVK_UpArrow, kVK_DownArrow:
-            let volumeValue = keyCode == kVK_DownArrow ? -kVolumeAddingValue : kVolumeAddingValue
-            changeVolume(volumeValue)
+            let volumeAddingValue: CGFloat = 20
+            
+            let volumeValue = keyCode == kVK_DownArrow ? -volumeAddingValue : volumeAddingValue
+            self.mediaModel.onChangeVolume(volumeValue)
         default:
             super.keyDown(with: event)
         }
     }
     
     //MARK: - Private
-    private func loadItems(_ items: [File]) {
-        for item in items {
-            
-            if item.type == .folder {
-                continue
-            }
-            
-            let url = item.url
-            if self.playItemMap[url] == nil {
-                let playItem = PlayItem(item: item)
-                self.playItemMap[url] = playItem
-                self.player.addMediaToPlayList(item)
-            }
-        }
-    }
-    
-    private func changeVolume(_ addBy: CGFloat) {
-        self.player.volume += Int(addBy)
-    }
-    
-    private func findPlayItem(_ protocolItem: File) -> PlayItem? {
-        if let protocolItem = protocolItem as? PlayItem {
-            return protocolItem
-        }
-        
-        return self.playItemMap[protocolItem.url]
-    }
-    
-    private func changeRepeatMode() {
-        player.playMode = Preferences.shared.playerMode
-    }
-    
-    private func setPlayerProgress(_ progress: CGFloat) {
-        self.player.setPosition(Double(progress))
-        self.uiView.updateTime()
-    }
-    
-    private func tryParseMedia(_ media: File) {
-        
-        self.storeProgress()
-        
-        self.player.stop()
-        
-        self.uiView.title = media.fileName
-        
-        self.view.show(progress: 0, statusText: NSLocalizedString("解析视频中...", comment: ""))
-        
-        MatchNetworkHandle.matchAndGetDanmakuWithFile(media) { [weak self] (state) in
-            DispatchQueue.main.async {
-                guard let self = self else { return }
-                
-                switch state {
-                case .parseMedia:
-                    self.view.show(progress: 0, statusText: NSLocalizedString("开始解析...", comment: ""))
-                case .downloadLocalDanmaku:
-                    self.view.show(progress: 0.2, statusText: NSLocalizedString("下载本地弹幕...", comment: ""))
-                case .matchMedia(progress: let progress):
-                    self.view.show(progress: 0.2 + 0.6 * progress, statusText: NSLocalizedString("解析视频中...", comment: ""))
-                case .downloadDanmaku:
-                    self.view.show(progress: 0.9, statusText: NSLocalizedString("解析视频中...", comment: ""))
-                }
-                
-            }
-        } matchCompletion: { [weak self] (collection, error) in
-            DispatchQueue.main.async {
-                guard let self = self else { return }
-                
-                self.view.dismiss(delay: 2)
-                
-                if let error = error {
-                    self.view.show(error: error)
-                } else if let collection = collection {
-                    self.popMatchWindowController(with: collection, file: media)
-                }
-            }
-        } getDanmakuCompletion: { [weak self] (collection, episodeId, error) in
-            DispatchQueue.main.async {
-                guard let self = self else { return }
-                
-                self.view.dismiss(delay: 2)
-                
-                if let error = error {
-                    self.view.show(error: error)
-                } else {
-                    let danmakus = collection?.collection ?? []
-                    self.playMedia(media, episodeId: episodeId, danmakus: danmakus)
-                }
-            }
-        }
-    }
-    
-    
-    /// 播放视频
-    /// - Parameters:
-    ///   - media: 视频
-    ///   - episodeId: 弹幕分集id
-    ///   - danmakus: 弹幕
-    private func playMedia(_ media: File, episodeId: Int, danmakus: [Comment]) {
-        
-        if Preferences.shared.autoLoadCustomDanmaku {
-            self.loadCustomDanmaku(media) { isSuccess, result in
-                if isSuccess, let result = result {
-                    self.startPlay(media, episodeId: episodeId, danmakus: result)
-                    self.loadCustomSubtitle(media)
-                } else {
-                    self.startPlay(media, episodeId: episodeId, danmakus: DanmakuManager.shared.conver(danmakus))
-                    self.loadCustomSubtitle(media)
-                }
-            }
-        } else {
-            self.startPlay(media, episodeId: episodeId, danmakus: DanmakuManager.shared.conver(danmakus))
-            self.loadCustomSubtitle(media)
-        }
-        
-    }
-    
-    /// 加载本地弹幕
-    /// - Parameters:
-    ///   - media: 视频
-    ///   - completion: 完成回调
-    private func loadCustomDanmaku(_ media: File, completion: @escaping((Bool, [UInt : [DanmakuConverResult]]?) -> Void)) {
-            DanmakuManager.shared.findCustomDanmakuWithMedia(media) { [weak self] result in
-                guard let self = self else { return }
-                
-                switch result {
-                case .success(let files):
-                    if files.isEmpty {
-                        DispatchQueue.main.async {
-                            //没有匹配到本地弹幕
-                            completion(false, nil)
-                        }
-                        return
-                    }
-                    
-                    DanmakuManager.shared.downCustomDanmaku(files[0]) { [weak self] result1 in
-                        
-                        guard let self = self else { return }
-                        
-                        switch result1 {
-                        case .success(let url):
-                            do {
-                                let converResult = try DanmakuManager.shared.conver(url)
-                                DispatchQueue.main.async {
-                                    completion(true, converResult)
-                                    self.view.show(text: NSLocalizedString("加载本地弹幕成功！", comment: ""))
-                                }
-                            } catch {
-                                DispatchQueue.main.async {
-                                    completion(false, nil)
-                                    self.view.show(error: error)
-                                }
-                            }
-                        case .failure(let error):
-                            DispatchQueue.main.async {
-                                completion(false, nil)
-                                self.view.show(error: error)
-                            }
-                        }
-                    }
-                case .failure(let error):
-                    DispatchQueue.main.async {
-                        completion(false, nil)
-                        self.view.show(error: error)
-                    }
-                }
-            }
-    }
-    
-    /// 开始播放
-    /// - Parameters:
-    ///   - media: 视频
-    ///   - episodeId: 弹幕分级id
-    ///   - danmakus: 弹幕
-    private func startPlay(_ media: File, episodeId: Int, danmakus: [UInt : [DanmakuConverResult]]) {
-        
-        self.danmakuDic = danmakus
-        self.danmakuRender.time = 0
-        self.danmakuTime = nil
-        self.player.play(media)
-        
-        var frame = self.player.mediaView.frame
-        frame.size.width -= 1
-        frame.size.height -= 1
-        self.player.mediaView.frame = frame
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            self.player.mediaView.frame = self.view.bounds
-        }
-        
-        //定位上次播放的位置
-        if let playItem = self.findPlayItem(media) {
-            playItem.episodeId = episodeId
-            if let watchProgressKey = playItem.watchProgressKey,
-               let lastWatchProgress = HistoryManager.shared.watchProgress(mediaKey: watchProgressKey) {
-                
-                if lastWatchProgress > 0 {
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                        
-                        func lastTimeString() -> String {
-                            let timeFormatter = DateFormatter()
-                            timeFormatter.dateFormat = "mm:ss"
-                            return timeFormatter.string(from: Date(timeIntervalSince1970: self.player.length * lastWatchProgress))
-                        }
-                        
-                        let customView = GotoLastWatchPointView()
-                        customView.timeString = NSLocalizedString("上次观看时间：", comment: "") + lastTimeString()
-                        customView.didClickGotoButton = { [weak self] in
-                            guard let self = self else { return }
-                            
-                            self.setPlayerProgress(lastWatchProgress)
-                            self.uiView.autoShowControlView()
-                        }
-                        
-                        customView.show(from: self.view)
-                    }
-                }
-            }
-        }
-    }
-    
-    /// 加载本地字幕
-    /// - Parameter media: 视频
-    private func loadCustomSubtitle(_ media: File) {
-        SubtitleManager.shared.findCustomSubtitleWithMedia(media) { [weak self] result in
+    private func bindModel() {
+
+        self.playerModel.parseMediaState.subscribe(onNext: { [weak self] event in
             guard let self = self else { return }
             
-            switch result {
-            case .success(let files):
-                if files.isEmpty {
-                    return
-                }
-                
-                var subtitleFile = files[0]
-                
-                //按照优先级加载字幕
-                if let subtitleLoadOrder = Preferences.shared.subtitleLoadOrder {
-                    for keyName in subtitleLoadOrder {
-                        if let matched = files.first(where: { $0.fileName.contains(keyName) }) {
-                            subtitleFile = matched
-                            break
-                        }
-                    }
-                }
-                
-                SubtitleManager.shared.downCustomSubtitle(subtitleFile) { result1 in
-                    switch result1 {
-                    case .success(let subtitle):
-                    DispatchQueue.main.async {
-                        self.player.currentSubtitle = subtitle
-                        self.view.show(text: NSLocalizedString("加载本地字幕成功！", comment: ""))
-                    }
-                    case .failure(let error):
-                        DispatchQueue.main.async {
-                            self.view.show(error: error)
-                        }
-                    }
-                }
-            case .failure(let error):
-                DispatchQueue.main.async {
-                    self.view.show(error: error)
+            self.parseMedia(event: event)
+        }).disposed(by: self.disposeBag)
+        
+        self.bindMediaModel()
+        self.bindDanmakuModel()
+    }
+    
+    private func bindMediaModel() {
+        self.mediaModel.context.media.subscribe(onNext: { [weak self] file in
+            guard let self = self else { return }
+            
+            self.uiView.title = file?.fileName
+        }).disposed(by: self.disposeBag)
+        
+        self.mediaModel.context.time.subscribe(onNext: { [weak self] timeInfo in
+            guard let self = self else { return }
+
+            self.uiView.updateTime()
+        }).disposed(by: self.disposeBag)
+        
+        self.mediaModel.context.isPlay.subscribe(onNext: { [weak self] isPlay in
+            guard let self = self else { return }
+            
+            self.uiView.isPlay = isPlay
+        }).disposed(by: self.disposeBag)
+        
+//        self.mediaModel.context.buffer.subscribe(onNext: { [weak self] bufferInfos in
+//            guard let self = self else { return }
+            
+//            self.uiView.updateBufferInfos(bufferInfos ?? [])
+//        }).disposed(by: self.disposeBag)
+        
+        self.mediaModel.context.subtitleSafeArea.subscribe(onNext: { [weak self] subtitleSafeArea in
+            guard let self = self else { return }
+            
+            self.danmakuCanvas.snp.remakeConstraints { (make) in
+                make.top.leading.trailing.equalTo(self.containerView)
+                if subtitleSafeArea {
+                    make.height.equalTo(self.containerView).multipliedBy(0.85)
+                } else {
+                    make.height.equalTo(self.containerView)
                 }
             }
-        }
+            
+        }).disposed(by: self.disposeBag)
+        
+        /// 高亮调整区域，初始化时不展示颜色
+        self.mediaModel.context.subtitleSafeArea.skip(1).subscribe(onNext: { [weak self] _ in
+            guard let self = self else { return }
+            
+            let animate = CAKeyframeAnimation(keyPath: #keyPath(CALayer.backgroundColor))
+            let mainColor = NSColor.mainColor
+            animate.values = [
+                NSColor(red: mainColor.redComponent, green: mainColor.greenComponent, blue: mainColor.blueComponent, alpha: 0.3).cgColor,
+                NSColor.clear.cgColor
+            ]
+            animate.duration = 0.5
+            animate.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            self.danmakuCanvas.layer?.add(animate, forKey: "CAKeyframeAnimation")
+            
+        }).disposed(by: self.disposeBag)
+        
+        self.mediaModel.context.volume.skip(1).subscribe(onNext: { [weak self] volume in
+            guard let self = self else { return }
+            
+            self.view.show(text: NSLocalizedString("音量: ", comment: "") + "\(volume)")
+        }).disposed(by: self.disposeBag)
+        
+        self.mediaModel.context.playList.subscribe(onNext: { [weak self] playList in
+            guard let self = self else { return }
+            
+            self.uiView.showOpenButton = !(playList?.isEmpty == false)
+        }).disposed(by: self.disposeBag)
+    }
+    
+    
+    private func bindDanmakuModel() {
+        self.danmakuModel.context.danmakuAlpha.subscribe(onNext: { [weak self] danmakuAlpha in
+            guard let self = self else { return }
+            
+            self.danmakuCanvas.alphaValue = CGFloat(danmakuAlpha)
+        }).disposed(by: self.disposeBag)
+        
+        self.danmakuModel.context.isShowDanmaku.subscribe(onNext: { [weak self] isShowDanmaku in
+            guard let self = self else { return }
+            
+            self.danmakuCanvas.isHidden = !isShowDanmaku
+        }).disposed(by: self.disposeBag)
+        
+        self.danmakuModel.context.danmakuArea.subscribe(onNext: { [weak self] danmakuArea in
+            guard let self = self else { return }
+                    
+            self.danmakuModel.danmakuView.snp.remakeConstraints { make in
+                make.top.leading.trailing.equalToSuperview()
+                make.height.equalToSuperview().multipliedBy(danmakuArea.value)
+            }
+            
+        }).disposed(by: self.disposeBag)
+        
+        /// 高亮调整区域，初始化时不展示颜色
+        self.danmakuModel.context.danmakuArea.skip(1).subscribe(onNext: { [weak self] _ in
+            guard let self = self else { return }
+            
+            let animate = CAKeyframeAnimation(keyPath: #keyPath(CALayer.backgroundColor))
+            let mainColor = NSColor.mainColor
+            animate.values = [
+                NSColor(red: mainColor.redComponent, green: mainColor.greenComponent, blue: mainColor.blueComponent, alpha: 0.3).cgColor,
+                NSColor.clear.cgColor
+            ]
+            animate.duration = 0.5
+            animate.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
+            self.danmakuModel.danmakuView.layer?.add(animate, forKey: "CAKeyframeAnimation")
+            
+        }).disposed(by: self.disposeBag)
+        
     }
     
     private func popMatchWindowController(with collection: MatchCollection?, file: File) {
@@ -469,59 +296,10 @@ class PlayerViewController: ViewController {
         }
     }
     
-    //保存观看记录
-    private func storeProgress() {
-        if let currentPlayItem = self.player.currentPlayItem,
-           let playItem = self.findPlayItem(currentPlayItem),
-            let watchProgressKey = playItem.watchProgressKey {
-            
-            let position = self.player.position
-            //播放结束不保存进度
-            if position >= 0.99 {
-                HistoryManager.shared.cleanWatchProgress(mediaKey: watchProgressKey)
-            } else {
-                HistoryManager.shared.storeWatchProgress(mediaKey: watchProgressKey, progress: position)
-            }
-        }
-    }
-    
-    /// 调整播放器和弹幕整体
-    /// - Parameter speed: 速度
-    private func changeSpeed(_ speed: Double) {
-        self.player.speed = speed
-        self.danmakuRender.speed = speed
-    }
-    
-    /// 重新布局弹幕画布
-    private func layoutDanmakuCanvas() {
-        self.danmakuCanvas.snp.remakeConstraints { (make) in
-            make.top.leading.trailing.equalTo(self.containerView)
-            if Preferences.shared.subtitleSafeArea {
-                make.height.equalTo(self.containerView).multipliedBy(0.85)
-            } else {
-                make.height.equalTo(self.containerView)
-            }
-        }
-        
-        self.danmakuRender.canvas.snp.remakeConstraints { make in
-            make.top.leading.trailing.equalToSuperview()
-            let danmakuProportion = Preferences.shared.danmakuArea.value
-            make.height.equalToSuperview().multipliedBy(danmakuProportion)
-        }
-    }
-    
     private func onToggleFullScreen() {
         let window = view.window
         window?.collectionBehavior = .fullScreenPrimary
         window?.toggleFullScreen(nil)
-    }
-    
-    private func onClickPlayButton() {
-        if self.player.isPlaying {
-            self.player.pause()
-        } else {
-            self.player.play()
-        }
     }
     
     private func dismissPresented() {
@@ -548,54 +326,33 @@ class PlayerViewController: ViewController {
     /// 文件拾取器
     @objc private func pickFile() {
         
-        let currentPlayItem = self.player.currentPlayItem ?? LocalFile.rootFile
+        let currentPlayItem = self.mediaModel.media ?? LocalFile.rootFile
 
         type(of: currentPlayItem).fileManager.pickFiles(currentPlayItem.parentFile, from: self, filterType: .all) { [weak self] result in
             guard let self = self else { return }
             
             switch result {
             case .success(let files):
-                
                 if files.count == 1 && files[0].url.isSubtitleFile {
-                    SubtitleManager.shared.downCustomSubtitle(files[0]) { [weak self] result1 in
+                    _ = self.mediaModel.loadSubtitleByUser(files[0]).subscribe(onError: { [weak self] error in
                         guard let self = self else { return }
                         
-                        switch result1 {
-                        case .success(let subtitle):
-                            DispatchQueue.main.async {
-                                self.player.currentSubtitle = subtitle
-                                self.view.show(text: NSLocalizedString("加载本地字幕成功！", comment: ""))
-                            }
-                        case .failure(let error):
-                            DispatchQueue.main.async {
-                                self.view.show(error: error)
-                            }
-                        }
-                    }
+                        self.view.show(error: error)
+                    }, onCompleted: { [weak self] in
+                        guard let self = self else { return }
+                        
+                        self.view.show(text: NSLocalizedString("加载本地字幕成功！", comment: ""))
+                    })
                 } else if files.count == 1 && files[0].url.isDanmakuFile {
-                    DanmakuManager.shared.downCustomDanmaku(files[0]) { [weak self] result1 in
-                        
+                    _ = self.danmakuModel.loadDanmakuByUser(files[0]).subscribe(onError: { [weak self] error in
                         guard let self = self else { return }
                         
-                        switch result1 {
-                        case .success(let url):
-                            do {
-                                let converResult = try DanmakuManager.shared.conver(url)
-                                DispatchQueue.main.async {
-                                    self.danmakuDic = converResult
-                                    self.view.show(text: NSLocalizedString("加载本地弹幕成功！", comment: ""))
-                                }
-                            } catch let error {
-                                DispatchQueue.main.async {
-                                    self.view.show(error: error)
-                                }
-                            }
-                        case .failure(let error):
-                            DispatchQueue.main.async {
-                                self.view.show(error: error)
-                            }
-                        }
-                    }
+                        self.view.show(error: error)
+                    }, onCompleted: { [weak self] in
+                        guard let self = self else { return }
+                        
+                        self.view.show(text: NSLocalizedString("加载本地弹幕成功！", comment: ""))
+                    })
                 } else {
                     self.openURLs(files)
                 }
@@ -613,10 +370,9 @@ class PlayerViewController: ViewController {
     /// 批量加载url
     /// - Parameter urls: url集合
     private func openURLs(_ files: [File]) {
-        self.loadItems(files)
-        if !files.isEmpty &&
-            self.player.playList.contains(where: { $0.url == files.first?.url }) {
-            self.tryParseMedia(files[0])
+        if !files.isEmpty {
+            self.mediaModel.loadMedias(files)
+            self.playerModel.tryParseMedia(files[0])
         }
     }
 }
@@ -628,32 +384,106 @@ extension PlayerViewController: MatchsViewControllerDelegate {
         
         self.closeMatchWindow()
         
-        self.view.show(progress: 0.5, statusText: NSLocalizedString("加载弹幕中...", comment: ""))
-
-        CommentNetworkHandle.getDanmaku(with: episodeId) { [weak self] (collection, error) in
-            
+        _ = self.playerModel.didMatchMedia(matchsViewController.file, episodeId: episodeId).subscribe { [weak self] event in
             guard let self = self else { return }
             
-            if let error = error {
-                DispatchQueue.main.async {
-                    self.view.show(progress: 1, statusText: NSLocalizedString("加载弹幕中...", comment: ""))
-                    self.view.dismiss(delay: 0)
-                    self.view.show(error: error)
-                }
-            } else {
-                let danmakus = collection?.collection ?? []
-                DispatchQueue.main.async {
-                    self.view.show(progress: 1, statusText: NSLocalizedString("即将开始播放", comment: ""))
-                    self.view.dismiss(delay: 0)
-                    self.playMedia(matchsViewController.file, episodeId: episodeId, danmakus: danmakus)
-                }
-            }
+            self.parseMedia(event: event)
         }
     }
     
     func playNowInMatchsViewController(_ matchsViewController: MatchsViewController) {
         self.closeMatchWindow()
-        self.playMedia(matchsViewController.file, episodeId: 0, danmakus: [])
+        _ = self.playerModel.startPlay(matchsViewController.file, episodeId: 0, danmakus: [:])
+    }
+    
+    /// 解析视频
+    /// - Parameters:
+    ///   - event: 解析事件
+    ///   - hud: 指示器
+    private func parseMedia(event: RxSwift.Event<PlayerModel.MediaLoadState>) {
+        
+        let builder = self.view.showProgress()
+        
+        switch event {
+        case .next(let element):
+            switch element {
+            case .parse(let state, let progress):
+                
+                builder.progress = CGFloat(progress)
+                
+                switch state {
+                case .parseMedia:
+                    builder.statusText = NSLocalizedString("开始解析...", comment: "")
+                case .downloadLocalDanmaku:
+                    builder.statusText = NSLocalizedString("下载本地弹幕...", comment: "")
+                case .matchMedia(progress: _):
+                    builder.statusText = NSLocalizedString("解析视频中...", comment: "")
+                case .downloadDanmaku:
+                    builder.statusText = NSLocalizedString("加载弹幕中...", comment: "")
+                }
+                
+            case .subtitle(_):
+                builder.progress = 0.85
+                builder.statusText = NSLocalizedString("加载字幕中...", comment: "")
+            case .lastWatchProgress(let lastWatchProgress):
+                builder.progress = 1
+                builder.statusText = NSLocalizedString("即将开始播放...", comment: "")
+                
+                self.showGotoLastWatchTime(lastWatchProgress: lastWatchProgress, retryTime: 0)
+            }
+        case .error(let error):
+            if let error = error as? PlayerModel.ParseError {
+                switch error {
+                case .notMatched(let collection, let media):
+                    self.popMatchWindowController(with: collection, file: media)
+                }
+            } else {
+                self.view.show(error: error)
+            }
+            
+            self.view.dismiss(delay: 0.3)
+        case .completed:
+            self.view.dismiss(delay: 0.3)
+        }
+    }
+    
+    
+    /// 显示上次播放进度
+    /// - Parameters:
+    ///   - lastWatchProgress: 上次播放进度
+    ///   - retryTime: 重试次数
+    private func showGotoLastWatchTime(lastWatchProgress: TimeInterval, retryTime: Int) {
+        let totalTime = self.mediaModel.length
+        
+        if totalTime == 0 && retryTime < 5 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.showGotoLastWatchTime(lastWatchProgress: lastWatchProgress, retryTime: retryTime + 1)
+            }
+        } else if totalTime > 0 {
+            func lastTimeString() -> String {
+                let timeFormatter = DateFormatter()
+                timeFormatter.dateFormat = "mm:ss"
+                return timeFormatter.string(from: Date(timeIntervalSince1970: totalTime * lastWatchProgress))
+            }
+            
+            self.gotoLastWatchPointView?.dismiss()
+            
+            let customView = GotoLastWatchPointView()
+            customView.timeString = NSLocalizedString("上次观看时间：", comment: "") + lastTimeString()
+            customView.didClickGotoButton = { [weak self] in
+                guard let self = self else { return }
+                
+                self.playerModel.changePosition(lastWatchProgress)
+                self.uiView.autoShowControlView()
+            }
+            
+            customView.show(from: self.view)
+            self.gotoLastWatchPointView = customView
+        } else {
+            if let url = self.mediaModel.media?.url {
+                ANX.logError(.UI, "视频时长获取失败 \(url)")
+            }
+        }
     }
 }
 
@@ -664,15 +494,15 @@ extension PlayerViewController: PlayerUIViewDataSource {
     }
     
     func playerCurrentTime(playerUIView: PlayerUIView) -> TimeInterval {
-        return player.currentTime
+        return mediaModel.currentTime
     }
     
     func playerTotalTime(playerUIView: PlayerUIView) -> TimeInterval {
-        return player.length
+        return mediaModel.length
     }
     
     func playerProgress(playerUIView: PlayerUIView) -> CGFloat {
-        return CGFloat(player.position)
+        return CGFloat(mediaModel.position)
     }
 }
 
@@ -686,7 +516,7 @@ extension PlayerViewController: PlayerUIViewDelegate {
     func onTouchDanmakuSettingButton(playerUIView: PlayerUIView, button: NSButton) {
         self.dismissPresented()
         
-        let vc = DanmakuSettingViewController()
+        let vc = DanmakuSettingViewController(danmakuModel: self.danmakuModel)
         vc.delegate = self
         
         self.present(vc, asPopoverRelativeTo: .zero, of: button, preferredEdge: .minY, behavior: .transient)
@@ -695,7 +525,7 @@ extension PlayerViewController: PlayerUIViewDelegate {
     func onTouchMediaSettingButton(playerUIView: PlayerUIView, button: NSButton) {
         self.dismissPresented()
         
-        let vc = MediaSettingViewController(player: self.player)
+        let vc = MediaSettingViewController(mediaModel: self.mediaModel)
         vc.delegate = self
         self.present(vc, asPopoverRelativeTo: .zero, of: button, preferredEdge: .minY, behavior: .transient)
     }
@@ -717,8 +547,7 @@ extension PlayerViewController: PlayerUIViewDelegate {
     }
     
     func onTouchSendDanmakuButton(playerUIView: PlayerUIView) {
-        guard let item = self.player.currentPlayItem,
-              self.findPlayItem(item)?.episodeId != nil else {
+        guard let item = self.mediaModel.media, self.mediaModel.isMatch(media: item) else {
             self.view.show(text: NSLocalizedString("需要指定视频弹幕列表，才能发弹幕哟~", comment: ""))
             return
         }
@@ -756,193 +585,62 @@ extension PlayerViewController: PlayerUIViewDelegate {
     }
     
     func onTouchPlayButton(playerUIView: PlayerUIView, isSelected: Bool) {
-        self.onClickPlayButton()
-    }
-    
-    func onTouchNextButton(playerUIView: PlayerUIView) {
-        if let index = self.player.playList.firstIndex(where: { $0.url == self.player.currentPlayItem?.url }) {
-            if index != self.player.playList.count - 1 {
-                let item = self.player.playList[index + 1]
-                self.tryParseMedia(item)
-            }
-        }
+        self.mediaModel.changePlayState()
     }
     
     func doubleTap(playerUIView: PlayerUIView) {
-        onToggleFullScreen()
+        self.onToggleFullScreen()
+    }
+    
+    func onTouchNextButton(playerUIView: PlayerUIView) {
+        if let media = self.mediaModel.nextMedia() {
+            self.playerModel.tryParseMedia(media)
+        }
     }
     
     func tapSlider(playerUIView: PlayerUIView, progress: CGFloat) {
-        self.setPlayerProgress(progress)
+        self.playerModel.changePosition(progress)
     }
     
     func changeProgress(playerUIView: PlayerUIView, diffValue: CGFloat) {
-        let length = self.player.length
-        if length > 0 {
-            let progress = (CGFloat(self.player.currentTime) + diffValue) / CGFloat(length)
-            self.setPlayerProgress(progress)
-        }
+        self.playerModel.changePosition(diffValue: diffValue)
     }
 }
 
 // MARK: - PlayerListViewControllerDelegate
 extension PlayerViewController: PlayerListViewControllerDelegate {
     func numberOfRowAtPlayerListViewController() -> Int {
-        return self.player.playList.count
+        return self.mediaModel.playList.count
     }
     
     func playerListViewController(_ viewController: PlayerListViewController, titleAtRow: Int) -> String {
-        return self.player.playList[titleAtRow].fileName
+        return self.mediaModel.playList[titleAtRow].fileName
     }
     
     func playerListViewController(_ viewController: PlayerListViewController, didSelectedRow: Int) {
         self.dismissPresented()
         
-        let file = self.player.playList[didSelectedRow]
-        self.tryParseMedia(file)
+        let file = self.mediaModel.playList[didSelectedRow]
+        self.playerModel.tryParseMedia(file)
     }
     
     func playerListViewController(_ viewController: PlayerListViewController, didDeleteRow: Int) {
-        let file = self.player.playList[didDeleteRow]
-        self.player.removeMediaFromPlayList(file)
+        let file = self.mediaModel.playList[didDeleteRow]
+        self.mediaModel.removeMediaFromPlayList(file)
     }
     
     func currentPlayIndexAtPlayerListViewController(_ viewController: PlayerListViewController) -> Int? {
-        return self.player.playList.firstIndex(where: { $0.url == self.player.currentPlayItem?.url })
-    }
-}
-
-//MARK: - MediaPlayerDelegate
-extension PlayerViewController: MediaPlayerDelegate {
-    
-    func playerListDidChange(_ player: MediaPlayer) {
-        self.uiView.showOpenButton = player.playList.isEmpty
-    }
-    
-    func player(_ player: MediaPlayer, stateDidChange state: PlayerState) {
-        switch state {
-        case .playing:
-            danmakuRender.start()
-            self.uiView.isPlay = true
-        case .pause, .stop:
-            danmakuRender.pause()
-            self.uiView.isPlay = false
-        }
-    }
-    
-    func player(_ player: MediaPlayer, shouldChangeMedia media: File) -> Bool {
-        
-        self.tryParseMedia(media)
-        
-        return false
-    }
-    
-    func player(_ player: MediaPlayer, mediaDidChange media: File?) {
-        
-    }
-    
-    func player(_ player: MediaPlayer, didChangePosition: Double, mediaTime: TimeInterval) {
-        self.danmakuRender.time = mediaTime
-    }
-    
-    func player(_ player: MediaPlayer, currentTime: TimeInterval, totalTime: TimeInterval) {
-        uiView.updateTime()
-        
-        let danmakuRenderTime = self.danmakuRender.time
-        
-        if danmakuRenderTime < 0 {
-            return
-        }
-        
-        let intTime = UInt(danmakuRenderTime)
-        if intTime == self.danmakuTime {
-            return
-        }
-        
-        self.danmakuTime = intTime
-        if let danmakus = danmakuDic[intTime] {
-            let danmakuDensity = Preferences.shared.danmakuDensity
-            for danmakuBlock in danmakus {
-                /// 小于弹幕密度才允许发射
-                let shouldSendDanmaku = Float.random(in: 0...10) <= danmakuDensity
-                if shouldSendDanmaku {
-                    let danmaku = danmakuBlock()
-                    //修复因为时间误差的问题，导致少数弹幕突然出现在屏幕上的问题
-                    danmaku.appearTime = (danmaku.appearTime - Double(intTime)) + danmakuRenderTime
-                    self.danmakuRender.send(danmaku)
-                }
-            }
-        }
-    }
-    
-    func player(_ player: MediaPlayer, file: any File, bufferInfoDidChange bufferInfo: any MediaBufferInfo) {
-        
-    }
-    
-    //MARK: Private Method
-    /// 遍历当前的弹幕
-    /// - Parameter callBack: 回调
-    private func forEachDanmakus(_ callBack: (BaseDanmaku) -> Void) {
-        for con in danmakuRender.containers {
-            if let danmaku = con.danmaku as? BaseDanmaku {
-                callBack(danmaku)
-            }
-        }
+        return self.mediaModel.playList.firstIndex(where: { $0.url == self.mediaModel.media?.url })
     }
 }
 
 // MARK: - DanmakuSettingViewControllerDelegate
 extension PlayerViewController: DanmakuSettingViewControllerDelegate {
-    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, danmakuArea: DanmakuArea) {
-        let animate = CAKeyframeAnimation(keyPath: "backgroundColor")
-        let mainColor = NSColor.mainColor
-        animate.values = [
-            NSColor(red: mainColor.redComponent, green: mainColor.greenComponent, blue: mainColor.blueComponent, alpha: 0.3).cgColor,
-            NSColor.clear.cgColor
-        ]
-        animate.duration = 0.5
-        animate.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-        self.danmakuRender.canvas.layer?.add(animate, forKey: "CAKeyframeAnimation")
-        
-        self.layoutDanmakuCanvas()
-    }
-    
-
-    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuDensity density: Float) {
-        
-    }
-    
-    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuAlpha alpha: Float) {
-        danmakuCanvas.alphaValue = CGFloat(alpha)
-    }
-    
-    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuSpeed speed: Float) {
-        self.forEachDanmakus { danmaku in
-            if let scrollDanmaku = danmaku as? ScrollDanmaku {
-                scrollDanmaku.extraSpeed = CGFloat(speed)
-            }
-        }
-    }
-    
-    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuFontSize fontSize: Double) {
-        self.danmakuFont = NSFont.systemFont(ofSize: fontSize)
-        self.forEachDanmakus { danmaku in
-            danmaku.font = self.danmakuFont
-        }
-    }
-    
-    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeShowDanmaku isShow: Bool) {
-        self.danmakuCanvas.isHidden = !isShow
-    }
-    
-    func danmakuSettingViewController(_ vc: DanmakuSettingViewController, didChangeDanmakuOffsetTime danmakuOffsetTime: Int) {
-        self.danmakuRender.offsetTime = TimeInterval(danmakuOffsetTime)
-    }
     
     func searchDanmakuInDanmakuSettingViewController(vc: DanmakuSettingViewController) {
         self.dismissPresented()
         
-        if let item = self.player.currentPlayItem ?? self.player.playList.first {
+        if let item = self.mediaModel.media ?? self.mediaModel.playList.first {
             self.popMatchWindowController(with: nil, file: item)
         }
     }
@@ -955,35 +653,8 @@ extension PlayerViewController: DanmakuSettingViewControllerDelegate {
 // MARK: - MediaSettingViewControllerDelegate
 extension PlayerViewController: MediaSettingViewControllerDelegate {
     
-    func mediaSettingViewController(_ vc: MediaSettingViewController, didOpenSubtitle subtitle: SubtitleProtocol) {
-        self.player.currentSubtitle = subtitle
-    }
-    
     func loadSubtitleFileInMediaSettingViewController(_ vc: MediaSettingViewController) {
         self.pickFile()
-    }
-    
-    func mediaSettingViewController(_ vc: MediaSettingViewController, didChangeSubtitleSafeArea isOn: Bool) {
-        
-        let animate = CAKeyframeAnimation(keyPath: "backgroundColor")
-        let mainColor = NSColor.mainColor
-        animate.values = [
-            NSColor(red: mainColor.redComponent, green: mainColor.greenComponent, blue: mainColor.blueComponent, alpha: 0.3).cgColor,
-            NSColor.clear.cgColor
-        ]
-        animate.duration = 0.5
-        animate.timingFunction = CAMediaTimingFunction(name: .easeInEaseOut)
-        self.danmakuCanvas.layer?.add(animate, forKey: "CAKeyframeAnimation")
-
-        self.layoutDanmakuCanvas()
-    }
-    
-    func mediaSettingViewController(_ vc: MediaSettingViewController, didChangePlayerSpeed speed: Double) {
-        self.changeSpeed(speed)
-    }
-    
-    func mediaSettingViewController(_ vc: MediaSettingViewController, didChangePlayerMode mode: PlayerMode) {
-        self.changeRepeatMode()
     }
     
 }

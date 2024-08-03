@@ -16,20 +16,6 @@ protocol PlayerListViewControllerDelegate: AnyObject {
     func currentPlayIndexAtPlayerListViewController(_ viewController: PlayerListViewController) -> Int?
 }
 
-extension PlayerListViewControllerDelegate {
-    func playerListViewController(_ viewController: PlayerListViewController, didSelectedRow: Int) {
-        
-    }
-    
-    func playerListViewController(_ viewController: PlayerListViewController, didDeleteRow: Int) {
-        
-    }
-    
-    func currentPlayIndexAtPlayerListViewController(_ viewController: PlayerListViewController) -> Int? {
-        return nil
-    }
-}
-
 class PlayerListViewController: ViewController, NSTableViewDelegate, NSTableViewDataSource {
     
     
