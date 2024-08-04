@@ -119,16 +119,10 @@ class PlayerMediaContext {
     
     lazy var jumpEndingDuration = BehaviorSubject<Double>(value: Preferences.shared.jumpEndingDuration)
     
-    lazy var volume = BehaviorSubject<Int>(value: self.player?.volume ?? 0)
+    lazy var volume = PublishSubject<Int>()
     
     /// 播放文件事件
     lazy var playMediaEvent = PublishSubject<File>()
-    
-    private weak var player: MediaPlayer?
-    
-    init(player: MediaPlayer) {
-        self.player = player
-    }
 }
 
 // MARK: - 便捷接口
@@ -248,7 +242,7 @@ extension PlayerMediaModel {
 
 class PlayerMediaModel {
     
-    lazy var context = PlayerMediaContext(player: self.player)
+    lazy var context = PlayerMediaContext()
     
     private var playMediaInfo = [URL : PlayMediaInfo]()
     

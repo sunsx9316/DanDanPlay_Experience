@@ -215,7 +215,7 @@ class PlayerViewController: ViewController {
             
         }).disposed(by: self.disposeBag)
         
-        self.mediaModel.context.volume.skip(1).subscribe(onNext: { [weak self] volume in
+        self.mediaModel.context.volume.subscribe(onNext: { [weak self] volume in
             guard let self = self else { return }
             
             self.view.show(text: NSLocalizedString("音量: ", comment: "") + "\(volume)")
@@ -429,7 +429,7 @@ extension PlayerViewController: MatchsViewControllerDelegate {
                 builder.progress = 1
                 builder.statusText = NSLocalizedString("即将开始播放...", comment: "")
                 
-                self.showGotoLastWatchTime(lastWatchProgress: lastWatchProgress, retryTime: 0)
+                self.showGotoLastWatchTime(lastWatchProgress: lastWatchProgress)
             }
         case .error(let error):
             if let error = error as? PlayerModel.ParseError {
@@ -452,7 +452,7 @@ extension PlayerViewController: MatchsViewControllerDelegate {
     /// - Parameters:
     ///   - lastWatchProgress: 上次播放进度
     ///   - retryTime: 重试次数
-    private func showGotoLastWatchTime(lastWatchProgress: TimeInterval, retryTime: Int) {
+    private func showGotoLastWatchTime(lastWatchProgress: TimeInterval, retryTime: Int = 0) {
         let totalTime = self.mediaModel.length
         
         if totalTime == 0 && retryTime < 5 {

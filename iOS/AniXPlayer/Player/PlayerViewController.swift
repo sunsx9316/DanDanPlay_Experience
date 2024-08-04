@@ -599,7 +599,7 @@ extension PlayerViewController: MatchsViewControllerDelegate {
                 self.parseMediaHUD?.progress = 1
                 self.parseMediaHUD?.label.text = NSLocalizedString("即将开始播放...", comment: "")
                 
-                self.showGotoLastWatchTime(lastWatchProgress: lastWatchProgress, retryTime: 0)
+                self.showGotoLastWatchTime(lastWatchProgress: lastWatchProgress)
             }
         case .error(let error):
             if let error = error as? PlayerModel.ParseError {
@@ -626,7 +626,7 @@ extension PlayerViewController: MatchsViewControllerDelegate {
     /// - Parameters:
     ///   - lastWatchProgress: 上次播放进度
     ///   - retryTime: 重试次数
-    private func showGotoLastWatchTime(lastWatchProgress: TimeInterval, retryTime: Int) {
+    private func showGotoLastWatchTime(lastWatchProgress: TimeInterval, retryTime: Int = 0) {
         let totalTime = self.mediaModel.length
         
         if totalTime == 0 && retryTime < 5 {
