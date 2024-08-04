@@ -389,7 +389,7 @@ extension PlayerViewController: MatchsViewControllerDelegate {
     
     func playNowInMatchsViewController(_ matchsViewController: MatchsViewController) {
         self.closeMatchWindow()
-        _ = self.playerModel.startPlay(matchsViewController.file, matchInfo: nil, danmakus: [:])
+        _ = self.playerModel.startPlay(matchsViewController.file, matchInfo: nil, danmakus: [:]).subscribe()
     }
     
     /// 解析视频
@@ -430,14 +430,14 @@ extension PlayerViewController: MatchsViewControllerDelegate {
         case .error(let error):
             if let error = error as? PlayerModel.ParseError {
                 switch error {
-                case .notMatched(let collection, let media):
+                case .matched(let collection, let media):
                     self.popMatchWindowController(with: collection, file: media)
+                case .notMatchedDanmaku:
+                    self.view.show(error: error)
                 }
             } else {
                 self.view.show(error: error)
             }
-            
-            self.view.dismiss(delay: 0.3)
         case .completed:
             self.view.dismiss(delay: 0.3)
         }

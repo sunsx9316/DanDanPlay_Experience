@@ -13,8 +13,20 @@ import RxSwift
 class PlayerModel {
 
     /// 解析错误
-    enum ParseError: Error {
-        case notMatched(collection: MatchCollection, media: File)
+    enum ParseError: LocalizedError {
+        /// 匹配到多个弹幕
+        case matched(collection: MatchCollection, media: File)
+        /// 没匹配到弹幕
+        case notMatchedDanmaku
+        
+        var errorDescription: String? {
+            switch self {
+            case .matched(let collection, let media):
+                return NSLocalizedString("匹配到多个结果", comment: "")
+            case .notMatchedDanmaku:
+                return NSLocalizedString("未匹配到弹幕", comment: "")
+            }
+        }
     }
     
     /// 视频加载状态
@@ -123,7 +135,13 @@ extension PlayerModel {
                     if let error = error {
                         sub.onError(error)
                     } else if let collection = collection {
-                        sub.onError(ParseError.notMatched(collection: collection, media: media))
+                        if !collection.collection.isEmpty {
+                            sub.onError(ParseError.matched(collection: collection, media: media))
+                        } else {
+                            /// 没匹配到视频，直接播放
+                            _ = self?.startPlay(media, matchInfo: nil, danmakus: [:]).subscribe(onNext: { _ in })
+                            sub.onError(ParseError.notMatchedDanmaku)
+                        }
                     }
                     
                     sub.onCompleted()

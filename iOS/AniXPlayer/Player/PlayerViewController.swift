@@ -555,7 +555,7 @@ extension PlayerViewController: MatchsViewControllerDelegate {
     
     func playNowInMatchsViewController(_ matchsViewController: MatchsViewController) {
         matchsViewController.navigationController?.popToRootViewController(animated: true)
-        _ = self.playerModel.startPlay(matchsViewController.file, matchInfo: nil, danmakus: [:])
+        _ = self.playerModel.startPlay(matchsViewController.file, matchInfo: nil, danmakus: [:]).subscribe()
     }
     
     
@@ -600,10 +600,12 @@ extension PlayerViewController: MatchsViewControllerDelegate {
         case .error(let error):
             if let error = error as? PlayerModel.ParseError {
                 switch error {
-                case .notMatched(let collection, let media):
+                case .matched(let collection, let media):
                     let vc = MatchsViewController(with: collection, file: media)
                     vc.delegate = self
                     self.navigationController?.pushViewController(vc, animated: true)
+                case .notMatchedDanmaku:
+                    self.view.showError(error)
                 }
             } else {
                 self.view.showError(error)
