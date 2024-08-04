@@ -34,7 +34,7 @@ protocol FileDelegate: AnyObject {
     func mediaBufferDidChange(file: File, bufferInfo: MediaBufferInfo)
 }
 
-protocol File {
+protocol File: HistoryManager.lastWatchDateStoreable {
     
     var url: URL { get }
     
@@ -52,7 +52,7 @@ protocol File {
     
     var parentFile: File? { get }
     
-    var fileHash: String { get }
+    var fileId: String { get }
     
     /// 文件是否允许删除
     var isCanDelete: Bool { get }
@@ -95,7 +95,7 @@ extension File {
         return (self.url.absoluteString.removingPercentEncoding as NSString?)?.pathExtension.uppercased() ?? ""
     }
     
-    var fileHash: String {
+    var fileId: String {
         return (self.url.absoluteString as NSString).md5() ?? ""
     }
     
@@ -108,6 +108,10 @@ extension File {
             return false
         }
         return true
+    }
+    
+    var lastWatchDateKey: String {
+        return self.fileId
     }
     
     func getDataWithRange(_ range: ClosedRange<Int>,

@@ -24,16 +24,34 @@ class LocalFile: File {
     
     var fileSize = 0
     
+    var fileId: String = ""
+    
     var parentFile: File? {
         return LocalFile(with: self.url.deletingLastPathComponent())
     }
     
     static var rootFile: File = LocalFile(with: PathUtils.documentsURL)
     
-    init(with url: URL, fileSize: Int) {
+    private init(with url: URL, fileSize: Int, fileId: String) {
         self.url = url
         self.fileSize = fileSize
+        self.fileId = fileId
         self.type = url.hasDirectoryPath ? .folder : .file
+    }
+    
+    convenience init(with url: URL) {
+        let attributesOfItem = try? FileManager.default.attributesOfItem(atPath:url.path)
+        let size = attributesOfItem?[.size] as? Int ?? 0
+        
+        /// 本地文件每次启动的路径都会变，这里结合文件信息和名称确定id
+        var fileId = url.lastPathComponent
+        if let createDate = attributesOfItem?[.creationDate] as? Date {
+            let dateFormatter = DateFormatter.anix_YYYY_MM_dd_T_HH_mm_ss_SSSFormatter
+            fileId += dateFormatter.string(from: createDate)
+        }
+        
+        let fileHash = fileId.md5() ?? ""
+        self.init(with: url, fileSize: size, fileId: fileHash)
     }
     
     func getFileHashWithProgress(_ progress: FileProgressAction?,
@@ -48,12 +66,6 @@ class LocalFile: File {
                 completion(.failure(error))
             }
         }
-    }
-    
-    convenience init(with url: URL) {
-        let attributesOfItem = try? FileManager.default.attributesOfItem(atPath:url.path)
-        let size = attributesOfItem?[.size] as? Int ?? 0
-        self.init(with: url, fileSize: size)
     }
     
     func createMedia(delegate: FileDelegate) -> VLCMedia? {

@@ -9,6 +9,13 @@ import Foundation
 
 extension DateFormatter {
     
+    /// 解析YYYY-MM-dd HH:mm:ss
+    static var anix_YYYY_MM_dd_HH_mm_ssFormatter: DateFormatter = {
+        var dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "YYYY-MM-dd HH:mm:ss"
+        return dateFormatter
+    }()
+    
     /// 解析YYYY-MM-ddTHH:mm:ss
     static var anix_YYYY_MM_dd_T_HH_mm_ssFormatter: DateFormatter = {
         var dateFormatter = DateFormatter()

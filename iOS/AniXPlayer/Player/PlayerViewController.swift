@@ -96,8 +96,6 @@ class PlayerViewController: ViewController {
         if self.mediaModel.isPlaying {
             self.playerModel.mediaModel.pause()
         }
-        
-        self.mediaModel.storeProgress()
     }
     
     override func viewDidLoad() {

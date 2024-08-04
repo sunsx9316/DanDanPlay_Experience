@@ -55,7 +55,7 @@ class CacheManager {
     func matchHashWithFile(_ file: File) -> String? {
         let episodeFolderURL = PathUtils.cacheURL.appendingPathComponent("fileHash.plist")
         if let dic = NSDictionary(contentsOf: episodeFolderURL) as? [AnyHashable : [AnyHashable : Any]] {
-            let values = dic[file.fileHash]
+            let values = dic[file.fileId]
             return values?["hash"] as? String
         }
         return nil
@@ -64,7 +64,7 @@ class CacheManager {
     func setMatchHashWithFile(_ file: File, hash: String) {
         let episodeFolderURL = PathUtils.cacheURL.appendingPathComponent("fileHash.plist")
         let dic = NSMutableDictionary(contentsOf: episodeFolderURL) ?? .init()
-        dic[file.fileHash] = ["hash" : hash]
+        dic[file.fileId] = ["hash" : hash]
         do {
             try dic.write(to: episodeFolderURL)
         } catch let error {

@@ -228,7 +228,7 @@ class DanmakuManager {
     ///   - completion: 完成回调
     func downCustomDanmaku(_ file: File, completion: @escaping((Result<URL, Error>) -> Void)) {
         var cacheURL = PathUtils.cacheURL
-        cacheURL.appendPathComponent(file.fileHash)
+        cacheURL.appendPathComponent(file.fileId)
         
         if !FileManager.default.fileExists(atPath: cacheURL.path) {
             file.getDataWithProgress(nil) { result in

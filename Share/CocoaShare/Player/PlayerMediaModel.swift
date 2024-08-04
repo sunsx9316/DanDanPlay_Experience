@@ -8,21 +8,15 @@
 import Foundation
 import RxSwift
 
-private class PlayMediaInfo {
+private class PlayMediaInfo: HistoryManager.WatchProgressStoreable {
     
-    var watchProgressKey: String? {
+    /// 上次播放进度缓存key
+    var watchProgressKey: String {
         if episodeId != 0 {
             return "\(episodeId)"
         }
-        return media.fileHash
+        return media.fileId
     }
-    
-    
-    var mediaId: String {
-        return self.media.url.path
-    }
-    
-    var playImmediately = false
     
     var episodeId = 0
     
@@ -260,7 +254,7 @@ class PlayerMediaModel {
     }
     
     deinit {
-        self.storeProgress()
+        self.storeWatchProgress()
     }
     
     // MARK: - Public
@@ -340,27 +334,11 @@ class PlayerMediaModel {
     /// 尝试解析文件
     /// - Parameter media: 文件
     func tryParseMediaOneTime(_ media: File) {
-        self.storeProgress()
+        self.storeWatchProgress()
         
         self.stop()
         
         self.context.media.onNext(media)
-    }
-    
-    /// 保存观看记录
-    func storeProgress() {
-        if let currentPlayItem = self.player.currentPlayItem,
-           let playItem = self.findPlayItem(currentPlayItem),
-            let watchProgressKey = playItem.watchProgressKey {
-            
-            let position = self.player.position
-            //播放结束不保存进度
-            if position >= 0.99 {
-                HistoryManager.shared.cleanWatchProgress(mediaKey: watchProgressKey)
-            } else {
-                HistoryManager.shared.storeWatchProgress(mediaKey: watchProgressKey, progress: position)
-            }
-        }
     }
     
     
@@ -481,9 +459,7 @@ class PlayerMediaModel {
             
             if let playItem = self?.findPlayItem(media) {
                 playItem.episodeId = episodeId
-                if let watchProgressKey = playItem.watchProgressKey {
-                    lastWatchProgress = HistoryManager.shared.watchProgress(mediaKey: watchProgressKey)
-                }
+                lastWatchProgress = HistoryManager.shared.watchProgress(media: playItem)
             }
             
             DispatchQueue.main.async {
@@ -504,6 +480,29 @@ class PlayerMediaModel {
         }
         
         return self.playMediaInfo[media.url]
+    }
+    
+    /// 保存观看进度
+    private func storeWatchProgress() {
+        if let currentPlayItem = self.player.currentPlayItem,
+           let playItem = self.findPlayItem(currentPlayItem) {
+            
+            let position = self.player.position
+            //播放结束不保存进度
+            if position >= 0.99 {
+                HistoryManager.shared.storeWatchProgress(media: playItem, progress: nil)
+            } else {
+                HistoryManager.shared.storeWatchProgress(media: playItem, progress: position)
+            }
+        }
+    }
+    
+    
+    /// 保存上次观看时间
+    private func storeLastWatchDateProgress() {
+        if let currentPlayItem = self.player.currentPlayItem {
+            HistoryManager.shared.storeLastWatchDate(media: currentPlayItem, date: Date())
+        }
     }
     
     private func bindContext() {
@@ -633,19 +632,15 @@ extension PlayerMediaModel {
 extension PlayerMediaModel: MediaPlayerDelegate {
     
     func player(_ player: MediaPlayer, stateDidChange state: PlayerState) {
-        
-        let isPlay = (try? self.context.isPlay.value()) ?? false
-        
         switch state {
         case .playing:
-            if !isPlay {
-                self.context.isPlay.onNext(true)
-            }
+            self.context.isPlay.onNext(true)
         case .pause, .stop:
-            if isPlay {
-                self.context.isPlay.onNext(false)
-            }
+            self.context.isPlay.onNext(false)
         }
+        
+        self.storeWatchProgress()
+        self.storeLastWatchDateProgress()
     }
     
     func player(_ player: MediaPlayer, shouldChangeMedia media: File) -> Bool {

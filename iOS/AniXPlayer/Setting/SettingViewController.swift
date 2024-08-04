@@ -106,7 +106,7 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = type.subtitle
             return cell
-        case .cleanupCache:
+        case .cleanupCache, .cleanupHistory:
             let cell = tableView.dequeueCell(class: TitleDetailTableViewCell.self, indexPath: indexPath)
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = type.subtitle
@@ -187,7 +187,20 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
             
             vc.addAction(.init(title: NSLocalizedString("确定", comment: ""), style: .destructive, handler: { (_)  in
                 CacheManager.shared.cleanupCache()
-                HistoryManager.shared.cleanUpAllWatchProgress()
+                
+                self.view.showHUD(NSLocalizedString("清除成功！", comment: ""))
+            }))
+            
+            self.present(vc, atView: tableView.cellForRow(at: indexPath))
+        } else if type == .cleanupHistory {
+            let vc = UIAlertController(title: NSLocalizedString("提示", comment: ""), message: NSLocalizedString("确定清除播放记录吗？", comment: ""), preferredStyle: .alert)
+
+            vc.addAction(.init(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: { (_) in
+                
+            }))
+            
+            vc.addAction(.init(title: NSLocalizedString("确定", comment: ""), style: .destructive, handler: { (_)  in
+                HistoryManager.shared.cleanUpAllCache()
                 
                 self.view.showHUD(NSLocalizedString("清除成功！", comment: ""))
             }))
@@ -209,6 +222,7 @@ class SettingViewController: ViewController {
         case host
         case log
         case cleanupCache
+        case cleanupHistory
         
         var title: String {
             switch self {
@@ -228,6 +242,8 @@ class SettingViewController: ViewController {
                 return NSLocalizedString("清除缓存", comment: "")
             case .autoLoadCustomSubtitle:
                 return NSLocalizedString("自动加载本地字幕", comment: "")
+            case .cleanupHistory:
+                return NSLocalizedString("清除播放记录", comment: "")
             }
         }
         
@@ -268,6 +284,8 @@ class SettingViewController: ViewController {
                 return NSLocalizedString("将.xlog文件提供给开发者", comment: "")
             case .cleanupCache:
                 return NSLocalizedString("清除本地匹配记录、弹幕缓存等", comment: "")
+            case .cleanupHistory:
+                return NSLocalizedString("清除播放记录、历史等", comment: "")
             }
         }
     }
