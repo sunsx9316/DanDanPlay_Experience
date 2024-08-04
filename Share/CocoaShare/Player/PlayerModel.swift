@@ -21,7 +21,7 @@ class PlayerModel {
         
         var errorDescription: String? {
             switch self {
-            case .matched(let collection, let media):
+            case .matched(_, _):
                 return NSLocalizedString("匹配到多个结果", comment: "")
             case .notMatchedDanmaku:
                 return NSLocalizedString("未匹配到弹幕", comment: "")
