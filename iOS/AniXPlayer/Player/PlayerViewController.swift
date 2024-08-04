@@ -536,9 +536,7 @@ extension PlayerViewController: FileBrowserViewControllerDelegate {
 
 // MARK: - MatchsViewControllerDelegate
 extension PlayerViewController: MatchsViewControllerDelegate {
-    
-    func matchsViewController(_ matchsViewController: MatchsViewController, didSelectedEpisodeId episodeId: Int) {
-        
+    func matchsViewController(_ matchsViewController: MatchsViewController, didMatched matchInfo: any MatchInfo) {
         switch matchsViewController.style {
         case .full:
             matchsViewController.navigationController?.popToRootViewController(animated: true)
@@ -548,7 +546,7 @@ extension PlayerViewController: MatchsViewControllerDelegate {
             }
         }
         
-        _ = self.playerModel.didMatchMedia(matchsViewController.file, episodeId: episodeId).subscribe { [weak self] event in
+        _ = self.playerModel.didMatchMedia(matchsViewController.file, matchInfo: matchInfo).subscribe { [weak self] event in
             guard let self = self else { return }
             
             self.parseMedia(event: event)
@@ -557,7 +555,7 @@ extension PlayerViewController: MatchsViewControllerDelegate {
     
     func playNowInMatchsViewController(_ matchsViewController: MatchsViewController) {
         matchsViewController.navigationController?.popToRootViewController(animated: true)
-        _ = self.playerModel.startPlay(matchsViewController.file, episodeId: 0, danmakus: [:])
+        _ = self.playerModel.startPlay(matchsViewController.file, matchInfo: nil, danmakus: [:])
     }
     
     

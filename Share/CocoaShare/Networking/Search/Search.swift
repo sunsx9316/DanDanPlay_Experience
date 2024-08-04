@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Search: Decodable {
+class Search: Decodable {
     
     /// 剧集ID（弹幕库编号）
     @Default<Int> var id: Int
@@ -15,13 +15,16 @@ struct Search: Decodable {
     /// 剧集标题
     @Default<String> var episodeTitle: String
     
+    ///  作品标题
+    var animeTitle: String = ""
+    
     private enum CodingKeys: String, CodingKey {
         case id = "episodeId"
         case episodeTitle
     }
 }
 
-struct SearchCollection: Decodable {
+class SearchCollection: Decodable {
     
     /// 作品编号
     @Default<Int> var animeId: Int
@@ -44,7 +47,7 @@ struct SearchCollection: Decodable {
     }
 }
 
-struct SearchResult: Decodable {
+class SearchResult: Decodable {
     
     /// 是否有更多未显示的搜索结果，当结果集过大时，hasMore属性为true，这时客户端应该提示用户填写更详细的信息以缩小搜索范围。
     @Default<Bool> var hasMore: Bool

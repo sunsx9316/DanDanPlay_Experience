@@ -9,43 +9,7 @@ import Cocoa
 import ProgressHUD
 
 protocol SearchViewControllerDelegate: AnyObject {
-    func searchViewController(_ searchViewController: SearchViewController, didSelectedEpisodeId episodeId: Int)
-}
-
-extension Search: MatchItem {
-    var episodeId: Int? {
-        self.id
-    }
-    
-    var items: [MatchItem]? {
-        return nil
-    }
-    
-    var title: String {
-        return self.episodeTitle
-    }
-    
-    var typeDesc: String? {
-        return nil
-    }
-}
-
-extension SearchCollection: MatchItem {
-    var items: [MatchItem]? {
-        return self.collection
-    }
-    
-    var title: String {
-        return self.animeTitle
-    }
-    
-    var episodeId: Int? {
-        return nil
-    }
-    
-    var typeDesc: String? {
-        return self.typeDescription
-    }
+    func searchViewController(_ searchViewController: SearchViewController, didMatched matchInfo: MatchInfo)
 }
 
 class SearchViewController: ViewController {
@@ -56,12 +20,12 @@ class SearchViewController: ViewController {
     
     weak var delegate: SearchViewControllerDelegate?
     
-    private var dataSource = [MatchItem]()
+    private var dataSource = [MediaMatchItem]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.view.window?.title = NSLocalizedString("搜索结果", comment: "")
+        self.title = NSLocalizedString("搜索结果", comment: "")
         
         self.outlineView.registerClassCell(class: MatchsCell.self)
         self.outlineView.target = self
@@ -73,9 +37,9 @@ class SearchViewController: ViewController {
     // MARK: Private
     @objc private func doubleAction(_ sender: NSOutlineView) {
         if sender.selectedRow > -1,
-            let item = sender.item(atRow: sender.selectedRow) as? MatchItem {
+            let item = sender.item(atRow: sender.selectedRow) as? MediaMatchItem {
             if let episodeId = item.episodeId {
-                self.delegate?.searchViewController(self, didSelectedEpisodeId: episodeId)
+                self.delegate?.searchViewController(self, didMatched: item)
             }
         }
     }
@@ -115,7 +79,7 @@ extension SearchViewController: NSOutlineViewDataSource {
             return 0
         }
         
-        if let item = item as? MatchItem {
+        if let item = item as? MediaMatchItem {
             return item.items?.count ?? 0
         }
         return self.dataSource.count
@@ -124,14 +88,14 @@ extension SearchViewController: NSOutlineViewDataSource {
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
         if item == nil {
             return self.dataSource[index]
-        } else if let item = item as? MatchItem {
+        } else if let item = item as? MediaMatchItem {
             return item.items?[index] ?? NSNull()
         }
         return NSNull()
     }
     
     func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
-        if let item = item as? MatchItem {
+        if let item = item as? MediaMatchItem {
             return item.items?.isEmpty == false
         }
         return false
@@ -142,7 +106,7 @@ extension SearchViewController: NSOutlineViewDataSource {
 
 extension SearchViewController: NSOutlineViewDelegate {
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
-        if let item = item as? MatchItem {
+        if let item = item as? MediaMatchItem {
             let cell = outlineView.dequeueReusableCell(class: MatchsCell.self)
             cell.model = item
             return cell

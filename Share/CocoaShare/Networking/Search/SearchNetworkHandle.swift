@@ -19,6 +19,14 @@ class SearchNetworkHandle {
             switch result {
             case .success(let data):
                 let result = Response<SearchResult>(with: data)
+                
+                /// 给搜索赋值标题
+                if let searchCollection = result.result?.collection {
+                    for item in searchCollection {
+                        item.collection.forEach( { $0.animeTitle = item.animeTitle } )
+                    }
+                }
+                
                 completion(result.result, result.error)
                 ANX.logInfo(.HTTP, "搜索 请求成功")
             case .failure(let error):

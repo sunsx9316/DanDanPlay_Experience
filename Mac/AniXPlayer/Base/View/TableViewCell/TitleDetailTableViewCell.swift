@@ -17,6 +17,7 @@ class TitleDetailTableViewCell: NSView {
         super.awakeFromNib()
         
         self.titleLabel.font = .ddp_large
+        self.subtitleLabel.font = .ddp_normal
         self.subtitleLabel.textColor = .subtitleTextColor
     }
 }

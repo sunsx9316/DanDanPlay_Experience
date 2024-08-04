@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Image references" minToolsVersion="12.0"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -23,13 +23,13 @@
                         <imageReference key="image" image="Public/right_arrow" renderingMode="original"/>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="249" verticalCompressionResistancePriority="748" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uAW-M5-zZT" customClass="Label" customModule="AniXPlayer" customModuleProvider="target">
-                        <rect key="frame" x="10" y="38" width="53" height="18"/>
+                        <rect key="frame" x="15" y="38" width="53" height="18"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zkH-Uw-sYX" customClass="Label" customModule="AniXPlayer" customModuleProvider="target">
-                        <rect key="frame" x="10" y="10" width="30" height="18"/>
+                        <rect key="frame" x="15" y="10" width="30" height="18"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
@@ -41,7 +41,7 @@
                     <constraint firstItem="5vI-He-h3h" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="zkH-Uw-sYX" secondAttribute="trailing" constant="10" id="DXX-wG-iln"/>
                     <constraint firstItem="uAW-M5-zZT" firstAttribute="leading" secondItem="zkH-Uw-sYX" secondAttribute="leading" id="EIv-VP-nfC"/>
                     <constraint firstItem="5vI-He-h3h" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="Lgk-DT-Q8X"/>
-                    <constraint firstItem="zkH-Uw-sYX" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="M4J-dA-vG5"/>
+                    <constraint firstItem="zkH-Uw-sYX" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="15" id="M4J-dA-vG5"/>
                     <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="uAW-M5-zZT" secondAttribute="bottom" constant="10" id="cys-eM-cm8"/>
                     <constraint firstItem="zkH-Uw-sYX" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="f6Y-mu-6Mt"/>
                     <constraint firstAttribute="trailing" secondItem="5vI-He-h3h" secondAttribute="trailing" constant="10" id="ucv-fB-5JS"/>

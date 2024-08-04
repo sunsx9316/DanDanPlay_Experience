@@ -8,43 +8,7 @@
 import UIKit
 
 protocol SearchViewControllerDelegate: AnyObject {
-    func searchViewController(_ searchViewController: SearchViewController, didSelectedEpisodeId episodeId: Int)
-}
-
-extension Search: MatchItem {
-    var episodeId: Int? {
-        self.id
-    }
-    
-    var items: [MatchItem]? {
-        return nil
-    }
-    
-    var title: String {
-        return self.episodeTitle
-    }
-    
-    var typeDesc: String? {
-        return nil
-    }
-}
-
-extension SearchCollection: MatchItem {
-    var items: [MatchItem]? {
-        return self.collection
-    }
-    
-    var title: String {
-        return self.animeTitle
-    }
-    
-    var episodeId: Int? {
-        return nil
-    }
-    
-    var typeDesc: String? {
-        return self.typeDescription
-    }
+    func searchViewController(_ searchViewController: SearchViewController, didMatched matchInfo: MatchInfo)
 }
 
 extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
@@ -79,15 +43,15 @@ extension SearchViewController: UITableViewDelegate, UITableViewDataSource {
             vc.isRootVC = false
             vc.delegate = self
             self.navigationController?.pushViewController(vc, animated: true)
-        } else if let episodeId = item.episodeId {
-            self.delegate?.searchViewController(self, didSelectedEpisodeId: episodeId)
+        } else if (item.episodeId ?? 0) > 0 {
+            self.delegate?.searchViewController(self, didMatched: item)
         }
     }
 }
 
 extension SearchViewController: SearchViewControllerDelegate {
-    func searchViewController(_ searchViewController: SearchViewController, didSelectedEpisodeId episodeId: Int) {
-        self.delegate?.searchViewController(searchViewController, didSelectedEpisodeId: episodeId)
+    func searchViewController(_ searchViewController: SearchViewController, didMatched matchInfo: any MatchInfo) {
+        self.delegate?.searchViewController(searchViewController, didMatched: matchInfo)
     }
 }
 
@@ -99,7 +63,7 @@ extension SearchViewController: UISearchBarDelegate {
 
 class SearchViewController: ViewController {
     
-    private lazy var dataSource = [MatchItem]()
+    private lazy var dataSource = [MediaMatchItem]()
     
     private lazy var tableView: TableView = {
         let tableView = TableView(frame: .zero, style: .plain)
@@ -114,7 +78,7 @@ class SearchViewController: ViewController {
     
     private var isRootVC = true
     
-    private init(with items: [MatchItem]) {
+    private init(with items: [MediaMatchItem]) {
         super.init(nibName: nil, bundle: nil)
         self.dataSource = items
     }

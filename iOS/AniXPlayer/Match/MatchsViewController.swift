@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 
 protocol MatchsViewControllerDelegate: AnyObject {
-    func matchsViewController(_ matchsViewController: MatchsViewController, didSelectedEpisodeId episodeId: Int)
+    func matchsViewController(_ matchsViewController: MatchsViewController, didMatched matchInfo: MatchInfo)
     
     func playNowInMatchsViewController(_ matchsViewController: MatchsViewController)
 }
@@ -45,16 +45,16 @@ extension MatchsViewController: UITableViewDelegate, UITableViewDataSource {
             vc.hidesBottomBarWhenPushed = true
             vc.delegate = self
             self.navigationController?.pushViewController(vc, animated: true)
-        } else if let episodeId = model.episodeId {
-            self.delegate?.matchsViewController(self, didSelectedEpisodeId: episodeId)
+        } else if (model.episodeId ?? 0) > 0 {
+            self.delegate?.matchsViewController(self, didMatched: model)
         }
     }
 }
 
 
 extension MatchsViewController: MatchsViewControllerDelegate {
-    func matchsViewController(_ matchsViewController: MatchsViewController, didSelectedEpisodeId episodeId: Int) {
-        self.delegate?.matchsViewController(matchsViewController, didSelectedEpisodeId: episodeId)
+    func matchsViewController(_ matchsViewController: MatchsViewController, didMatched matchInfo: any MatchInfo) {
+        self.delegate?.matchsViewController(matchsViewController, didMatched: matchInfo)
     }
     
     func playNowInMatchsViewController(_ matchsViewController: MatchsViewController) {
@@ -64,11 +64,9 @@ extension MatchsViewController: MatchsViewControllerDelegate {
 
 
 extension MatchsViewController: SearchViewControllerDelegate {
-    
-    func searchViewController(_ searchViewController: SearchViewController, didSelectedEpisodeId episodeId: Int) {
-        self.delegate?.matchsViewController(self, didSelectedEpisodeId: episodeId)
+    func searchViewController(_ searchViewController: SearchViewController, didMatched matchInfo: any MatchInfo) {
+        self.delegate?.matchsViewController(self, didMatched: matchInfo)
     }
-    
 }
 
 class MatchsViewController: ViewController {
@@ -78,21 +76,57 @@ class MatchsViewController: ViewController {
         case mini
     }
     
-    private class _AnimateModel: MatchItem {
-        var typeDesc: String?
+    private class _AnimateModel: MediaMatchItem {
         
-        var items: [MatchItem]? = .init()
+        var matchId: Int {
+            return 0
+        }
         
-        var title = ""
+        var matchDesc: String {
+            return ""
+        }
         
-        var episodeId: Int?
+        var typeDesc: String? {
+            return self.match.typeDescription
+        }
+        
+        var items: [MediaMatchItem]? = .init()
+        
+        var title: String {
+            return self.match.animeTitle
+        }
+        
+        var episodeId: Int? {
+            return nil
+        }
+        
+        let match: Match
+        
+        init(match: Match) {
+            self.match = match
+        }
     }
     
     private class _EpisodeModel: _AnimateModel {
         
+        override var matchId: Int {
+            return self.episodeId
+        }
+        
+        override var episodeId: Int {
+            return self.match.episodeId
+        }
+        
+        override var title: String {
+            return self.match.episodeTitle
+        }
+        
+        override var matchDesc: String {
+            return self.match.matchDesc
+        }
     }
     
-    private lazy var dataSource = [MatchItem]()
+    private lazy var dataSource = [MediaMatchItem]()
     
     private lazy var tableView: TableView = {
         let tableView = TableView(frame: .zero, style: .plain)
@@ -114,7 +148,7 @@ class MatchsViewController: ViewController {
     
     let style: Style
     
-    private init(with items: [MatchItem], file: File, style: Style) {
+    private init(with items: [MediaMatchItem], file: File, style: Style) {
         self.style = style
         self.file = file
         super.init(nibName: nil, bundle: nil)
@@ -218,15 +252,11 @@ class MatchsViewController: ViewController {
         
         for item in collection.collection {
             if animateDic[item.animeId] == nil {
-                let anime = _AnimateModel()
-                anime.title = item.animeTitle
-                anime.typeDesc = item.typeDescription
+                let anime = _AnimateModel(match: item)
                 animateDic[item.animeId] = anime
             }
             
-            let episodeModel = _EpisodeModel()
-            episodeModel.title = item.episodeTitle
-            episodeModel.episodeId = item.episodeId
+            let episodeModel = _EpisodeModel(match: item)
             animateDic[item.animeId]?.items?.append(episodeModel)
         }
         

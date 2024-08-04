@@ -9,24 +9,62 @@ import Cocoa
 import ProgressHUD
 
 protocol MatchsViewControllerDelegate: AnyObject {
-    func matchsViewController(_ matchsViewController: MatchsViewController, didSelectedEpisodeId episodeId: Int)
+    func matchsViewController(_ matchsViewController: MatchsViewController, didMatched matchInfo: MatchInfo)
     
     func playNowInMatchsViewController(_ matchsViewController: MatchsViewController)
 }
 
 class MatchsViewController: ViewController {
     
-    private class _AnimateModel: MatchItem {
-        var typeDesc: String?
+    private class _AnimateModel: MediaMatchItem {
         
-        var items: [MatchItem]? = .init()
+        var matchId: Int {
+            return 0
+        }
         
-        var title = ""
+        var matchDesc: String {
+            return ""
+        }
         
-        var episodeId: Int?
+        var typeDesc: String? {
+            return self.match.typeDescription
+        }
+        
+        var items: [MediaMatchItem]? = .init()
+        
+        var title: String {
+            return self.match.animeTitle
+        }
+        
+        var episodeId: Int? {
+            return nil
+        }
+        
+        let match: Match
+        
+        init(match: Match) {
+            self.match = match
+        }
     }
     
-    private class _EpisodeModel: _AnimateModel {}
+    private class _EpisodeModel: _AnimateModel {
+        
+        override var matchId: Int {
+            return self.episodeId
+        }
+        
+        override var episodeId: Int {
+            return self.match.episodeId
+        }
+        
+        override var title: String {
+            return self.match.episodeTitle
+        }
+        
+        override var matchDesc: String {
+            return self.match.matchDesc
+        }
+    }
     
     
     @IBOutlet weak var outlineView: NSOutlineView!
@@ -53,7 +91,7 @@ class MatchsViewController: ViewController {
     
     let file: File
     
-    private var dataSource = [MatchItem]()
+    private var dataSource = [MediaMatchItem]()
     
     /// 数据来源于初始化
     private var dataFromInit = false
@@ -65,7 +103,7 @@ class MatchsViewController: ViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = NSLocalizedString("弹幕匹配结果", comment: "")
+        self.title = NSLocalizedString("弹幕匹配结果（右键搜索）", comment: "")
         
         self.outlineView.target = self
         self.outlineView.doubleAction = #selector(doubleAction(_:))
@@ -87,9 +125,9 @@ class MatchsViewController: ViewController {
     // MARK: Private
     @objc private func doubleAction(_ sender: NSOutlineView) {
         if sender.selectedRow > -1,
-            let item = sender.item(atRow: sender.selectedRow) as? MatchItem {
+            let item = sender.item(atRow: sender.selectedRow) as? MediaMatchItem {
             if let episodeId = item.episodeId {
-                self.delegate?.matchsViewController(self, didSelectedEpisodeId: episodeId)
+                self.delegate?.matchsViewController(self, didMatched: item)
             }
         }
     }
@@ -159,15 +197,11 @@ class MatchsViewController: ViewController {
         
         for item in collection.collection {
             if animateDic[item.animeId] == nil {
-                let anime = _AnimateModel()
-                anime.title = item.animeTitle
-                anime.typeDesc = item.typeDescription
+                let anime = _AnimateModel(match: item)
                 animateDic[item.animeId] = anime
             }
             
-            let episodeModel = _EpisodeModel()
-            episodeModel.title = item.episodeTitle
-            episodeModel.episodeId = item.episodeId
+            let episodeModel = _EpisodeModel(match: item)
             animateDic[item.animeId]?.items?.append(episodeModel)
         }
         
@@ -189,7 +223,7 @@ extension MatchsViewController: NSOutlineViewDataSource {
             return 0
         }
         
-        if let item = item as? MatchItem {
+        if let item = item as? MediaMatchItem {
             return item.items?.count ?? 0
         }
         return self.dataSource.count
@@ -198,14 +232,14 @@ extension MatchsViewController: NSOutlineViewDataSource {
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
         if item == nil {
             return self.dataSource[index]
-        } else if let item = item as? MatchItem {
+        } else if let item = item as? MediaMatchItem {
             return item.items?[index] ?? NSNull()
         }
         return NSNull()
     }
     
     func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
-        if let item = item as? MatchItem {
+        if let item = item as? MediaMatchItem {
             return item.items?.isEmpty == false
         }
         return false
@@ -216,7 +250,7 @@ extension MatchsViewController: NSOutlineViewDataSource {
 
 extension MatchsViewController: NSOutlineViewDelegate {
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
-        if let item = item as? MatchItem {
+        if let item = item as? MediaMatchItem {
             let cell = outlineView.dequeueReusableCell(class: MatchsCell.self)
             cell.model = item
             return cell
@@ -227,9 +261,8 @@ extension MatchsViewController: NSOutlineViewDelegate {
 
 
 extension MatchsViewController: SearchViewControllerDelegate {
-    func searchViewController(_ searchViewController: SearchViewController, didSelectedEpisodeId episodeId: Int) {
-        self.delegate?.matchsViewController(self, didSelectedEpisodeId: episodeId)
+    func searchViewController(_ searchViewController: SearchViewController, didMatched matchInfo: any MatchInfo) {
+        self.delegate?.matchsViewController(self, didMatched: matchInfo)
     }
-    
     
 }

@@ -26,7 +26,7 @@ class MatchsCell: BaseView {
         return title
     }()
     
-    var model: MatchItem? {
+    var model: MediaMatchItem? {
         didSet {
             
             let typeDesc = self.model?.typeDesc ?? ""

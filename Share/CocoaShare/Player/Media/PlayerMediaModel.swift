@@ -12,111 +12,19 @@ private class PlayMediaInfo: HistoryManager.WatchProgressStoreable {
     
     /// 上次播放进度缓存key
     var watchProgressKey: String {
-        if episodeId != 0 {
+        if let episodeId = matchInfo?.matchId, episodeId != 0 {
             return "\(episodeId)"
         }
         return media.fileId
     }
     
-    var episodeId = 0
+    var matchInfo: MatchInfo?
     
     private let media: File
     
     init(media: File) {
         self.media = media
     }
-}
-
-/// 媒体设置项
-enum MediaSetting: CaseIterable {
-    
-    case playerSpeed
-    case subtitleMargin
-    case subtitleFontSize
-    
-    case autoJumpTitleEnding
-    case jumpTitleDuration
-    case jumpEndingDuration
-    
-    case playerMode
-    case subtitleTrack
-    case audioTrack
-    case subtitleSafeArea
-    case subtitleDelay
-    case loadSubtitle
-    
-    
-    var title: String {
-        switch self {
-        case .subtitleSafeArea:
-            return NSLocalizedString("防挡字幕", comment: "")
-        case .playerSpeed:
-            return NSLocalizedString("播放速度", comment: "")
-        case .playerMode:
-            return NSLocalizedString("播放模式", comment: "")
-        case .loadSubtitle:
-            return NSLocalizedString("加载字幕...", comment: "")
-        case .subtitleTrack:
-            return NSLocalizedString("字幕轨道", comment: "")
-        case .audioTrack:
-            return NSLocalizedString("音频轨道", comment: "")
-        case .autoJumpTitleEnding:
-            return NSLocalizedString("自动跳过片头/片尾", comment: "")
-        case .jumpTitleDuration:
-            return NSLocalizedString("跳过片头时长", comment: "")
-        case .jumpEndingDuration:
-            return NSLocalizedString("跳过片尾时长", comment: "")
-        case .subtitleDelay:
-            return NSLocalizedString("字幕时间偏移", comment: "")
-        case .subtitleMargin:
-            return NSLocalizedString("字幕Y轴偏移", comment: "")
-        case .subtitleFontSize:
-            return NSLocalizedString("字幕大小", comment: "")
-        }
-    }
-}
-
-class PlayerMediaContext {
-    
-    /// 时间信息
-    struct TimeInfo {
-        let currentTime: TimeInterval
-        let totalTime: TimeInterval
-    }
-    
-    lazy var isPlay = BehaviorSubject<Bool>(value: false)
-    
-    lazy var time = BehaviorSubject<TimeInfo>(value: TimeInfo(currentTime: 0, totalTime: 0))
-    
-    lazy var buffer = BehaviorSubject<[MediaBufferInfo]?>(value: nil)
-    
-    lazy var media = BehaviorSubject<File?>(value: nil)
-    
-    lazy var playList = BehaviorSubject<[File]?>(value: nil)
-    
-    
-    lazy var subtitleSafeArea = BehaviorSubject<Bool>(value: Preferences.shared.subtitleSafeArea)
-    
-    lazy var playerSpeed = BehaviorSubject<Double>(value: Preferences.shared.playerSpeed)
-    
-    lazy var playerMode = BehaviorSubject<PlayerMode>(value: Preferences.shared.playerMode)
-    
-    lazy var subtitleOffsetTime = BehaviorSubject<Int>(value: Preferences.shared.subtitleOffsetTime)
-    
-    lazy var subtitleMargin = BehaviorSubject<Int>(value: Preferences.shared.subtitleMargin)
-    
-    lazy var subtitleFontSize = BehaviorSubject<Float>(value: Preferences.shared.subtitleFontSize)
-    
-    lazy var autoJumpTitleEnding = BehaviorSubject<Bool>(value: Preferences.shared.autoJumpTitleEnding)
-    
-    lazy var jumpTitleDuration = BehaviorSubject<Double>(value: Preferences.shared.jumpTitleDuration)
-    
-    lazy var jumpEndingDuration = BehaviorSubject<Double>(value: Preferences.shared.jumpEndingDuration)
-    
-    lazy var volume = PublishSubject<Int>()
-    
-    /// 播放文件事件
-    lazy var playMediaEvent = PublishSubject<File>()
 }
 
 // MARK: - 便捷接口
@@ -217,20 +125,31 @@ extension PlayerMediaModel {
         return self.player.volume
     }
     
-    var mediaSetting: [MediaSetting] {
-        return MediaSetting.allCases.filter { cellType in
-            if cellType == .subtitleFontSize {
-                return false
-            }
-            
+    var mediaSetting: [MediaSettingInfo] {
+        var dataSource = [MediaSettingInfo]()
+        
+        dataSource.append(MediaSettingInfo(title: NSLocalizedString("媒体信息", comment: ""),
+                                           dataSource: [.matchInfo]))
+        
+        var mediaSetting: [MediaSetting] = [.autoJumpTitleEnding, .jumpTitleDuration, .jumpEndingDuration, .playerSpeed, .playerMode]
+        mediaSetting = mediaSetting.filter ({ setting in
             if !self.autoJumpTitleEnding {
-                if cellType == .jumpTitleDuration || cellType == .jumpEndingDuration {
+                if setting == .jumpTitleDuration || setting == .jumpEndingDuration {
                     return false
                 }
             }
-            
             return true
-        }
+        })
+        
+        dataSource.append(MediaSettingInfo(title: NSLocalizedString("播放设置", comment: ""), dataSource: mediaSetting))
+        
+        dataSource.append(MediaSettingInfo(title: NSLocalizedString("字幕设置", comment: ""),
+                                           dataSource: [.subtitleMargin, .subtitleSafeArea, .subtitleDelay, .subtitleTrack, .loadSubtitle]))
+        
+        dataSource.append(MediaSettingInfo(title: NSLocalizedString("音频设置", comment: ""),
+                                           dataSource: [.audioTrack]))
+        
+        return dataSource
     }
 }
 
@@ -346,7 +265,15 @@ class PlayerMediaModel {
     /// - Parameter media: 视频
     /// - Returns: 是否已经匹配到节目
     func isMatch(media: File) -> Bool {
-        return findPlayItem(media)?.episodeId != 0
+        return findPlayItem(media)?.matchInfo != nil
+    }
+    
+    
+    /// 获取匹配信息
+    /// - Parameter media: 媒体
+    /// - Returns: 匹配信息
+    func matchInfo(media: File) -> MatchInfo? {
+        return findPlayItem(media)?.matchInfo
     }
     
     
@@ -365,9 +292,9 @@ class PlayerMediaModel {
     /// 开始播放
     /// - Parameters:
     ///   - media: 视频
-    ///   - episodeId: 弹幕分级id
+    ///   - matchInfo: 匹配信息
     ///   - danmakus: 弹幕
-    func startPlay(_ media: File, episodeId: Int) -> Observable<PlayerModel.MediaLoadState> {
+    func startPlay(_ media: File, matchInfo: MatchInfo?) -> Observable<PlayerModel.MediaLoadState> {
         
         return Observable<PlayerModel.MediaLoadState>.create { [weak self] (sub) in
             
@@ -378,7 +305,7 @@ class PlayerMediaModel {
                     sub.onNext(.subtitle(subtitle: subtitle))
                 })
             
-            _ = self?.loadLastWatchProgress(media, episodeId: episodeId)
+            _ = self?.loadLastWatchProgress(media, matchInfo: matchInfo)
                 .subscribe(onNext: { [weak self] progress in
                     guard let self = self else { return }
                     
@@ -452,13 +379,13 @@ class PlayerMediaModel {
     }
     
     /// 定位上次播放的位置
-    private func loadLastWatchProgress(_ media: File, episodeId: Int) -> Observable<Double?> {
+    private func loadLastWatchProgress(_ media: File, matchInfo: MatchInfo?) -> Observable<Double?> {
         return Observable<Double?>.create { [weak self] (sub) in
             
             var lastWatchProgress: Double?
             
-            if let playItem = self?.findPlayItem(media) {
-                playItem.episodeId = episodeId
+            if let playItem = self?.findPlayItem(media), let matchInfo = matchInfo {
+                playItem.matchInfo = matchInfo
                 lastWatchProgress = HistoryManager.shared.watchProgress(media: playItem)
             }
             

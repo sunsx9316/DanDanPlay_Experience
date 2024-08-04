@@ -17,9 +17,9 @@ class PlayerSettingViewController: ViewController {
         var title: String {
             switch self {
             case .danmakuSetting:
-                return NSLocalizedString("弹幕设置", comment: "")
+                return NSLocalizedString("弹幕", comment: "")
             case .mediaSetting:
-                return NSLocalizedString("播放器设置", comment: "")
+                return NSLocalizedString("媒体", comment: "")
             }
         }
         

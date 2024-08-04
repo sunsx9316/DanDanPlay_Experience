@@ -29,7 +29,7 @@ class AnimatesTableViewCell: EpisodeTableViewCell {
         return imgView
     }()
     
-    override var model: MatchItem? {
+    override var model: MediaMatchItem? {
         didSet {
             self.typeLabel.text = self.model?.typeDesc
         }

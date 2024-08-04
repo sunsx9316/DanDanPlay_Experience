@@ -19,13 +19,13 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="249" verticalCompressionResistancePriority="748" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="uAW-M5-zZT" customClass="Label" customModule="AniXPlayer" customModuleProvider="target">
-                        <rect key="frame" x="10" y="38" width="53" height="18"/>
+                        <rect key="frame" x="15" y="38" width="53" height="18"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zkH-Uw-sYX" customClass="Label" customModule="AniXPlayer" customModuleProvider="target">
-                        <rect key="frame" x="10" y="10" width="30" height="18"/>
+                        <rect key="frame" x="15" y="10" width="30" height="18"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
@@ -55,7 +55,7 @@
                     <constraint firstItem="uAW-M5-zZT" firstAttribute="leading" secondItem="zkH-Uw-sYX" secondAttribute="leading" id="EIv-VP-nfC"/>
                     <constraint firstItem="RTI-CW-yUi" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="uAW-M5-zZT" secondAttribute="trailing" constant="10" id="Gcf-rT-Km7"/>
                     <constraint firstItem="RTI-CW-yUi" firstAttribute="centerX" secondItem="IHr-mY-0bG" secondAttribute="centerX" id="HFp-jg-k1W"/>
-                    <constraint firstItem="zkH-Uw-sYX" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="M4J-dA-vG5"/>
+                    <constraint firstItem="zkH-Uw-sYX" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="15" id="M4J-dA-vG5"/>
                     <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="uAW-M5-zZT" secondAttribute="bottom" constant="10" id="cys-eM-cm8"/>
                     <constraint firstItem="zkH-Uw-sYX" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="f6Y-mu-6Mt"/>
                     <constraint firstAttribute="trailing" secondItem="RTI-CW-yUi" secondAttribute="trailing" constant="10" id="oFF-b3-Ipx"/>

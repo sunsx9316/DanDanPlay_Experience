@@ -122,7 +122,7 @@ class DanmakuManager {
     func loadDanmaku(_ media: File,
                      progress: LoadingProgressAction?,
                      matchCompletion: @escaping((MatchCollection?, Error?) -> Void),
-                     danmakuCompletion: @escaping((DanmakuMapResult?, _ episodeId: Int, Error?) -> Void)) {
+                     danmakuCompletion: @escaping((DanmakuMapResult?, _ matchInfo: Match?, Error?) -> Void)) {
         progress?(.parseMedia)
         
         if Preferences.shared.autoLoadCustomDanmaku {
@@ -139,16 +139,16 @@ class DanmakuManager {
                         guard self != nil else { return }
                         
                         /// 进这里说明匹配到多个结果，或关闭了快速匹配
-                        danmakuCompletion(result, 0, nil)
+                        danmakuCompletion(result, nil, nil)
                         
-                    } getDanmakuCompletion: { [weak self] collection, episodeId, error in
+                    } getDanmakuCompletion: { [weak self] collection, matchInfo, error in
                         guard let self = self else { return }
                         
                         /// 如果下载到网络弹幕则使用，否则使用本地弹幕
                         if let collection = collection {
-                            danmakuCompletion(self.conver(collection.collection), episodeId, nil)
+                            danmakuCompletion(self.conver(collection.collection), matchInfo, nil)
                         } else {
-                            danmakuCompletion(result, 0, nil)
+                            danmakuCompletion(result, nil, nil)
                         }
                     }
                     

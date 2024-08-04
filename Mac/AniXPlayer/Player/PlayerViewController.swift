@@ -73,13 +73,10 @@ class PlayerViewController: ViewController {
 
     override func viewWillDisappear() {
         super.viewWillDisappear()
-
         
         if self.mediaModel.isPlaying {
             self.playerModel.mediaModel.pause()
         }
-        
-        self.mediaModel.storeProgress()
     }
     
     override func loadView() {
@@ -380,11 +377,10 @@ class PlayerViewController: ViewController {
 // MARK: - MatchsViewControllerDelegate
 extension PlayerViewController: MatchsViewControllerDelegate {
     
-    func matchsViewController(_ matchsViewController: MatchsViewController, didSelectedEpisodeId episodeId: Int) {
-        
+    func matchsViewController(_ matchsViewController: MatchsViewController, didMatched matchInfo: any MatchInfo) {
         self.closeMatchWindow()
         
-        _ = self.playerModel.didMatchMedia(matchsViewController.file, episodeId: episodeId).subscribe { [weak self] event in
+        _ = self.playerModel.didMatchMedia(matchsViewController.file, matchInfo: matchInfo).subscribe { [weak self] event in
             guard let self = self else { return }
             
             self.parseMedia(event: event)
@@ -393,7 +389,7 @@ extension PlayerViewController: MatchsViewControllerDelegate {
     
     func playNowInMatchsViewController(_ matchsViewController: MatchsViewController) {
         self.closeMatchWindow()
-        _ = self.playerModel.startPlay(matchsViewController.file, episodeId: 0, danmakus: [:])
+        _ = self.playerModel.startPlay(matchsViewController.file, matchInfo: nil, danmakus: [:])
     }
     
     /// 解析视频

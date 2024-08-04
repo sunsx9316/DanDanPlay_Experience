@@ -27,7 +27,7 @@ class MatchNetworkHandle {
     static func matchAndGetDanmakuWithFile(_ file: File,
                                            progress: LoadingProgressAction?,
                                            matchCompletion: @escaping((MatchCollection?, Error?) -> Void),
-                                           getDanmakuCompletion: @escaping((CommentCollection?, _ episodeId: Int, Error?) -> Void)) {
+                                           getDanmakuCompletion: @escaping((CommentCollection?, _ matchInfo: Match, Error?) -> Void)) {
         
         ANX.logInfo(.HTTP, "根据文件直接搜索弹幕 file: \(file)")
         
@@ -52,7 +52,7 @@ class MatchNetworkHandle {
                 ANX.logInfo(.HTTP, "根据文件直接搜索弹幕 精确匹配 matched: \(matched)")
                 
                 CommentNetworkHandle.getDanmaku(with: matched.episodeId) { damakus, error in
-                    getDanmakuCompletion(damakus, matched.episodeId, error)
+                    getDanmakuCompletion(damakus, matched, error)
                 }
             } else {
                 

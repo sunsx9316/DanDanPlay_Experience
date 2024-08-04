@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -18,13 +18,13 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="5Wx-oM-Rao" customClass="Label" customModule="AniXPlayer" customModuleProvider="target">
-                        <rect key="frame" x="10" y="10" width="30" height="18"/>
+                        <rect key="frame" x="15" y="10" width="30" height="18"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="249" verticalCompressionResistancePriority="748" text="Subtitle" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GBm-Je-Ncl" customClass="Label" customModule="AniXPlayer" customModuleProvider="target">
-                        <rect key="frame" x="10" y="38" width="311" height="18"/>
+                        <rect key="frame" x="15" y="38" width="306" height="18"/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <nil key="textColor"/>
                         <nil key="highlightedColor"/>
@@ -39,7 +39,7 @@
                 <constraints>
                     <constraint firstItem="M7s-kn-xld" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="1vH-gQ-5zI"/>
                     <constraint firstAttribute="bottom" relation="greaterThanOrEqual" secondItem="GBm-Je-Ncl" secondAttribute="bottom" constant="10" id="BMR-ot-w2n"/>
-                    <constraint firstItem="5Wx-oM-Rao" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="Lv8-NH-lWz"/>
+                    <constraint firstItem="5Wx-oM-Rao" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="15" id="Lv8-NH-lWz"/>
                     <constraint firstItem="GBm-Je-Ncl" firstAttribute="top" secondItem="5Wx-oM-Rao" secondAttribute="bottom" constant="10" id="OOu-CL-j4H"/>
                     <constraint firstItem="5Wx-oM-Rao" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="10" id="a1Q-Kr-eZ3"/>
                     <constraint firstItem="M7s-kn-xld" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="5Wx-oM-Rao" secondAttribute="trailing" constant="10" id="gd9-GI-gbh"/>

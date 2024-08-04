@@ -15,23 +15,7 @@ protocol MediaSettingViewControllerDelegate: AnyObject {
 
 class MediaSettingViewController: ViewController {
     
-    private struct CellTypeInfo {
-        var title: String
-        var dataSource: [MediaSetting]
-    }
-    
-    private lazy var dataSource: [CellTypeInfo] = {
-        var dataSource = [CellTypeInfo]()
-        
-        dataSource.append(CellTypeInfo(title: NSLocalizedString("播放设置", comment: ""),
-                                       dataSource: [.playerSpeed, .jumpTitleDuration, .jumpEndingDuration, .autoJumpTitleEnding, .playerMode]))
-        dataSource.append(CellTypeInfo(title: NSLocalizedString("字幕设置", comment: ""),
-                                       dataSource: [.subtitleMargin, .subtitleSafeArea, .subtitleDelay, .subtitleTrack, .loadSubtitle]))
-        dataSource.append(CellTypeInfo(title: NSLocalizedString("音频设置", comment: ""),
-                                       dataSource: [.audioTrack]))
-        
-        return dataSource
-    }()
+    private lazy var dataSource = [MediaSettingInfo]()
     
     private lazy var tableView: TableView = {
         let tableView = TableView(frame: .zero, style: .plain)
@@ -42,6 +26,7 @@ class MediaSettingViewController: ViewController {
         tableView.registerNibCell(class: SheetTableViewCell.self)
         tableView.registerNibCell(class: TitleTableViewCell.self)
         tableView.registerNibCell(class: StepTableViewCell.self)
+        tableView.registerNibCell(class: TitleTableViewCell.self)
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
         tableView.backgroundColor = .clear
@@ -82,8 +67,13 @@ class MediaSettingViewController: ViewController {
         self.tableView.snp.makeConstraints { (make) in
             make.edges.equalTo(self.view.safeAreaLayoutGuide.snp.edges)
         }
+        reloadData()
     }
 
+    private func reloadData() {
+        self.dataSource = self.mediaModel.mediaSetting
+        self.tableView.reloadData()
+    }
 }
 
 
@@ -166,7 +156,7 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
                 let isOn = aCell.aSwitch.isOn
                 
                 self.mediaModel.onChangeAutoJumpTitleEnding(isOn)
-                self.tableView.reloadData()
+                self.reloadData()
             }
             return cell
         case .jumpTitleDuration:
@@ -313,6 +303,19 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
                 aCell.model = model
                 
                 self.mediaModel.onChangeSubtitleFontSize(currentValue)
+            }
+            return cell
+        case .matchInfo:
+            let cell = tableView.dequeueCell(class: TitleTableViewCell.self, indexPath: indexPath)
+            cell.backgroundView?.backgroundColor = .clear
+            cell.backgroundColor = .clear
+            cell.selectionStyle = .none
+            cell.label.font = .ddp_normal
+            if let media = self.mediaModel.media {
+                let matchInfo = self.mediaModel.matchInfo(media: media)
+                cell.label.text = matchInfo?.matchDesc
+            } else {
+                cell.label.text = NSLocalizedString("无", comment: "")
             }
             return cell
         }

@@ -11,6 +11,11 @@ class TitleTableViewCell: NSView {
 
     @IBOutlet weak var label: NSTextField!
     
-    
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        self.label.text = nil
+        self.label.toolTip = nil
+    }
     
 }

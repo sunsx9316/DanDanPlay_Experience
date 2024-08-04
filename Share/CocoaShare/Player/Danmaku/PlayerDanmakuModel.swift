@@ -10,108 +10,6 @@ import RxSwift
 import RxCocoa
 import DanmakuRender
 
-/// 弹幕展示区域
-enum DanmakuArea: Int, CaseIterable {
-    /// 1/4屏
-    case area_1_4
-    /// 1/2屏
-    case area_1_2
-    /// 2/3屏
-    case area_2_3
-    /// 满屏
-    case area_1_1
-    
-    var value: Double {
-        switch self {
-        case .area_1_4:
-            return 1/4
-        case .area_1_2:
-            return 1/2
-        case .area_2_3:
-            return 2/3
-        case .area_1_1:
-            return 1
-        }
-    }
-    
-    var title: String {
-        switch self {
-        case .area_1_4:
-            return NSLocalizedString("1/4屏", comment: "")
-        case .area_1_2:
-            return NSLocalizedString("1/2屏", comment: "")
-        case .area_2_3:
-            return NSLocalizedString("2/3屏", comment: "")
-        case .area_1_1:
-            return NSLocalizedString("满屏", comment: "")
-        }
-    }
-}
-
-
-/// 弹幕设置项
-enum DanmakuSetting: CaseIterable {
-    case danmakuFontSize
-    case danmakuSpeed
-    case danmakuAlpha
-    case danmakuDensity
-    
-    case danmakuArea
-    case showDanmaku
-    case mergeSameDanmaku
-    
-    case danmakuOffsetTime
-    case searchDanmaku
-    case loadDanmaku
-    
-    var title: String {
-        switch self {
-        case .danmakuFontSize:
-            return NSLocalizedString("弹幕字体大小", comment: "")
-        case .danmakuSpeed:
-            return NSLocalizedString("弹幕速度", comment: "")
-        case .danmakuAlpha:
-            return NSLocalizedString("弹幕透明度", comment: "")
-        case .danmakuArea:
-            return NSLocalizedString("显示区域", comment: "")
-        case .showDanmaku:
-            return NSLocalizedString("弹幕开关", comment: "")
-        case .danmakuOffsetTime:
-            return NSLocalizedString("弹幕偏移时间", comment: "")
-        case .loadDanmaku:
-            return NSLocalizedString("加载本地弹幕...", comment: "")
-        case .searchDanmaku:
-            return NSLocalizedString("搜索弹幕", comment: "")
-        case .danmakuDensity:
-            return NSLocalizedString("弹幕密度", comment: "")
-        case .mergeSameDanmaku:
-            return NSLocalizedString("合并重复弹幕", comment: "")
-        }
-    }
-}
-
-class PlayerDanmakuContext {
-    
-    lazy var danmakuAlpha = BehaviorSubject<Float>(value: Float(Preferences.shared.danmakuAlpha))
-    
-    lazy var danmakuSpeed = BehaviorSubject<Double>(value: Preferences.shared.danmakuSpeed)
-    
-    lazy var danmakuFont = BehaviorSubject<DRFont>(value: DRFont.systemFont(ofSize: CGFloat(Preferences.shared.danmakuFontSize)))
-    
-    /// 弹幕和屏幕的占比
-    lazy var danmakuArea = BehaviorSubject<DanmakuArea>(value: Preferences.shared.danmakuArea)
-    
-    lazy var isShowDanmaku = BehaviorSubject<Bool>(value: Preferences.shared.isShowDanmaku)
-    
-    lazy var danmakuOffsetTime = BehaviorSubject<Int>(value: Preferences.shared.danmakuOffsetTime)
-    
-    /// 弹幕密度
-    lazy var danmakuDensity = BehaviorSubject<Float>(value: Preferences.shared.danmakuDensity)
-    
-    /// 合并相同弹幕
-    lazy var isMergeSameDanmaku = BehaviorSubject<Bool>(value: Preferences.shared.isMergeSameDanmaku)
-}
-
 // MARK: - 便捷接口
 extension PlayerDanmakuModel {
     var danmakuSpeed: Double {
@@ -195,7 +93,7 @@ class PlayerDanmakuModel {
     
     func onChangeDanmakuFontSize(_ danmakuFontSize: Double) {
         Preferences.shared.danmakuFontSize = danmakuFontSize
-        let font = DRFont.systemFont(ofSize: danmakuFontSize)
+        let font = ANXFont.systemFont(ofSize: danmakuFontSize)
         self.context.danmakuFont.onNext(font)
     }
     

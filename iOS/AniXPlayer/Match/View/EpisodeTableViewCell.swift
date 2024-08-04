@@ -15,7 +15,7 @@ class EpisodeTableViewCell: TableViewCell {
         return label
     }()
     
-    var model: MatchItem? {
+    var model: MediaMatchItem? {
         didSet {
             self.titleLabel.text = self.model?.title
         }

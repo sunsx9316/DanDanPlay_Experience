@@ -128,14 +128,14 @@ extension PlayerModel {
                     
                     sub.onCompleted()
                 }
-            } danmakuCompletion: { [weak self] result, episodeId, error in
+            } danmakuCompletion: { [weak self] result, matchInfo, error in
 
                 DispatchQueue.main.async {
                     
                     if let error = error {
                         sub.onError(error)
                     } else {
-                        _ = self?.startPlay(media, episodeId: episodeId, danmakus: result ?? [:]).subscribe(onNext: { state in
+                        _ = self?.startPlay(media, matchInfo: matchInfo, danmakus: result ?? [:]).subscribe(onNext: { state in
                             sub.onNext(state)
                         }, onCompleted: {
                             sub.onCompleted()
@@ -154,9 +154,9 @@ extension PlayerModel {
     ///   - media: 视频
     ///   - episodeId: 节目id
     /// - Returns: 加载状态
-    func didMatchMedia(_ media: File, episodeId: Int) -> Observable<MediaLoadState>  {
+    func didMatchMedia(_ media: File, matchInfo: MatchInfo) -> Observable<MediaLoadState>  {
         return Observable<MediaLoadState>.create { sub in
-            CommentNetworkHandle.getDanmaku(with: episodeId) { [weak self] (collection, error) in
+            CommentNetworkHandle.getDanmaku(with: matchInfo.matchId) { [weak self] (collection, error) in
                 
                 if let error = error {
                     DispatchQueue.main.async {
@@ -165,7 +165,7 @@ extension PlayerModel {
                 } else {
                     let danmakus = collection?.collection ?? []
                     DispatchQueue.main.async {
-                        _ = self?.startPlay(media, episodeId: episodeId, danmakus: DanmakuManager.shared.conver(danmakus)).subscribe { event in
+                        _ = self?.startPlay(media, matchInfo: matchInfo, danmakus: DanmakuManager.shared.conver(danmakus)).subscribe { event in
                             sub.on(event)
                         }
                     }
@@ -181,8 +181,8 @@ extension PlayerModel {
     ///   - media: 视频
     ///   - episodeId: 弹幕分级id
     ///   - danmakus: 弹幕
-    func startPlay(_ media: File, episodeId: Int, danmakus: DanmakuMapResult) -> Observable<MediaLoadState> {
+    func startPlay(_ media: File, matchInfo: MatchInfo?, danmakus: DanmakuMapResult) -> Observable<MediaLoadState> {
         self.danmakuModel.startPlay(danmakus)
-        return self.mediaModel.startPlay(media, episodeId: episodeId)
+        return self.mediaModel.startPlay(media, matchInfo: matchInfo)
     }
 }
