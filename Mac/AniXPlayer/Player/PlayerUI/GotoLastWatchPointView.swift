@@ -13,6 +13,7 @@ class GotoLastWatchPointView: BaseView {
     private lazy var timeLabel: TextField = {
         let label = TextField(labelWithString: "")
         label.textColor = .white
+        label.font = .ddp_large
         return label
     }()
     
@@ -39,7 +40,7 @@ class GotoLastWatchPointView: BaseView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        self.bgColor = NSColor(red: 0, green: 0, blue: 0, alpha: 0.3)
+        self.bgColor = NSColor(red: 0, green: 0, blue: 0, alpha: 0.6)
         self.layer?.cornerRadius = 5
         self.layer?.masksToBounds = true
         
@@ -63,17 +64,17 @@ class GotoLastWatchPointView: BaseView {
     }
     
     func show(from view: NSView) {
+        self.animator().alphaValue = 0
+        
         view.addSubview(self)
         
         self.snp.makeConstraints { make in
-            make.trailing.equalTo(view.snp.leading)
+            make.leading.equalTo(view.snp.leading)
             make.bottom.equalToSuperview().offset(-150)
         }
         
-        self.layer?.layoutIfNeeded()
-        
         NSAnimationContext.runAnimationGroup { ctx in
-            self.animator().layer?.transform = CATransform3DMakeAffineTransform(.init(translationX: self.frame.width, y: 0))
+            self.animator().alphaValue = 1
         } completionHandler: {
             self.dismissTimer = .scheduledTimer(withTimeInterval: 5, block: { [weak self] _ in
                 guard let self = self else { return }
@@ -85,7 +86,7 @@ class GotoLastWatchPointView: BaseView {
     
     func dismiss() {
         NSAnimationContext.runAnimationGroup { ctx in
-            self.animator().layer?.transform = CATransform3DIdentity
+            self.animator().alphaValue = 0
         } completionHandler: {
             self.removeFromSuperview()
         }
