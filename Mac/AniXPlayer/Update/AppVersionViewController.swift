@@ -41,7 +41,7 @@ class AppVersionViewController: ViewController {
         }
         
         if let desc = appVersion?.desc {
-            label.stringValue = "更新内容：\n\n \(desc)"
+            label.stringValue = "更新内容：\n\n\(desc)"
         } else {
             label.stringValue = "暂无版本信息"
         }
