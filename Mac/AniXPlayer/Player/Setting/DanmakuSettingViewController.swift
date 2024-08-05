@@ -17,7 +17,7 @@ protocol DanmakuSettingViewControllerDelegate: AnyObject {
 
 class DanmakuSettingViewController: ViewController {
     
-    private var dataSource: [DanmakuSetting] {
+    private var dataSource: [DanmakuSettingType] {
         return self.danmakuModel.danmakuSetting
     }
     
@@ -166,7 +166,7 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
         case .danmakuArea:
             let cell = tableView.dequeueReusableCell(class: SheetTableViewCell.self)
             cell.titleLabel.text = type.title
-            let allItems = DanmakuArea.allCases
+            let allItems = DanmakuAreaType.allCases
             let titles = allItems.compactMap { $0.title }
             cell.setItems(titles, selectedItem: self.danmakuModel.danmakuArea.title)
             cell.onClickButtonCallBack = { [weak self] (idx) in
@@ -174,7 +174,6 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
                 
                 let type = allItems[idx]
                 self.danmakuModel.onChangeDanmakuArea(type)
-                self.scrollView.containerView.reloadData()
             }
             return cell
         

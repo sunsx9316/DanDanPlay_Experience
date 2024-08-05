@@ -179,8 +179,8 @@ class Preferences {
     @StoreWrapper(defaultValue: true, key: .showHomePageTips)
     var showHomePageTips: Bool
     
-    @StoreWrapper(defaultValue: DanmakuArea.area_1_1, key: .danmakuArea)
-    var danmakuArea: DanmakuArea
+    @StoreWrapper(defaultValue: DanmakuAreaType.area_1_1, key: .danmakuArea)
+    var danmakuArea: DanmakuAreaType
     
     @StoreWrapper(defaultValue: 1, key: .danmakuAlpha)
     var danmakuAlpha: Double

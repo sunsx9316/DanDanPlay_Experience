@@ -191,6 +191,7 @@
 		89C323A52C5F8E41002E2487 /* Define.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C323602C5F8E41002E2487 /* Define.swift */; };
 		89C323A62C5F8E41002E2487 /* HistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C323612C5F8E41002E2487 /* HistoryManager.swift */; };
 		89C323A72C5F8E41002E2487 /* SubtitleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C323622C5F8E41002E2487 /* SubtitleManager.swift */; };
+		89C324F62C610E4B002E2487 /* GlobalSettingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C324F52C610E4B002E2487 /* GlobalSettingModel.swift */; };
 		89C79B922A87D3AA0040FEDA /* Launcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C79B912A87D3AA0040FEDA /* Launcher.swift */; };
 		89C79B942A881B200040FEDA /* DanmakuLoadUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C79B932A881B200040FEDA /* DanmakuLoadUtil.swift */; };
 		89E0D60E2669113400E2337B /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0D60D2669113400E2337B /* SettingViewController.swift */; };
@@ -407,6 +408,7 @@
 		89C323602C5F8E41002E2487 /* Define.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Define.swift; sourceTree = "<group>"; };
 		89C323612C5F8E41002E2487 /* HistoryManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryManager.swift; sourceTree = "<group>"; };
 		89C323622C5F8E41002E2487 /* SubtitleManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubtitleManager.swift; sourceTree = "<group>"; };
+		89C324F52C610E4B002E2487 /* GlobalSettingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettingModel.swift; sourceTree = "<group>"; };
 		89C79B912A87D3AA0040FEDA /* Launcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Launcher.swift; sourceTree = "<group>"; };
 		89C79B932A881B200040FEDA /* DanmakuLoadUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuLoadUtil.swift; sourceTree = "<group>"; };
 		89E0D60D2669113400E2337B /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
@@ -1104,19 +1106,11 @@
 			path = Media;
 			sourceTree = "<group>";
 		};
-		89C323552C5F8E41002E2487 /* UI */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = UI;
-			sourceTree = "<group>";
-		};
 		89C323582C5F8E41002E2487 /* Player */ = {
 			isa = PBXGroup;
 			children = (
 				89C323502C5F8E41002E2487 /* Danmaku */,
 				89C323542C5F8E41002E2487 /* Media */,
-				89C323552C5F8E41002E2487 /* UI */,
 				89C323562C5F8E41002E2487 /* MatchInfo.swift */,
 				89C323572C5F8E41002E2487 /* PlayerModel.swift */,
 			);
@@ -1136,10 +1130,10 @@
 		89C323632C5F8E41002E2487 /* CocoaShare */ = {
 			isa = PBXGroup;
 			children = (
+				89C324F32C610E2C002E2487 /* Model */,
 				89C3230F2C5F8E41002E2487 /* Helper */,
 				89C3232F2C5F8E41002E2487 /* MediaPlayer */,
 				89C3234D2C5F8E41002E2487 /* Networking */,
-				89C323582C5F8E41002E2487 /* Player */,
 				89C3235C2C5F8E41002E2487 /* Preferences */,
 				89C3235D2C5F8E41002E2487 /* Atomic.swift */,
 				89C3235E2C5F8E41002E2487 /* CacheManager.swift */,
@@ -1150,6 +1144,23 @@
 			);
 			name = CocoaShare;
 			path = ../../Share/CocoaShare;
+			sourceTree = "<group>";
+		};
+		89C324F32C610E2C002E2487 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				89C324F42C610E34002E2487 /* GlobalSetting */,
+				89C323582C5F8E41002E2487 /* Player */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		89C324F42C610E34002E2487 /* GlobalSetting */ = {
+			isa = PBXGroup;
+			children = (
+				89C324F52C610E4B002E2487 /* GlobalSettingModel.swift */,
+			);
+			path = GlobalSetting;
 			sourceTree = "<group>";
 		};
 		89E0D60C2669111500E2337B /* Setting */ = {
@@ -1347,6 +1358,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				89C324F62C610E4B002E2487 /* GlobalSettingModel.swift in Sources */,
 				89C323732C5F8E41002E2487 /* WebDavFileManager.swift in Sources */,
 				89A688E32C3A6628002B7CA3 /* BangumiDetailMetadataViewController.swift in Sources */,
 				897F9B602822B2EA00130613 /* SnapshotView.swift in Sources */,

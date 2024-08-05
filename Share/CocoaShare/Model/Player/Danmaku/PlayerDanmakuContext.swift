@@ -17,7 +17,7 @@ class PlayerDanmakuContext {
     lazy var danmakuFont = BehaviorSubject<ANXFont>(value: ANXFont.systemFont(ofSize: CGFloat(Preferences.shared.danmakuFontSize)))
     
     /// 弹幕和屏幕的占比
-    lazy var danmakuArea = BehaviorSubject<DanmakuArea>(value: Preferences.shared.danmakuArea)
+    lazy var danmakuArea = BehaviorSubject<DanmakuAreaType>(value: Preferences.shared.danmakuArea)
     
     lazy var isShowDanmaku = BehaviorSubject<Bool>(value: Preferences.shared.isShowDanmaku)
     

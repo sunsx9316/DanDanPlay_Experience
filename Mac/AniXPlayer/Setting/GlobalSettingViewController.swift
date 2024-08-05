@@ -7,6 +7,7 @@
 
 import Cocoa
 import SnapKit
+import RxSwift
 
 extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSource {
     
@@ -16,8 +17,7 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
     
     
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-        let type = self.dataSource[row]
-        return type.rowHeight
+        return 70
     }
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
@@ -26,38 +26,53 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
         switch type {
         case .fastMatch:
             let cell = tableView.dequeueReusableCell(class: SwitchDetailTableViewCell.self)
-            cell.aSwitch.isOn = Preferences.shared.fastMatch
+            cell.aSwitch.isOn = self.model.fastMatch
             cell.titleLabel.text = type.title
-            cell.subtitleLabel.text = type.subtitle
-            cell.onTouchSliderCallBack = { (aCell) in
+            cell.subtitleLabel.text = self.model.subtitle(settingType: type)
+            cell.onTouchSliderCallBack = { [weak self] (aCell) in
                 let isOn = aCell.aSwitch.isOn
-                Preferences.shared.fastMatch = isOn
+                self?.model.onOpenFastMatch(isOn)
             }
             return cell
         case .autoLoadCustomDanmaku:
             let cell = tableView.dequeueReusableCell(class: SwitchDetailTableViewCell.self)
-            cell.aSwitch.isOn = Preferences.shared.autoLoadCustomDanmaku
+            cell.aSwitch.isOn = self.model.autoLoadCustomDanmaku
             cell.titleLabel.text = type.title
-            cell.subtitleLabel.text = type.subtitle
-            cell.onTouchSliderCallBack = { (aCell) in
+            cell.subtitleLabel.text = self.model.subtitle(settingType: type)
+            cell.onTouchSliderCallBack = { [weak self] (aCell) in
                 let isOn = aCell.aSwitch.isOn
-                Preferences.shared.autoLoadCustomDanmaku = isOn
+                self?.model.onOpenAutoLoadCustomDanmaku(isOn)
             }
             return cell
         case .danmakuCacheDay:
             let cell = tableView.dequeueReusableCell(class: TitleDetailTableViewCell.self)
             cell.titleLabel.text = type.title
-            cell.subtitleLabel.text = type.subtitle
+            cell.subtitleLabel.text = self.model.subtitle(settingType: type)
             return cell
         case .subtitleLoadOrder:
             let cell = tableView.dequeueReusableCell(class: TitleDetailTableViewCell.self)
             cell.titleLabel.text = type.title
-            cell.subtitleLabel.text = type.subtitle
+            cell.subtitleLabel.text = self.model.subtitle(settingType: type)
             return cell
         case .host:
             let cell = tableView.dequeueReusableCell(class: TitleDetailTableViewCell.self)
             cell.titleLabel.text = type.title
-            cell.subtitleLabel.text = type.subtitle
+            cell.subtitleLabel.text = self.model.subtitle(settingType: type)
+            return cell
+        case .autoLoadCustomSubtitle:
+            let cell = tableView.dequeueReusableCell(class: SwitchDetailTableViewCell.self)
+            cell.aSwitch.isOn = self.model.autoLoadCustomSubtitle
+            cell.titleLabel.text = type.title
+            cell.subtitleLabel.text = self.model.subtitle(settingType: type)
+            cell.onTouchSliderCallBack = { [weak self] (aCell) in
+                let isOn = aCell.aSwitch.isOn
+                self?.model.onOpenAutoLoadCustomSubtitle(isOn)
+            }
+            return cell
+        case .log, .cleanupCache, .cleanupHistory:
+            let cell = tableView.dequeueReusableCell(class: TitleDetailTableViewCell.self)
+            cell.titleLabel.text = type.title
+            cell.subtitleLabel.text = self.model.subtitle(settingType: type)
             return cell
         }
     }
@@ -80,7 +95,7 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
             
             let aTextField = TextField(frame: .init(x: 0, y: 0, width: 150, height: 25))
             aTextField.placeholderString = NSLocalizedString("0则不缓存", comment: "")
-            let day = max(0, Preferences.shared.danmakuCacheDay)
+            let day = max(0, self.model.danmakuCacheDay)
             aTextField.text = "\(day)"
             vc.accessoryView = aTextField
             
@@ -92,8 +107,7 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
                     return
                 }
 
-                Preferences.shared.danmakuCacheDay = day
-                self.scrollView.containerView.reloadData()
+                self.model.onChangeDanmakuCacheDay(day)
             }
 
         } else if type == .host {
@@ -105,7 +119,7 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
             
             let aTextField = TextField(frame: .init(x: 0, y: 0, width: 250, height: 25))
             aTextField.placeholderString = NSLocalizedString("例：\(DefaultHost)", comment: "")
-            aTextField.text = Preferences.shared.host
+            aTextField.text = self.model.host
             vc.accessoryView = aTextField
             
             let response: NSApplication.ModalResponse = vc.runModal()
@@ -113,86 +127,51 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
             if response == .alertFirstButtonReturn {
                 let host = aTextField.text ?? ""
                 
-                Preferences.shared.host = host.isEmpty ? DefaultHost : host
-                self.scrollView.containerView.reloadData()
+                self.model.onChangeHost(host)
             }
         } else if type == .subtitleLoadOrder {
-            let vc = SubtitleOrderViewController()
-            vc.didClockCallBack = { [weak self] in
-                guard let self = self else { return }
-                
-                self.scrollView.containerView.reloadData()
-            }
+            let vc = SubtitleOrderViewController(globalSettingModel: self.model)
             self.presentAsModalWindow(vc)
+        } else if type == .log {
+            NSWorkspace.shared.open(URL(fileURLWithPath: ANXLogHelper.logPath()))
+        } else if type == .cleanupCache {
+            let vc = NSAlert()
+            vc.messageText = NSLocalizedString("提示", comment: "")
+            vc.informativeText = NSLocalizedString("确定清除缓存吗？", comment: "")
+            vc.alertStyle = .warning
+            vc.addButton(withTitle: NSLocalizedString("确定", comment: ""))
+            vc.addButton(withTitle: NSLocalizedString("取消", comment: ""))
+            
+            let response: NSApplication.ModalResponse = vc.runModal()
+            
+            if response == .alertFirstButtonReturn {
+                self.model.cleanupCache()
+            }
+        } else if type == .cleanupHistory {
+            let vc = NSAlert()
+            vc.messageText = NSLocalizedString("提示", comment: "")
+            vc.informativeText = NSLocalizedString("确定清除播放历史吗？", comment: "")
+            vc.alertStyle = .warning
+            vc.addButton(withTitle: NSLocalizedString("确定", comment: ""))
+            vc.addButton(withTitle: NSLocalizedString("取消", comment: ""))
+            
+            let response: NSApplication.ModalResponse = vc.runModal()
+            
+            if response == .alertFirstButtonReturn {
+                self.model.cleanupCache()
+            }
         }
     }
     
 }
 
 class GlobalSettingViewController: ViewController {
-
-    private enum CellType: CaseIterable {
-        case fastMatch
-        case autoLoadCustomDanmaku
-        case danmakuCacheDay
-        case subtitleLoadOrder
-        case host
-        
-        var title: String {
-            switch self {
-            case .fastMatch:
-                return NSLocalizedString("快速匹配弹幕", comment: "")
-            case .danmakuCacheDay:
-                return NSLocalizedString("弹幕缓存时间", comment: "")
-            case .autoLoadCustomDanmaku:
-                return NSLocalizedString("自动加载本地弹幕", comment: "")
-            case .subtitleLoadOrder:
-                return NSLocalizedString("字幕加载顺序", comment: "")
-            case .host:
-                return NSLocalizedString("请求域名", comment: "")
-            }
-        }
-        
-        var subtitle: String {
-            switch self {
-            case .fastMatch:
-                return NSLocalizedString("关闭则手动关联", comment: "")
-            case .danmakuCacheDay:
-                let day = Preferences.shared.danmakuCacheDay
-                let str: String
-                if day <= 0 {
-                    str = NSLocalizedString("不缓存", comment: "")
-                } else {
-                    str = String(format: "%ld天", day)
-                }
-                return str
-            case .autoLoadCustomDanmaku:
-                return NSLocalizedString("自动加载本地弹幕", comment: "")
-            case .subtitleLoadOrder:
-                let desc = Preferences.shared.subtitleLoadOrder?.reduce("", { result, str in
-                    
-                    guard let result = result, !result.isEmpty else {
-                        return str
-                    }
-                    
-                    return result + "," + str
-                }) ?? ""
-                
-                if desc.isEmpty {
-                    return NSLocalizedString("未指定", comment: "")
-                }
-                return desc
-            case .host:
-                return Preferences.shared.host
-            }
-        }
-        
-        var rowHeight: CGFloat {
-            return 70
-        }
+    
+    private var dataSource: [GlobalSettingType] {
+        return self.model.allSettingType()
     }
     
-    private lazy var dataSource = CellType.allCases
+    private lazy var model = GlobalSettingModel()
     
     private lazy var scrollView: ScrollView<TableView> = {
         let tableView = TableView()
@@ -212,10 +191,10 @@ class GlobalSettingViewController: ViewController {
         return scrollView
     }()
 
-    weak var delegate: MediaSettingViewControllerDelegate?
+    private lazy var bag = DisposeBag()
     
     override func loadView() {
-        self.view = .init(frame: .init(x: 0, y: 0, width: 500, height: 600))
+        self.view = .init(frame: .init(x: 0, y: 0, width: 500, height: 700))
     }
     
     override func viewDidLoad() {
@@ -227,11 +206,27 @@ class GlobalSettingViewController: ViewController {
         self.scrollView.snp.makeConstraints { (make) in
             make.edges.equalTo(self.view.safeAreaLayoutGuide.snp.edges)
         }
+        
+        bindModel()
     }
     
-    override func viewDidAppear() {
-        super.viewDidAppear()
-        self.scrollView.containerView.reloadData()
+    // MARK: Private
+    private func bindModel() {
+        self.model.context.host.subscribe(onNext: { [weak self] _ in
+            self?.scrollView.containerView.reloadData()
+        }).disposed(by: self.bag)
+        
+        self.model.context.danmakuCacheDay.subscribe(onNext: { [weak self] _ in
+            self?.scrollView.containerView.reloadData()
+        }).disposed(by: self.bag)
+        
+        self.model.context.host.subscribe(onNext: { [weak self] _ in
+            self?.scrollView.containerView.reloadData()
+        }).disposed(by: self.bag)
+        
+        self.model.context.subtitleLoadOrder.subscribe(onNext: { [weak self] _ in
+            self?.scrollView.containerView.reloadData()
+        }).disposed(by: self.bag)
     }
 
 }

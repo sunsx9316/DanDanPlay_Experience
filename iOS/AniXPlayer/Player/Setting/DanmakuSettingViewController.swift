@@ -18,7 +18,7 @@ protocol DanmakuSettingViewControllerDelegate: AnyObject {
 
 class DanmakuSettingViewController: ViewController {
     
-    private var dataSource: [DanmakuSetting] {
+    private var dataSource: [DanmakuSettingType] {
         return self.danmakuModel.danmakuSetting
     }
     
@@ -238,7 +238,7 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
             self.delegate?.searchDanmakuInDanmakuSettingViewController(vc: self)
         } else if type == .danmakuArea {
             let vc = UIAlertController(title: type.title, message: nil, preferredStyle: .actionSheet)
-            let actions = DanmakuArea.allCases.compactMap { (mode) -> UIAlertAction? in
+            let actions = DanmakuAreaType.allCases.compactMap { (mode) -> UIAlertAction? in
                 return UIAlertAction(title: mode.title, style: .default) { (UIAlertAction) in
                     self.danmakuModel.onChangeDanmakuArea(mode)
                     self.tableView.reloadData()

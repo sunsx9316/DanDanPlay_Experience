@@ -24,7 +24,7 @@ typealias ANXFont = NSFont
 #endif
 
 /// 媒体设置项
-enum MediaSetting: CaseIterable {
+enum MediaSettingType: CaseIterable {
     
     case matchInfo
     
@@ -78,7 +78,7 @@ enum MediaSetting: CaseIterable {
 
 
 /// 弹幕设置项
-enum DanmakuSetting: CaseIterable {
+enum DanmakuSettingType: CaseIterable {
     case danmakuFontSize
     case danmakuSpeed
     case danmakuAlpha
@@ -121,7 +121,7 @@ enum DanmakuSetting: CaseIterable {
 
 
 /// 弹幕展示区域
-enum DanmakuArea: Int, CaseIterable {
+enum DanmakuAreaType: Int, CaseIterable {
     /// 1/4屏
     case area_1_4
     /// 1/2屏
@@ -154,6 +154,42 @@ enum DanmakuArea: Int, CaseIterable {
             return NSLocalizedString("2/3屏", comment: "")
         case .area_1_1:
             return NSLocalizedString("满屏", comment: "")
+        }
+    }
+}
+
+/// 全局设置
+enum GlobalSettingType: CaseIterable {
+    case fastMatch
+    case autoLoadCustomDanmaku
+    case autoLoadCustomSubtitle
+    case danmakuCacheDay
+    case subtitleLoadOrder
+    case host
+    case log
+    case cleanupCache
+    case cleanupHistory
+    
+    var title: String {
+        switch self {
+        case .fastMatch:
+            return NSLocalizedString("快速匹配弹幕", comment: "")
+        case .danmakuCacheDay:
+            return NSLocalizedString("弹幕缓存时间", comment: "")
+        case .autoLoadCustomDanmaku:
+            return NSLocalizedString("自动加载本地弹幕", comment: "")
+        case .subtitleLoadOrder:
+            return NSLocalizedString("字幕加载顺序", comment: "")
+        case .host:
+            return NSLocalizedString("请求域名", comment: "")
+        case .log:
+            return NSLocalizedString("日志", comment: "")
+        case .cleanupCache:
+            return NSLocalizedString("清除缓存", comment: "")
+        case .autoLoadCustomSubtitle:
+            return NSLocalizedString("自动加载本地字幕", comment: "")
+        case .cleanupHistory:
+            return NSLocalizedString("清除播放记录", comment: "")
         }
     }
 }

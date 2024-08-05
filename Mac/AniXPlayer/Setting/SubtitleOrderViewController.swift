@@ -7,6 +7,7 @@
 
 import Cocoa
 import SnapKit
+import RxSwift
 
 extension SubtitleOrderViewController: NSTableViewDelegate, NSTableViewDataSource {
     func numberOfRows(in tableView: NSTableView) -> Int {
@@ -52,14 +53,16 @@ extension SubtitleOrderViewController: NSTableViewDelegate, NSTableViewDataSourc
             var newIndexOffset = 0
 
             tableView.beginUpdates()
+            var dataSource = self.dataSource
+            
             for oldIndex in oldIndexes {
                 if oldIndex < row {
                     let from = oldIndex + oldIndexOffset
                     let to = row - 1
-                    let movedObject = self.dataSource[from]
+                    let movedObject = dataSource[from]
                     
-                    self.dataSource.remove(at: from)
-                    self.dataSource.insert(movedObject, at: to)
+                    dataSource.remove(at: from)
+                    dataSource.insert(movedObject, at: to)
                     tableView.removeRows(at: .init(integer: from), withAnimation: .slideDown)
                     tableView.insertRows(at: .init(integer: to), withAnimation: .slideDown)
                     
@@ -67,16 +70,16 @@ extension SubtitleOrderViewController: NSTableViewDelegate, NSTableViewDataSourc
                 } else {
                     let from = oldIndex
                     let to = row + newIndexOffset
-                    let movedObject = self.dataSource[from]
-                    self.dataSource.remove(at: from)
-                    self.dataSource.insert(movedObject, at: to)
+                    let movedObject = dataSource[from]
+                    dataSource.remove(at: from)
+                    dataSource.insert(movedObject, at: to)
                     tableView.removeRows(at: .init(integer: from), withAnimation: .slideUp)
                     tableView.insertRows(at: .init(integer: to), withAnimation: .slideUp)
                     newIndexOffset += 1
                 }
             }
             tableView.endUpdates()
-            Preferences.shared.subtitleLoadOrder = self.dataSource
+            self.globalSettingModel.onChangeSubtitleLoadOrder(dataSource)
 
             return true
         }
@@ -87,19 +90,32 @@ extension SubtitleOrderViewController: NSTableViewDelegate, NSTableViewDataSourc
             return
         }
         
-        self.dataSource.remove(at: clickedRow)
-        Preferences.shared.subtitleLoadOrder = self.dataSource
-        self.scrollView.containerView.reloadData()
+        var dataSource = self.dataSource
+        dataSource.remove(at: clickedRow)
+        self.globalSettingModel.onChangeSubtitleLoadOrder(dataSource)
     }
 }
 
 class SubtitleOrderViewController: ViewController {
     
-    var didClockCallBack: (() -> Void)?
-    
     private var dragDropType = NSPasteboard.PasteboardType(rawValue: "private.table-row")
 
-    private lazy var dataSource = Preferences.shared.subtitleLoadOrder ?? []
+    private var dataSource: [String] {
+        return self.globalSettingModel.subtitleLoadOrder ?? []
+    }
+    
+    private let globalSettingModel: GlobalSettingModel!
+    
+    private lazy var bag = DisposeBag()
+    
+    init(globalSettingModel: GlobalSettingModel) {
+        self.globalSettingModel = globalSettingModel
+        super.init()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     private lazy var scrollView: ScrollView<TableView> = {
         let tableView = TableView()
@@ -123,10 +139,6 @@ class SubtitleOrderViewController: ViewController {
         return scrollView
     }()
     
-    deinit {
-        self.didClockCallBack?()
-    }
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -136,6 +148,10 @@ class SubtitleOrderViewController: ViewController {
         self.scrollView.snp.makeConstraints { (make) in
             make.edges.equalTo(self.view.safeAreaLayoutGuide.snp.edges)
         }
+        
+        self.globalSettingModel.context.subtitleLoadOrder.subscribe(onNext: { [weak self] _ in
+            self?.scrollView.containerView.reloadData()
+        }).disposed(by: self.bag)
     }
 
     //MARK: Private Method
@@ -163,9 +179,8 @@ class SubtitleOrderViewController: ViewController {
 
             if !subtitleLoadOrder.contains(text) {
                 subtitleLoadOrder.insert(text, at: 0)
-                Preferences.shared.subtitleLoadOrder = subtitleLoadOrder
-                self.dataSource = subtitleLoadOrder
-                self.scrollView.containerView.reloadData()
+                
+                self.globalSettingModel.onChangeSubtitleLoadOrder(subtitleLoadOrder)
             }
         }
     }

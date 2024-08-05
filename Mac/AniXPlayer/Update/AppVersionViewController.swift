@@ -13,7 +13,9 @@ class AppVersionViewController: ViewController {
     
     @IBOutlet weak var updateButton: NSButton!
     
-    private(set) var appVersion: UpdateInfo?
+    private(set) var appVersion: UpdateInfo!
+    
+    private lazy var appVersionModel = AppVersionModel()
     
     var onClickCancelCallBack: ((AppVersionViewController) -> Void)?
     
@@ -50,11 +52,13 @@ class AppVersionViewController: ViewController {
         if let path = appVersion?.url, let url = URL(string: path) {
             NSWorkspace.shared.open(url)
         }
+        appVersionModel.updateIgnoreVersion(updateInfo: appVersion)
         onClickOKCallBack?(self)
     }
     
     
     @IBAction func onClickCancelButton(_ sender: NSButton) {
+        appVersionModel.updateIgnoreVersion(updateInfo: appVersion)
         onClickCancelCallBack?(self)
     }
 }

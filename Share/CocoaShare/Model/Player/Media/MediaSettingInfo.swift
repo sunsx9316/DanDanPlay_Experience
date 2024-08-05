@@ -10,5 +10,5 @@ import Foundation
 /// 设置项信息
 struct MediaSettingInfo {
     var title: String
-    var dataSource: [MediaSetting]
+    var dataSource: [MediaSettingType]
 }

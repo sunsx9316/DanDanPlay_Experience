@@ -15,7 +15,7 @@ class ConfigNetworkHandle {
     static func checkUpdate(_ completion: @escaping((UpdateInfo?, Error?) -> Void)) {
         ANX.logInfo(.HTTP, "检查更新")
         
-        NetworkManager.shared.get(url: NetworkManager.shared.host) { result in
+        NetworkManager.shared.get(url: NetworkManager.shared.host + "/api/v1/update/mac") { result in
             switch result {
             case .success(let data):
                 let result = Response<UpdateInfo>(with: data)

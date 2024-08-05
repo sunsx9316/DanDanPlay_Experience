@@ -20,7 +20,7 @@ extension PlayerDanmakuModel {
         return Preferences.shared.danmakuFontSize
     }
     
-    var danmakuArea: DanmakuArea {
+    var danmakuArea: DanmakuAreaType {
         return (try? self.context.danmakuArea.value()) ?? .area_1_1
     }
     
@@ -48,8 +48,8 @@ extension PlayerDanmakuModel {
         return (try? self.context.danmakuAlpha.value()) ?? 0
     }
     
-    var danmakuSetting: [DanmakuSetting] {
-        return DanmakuSetting.allCases
+    var danmakuSetting: [DanmakuSettingType] {
+        return DanmakuSettingType.allCases
     }
 }
 
@@ -102,7 +102,7 @@ class PlayerDanmakuModel {
         self.context.danmakuSpeed.onNext(danmakuSpeed)
     }
     
-    func onChangeDanmakuArea(_ danmakuArea: DanmakuArea) {
+    func onChangeDanmakuArea(_ danmakuArea: DanmakuAreaType) {
         Preferences.shared.danmakuArea = danmakuArea
         self.context.danmakuArea.onNext(danmakuArea)
     }

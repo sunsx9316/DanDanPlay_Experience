@@ -7,14 +7,15 @@
 
 import UIKit
 import SnapKit
+import RxSwift
 
 extension SubtitleOrderViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.dataSource.count
+        return self.dataSource?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let name = self.dataSource[indexPath.row]
+        let name = self.dataSource?[indexPath.row]
         
         let cell = tableView.dequeueCell(class: EditableTableViewCell.self, indexPath: indexPath)
         cell.titleLabel.text = name
@@ -37,24 +38,33 @@ extension SubtitleOrderViewController: UITableViewDelegate, UITableViewDataSourc
 //    }
     
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let movedObject = self.dataSource[sourceIndexPath.row]
-        self.dataSource.remove(at: sourceIndexPath.row)
-        self.dataSource.insert(movedObject, at: destinationIndexPath.row)
-        Preferences.shared.subtitleLoadOrder = self.dataSource
+        if var dataSource = self.dataSource {
+            let movedObject = dataSource[sourceIndexPath.row]
+            dataSource.remove(at: sourceIndexPath.row)
+            dataSource.insert(movedObject, at: destinationIndexPath.row)
+            self.globalSettingModel.onChangeSubtitleLoadOrder(dataSource)
+        }
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            self.dataSource.remove(at: indexPath.row)
-            Preferences.shared.subtitleLoadOrder = self.dataSource
-            tableView.reloadData()
+            if var dataSource = self.dataSource {
+                dataSource.remove(at: indexPath.row)
+                self.globalSettingModel.onChangeSubtitleLoadOrder(dataSource)
+            }
         }
     }
 }
 
 class SubtitleOrderViewController: ViewController {
-
-    private lazy var dataSource = Preferences.shared.subtitleLoadOrder ?? []
+    
+    private var dataSource: [String]? {
+        return self.globalSettingModel.subtitleLoadOrder
+    }
+    
+    private let globalSettingModel: GlobalSettingModel!
+    
+    private lazy var bag = DisposeBag()
     
     private lazy var tableView: TableView = {
         let tableView = TableView(frame: .zero, style: .plain)
@@ -65,6 +75,15 @@ class SubtitleOrderViewController: ViewController {
         tableView.rowHeight = UITableView.automaticDimension
         return tableView
     }()
+    
+    init(globalSettingModel: GlobalSettingModel) {
+        self.globalSettingModel = globalSettingModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -85,6 +104,10 @@ class SubtitleOrderViewController: ViewController {
                                                    .foregroundColor : UIColor.black], for: .highlighted)
         
         self.navigationItem.rightBarButtonItems = [addItem, editItem]
+        
+        self.globalSettingModel.context.subtitleLoadOrder.subscribe(onNext: { [weak self] _ in
+            self?.tableView.reloadData()
+        }).disposed(by: self.bag)
     }
 
     //MARK: Private Method
@@ -108,13 +131,11 @@ class SubtitleOrderViewController: ViewController {
                 return
             }
 
-            var subtitleLoadOrder = Preferences.shared.subtitleLoadOrder ?? []
+            var subtitleLoadOrder = self.globalSettingModel.subtitleLoadOrder ?? []
             
             if !subtitleLoadOrder.contains(text) {
                 subtitleLoadOrder.insert(text, at: 0)
-                Preferences.shared.subtitleLoadOrder = subtitleLoadOrder
-                self.dataSource = subtitleLoadOrder
-                self.tableView.reloadData()
+                self.globalSettingModel.onChangeSubtitleLoadOrder(subtitleLoadOrder)
             }
         }))
         

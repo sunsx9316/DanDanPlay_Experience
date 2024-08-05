@@ -81,7 +81,7 @@ class MediaSettingViewController: ViewController {
             return
         }
         
-        if let type = outlineView.item(atRow: row) as? MediaSetting {
+        if let type = outlineView.item(atRow: row) as? MediaSettingType {
             if type == .loadSubtitle {
                self.delegate?.loadSubtitleFileInMediaSettingViewController(self)
            }
@@ -104,7 +104,7 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
         
         if item is MediaSettingInfo {
             return 40
-        } else if let type = item as? MediaSetting {
+        } else if let type = item as? MediaSettingType {
             switch type {
             case .playerSpeed:
                 return 80
@@ -135,7 +135,7 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
             let cell = outlineView.dequeueReusableCell(class: TitleTableViewCell.self)
             cell.label.text = item.title
             return cell
-        } else if let type = item as? MediaSetting {
+        } else if let type = item as? MediaSettingType {
             switch type {
             case .subtitleSafeArea:
                 let cell = outlineView.dequeueReusableCell(class: SwitchTableViewCell.self)

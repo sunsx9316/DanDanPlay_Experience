@@ -131,7 +131,7 @@ extension PlayerMediaModel {
         dataSource.append(MediaSettingInfo(title: NSLocalizedString("媒体信息", comment: ""),
                                            dataSource: [.matchInfo]))
         
-        var mediaSetting: [MediaSetting] = [.autoJumpTitleEnding, .jumpTitleDuration, .jumpEndingDuration, .playerSpeed, .playerMode]
+        var mediaSetting: [MediaSettingType] = [.autoJumpTitleEnding, .jumpTitleDuration, .jumpEndingDuration, .playerSpeed, .playerMode]
         mediaSetting = mediaSetting.filter ({ setting in
             if !self.autoJumpTitleEnding {
                 if setting == .jumpTitleDuration || setting == .jumpEndingDuration {

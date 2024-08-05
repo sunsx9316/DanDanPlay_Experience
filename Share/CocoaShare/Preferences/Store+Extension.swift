@@ -128,10 +128,10 @@ extension PlayerMode: Storeable {
     }
 }
 
-extension DanmakuArea: Storeable {
-    static func create(from: Int) -> DanmakuArea? {
+extension DanmakuAreaType: Storeable {
+    static func create(from: Int) -> DanmakuAreaType? {
         let rawValue = from
-        return DanmakuArea(rawValue: rawValue)
+        return DanmakuAreaType(rawValue: rawValue)
     }
     
     func toValue() -> Int {
