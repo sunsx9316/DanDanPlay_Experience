@@ -1,5 +1,5 @@
 //
-//  BaseConnectSvrViewController.swift
+//  WebDavConnectSvrViewController.swift
 //  AniXPlayer
 //
 //  Created by jimhuang on 2021/5/6.
@@ -7,11 +7,7 @@
 
 import UIKit
 
-protocol BaseConnectSvrViewControllerDelegate: AnyObject {
-    func viewControllerDidSuccessConnected(_ viewController: ViewController, loginInfo: LoginInfo)
-}
-
-class BaseConnectSvrViewController: ViewController {
+class WebDavConnectSvrViewController: ViewController {
     
     private lazy var addressLabel: TextField = {
         let textField = TextField()
@@ -30,6 +26,13 @@ class BaseConnectSvrViewController: ViewController {
         textField.attributedPlaceholder = .init(string: NSLocalizedString("登录密码", comment: ""),
                                                 attributes: [.foregroundColor : UIColor.lightGray])
         textField.isSecureTextEntry = true
+        return textField
+    }()
+    
+    private lazy var rootPathLabel: TextField = {
+        let textField = TextField()
+        textField.attributedPlaceholder = .init(string: NSLocalizedString("根路径", comment: ""),
+                                                attributes: [.foregroundColor : UIColor.lightGray])
         return textField
     }()
     
@@ -79,6 +82,7 @@ class BaseConnectSvrViewController: ViewController {
         }
         
         stackView.addArrangedSubview(self.passwordLabel)
+        stackView.addArrangedSubview(self.rootPathLabel)
         stackView.addArrangedSubview(self.loginButton)
         self.view.addSubview(stackView)
         
@@ -102,6 +106,10 @@ class BaseConnectSvrViewController: ViewController {
             make.height.equalTo(self.addressLabel)
         }
         
+        self.rootPathLabel.snp.makeConstraints { make in
+            make.height.equalTo(self.addressLabel)
+        }
+        
         self.loginButton.snp.makeConstraints { make in
             make.height.equalTo(self.addressLabel)
         }
@@ -121,9 +129,14 @@ class BaseConnectSvrViewController: ViewController {
         self.userNameLabel.text = loginInfo?.auth?.userName
         self.passwordLabel.text = loginInfo?.auth?.password
         self.addressLabel.text = loginInfo?.url.absoluteString
+        self.rootPathLabel.text = loginInfo?.parameter?[LoginInfo.Key.webDavRootPath.rawValue] ?? WebDavFile.rootFile.url.absoluteString
     }
     
     //MARK: Private Method
+    
+    private func getRootPath() -> String? {
+        return self.rootPathLabel.text?.isEmpty == false ? self.rootPathLabel.text : WebDavFile.rootFile.url.absoluteString
+    }
 
     @objc private func onTouchLoginButton() {
         
@@ -148,7 +161,11 @@ class BaseConnectSvrViewController: ViewController {
         let userName = self.userNameLabel.text
         
         let auth: Auth? = .init(userName: userName, password: self.passwordLabel.text)
-        let loginInfo = LoginInfo(url: url, auth:auth)
+        
+        var parameter = [String: String]()
+        parameter[LoginInfo.Key.webDavRootPath.rawValue] = self.getRootPath()
+        
+        let loginInfo = LoginInfo(url: url, auth:auth, parameter: parameter)
         self.loginWithInfo(loginInfo)
     }
     

@@ -40,7 +40,7 @@ class WebDavFileManager: FileManagerProtocol {
     }
     
     var addressExampleDesc: String {
-        return "服务器地址：http://example"
+        return "服务器地址：http://example:1234"
     }
     
     
@@ -63,7 +63,14 @@ class WebDavFileManager: FileManagerProtocol {
         }
         self.listClient = .init(baseURL: loginInfo.url, credential: credential)
         
-        self.contentsOfDirectory(at: WebDavFile.rootFile, filterType: nil) { [weak self] res in
+        let rootFile: File
+        if let webDavRootPath = loginInfo.parameter?[LoginInfo.Key.webDavRootPath.rawValue], !webDavRootPath.isEmpty {
+            rootFile = WebDavFile(url: URL(string: webDavRootPath)!, fileSize: 0)
+        } else {
+            rootFile = WebDavFile.rootFile
+        }
+        
+        self.contentsOfDirectory(at: rootFile, filterType: nil) { [weak self] res in
             guard let self = self else { return }
             
             switch res {

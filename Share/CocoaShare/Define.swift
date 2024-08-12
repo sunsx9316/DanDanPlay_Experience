@@ -210,10 +210,15 @@ struct Auth: Codable, Equatable {
 /// 登录信息
 struct LoginInfo: Codable, Equatable {
     
+    enum Key: String {
+        case webDavRootPath = "webDavRootPath"
+    }
+    
     var url: URL
     
     var auth: Auth?
     
+    var parameter: [String: String]?
 }
 
 

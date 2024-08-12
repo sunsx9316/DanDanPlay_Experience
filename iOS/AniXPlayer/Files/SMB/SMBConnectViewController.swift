@@ -7,10 +7,6 @@
 
 import UIKit
 
-protocol SMBConnectViewControllerDelegate: AnyObject {
-    func viewControllerDidSuccessConnected(_ viewController: SMBConnectViewController, loginInfo: LoginInfo)
-}
-
 class SMBConnectViewController: ViewController {
     
     private lazy var addressLabel: TextField = {
@@ -62,7 +58,7 @@ class SMBConnectViewController: ViewController {
         return button
     }()
     
-    weak var delegate: SMBConnectViewControllerDelegate?
+    weak var delegate: BaseConnectSvrViewControllerDelegate?
     
     private var loginInfo: LoginInfo?
     

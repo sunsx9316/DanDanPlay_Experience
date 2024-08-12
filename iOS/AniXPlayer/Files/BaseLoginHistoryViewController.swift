@@ -7,34 +7,7 @@
 
 import UIKit
 
-extension BaseLoginHistoryViewController: BaseConnectSvrViewControllerDelegate {
-    func viewControllerDidSuccessConnected(_ viewController: BaseConnectSvrViewController, loginInfo: LoginInfo) {
-        
-        var loginInfos = self.dataSource
-        
-        if !loginInfos.contains(where: { $0 == loginInfo }) {
-            loginInfos.append(loginInfo)
-            self.dataSource = loginInfos
-            self.historyLoginInfos = loginInfos
-            self.tableView.reloadData()
-        }
-        
-        let rootFile = F.rootFile
-        let vc = FileBrowserViewController(with: rootFile, selectedFile: nil, filterType: .video)
-        vc.delegate = self
-        vc.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
-}
-
-extension BaseLoginHistoryViewController: FileBrowserViewControllerDelegate {
-    func fileBrowserViewController(_ vc: FileBrowserViewController, didSelectFile: File, allFiles: [File]) {
-        let nvc = PlayerNavigationController(items: allFiles, selectedItem: didSelectFile)
-        self.present(nvc, animated: true, completion: nil)
-    }
-}
-
-class BaseLoginHistoryViewController<F: File>: ViewController, UITableViewDelegate, UITableViewDataSource {
+class BaseLoginHistoryViewController<F: File>: ViewController, UITableViewDelegate, UITableViewDataSource, BaseConnectSvrViewControllerDelegate, FileBrowserViewControllerDelegate {
     
     private lazy var tableView: TableView = {
         let tableView = TableView(frame: .zero, style: .grouped)
@@ -49,9 +22,13 @@ class BaseLoginHistoryViewController<F: File>: ViewController, UITableViewDelega
         return tableView
     }()
     
-    private lazy var historyLoginInfos: [LoginInfo] = {
+    private var historyLoginInfos: [LoginInfo] {
         return self.dataSource
-    }()
+    }
+    
+    var rootFile: File {
+        return F.rootFile
+    }
     
     var dataSource: [LoginInfo] {
         get {
@@ -89,7 +66,6 @@ class BaseLoginHistoryViewController<F: File>: ViewController, UITableViewDelega
     
     //MARK: Private Method
     @objc private func beginRefreshing() {
-        self.historyLoginInfos = self.dataSource
         self.tableView.mj_header?.endRefreshing()
     }
     
@@ -105,7 +81,6 @@ class BaseLoginHistoryViewController<F: File>: ViewController, UITableViewDelega
             if smbLoginInfos.contains(info) {
                 smbLoginInfos.removeAll(where: { $0 == info })
                 self.dataSource = smbLoginInfos
-                self.historyLoginInfos = smbLoginInfos
                 self.tableView.reloadData()
             }
         }))
@@ -163,4 +138,28 @@ class BaseLoginHistoryViewController<F: File>: ViewController, UITableViewDelega
         })])
         return config
     }
+    
+    // MARK: FileBrowserViewControllerDelegate
+    func fileBrowserViewController(_ vc: FileBrowserViewController, didSelectFile: File, allFiles: [File]) {
+        let nvc = PlayerNavigationController(items: allFiles, selectedItem: didSelectFile)
+        self.present(nvc, animated: true, completion: nil)
+    }
+    
+    // MARK: BaseConnectSvrViewControllerDelegate
+    func viewControllerDidSuccessConnected(_ viewController: ViewController, loginInfo: LoginInfo) {
+        
+        var loginInfos = self.dataSource
+        
+        if !loginInfos.contains(where: { $0 == loginInfo }) {
+            loginInfos.append(loginInfo)
+            self.dataSource = loginInfos
+            self.tableView.reloadData()
+        }
+        
+        let vc = FileBrowserViewController(with: self.rootFile, selectedFile: nil, filterType: .video)
+        vc.delegate = self
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
 }

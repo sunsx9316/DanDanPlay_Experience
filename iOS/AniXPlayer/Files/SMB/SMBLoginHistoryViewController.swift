@@ -155,8 +155,8 @@ extension SMBLoginHistoryViewController: NetServiceDelegate {
     }
 }
 
-extension SMBLoginHistoryViewController: SMBConnectViewControllerDelegate {
-    func viewControllerDidSuccessConnected(_ viewController: SMBConnectViewController, loginInfo: LoginInfo) {
+extension SMBLoginHistoryViewController: BaseConnectSvrViewControllerDelegate {
+    func viewControllerDidSuccessConnected(_ viewController: ViewController, loginInfo: LoginInfo) {
         
         var loginInfos = Preferences.shared.smbLoginInfos ?? []
         
