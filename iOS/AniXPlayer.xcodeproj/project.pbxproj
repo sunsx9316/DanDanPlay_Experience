@@ -192,6 +192,7 @@
 		89C323A62C5F8E41002E2487 /* HistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C323612C5F8E41002E2487 /* HistoryManager.swift */; };
 		89C323A72C5F8E41002E2487 /* SubtitleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C323622C5F8E41002E2487 /* SubtitleManager.swift */; };
 		89C324F62C610E4B002E2487 /* GlobalSettingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C324F52C610E4B002E2487 /* GlobalSettingModel.swift */; };
+		89C325A72C6A4F16002E2487 /* WebDavConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C325A62C6A4F16002E2487 /* WebDavConnectSvrViewController.swift */; };
 		89C79B922A87D3AA0040FEDA /* Launcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C79B912A87D3AA0040FEDA /* Launcher.swift */; };
 		89C79B942A881B200040FEDA /* DanmakuLoadUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C79B932A881B200040FEDA /* DanmakuLoadUtil.swift */; };
 		89E0D60E2669113400E2337B /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0D60D2669113400E2337B /* SettingViewController.swift */; };
@@ -409,6 +410,7 @@
 		89C323612C5F8E41002E2487 /* HistoryManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HistoryManager.swift; sourceTree = "<group>"; };
 		89C323622C5F8E41002E2487 /* SubtitleManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SubtitleManager.swift; sourceTree = "<group>"; };
 		89C324F52C610E4B002E2487 /* GlobalSettingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettingModel.swift; sourceTree = "<group>"; };
+		89C325A62C6A4F16002E2487 /* WebDavConnectSvrViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebDavConnectSvrViewController.swift; sourceTree = "<group>"; };
 		89C79B912A87D3AA0040FEDA /* Launcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Launcher.swift; sourceTree = "<group>"; };
 		89C79B932A881B200040FEDA /* DanmakuLoadUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuLoadUtil.swift; sourceTree = "<group>"; };
 		89E0D60D2669113400E2337B /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
@@ -723,6 +725,7 @@
 		8931F0E92674CCD800590569 /* WebDAV */ = {
 			isa = PBXGroup;
 			children = (
+				89C325A62C6A4F16002E2487 /* WebDavConnectSvrViewController.swift */,
 				8949F8902662AA2100274520 /* WebDavLoginHistoryViewController.swift */,
 			);
 			path = WebDAV;
@@ -1359,6 +1362,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				89C324F62C610E4B002E2487 /* GlobalSettingModel.swift in Sources */,
+				89C325A72C6A4F16002E2487 /* WebDavConnectSvrViewController.swift in Sources */,
 				89C323732C5F8E41002E2487 /* WebDavFileManager.swift in Sources */,
 				89A688E32C3A6628002B7CA3 /* BangumiDetailMetadataViewController.swift in Sources */,
 				897F9B602822B2EA00130613 /* SnapshotView.swift in Sources */,
@@ -1678,7 +1682,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2024080501;
+				CURRENT_PROJECT_VERSION = 2024081201;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				ENABLE_BITCODE = NO;
@@ -1709,7 +1713,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2024080501;
+				CURRENT_PROJECT_VERSION = 2024081201;
 				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
