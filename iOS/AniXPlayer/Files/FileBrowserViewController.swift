@@ -279,7 +279,7 @@ class FileBrowserViewController: ViewController {
                                 return false
                             } else {
                                 if f1.pathExtension == f2.pathExtension {
-                                    return f1.name < f2.name
+                                    return f1.name.compare(f2.name, options: .numeric) == .orderedDescending ? false : true
                                 } else {
                                     return f1.pathExtension < f2.pathExtension
                                 }
