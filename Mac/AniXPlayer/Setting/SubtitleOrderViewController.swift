@@ -9,6 +9,20 @@ import Cocoa
 import SnapKit
 import RxSwift
 
+extension SubtitleOrderViewController: NSMenuDelegate {
+    func menuNeedsUpdate(_ menu: NSMenu) {
+        menu.removeAllItems()
+        
+        let addItem = NSMenuItem(title:  NSLocalizedString("添加字幕关键字", comment: ""), action: #selector(onTouchAddItem(_:)), keyEquivalent: "")
+        menu.addItem(addItem)
+        
+        if self.scrollView.containerView.clickedRow >= 0 {
+            let removeItem = NSMenuItem(title:  NSLocalizedString("删除", comment: ""), action: #selector(onClickDeleteItem(_:)), keyEquivalent: "")
+            menu.addItem(removeItem)
+        }
+    }
+}
+
 extension SubtitleOrderViewController: NSTableViewDelegate, NSTableViewDataSource {
     func numberOfRows(in tableView: NSTableView) -> Int {
         return self.dataSource.count
@@ -130,12 +144,9 @@ class SubtitleOrderViewController: ViewController {
         tableView.addTableColumn(column)
         
         tableView.menu = .init()
-        let addItem = NSMenuItem(title:  NSLocalizedString("添加字幕关键字", comment: ""), action: #selector(onTouchAddItem(_:)), keyEquivalent: "")
-        let removeItem = NSMenuItem(title:  NSLocalizedString("删除", comment: ""), action: #selector(onClickDeleteItem(_:)), keyEquivalent: "")
-        tableView.menu?.addItem(addItem)
-        tableView.menu?.addItem(removeItem)
+        tableView.menu?.delegate = self
         
-        var scrollView = ScrollView(containerView: tableView)
+        let scrollView = ScrollView(containerView: tableView)
         return scrollView
     }()
     

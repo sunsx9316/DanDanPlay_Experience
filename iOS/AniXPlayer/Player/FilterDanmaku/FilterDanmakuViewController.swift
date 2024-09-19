@@ -1,5 +1,5 @@
 //
-//  SubtitleOrderViewController.swift
+//  FilterDanmakuViewController.swift
 //  AniXPlayer
 //
 //  Created by jimhuang on 2021/6/14.
@@ -9,16 +9,41 @@ import UIKit
 import SnapKit
 import RxSwift
 
-extension SubtitleOrderViewController: UITableViewDelegate, UITableViewDataSource {
+extension FilterDanmakuViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.dataSource?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let name = self.dataSource?[indexPath.row]
+        let model = self.dataSource?[indexPath.row]
         
-        let cell = tableView.dequeueCell(class: EditableTableViewCell.self, indexPath: indexPath)
-        cell.titleLabel.text = name
+        let cell = tableView.dequeueCell(class: FilterDanmakuTableViewCell.self, indexPath: indexPath)
+        cell.titleLabel.text = model?.text
+        cell.aSwitch.isOn = model?.isEnable == true
+        if model?.isRegularExp == true {
+            cell.subtitleButton.setTitle(NSLocalizedString("✅正则表达式", comment: ""), for: .normal)
+        } else {
+            cell.subtitleButton.setTitle(NSLocalizedString("☑️正则表达式", comment: ""), for: .normal)
+        }
+        cell.onTouchSwitchCallBack = { [weak self] aCell in
+            if var model = model {
+                var newDataSource = self?.dataSource
+                model.isEnable = aCell.aSwitch.isOn
+                newDataSource?[indexPath.row] = model
+                self?.danmakuModel.onChangeFilterDanmkus(newDataSource)
+            }
+        }
+        
+        cell.onTouchSubtitleButtonCallBack = { [weak self] aCell in
+            if var model = model {
+                model.isRegularExp.toggle()
+                var newDataSource = self?.dataSource
+                newDataSource?[indexPath.row] = model
+                self?.danmakuModel.onChangeFilterDanmkus(newDataSource)
+                self?.tableView.reloadData()
+            }
+        }
+        
         return cell
     }
     
@@ -33,33 +58,22 @@ extension SubtitleOrderViewController: UITableViewDelegate, UITableViewDataSourc
         return .none
     }
     
-    
-    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        if var dataSource = self.dataSource {
-            let movedObject = dataSource[sourceIndexPath.row]
-            dataSource.remove(at: sourceIndexPath.row)
-            dataSource.insert(movedObject, at: destinationIndexPath.row)
-            self.globalSettingModel.onChangeSubtitleLoadOrder(dataSource)
-        }
-    }
-    
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            if var dataSource = self.dataSource {
-                dataSource.remove(at: indexPath.row)
-                self.globalSettingModel.onChangeSubtitleLoadOrder(dataSource)
+            if let dataSource = self.dataSource {
+                self.danmakuModel.onRemoveFilterDanmkus(dataSource[indexPath.row])
             }
         }
     }
 }
 
-class SubtitleOrderViewController: ViewController {
+class FilterDanmakuViewController: ViewController {
     
-    private var dataSource: [String]? {
-        return self.globalSettingModel.subtitleLoadOrder
+    private var dataSource: [FilterDanmaku]? {
+        return self.danmakuModel.filterDanmakus
     }
     
-    private let globalSettingModel: GlobalSettingModel!
+    private let danmakuModel: PlayerDanmakuModel!
     
     private lazy var bag = DisposeBag()
     
@@ -67,14 +81,14 @@ class SubtitleOrderViewController: ViewController {
         let tableView = TableView(frame: .zero, style: .plain)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.registerNibCell(class: EditableTableViewCell.self)
+        tableView.registerNibCell(class: FilterDanmakuTableViewCell.self)
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
         return tableView
     }()
     
-    init(globalSettingModel: GlobalSettingModel) {
-        self.globalSettingModel = globalSettingModel
+    init(danmakuModel: PlayerDanmakuModel) {
+        self.danmakuModel = danmakuModel
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -85,7 +99,7 @@ class SubtitleOrderViewController: ViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.title = NSLocalizedString("字幕加载顺序", comment: "")
+        self.title = NSLocalizedString("弹幕过滤列表", comment: "")
         
         self.view.addSubview(self.tableView)
         self.tableView.snp.makeConstraints { (make) in
@@ -102,18 +116,17 @@ class SubtitleOrderViewController: ViewController {
         
         self.navigationItem.rightBarButtonItems = [addItem, editItem]
         
-        self.globalSettingModel.context.subtitleLoadOrder.subscribe(onNext: { [weak self] _ in
+        self.danmakuModel.context.filterDanmakus.subscribe(onNext: { [weak self] _ in
             self?.tableView.reloadData()
         }).disposed(by: self.bag)
     }
 
     //MARK: Private Method
     @objc private func onTouchAddItem(_ item: UIBarButtonItem) {
-        let vc = UIAlertController(title: NSLocalizedString("添加字幕关键字", comment: ""), message: NSLocalizedString("播放器会优先选择关键字靠前的字幕加载", comment: ""), preferredStyle: .alert)
+        let vc = UIAlertController(title: NSLocalizedString("添加屏蔽弹幕", comment: ""), message: NSLocalizedString("支持正则表达式", comment: ""), preferredStyle: .alert)
         
         weak var aTextField: UITextField?
         vc.addTextField { textField in
-            textField.placeholder = NSLocalizedString("如：简中", comment: "")
             aTextField = textField
         }
 
@@ -127,13 +140,8 @@ class SubtitleOrderViewController: ViewController {
                   !text.isEmpty else {
                 return
             }
-
-            var subtitleLoadOrder = self.globalSettingModel.subtitleLoadOrder ?? []
             
-            if !subtitleLoadOrder.contains(text) {
-                subtitleLoadOrder.insert(text, at: 0)
-                self.globalSettingModel.onChangeSubtitleLoadOrder(subtitleLoadOrder)
-            }
+            self.danmakuModel.onAddFilterDanmku(text)
         }))
         
         self.present(vc, atItem: item)

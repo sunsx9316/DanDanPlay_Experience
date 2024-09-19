@@ -11,7 +11,8 @@ import YYCategories
 import MBProgressHUD
 import DynamicButton
 import RxSwift
-
+import ANXLog_Objc
+import ANXLog
 
 class PlayerViewController: ViewController {
     
@@ -316,8 +317,52 @@ class PlayerViewController: ViewController {
     
 }
 
+extension PlayerViewController: UIPopoverPresentationControllerDelegate {
+    func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
+        return UIDevice.current.isPad ? .popover : .none
+    }
+}
+
 //MARK: - PlayerUIViewDelegate
 extension PlayerViewController: PlayerUIViewDelegate {
+    func singleTap(playerUIView: PlayerUIView, point: CGPoint, showUIViewCallBack: @escaping (() -> Void)) {
+        
+        
+        let pointInDanmakuCanvas = self.danmakuModel.danmakuView.convert(point, from: playerUIView)
+        if let danmakuCanvas = self.danmakuModel.selectedDanmaku(at: pointInDanmakuCanvas) {
+            /// 命中弹幕，弹出气泡
+            let vc = DanmakuOperationViewViewController()
+            vc.onTouchCopyButtonCallBack = { [weak self] avc in
+                avc.dismiss(animated: true)
+                self?.danmakuModel.copyDanmkuText(danmakuCanvas)
+            }
+            
+            vc.onTouchFilterButtonCallBack = { [weak self] avc in
+                avc.dismiss(animated: true)
+                self?.danmakuModel.onAddFilterDanmku(danmakuCanvas)
+            }
+            
+            vc.dismissCallBack = { [weak self] avc in
+                self?.danmakuModel.deselectDanmaku()
+            }
+            
+            vc.modalPresentationStyle = .popover
+            vc.popoverPresentationController?.sourceView = self.danmakuModel.danmakuView
+            vc.popoverPresentationController?.sourceRect = CGRect(x: danmakuCanvas.frame.midX, y: danmakuCanvas.frame.maxY, width: 0, height: 0);
+            vc.popoverPresentationController?.permittedArrowDirections = .up;
+            vc.preferredContentSize = CGSize.init(width: 120, height: 50);
+            
+            if let pres = vc.presentationController {
+                pres.delegate = self
+            }
+            
+            self.present(vc, animated: true, completion: nil)
+        } else {
+            showUIViewCallBack()
+            self.danmakuModel.deselectDanmaku()
+        }
+    }
+    
     func playerUIViewDidRestScale(_ playerUIView: PlayerUIView) {
         self.mediaModel.mediaView.transform = .identity
     }
@@ -364,19 +409,11 @@ extension PlayerViewController: PlayerUIViewDelegate {
     }
     
     func onTouchPlayButton(playerUIView: PlayerUIView, isSelected: Bool) {
-        if self.mediaModel.changePlayState() == .pause {
-            self.showPlayStateHUD(isPlay: false)
-        } else {
-            self.showPlayStateHUD(isPlay: true)
-        }
+        changePlayState()
     }
     
     func doubleTap(playerUIView: PlayerUIView) {
-        if self.mediaModel.changePlayState() == .pause {
-            self.showPlayStateHUD(isPlay: false)
-        } else {
-            self.showPlayStateHUD(isPlay: true)
-        }
+        changePlayState()
     }
     
     func onTouchNextButton(playerUIView: PlayerUIView) {
@@ -437,6 +474,14 @@ extension PlayerViewController: PlayerUIViewDelegate {
         
     }
     
+    private func changePlayState() {
+        if self.mediaModel.changePlayState() == .pause {
+            self.showPlayStateHUD(isPlay: false)
+        } else {
+            self.showPlayStateHUD(isPlay: true)
+        }
+    }
+    
 }
 
 //MARK: - PlayerUIViewDataSource
@@ -464,6 +509,18 @@ extension PlayerViewController: PlayerUIViewDataSource {
 
 // MARK: - DanmakuSettingViewControllerDelegate
 extension PlayerViewController: DanmakuSettingViewControllerDelegate {
+    
+    func filterDanmakuInDanmakuSettingViewController(vc: DanmakuSettingViewController) {
+        if let presentedViewController = self.presentedViewController {
+            presentedViewController.dismiss(animated: true, completion: nil)
+        }
+        
+        let vc = FilterDanmakuViewController(danmakuModel: self.danmakuModel)
+        let nav = NavigationController(rootViewController: vc)
+        nav.modalPresentationStyle = .custom
+        nav.transitioningDelegate = self.animater
+        self.present(nav, animated: true, completion: nil)
+    }
     
     func loadDanmakuFileInDanmakuSettingViewController(vc: DanmakuSettingViewController) {
         self.showFilesVCWithType(.danmaku)
@@ -576,7 +633,6 @@ extension PlayerViewController: MatchsViewControllerDelegate {
                 
                 self.parseMediaHUD?.progress = 0.8 * progress
                 
-                
                 switch state {
                 case .parseMedia:
                     self.parseMediaHUD?.label.text = NSLocalizedString("开始解析...", comment: "")
@@ -588,8 +644,11 @@ extension PlayerViewController: MatchsViewControllerDelegate {
                     self.parseMediaHUD?.label.text = NSLocalizedString("加载弹幕中...", comment: "")
                 }
                 
-            case .subtitle(_):
+            case .filterDanmaku(progress: _):
                 self.parseMediaHUD?.progress = 0.85
+                self.parseMediaHUD?.label.text = NSLocalizedString("解析弹幕中...", comment: "")
+            case .subtitle(_):
+                self.parseMediaHUD?.progress = 0.9
                 self.parseMediaHUD?.label.text = NSLocalizedString("加载字幕中...", comment: "")
             case .lastWatchProgress(let lastWatchProgress):
                 self.parseMediaHUD?.progress = 1

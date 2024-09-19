@@ -8,12 +8,16 @@
 import UIKit
 import SnapKit
 import RxSwift
+import DanmakuRender
 
 protocol DanmakuSettingViewControllerDelegate: AnyObject {
     
     func loadDanmakuFileInDanmakuSettingViewController(vc: DanmakuSettingViewController)
     
     func searchDanmakuInDanmakuSettingViewController(vc: DanmakuSettingViewController)
+    
+    func filterDanmakuInDanmakuSettingViewController(vc: DanmakuSettingViewController)
+    
 }
 
 class DanmakuSettingViewController: ViewController {
@@ -31,6 +35,7 @@ class DanmakuSettingViewController: ViewController {
         tableView.registerNibCell(class: StepTableViewCell.self)
         tableView.registerNibCell(class: TitleTableViewCell.self)
         tableView.registerNibCell(class: SheetTableViewCell.self)
+        tableView.registerNibCell(class: TitleMoreTableViewCell.self)
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
         tableView.backgroundColor = .clear
@@ -88,6 +93,7 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
             cell.titleLabel.text = type.title
             cell.valueSlider.isContinuous = true
             cell.selectionStyle = .none
+            cell.step = 0.1
             let model = SliderTableViewCell.Model(maxValue: 1,
                                                   minValue: 0,
                                                   currentValue: self.danmakuModel.danmakuAlpha)
@@ -107,6 +113,7 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
             let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
             cell.selectionStyle = .none
             cell.titleLabel.text = type.title
+            cell.step = 1
             let model = SliderTableViewCell.Model(maxValue: 40,
                                                   minValue: 10,
                                                   currentValue: Float(self.danmakuModel.danmakuFontSize))
@@ -127,8 +134,9 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
             cell.selectionStyle = .none
             cell.titleLabel.text = type.title
             cell.valueSlider.isContinuous = true
+            cell.step = 0.1
             let model = SliderTableViewCell.Model(maxValue: 3,
-                                                  minValue: 1,
+                                                  minValue: 0.5,
                                                   currentValue: Float(self.danmakuModel.danmakuSpeed))
             cell.model = model
             cell.onChangeSliderCallBack = { [weak self] (aCell) in
@@ -209,7 +217,7 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
             }
             return cell
         case .loadDanmaku, .searchDanmaku:
-            let cell = tableView.dequeueCell(class: TitleTableViewCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: TitleMoreTableViewCell.self, indexPath: indexPath)
             cell.label.text = type.title
             return cell
         case .mergeSameDanmaku:
@@ -223,6 +231,15 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
                 let isOn = aCell.aSwitch.isOn
                 self.danmakuModel.onChangeIsMergeSameDanmaku(isOn)
             }
+            return cell
+        case .filterDanmaku:
+            let cell = tableView.dequeueCell(class: TitleMoreTableViewCell.self, indexPath: indexPath)
+            cell.label.text = type.title
+            return cell
+        case .danmakuEffectStyle:
+            let cell = tableView.dequeueCell(class: SheetTableViewCell.self, indexPath: indexPath)
+            cell.titleLabel.text = type.title
+            cell.valueLabel.text = self.danmakuModel.danmakuEffectStyle.title
             return cell
         }
     }
@@ -241,6 +258,26 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
             let actions = DanmakuAreaType.allCases.compactMap { (mode) -> UIAlertAction? in
                 return UIAlertAction(title: mode.title, style: .default) { (UIAlertAction) in
                     self.danmakuModel.onChangeDanmakuArea(mode)
+                    self.tableView.reloadData()
+                }
+            }
+            
+            for action in actions {
+                vc.addAction(action)
+            }
+            
+            vc.addAction(.init(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: { (_) in
+                
+            }))
+            
+            self.present(vc, atView: tableView.cellForRow(at: indexPath))
+        } else if type == .filterDanmaku {
+            self.delegate?.filterDanmakuInDanmakuSettingViewController(vc: self)
+        } else if type == .danmakuEffectStyle {
+            let vc = UIAlertController(title: type.title, message: nil, preferredStyle: .actionSheet)
+            let actions = DanmakuEffectStyle.allCases.compactMap { (style) -> UIAlertAction? in
+                return UIAlertAction(title: style.title, style: .default) { (UIAlertAction) in
+                    self.danmakuModel.onChangeDanmaEffectStyle(style)
                     self.tableView.reloadData()
                 }
             }

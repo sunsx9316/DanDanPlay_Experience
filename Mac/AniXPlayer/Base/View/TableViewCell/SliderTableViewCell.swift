@@ -55,7 +55,7 @@ class SliderTableViewCell: NSView {
     @IBOutlet weak var valueSlider: NSSlider!
     
     /// 步长
-    var step: UInt = 0
+    var step: Float = 0
     
     var onChangeSliderCallBack: ((SliderTableViewCell) -> Void)?
     

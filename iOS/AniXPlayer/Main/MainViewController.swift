@@ -7,6 +7,8 @@
 
 import UIKit
 import SVGKit
+import ANXLog
+import ANXLog_Objc
 
 class MainViewController: UITabBarController {
 

@@ -29,8 +29,12 @@ class PlayerSettingViewController: ViewController {
         let segmentedControl = UISegmentedControl(items: VCType.allCases.compactMap({ $0.title }))
         segmentedControl.tintColor = .mainColor
         segmentedControl.addTarget(self, action: #selector(onTouchSegmentedControl(_:)), for: .valueChanged)
-        segmentedControl.setTitleTextAttributes([.foregroundColor : UIColor.lightGray], for: .normal)
-        segmentedControl.setTitleTextAttributes([.foregroundColor : UIColor.black], for: .selected)
+        segmentedControl.setTitleTextAttributes([.foregroundColor : UIColor.textColor], for: .normal)
+        segmentedControl.setTitleTextAttributes([.foregroundColor : UIColor.mainColor], for: .selected)
+        segmentedControl.layer.borderWidth = 1
+        segmentedControl.layer.borderColor = UIColor.textColor.cgColor
+        segmentedControl.setWidth(50, forSegmentAt: 0)
+        segmentedControl.setWidth(50, forSegmentAt: 1)
         return segmentedControl
     }()
     
@@ -55,10 +59,24 @@ class PlayerSettingViewController: ViewController {
     
     private var currentVC: UIViewController?
     
-    private lazy var blurVuew: UIVisualEffectView = {
-        let blurVuew = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
-        return blurVuew
+    private lazy var blurView: UIVisualEffectView = {
+        let blurView = UIVisualEffectView()
+        return blurView
     }()
+    
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        if #available(iOS 12.0, *) {
+            if self.traitCollection.userInterfaceStyle == .dark {
+                self.blurView.effect = UIBlurEffect(style: .dark)
+            } else {
+                self.blurView.effect = UIBlurEffect(style: .light)
+            }
+        } else {
+            self.blurView.effect = UIBlurEffect(style: .dark)
+        }
+    }
     
     private var playerModel: PlayerModel!
     
@@ -86,7 +104,7 @@ class PlayerSettingViewController: ViewController {
         
         self.view.backgroundColor = .clear
         
-        self.view.addSubview(self.blurVuew)
+        self.view.addSubview(self.blurView)
         
         for vc in vcs {
             self.addChild(vc)
@@ -94,7 +112,7 @@ class PlayerSettingViewController: ViewController {
         
         self.view.addSubview(self.segmentedControl)
         
-        self.blurVuew.snp.makeConstraints { (make) in
+        self.blurView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
         }
         

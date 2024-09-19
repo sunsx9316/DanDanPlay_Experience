@@ -27,6 +27,8 @@ protocol PlayerUIViewDelegate: AnyObject {
     
     func doubleTap(playerUIView: PlayerUIView)
     
+    func singleTap(playerUIView: PlayerUIView, point: CGPoint, showUIViewCallBack: @escaping(() -> Void))
+    
     func longPress(playerUIView: PlayerUIView, isBegin: Bool)
     
     func tapSlider(playerUIView: PlayerUIView, progress: CGFloat)
@@ -326,12 +328,16 @@ class PlayerUIView: UIView {
     }
     
     @objc private func singleTap(gesture: UITapGestureRecognizer) {
-        autoHiddenTimer?.invalidate()
-        if self.hiddenControlView {
-            autoShowControlView()
-        } else {
-            autoHideControlView()
-        }
+        self.delegate?.singleTap(playerUIView: self, point: gesture.location(in: self), showUIViewCallBack: { [weak self] in
+            guard let self = self else { return }
+            
+            self.autoHiddenTimer?.invalidate()
+            if self.hiddenControlView {
+                self.autoShowControlView()
+            } else {
+                self.autoHideControlView()
+            }
+        })
     }
     
     @objc private func onTouchPlayButton(_ sender: UIButton) {
@@ -412,7 +418,9 @@ class PlayerUIView: UIView {
                 let width = self.frame.size.width
                 let diff = width > 0 ? (translation.x / width) * 0.4 : 0;
                 
-                self.bottomView.progressSlider.value += Double(diff)
+                let progressValue = self.bottomView.progressSlider.value + Double(diff)
+                
+                self.bottomView.progressSlider.value = min(max(progressValue, 0), 1)
                 self.onSliderValueChange(self.bottomView.progressSlider)
             case .brightness, .volume:
                 let height = self.frame.size.height
@@ -423,7 +431,8 @@ class PlayerUIView: UIView {
                     self.brightnessView.progress = min(max(progressValue, 0), 1)
                     UIScreen.main.brightness = self.brightnessView.progress
                 } else {
-                    self.volumeView.progress += diff
+                    let progressValue = self.volumeView.progress + diff
+                    self.volumeView.progress = min(max(progressValue, 0), 1)
                 }
             }
             break

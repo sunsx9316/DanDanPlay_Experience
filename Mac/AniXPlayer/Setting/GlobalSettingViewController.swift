@@ -8,6 +8,7 @@
 import Cocoa
 import SnapKit
 import RxSwift
+import ANXLog_Objc
 
 extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSource {
     
@@ -29,7 +30,7 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
             cell.aSwitch.isOn = self.model.fastMatch
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = self.model.subtitle(settingType: type)
-            cell.onTouchSliderCallBack = { [weak self] (aCell) in
+            cell.onTouchSwitchCallBack = { [weak self] (aCell) in
                 let isOn = aCell.aSwitch.isOn
                 self?.model.onOpenFastMatch(isOn)
             }
@@ -39,7 +40,7 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
             cell.aSwitch.isOn = self.model.autoLoadCustomDanmaku
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = self.model.subtitle(settingType: type)
-            cell.onTouchSliderCallBack = { [weak self] (aCell) in
+            cell.onTouchSwitchCallBack = { [weak self] (aCell) in
                 let isOn = aCell.aSwitch.isOn
                 self?.model.onOpenAutoLoadCustomDanmaku(isOn)
             }
@@ -64,7 +65,7 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
             cell.aSwitch.isOn = self.model.autoLoadCustomSubtitle
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = self.model.subtitle(settingType: type)
-            cell.onTouchSliderCallBack = { [weak self] (aCell) in
+            cell.onTouchSwitchCallBack = { [weak self] (aCell) in
                 let isOn = aCell.aSwitch.isOn
                 self?.model.onOpenAutoLoadCustomSubtitle(isOn)
             }

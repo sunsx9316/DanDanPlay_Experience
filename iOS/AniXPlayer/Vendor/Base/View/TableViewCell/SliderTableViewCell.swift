@@ -55,7 +55,7 @@ class SliderTableViewCell: TableViewCell {
     @IBOutlet weak var currentValueLabel: UILabel!
     
     /// 步长
-    var step: UInt = 0
+    var step: Float = 0
     
     var onChangeSliderCallBack: ((SliderTableViewCell) -> Void)?
     
@@ -83,10 +83,6 @@ class SliderTableViewCell: TableViewCell {
         super.awakeFromNib()
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
-        self.titleLabel.textColor = .white
-        self.minValueLabel.textColor = .white
-        self.maxValueLabel.textColor = .white
-        self.currentValueLabel.textColor = .white
         self.valueSlider.isContinuous = false
     }
     
@@ -103,7 +99,7 @@ class SliderTableViewCell: TableViewCell {
     
     private func changeValue(_ value: Float) {
         if self.step != 0 {
-            let newStep = Float(self.step)
+            let newStep = self.step
             let newValue = round(value / newStep) * newStep
             if newValue != self.valueSlider.value {
                 self.valueSlider.value = newValue

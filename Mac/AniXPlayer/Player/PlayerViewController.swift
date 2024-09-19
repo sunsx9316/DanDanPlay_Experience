@@ -10,6 +10,7 @@ import SnapKit
 import Carbon
 import ProgressHUD
 import RxSwift
+import ANXLog
 
 class PlayerViewController: ViewController {
     
@@ -64,6 +65,8 @@ class PlayerViewController: ViewController {
     }()
     
     private var matchWindowController: WindowController?
+    
+    private weak var danmakuMenu: NSMenu?
     
     //MARK: - life cycle
     
@@ -405,7 +408,7 @@ extension PlayerViewController: MatchsViewControllerDelegate {
             switch element {
             case .parse(let state, let progress):
                 
-                builder.progress = CGFloat(progress)
+                builder.progress = CGFloat(0.8 * progress)
                 
                 switch state {
                 case .parseMedia:
@@ -417,9 +420,11 @@ extension PlayerViewController: MatchsViewControllerDelegate {
                 case .downloadDanmaku:
                     builder.statusText = NSLocalizedString("加载弹幕中...", comment: "")
                 }
-                
-            case .subtitle(_):
+            case .filterDanmaku(progress: _):
                 builder.progress = 0.85
+                builder.statusText = NSLocalizedString("解析弹幕中...", comment: "")
+            case .subtitle(_):
+                builder.progress = 0.9
                 builder.statusText = NSLocalizedString("加载字幕中...", comment: "")
             case .lastWatchProgress(let lastWatchProgress):
                 builder.progress = 1
@@ -503,7 +508,7 @@ extension PlayerViewController: PlayerUIViewDataSource {
 }
 
 // MARK: - PlayerUIViewDelegate
-extension PlayerViewController: PlayerUIViewDelegate {
+extension PlayerViewController: PlayerUIViewDelegate, NSMenuDelegate {
     
     func openButtonDidClick(playerUIView: PlayerUIView, button: NSButton) {
         self.pickFile()
@@ -601,6 +606,30 @@ extension PlayerViewController: PlayerUIViewDelegate {
     func changeProgress(playerUIView: PlayerUIView, diffValue: CGFloat) {
         self.playerModel.changePosition(diffValue: diffValue)
     }
+    
+    func menuDidClose(_ menu: NSMenu) {
+        if menu == self.danmakuMenu {
+            self.danmakuModel.deselectDanmaku()            
+        }
+    }
+    
+    func onClickRightMouse(playerUIView: PlayerUIView, at point: NSPoint) {
+        let pointInDanmakuCanvas = self.danmakuCanvas.convert(point, from: playerUIView)
+        if let danmakuCanvas = self.danmakuModel.selectedDanmaku(at: pointInDanmakuCanvas) {
+            /// 命中弹幕，弹出气泡
+            let menu = NSMenu(title: NSLocalizedString("操作弹幕", comment: ""))
+            menu.delegate = self
+            self.danmakuMenu = menu
+            menu.addItem(NSMenuItem(title: NSLocalizedString("复制弹幕", comment: ""), action: { [weak self] _ in
+                self?.danmakuModel.copyDanmkuText(danmakuCanvas)
+            }))
+            menu.addItem(NSMenuItem(title: NSLocalizedString("屏蔽弹幕", comment: ""), action: { [weak self] _ in
+                self?.danmakuModel.onAddFilterDanmku(danmakuCanvas)
+            }))
+            
+            menu.popUp(positioning: nil, at: pointInDanmakuCanvas, in: self.danmakuCanvas)
+        }
+    }
 }
 
 // MARK: - PlayerListViewControllerDelegate
@@ -643,6 +672,11 @@ extension PlayerViewController: DanmakuSettingViewControllerDelegate {
     
     func loadDanmakuFileInDanmakuSettingViewController(vc: DanmakuSettingViewController) {
         self.pickFile()
+    }
+    
+    func filterDanmakuInDanmakuSettingViewController(vc: DanmakuSettingViewController) {
+        let vc = FilterDanmakuViewController(danmakuModel: self.danmakuModel)
+        self.presentAsModalWindow(vc)
     }
 }
 

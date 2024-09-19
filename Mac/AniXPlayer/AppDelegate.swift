@@ -6,7 +6,7 @@
 //
 
 import Cocoa
-import ANXLog
+import ANXLog_Objc
 import FirebaseCore
 import RxSwift
 

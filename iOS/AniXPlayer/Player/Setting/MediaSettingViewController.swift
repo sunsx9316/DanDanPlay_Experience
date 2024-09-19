@@ -27,6 +27,7 @@ class MediaSettingViewController: ViewController {
         tableView.registerNibCell(class: TitleTableViewCell.self)
         tableView.registerNibCell(class: StepTableViewCell.self)
         tableView.registerNibCell(class: TitleTableViewCell.self)
+        tableView.registerClassHeaderFooterView(class: TitleTableViewHeaderFooterView.self)
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
         tableView.backgroundColor = .clear
@@ -83,8 +84,21 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
         return self.dataSource.count
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return self.dataSource[section].title
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = tableView.dequeueHeaderFooterView(class: TitleTableViewHeaderFooterView.self)
+        
+        view.titleLabel.text = self.dataSource[section].title
+        view.titleLabel.textColor = .mainColor
+        
+        return view
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 40
+    }
+    
+    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        return 0.01
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -111,6 +125,8 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
             cell.titleLabel.text = type.title
             cell.selectionStyle = .none
+            cell.valueSlider.isContinuous = true
+            cell.step = 0.1
             let model = SliderTableViewCell.Model(maxValue: 3,
                                                   minValue: 0.5,
                                                   currentValue: Float(self.mediaModel.playerSpeed))
@@ -316,6 +332,24 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
                 cell.label.text = matchInfo?.matchDesc
             } else {
                 cell.label.text = NSLocalizedString("无", comment: "")
+            }
+            return cell
+        case .audioDelay:
+            let cell = tableView.dequeueCell(class: StepTableViewCell.self, indexPath: indexPath)
+            cell.selectionStyle = .none
+            cell.titleLabel.text = type.title
+            let offsetTime = self.mediaModel.audioOffsetTime
+            cell.stepper.minimumValue = -100
+            cell.stepper.maximumValue = 100
+            cell.stepper.value = Double(offsetTime)
+            cell.valueLabel.text = "\(Int(offsetTime))s"
+            cell.onTouchStepperCallBack = { [weak self] (aCell) in
+                guard let self = self else { return }
+                
+                let value = Int(aCell.stepper.value)
+                aCell.valueLabel.text = "\(value)s"
+                
+                self.mediaModel.onChangeAudioOffsetTime(value)
             }
             return cell
         }

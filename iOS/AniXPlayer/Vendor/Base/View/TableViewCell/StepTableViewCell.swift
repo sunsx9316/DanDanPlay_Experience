@@ -26,9 +26,6 @@ class StepTableViewCell: TableViewCell {
         super.awakeFromNib()
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
-        self.titleLabel.textColor = .white
-        self.valueLabel.textColor = .white
-        self.stepper.tintColor = .white
     }
     
 }

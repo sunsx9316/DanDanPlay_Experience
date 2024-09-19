@@ -8,17 +8,19 @@ target 'AniXPlayer' do
   use_frameworks!
   use_modular_headers!
 
-  pod 'SnapKit'
+  
   pod 'MMKV'
-  pod 'DanmakuRender-Swift'
-  pod 'VLCKit'
-  pod 'Alamofire'
   pod 'DDPCategory', :path => 'LocalPods/DDPCategory'
-  pod 'ANXLog', :path => '../Share/ANXLog'
   pod 'ProgressHUD', :path => 'LocalPods/ProgressHUD'
   pod 'FirebaseCrashlytics'
-  pod 'RxSwift'
-  pod 'RxCocoa'
+  pod 'VLCKit'
+
+  # pod 'ANXLog', :path => '../Share/ANXLog'
+  # pod 'SnapKit'
+  # pod 'DanmakuRender-Swift'
+  # pod 'Alamofire'
+  # pod 'RxSwift'
+  # pod 'RxCocoa'
   # pod 'MPVPlayer', :path => 'LocalPods/MPVPlayer'
   # Pods for AniXPlayer
 

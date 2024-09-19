@@ -106,23 +106,11 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
             return 40
         } else if let type = item as? MediaSettingType {
             switch type {
-            case .playerSpeed:
+            case .playerSpeed, .jumpTitleDuration, .jumpEndingDuration, .subtitleMargin, .subtitleFontSize:
                 return 80
-            case .subtitleSafeArea, .subtitleTrack, .audioTrack, .playerMode, .loadSubtitle:
-                return 40
-            case .autoJumpTitleEnding:
-                return 40
-            case .jumpTitleDuration:
-                return 80
-            case .jumpEndingDuration:
-                return 80
-            case .subtitleMargin:
-                return 80
-            case .subtitleFontSize:
-                return 80
-            case .subtitleDelay:
-                return 40
-            case .matchInfo:
+            case .subtitleSafeArea, .subtitleTrack, .audioTrack, 
+                    .playerMode, .loadSubtitle, .subtitleDelay,
+                    .matchInfo, .audioDelay, .autoJumpTitleEnding:
                 return 40
             }
         }
@@ -152,6 +140,7 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
             case .playerSpeed:
                 let cell = outlineView.dequeueReusableCell(class: SliderTableViewCell.self)
                 cell.titleLabel.text = type.title
+                cell.step = 0.1
                 let model = SliderTableViewCell.Model(maxValue: 3,
                                                       minValue: 0.5,
                                                       currentValue: Float(self.mediaModel.playerSpeed))
@@ -378,6 +367,23 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
                 } else {
                     cell.label.text = NSLocalizedString("无", comment: "")
                     cell.label.toolTip = nil
+                }
+                return cell
+            case .audioDelay:
+                let cell = outlineView.dequeueReusableCell(class: StepTableViewCell.self)
+                cell.titleLabel.text = type.title
+                let offsetTime = self.mediaModel.audioOffsetTime
+                cell.stepper.minValue = -100
+                cell.stepper.maxValue = 100
+                cell.stepper.integerValue = offsetTime
+                cell.valueLabel.text = "\(offsetTime)s"
+                cell.onTouchStepperCallBack = { [weak self] (aCell) in
+                    guard let self = self else { return }
+                    
+                    let value = aCell.stepper.integerValue
+                    aCell.valueLabel.text = "\(value)s"
+                    
+                    self.mediaModel.onChangeAudioOffsetTime(value)
                 }
                 return cell
             }

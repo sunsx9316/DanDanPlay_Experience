@@ -7,12 +7,15 @@
 
 import Cocoa
 import SnapKit
+import DanmakuRender
 
 protocol DanmakuSettingViewControllerDelegate: AnyObject {
     
     func loadDanmakuFileInDanmakuSettingViewController(vc: DanmakuSettingViewController)
     
     func searchDanmakuInDanmakuSettingViewController(vc: DanmakuSettingViewController)
+    
+    func filterDanmakuInDanmakuSettingViewController(vc: DanmakuSettingViewController)
 }
 
 class DanmakuSettingViewController: ViewController {
@@ -83,6 +86,8 @@ class DanmakuSettingViewController: ViewController {
             self.delegate?.loadDanmakuFileInDanmakuSettingViewController(vc: self)
         } else if type == .searchDanmaku {
             self.delegate?.searchDanmakuInDanmakuSettingViewController(vc: self)
+        } else if type == .filterDanmaku {
+            self.delegate?.filterDanmakuInDanmakuSettingViewController(vc: self)
         }
     }
 
@@ -99,9 +104,9 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
         switch type {
         case .danmakuFontSize, .danmakuSpeed, .danmakuAlpha, .danmakuDensity:
             return 80
-        case .showDanmaku, .danmakuOffsetTime, .searchDanmaku, .loadDanmaku, .danmakuArea:
-            return 40
-        case .mergeSameDanmaku:
+        case .showDanmaku, .danmakuOffsetTime, .searchDanmaku,
+                .loadDanmaku, .danmakuArea, .mergeSameDanmaku,
+                .danmakuEffectStyle, .filterDanmaku:
             return 40
         }
     }
@@ -114,6 +119,7 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
             let cell = tableView.dequeueReusableCell(class: SliderTableViewCell.self)
             cell.titleLabel.text = type.title
             cell.valueSlider.isContinuous = true
+            cell.step = 0.1
             let model = SliderTableViewCell.Model(maxValue: 1,
                                                   minValue: 0,
                                                   currentValue: Float(self.danmakuModel.danmakuAlpha))
@@ -131,6 +137,7 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
         case .danmakuFontSize:
             let cell = tableView.dequeueReusableCell(class: SliderTableViewCell.self)
             cell.titleLabel.text = type.title
+            cell.step = 1
             let model = SliderTableViewCell.Model(maxValue: 40,
                                                   minValue: 10,
                                                   currentValue: Float(self.danmakuModel.danmakuFontSize))
@@ -149,8 +156,9 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
             let cell = tableView.dequeueReusableCell(class: SliderTableViewCell.self)
             cell.titleLabel.text = type.title
             cell.valueSlider.isContinuous = true
+            cell.step = 0.1
             let model = SliderTableViewCell.Model(maxValue: 3,
-                                                  minValue: 1,
+                                                  minValue: 0.5,
                                                   currentValue: Float(self.danmakuModel.danmakuSpeed))
             cell.model = model
             cell.onChangeSliderCallBack = { [weak self] (aCell) in
@@ -236,7 +244,7 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
                 self.danmakuModel.onChangeDanmakuDensity(currentValue)
             }
             return cell
-        case .loadDanmaku, .searchDanmaku:
+        case .loadDanmaku, .searchDanmaku, .filterDanmaku:
             let cell = tableView.dequeueReusableCell(class: TitleTableViewCell.self)
             cell.label.text = type.title
             return cell
@@ -249,6 +257,19 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
                 
                 let isOn = aCell.aSwitch.isOn
                 self.danmakuModel.onChangeIsMergeSameDanmaku(isOn)
+            }
+            return cell
+        case .danmakuEffectStyle:
+            let cell = tableView.dequeueReusableCell(class: SheetTableViewCell.self)
+            cell.titleLabel.text = type.title
+            let allItems = DanmakuEffectStyle.allCases
+            let titles = allItems.compactMap { $0.title }
+            cell.setItems(titles, selectedItem: self.danmakuModel.danmakuEffectStyle.title)
+            cell.onClickButtonCallBack = { [weak self] (idx) in
+                guard let self = self else { return }
+                
+                let style = allItems[idx]
+                self.danmakuModel.onChangeDanmaEffectStyle(style)
             }
             return cell
         }

@@ -33,6 +33,8 @@ protocol PlayerUIViewDelegate: AnyObject {
     func playerUIView(_ playerUIView: PlayerUIView, didChangeControlViewState show: Bool)
     
     func openButtonDidClick(playerUIView: PlayerUIView, button: NSButton)
+    
+    func onClickRightMouse(playerUIView: PlayerUIView, at point: NSPoint)
 }
 
 protocol PlayerUIViewDataSource: AnyObject {
@@ -81,9 +83,18 @@ class PlayerUIView: BaseView {
         return doubleTap
     }()
     
-    private lazy var singleTapGes: NSClickGestureRecognizer = {
-        let singleTap = NSClickGestureRecognizer(target: self, action: #selector(PlayerUIView.singleTap))
+    private lazy var leftClickGes: NSClickGestureRecognizer = {
+        let singleTap = NSClickGestureRecognizer(target: self, action: #selector(PlayerUIView.handleLeftClick))
         singleTap.numberOfClicksRequired = 1
+        singleTap.delegate = self
+        singleTap.buttonMask = 0x1
+        return singleTap
+    }()
+    
+    private lazy var rightClickGes: NSClickGestureRecognizer = {
+        let singleTap = NSClickGestureRecognizer(target: self, action: #selector(PlayerUIView.handleRightClick))
+        singleTap.numberOfClicksRequired = 1
+        singleTap.buttonMask = 0x2
         singleTap.delegate = self
         return singleTap
     }()
@@ -105,7 +116,8 @@ class PlayerUIView: BaseView {
     private lazy var gestureView: BaseView = {
         let gestureView = BaseView()
         gestureView.addGestureRecognizer(self.doubleTapGes)
-        gestureView.addGestureRecognizer(singleTapGes)
+        gestureView.addGestureRecognizer(self.leftClickGes)
+        gestureView.addGestureRecognizer(self.rightClickGes)
         return gestureView
     }()
     
@@ -268,13 +280,17 @@ class PlayerUIView: BaseView {
         delegate?.doubleTap(playerUIView: self)
     }
     
-    @objc private func singleTap(gesture: NSClickGestureRecognizer) {
+    @objc private func handleLeftClick(gesture: NSClickGestureRecognizer) {
         autoHiddenTimer?.invalidate()
         if self.hiddenControlView {
             autoShowControlView()
         } else {
             autoHideControlView()
         }
+    }
+    
+    @objc private func handleRightClick(_ ges: NSClickGestureRecognizer) {
+        delegate?.onClickRightMouse(playerUIView: self, at: ges.location(in: self))
     }
     
     @objc private func onTouchPlayButton(_ sender: NSButton) {

@@ -49,6 +49,10 @@ extension UIColor {
         return .byName("Color/textColor")
     }
     
+    static var indicatorColor: UIColor {
+        return .byName("Color/indicatorColor")
+    }
+    
     static var subtitleTextColor: UIColor {
         return .lightGray
     }

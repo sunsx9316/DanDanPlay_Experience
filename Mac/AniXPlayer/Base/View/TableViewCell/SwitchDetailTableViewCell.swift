@@ -15,10 +15,10 @@ class SwitchDetailTableViewCell: NSView {
     
     @IBOutlet weak var aSwitch: NSSwitch!
     
-    var onTouchSliderCallBack: ((SwitchDetailTableViewCell) -> Void)?
+    var onTouchSwitchCallBack: ((SwitchDetailTableViewCell) -> Void)?
     
     @IBAction func onTouchSwitch(_ sender: NSSwitch) {
-        self.onTouchSliderCallBack?(self)
+        self.onTouchSwitchCallBack?(self)
     }
     
     override func awakeFromNib() {

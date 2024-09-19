@@ -16,7 +16,7 @@ protocol PlayerListViewControllerDelegate: AnyObject {
     func currentPlayIndexAtPlayerListViewController(_ viewController: PlayerListViewController) -> Int?
 }
 
-class PlayerListViewController: ViewController, NSTableViewDelegate, NSTableViewDataSource {
+class PlayerListViewController: ViewController {
     
     
     private lazy var scrollView: ScrollView<TableView> = {
@@ -31,16 +31,8 @@ class PlayerListViewController: ViewController, NSTableViewDelegate, NSTableView
         tableView.doubleAction = #selector(onDoubleClickTableRow(_:))
         tableView.registerNibCell(class: PlayerListTableViewCell.self)
         
-        let menu = NSMenu()
-        
-        menu.addItem(NSMenuItem(title: NSLocalizedString("删除", comment: ""), action: { [weak self] _ in
-            guard let self = self else { return }
-            
-            self.delegate?.playerListViewController(self, didDeleteRow: tableView.clickedRow)
-            self.scrollView.containerView.reloadData()
-        }))
-        
-        tableView.menu = menu
+        tableView.menu = .init()
+        tableView.menu?.delegate = self
         
         var scrollView = ScrollView(containerView: tableView)
         return scrollView
@@ -66,6 +58,34 @@ class PlayerListViewController: ViewController, NSTableViewDelegate, NSTableView
         self.scrollView.containerView.reloadData()
     }
     
+    override func loadView() {
+        self.view = .init(frame: .init(x: 0, y: 0, width: 400, height: 500))
+    }
+    
+    //MARK: Private Method
+    
+    @objc private func onDoubleClickTableRow(_ sender: NSTableView) {
+        delegate?.playerListViewController(self, didSelectedRow: sender.selectedRow)
+    }
+}
+
+extension PlayerListViewController: NSMenuDelegate {
+    func menuNeedsUpdate(_ menu: NSMenu) {
+        menu.removeAllItems()
+        
+        let clickedRow = self.scrollView.containerView.clickedRow
+        if clickedRow >= 0 {
+            menu.addItem(NSMenuItem(title: NSLocalizedString("删除", comment: ""), action: { [weak self] _ in
+                guard let self = self else { return }
+                
+                self.delegate?.playerListViewController(self, didDeleteRow: clickedRow)
+                self.scrollView.containerView.reloadData()
+            }))
+        }
+    }
+}
+
+extension PlayerListViewController: NSTableViewDelegate, NSTableViewDataSource {
     //MARK: NSTableViewDataSource
     func numberOfRows(in tableView: NSTableView) -> Int {
         return delegate?.numberOfRowAtPlayerListViewController() ?? 0
@@ -99,15 +119,5 @@ class PlayerListViewController: ViewController, NSTableViewDelegate, NSTableView
             return height
         }
         return 16
-    }
-    
-    override func loadView() {
-        self.view = .init(frame: .init(x: 0, y: 0, width: 400, height: 500))
-    }
-    
-    //MARK: Private Method
-    
-    @objc private func onDoubleClickTableRow(_ sender: NSTableView) {
-        delegate?.playerListViewController(self, didSelectedRow: sender.selectedRow)
     }
 }
