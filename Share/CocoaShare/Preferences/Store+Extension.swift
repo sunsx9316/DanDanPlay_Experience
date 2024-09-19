@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import DanmakuRender
 
 protocol Storeable {
     associatedtype F
@@ -139,3 +140,14 @@ extension DanmakuAreaType: Storeable {
     }
 }
 
+
+extension DanmakuEffectStyle: Storeable {
+    static func create(from: Int) -> DanmakuEffectStyle? {
+        let rawValue = from
+        return DanmakuEffectStyle(rawValue: rawValue)
+    }
+    
+    func toValue() -> Int {
+        return self.rawValue
+    }
+}

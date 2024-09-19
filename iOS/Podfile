@@ -1,5 +1,5 @@
 # Uncomment the next line to define a global platform for your project
-platform :ios, '11.0'
+platform :ios, '12.0'
 
 inhibit_all_warnings!
 
@@ -8,32 +8,33 @@ target 'AniXPlayer' do
   use_frameworks!
   use_modular_headers!
 
-  pod 'SnapKit'
+  
   pod 'YYCategories'
-  pod 'MBProgressHUD'
-  pod 'IQKeyboardManager'
   pod 'NKOColorPickerView'
   pod 'MMKV'
-  pod 'DanmakuRender-Swift'
-  # pod 'DanmakuRender-Swift', :path => '../../../DanmakuRender-Swift'
-  pod 'MJRefresh'
   pod 'MobileVLCKit'
-  # pod 'MobileVLCKit', '3.3.10'
-  pod 'Alamofire'
   pod 'AMSMB2'
-  pod 'FilesProvider'
   pod "GCDWebServer/WebUploader"
-  pod 'DynamicButton'
   pod 'AFNetworking'
   pod 'Ono'
-  pod 'ANXLog', :path => '../Share/ANXLog'
   pod 'FirebaseCrashlytics'
-  pod 'SVGKit'
-  pod 'SDWebImage'
   pod 'FSPagerView'
   pod 'JXCategoryView'
-  pod 'RxSwift'
-  pod 'RxCocoa'
+
+  # pod 'ANXLog', :path => '../Share/ANXLog'
+  # pod 'SnapKit'
+  # pod 'MBProgressHUD'
+  # pod 'IQKeyboardManager'
+  # pod 'DanmakuRender-Swift'
+  # pod 'MJRefresh'
+  # pod 'MobileVLCKit', '3.3.10'
+  # pod 'Alamofire'
+  # pod 'FilesProvider'
+  # pod 'DynamicButton'
+  # pod 'SVGKit'
+  # pod 'SDWebImage'
+  # pod 'RxSwift'
+  # pod 'RxCocoa'
 
 end
 
@@ -41,7 +42,7 @@ post_install do |installer|
     installer.generated_projects.each do |project|
         project.targets.each do |target|
             target.build_configurations.each do |config|
-                config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '11.0'
+                config.build_settings['IPHONEOS_DEPLOYMENT_TARGET'] = '12.0'
             end
         end
     end

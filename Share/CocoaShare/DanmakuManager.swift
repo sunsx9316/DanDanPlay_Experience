@@ -14,9 +14,8 @@ import YYCategories
 import DDPCategory
 #endif
 
-typealias DanmakuEntity = (BaseDanmaku & RepeatDanmakuInfoProtocol)
-typealias DanmakuConverResult = () -> DanmakuEntity
-typealias DanmakuMapResult = [UInt : [DanmakuConverResult]]
+typealias DanmakuEntity = (BaseDanmaku & DanmakuInfoProtocol)
+typealias DanmakuMapResult = [UInt : [DanmakuEntity]]
 typealias LoadingProgressAction = ((LoadingState) -> Void)
 
 enum LoadingState {
@@ -38,62 +37,6 @@ private enum DanmakuLoadError: LocalizedError {
             return "弹幕转换失败"
         }
     }
-}
-
-
-/// 重复弹幕信息
-class RepeatDanmakuInfo {
-    
-    weak var danmaku: BaseDanmaku?
-    
-    /// 原始文案
-    let originText: String
-    
-    /// 重复次数
-    var repeatCount = 0 {
-        didSet {
-            if self.repeatCount > 0 {
-                self.danmaku?.text = self.originText + ": \(self.repeatCount)"
-            } else {
-                self.danmaku?.text = self.originText
-            }
-        }
-    }
-    
-    init(danmaku: BaseDanmaku) {
-        self.danmaku = danmaku
-        self.originText = danmaku.text
-    }
-    
-}
-
-protocol RepeatDanmakuInfoProtocol: AnyObject {
-    
-    var repeatDanmakuInfo: RepeatDanmakuInfo? { set get }
-    
-}
-
-private class _ScrollDanmaku: ScrollDanmaku, RepeatDanmakuInfoProtocol {
-    
-    var repeatDanmakuInfo: RepeatDanmakuInfo?
-    
-    override func willMoveOutCanvas(_ context: DanmakuContext) {
-        super.willMoveOutCanvas(context)
-        self.repeatDanmakuInfo = nil
-    }
-    
-}
- 
-
-private class _FloatDanmaku: FloatDanmaku, RepeatDanmakuInfoProtocol {
-    
-    var repeatDanmakuInfo: RepeatDanmakuInfo?
-    
-    override func willMoveOutCanvas(_ context: DanmakuContext) {
-        super.willMoveOutCanvas(context)
-        self.repeatDanmakuInfo = nil
-    }
-    
 }
 
 private enum DanmakuError: LocalizedError {
@@ -211,12 +154,10 @@ class DanmakuManager {
             }
             let intTime = UInt(model.time)
             if dic[intTime] == nil {
-                dic[intTime] = [DanmakuConverResult]()
+                dic[intTime] = [DanmakuEntity]()
             }
             
-            dic[intTime]?.append({
-                return self.conver(model)
-            })
+            dic[intTime]?.append(self.conver(model))
         }
         
         return dic
@@ -228,15 +169,17 @@ class DanmakuManager {
     ///   - completion: 完成回调
     func downCustomDanmaku(_ file: File, completion: @escaping((Result<URL, Error>) -> Void)) {
         var cacheURL = PathUtils.cacheURL
-        cacheURL.appendPathComponent(file.fileId)
         
-        if !FileManager.default.fileExists(atPath: cacheURL.path) {
+        let fileURL = cacheURL.appendingPathComponent(file.fileId)
+        
+        if !FileManager.default.fileExists(atPath: fileURL.path) {
             file.getDataWithProgress(nil) { result in
                 switch result {
                 case .success(let data):
                     do {
-                        try data.write(to: cacheURL, options: .atomic)
-                        completion(.success(cacheURL))
+                        try FileManager.default.createDirectory(at: cacheURL, withIntermediateDirectories: true)
+                        try data.write(to: fileURL, options: .atomic)
+                        completion(.success(fileURL))
                     } catch (let error) {
                         completion(.failure(error))
                     }
@@ -245,7 +188,7 @@ class DanmakuManager {
                 }
             }
         } else {
-            completion(.success(cacheURL))
+            completion(.success(fileURL))
         }
     }
     
@@ -318,17 +261,16 @@ class DanmakuManager {
     /// - Returns: 弹幕模型
     private func conver(_ model: Comment) -> DanmakuEntity {
         let fontSize = CGFloat(Preferences.shared.danmakuFontSize)
+        let danmakuEffectStyle = Preferences.shared.danmakuEffectStyle
         
         switch model.mode {
         case .normal:
-            let danmakuSpeed = Preferences.shared.danmakuSpeed
-            let aDanmaku = _ScrollDanmaku(text: model.message, textColor: model.color, font: .systemFont(ofSize: fontSize), effectStyle: .stroke, direction: .toLeft)
+            let aDanmaku = _ScrollDanmaku(text: model.message, textColor: model.color, font: .systemFont(ofSize: fontSize), effectStyle: danmakuEffectStyle, direction: .toLeft)
             aDanmaku.appearTime = model.time
-            aDanmaku.extraSpeed = danmakuSpeed
             return aDanmaku
         case .bottom, .top:
             let position: FloatDanmaku.Position = model.mode == .bottom ? .atBottom : .atTop
-            let aDanmaku = _FloatDanmaku(text: model.message, textColor: model.color, font: .systemFont(ofSize: fontSize), effectStyle: .stroke, position: position, lifeTime: 3)
+            let aDanmaku = _FloatDanmaku(text: model.message, textColor: model.color, font: .systemFont(ofSize: fontSize), effectStyle: danmakuEffectStyle, position: position, lifeTime: 3)
             aDanmaku.appearTime = model.time
             return aDanmaku
         }

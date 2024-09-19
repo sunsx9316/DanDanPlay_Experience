@@ -49,6 +49,10 @@ extension PlayerMediaModel {
         return (try? self.context.subtitleOffsetTime.value()) ?? 0
     }
     
+    var audioOffsetTime: Int {
+        return (try? self.context.audioOffsetTime.value()) ?? 0
+    }
+    
     var subtitleMargin: Int {
         return (try? self.context.subtitleMargin.value()) ?? 0
     }
@@ -114,7 +118,7 @@ extension PlayerMediaModel {
     }
     
     var media: File? {
-        return self.player.currentPlayItem
+        return try? self.context.media.value()
     }
     
     var isPlaying: Bool {
@@ -147,7 +151,7 @@ extension PlayerMediaModel {
                                            dataSource: [.subtitleMargin, .subtitleSafeArea, .subtitleDelay, .subtitleTrack, .loadSubtitle]))
         
         dataSource.append(MediaSettingInfo(title: NSLocalizedString("音频设置", comment: ""),
-                                           dataSource: [.audioTrack]))
+                                           dataSource: [.audioDelay, .audioTrack]))
         
         return dataSource
     }
@@ -197,6 +201,11 @@ class PlayerMediaModel {
     func onChangeSubtitleOffsetTime(_ subtitleOffsetTime: Int) {
         Preferences.shared.subtitleOffsetTime = subtitleOffsetTime
         self.context.subtitleOffsetTime.onNext(subtitleOffsetTime)
+    }
+    
+    func onChangeAudioOffsetTime(_ audioOffsetTime: Int) {
+        Preferences.shared.audioOffsetTime = audioOffsetTime
+        self.context.audioOffsetTime.onNext(audioOffsetTime)
     }
     
     func onChangeSubtitleMargin(_ subtitleMargin: Int) {
@@ -280,7 +289,7 @@ class PlayerMediaModel {
     /// 获取下一个应该播放的视频
     /// - Returns: 下一个应该播放的视频
     func nextMedia() -> File? {
-        if let index = self.player.playList.firstIndex(where: { $0.url == self.player.currentPlayItem?.url }) {
+        if let index = self.player.playList.firstIndex(where: { $0.url == self.media?.url }) {
             if index != self.player.playList.count - 1 {
                 return self.player.playList[index + 1]
             }
@@ -411,7 +420,7 @@ class PlayerMediaModel {
     
     /// 保存观看进度
     private func storeWatchProgress() {
-        if let currentPlayItem = self.player.currentPlayItem,
+        if let currentPlayItem = self.media,
            let playItem = self.findPlayItem(currentPlayItem) {
             
             let position = self.player.position
@@ -427,7 +436,7 @@ class PlayerMediaModel {
     
     /// 保存上次观看时间
     private func storeLastWatchDateProgress() {
-        if let currentPlayItem = self.player.currentPlayItem {
+        if let currentPlayItem = self.media {
             HistoryManager.shared.storeLastWatchDate(media: currentPlayItem, date: Date())
         }
     }
@@ -448,7 +457,7 @@ class PlayerMediaModel {
         self.context.subtitleOffsetTime.subscribe(onNext: { [weak self] subtitleOffsetTime in
             guard let self = self else { return }
             
-            self.player.subtitleDelay = Double(subtitleOffsetTime)
+            self.player.subtitleOffsetTime = Double(subtitleOffsetTime)
         }).disposed(by: self.disposeBag)
         
         self.context.subtitleMargin.subscribe(onNext: { [weak self] subtitleMargin in
@@ -461,6 +470,16 @@ class PlayerMediaModel {
             guard let self = self else { return }
             
             self.player.fontSize = subtitleFontSize
+        }).disposed(by: self.disposeBag)
+        
+        /// 音频直接设置不起效，延迟2秒再试
+        self.context.audioOffsetTime
+            .delaySubscription(.seconds(2), scheduler: MainScheduler.instance)
+            .debounce(.milliseconds(200), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] audioOffsetTime in
+            guard let self = self else { return }
+            
+            self.player.audioOffsetTime = Double(audioOffsetTime)
         }).disposed(by: self.disposeBag)
     }
 }
@@ -532,7 +551,7 @@ extension PlayerMediaModel {
     /// 更改播放状态
     /// - Returns: 是否是暂停
     @discardableResult func changePlayState() -> PlayerState {
-        if self.player.currentPlayItem != nil {
+        if self.media != nil {
             if self.player.isPlaying {
                 self.player.pause()
             } else {

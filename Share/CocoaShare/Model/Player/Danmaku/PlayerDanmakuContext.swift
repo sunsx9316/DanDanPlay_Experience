@@ -7,6 +7,7 @@
 
 import Foundation
 import RxSwift
+import DanmakuRender
 
 class PlayerDanmakuContext {
     
@@ -19,6 +20,8 @@ class PlayerDanmakuContext {
     /// 弹幕和屏幕的占比
     lazy var danmakuArea = BehaviorSubject<DanmakuAreaType>(value: Preferences.shared.danmakuArea)
     
+    lazy var danmakuEffectStyle = BehaviorSubject<DanmakuEffectStyle>(value: Preferences.shared.danmakuEffectStyle)
+    
     lazy var isShowDanmaku = BehaviorSubject<Bool>(value: Preferences.shared.isShowDanmaku)
     
     lazy var danmakuOffsetTime = BehaviorSubject<Int>(value: Preferences.shared.danmakuOffsetTime)
@@ -28,4 +31,8 @@ class PlayerDanmakuContext {
     
     /// 合并相同弹幕
     lazy var isMergeSameDanmaku = BehaviorSubject<Bool>(value: Preferences.shared.isMergeSameDanmaku)
+    
+    /// 过滤弹幕
+    lazy var filterDanmakus = BehaviorSubject<[FilterDanmaku]?>(value: Preferences.shared.filterDanmakus)
+    
 }

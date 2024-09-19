@@ -20,8 +20,16 @@ extension PlayerDanmakuModel {
         return Preferences.shared.danmakuFontSize
     }
     
+    var danmakuFont: ANXFont? {
+        return (try? self.context.danmakuFont.value())
+    }
+    
     var danmakuArea: DanmakuAreaType {
         return (try? self.context.danmakuArea.value()) ?? .area_1_1
+    }
+    
+    var danmakuEffectStyle: DanmakuEffectStyle {
+        return (try? self.context.danmakuEffectStyle.value()) ?? .stroke
     }
     
     var isShowDanmaku: Bool {
@@ -51,6 +59,10 @@ extension PlayerDanmakuModel {
     var danmakuSetting: [DanmakuSettingType] {
         return DanmakuSettingType.allCases
     }
+    
+    var filterDanmakus: [FilterDanmaku]? {
+        return (try? self.context.filterDanmakus.value())
+    }
 }
 
 /// 弹幕设置
@@ -64,18 +76,23 @@ class PlayerDanmakuModel {
     private lazy var danmakuRender: DanmakuEngine = {
         let danmakuRender = DanmakuEngine()
         danmakuRender.layoutStyle = .nonOverlapping
+        danmakuRender.delegate = self
         return danmakuRender
     }()
     
     //当前弹幕时间/弹幕数组映射
-    private var danmakuDic = DanmakuMapResult()
+    private lazy var danmakuProducer = PlayerDanmakuProducer(danmakuContext: self.context)
+    
     
     /// 记录当前屏幕展示的弹幕
-    private lazy var danmuOnScreenMap = [String: BaseDanmaku]()
+    private lazy var danmuOnScreenMap: NSMapTable<NSString, BaseDanmaku> = NSMapTable.strongToWeakObjects()
     
     private lazy var disposeBag = DisposeBag()
     
     private var mediaContext: PlayerMediaContext!
+    
+    /// 当前选中的弹幕
+    private weak var selectedDanmakuContainer: DanmakuContainerProtocol?
     
     
     // MARK: Public
@@ -131,6 +148,87 @@ class PlayerDanmakuModel {
     
     func changeMediaTime(_ mediaTime: TimeInterval) {
         self.danmakuRender.time = mediaTime
+        _ = self.danmakuProducer.startFilter(from: UInt(mediaTime), forceParse: false).subscribe(onNext: nil)
+    }
+    
+    func onChangeDanmaEffectStyle(_ danmakuEffectStyle: DanmakuEffectStyle) {
+        Preferences.shared.danmakuEffectStyle = danmakuEffectStyle
+        self.context.danmakuEffectStyle.onNext(danmakuEffectStyle)
+    }
+    
+    func selectedDanmaku(at point: CGPoint) -> DanmakuContainerProtocol? {
+#if os(macOS)
+        let container = self.danmakuRender.canvas.hitTest(point)
+#else
+        let container = self.danmakuRender.canvas.hitTest(point, with: nil)
+#endif
+        
+        if let container = container as? DanmakuContainerProtocol {
+            if container !== self.selectedDanmakuContainer {
+                self.deselectDanmaku()
+                self.selectedDanmakuContainer = container
+                container.danmaku.isPause = true
+                return container
+            }
+        } else {
+            self.deselectDanmaku()
+        }
+        
+        return nil
+    }
+    
+    func deselectDanmaku() {
+        self.selectedDanmakuContainer?.danmaku.isPause = false
+        self.selectedDanmakuContainer = nil
+    }
+    
+    /// 将弹幕文案粘贴到剪贴板
+    /// - Parameter container: 弹幕容器
+    func copyDanmkuText(_ container: DanmakuContainerProtocol) {
+#if os(macOS)
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(container.danmaku.text, forType: .string)
+#else
+        UIPasteboard.general.string = container.danmaku.text
+#endif
+        
+    }
+    
+    /// 添加屏蔽弹幕
+    /// - Parameter container: 弹幕文案
+    func onAddFilterDanmku(_ container: DanmakuContainerProtocol) {
+        onAddFilterDanmku(container.danmaku.text)
+    }
+    
+    /// 添加屏蔽弹幕
+    /// - Parameter container: 弹幕文案
+    func onAddFilterDanmku(_ text: String) {
+        let newFilterDanmaku = FilterDanmaku(isRegularExp: false, text: text, isEnable: true)
+        var filterDanmakus = self.filterDanmakus ?? []
+        if !filterDanmakus.contains(where: { $0 == newFilterDanmaku }) {
+            filterDanmakus.insert(newFilterDanmaku, at: 0)
+            self.context.filterDanmakus.onNext(filterDanmakus)
+            Preferences.shared.filterDanmakus = filterDanmakus
+        }
+    }
+    
+    /// 移除屏蔽弹幕
+    /// - Parameter container: 弹幕
+    func onRemoveFilterDanmkus(_ filterDanmaku: FilterDanmaku) {
+        var filterDanmakus = self.filterDanmakus ?? []
+        if filterDanmakus.contains(where: { $0 == filterDanmaku }) {
+            filterDanmakus.removeAll(where: { $0 == filterDanmaku })
+            self.context.filterDanmakus.onNext(filterDanmakus)
+            Preferences.shared.filterDanmakus = filterDanmakus
+        }
+    }
+    
+    /// 修改过滤弹幕列表
+    /// - Parameter filterDanmakus: 过滤弹幕列表
+    func onChangeFilterDanmkus(_ filterDanmakus: [FilterDanmaku]?) {
+        self.context.filterDanmakus.onNext(filterDanmakus)
+        Preferences.shared.filterDanmakus = filterDanmakus
     }
     
     
@@ -158,8 +256,8 @@ class PlayerDanmakuModel {
     /// 用户手动加载弹幕
     /// - Parameter file: 文件
     /// - Returns: 加载状态
-    func loadDanmakuByUser(_ file: File) -> Observable<Void> {
-        return Observable<Void>.create { [weak self] (sub) in
+    func loadDanmakuByUser(_ file: File) -> Observable<LoadingState> {
+        return Observable<LoadingState>.create { [weak self] (sub) in
             
             DanmakuManager.shared.downCustomDanmaku(file) { [weak self] result1 in
                 
@@ -168,8 +266,7 @@ class PlayerDanmakuModel {
                     do {
                         let converResult = try DanmakuManager.shared.conver(url)
                         DispatchQueue.main.async {
-                            self?.danmakuDic = converResult
-                            
+                            _ = self?.danmakuProducer.setupDanmaku(converResult).subscribe(onNext: nil)
                             sub.onCompleted()
                         }
                     } catch let error {
@@ -188,14 +285,21 @@ class PlayerDanmakuModel {
         }
     }
     
-    /// 开始播放
+    /// 设置弹幕
     /// - Parameters:
     ///   - danmakus: 弹幕
-    func startPlay(_ danmakus: DanmakuMapResult) {
-        self.danmuOnScreenMap.removeAll()
-        self.danmakuDic = danmakus
-        self.danmakuRender.time = 0
-        self.danmakuTime = nil
+    func setupDanmaku(_ danmakus: DanmakuMapResult) -> Observable<DanmakuFilterProgress> {
+        return Observable<DanmakuFilterProgress>.create { sub in
+            self.danmakuRender.time = 0
+            self.danmakuTime = nil
+            _ = self.danmakuProducer.setupDanmaku(danmakus).subscribe(onNext: { progress in
+                sub.onNext(progress)
+            }, onCompleted: {
+                sub.onCompleted()
+            })
+            
+            return Disposables.create()
+        }
     }
     
     // MARK: - Private Method
@@ -205,35 +309,55 @@ class PlayerDanmakuModel {
         
         self.danmakuTime = currentTime
         
-        if let danmakus = danmakuDic[currentTime] {
+        if let danmakus = self.danmakuProducer.danmaku(at: currentTime) {
+            
             let danmakuDensity = self.danmakuDensity
-            for danmakuBlock in danmakus {
+            for danmaku in danmakus {
+                
+                /// 弹幕被过滤 不发送
+                if danmaku.isFilter {
+                    continue
+                }
+                
                 /// 小于弹幕密度才允许发射
                 let shouldSendDanmaku = Float.random(in: 0...10) <= danmakuDensity
                 if !shouldSendDanmaku {
                     continue
                 }
                 
-                let danmaku = danmakuBlock()
+                /// 重设弹幕字体
+                if let danmakuFont = self.danmakuFont, danmaku.font != danmakuFont {
+                    danmaku.font = danmakuFont
+                }
+                
+                /// 重设弹幕边缘
+                if danmaku.effectStyle != self.danmakuEffectStyle {
+                    danmaku.effectStyle = self.danmakuEffectStyle
+                }
+                
                 
                 /// 修复因为时间误差的问题，导致少数弹幕突然出现在屏幕上的问题
                 if danmaku.appearTime > 0 {
-                    danmaku.appearTime = self.danmakuRender.time + (danmaku.appearTime - Double(currentTime))
+                    if danmaku.originAppearTime == nil {
+                        danmaku.originAppearTime = danmaku.appearTime
+                    }
+                    
+                    let originAppearTime = danmaku.originAppearTime ?? 0
+                    let timeOffset = originAppearTime - Double(currentTime)
+                    danmaku.appearTime = self.danmakuRender.time + timeOffset
                 }
                 
                 /// 合并弹幕启用时，查找屏幕上与本弹幕文案相同的弹幕，进行更新
                 if self.isMergeSameDanmaku {
-                    let danmakuTextKey = danmaku.text
+                    let danmakuTextKey = danmaku.text as NSString
                     
                     /// 文案与当前弹幕相同
-                    if let oldDanmaku = self.danmuOnScreenMap[danmakuTextKey] as? DanmakuEntity {
+                    if let oldDanmaku = self.danmuOnScreenMap.object(forKey: danmakuTextKey) as? DanmakuEntity {
                         oldDanmaku.repeatDanmakuInfo?.repeatCount += 1
-                        self.danmakuRender.update(oldDanmaku)
                     } else {
                         danmaku.repeatDanmakuInfo = .init(danmaku: danmaku)
-                        
                         self.danmakuRender.send(danmaku)
-                        self.danmuOnScreenMap[danmakuTextKey] = danmaku
+                        self.danmuOnScreenMap.setObject(danmaku, forKey: danmakuTextKey)
                     }
                 } else {
                     self.danmakuRender.send(danmaku)
@@ -246,9 +370,7 @@ class PlayerDanmakuModel {
     /// - Parameter callBack: 回调
     private func forEachDanmakus(_ callBack: (BaseDanmaku) -> Void) {
         for con in danmakuRender.containers {
-            if let danmaku = con.danmaku as? BaseDanmaku {
-                callBack(danmaku)
-            }
+            callBack(con.danmaku)
         }
     }
     
@@ -271,11 +393,21 @@ class PlayerDanmakuModel {
         self.context.danmakuSpeed.subscribe(onNext: { [weak self] speed in
             guard let self = self else { return }
             
-            self.danmakuRender.speed = speed
+            self.setupDanmakuRenderSpeed()
+        }).disposed(by: self.disposeBag)
+        
+        self.context.filterDanmakus.subscribe(onNext: { [weak self] filterDanmakus in
+            guard let self = self else { return }
+            
+            let time = (try? self.mediaContext.time.value().currentTime) ?? 0
+            _ = self.danmakuProducer.startFilter(from: UInt(time), forceParse: true).subscribe(onNext: nil)
+        }).disposed(by: self.disposeBag)
+        
+        self.context.danmakuEffectStyle.subscribe(onNext: { [weak self] danmakuEffectStyle in
+            guard let self = self else { return }
+            
             self.forEachDanmakus { danmaku in
-                if let scrollDanmaku = danmaku as? ScrollDanmaku {
-                    scrollDanmaku.extraSpeed = speed
-                }
+                danmaku.effectStyle = danmakuEffectStyle
             }
         }).disposed(by: self.disposeBag)
     }
@@ -289,6 +421,10 @@ class PlayerDanmakuModel {
             } else {
                 self.danmakuRender.pause()
             }
+        }).disposed(by: self.disposeBag)
+        
+        self.mediaContext.playerSpeed.subscribe(onNext: { [weak self] _ in
+            self?.setupDanmakuRenderSpeed()
         }).disposed(by: self.disposeBag)
         
         self.mediaContext.time.map({ [weak self] timeInfo in
@@ -309,5 +445,20 @@ class PlayerDanmakuModel {
         }).subscribe(onNext: { [weak self] time in
             self?.sendDanmakus(at: UInt(time))
         }).disposed(by: self.disposeBag)
+    }
+    
+    
+    /// 设置弹幕速度
+    private func setupDanmakuRenderSpeed() {
+        let playerSpeed = (try? self.mediaContext.playerSpeed.value()) ?? 1
+        let danmakuSpeed = self.danmakuSpeed
+        self.danmakuRender.speed = danmakuSpeed * playerSpeed
+    }
+}
+
+
+extension PlayerDanmakuModel: DanmakuEngineDelegate {
+    func willMoveOutCanvas(danmaku: BaseDanmaku, engine: DanmakuEngine) {
+        self.danmuOnScreenMap.removeObject(forKey: danmaku.text as NSString)
     }
 }

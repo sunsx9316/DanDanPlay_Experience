@@ -42,7 +42,9 @@ protocol MediaPlayerProtocol: AnyObject {
     
     var volume: Int { set get }
     
-    var subtitleDelay: Double { set get }
+    var subtitleOffsetTime: Double { set get }
+    
+    var audioOffsetTime: Double { set get }
     
     var speed: Double { set get }
     
@@ -240,13 +242,25 @@ class MediaPlayer {
         }
     }
     
-    var subtitleDelay: Double {
+    /// 字幕偏移，单位秒
+    var subtitleOffsetTime: Double {
         get {
-            return self.player.subtitleDelay
+            return self.player.subtitleOffsetTime
         }
         
         set {
-            self.player.subtitleDelay = newValue
+            self.player.subtitleOffsetTime = newValue
+        }
+    }
+    
+    /// 音频偏移，单位秒
+    var audioOffsetTime: Double {
+        get {
+            return self.player.audioOffsetTime
+        }
+        
+        set {
+            self.player.audioOffsetTime = newValue
         }
     }
     

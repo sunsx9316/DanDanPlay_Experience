@@ -57,10 +57,11 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     private enum InitAction {
         case currentSubtitle
         case volume
-        case subtitleDelay
+        case subtitleOffsetTime
         case speed
         case currentAudioChannel
         case aspectRatio
+        case audioOffsetTime
     }
 
     
@@ -185,21 +186,39 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         }
     }
     
-    var subtitleDelay: Double {
+    var subtitleOffsetTime: Double {
         get {
-            return Double(self.player?.currentVideoSubTitleDelay ?? 0) / 1000000.0
+            return Double(self.player?.currentVideoSubTitleDelay ?? 0) / -1000000.0
         }
         
         set {
             func setup() {
-                self.player?.currentVideoSubTitleDelay = Int(newValue * 1000000.0)
+                self.player?.currentVideoSubTitleDelay = Int(newValue * -1000000.0)
             }
             
             if self.player != nil {
                 setup()
             }
             
-            self.initActionDic[.subtitleDelay] = setup
+            self.initActionDic[.subtitleOffsetTime] = setup
+        }
+    }
+    
+    var audioOffsetTime: Double {
+        get {
+            return Double(self.player?.currentAudioPlaybackDelay ?? 0) / -1000000.0
+        }
+        
+        set {
+            func setup() {
+                self.player?.currentAudioPlaybackDelay = Int(newValue * -1000000.0)
+            }
+            
+            if self.player != nil {
+                setup()
+            }
+            
+            self.initActionDic[.audioOffsetTime] = setup
         }
     }
     

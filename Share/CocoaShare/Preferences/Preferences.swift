@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import DanmakuRender
 
 class Preferences {
     
@@ -106,6 +107,15 @@ class Preferences {
         /// 字幕字体大小
         case subtitleFontSize
         
+        /// 音频偏移
+        case audioOffsetTime
+        
+        /// 屏蔽弹幕
+        case filterDanmaku
+        
+        /// 边缘样式
+        case danmakuEffectStyle
+        
         var storeKey: String {
             return self.rawValue
         }
@@ -122,6 +132,9 @@ class Preferences {
     
     @StoreWrapper(defaultValue: 0, key: .subtitleOffsetTime)
     var subtitleOffsetTime: Int
+    
+    @StoreWrapper(defaultValue: 0, key: .audioOffsetTime)
+    var audioOffsetTime: Int
     
     @StoreWrapper(defaultValue: true, key: .autoLoadCustomDanmaku)
     var autoLoadCustomDanmaku: Bool
@@ -203,6 +216,10 @@ class Preferences {
     /// 弹幕密度 取值 1 ~ 10
     @StoreWrapper(defaultValue: 10, key: .danmakuDensity)
     var danmakuDensity: Float
+    
+    /// 弹幕边缘样式
+    @StoreWrapper(defaultValue: DanmakuEffectStyle.stroke, key: .danmakuEffectStyle)
+    var danmakuEffectStyle: DanmakuEffectStyle
     
     var pcLoginInfos: [LoginInfo]? {
         get {
@@ -335,6 +352,33 @@ class Preferences {
                 }
             } else {
                 Store.shared.remove(KeyName.subtitleLoadOrder.rawValue)
+            }
+        }
+    }
+    
+    var filterDanmakus: [FilterDanmaku]? {
+        get {
+            if let jsonData: Data = Store.shared.value(forKey: KeyName.filterDanmaku.rawValue) {
+                do {
+                    let shildDanmaku = try JSONDecoder().decode([FilterDanmaku].self, from: jsonData)
+                    return shildDanmaku
+                } catch let error {
+                    debugPrint("读取 filterDanmaku 失败 error: \(error)")
+                }
+            }
+            return nil
+        }
+        
+        set {
+            if let newValue = newValue {
+                do {
+                    let data = try JSONEncoder().encode(newValue)
+                    Store.shared.set(data, forKey: KeyName.filterDanmaku.rawValue)
+                } catch let error {
+                    debugPrint("设置 filterDanmaku 失败 error: \(error)")
+                }
+            } else {
+                Store.shared.remove(KeyName.filterDanmaku.rawValue)
             }
         }
     }

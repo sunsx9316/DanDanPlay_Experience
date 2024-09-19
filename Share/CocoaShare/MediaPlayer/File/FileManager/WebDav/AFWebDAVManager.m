@@ -25,7 +25,7 @@
 #if TARGET_OS_IPHONE
 
 #import "ONOXMLDocument.h"
-#import "ANXLogHelperModule+Utils.h"
+#import "ANXLogHelper.h"
 
 static NSString * const AFWebDAVXMLDeclarationString = @"<?xml version=\"1.0\" encoding=\"utf-8\"?>";
 

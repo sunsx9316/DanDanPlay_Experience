@@ -16,6 +16,7 @@ class PlayerModel {
     enum ParseError: LocalizedError {
         /// 匹配到多个弹幕
         case matched(collection: MatchCollection, media: File)
+        
         /// 没匹配到弹幕
         case notMatchedDanmaku
         
@@ -32,6 +33,8 @@ class PlayerModel {
     /// 视频加载状态
     enum MediaLoadState {
         case parse(state: LoadingState, progress: Float)
+        /// 过滤弹幕
+        case filterDanmaku(progress: Double)
         case subtitle(subtitle: SubtitleProtocol?)
         case lastWatchProgress(progress: Double)
     }
@@ -55,14 +58,12 @@ class PlayerModel {
     /// - Parameter speed: 速度
     func changeSpeed(_ speed: Double) {
         self.mediaModel.onChangePlayerSpeed(speed)
-        self.danmakuModel.onChangeDanmakuSpeed(speed)
     }
     
     /// 调整进度
     /// - Parameter position: 播放进度
     func changePosition(_ position: CGFloat) {
         let positionValue = max(min(position, 1), 0)
-        
         let mediaTime = self.mediaModel.changePosition(positionValue)
         self.danmakuModel.changeMediaTime(mediaTime)
     }
@@ -134,6 +135,8 @@ extension PlayerModel {
                     
                     if let error = error {
                         sub.onError(error)
+                        /// 匹配失败也正常播放
+                        _ = self?.startPlay(media, matchInfo: nil, danmakus: [:]).subscribe(onNext: { _ in })
                     } else if let collection = collection {
                         if !collection.collection.isEmpty {
                             sub.onError(ParseError.matched(collection: collection, media: media))
@@ -151,7 +154,11 @@ extension PlayerModel {
                 DispatchQueue.main.async {
                     
                     if let error = error {
-                        sub.onError(error)
+                        _ = self?.startPlay(media, matchInfo: matchInfo, danmakus: result ?? [:]).subscribe(onNext: { state in
+                            sub.onNext(state)
+                        }, onCompleted: {
+                            sub.onError(error)
+                        })
                     } else {
                         _ = self?.startPlay(media, matchInfo: matchInfo, danmakus: result ?? [:]).subscribe(onNext: { state in
                             sub.onNext(state)
@@ -200,7 +207,30 @@ extension PlayerModel {
     ///   - episodeId: 弹幕分级id
     ///   - danmakus: 弹幕
     func startPlay(_ media: File, matchInfo: MatchInfo?, danmakus: DanmakuMapResult) -> Observable<MediaLoadState> {
-        self.danmakuModel.startPlay(danmakus)
-        return self.mediaModel.startPlay(media, matchInfo: matchInfo)
+        return Observable<MediaLoadState>.create { [weak self] sub in
+            
+            var isStartPlay = false
+            _ = self?.danmakuModel.setupDanmaku(danmakus).subscribe(onNext: { state in
+                if state.filtered == 3 {
+                    if !isStartPlay {
+                        isStartPlay = true
+                        _ = self?.mediaModel.startPlay(media, matchInfo: matchInfo).subscribe({ event in
+                            sub.on(event)
+                        })
+                    }
+                } else if state.filtered < 3 {
+                    sub.onNext(.filterDanmaku(progress: Double(state.filtered) / 3))
+                }
+            }, onCompleted: {
+                if !isStartPlay {
+                    sub.onNext(.filterDanmaku(progress: 1))
+                    _ = self?.mediaModel.startPlay(media, matchInfo: matchInfo).subscribe({ event in
+                        sub.on(event)
+                    })
+                }
+            })
+            
+            return Disposables.create()
+        }
     }
 }

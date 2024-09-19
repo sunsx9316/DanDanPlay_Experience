@@ -11,6 +11,12 @@ import ANXLog
 
 class NetworkManager {
     
+#if DEBUG
+    private let printResponse = false
+#else
+    private let printResponse = false
+#endif
+    
     static var shared = NetworkManager()
     
     var host: String {
@@ -40,11 +46,11 @@ class NetworkManager {
             switch response.result {
             case .success(let data):
                 
-#if DEBUG
-                ANX.logInfo(.HTTP, "get 请求成功 url: \(url), 参数: \(parameters), 回包：\(String(data: data, encoding: .utf8) ?? "")")
-#else
-                ANX.logInfo(.HTTP, "get 请求成功 url: \(url), 参数: \(parameters)")
-#endif
+                if self.printResponse {
+                    ANX.logInfo(.HTTP, "get 请求成功 url: \(url), 参数: \(parameters), 回包：\(String(data: data, encoding: .utf8) ?? "")")
+                } else {
+                    ANX.logInfo(.HTTP, "get 请求成功 url: \(url), 参数: \(parameters)")
+                }
                 
                 complection(.success(data))
             case .failure(let error):
@@ -66,11 +72,11 @@ class NetworkManager {
             switch response.result {
             case .success(let data):
                 
-#if DEBUG
-                ANX.logDebug(.HTTP, "post 请求成功 url: \(url), 参数: \(parameters), 回包：\(String(data: data, encoding: .utf8) ?? "")")
-#else
-                ANX.logInfo(.HTTP, "post 请求成功 url: \(url), 参数: \(parameters)")
-#endif
+                if self.printResponse {
+                    ANX.logDebug(.HTTP, "post 请求成功 url: \(url), 参数: \(parameters), 回包：\(String(data: data, encoding: .utf8) ?? "")")
+                } else {
+                    ANX.logInfo(.HTTP, "post 请求成功 url: \(url), 参数: \(parameters)")
+                }
                 
                 complection(.success(data))
             case .failure(let error):
@@ -92,11 +98,11 @@ class NetworkManager {
             switch response.result {
             case .success(let data):
                 
-#if DEBUG
-                ANX.logDebug(.HTTP, "delete 请求成功 url: \(url), 参数: \(parameters), 回包：\(String(data: data, encoding: .utf8) ?? "")")
-#else
-                ANX.logInfo(.HTTP, "delete 请求成功 url: \(url), 参数: \(parameters)")
-#endif
+                if self.printResponse {
+                    ANX.logDebug(.HTTP, "delete 请求成功 url: \(url), 参数: \(parameters), 回包：\(String(data: data, encoding: .utf8) ?? "")")
+                } else {
+                    ANX.logInfo(.HTTP, "delete 请求成功 url: \(url), 参数: \(parameters)")
+                }
                 
                 complection(.success(data))
             case .failure(let error):
@@ -138,7 +144,7 @@ class NetworkManager {
     // 创建请求头
     private func createHeaders() -> HTTPHeaders {
         var header = HTTPHeaders()
-        let version = AppInfoHelper.appVersion ?? "1.0.0"
+        let version = AppInfoHelper.appVersion
         header.add(.userAgent("dandanplay/ios \(version)"))
         if let loginInfo = Preferences.shared.loginInfo {
             header.add(.authorization(bearerToken: loginInfo.token))
