@@ -52,7 +52,7 @@ class AppVersionModel {
     }
     
     private func isIgnoreVersion(updateInfo: UpdateInfo) -> Bool {
-        if updateInfo.version != Preferences.shared.lastUpdateVersion {
+        if updateInfo.version == Preferences.shared.lastUpdateVersion {
             return true
         }
         return false
