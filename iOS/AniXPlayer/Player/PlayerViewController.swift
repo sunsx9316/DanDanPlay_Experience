@@ -11,7 +11,6 @@ import YYCategories
 import MBProgressHUD
 import DynamicButton
 import RxSwift
-import ANXLog_Objc
 import ANXLog
 
 class PlayerViewController: ViewController {

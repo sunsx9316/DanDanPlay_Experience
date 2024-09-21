@@ -14,8 +14,8 @@ target 'AniXPlayer' do
   pod 'ProgressHUD', :path => 'LocalPods/ProgressHUD'
   pod 'FirebaseCrashlytics'
   pod 'VLCKit'
-
-  # pod 'ANXLog', :path => '../Share/ANXLog'
+  pod 'ANXLog', :path => '../Share/ANXLog'
+  
   # pod 'SnapKit'
   # pod 'DanmakuRender-Swift'
   # pod 'Alamofire'

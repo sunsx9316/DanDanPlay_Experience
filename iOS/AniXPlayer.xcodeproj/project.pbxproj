@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -138,7 +138,6 @@
 		89B4B445272484FE00FB1BF5 /* SpeedUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B4B444272484FE00FB1BF5 /* SpeedUpView.swift */; };
 		89B7EA4C2C9B120100527B84 /* DanmakuRender in Frameworks */ = {isa = PBXBuildFile; productRef = 89B7EA4B2C9B120100527B84 /* DanmakuRender */; };
 		89B7EA4F2C9B141100527B84 /* DanmakuRender in Frameworks */ = {isa = PBXBuildFile; productRef = 89B7EA4E2C9B141100527B84 /* DanmakuRender */; };
-		89B7EA602C9B422F00527B84 /* ANXLog in Frameworks */ = {isa = PBXBuildFile; productRef = 89B7EA5F2C9B422F00527B84 /* ANXLog */; };
 		89C323642C5F8E41002E2487 /* ANXColor+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C323042C5F8E41002E2487 /* ANXColor+Utils.swift */; };
 		89C323662C5F8E41002E2487 /* AppInfoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C323072C5F8E41002E2487 /* AppInfoHelper.swift */; };
 		89C323672C5F8E41002E2487 /* DateFormatter+Helper.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C323082C5F8E41002E2487 /* DateFormatter+Helper.swift.swift */; };
@@ -475,7 +474,6 @@
 				8953D0212C99E306003EF386 /* Alamofire in Frameworks */,
 				8953D02C2C99E430003EF386 /* SDWebImage in Frameworks */,
 				8953D0272C99E3D8003EF386 /* RxCocoa in Frameworks */,
-				89B7EA602C9B422F00527B84 /* ANXLog in Frameworks */,
 				8953D0322C99E48A003EF386 /* SnapKit in Frameworks */,
 				6F969714544C3EBD7E920F21 /* Pods_AniXPlayer.framework in Frameworks */,
 				8953D0382C99E502003EF386 /* IQKeyboardManagerSwift in Frameworks */,
@@ -1293,7 +1291,6 @@
 				8953D0462C99E759003EF386 /* DynamicButton */,
 				89B7EA4B2C9B120100527B84 /* DanmakuRender */,
 				89B7EA4E2C9B141100527B84 /* DanmakuRender */,
-				89B7EA5F2C9B422F00527B84 /* ANXLog */,
 			);
 			productName = AniXPlayer;
 			productReference = 890DF6C926160826002D8AE5 /* AniXPlayer.app */;
@@ -1336,7 +1333,6 @@
 				8953D0422C99E6F0003EF386 /* XCRemoteSwiftPackageReference "SVGKit" */,
 				8953D0452C99E758003EF386 /* XCRemoteSwiftPackageReference "DynamicButton" */,
 				89B7EA4D2C9B141100527B84 /* XCRemoteSwiftPackageReference "DanmakuRender-Swift" */,
-				89B7EA5E2C9B422F00527B84 /* XCLocalSwiftPackageReference "../Share/ANXLog" */,
 			);
 			productRefGroup = 890DF6CA26160826002D8AE5 /* Products */;
 			projectDirPath = "";
@@ -1859,13 +1855,6 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		89B7EA5E2C9B422F00527B84 /* XCLocalSwiftPackageReference "../Share/ANXLog" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../Share/ANXLog;
-		};
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCRemoteSwiftPackageReference section */
 		8953D01F2C99E306003EF386 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -2021,10 +2010,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 89B7EA4D2C9B141100527B84 /* XCRemoteSwiftPackageReference "DanmakuRender-Swift" */;
 			productName = DanmakuRender;
-		};
-		89B7EA5F2C9B422F00527B84 /* ANXLog */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = ANXLog;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

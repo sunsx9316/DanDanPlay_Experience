@@ -7,7 +7,6 @@
 
 import UIKit
 import ANXLog
-import ANXLog_Objc
 import RxSwift
 
 extension SettingViewController: UIDocumentPickerDelegate {

@@ -6,9 +6,7 @@
 //
 
 import Foundation
-#if SPM_MODE
-import ANXLog_Objc
-#endif
+import ANXLog
 
 fileprivate extension ANXLogLevel {
     var prefix: String {

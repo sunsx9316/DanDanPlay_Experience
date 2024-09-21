@@ -7,7 +7,6 @@
 
 import UIKit
 import ANXLog
-import ANXLog_Objc
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {

@@ -20,8 +20,8 @@ target 'AniXPlayer' do
   pod 'FirebaseCrashlytics'
   pod 'FSPagerView'
   pod 'JXCategoryView'
-
-  # pod 'ANXLog', :path => '../Share/ANXLog'
+  pod 'ANXLog', :path => '../Share/ANXLog'
+  
   # pod 'SnapKit'
   # pod 'MBProgressHUD'
   # pod 'IQKeyboardManager'

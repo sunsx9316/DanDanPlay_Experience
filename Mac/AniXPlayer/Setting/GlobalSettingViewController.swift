@@ -8,7 +8,7 @@
 import Cocoa
 import SnapKit
 import RxSwift
-import ANXLog_Objc
+import ANXLog
 
 extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSource {
     

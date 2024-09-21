@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -152,7 +152,6 @@
 		89B7EA552C9B14DA00527B84 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 89B7EA542C9B14DA00527B84 /* Alamofire */; };
 		89B7EA582C9B14F500527B84 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 89B7EA572C9B14F500527B84 /* RxCocoa */; };
 		89B7EA5A2C9B14F500527B84 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 89B7EA592C9B14F500527B84 /* RxSwift */; };
-		89B7EA5D2C9B1C6B00527B84 /* ANXLog in Frameworks */ = {isa = PBXBuildFile; productRef = 89B7EA5C2C9B1C6B00527B84 /* ANXLog */; };
 		89C325A22C61229F002E2487 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C325A02C61229F002E2487 /* AboutViewController.swift */; };
 		89C325A32C61229F002E2487 /* AboutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89C325A12C61229F002E2487 /* AboutViewController.xib */; };
 		89C325A52C612923002E2487 /* AppVersionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C325A42C612923002E2487 /* AppVersionModel.swift */; };
@@ -322,7 +321,6 @@
 			files = (
 				89B7EA5A2C9B14F500527B84 /* RxSwift in Frameworks */,
 				89B7EA522C9B14C700527B84 /* SnapKit in Frameworks */,
-				89B7EA5D2C9B1C6B00527B84 /* ANXLog in Frameworks */,
 				89B7EA552C9B14DA00527B84 /* Alamofire in Frameworks */,
 				89B7EA582C9B14F500527B84 /* RxCocoa in Frameworks */,
 				8953D0162C99E191003EF386 /* DanmakuRender in Frameworks */,
@@ -910,7 +908,6 @@
 				89B7EA542C9B14DA00527B84 /* Alamofire */,
 				89B7EA572C9B14F500527B84 /* RxCocoa */,
 				89B7EA592C9B14F500527B84 /* RxSwift */,
-				89B7EA5C2C9B1C6B00527B84 /* ANXLog */,
 			);
 			productName = AniXPlayer;
 			productReference = 89945FE728CA3BAE009AC640 /* AniXPlayer.app */;
@@ -946,7 +943,6 @@
 				89B7EA502C9B14C700527B84 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				89B7EA532C9B14DA00527B84 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				89B7EA562C9B14F500527B84 /* XCRemoteSwiftPackageReference "RxSwift" */,
-				89B7EA5B2C9B1C6B00527B84 /* XCLocalSwiftPackageReference "../Share/ANXLog" */,
 			);
 			productRefGroup = 89945FE828CA3BAE009AC640 /* Products */;
 			projectDirPath = "";
@@ -1302,15 +1298,18 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = AniXPlayer/AniXPlayer.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2024092101;
+				CURRENT_PROJECT_VERSION = 2024092102;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AniXPlayer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 - 2024 jimhuang";
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1321,6 +1320,7 @@
 				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.anixplayer.mac.AniXPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/AniXPlayer/AniXPlayer-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -1334,15 +1334,18 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = AniXPlayer/AniXPlayer.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 2024092101;
+				CURRENT_PROJECT_VERSION = 2024092102;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AniXPlayer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 - 2024 jimhuang";
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1353,6 +1356,7 @@
 				MARKETING_VERSION = 1.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.anixplayer.mac.AniXPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/AniXPlayer/AniXPlayer-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -1381,13 +1385,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCLocalSwiftPackageReference section */
-		89B7EA5B2C9B1C6B00527B84 /* XCLocalSwiftPackageReference "../Share/ANXLog" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../Share/ANXLog;
-		};
-/* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
 		8953D0142C99E191003EF386 /* XCRemoteSwiftPackageReference "DanmakuRender-Swift" */ = {
@@ -1449,10 +1446,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 89B7EA562C9B14F500527B84 /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxSwift;
-		};
-		89B7EA5C2C9B1C6B00527B84 /* ANXLog */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = ANXLog;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
