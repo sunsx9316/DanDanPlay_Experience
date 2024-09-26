@@ -14,6 +14,7 @@
 		890886D42A0118A4005EDBD6 /* JHQRCodeReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 890886D32A0118A4005EDBD6 /* JHQRCodeReader.m */; };
 		890886D92A011971005EDBD6 /* PCQRScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890886D82A011971005EDBD6 /* PCQRScannerViewController.swift */; };
 		890886DD2A01277B005EDBD6 /* PCConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890886DC2A01277B005EDBD6 /* PCConnectSvrViewController.swift */; };
+		890CD2822CA5C6C9001F7417 /* YYCategories in Frameworks */ = {isa = PBXBuildFile; productRef = 890CD2812CA5C6C9001F7417 /* YYCategories */; };
 		890DF6CD26160826002D8AE5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF6CC26160826002D8AE5 /* AppDelegate.swift */; };
 		890DF6D426160826002D8AE5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 890DF6D226160826002D8AE5 /* Main.storyboard */; };
 		890DF6D626160827002D8AE5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 890DF6D526160827002D8AE5 /* Assets.xcassets */; };
@@ -92,6 +93,7 @@
 		899A9DDF262F35EB00C54AC9 /* SliderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897CF530262F317B00CC297A /* SliderTableViewCell.swift */; };
 		899C4E97263BDDE600A17C83 /* LinkHistoryHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899C4E96263BDDE600A17C83 /* LinkHistoryHeaderView.swift */; };
 		899E385D280B2F7A00285191 /* ProgressSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899E385C280B2F7A00285191 /* ProgressSlider.swift */; };
+		899F8A5B2CA5A9C00055F53F /* YYCategories in Frameworks */ = {isa = PBXBuildFile; productRef = 899F8A5A2CA5A9C00055F53F /* YYCategories */; };
 		89A688952C394FC5002B7CA3 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A688942C394FC5002B7CA3 /* MainViewController.swift */; };
 		89A688982C39546E002B7CA3 /* HomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A688972C39546E002B7CA3 /* HomePageViewController.swift */; };
 		89A688A12C3982FC002B7CA3 /* HomePageBannerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A6889F2C3982FC002B7CA3 /* HomePageBannerTableViewCell.swift */; };
@@ -468,8 +470,10 @@
 				8953D0442C99E6F0003EF386 /* SVGKit in Frameworks */,
 				8953D0472C99E759003EF386 /* DynamicButton in Frameworks */,
 				89B7EA4C2C9B120100527B84 /* DanmakuRender in Frameworks */,
+				890CD2822CA5C6C9001F7417 /* YYCategories in Frameworks */,
 				8953D0292C99E3D8003EF386 /* RxSwift in Frameworks */,
 				8953D0352C99E4C7003EF386 /* MBProgressHUD in Frameworks */,
+				899F8A5B2CA5A9C00055F53F /* YYCategories in Frameworks */,
 				8953D03B2C99E55C003EF386 /* FilesProvider in Frameworks */,
 				8953D0212C99E306003EF386 /* Alamofire in Frameworks */,
 				8953D02C2C99E430003EF386 /* SDWebImage in Frameworks */,
@@ -1291,6 +1295,8 @@
 				8953D0462C99E759003EF386 /* DynamicButton */,
 				89B7EA4B2C9B120100527B84 /* DanmakuRender */,
 				89B7EA4E2C9B141100527B84 /* DanmakuRender */,
+				899F8A5A2CA5A9C00055F53F /* YYCategories */,
+				890CD2812CA5C6C9001F7417 /* YYCategories */,
 			);
 			productName = AniXPlayer;
 			productReference = 890DF6C926160826002D8AE5 /* AniXPlayer.app */;
@@ -1333,6 +1339,7 @@
 				8953D0422C99E6F0003EF386 /* XCRemoteSwiftPackageReference "SVGKit" */,
 				8953D0452C99E758003EF386 /* XCRemoteSwiftPackageReference "DynamicButton" */,
 				89B7EA4D2C9B141100527B84 /* XCRemoteSwiftPackageReference "DanmakuRender-Swift" */,
+				890CD2802CA5C6C9001F7417 /* XCRemoteSwiftPackageReference "YYCategories" */,
 			);
 			productRefGroup = 890DF6CA26160826002D8AE5 /* Products */;
 			projectDirPath = "";
@@ -1856,6 +1863,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		890CD2802CA5C6C9001F7417 /* XCRemoteSwiftPackageReference "YYCategories" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sunsx9316/YYCategories";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
 		8953D01F2C99E306003EF386 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire";
@@ -1947,6 +1962,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		890CD2812CA5C6C9001F7417 /* YYCategories */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 890CD2802CA5C6C9001F7417 /* XCRemoteSwiftPackageReference "YYCategories" */;
+			productName = YYCategories;
+		};
 		8953D0202C99E306003EF386 /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 8953D01F2C99E306003EF386 /* XCRemoteSwiftPackageReference "Alamofire" */;
@@ -2001,6 +2021,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8953D0452C99E758003EF386 /* XCRemoteSwiftPackageReference "DynamicButton" */;
 			productName = DynamicButton;
+		};
+		899F8A5A2CA5A9C00055F53F /* YYCategories */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = YYCategories;
 		};
 		89B7EA4B2C9B120100527B84 /* DanmakuRender */ = {
 			isa = XCSwiftPackageProductDependency;

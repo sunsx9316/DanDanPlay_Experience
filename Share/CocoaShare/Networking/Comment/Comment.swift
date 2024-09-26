@@ -81,7 +81,7 @@ struct Comment: Decodable {
             
             if parameter.count > 2 {
                 let rgb = Int(parameter[2]) ?? 0
-                self.color = ANXColor(rgb: rgb)
+                self.color = ANXColor(anxRgb: rgb)
             }
             
             if parameter.count > 3 {

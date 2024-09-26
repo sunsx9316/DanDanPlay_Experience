@@ -8,11 +8,7 @@
 
 import Foundation
 import DanmakuRender
-#if os(iOS)
 import YYCategories
-#else
-import DDPCategory
-#endif
 
 typealias DanmakuEntity = (BaseDanmaku & DanmakuInfoProtocol)
 typealias DanmakuMapResult = [UInt : [DanmakuEntity]]
@@ -124,7 +120,7 @@ class DanmakuManager {
                                 var model = Comment()
                                 model.time = TimeInterval(strArr[0]) ?? 0
                                 model.mode = Comment.Mode(rawValue: Int(strArr[1]) ?? 1) ?? .normal
-                                model.color = ANXColor(rgb: Int(strArr[3]) ?? 0)
+                                model.color = ANXColor(anxRgb: Int(strArr[3]) ?? 0)
                                 model.message = text
                                 danmakuModels.append(model)
                             }

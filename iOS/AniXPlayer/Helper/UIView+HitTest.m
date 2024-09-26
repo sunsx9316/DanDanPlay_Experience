@@ -7,7 +7,7 @@
 
 #import "UIView+HitTest.h"
 #import <objc/runtime.h>
-#import <YYCategories/YYCategories.h>
+#import <YYCategories.h>
 
 @implementation UIView (HitTest)
 

@@ -8,7 +8,7 @@
 import Cocoa
 import AVFoundation
 import SnapKit
-import DDPCategory
+import YYCategories
 
 protocol PlayerUIViewDelegate: AnyObject {
     

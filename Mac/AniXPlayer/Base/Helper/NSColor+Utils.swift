@@ -6,7 +6,7 @@
 //
 
 import Foundation
-import DDPCategory
+import YYCategories
 
 extension NSColor {
     

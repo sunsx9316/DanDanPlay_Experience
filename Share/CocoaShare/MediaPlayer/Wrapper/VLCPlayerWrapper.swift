@@ -281,7 +281,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     var fontColor: ANXColor? {
         didSet {
             if let fontColor = self.fontColor {
-                self.player?.anx_setTextRendererFontColor(fontColor.rgbValue as NSNumber)
+                self.player?.anx_setTextRendererFontColor(fontColor.rgbValue() as NSNumber)
             }
         }
     }

@@ -7,6 +7,7 @@
 
 import Foundation
 import DanmakuRender
+import YYCategories
 
 protocol Storeable {
     associatedtype F
