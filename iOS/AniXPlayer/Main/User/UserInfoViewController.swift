@@ -38,20 +38,6 @@ class UserInfoViewController: ViewController {
         return label
     }()
     
-    // 会员过期时间
-    private lazy var membershipExpiryLabel: UILabel = {
-        let label = Label()
-        label.font = UIFont.systemFont(ofSize: 16)
-        return label
-    }()
-    
-    // 资源监视器权益过期时间
-    private lazy var resourceMonitorExpiryLabel: UILabel = {
-        let label = Label()
-        label.font = UIFont.systemFont(ofSize: 16)
-        return label
-    }()
-    
     private lazy var logoutButton: UIButton = {
         let button = Button(type: .custom)
         button.backgroundColor = .mainColor
@@ -114,8 +100,6 @@ class UserInfoViewController: ViewController {
         scrollView.addSubview(logoutButton)
         
         infoStackView.addArrangedSubview(usernameLabel)
-        infoStackView.addArrangedSubview(membershipExpiryLabel)
-        infoStackView.addArrangedSubview(resourceMonitorExpiryLabel)
         
         setupConstraints()
         reloadUserInfo()
@@ -160,25 +144,12 @@ class UserInfoViewController: ViewController {
         if let userInfo = Preferences.shared.loginInfo {
             self.userAvatarImageView.sd_setImage(with: URL(string: userInfo.profileImage), placeholderImage: placeHolderImg)
             self.usernameLabel.text = userInfo.screenName
-            if let date = userInfo.privileges?.member {
-                self.membershipExpiryLabel.text = NSLocalizedString("会员过期时间: ", comment: "") + dateFormatter.string(from: date)
-            } else {
-                self.membershipExpiryLabel.text = nil
-            }
-            
-            if let date = userInfo.privileges?.resmonitor {
-                self.resourceMonitorExpiryLabel.text = NSLocalizedString("资源监视器权益过期时间: ", comment: "") + dateFormatter.string(from: date)
-            } else {
-                self.resourceMonitorExpiryLabel.text = nil
-            }
             
             logoutButton.isHidden = false
             
         } else {
             self.userAvatarImageView.image = placeHolderImg
             self.usernameLabel.text = NSLocalizedString("点击登录", comment: "")
-            self.membershipExpiryLabel.text = nil
-            self.resourceMonitorExpiryLabel.text = nil
             logoutButton.isHidden = true
         }
         
