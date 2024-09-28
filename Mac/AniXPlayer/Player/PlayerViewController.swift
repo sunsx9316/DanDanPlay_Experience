@@ -11,6 +11,7 @@ import Carbon
 import ProgressHUD
 import RxSwift
 import ANXLog
+import AVKit
 
 class PlayerViewController: ViewController {
     
@@ -68,6 +69,9 @@ class PlayerViewController: ViewController {
     
     private weak var danmakuMenu: NSMenu?
     
+    // 开始活动以防止系统休眠
+    private var activityToken: NSObjectProtocol?
+    
     //MARK: - life cycle
     
     deinit {
@@ -80,6 +84,8 @@ class PlayerViewController: ViewController {
         if self.mediaModel.isPlaying {
             self.playerModel.mediaModel.pause()
         }
+        
+        self.endActivity()
     }
     
     override func loadView() {
@@ -165,6 +171,11 @@ class PlayerViewController: ViewController {
             guard let self = self else { return }
             
             self.uiView.title = file?.fileName
+            if file != nil {
+                self.beginActivity()
+            } else {
+                self.endActivity()
+            }
         }).disposed(by: self.disposeBag)
         
         self.mediaModel.context.time.subscribe(onNext: { [weak self] timeInfo in
@@ -484,6 +495,17 @@ extension PlayerViewController: MatchsViewControllerDelegate {
             if let url = self.mediaModel.media?.url {
                 ANX.logError(.UI, "视频时长获取失败 \(url)")
             }
+        }
+    }
+    
+    private func beginActivity() {
+        self.activityToken = ProcessInfo.processInfo.beginActivity(options: [.idleSystemSleepDisabled, .suddenTerminationDisabled], reason: "Playing video")
+    }
+    
+    private func endActivity() {
+        // 停止活动以允许系统休眠
+        if let token = self.activityToken {
+            ProcessInfo.processInfo.endActivity(token)
         }
     }
 }
