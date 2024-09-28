@@ -19,7 +19,7 @@ private extension AddressModel {
 extension SMBLoginHistoryViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
-            return self.services.count
+            return self.browser?.discoveredServices.count ?? 0
         }
         return self.historyLoginInfos.count
     }
@@ -32,12 +32,12 @@ extension SMBLoginHistoryViewController: UITableViewDelegate, UITableViewDataSou
         
         let cell = tableView.dequeueCell(class: LinkHistoryTableViewCell.self, indexPath: indexPath)
         if indexPath.section == 0 {
-            let service = self.services[indexPath.row]
+            let service = self.browser?.discoveredServices[indexPath.row]
             
-            cell.titleLabel.text = service.name
-            cell.addressLabel.text = service.addressDesc
+            cell.titleLabel.text = service?.name
+            cell.addressLabel.text = service?.addressDesc
             
-            if service.didResolve {
+            if service?.didResolve == true {
                 cell.indicatorView.stopAnimating()
             } else {
                 cell.indicatorView.startAnimating()
@@ -55,8 +55,8 @@ extension SMBLoginHistoryViewController: UITableViewDelegate, UITableViewDataSou
         tableView.deselectRow(at: indexPath, animated: true)
  
         if indexPath.section == 0 {
-            let service = self.services[indexPath.row]
-            let addressModels = service.netService?.addressModels ?? []
+            let service = self.browser?.discoveredServices[indexPath.row]
+            let addressModels = service?.addresses ?? []
             if addressModels.count > 1 {
                 let vc = UIAlertController(title: NSLocalizedString("请选择地址", comment: ""), message: nil, preferredStyle: .alert)
                 for address in addressModels {
@@ -114,47 +114,6 @@ extension SMBLoginHistoryViewController: UITableViewDelegate, UITableViewDataSou
     
 }
 
-extension SMBLoginHistoryViewController: NetServiceBrowserDelegate {
-    
-    func netServiceBrowserWillSearch(_ browser: NetServiceBrowser) {
-        debugPrint("netServiceBrowserWillSearch")
-    }
-    
-    func netServiceBrowserDidStopSearch(_ browser: NetServiceBrowser) {
-        debugPrint("netServiceBrowserDidStopSearch")
-    }
-    
-    func netServiceBrowser(_ browser: NetServiceBrowser, didNotSearch errorDict: [String : NSNumber]) {
-        debugPrint("didNotSearch \(errorDict)")
-    }
-    
-    func netServiceBrowser(_ browser: NetServiceBrowser, didFind service: NetService, moreComing: Bool) {
-        service.delegate = self
-        service.resolve(withTimeout: 5)
-        DispatchQueue.main.async {
-            self.services.append(Service(netService: service))
-            self.tableView.reloadData()
-        }
-    }
-    
-    func netServiceBrowser(_ browser: NetServiceBrowser, didRemove service: NetService, moreComing: Bool) {
-        DispatchQueue.main.async {
-            self.services.removeAll(where: { $0.netService == service })
-            self.tableView.reloadData()
-        }
-    }
-}
-
-extension SMBLoginHistoryViewController: NetServiceDelegate {
-    func netServiceDidResolveAddress(_ sender: NetService) {
-        DispatchQueue.main.async {
-            let service = self.services.first(where: { $0.netService == sender })
-            service?.didResolve = true
-            self.tableView.reloadData()
-        }
-    }
-}
-
 extension SMBLoginHistoryViewController: BaseConnectSvrViewControllerDelegate {
     func viewControllerDidSuccessConnected(_ viewController: ViewController, loginInfo: LoginInfo) {
         
@@ -184,28 +143,6 @@ extension SMBLoginHistoryViewController: FileBrowserViewControllerDelegate {
 
 class SMBLoginHistoryViewController: ViewController {
     
-    private class Service {
-        private(set) var netService: NetService?
-        
-        var didResolve = false
-        
-        var addressDesc: String? {
-            let addressModels = self.netService?.addressModels
-            let str = addressModels?.reduce("", { res, model in
-                return res + model.address + (model == addressModels?.last ? "" : "\n")
-            })
-            return str
-        }
-        
-        var name: String? {
-            return self.netService?.name
-        }
-        
-        init(netService: NetService) {
-            self.netService = netService
-        }
-    }
-    
     private lazy var tableView: TableView = {
         let tableView = TableView(frame: .zero, style: .grouped)
         tableView.delegate = self
@@ -223,18 +160,7 @@ class SMBLoginHistoryViewController: ViewController {
         return Preferences.shared.smbLoginInfos ?? []
     }()
     
-    private lazy var services = [Service]()
-    
-    private lazy var netServiceBrowser: NetServiceBrowser = {
-        let browser = NetServiceBrowser()
-        browser.delegate = self
-        return browser
-    }()
-    
-    
-    deinit {
-        self.netServiceBrowser.stop()
-    }
+    private var browser: SMBServiceBrowser?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -250,11 +176,6 @@ class SMBLoginHistoryViewController: ViewController {
         self.navigationItem.rightBarButtonItem = rightBarButtonItem
         
         self.beginRefreshing()
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        self.stopSearch()
     }
     
     @objc private func beginRefreshing() {
@@ -275,14 +196,18 @@ class SMBLoginHistoryViewController: ViewController {
     }
     
     private func startSeach() {
-        self.netServiceBrowser.stop()
-        self.netServiceBrowser.searchForServices(ofType: "_smb._tcp.", inDomain: "local.")
-        self.services.removeAll()
+        self.browser = .init()
+        self.browser?.startScanning({ [weak self] in
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
+        })
+        
         self.tableView.reloadData()
     }
     
     private func stopSearch() {
-        self.netServiceBrowser.stop()
+        self.browser = nil
     }
     
     private func deleteLoginInfo(_ info: LoginInfo, at view: UIView?) {

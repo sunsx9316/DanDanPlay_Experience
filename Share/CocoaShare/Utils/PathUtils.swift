@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import YYCategories
 
 struct PathUtils {
     static var cacheURL: URL {

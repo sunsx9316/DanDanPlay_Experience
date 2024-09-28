@@ -63,15 +63,6 @@ class WebDavFile: File {
         self.type = (file.isDirectory || file.isSymLink) ? .folder : .file
     }
     
-    init(with file: AFWebDAVMultiStatusResponse) {
-        self.url = file.url ?? URL(fileURLWithPath: "")
-        self.path = self.url.path
-        self.type = file.isCollection ? .folder : .file
-        if self.type == .file {
-            self.fileSize = Int(file.contentLength)
-        }
-    }
-    
     init(url: URL, fileSize: Int = 0) {
         self.url = url
         self.fileSize = fileSize

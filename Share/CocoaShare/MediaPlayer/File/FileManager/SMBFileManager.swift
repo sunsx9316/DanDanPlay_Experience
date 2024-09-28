@@ -163,7 +163,15 @@ class SMBFileManager: FileManagerProtocol {
                     return false
                 }
                 return true
-            }, completionHandler: completion)
+            }, completionHandler: { result in
+                switch result {
+                case .success(let data):
+                    try? data.write(to: UIApplication.shared.documentsURL.appendingPathComponent("old.data"))
+                case .failure(_):
+                    break
+                }
+                completion(result)
+            })
         } else {
             self.client?.contents(atPath: file.path, progress: { (_, _) in
                 return true

@@ -9,5 +9,6 @@
 #define AniXPlayer_Bridging_Header_h
 
 #import "VLCMediaPlayer+Private.h"
+#import "ANXAddressModel.h"
 
 #endif /* AniXPlayer_Bridging_Header_h */

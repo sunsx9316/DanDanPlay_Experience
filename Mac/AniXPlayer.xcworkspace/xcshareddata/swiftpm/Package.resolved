@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sunsx9316/YYCategories",
       "state" : {
-        "branch" : "master",
-        "revision" : "0680e9c4c73db7baa7a9cd9a6bd65ad0cbd936be"
+        "revision" : "7c9efb6c56b97399e7e1bb82e6c3508e55eb7345",
+        "version" : "1.0.0"
       }
     }
   ],

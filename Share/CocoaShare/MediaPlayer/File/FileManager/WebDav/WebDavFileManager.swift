@@ -20,18 +20,23 @@ class WebDavFileManager: FileManagerProtocol {
     
     private enum WebDavError: LocalizedError {
         case fileTypeError
+        case reqError
         
         var errorDescription: String? {
             switch self {
             case .fileTypeError:
                 return "文件类型错误"
+            case .reqError:
+                return "请求失败"
             }
         }
     }
     
-    private var client: AFWebDAVManager?
+    private var progressObj: Progress?
     
-    private var listClient: WebDAVFileProvider?
+    private var progressObs: NSKeyValueObservation?
+    
+    private var client: WebDAVFileProvider?
     
     private var loginInfo: LoginInfo?
     
@@ -46,22 +51,19 @@ class WebDavFileManager: FileManagerProtocol {
     
     func cancelTasks() {
         ANX.logInfo(.webDav, "cancelTasks")
-        self.client?.invalidateSessionCancelingTasks(true, resetSession: true)
-        self.listClient = nil
+        self.client = nil
     }
     
     func connectWithLoginInfo(_ loginInfo: LoginInfo, completionHandler: @escaping((Error?) -> Void)) {
         ANX.logInfo(.webDav, "登录 loginInfo: %@", "\(loginInfo)")
         
         self.loginInfo = loginInfo
-        
-        self.client = self.createDefaultClient(with: loginInfo)
 
         var credential: URLCredential?
         if let auth = loginInfo.auth {
             credential = .init(user: auth.userName ?? "", password: auth.password ?? "", persistence: .forSession)
         }
-        self.listClient = .init(baseURL: loginInfo.url, credential: credential)
+        self.client = .init(baseURL: loginInfo.url, credential: credential)
         
         let rootFile: File
         if let webDavRootPath = loginInfo.parameter?[LoginInfo.Key.webDavRootPath.rawValue], !webDavRootPath.isEmpty {
@@ -91,7 +93,7 @@ class WebDavFileManager: FileManagerProtocol {
             return
         }
         
-        self.listClient?.contentsOfDirectory(path: directory.path, completionHandler: { files, error in
+        self.client?.contentsOfDirectory(path: directory.path, completionHandler: { files, error in
             if let error = error {
                 completion(.failure(error))
                 ANX.logError(.webDav, "contentsOfDirectory error: %@", error as NSError)
@@ -114,58 +116,57 @@ class WebDavFileManager: FileManagerProtocol {
     
     func getDataWithFile(_ file: File, range: ClosedRange<Int>?, progress: FileProgressAction?, completion: @escaping ((Result<Data, Error>) -> Void)) {
         
-        guard let url = URL(string: file.url.absoluteString, relativeTo: self.client?.baseURL) else {
-            ANX.logError(.webDav, "getDataWithFile URL生成失败 fileUrl: %@, relativeTo: %@", String(describing: file.url.absoluteString), String(describing: self.client?.baseURL))
-            completion(.failure(URLError(.badURL)))
+        guard let file = file as? WebDavFile else {
+            assert(false, "文件类型错误: \(file)")
+            completion(.failure(WebDavError.fileTypeError))
             return
         }
         
-        var request = URLRequest(url: url)
-        request.timeoutInterval = 60
+        var offset: Int64 = 0
+        var length: Int = -1
+        
         if let range = range {
-            request.setValue("bytes=\(range.lowerBound)-\(range.upperBound)", forHTTPHeaderField: "Range")
+            offset = Int64(range.lowerBound)
+            length = range.count
         }
-
-        self.client?.dataTask(with: request, uploadProgress: nil, downloadProgress: { p in
-            progress?(p.fractionCompleted)
-        }, completionHandler: { _, data, error in
+        
+        
+        self.progressObj = self.client?.contents(path: file.path, offset: offset, length: length, completionHandler: { [weak self] contents, error in
+            self?.progressObs = nil
+            self?.progressObj = nil
+            
             if let error = error {
-                ANX.logError(.webDav, "getDataWithFile请求失败 error: %@", error as NSError)
                 completion(.failure(error))
-            } else if let data = data as? Data {
-                completion(.success(data))
+            } else if let contents = contents {
+                try? contents.write(to: UIApplication.shared.documentsURL.appendingPathComponent("new.data"))
+                completion(.success(contents))
+            } else {
+                completion(.failure(WebDavError.reqError))
             }
-        }).resume()
+        })
+        
+        self.progressObs = self.progressObj?.observe(\.fractionCompleted, options: [.new], changeHandler: { _, value in
+            progress?(value.newValue ?? 0)
+        })
     }
     
     func getFileSize(_ file: File, completion: @escaping ((Result<Int, Error>) -> Void)) {
-        guard let url = URL(string: file.url.absoluteString, relativeTo: self.client?.baseURL) else {
-            ANX.logError(.webDav, "getFileSize URL生成失败 fileUrl: %@, relativeTo: %@", String(describing: file.url.absoluteString), String(describing: self.client?.baseURL))
-            
-            completion(.failure(URLError(.badURL)))
+        guard let file = file as? WebDavFile else {
+            assert(false, "文件类型错误: \(file)")
+            completion(.failure(WebDavError.fileTypeError))
             return
         }
         
-        var request = URLRequest(url: url)
-        request.timeoutInterval = 60
-        request.setValue("bytes=0-1024", forHTTPHeaderField: "Range")
-        
-        self.client?.dataTask(with: request, uploadProgress: nil, downloadProgress: nil, completionHandler: { res, data, error in
+        self.client?.attributesOfItem(path: file.path, completionHandler: { attributes, error in
             if let error = error {
                 ANX.logError(.webDav, "getFileSize 请求失败 error: %@", error as NSError)
                 completion(.failure(error))
-            } else if let res = res as? HTTPURLResponse {
-                if let contentRange = res.allHeaderFields["Content-Range"] as? String,
-                   let fileLengthString = contentRange.components(separatedBy: "/").last {
-                    let fileLength = Int(fileLengthString) ?? 0
-                    completion(.success(fileLength))
-                    ANX.logInfo(.webDav, "getFileSize 请求成功 fileLength: %ld", fileLength)
-                } else {
-                    completion(.failure(URLError(.zeroByteResource)))
-                    ANX.logError(.webDav, "getFileSize 请求失败 allHeaderFields: %@", res.allHeaderFields)
-                }
+                ANX.logError(.webDav, "getFileSize 请求失败 error: \(error)")
+            } else if let attributes = attributes {
+                completion(.success(Int(attributes.size)))
+                ANX.logInfo(.webDav, "getFileSize 请求成功 fileLength: %ld", attributes.size)
             }
-        }).resume()
+        })
     }
     
     func deleteFile(_ file: File, completionHandler: @escaping ((Error?) -> Void)) {
@@ -176,39 +177,10 @@ class WebDavFileManager: FileManagerProtocol {
             return
         }
         
-        self.listClient?.removeItem(path: file.url.path, completionHandler: completionHandler)
+        self.client?.removeItem(path: file.url.path, completionHandler: completionHandler)
     }
  
     //MARK: - private method
-    private func createDefaultClient(with loginInfo: LoginInfo) -> AFWebDAVManager {
-        
-        var credential: URLCredential?
-        
-        if let auth = loginInfo.auth {
-            credential = .init(user: auth.userName ?? "", password: auth.password ?? "", persistence: .forSession)
-        }
-        
-        let client = AFWebDAVManager(baseURL: loginInfo.url)
-        client.setAuthenticationChallengeHandler({ [weak self] session, task, challenge, completionHandler in
-            
-            guard self != nil else {
-                return NSNumber(value: URLSession.AuthChallengeDisposition.performDefaultHandling.rawValue)
-            }
-            
-            if challenge.previousFailureCount > 0 {
-                return NSNumber(value:URLSession.AuthChallengeDisposition.performDefaultHandling.rawValue)
-            }
-            
-            if let credential = credential {
-                return credential
-            }
-            
-            return NSNumber(value:URLSession.AuthChallengeDisposition.performDefaultHandling.rawValue)
-        })
-        
-        return client
-    }
-    
     func pickFiles(_ directory: File?, from viewController: ANXViewController, filterType: URLFilterType?, completion: @escaping ((Result<[File], Error>) -> Void)) {
         assert(false)
     }
