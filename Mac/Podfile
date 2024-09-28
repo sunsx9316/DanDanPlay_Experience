@@ -10,7 +10,6 @@ target 'AniXPlayer' do
 
   
   pod 'MMKV'
-  # pod 'DDPCategory', :path => 'LocalPods/DDPCategory'
   pod 'ProgressHUD', :path => 'LocalPods/ProgressHUD'
   pod 'FirebaseCrashlytics'
   pod 'VLCKit'
