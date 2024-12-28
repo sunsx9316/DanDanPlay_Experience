@@ -7,6 +7,7 @@
 
 import Foundation
 import RxSwift
+import YYCategories
 
 class GlobalSettingContext {
     
@@ -21,6 +22,8 @@ class GlobalSettingContext {
     lazy var subtitleLoadOrder = BehaviorSubject<[String]?>(value: Preferences.shared.subtitleLoadOrder)
     
     lazy var host = BehaviorSubject<String>(value: Preferences.shared.host)
+    
+    lazy var mainColor = BehaviorSubject<ANXColor>(value: Preferences.shared.mainColor)
     
 }
 
@@ -47,6 +50,10 @@ extension GlobalSettingModel {
     
     var host: String {
         return (try? self.context.host.value()) ?? ""
+    }
+    
+    var mainColor: ANXColor? {
+        return (try? self.context.mainColor.value())
     }
 }
 
@@ -97,6 +104,8 @@ class GlobalSettingModel {
             return NSLocalizedString("清除本地匹配记录、弹幕缓存等", comment: "")
         case .cleanupHistory:
             return NSLocalizedString("清除播放记录、历史等", comment: "")
+        case .mainColor:
+            return NSLocalizedString("App主题色", comment: "")
         }
     }
     
@@ -129,6 +138,11 @@ class GlobalSettingModel {
     func onChangeHost(_ host: String) {
         Preferences.shared.host = host.isEmpty ? DefaultHost : host
         self.context.host.onNext(host)
+    }
+    
+    func onChangeMainColor(_ color: ANXColor) {
+        Preferences.shared.mainColor = color
+        self.context.mainColor.onNext(color)
     }
     
     func cleanupCache() {

@@ -88,12 +88,12 @@ extension Data: Storeable {
 }
 
 extension ANXColor: Storeable {
-    static func create(from: Int) -> Self? {
+    static func create(from: UInt) -> Self? {
         return Self(rgba: UInt32(from))
     }
     
-    func toValue() -> Int {
-        return Int(self.rgbaValue())
+    func toValue() -> UInt {
+        return UInt(self.rgbaValue())
     }
 }
 

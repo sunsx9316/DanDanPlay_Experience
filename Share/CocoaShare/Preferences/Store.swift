@@ -90,9 +90,13 @@ extension Preferences {
             } else if valueType is Data.Type {
                 let v: Data? = self._value(forKey: forKey)
                 return Value.create(from: v as! Value.F)
+            } else if valueType is UInt.Type {
+                let v: UInt? = self._value(forKey: forKey)
+                return Value.create(from: v as! Value.F)
             }
             
-            fatalError()
+            assert(false)
+            return nil
         }
         
         open func contains(_ forKey: String) -> Bool {

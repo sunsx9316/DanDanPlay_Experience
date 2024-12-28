@@ -63,7 +63,7 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = self.model.subtitle(settingType: type)
             return cell
-        case .subtitleLoadOrder:
+        case .subtitleLoadOrder, .mainColor:
             let cell = tableView.dequeueCell(class: TitleDetailMoreTableViewCell.self, indexPath: indexPath)
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = self.model.subtitle(settingType: type)
@@ -151,7 +151,15 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
         } else if type == .subtitleLoadOrder {
             let vc = SubtitleOrderViewController(globalSettingModel: self.model)
             self.navigationController?.pushViewController(vc, animated: true)
-        } else if type == .log {
+        } else if type == .mainColor {
+            if let memberDate = Preferences.shared.loginInfo?.privileges?.member, memberDate >= Date() {
+                let vc = SetMainColorViewController(globalSettingModel: self.model)
+                self.navigationController?.pushViewController(vc, animated: true)
+            } else {
+                self.view.showHUD(NSLocalizedString("仅会员支持，请使用电脑版开通", comment: ""))
+            }
+        }
+        else if type == .log {
             let vc = UIDocumentPickerViewController(documentTypes: [String("public.data")], in: .import)
             vc.delegate = self
             vc.allowsMultipleSelection = true

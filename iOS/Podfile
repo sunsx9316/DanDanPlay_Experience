@@ -9,7 +9,7 @@ target 'AniXPlayer' do
   use_modular_headers!
 
   
-  pod 'NKOColorPickerView'
+  # pod 'NKOColorPickerView'
   pod 'MMKV'
   pod 'MobileVLCKit'
   pod 'AMSMB2'

@@ -14,6 +14,7 @@
 		890886D42A0118A4005EDBD6 /* JHQRCodeReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 890886D32A0118A4005EDBD6 /* JHQRCodeReader.m */; };
 		890886D92A011971005EDBD6 /* PCQRScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890886D82A011971005EDBD6 /* PCQRScannerViewController.swift */; };
 		890886DD2A01277B005EDBD6 /* PCConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890886DC2A01277B005EDBD6 /* PCConnectSvrViewController.swift */; };
+		890A0B2E2CAD624200AE1F6B /* Colorful in Frameworks */ = {isa = PBXBuildFile; productRef = 890A0B2D2CAD624200AE1F6B /* Colorful */; };
 		890DF6CD26160826002D8AE5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF6CC26160826002D8AE5 /* AppDelegate.swift */; };
 		890DF6D426160826002D8AE5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 890DF6D226160826002D8AE5 /* Main.storyboard */; };
 		890DF6D626160827002D8AE5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 890DF6D526160827002D8AE5 /* Assets.xcassets */; };
@@ -122,6 +123,7 @@
 		8925B8B52CA7E4C3001A8388 /* SubtitleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B86B2CA7E4C3001A8388 /* SubtitleManager.swift */; };
 		8925B8B62CA7E4C3001A8388 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8572CA7E4C3001A8388 /* Store.swift */; };
 		8925B8B72CA7E4C3001A8388 /* PCQRModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8082CA7E4C3001A8388 /* PCQRModel.swift */; };
+		8925B9632CAD4C12001A8388 /* SetMainColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B9622CAD4C12001A8388 /* SetMainColorViewController.swift */; };
 		8931F0E52674CA6A00590569 /* UIBarButtonItem+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8931F0E42674CA6A00590569 /* UIBarButtonItem+Helper.swift */; };
 		8931F0EB2674CD3300590569 /* HttpServerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8931F0EA2674CD3300590569 /* HttpServerViewController.swift */; };
 		8931F0EE26750D6500590569 /* UIView+HitTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8931F0ED26750D6500590569 /* UIView+HitTest.m */; };
@@ -352,6 +354,7 @@
 		8925B8692CA7E4C3001A8388 /* Enum.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enum.swift; sourceTree = "<group>"; };
 		8925B86A2CA7E4C3001A8388 /* HistoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryManager.swift; sourceTree = "<group>"; };
 		8925B86B2CA7E4C3001A8388 /* SubtitleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtitleManager.swift; sourceTree = "<group>"; };
+		8925B9622CAD4C12001A8388 /* SetMainColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetMainColorViewController.swift; sourceTree = "<group>"; };
 		8931F0E42674CA6A00590569 /* UIBarButtonItem+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+Helper.swift"; sourceTree = "<group>"; };
 		8931F0EA2674CD3300590569 /* HttpServerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpServerViewController.swift; sourceTree = "<group>"; };
 		8931F0EC26750D6500590569 /* UIView+HitTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+HitTest.h"; sourceTree = "<group>"; };
@@ -478,6 +481,7 @@
 				8953D0322C99E48A003EF386 /* SnapKit in Frameworks */,
 				6F969714544C3EBD7E920F21 /* Pods_AniXPlayer.framework in Frameworks */,
 				8953D0382C99E502003EF386 /* IQKeyboardManagerSwift in Frameworks */,
+				890A0B2E2CAD624200AE1F6B /* Colorful in Frameworks */,
 				8953D0242C99E374003EF386 /* MJRefresh in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1238,6 +1242,7 @@
 			children = (
 				89E0D60D2669113400E2337B /* SettingViewController.swift */,
 				8931F0F526773A2300590569 /* SubtitleOrderViewController.swift */,
+				8925B9622CAD4C12001A8388 /* SetMainColorViewController.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -1300,6 +1305,7 @@
 				89B7EA4B2C9B120100527B84 /* DanmakuRender */,
 				89B7EA4E2C9B141100527B84 /* DanmakuRender */,
 				8925B7F72CA7E159001A8388 /* YYCategories */,
+				890A0B2D2CAD624200AE1F6B /* Colorful */,
 			);
 			productName = AniXPlayer;
 			productReference = 890DF6C926160826002D8AE5 /* AniXPlayer.app */;
@@ -1343,6 +1349,7 @@
 				8953D0452C99E758003EF386 /* XCRemoteSwiftPackageReference "DynamicButton" */,
 				89B7EA4D2C9B141100527B84 /* XCRemoteSwiftPackageReference "DanmakuRender-Swift" */,
 				8925B7F62CA7E159001A8388 /* XCRemoteSwiftPackageReference "YYCategories" */,
+				890A0B2C2CAD624200AE1F6B /* XCRemoteSwiftPackageReference "Color-Picker-for-iOS" */,
 			);
 			productRefGroup = 890DF6CA26160826002D8AE5 /* Products */;
 			projectDirPath = "";
@@ -1544,6 +1551,7 @@
 				8944E876263AF48C00EF00B1 /* LinkHistoryTableViewCell.swift in Sources */,
 				890DF77026160B3E002D8AE5 /* FileTableViewCell.swift in Sources */,
 				890DF6FA26160A36002D8AE5 /* RefreshHeader.swift in Sources */,
+				8925B9632CAD4C12001A8388 /* SetMainColorViewController.swift in Sources */,
 				890DF75226160B1B002D8AE5 /* UIDevice+Helper.swift in Sources */,
 				89A689662C425C70002B7CA3 /* LoginViewController.swift in Sources */,
 				89945FDD28C8E7C6009AC640 /* GotoLastWatchPointView.swift in Sources */,
@@ -1787,8 +1795,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2024092801;
+				CURRENT_PROJECT_VERSION = 2024122801;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				ENABLE_BITCODE = NO;
@@ -1805,6 +1814,7 @@
 				MARKETING_VERSION = 6.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.anixplayer.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/AniXPlayer/AniXPlayer-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -1819,8 +1829,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2024092801;
+				CURRENT_PROJECT_VERSION = 2024122801;
 				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1836,6 +1847,7 @@
 				MARKETING_VERSION = 6.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.anixplayer.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/AniXPlayer/AniXPlayer-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1866,6 +1878,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		890A0B2C2CAD624200AE1F6B /* XCRemoteSwiftPackageReference "Color-Picker-for-iOS" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/hayashi311/Color-Picker-for-iOS";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.2;
+			};
+		};
 		8925B7F62CA7E159001A8388 /* XCRemoteSwiftPackageReference "YYCategories" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sunsx9316/YYCategories";
@@ -1965,6 +1985,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		890A0B2D2CAD624200AE1F6B /* Colorful */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 890A0B2C2CAD624200AE1F6B /* XCRemoteSwiftPackageReference "Color-Picker-for-iOS" */;
+			productName = Colorful;
+		};
 		8925B7F72CA7E159001A8388 /* YYCategories */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 8925B7F62CA7E159001A8388 /* XCRemoteSwiftPackageReference "YYCategories" */;

@@ -159,6 +159,7 @@ enum GlobalSettingType: CaseIterable {
     case autoLoadCustomSubtitle
     case danmakuCacheDay
     case subtitleLoadOrder
+    case mainColor
     case host
     case log
     case cleanupCache
@@ -184,6 +185,8 @@ enum GlobalSettingType: CaseIterable {
             return NSLocalizedString("自动加载本地字幕", comment: "")
         case .cleanupHistory:
             return NSLocalizedString("清除播放记录", comment: "")
+        case .mainColor:
+            return NSLocalizedString("主题色", comment: "")
         }
     }
 }

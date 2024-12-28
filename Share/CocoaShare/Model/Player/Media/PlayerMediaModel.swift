@@ -7,6 +7,7 @@
 
 import Foundation
 import RxSwift
+import ANXLog
 
 private class PlayMediaInfo: HistoryManager.WatchProgressStoreable {
     
@@ -393,12 +394,16 @@ class PlayerMediaModel {
             
             var lastWatchProgress: Double?
             
-            if let playItem = self?.findPlayItem(media), let matchInfo = matchInfo {
-                playItem.matchInfo = matchInfo
+            if let playItem = self?.findPlayItem(media) {
+                if let matchInfo = matchInfo {
+                    playItem.matchInfo = matchInfo
+                }
+                
                 lastWatchProgress = HistoryManager.shared.watchProgress(media: playItem)
             }
             
             DispatchQueue.main.async {
+                ANX.logInfo(.UI, "恢复上次播放进度 key: \(media.fileName), progress：\(lastWatchProgress != nil ? "\(lastWatchProgress!)" : "null")")
                 sub.onNext(lastWatchProgress)
                 sub.onCompleted()
             }
@@ -428,6 +433,7 @@ class PlayerMediaModel {
             if position >= 0.99 {
                 HistoryManager.shared.storeWatchProgress(media: playItem, progress: nil)
             } else {
+                ANX.logInfo(.UI, "保存上次播放进度 key: \(currentPlayItem.fileName), progress：\(position)")
                 HistoryManager.shared.storeWatchProgress(media: playItem, progress: position)
             }
         }
@@ -585,8 +591,11 @@ extension PlayerMediaModel: MediaPlayerDelegate {
             self.context.isPlay.onNext(false)
         }
         
-        self.storeWatchProgress()
-        self.storeLastWatchDateProgress()
+        // fix 未开始播放导致播放记录被覆盖的问题
+        if player.currentTime > 0 {
+            self.storeWatchProgress()
+            self.storeLastWatchDateProgress()
+        }
     }
     
     func player(_ player: MediaPlayer, shouldChangeMedia media: File) -> Bool {

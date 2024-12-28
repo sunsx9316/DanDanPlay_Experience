@@ -26,6 +26,10 @@ extension UIColor {
     }
     
     static var mainColor: UIColor {
+        return Preferences.shared.mainColor
+    }
+    
+    static var defaultMainColor: UIColor {
         return UIColor(red: 20, green: 180, blue: 9, alpha: 1)
     }
     

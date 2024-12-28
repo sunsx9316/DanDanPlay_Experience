@@ -611,7 +611,11 @@ extension PlayerViewController: MatchsViewControllerDelegate {
     
     func playNowInMatchsViewController(_ matchsViewController: MatchsViewController) {
         matchsViewController.navigationController?.popToRootViewController(animated: true)
-        _ = self.playerModel.startPlay(matchsViewController.file, matchInfo: nil, danmakus: [:]).subscribe()
+        _ = self.playerModel.startPlay(matchsViewController.file, matchInfo: nil, danmakus: [:]).subscribe { [weak self] event in
+            guard let self = self else { return }
+            
+            self.parseMedia(event: event)
+        }
     }
     
     

@@ -116,6 +116,9 @@ class Preferences {
         /// 边缘样式
         case danmakuEffectStyle
         
+        /// 主题色
+        case mainColor = "mainColor_v2"
+        
         var storeKey: String {
             return self.rawValue
         }
@@ -123,6 +126,9 @@ class Preferences {
     
     static let shared = Preferences()
     private init() {}
+    
+    @StoreWrapper(defaultValue: UIColor.defaultMainColor, key: .mainColor)
+    var mainColor: ANXColor
     
     @StoreWrapper(defaultValue: "0", key: .lastUpdateVersion)
     var lastUpdateVersion: String
