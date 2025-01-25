@@ -23,9 +23,10 @@ class NetworkManager {
         return Preferences.shared.host
     }
     
+    private let apiVersion = "/api/v2"
+    
     private var baseURL: String {
-        let url = URL(string: self.host)
-        return url?.appendingPathComponent("api/v2").absoluteString ?? ""
+        return self.host
     }
     
     private lazy var defaultSession: Alamofire.Session = {
@@ -40,9 +41,9 @@ class NetworkManager {
     ///   - url: url
     ///   - parameters: 参数
     ///   - complection: 完成回调
-    func get(url: String, parameters: Encodable = [String: String](), complection: @escaping((Result<Data, Error>) -> Void)) {
+    func get(url: String, parameters: Encodable = [String: String](), headers: HTTPHeaders? = nil, complection: @escaping((Result<Data, Error>) -> Void)) {
         ANX.logInfo(.HTTP, "发起 get 请求 url: \(url), 参数: \(parameters)")
-        self.defaultSession.request(url, method: .get, parameters: parameters, encoder: URLEncodedFormParameterEncoder.default, headers: createHeaders()).responseData { (response) in
+        self.defaultSession.request(url, method: .get, parameters: parameters, encoder: URLEncodedFormParameterEncoder.default, headers: headers).responseData { (response) in
             switch response.result {
             case .success(let data):
                 
@@ -54,7 +55,7 @@ class NetworkManager {
                 
                 complection(.success(data))
             case .failure(let error):
-                ANX.logInfo(.HTTP, "get 请求失败 url: \(url), 参数: \(parameters), error:\(error)")
+                ANX.logInfo(.HTTP, "get 请求失败 url: \(url), 参数: \(parameters), error:\(error), response:\(response.response), req:\(response.request?.headers)")
                 
                 complection(.failure(error))
             }
@@ -66,9 +67,9 @@ class NetworkManager {
     ///   - url: url
     ///   - parameters: 参数
     ///   - complection: 完成回调
-    func post(url: String, parameters: Encodable = [String: String](), complection: @escaping((Result<Data, Error>) -> Void)) {
+    func post(url: String, parameters: Encodable = [String: String](), headers: HTTPHeaders? = nil, complection: @escaping((Result<Data, Error>) -> Void)) {
         ANX.logInfo(.HTTP, "发起 post 请求 url: \(url), 参数: \(parameters)")
-        self.defaultSession.request(url, method: .post, parameters: parameters, encoder: JSONParameterEncoder.default, headers: createHeaders()).responseData { (response) in
+        self.defaultSession.request(url, method: .post, parameters: parameters, encoder: JSONParameterEncoder.default, headers: headers).responseData { (response) in
             switch response.result {
             case .success(let data):
                 
@@ -92,9 +93,9 @@ class NetworkManager {
     ///   - url: url
     ///   - parameters: 参数
     ///   - complection: 完成回调
-    func delete(url: String, parameters: Encodable = [String: String](), complection: @escaping((Result<Data, Error>) -> Void)) {
+    func delete(url: String, parameters: Encodable = [String: String](), headers: HTTPHeaders? = nil, complection: @escaping((Result<Data, Error>) -> Void)) {
         ANX.logInfo(.HTTP, "发起 delete 请求 url: \(url), 参数: \(parameters)")
-        self.defaultSession.request(url, method: .delete, parameters: parameters, encoder: JSONParameterEncoder.default, headers: createHeaders()).responseData { (response) in
+        self.defaultSession.request(url, method: .delete, parameters: parameters, encoder: JSONParameterEncoder.default, headers: headers).responseData { (response) in
             switch response.result {
             case .success(let data):
                 
@@ -119,7 +120,8 @@ class NetworkManager {
     ///   - parameters: 参数
     ///   - complection: 完成回调
     func getOnBaseURL(additionUrl: String, parameters: Encodable = [String: String](), complection: @escaping((Result<Data, Error>) -> Void)) {
-        self.get(url: self.baseURL + additionUrl, parameters: parameters, complection: complection)
+        let tmpPath = apiVersion + additionUrl
+        self.get(url: self.baseURL + tmpPath, parameters: parameters, headers: createHeaders(path: tmpPath), complection: complection)
     }
     
     
@@ -129,7 +131,8 @@ class NetworkManager {
     ///   - parameters: 参数
     ///   - complection: 完成回调
     func postOnBaseURL(additionUrl: String, parameters: Encodable = [String: String](), complection: @escaping((Result<Data, Error>) -> Void)) {
-        self.post(url: self.baseURL + additionUrl, parameters: parameters, complection: complection)
+        let tmpPath = apiVersion + additionUrl
+        self.post(url: self.baseURL + tmpPath, parameters: parameters, headers: createHeaders(path: tmpPath), complection: complection)
     }
     
     /// 基于baseurl 拼接 additionUrl发起delete请求
@@ -138,18 +141,35 @@ class NetworkManager {
     ///   - parameters: 参数
     ///   - complection: 完成回调
     func deleteOnBaseURL(additionUrl: String, parameters: Encodable = [String: String](), complection: @escaping((Result<Data, Error>) -> Void)) {
-        self.delete(url: self.baseURL + additionUrl, parameters: parameters, complection: complection)
+        let tmpPath = apiVersion + additionUrl
+        self.delete(url: self.baseURL + tmpPath, parameters: parameters, headers: createHeaders(path: tmpPath), complection: complection)
     }
 
     // 创建请求头
-    private func createHeaders() -> HTTPHeaders {
+    private func createHeaders(path: String) -> HTTPHeaders {
         var header = HTTPHeaders()
         let version = AppInfoHelper.appVersion
         header.add(.userAgent("dandanplay/ios \(version)"))
         if let loginInfo = Preferences.shared.loginInfo {
             header.add(.authorization(bearerToken: loginInfo.token))
         }
+        
+        let time = Int64(Date().timeIntervalSince1970)
+        let signature = hash(unixTimestamp: time, path: path)
+        header.add(name: "X-AppId", value: AppKey.appId)
+        header.add(name: "X-Signature", value: signature)
+        header.add(name: "X-Timestamp", value: "\(time)")
+#if DEBUG
+        // 测试签名（强制启用验证）
+        header.add(name: "X-Auth", value: "1")
+#endif
         return header
+    }
+    
+    private func hash(unixTimestamp: Int64, path: String) -> String {
+        let str = AppKey.appId + "\(unixTimestamp)" + path + AppKey.appSec
+        let hash = (str.data(using: .utf8) as NSData?)?.sha256().base64EncodedString() ?? ""
+        return hash
     }
     
 }

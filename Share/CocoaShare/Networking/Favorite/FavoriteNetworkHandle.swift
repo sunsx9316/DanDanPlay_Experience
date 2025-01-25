@@ -36,7 +36,7 @@ class FavoriteNetworkHandle {
                 switch result {
                 case .success(let data):
                     let decoder = JSONDecoder()
-                    var error = try? decoder.decode(ResponseError.self, from: data)
+                    let error = try? decoder.decode(ResponseError.self, from: data)
                     completion(error?.errorCode == 0 ? nil : error)
                 case .failure(let error):
                     completion(error)
@@ -67,7 +67,7 @@ class FavoriteNetworkHandle {
             switch result {
             case .success(let data):
                 let decoder = JSONDecoder()
-                var error = try? decoder.decode(ResponseError.self, from: data)
+                let error = try? decoder.decode(ResponseError.self, from: data)
                 completion(error?.errorCode == 0 ? nil : error)
             case .failure(let error):
                 completion(error)
