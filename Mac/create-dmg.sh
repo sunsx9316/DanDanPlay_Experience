@@ -15,4 +15,4 @@ dir_path=$(dirname "$file_path")
 # 切换到文件的目录
 cd "$dir_path" || { echo "无法切换到目录 '$dir_path'"; exit 3; }
 
-create-dmg $1 --identity="Apple Development: Hongjun Xu (LCV4UPFZ8P)"
+create-dmg $1
