@@ -6,8 +6,17 @@
 ## 安装
 1. clone 项目
 2. pod install
-3. 如果需要支持登录等功能，在`AppKey.swift`中配置你的`appId`和`appSec`
-> 可加QQ群: 493974192，找群主申请
+3. 在下图目录中创建`AppKey.swift`文件，内容如下（AppKey申请方式：[点我跳转](https://doc.dandanplay.com/open/)）：
+```
+AppKey.swift：
+
+struct AppKey {
+    static var appId = "xxxxx"
+    static var appSec = "xxxxx"
+}
+```
+
+![mac](AppKey.jpeg)
 
 ## 截图
 ### Mac
