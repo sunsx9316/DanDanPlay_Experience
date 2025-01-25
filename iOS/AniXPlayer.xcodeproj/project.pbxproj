@@ -233,6 +233,7 @@
 		89E109B426443F4F00825308 /* BaseLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E109B326443F4F00825308 /* BaseLoginHistoryViewController.swift */; };
 		89E109B62644424800825308 /* BaseConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E109B52644424800825308 /* BaseConnectSvrViewController.swift */; };
 		89FFD1292D44E65000428206 /* YYCategories in Frameworks */ = {isa = PBXBuildFile; productRef = 89FFD1282D44E65000428206 /* YYCategories */; };
+		89FFD12B2D44EB2700428206 /* AppKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD12A2D44EB2700428206 /* AppKey.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -458,6 +459,7 @@
 		89E0D82B266BDB8600E2337B /* PlayerUIBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerUIBottomView.swift; sourceTree = "<group>"; };
 		89E109B326443F4F00825308 /* BaseLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseLoginHistoryViewController.swift; sourceTree = "<group>"; };
 		89E109B52644424800825308 /* BaseConnectSvrViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseConnectSvrViewController.swift; sourceTree = "<group>"; };
+		89FFD12A2D44EB2700428206 /* AppKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppKey.swift; sourceTree = "<group>"; };
 		CF2D5334A2A53D20F8B80E22 /* Pods-AniXPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.release.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.release.xcconfig"; sourceTree = "<group>"; };
 		F410B8A741526DF765820021 /* Pods-AniXPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.debug.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -966,6 +968,7 @@
 				8925B8482CA7E4C3001A8388 /* Search */,
 				8925B84C2CA7E4C3001A8388 /* User */,
 				8925B84D2CA7E4C3001A8388 /* NetworkManager.swift */,
+				89FFD12A2D44EB2700428206 /* AppKey.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -1551,6 +1554,7 @@
 				89A688982C39546E002B7CA3 /* HomePageViewController.swift in Sources */,
 				890DF77526160B3E002D8AE5 /* PlayerViewController.swift in Sources */,
 				890DF76F26160B3E002D8AE5 /* FolderTableViewCell.swift in Sources */,
+				89FFD12B2D44EB2700428206 /* AppKey.swift in Sources */,
 				8944E876263AF48C00EF00B1 /* LinkHistoryTableViewCell.swift in Sources */,
 				890DF77026160B3E002D8AE5 /* FileTableViewCell.swift in Sources */,
 				890DF6FA26160A36002D8AE5 /* RefreshHeader.swift in Sources */,
