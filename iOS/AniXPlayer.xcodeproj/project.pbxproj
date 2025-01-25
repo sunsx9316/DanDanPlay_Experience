@@ -92,7 +92,6 @@
 		8925B8972CA7E4C3001A8388 /* Favorite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B83B2CA7E4C3001A8388 /* Favorite.swift */; };
 		8925B8982CA7E4C3001A8388 /* URL+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8212CA7E4C3001A8388 /* URL+Extension.swift */; };
 		8925B8992CA7E4C3001A8388 /* DateFormatter+Helper.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B85C2CA7E4C3001A8388 /* DateFormatter+Helper.swift.swift */; };
-		8925B89A2CA7E4C3001A8388 /* AppKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8492CA7E4C3001A8388 /* AppKey.swift */; };
 		8925B89B2CA7E4C3001A8388 /* DanmakuManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8672CA7E4C3001A8388 /* DanmakuManager.swift */; };
 		8925B89C2CA7E4C3001A8388 /* FileManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8102CA7E4C3001A8388 /* FileManagerProtocol.swift */; };
 		8925B89D2CA7E4C3001A8388 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8442CA7E4C3001A8388 /* Response.swift */; };
@@ -329,7 +328,6 @@
 		8925B8442CA7E4C3001A8388 /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		8925B8462CA7E4C3001A8388 /* Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
 		8925B8472CA7E4C3001A8388 /* SearchNetworkHandle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNetworkHandle.swift; sourceTree = "<group>"; };
-		8925B8492CA7E4C3001A8388 /* AppKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppKey.swift; sourceTree = "<group>"; };
 		8925B84A2CA7E4C3001A8388 /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
 		8925B84B2CA7E4C3001A8388 /* UserNetworkHandle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNetworkHandle.swift; sourceTree = "<group>"; };
 		8925B84D2CA7E4C3001A8388 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
@@ -949,7 +947,6 @@
 		8925B84C2CA7E4C3001A8388 /* User */ = {
 			isa = PBXGroup;
 			children = (
-				8925B8492CA7E4C3001A8388 /* AppKey.swift */,
 				8925B84A2CA7E4C3001A8388 /* Login.swift */,
 				8925B84B2CA7E4C3001A8388 /* UserNetworkHandle.swift */,
 			);
@@ -1606,7 +1603,6 @@
 				8925B8972CA7E4C3001A8388 /* Favorite.swift in Sources */,
 				8925B8982CA7E4C3001A8388 /* URL+Extension.swift in Sources */,
 				8925B8992CA7E4C3001A8388 /* DateFormatter+Helper.swift.swift in Sources */,
-				8925B89A2CA7E4C3001A8388 /* AppKey.swift in Sources */,
 				8925B89B2CA7E4C3001A8388 /* DanmakuManager.swift in Sources */,
 				8925B89C2CA7E4C3001A8388 /* FileManagerProtocol.swift in Sources */,
 				8925B89D2CA7E4C3001A8388 /* Response.swift in Sources */,
