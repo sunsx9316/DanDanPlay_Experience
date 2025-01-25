@@ -127,7 +127,7 @@ class Preferences {
     static let shared = Preferences()
     private init() {}
     
-    @StoreWrapper(defaultValue: UIColor.defaultMainColor, key: .mainColor)
+    @StoreWrapper(defaultValue: ANXColor.defaultMainColor, key: .mainColor)
     var mainColor: ANXColor
     
     @StoreWrapper(defaultValue: "0", key: .lastUpdateVersion)

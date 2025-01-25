@@ -67,7 +67,6 @@
 		8925B94A2CA7F901001A8388 /* Bangumi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8E22CA7F901001A8388 /* Bangumi.swift */; };
 		8925B94B2CA7F901001A8388 /* WebDavFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8BF2CA7F901001A8388 /* WebDavFileManager.swift */; };
 		8925B94C2CA7F901001A8388 /* MatchInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8DE2CA7F901001A8388 /* MatchInfo.swift */; };
-		8925B94D2CA7F901001A8388 /* AppKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8FA2CA7F901001A8388 /* AppKey.swift */; };
 		8925B94E2CA7F901001A8388 /* NumberUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B90E2CA7F901001A8388 /* NumberUtils.swift */; };
 		8925B94F2CA7F901001A8388 /* ANXAddressModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 8925B9012CA7F901001A8388 /* ANXAddressModel.m */; };
 		8925B9502CA7F901001A8388 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8FE2CA7F901001A8388 /* NetworkManager.swift */; };
@@ -156,6 +155,8 @@
 		89C325A22C61229F002E2487 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C325A02C61229F002E2487 /* AboutViewController.swift */; };
 		89C325A32C61229F002E2487 /* AboutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89C325A12C61229F002E2487 /* AboutViewController.xib */; };
 		89C325A52C612923002E2487 /* AppVersionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C325A42C612923002E2487 /* AppVersionModel.swift */; };
+		89FFD12D2D45131800428206 /* AppKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD12C2D45131800428206 /* AppKey.swift */; };
+		89FFD12F2D45137300428206 /* NSColor+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD12E2D45137300428206 /* NSColor+Helper.swift */; };
 		F7CC679A78A31AB0A704CFA9 /* Pods_AniXPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F82727D2DE868C53427D0F5 /* Pods_AniXPlayer.framework */; };
 /* End PBXBuildFile section */
 
@@ -218,7 +219,6 @@
 		8925B8F52CA7F901001A8388 /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		8925B8F72CA7F901001A8388 /* Search.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Search.swift; sourceTree = "<group>"; };
 		8925B8F82CA7F901001A8388 /* SearchNetworkHandle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchNetworkHandle.swift; sourceTree = "<group>"; };
-		8925B8FA2CA7F901001A8388 /* AppKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppKey.swift; sourceTree = "<group>"; };
 		8925B8FB2CA7F901001A8388 /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
 		8925B8FC2CA7F901001A8388 /* UserNetworkHandle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNetworkHandle.swift; sourceTree = "<group>"; };
 		8925B8FE2CA7F901001A8388 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
@@ -312,6 +312,8 @@
 		89C325A02C61229F002E2487 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		89C325A12C61229F002E2487 /* AboutViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AboutViewController.xib; sourceTree = "<group>"; };
 		89C325A42C612923002E2487 /* AppVersionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersionModel.swift; sourceTree = "<group>"; };
+		89FFD12C2D45131800428206 /* AppKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppKey.swift; sourceTree = "<group>"; };
+		89FFD12E2D45137300428206 /* NSColor+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSColor+Helper.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -554,7 +556,6 @@
 		8925B8FD2CA7F901001A8388 /* User */ = {
 			isa = PBXGroup;
 			children = (
-				8925B8FA2CA7F901001A8388 /* AppKey.swift */,
 				8925B8FB2CA7F901001A8388 /* Login.swift */,
 				8925B8FC2CA7F901001A8388 /* UserNetworkHandle.swift */,
 			);
@@ -574,6 +575,7 @@
 				8925B8F92CA7F901001A8388 /* Search */,
 				8925B8FD2CA7F901001A8388 /* User */,
 				8925B8FE2CA7F901001A8388 /* NetworkManager.swift */,
+				89FFD12C2D45131800428206 /* AppKey.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -669,6 +671,7 @@
 			isa = PBXGroup;
 			children = (
 				897291EA2C2FB1020016CA1F /* NSImage+Utils.swift */,
+				89FFD12E2D45137300428206 /* NSColor+Helper.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -1071,6 +1074,7 @@
 				8925B91B2CA7F901001A8388 /* BangumiNetworkHandle.swift in Sources */,
 				8925B91C2CA7F901001A8388 /* PCQRModel.swift in Sources */,
 				8925B91D2CA7F901001A8388 /* VLCPlayerWrapper.swift in Sources */,
+				89FFD12F2D45137300428206 /* NSColor+Helper.swift in Sources */,
 				8925B91E2CA7F901001A8388 /* VLCMediaPlayer+Private.m in Sources */,
 				8925B91F2CA7F901001A8388 /* DanmakuManager.swift in Sources */,
 				8925B9202CA7F901001A8388 /* GlobalSettingModel.swift in Sources */,
@@ -1103,6 +1107,7 @@
 				8925B93B2CA7F901001A8388 /* PlayerMediaContext.swift in Sources */,
 				8925B93C2CA7F901001A8388 /* SearchNetworkHandle.swift in Sources */,
 				8925B93D2CA7F901001A8388 /* HomePage.swift in Sources */,
+				89FFD12D2D45131800428206 /* AppKey.swift in Sources */,
 				8925B93E2CA7F901001A8388 /* MediaPlayer.swift in Sources */,
 				8925B93F2CA7F901001A8388 /* Store+Extension.swift in Sources */,
 				8925B9402CA7F901001A8388 /* PlayerMediaModel.swift in Sources */,
@@ -1118,7 +1123,6 @@
 				8925B94A2CA7F901001A8388 /* Bangumi.swift in Sources */,
 				8925B94B2CA7F901001A8388 /* WebDavFileManager.swift in Sources */,
 				8925B94C2CA7F901001A8388 /* MatchInfo.swift in Sources */,
-				8925B94D2CA7F901001A8388 /* AppKey.swift in Sources */,
 				8925B94E2CA7F901001A8388 /* NumberUtils.swift in Sources */,
 				8925B94F2CA7F901001A8388 /* ANXAddressModel.m in Sources */,
 				8925B9502CA7F901001A8388 /* NetworkManager.swift in Sources */,
@@ -1319,7 +1323,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.6.0;
+				MARKETING_VERSION = 1.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.anixplayer.mac.AniXPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1355,7 +1359,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.0;
-				MARKETING_VERSION = 1.6.0;
+				MARKETING_VERSION = 1.6.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.anixplayer.mac.AniXPlayer;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

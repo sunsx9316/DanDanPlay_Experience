@@ -75,6 +75,8 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = self.model.subtitle(settingType: type)
             return cell
+        case .mainColor:
+            return nil
         }
     }
     

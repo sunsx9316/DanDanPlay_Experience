@@ -62,7 +62,11 @@ class GlobalSettingModel {
     lazy var context = GlobalSettingContext()
     
     func allSettingType() -> [GlobalSettingType] {
+#if os(iOS)
         return GlobalSettingType.allCases
+#else
+        return GlobalSettingType.allCases.filter({ $0 != .mainColor })
+#endif
     }
     
     func subtitle(settingType: GlobalSettingType) -> String {
