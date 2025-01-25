@@ -51,7 +51,6 @@
 		890DF86526189D26002D8AE5 /* EpisodeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF86326189D26002D8AE5 /* EpisodeTableViewCell.swift */; };
 		890DF86F2618B922002D8AE5 /* AnimatesTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF86E2618B922002D8AE5 /* AnimatesTableViewCell.swift */; };
 		8914481C261F510700E26133 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8914481B261F510700E26133 /* SearchViewController.swift */; };
-		8925B7F82CA7E159001A8388 /* YYCategories in Frameworks */ = {isa = PBXBuildFile; productRef = 8925B7F72CA7E159001A8388 /* YYCategories */; };
 		8925B8702CA7E4C3001A8388 /* Bangumi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8312CA7E4C3001A8388 /* Bangumi.swift */; };
 		8925B8712CA7E4C3001A8388 /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8652CA7E4C3001A8388 /* CacheManager.swift */; };
 		8925B8722CA7E4C3001A8388 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8152CA7E4C3001A8388 /* File.swift */; };
@@ -220,6 +219,8 @@
 		89C325B82C6FD91F002E2487 /* DanmakuOperationViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C325B52C6FD91F002E2487 /* DanmakuOperationViewViewController.swift */; };
 		89C79B922A87D3AA0040FEDA /* Launcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C79B912A87D3AA0040FEDA /* Launcher.swift */; };
 		89C79B942A881B200040FEDA /* DanmakuLoadUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C79B932A881B200040FEDA /* DanmakuLoadUtil.swift */; };
+		89D148722D44E2B000E7FDF5 /* YYCategories in Frameworks */ = {isa = PBXBuildFile; productRef = 89D148712D44E2B000E7FDF5 /* YYCategories */; };
+		89D148752D44E4A700E7FDF5 /* YYCategories in Frameworks */ = {isa = PBXBuildFile; productRef = 89D148742D44E4A700E7FDF5 /* YYCategories */; };
 		89E0D60E2669113400E2337B /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0D60D2669113400E2337B /* SettingViewController.swift */; };
 		89E0D6122669127B00E2337B /* SwitchDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0D6102669127A00E2337B /* SwitchDetailTableViewCell.swift */; };
 		89E0D6132669127B00E2337B /* SwitchDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89E0D6112669127B00E2337B /* SwitchDetailTableViewCell.xib */; };
@@ -232,6 +233,7 @@
 		89E0D82C266BDB8600E2337B /* PlayerUIBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0D82B266BDB8600E2337B /* PlayerUIBottomView.swift */; };
 		89E109B426443F4F00825308 /* BaseLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E109B326443F4F00825308 /* BaseLoginHistoryViewController.swift */; };
 		89E109B62644424800825308 /* BaseConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E109B52644424800825308 /* BaseConnectSvrViewController.swift */; };
+		89FFD1292D44E65000428206 /* YYCategories in Frameworks */ = {isa = PBXBuildFile; productRef = 89FFD1282D44E65000428206 /* YYCategories */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -471,15 +473,17 @@
 				8953D0442C99E6F0003EF386 /* SVGKit in Frameworks */,
 				8953D0472C99E759003EF386 /* DynamicButton in Frameworks */,
 				89B7EA4C2C9B120100527B84 /* DanmakuRender in Frameworks */,
+				89D148722D44E2B000E7FDF5 /* YYCategories in Frameworks */,
 				8953D0292C99E3D8003EF386 /* RxSwift in Frameworks */,
 				8953D0352C99E4C7003EF386 /* MBProgressHUD in Frameworks */,
-				8925B7F82CA7E159001A8388 /* YYCategories in Frameworks */,
 				8953D03B2C99E55C003EF386 /* FilesProvider in Frameworks */,
 				8953D0212C99E306003EF386 /* Alamofire in Frameworks */,
 				8953D02C2C99E430003EF386 /* SDWebImage in Frameworks */,
 				8953D0272C99E3D8003EF386 /* RxCocoa in Frameworks */,
 				8953D0322C99E48A003EF386 /* SnapKit in Frameworks */,
+				89FFD1292D44E65000428206 /* YYCategories in Frameworks */,
 				6F969714544C3EBD7E920F21 /* Pods_AniXPlayer.framework in Frameworks */,
+				89D148752D44E4A700E7FDF5 /* YYCategories in Frameworks */,
 				8953D0382C99E502003EF386 /* IQKeyboardManagerSwift in Frameworks */,
 				890A0B2E2CAD624200AE1F6B /* Colorful in Frameworks */,
 				8953D0242C99E374003EF386 /* MJRefresh in Frameworks */,
@@ -1304,8 +1308,10 @@
 				8953D0462C99E759003EF386 /* DynamicButton */,
 				89B7EA4B2C9B120100527B84 /* DanmakuRender */,
 				89B7EA4E2C9B141100527B84 /* DanmakuRender */,
-				8925B7F72CA7E159001A8388 /* YYCategories */,
 				890A0B2D2CAD624200AE1F6B /* Colorful */,
+				89D148712D44E2B000E7FDF5 /* YYCategories */,
+				89D148742D44E4A700E7FDF5 /* YYCategories */,
+				89FFD1282D44E65000428206 /* YYCategories */,
 			);
 			productName = AniXPlayer;
 			productReference = 890DF6C926160826002D8AE5 /* AniXPlayer.app */;
@@ -1348,8 +1354,8 @@
 				8953D0422C99E6F0003EF386 /* XCRemoteSwiftPackageReference "SVGKit" */,
 				8953D0452C99E758003EF386 /* XCRemoteSwiftPackageReference "DynamicButton" */,
 				89B7EA4D2C9B141100527B84 /* XCRemoteSwiftPackageReference "DanmakuRender-Swift" */,
-				8925B7F62CA7E159001A8388 /* XCRemoteSwiftPackageReference "YYCategories" */,
 				890A0B2C2CAD624200AE1F6B /* XCRemoteSwiftPackageReference "Color-Picker-for-iOS" */,
+				89FFD1272D44E65000428206 /* XCRemoteSwiftPackageReference "YYCategories" */,
 			);
 			productRefGroup = 890DF6CA26160826002D8AE5 /* Products */;
 			projectDirPath = "";
@@ -1886,14 +1892,6 @@
 				minimumVersion = 3.0.2;
 			};
 		};
-		8925B7F62CA7E159001A8388 /* XCRemoteSwiftPackageReference "YYCategories" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sunsx9316/YYCategories";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 		8953D01F2C99E306003EF386 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire";
@@ -1982,6 +1980,14 @@
 				minimumVersion = 1.5.0;
 			};
 		};
+		89FFD1272D44E65000428206 /* XCRemoteSwiftPackageReference "YYCategories" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sunsx9316/YYCategories";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1989,11 +1995,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 890A0B2C2CAD624200AE1F6B /* XCRemoteSwiftPackageReference "Color-Picker-for-iOS" */;
 			productName = Colorful;
-		};
-		8925B7F72CA7E159001A8388 /* YYCategories */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 8925B7F62CA7E159001A8388 /* XCRemoteSwiftPackageReference "YYCategories" */;
-			productName = YYCategories;
 		};
 		8953D0202C99E306003EF386 /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -2058,6 +2059,19 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 89B7EA4D2C9B141100527B84 /* XCRemoteSwiftPackageReference "DanmakuRender-Swift" */;
 			productName = DanmakuRender;
+		};
+		89D148712D44E2B000E7FDF5 /* YYCategories */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = YYCategories;
+		};
+		89D148742D44E4A700E7FDF5 /* YYCategories */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = YYCategories;
+		};
+		89FFD1282D44E65000428206 /* YYCategories */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 89FFD1272D44E65000428206 /* XCRemoteSwiftPackageReference "YYCategories" */;
+			productName = YYCategories;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
