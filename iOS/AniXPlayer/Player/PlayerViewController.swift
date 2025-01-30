@@ -546,6 +546,18 @@ extension PlayerViewController: DanmakuSettingViewControllerDelegate {
 
 // MARK: - MediaSettingViewControllerDelegate
 extension PlayerViewController: MediaSettingViewControllerDelegate {
+    func changeSubtitleFontInMediaSettingViewController(_ vc: MediaSettingViewController) {
+        if let presentedViewController = self.presentedViewController {
+            presentedViewController.dismiss(animated: true, completion: nil)
+        }
+        
+        let vc = SelectedFontViewController(mediaModel: self.mediaModel)
+        let nav = NavigationController(rootViewController: vc)
+        nav.modalPresentationStyle = .custom
+        nav.transitioningDelegate = self.animater
+        self.present(nav, animated: true, completion: nil)
+    }
+    
         
     func loadSubtitleFileInMediaSettingViewController(_ vc: MediaSettingViewController) {
         self.showFilesVCWithType(.subtitle)

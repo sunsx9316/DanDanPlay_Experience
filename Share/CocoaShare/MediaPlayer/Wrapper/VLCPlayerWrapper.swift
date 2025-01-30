@@ -62,6 +62,8 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         case currentAudioChannel
         case aspectRatio
         case audioOffsetTime
+        case subtitleFontName
+        case subtitleFontSize
     }
 
     
@@ -264,17 +266,35 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     /// 10 .. 500
     var fontSize: Float? {
         didSet {
-            if let fontSize = self.fontSize {
-                self.player?.anx_setTextRendererFontSize(fontSize as NSNumber)
+            func setup() {
+                if let fontSize = self.fontSize {
+                    /// 值越大字体越小，要进行区间的重新映射
+                    self.player?.anx_setTextRendererFontSize((500 / fontSize) as NSNumber)
+                }
             }
+            
+            if self.player != nil {
+                setup()
+            }
+            
+            self.initActionDic[.subtitleFontSize] = setup
         }
     }
     
     var fontName: String? {
         didSet {
-            if let fontName = self.fontName {
-                self.player?.anx_setTextRendererFont(fontName)
+            
+            func setup() {
+                if let fontName = self.fontName {
+                    self.player?.anx_setTextRendererFont(fontName)
+                }
             }
+            
+            if self.player != nil {
+                setup()
+            }
+            
+            self.initActionDic[.subtitleFontName] = setup
         }
     }
     

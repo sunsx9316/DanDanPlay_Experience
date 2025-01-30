@@ -62,7 +62,6 @@ protocol MediaPlayerProtocol: AnyObject {
     
     var isPlaying: Bool { get }
     
-    /// 字体大小 值越大 字体越小
     var fontSize: Float? { set get }
     
     var fontName: String? { set get }
@@ -304,7 +303,7 @@ class MediaPlayer {
         return self.player.isPlaying
     }
     
-    /// 字体大小 值越大 字体越小
+    /// 字体大小
     var fontSize: Float? {
         set {
             self.player.fontSize = newValue

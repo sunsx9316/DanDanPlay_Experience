@@ -107,6 +107,9 @@ class Preferences {
         /// 字幕字体大小
         case subtitleFontSize
         
+        /// 字幕字体名
+        case subtitleFontName
+        
         /// 音频偏移
         case audioOffsetTime
         
@@ -174,6 +177,9 @@ class Preferences {
     
     @StoreWrapper(defaultValue: 20, key: .subtitleFontSize)
     var subtitleFontSize: Float
+    
+    @StoreWrapper(defaultValue: "", key: .subtitleFontName)
+    var subtitleFontName: String
     
     @StoreWrapper(defaultValue: nil, key: .loginInfo)
     var loginInfo: AnixLoginInfo? {

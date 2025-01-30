@@ -41,6 +41,8 @@ class PlayerMediaContext {
     
     lazy var subtitleFontSize = BehaviorSubject<Float>(value: Preferences.shared.subtitleFontSize)
     
+    lazy var subtitleFontName = BehaviorSubject<String>(value: Preferences.shared.subtitleFontName)
+    
     lazy var autoJumpTitleEnding = BehaviorSubject<Bool>(value: Preferences.shared.autoJumpTitleEnding)
     
     lazy var jumpTitleDuration = BehaviorSubject<Double>(value: Preferences.shared.jumpTitleDuration)

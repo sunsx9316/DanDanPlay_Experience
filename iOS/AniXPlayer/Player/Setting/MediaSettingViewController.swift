@@ -11,6 +11,8 @@ protocol MediaSettingViewControllerDelegate: AnyObject {
     
     func loadSubtitleFileInMediaSettingViewController(_ vc: MediaSettingViewController)
     
+    func changeSubtitleFontInMediaSettingViewController(_ vc: MediaSettingViewController)
+    
 }
 
 class MediaSettingViewController: ViewController {
@@ -26,7 +28,7 @@ class MediaSettingViewController: ViewController {
         tableView.registerNibCell(class: SheetTableViewCell.self)
         tableView.registerNibCell(class: TitleTableViewCell.self)
         tableView.registerNibCell(class: StepTableViewCell.self)
-        tableView.registerNibCell(class: TitleTableViewCell.self)
+        tableView.registerNibCell(class: TitleDetailMoreTableViewCell.self)
         tableView.registerClassHeaderFooterView(class: TitleTableViewHeaderFooterView.self)
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
@@ -126,9 +128,12 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             cell.titleLabel.text = type.title
             cell.selectionStyle = .none
             cell.valueSlider.isContinuous = true
-            cell.step = 0.1
-            let model = SliderTableViewCell.Model(maxValue: 3,
-                                                  minValue: 0.5,
+            
+            let range = self.mediaModel.playerSpeedRange()
+            
+            cell.step = range.step
+            let model = SliderTableViewCell.Model(maxValue: range.max,
+                                                  minValue: range.min,
                                                   currentValue: Float(self.mediaModel.playerSpeed))
             cell.model = model
             cell.onChangeSliderCallBack = { [weak self] (aCell) in
@@ -179,9 +184,12 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
             cell.titleLabel.text = type.title
             cell.selectionStyle = .none
-            cell.step = 1
-            let model = SliderTableViewCell.Model(maxValue: 600,
-                                                  minValue: 0,
+            
+            let range = self.mediaModel.jumpTitleDurationRange()
+            
+            cell.step = range.step
+            let model = SliderTableViewCell.Model(maxValue: range.max,
+                                                  minValue: range.min,
                                                   currentValue: Float(self.mediaModel.jumpTitleDuration))
             
             model.minValueFormattingCallBack = { [weak self] aModel in
@@ -221,9 +229,12 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
             cell.titleLabel.text = type.title
             cell.selectionStyle = .none
-            cell.step = 1
-            let model = SliderTableViewCell.Model(maxValue: 600,
-                                                  minValue: 0,
+            
+            let range = self.mediaModel.jumpTitleDurationRange()
+            
+            cell.step = range.step
+            let model = SliderTableViewCell.Model(maxValue: range.max,
+                                                  minValue: range.min,
                                                   currentValue: Float(self.mediaModel.jumpEndingDuration))
             
             model.minValueFormattingCallBack = { [weak self] aModel in
@@ -265,8 +276,11 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             cell.selectionStyle = .none
             cell.titleLabel.text = type.title
             let offsetTime = self.mediaModel.subtitleOffsetTime
-            cell.stepper.minimumValue = -500
-            cell.stepper.maximumValue = 500
+            
+            let range = self.mediaModel.subtitleDelayRange()
+            
+            cell.stepper.minimumValue = range.min
+            cell.stepper.maximumValue = range.max
             cell.stepper.value = Double(offsetTime)
             cell.valueLabel.text = "\(Int(offsetTime))s"
             cell.onTouchStepperCallBack = { [weak self] (aCell) in
@@ -282,9 +296,12 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
             cell.titleLabel.text = type.title
             cell.selectionStyle = .none
-            cell.step = 1
-            let model = SliderTableViewCell.Model(maxValue: 1000,
-                                                  minValue: 0,
+            
+            let range = self.mediaModel.subtitleMarginRange()
+            
+            cell.step = range.step
+            let model = SliderTableViewCell.Model(maxValue: range.max,
+                                                  minValue: range.min,
                                                   currentValue: Float(self.mediaModel.subtitleMargin))
             
             cell.model = model
@@ -304,9 +321,12 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
             cell.titleLabel.text = type.title
             cell.selectionStyle = .none
-            cell.step = 1
-            let model = SliderTableViewCell.Model(maxValue: 500,
-                                                  minValue: 10,
+            
+            let range = self.mediaModel.subtitleFontSizeRange()
+            
+            cell.step = range.step
+            let model = SliderTableViewCell.Model(maxValue: range.max,
+                                                  minValue: range.min,
                                                   currentValue: Float(self.mediaModel.subtitleFontSize))
             
             cell.model = model
@@ -339,8 +359,11 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             cell.selectionStyle = .none
             cell.titleLabel.text = type.title
             let offsetTime = self.mediaModel.audioOffsetTime
-            cell.stepper.minimumValue = -100
-            cell.stepper.maximumValue = 100
+            
+            let range = self.mediaModel.audioDelayRange()
+            
+            cell.stepper.minimumValue = range.min
+            cell.stepper.maximumValue = range.max
             cell.stepper.value = Double(offsetTime)
             cell.valueLabel.text = "\(Int(offsetTime))s"
             cell.onTouchStepperCallBack = { [weak self] (aCell) in
@@ -351,6 +374,14 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
                 
                 self.mediaModel.onChangeAudioOffsetTime(value)
             }
+            return cell
+        case .subtitleFont:
+            let cell = tableView.dequeueCell(class: TitleDetailMoreTableViewCell.self, indexPath: indexPath)
+            cell.backgroundView?.backgroundColor = .clear
+            cell.backgroundColor = .clear
+            cell.selectionStyle = .none
+            cell.titleLabel.text = type.title
+            cell.subtitleLabel.text = self.mediaModel.subtitleFontReadableName()
             return cell
         }
     }
@@ -428,6 +459,8 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
                 
             }))
             self.present(vc, atView: tableView.cellForRow(at: indexPath))
+        } else if type == .subtitleFont {
+            self.delegate?.changeSubtitleFontInMediaSettingViewController(self)
         }
     }
     

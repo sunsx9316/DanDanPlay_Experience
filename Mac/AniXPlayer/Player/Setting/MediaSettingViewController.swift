@@ -42,6 +42,8 @@ class MediaSettingViewController: ViewController {
     
     private var mediaModel: PlayerMediaModel!
     
+    private weak var fontPanel: NSPanel?
+    
     private lazy var dateFormatter: DateFormatter = {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "mm:ss"
@@ -65,12 +67,16 @@ class MediaSettingViewController: ViewController {
             make.edges.equalTo(self.view.safeAreaLayoutGuide.snp.edges)
         }
         
+        NSFontManager.shared.isEnabled = true
         self.reloadDataSource()
-        self.scrollView.containerView.expandItem(nil, expandChildren: true)
     }
     
     override func loadView() {
         self.view = .init(frame: .init(x: 0, y: 0, width: 400, height: 600))
+    }
+    
+    deinit {
+        NSFontPanel.shared.close()
     }
 
     // MARK: Private Method
@@ -83,13 +89,32 @@ class MediaSettingViewController: ViewController {
         
         if let type = outlineView.item(atRow: row) as? MediaSettingType {
             if type == .loadSubtitle {
-               self.delegate?.loadSubtitleFileInMediaSettingViewController(self)
-           }
+                self.delegate?.loadSubtitleFileInMediaSettingViewController(self)
+            } else if type == .subtitleFont {
+                
+                let font = NSFont(name: self.mediaModel.subtitleFontName, size: self.mediaModel.subtitleFontSize) ?? NSFont.systemFont(ofSize: self.mediaModel.subtitleFontSize)
+                
+                NSFontManager.shared.target = self
+                NSFontManager.shared.setSelectedFont(font, isMultiple: false)
+                NSFontManager.shared.orderFrontFontPanel(self)
+            }
         }
     }
     
     private func reloadDataSource() {
         self.dataSource = self.mediaModel.mediaSetting
+        self.scrollView.containerView.reloadData()
+        self.scrollView.containerView.expandItem(nil, expandChildren: true)
+    }
+}
+
+extension MediaSettingViewController: NSFontChanging {
+    func changeFont(_ sender: NSFontManager?) {
+        guard let sender = sender else { return }
+        let oldFont = NSFont(name: self.mediaModel.subtitleFontName, size: self.mediaModel.subtitleFontSize) ?? NSFont.systemFont(ofSize: self.mediaModel.subtitleFontSize)
+        let selectedFont = sender.convert(oldFont)
+        self.mediaModel.onChangeSubtitleFont(selectedFont)
+        self.mediaModel.onChangeSubtitleFontSize(Float(selectedFont.pointSize))
         self.scrollView.containerView.reloadData()
     }
 }
@@ -106,7 +131,7 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
             return 40
         } else if let type = item as? MediaSettingType {
             switch type {
-            case .playerSpeed, .jumpTitleDuration, .jumpEndingDuration, .subtitleMargin, .subtitleFontSize:
+            case .playerSpeed, .jumpTitleDuration, .jumpEndingDuration, .subtitleMargin, .subtitleFontSize, .subtitleFont:
                 return 80
             case .subtitleSafeArea, .subtitleTrack, .audioTrack, 
                     .playerMode, .loadSubtitle, .subtitleDelay,
@@ -140,9 +165,10 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
             case .playerSpeed:
                 let cell = outlineView.dequeueReusableCell(class: SliderTableViewCell.self)
                 cell.titleLabel.text = type.title
-                cell.step = 0.1
-                let model = SliderTableViewCell.Model(maxValue: 3,
-                                                      minValue: 0.5,
+                let range = self.mediaModel.playerSpeedRange()
+                cell.step = range.step
+                let model = SliderTableViewCell.Model(maxValue: range.max,
+                                                      minValue: range.min,
                                                       currentValue: Float(self.mediaModel.playerSpeed))
                 cell.model = model
                 cell.onChangeSliderCallBack = { [weak self] (aCell) in
@@ -168,6 +194,7 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
                     
                     let type = allItems[idx]
                     self.scrollView.containerView.reloadData()
+                    self.scrollView.containerView.expandItem(item, expandChildren: true)
                     
                     self.mediaModel.onChangePlayerMode(type)
                 }
@@ -188,6 +215,7 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
                     
                     self.mediaModel.currentSubtitle = allItems[idx]
                     self.scrollView.containerView.reloadData()
+                    self.scrollView.containerView.expandItem(item, expandChildren: true)
                 }
                 
                 return cell
@@ -203,6 +231,7 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
                     
                     self.mediaModel.currentAudioChannel = allItems[idx]
                     self.scrollView.containerView.reloadData()
+                    self.scrollView.containerView.expandItem(item, expandChildren: true)
                 }
                 
                 return cell
@@ -221,9 +250,11 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
             case .jumpTitleDuration:
                 let cell = outlineView.dequeueReusableCell(class: SliderTableViewCell.self)
                 cell.titleLabel.text = type.title
-                cell.step = 1
-                let model = SliderTableViewCell.Model(maxValue: 600,
-                                                      minValue: 0,
+                let range = self.mediaModel.jumpTitleDurationRange()
+                
+                cell.step = range.step
+                let model = SliderTableViewCell.Model(maxValue: range.max,
+                                                      minValue: range.min,
                                                       currentValue: Float(self.mediaModel.jumpTitleDuration))
                 
                 model.minValueFormattingCallBack = { [weak self] aModel in
@@ -262,9 +293,11 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
             case .jumpEndingDuration:
                 let cell = outlineView.dequeueReusableCell(class: SliderTableViewCell.self)
                 cell.titleLabel.text = type.title
-                cell.step = 1
-                let model = SliderTableViewCell.Model(maxValue: 600,
-                                                      minValue: 0,
+                let range = self.mediaModel.jumpEndDurationRange()
+                
+                cell.step = range.step
+                let model = SliderTableViewCell.Model(maxValue: range.max,
+                                                      minValue: range.min,
                                                       currentValue: Float(self.mediaModel.jumpEndingDuration))
                 
                 model.minValueFormattingCallBack = { [weak self] aModel in
@@ -303,9 +336,11 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
             case .subtitleMargin:
                 let cell = outlineView.dequeueReusableCell(class: SliderTableViewCell.self)
                 cell.titleLabel.text = type.title
-                cell.step = 1
-                let model = SliderTableViewCell.Model(maxValue: 1000,
-                                                      minValue: 0,
+                let range = self.mediaModel.subtitleMarginRange()
+                
+                cell.step = range.step
+                let model = SliderTableViewCell.Model(maxValue: range.max,
+                                                      minValue: range.min,
                                                       currentValue: Float(self.mediaModel.subtitleMargin))
                 
                 cell.model = model
@@ -324,9 +359,11 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
             case .subtitleFontSize:
                 let cell = outlineView.dequeueReusableCell(class: SliderTableViewCell.self)
                 cell.titleLabel.text = type.title
-                cell.step = 1
-                let model = SliderTableViewCell.Model(maxValue: 500,
-                                                      minValue: 10,
+                let range = self.mediaModel.subtitleFontSizeRange()
+                
+                cell.step = range.step
+                let model = SliderTableViewCell.Model(maxValue: range.max,
+                                                      minValue: range.min,
                                                       currentValue: Float(self.mediaModel.subtitleFontSize))
                 
                 cell.model = model
@@ -345,8 +382,10 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
                 let cell = outlineView.dequeueReusableCell(class: StepTableViewCell.self)
                 cell.titleLabel.text = type.title
                 let offsetTime = self.mediaModel.subtitleOffsetTime
-                cell.stepper.minValue = -500
-                cell.stepper.maxValue = 500
+                let range = self.mediaModel.subtitleDelayRange()
+                
+                cell.stepper.minValue = range.min
+                cell.stepper.maxValue = range.max
                 cell.stepper.integerValue = offsetTime
                 cell.valueLabel.text = "\(offsetTime)s"
                 cell.onTouchStepperCallBack = { [weak self] (aCell) in
@@ -373,8 +412,10 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
                 let cell = outlineView.dequeueReusableCell(class: StepTableViewCell.self)
                 cell.titleLabel.text = type.title
                 let offsetTime = self.mediaModel.audioOffsetTime
-                cell.stepper.minValue = -100
-                cell.stepper.maxValue = 100
+                let range = self.mediaModel.audioDelayRange()
+                
+                cell.stepper.minValue = range.min
+                cell.stepper.maxValue = range.max
                 cell.stepper.integerValue = offsetTime
                 cell.valueLabel.text = "\(offsetTime)s"
                 cell.onTouchStepperCallBack = { [weak self] (aCell) in
@@ -385,6 +426,11 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
                     
                     self.mediaModel.onChangeAudioOffsetTime(value)
                 }
+                return cell
+            case .subtitleFont:
+                let cell = outlineView.dequeueReusableCell(class: TitleDetailTableViewCell.self)
+                cell.titleLabel.text = type.title
+                cell.subtitleLabel.text = self.mediaModel.subtitleFontReadableName()
                 return cell
             }
         }

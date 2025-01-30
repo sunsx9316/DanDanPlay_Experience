@@ -17,6 +17,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         Launcher.launch()
         
+        setupUI()
+        
         self.window = UIWindow(frame: UIScreen.main.bounds)
         self.window?.rootViewController = MainViewController()
         self.window?.makeKeyAndVisible()
@@ -56,6 +58,50 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationDidEnterBackground(_ application: UIApplication) {
         ANXLogHelper.flush()
+    }
+    
+    private func setupUI() {
+        do {
+            let barButtonAppearance = UIBarButtonItem.appearance()
+            barButtonAppearance.setBackButtonTitlePositionAdjustment(UIOffset(horizontal: 0, vertical: -5), for: .default)
+        }
+        
+        do {
+            let tabbarAppearance = UITabBar.appearance()
+            tabbarAppearance.barTintColor = .backgroundColor
+        }
+        
+        do {
+            let windowAppearance = UIWindow.appearance()
+            windowAppearance.backgroundColor = .backgroundColor
+        }
+        
+        //搜索框
+//        do {
+//            let placeholderAttributes: [NSAttributedString.Key : Any] = [.font : UIFont.ddp_normal, .foregroundColor : UIColor.placeholderColor]
+//            let barButtonItemAppearance = UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self])
+//            barButtonItemAppearance.tintColor = UIColor.navigationTitleColor
+//            barButtonItemAppearance.title = "取消"
+//            barButtonItemAppearance.setTitleTextAttributes(placeholderAttributes, for: .normal)
+//        }
+        
+        // 滚动条
+        do {
+            let sliderAppearance = UISlider.appearance()
+            sliderAppearance.tintColor = .mainColor
+        }
+        
+        // 开关
+        
+        do {
+            let switchAppearance = UISwitch.appearance()
+            switchAppearance.onTintColor = .mainColor
+        }
+        
+        do {
+            let tableView = UITableView.appearance()
+            tableView.separatorColor = .separatorColor
+        }
     }
     
 }

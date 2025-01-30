@@ -16,6 +16,7 @@ enum MediaSettingType: CaseIterable {
     case playerSpeed
     case subtitleMargin
     case subtitleFontSize
+    case subtitleFont
     
     case autoJumpTitleEnding
     case jumpTitleDuration
@@ -60,6 +61,8 @@ enum MediaSettingType: CaseIterable {
             return NSLocalizedString("弹幕信息", comment: "")
         case .audioDelay:
             return NSLocalizedString("音频时间偏移", comment: "")
+        case .subtitleFont:
+            return NSLocalizedString("字幕字体", comment: "")
         }
     }
 }

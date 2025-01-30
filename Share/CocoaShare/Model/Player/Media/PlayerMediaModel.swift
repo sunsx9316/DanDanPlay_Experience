@@ -58,8 +58,12 @@ extension PlayerMediaModel {
         return (try? self.context.subtitleMargin.value()) ?? 0
     }
     
-    var subtitleFontSize: Float {
-        return (try? self.context.subtitleFontSize.value()) ?? 0
+    var subtitleFontSize: CGFloat {
+        return CGFloat((try? self.context.subtitleFontSize.value()) ?? 0)
+    }
+    
+    var subtitleFontName: String {
+        return (try? self.context.subtitleFontName.value()) ?? ""
     }
     
     var autoJumpTitleEnding: Bool {
@@ -148,8 +152,32 @@ extension PlayerMediaModel {
         
         dataSource.append(MediaSettingInfo(title: NSLocalizedString("播放设置", comment: ""), dataSource: mediaSetting))
         
+#if os(iOS)
         dataSource.append(MediaSettingInfo(title: NSLocalizedString("字幕设置", comment: ""),
-                                           dataSource: [.subtitleMargin, .subtitleSafeArea, .subtitleDelay, .subtitleTrack, .loadSubtitle]))
+                                           dataSource:
+                                            [
+                                                .subtitleMargin,
+                                                .subtitleFont,
+                                                .subtitleFontSize,
+                                                .subtitleSafeArea,
+                                                .subtitleDelay,
+                                                .subtitleTrack,
+                                                .loadSubtitle
+                                            ]
+                                          ))
+#else
+        dataSource.append(MediaSettingInfo(title: NSLocalizedString("字幕设置", comment: ""),
+                                           dataSource:
+                                            [
+                                                .subtitleMargin,
+                                                .subtitleFont,
+                                                .subtitleSafeArea,
+                                                .subtitleDelay,
+                                                .subtitleTrack,
+                                                .loadSubtitle
+                                            ]
+                                          ))
+#endif
         
         dataSource.append(MediaSettingInfo(title: NSLocalizedString("音频设置", comment: ""),
                                            dataSource: [.audioDelay, .audioTrack]))
@@ -187,56 +215,117 @@ class PlayerMediaModel {
     func onChangeSubtitleSafeArea(_ subtitleSafeArea: Bool) {
         Preferences.shared.subtitleSafeArea = subtitleSafeArea
         self.context.subtitleSafeArea.onNext(subtitleSafeArea)
+        ANX.logInfo(.UI, "更改字幕保护区域: \(subtitleSafeArea)")
     }
     
     func onChangePlayerSpeed(_ playerSpeed: Double) {
         Preferences.shared.playerSpeed = playerSpeed
         self.context.playerSpeed.onNext(playerSpeed)
+        ANX.logInfo(.UI, "更改播放速度: \(playerSpeed)")
     }
     
     func onChangePlayerMode(_ playerMode: PlayerMode) {
         Preferences.shared.playerMode = playerMode
         self.context.playerMode.onNext(playerMode)
+        ANX.logInfo(.UI, "更改播放模式: \(playerMode)")
     }
     
     func onChangeSubtitleOffsetTime(_ subtitleOffsetTime: Int) {
         Preferences.shared.subtitleOffsetTime = subtitleOffsetTime
         self.context.subtitleOffsetTime.onNext(subtitleOffsetTime)
+        ANX.logInfo(.UI, "更改字幕偏移: \(audioOffsetTime)")
     }
     
     func onChangeAudioOffsetTime(_ audioOffsetTime: Int) {
         Preferences.shared.audioOffsetTime = audioOffsetTime
         self.context.audioOffsetTime.onNext(audioOffsetTime)
+        ANX.logInfo(.UI, "更改音频偏移: \(audioOffsetTime)")
     }
     
     func onChangeSubtitleMargin(_ subtitleMargin: Int) {
         Preferences.shared.subtitleMargin = subtitleMargin
         self.context.subtitleMargin.onNext(subtitleMargin)
+        ANX.logInfo(.UI, "更改字体间距: \(subtitleMargin)")
     }
     
     func onChangeSubtitleFontSize(_ subtitleFontSize: Float) {
         Preferences.shared.subtitleFontSize = subtitleFontSize
         self.context.subtitleFontSize.onNext(subtitleFontSize)
+        ANX.logInfo(.UI, "更改字体大小: \(subtitleFontSize)")
+    }
+    
+    func onChangeSubtitleFont(_ subtitleFont: ANXFont?) {
+        let fontName = subtitleFont?.fontName ?? ""
+        Preferences.shared.subtitleFontName = fontName
+        self.context.subtitleFontName.onNext(fontName)
+        
+        if let subtitleFont = subtitleFont {
+            ANX.logInfo(.UI, "更改字幕字体: \(subtitleFont)")
+        } else {
+            ANX.logInfo(.UI, "更改字幕字体为默认")
+        }
     }
     
     func onChangeAutoJumpTitleEnding(_ autoJumpTitleEnding: Bool) {
         Preferences.shared.autoJumpTitleEnding = autoJumpTitleEnding
         self.context.autoJumpTitleEnding.onNext(autoJumpTitleEnding)
+        ANX.logInfo(.UI, "更改自动跳过片头片尾开关: \(autoJumpTitleEnding)")
     }
     
     func onChangeJumpTitleDuration(_ jumpTitleDuration: Double) {
         Preferences.shared.jumpTitleDuration = jumpTitleDuration
         self.context.jumpTitleDuration.onNext(jumpTitleDuration)
+        ANX.logInfo(.UI, "更改自动跳过片头时长: \(jumpTitleDuration)")
     }
     
     func onChangeJumpEndingDuration(_ jumpEndingDuration: Double) {
         Preferences.shared.jumpEndingDuration = jumpEndingDuration
         self.context.jumpEndingDuration.onNext(jumpEndingDuration)
+        ANX.logInfo(.UI, "更改自动跳过片尾时长: \(jumpEndingDuration)")
     }
     
     func onChangeVolume(_ addBy: CGFloat) {
         self.player.volume += Int(addBy)
         self.context.volume.onNext(self.player.volume)
+        ANX.logInfo(.UI, "更改音量: \(self.player.volume)")
+    }
+    
+    func playerSpeedRange() -> (min: Float, max: Float, step: Float) {
+        return (0.5, 3, 0.1)
+    }
+    
+    func jumpTitleDurationRange() -> (min: Float, max: Float, step: Float) {
+        return (0, 600, 1)
+    }
+    
+    func jumpEndDurationRange() -> (min: Float, max: Float, step: Float) {
+        return (0, 600, 1)
+    }
+    
+    func subtitleMarginRange() -> (min: Float, max: Float, step: Float) {
+        return (0, 1000, 1)
+    }
+    
+    func subtitleFontSizeRange() -> (min: Float, max: Float, step: Float) {
+        return (10, 120, 1)
+    }
+    
+    func subtitleDelayRange() -> (min: Double, max: Double) {
+        return (-500, 500)
+    }
+    
+    func audioDelayRange() -> (min: Double, max: Double) {
+        return (-100, 100)
+    }
+    
+    /// 可读的字幕描述
+    func subtitleFontReadableName() -> String {
+        let tmpSubtitleFontName = self.subtitleFontName
+        if tmpSubtitleFontName.isEmpty {
+            return NSLocalizedString("默认", comment: "")
+        } else {
+            return tmpSubtitleFontName + String(format: ": %.1f", self.subtitleFontSize)
+        }
     }
     
 
@@ -472,11 +561,22 @@ class PlayerMediaModel {
             self.player.subtitleMargin = subtitleMargin
         }).disposed(by: self.disposeBag)
         
+        self.context.subtitleFontName.subscribe(onNext: { [weak self] subtitleFontName in
+            guard let self = self else { return }
+            
+            if subtitleFontName.isEmpty {
+                self.player.fontName = nil
+            } else {
+                self.player.fontName = subtitleFontName
+            }
+        }).disposed(by: self.disposeBag)
+        
         self.context.subtitleFontSize.subscribe(onNext: { [weak self] subtitleFontSize in
             guard let self = self else { return }
             
             self.player.fontSize = subtitleFontSize
         }).disposed(by: self.disposeBag)
+        
         
         /// 音频直接设置不起效，延迟2秒再试
         self.context.audioOffsetTime
