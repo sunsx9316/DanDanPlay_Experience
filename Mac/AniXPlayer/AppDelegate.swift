@@ -33,8 +33,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }()
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        UserDefaults.standard.register(defaults: ["NSApplicationCrashOnExceptions": true])
-        FirebaseApp.configure()
+        
+        Launcher.launch()
         
         self.setupMenu()
         self.mainWindowController.showWindow(nil)

@@ -216,7 +216,6 @@
 		89C325AF2C6FC01C002E2487 /* TitleTableViewHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C325AE2C6FC01C002E2487 /* TitleTableViewHeaderFooterView.swift */; };
 		89C325B32C6FC70A002E2487 /* FilterDanmakuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C325B22C6FC70A002E2487 /* FilterDanmakuViewController.swift */; };
 		89C325B82C6FD91F002E2487 /* DanmakuOperationViewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C325B52C6FD91F002E2487 /* DanmakuOperationViewViewController.swift */; };
-		89C79B922A87D3AA0040FEDA /* Launcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C79B912A87D3AA0040FEDA /* Launcher.swift */; };
 		89C79B942A881B200040FEDA /* DanmakuLoadUtil.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C79B932A881B200040FEDA /* DanmakuLoadUtil.swift */; };
 		89D148722D44E2B000E7FDF5 /* YYCategories in Frameworks */ = {isa = PBXBuildFile; productRef = 89D148712D44E2B000E7FDF5 /* YYCategories */; };
 		89D148752D44E4A700E7FDF5 /* YYCategories in Frameworks */ = {isa = PBXBuildFile; productRef = 89D148742D44E4A700E7FDF5 /* YYCategories */; };
@@ -234,6 +233,8 @@
 		89E109B62644424800825308 /* BaseConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E109B52644424800825308 /* BaseConnectSvrViewController.swift */; };
 		89FFD1292D44E65000428206 /* YYCategories in Frameworks */ = {isa = PBXBuildFile; productRef = 89FFD1282D44E65000428206 /* YYCategories */; };
 		89FFD12B2D44EB2700428206 /* AppKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD12A2D44EB2700428206 /* AppKey.swift */; };
+		89FFD1312D4B838500428206 /* Launcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD1302D4B838500428206 /* Launcher.swift */; };
+		89FFD1352D4B904000428206 /* SelectedFontViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD1342D4B904000428206 /* SelectedFontViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -445,7 +446,6 @@
 		89C325AE2C6FC01C002E2487 /* TitleTableViewHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleTableViewHeaderFooterView.swift; sourceTree = "<group>"; };
 		89C325B22C6FC70A002E2487 /* FilterDanmakuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterDanmakuViewController.swift; sourceTree = "<group>"; };
 		89C325B52C6FD91F002E2487 /* DanmakuOperationViewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuOperationViewViewController.swift; sourceTree = "<group>"; };
-		89C79B912A87D3AA0040FEDA /* Launcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Launcher.swift; sourceTree = "<group>"; };
 		89C79B932A881B200040FEDA /* DanmakuLoadUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuLoadUtil.swift; sourceTree = "<group>"; };
 		89E0D60D2669113400E2337B /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		89E0D6102669127A00E2337B /* SwitchDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchDetailTableViewCell.swift; sourceTree = "<group>"; };
@@ -460,6 +460,8 @@
 		89E109B326443F4F00825308 /* BaseLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseLoginHistoryViewController.swift; sourceTree = "<group>"; };
 		89E109B52644424800825308 /* BaseConnectSvrViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseConnectSvrViewController.swift; sourceTree = "<group>"; };
 		89FFD12A2D44EB2700428206 /* AppKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppKey.swift; sourceTree = "<group>"; };
+		89FFD1302D4B838500428206 /* Launcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Launcher.swift; sourceTree = "<group>"; };
+		89FFD1342D4B904000428206 /* SelectedFontViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedFontViewController.swift; sourceTree = "<group>"; };
 		CF2D5334A2A53D20F8B80E22 /* Pods-AniXPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.release.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.release.xcconfig"; sourceTree = "<group>"; };
 		F410B8A741526DF765820021 /* Pods-AniXPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.debug.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -555,7 +557,6 @@
 				890DF75E26160B3E002D8AE5 /* Player */,
 				890DF81E2616175B002D8AE5 /* Main */,
 				89A688D32C3A535A002B7CA3 /* Bangumi */,
-				89C79B912A87D3AA0040FEDA /* Launcher.swift */,
 				89E0D826266BBA9400E2337B /* SceneDelegate.swift */,
 				890DF6CC26160826002D8AE5 /* AppDelegate.swift */,
 				890DF6D226160826002D8AE5 /* Main.storyboard */,
@@ -1025,6 +1026,7 @@
 				8925B8682CA7E4C3001A8388 /* Define.swift */,
 				8925B8692CA7E4C3001A8388 /* Enum.swift */,
 				8925B86A2CA7E4C3001A8388 /* HistoryManager.swift */,
+				89FFD1302D4B838500428206 /* Launcher.swift */,
 				8925B86B2CA7E4C3001A8388 /* SubtitleManager.swift */,
 			);
 			name = CocoaShare;
@@ -1082,6 +1084,7 @@
 				897CF528262F309D00CC297A /* PlayerSettingViewController.swift */,
 				897CF52C262F30D200CC297A /* DanmakuSettingViewController.swift */,
 				89AF9C062631D4B00037A133 /* MediaSettingViewController.swift */,
+				89FFD1342D4B904000428206 /* SelectedFontViewController.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -1515,9 +1518,9 @@
 				890DF75426160B1B002D8AE5 /* UITableView+Extension.swift in Sources */,
 				89E0D82A266BD4FC00E2337B /* PlayerUITopView.swift in Sources */,
 				890DF86F2618B922002D8AE5 /* AnimatesTableViewCell.swift in Sources */,
+				89FFD1352D4B904000428206 /* SelectedFontViewController.swift in Sources */,
 				8931F0F626773A2300590569 /* SubtitleOrderViewController.swift in Sources */,
 				899C4E97263BDDE600A17C83 /* LinkHistoryHeaderView.swift in Sources */,
-				89C79B922A87D3AA0040FEDA /* Launcher.swift in Sources */,
 				8953CDA42C987FF1003EF386 /* FilterDanmakuTableViewCell.swift in Sources */,
 				89A688AC2C398392002B7CA3 /* CollectionViewCell.swift in Sources */,
 				890DF77E26160B3E002D8AE5 /* PlayerNavigationController.swift in Sources */,
@@ -1565,6 +1568,7 @@
 				890DF823261617D0002D8AE5 /* PickFileTableViewCell.swift in Sources */,
 				89A688A12C3982FC002B7CA3 /* HomePageBannerTableViewCell.swift in Sources */,
 				890DF77326160B3E002D8AE5 /* SendDanmakuViewController.swift in Sources */,
+				89FFD1312D4B838500428206 /* Launcher.swift in Sources */,
 				89A688A92C398347002B7CA3 /* HomePageBangumiQueueTableViewCell.swift in Sources */,
 				8925B8702CA7E4C3001A8388 /* Bangumi.swift in Sources */,
 				8925B8712CA7E4C3001A8388 /* CacheManager.swift in Sources */,
