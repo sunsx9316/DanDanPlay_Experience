@@ -241,6 +241,18 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
             cell.titleLabel.text = type.title
             cell.valueLabel.text = self.danmakuModel.danmakuEffectStyle.title
             return cell
+        case .openDanmakuRandomColor:
+            let cell = tableView.dequeueCell(class: SwitchTableViewCell.self, indexPath: indexPath)
+            cell.selectionStyle = .none
+            cell.aSwitch.isOn = self.danmakuModel.openDanmakuRandomColor
+            cell.titleLabel.text = type.title
+            cell.onTouchSliderCallBack = { [weak self] (aCell) in
+                guard let self = self else { return }
+                
+                let isOn = aCell.aSwitch.isOn
+                self.danmakuModel.onOpenDanmakuRandomColor(isOn)
+            }
+            return cell
         }
     }
     

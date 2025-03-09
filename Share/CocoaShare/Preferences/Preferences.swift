@@ -122,6 +122,9 @@ class Preferences {
         /// 主题色
         case mainColor = "mainColor_v2"
         
+        /// 弹幕随机颜色
+        case openDanmakuRandomColor
+        
         var storeKey: String {
             return self.rawValue
         }
@@ -180,6 +183,9 @@ class Preferences {
     
     @StoreWrapper(defaultValue: "", key: .subtitleFontName)
     var subtitleFontName: String
+    
+    @StoreWrapper(defaultValue: false, key: .openDanmakuRandomColor)
+    var openDanmakuRandomColor: Bool
     
     @StoreWrapper(defaultValue: nil, key: .loginInfo)
     var loginInfo: AnixLoginInfo? {

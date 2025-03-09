@@ -105,6 +105,8 @@ protocol DanmakuInfoProtocol: AnyObject {
     var newResizeCallBack: ((CGSize) -> CGSize)? { set get }
     
     var changeFontCallBack: ((DRFont) -> Void)? { set get }
+    
+    func changeTextColor(isRandom: Bool)
 
 }
 
@@ -119,6 +121,27 @@ class _ScrollDanmaku: ScrollDanmaku, DanmakuInfoProtocol {
     var newResizeCallBack: ((CGSize) -> CGSize)?
     
     var changeFontCallBack: ((DRFont) -> Void)?
+    
+    private lazy var randomTextColor = ANXColor(red: Int.random(in: 0...255), green: Int.random(in: 0...255), blue: Int.random(in: 0...255), alpha: 1)
+    
+    private let originalTextColor: ANXColor
+    
+    func changeTextColor(isRandom: Bool) {
+        if isRandom {
+            if self.textColor != self.randomTextColor {
+                self.textColor = self.randomTextColor                
+            }
+        } else {
+            if self.textColor != self.originalTextColor {
+                self.textColor = self.originalTextColor
+            }
+        }
+    }
+    
+    override init(text: String, textColor: DRColor, font: DRFont, effectStyle: DanmakuEffectStyle, direction: ScrollDanmaku.Direction) {
+        self.originalTextColor = textColor
+        super.init(text: text, textColor: textColor, font: font, effectStyle: effectStyle, direction: direction)
+    }
     
     override var font: DRFont {
         willSet {
@@ -159,6 +182,23 @@ class _FloatDanmaku: FloatDanmaku, DanmakuInfoProtocol {
     var changeFontCallBack: ((DRFont) -> Void)?
     
     var willMoveOutCanvasCallBack: (() -> Void)?
+    
+    private lazy var randomTextColor = ANXColor(red: Int.random(in: 0...255), green: Int.random(in: 0...255), blue: Int.random(in: 0...255), alpha: 1)
+    
+    private let originalTextColor: ANXColor
+    
+    func changeTextColor(isRandom: Bool) {
+        if isRandom {
+            self.textColor = self.randomTextColor
+        } else {
+            self.textColor = self.originalTextColor
+        }
+    }
+    
+    override init(text: String, textColor: DRColor, font: DRFont, effectStyle: DanmakuEffectStyle, position: FloatDanmaku.Position, lifeTime: TimeInterval) {
+        self.originalTextColor = textColor
+        super.init(text: text, textColor: textColor, font: font, effectStyle: effectStyle, position: position, lifeTime: lifeTime)
+    }
     
     override var font: DRFont {
         willSet {

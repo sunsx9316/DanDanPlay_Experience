@@ -78,6 +78,7 @@ enum DanmakuSettingType: CaseIterable {
     case danmakuEffectStyle
     case danmakuArea
     case showDanmaku
+    case openDanmakuRandomColor
     case mergeSameDanmaku
     
     case danmakuOffsetTime
@@ -111,6 +112,8 @@ enum DanmakuSettingType: CaseIterable {
             return NSLocalizedString("弹幕过滤列表", comment: "")
         case .danmakuEffectStyle:
             return NSLocalizedString("弹幕边缘样式", comment: "")
+        case .openDanmakuRandomColor:
+            return NSLocalizedString("随机弹幕颜色", comment: "")
         }
     }
 }

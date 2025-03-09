@@ -35,4 +35,9 @@ class PlayerDanmakuContext {
     /// 过滤弹幕
     lazy var filterDanmakus = BehaviorSubject<[FilterDanmaku]?>(value: Preferences.shared.filterDanmakus)
     
+    /// 弹幕随机颜色
+    lazy var openDanmakuRandomColor = BehaviorSubject<Bool>(value: Preferences.shared.openDanmakuRandomColor)
+    
+
+    
 }

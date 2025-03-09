@@ -12,6 +12,11 @@ import DanmakuRender
 
 // MARK: - 便捷接口
 extension PlayerDanmakuModel {
+    
+    var openDanmakuRandomColor: Bool {
+        return (try? self.context.openDanmakuRandomColor.value()) ?? false
+    }
+    
     var danmakuSpeed: Double {
         return (try? self.context.danmakuSpeed.value()) ?? 0
     }
@@ -103,6 +108,11 @@ class PlayerDanmakuModel {
     }
     
     // MARK: - 工具方法
+    func onOpenDanmakuRandomColor(_ openDanmakuRandomColor: Bool) {
+        Preferences.shared.openDanmakuRandomColor = openDanmakuRandomColor
+        self.context.openDanmakuRandomColor.onNext(openDanmakuRandomColor)
+    }
+    
     func onChangeDanmakuAlpha(_ danmakuAlpha: Float) {
         Preferences.shared.danmakuAlpha = Double(danmakuAlpha)
         self.context.danmakuAlpha.onNext(danmakuAlpha)
@@ -304,8 +314,8 @@ class PlayerDanmakuModel {
     
     // MARK: - Private Method
     
-    /// 发送弹幕
-    private func sendDanmakus(at currentTime: UInt) {
+    /// 显示弹幕
+    private func showDanmakus(at currentTime: UInt) {
         
         self.danmakuTime = currentTime
         
@@ -334,6 +344,8 @@ class PlayerDanmakuModel {
                 if danmaku.effectStyle != self.danmakuEffectStyle {
                     danmaku.effectStyle = self.danmakuEffectStyle
                 }
+                
+                danmaku.changeTextColor(isRandom: self.openDanmakuRandomColor)
                 
                 
                 /// 修复因为时间误差的问题，导致少数弹幕突然出现在屏幕上的问题
@@ -368,9 +380,11 @@ class PlayerDanmakuModel {
     
     /// 遍历当前的弹幕
     /// - Parameter callBack: 回调
-    private func forEachDanmakus(_ callBack: (BaseDanmaku) -> Void) {
+    private func forEachDanmakus(_ callBack: (DanmakuEntity) -> Void) {
         for con in danmakuRender.containers {
-            callBack(con.danmaku)
+            if let danmaku = con.danmaku as? DanmakuEntity {
+                callBack(danmaku)
+            }
         }
     }
     
@@ -410,6 +424,14 @@ class PlayerDanmakuModel {
                 danmaku.effectStyle = danmakuEffectStyle
             }
         }).disposed(by: self.disposeBag)
+        
+        self.context.openDanmakuRandomColor.subscribe(onNext: { [weak self] isRandomColor in
+            guard let self = self else { return }
+            
+            self.forEachDanmakus { danmaku in
+                danmaku.changeTextColor(isRandom: isRandomColor)
+            }
+        }).disposed(by: self.disposeBag)
     }
     
     private func bindMediaContext() {
@@ -443,7 +465,7 @@ class PlayerDanmakuModel {
             
             return true
         }).subscribe(onNext: { [weak self] time in
-            self?.sendDanmakus(at: UInt(time))
+            self?.showDanmakus(at: UInt(time))
         }).disposed(by: self.disposeBag)
     }
     
