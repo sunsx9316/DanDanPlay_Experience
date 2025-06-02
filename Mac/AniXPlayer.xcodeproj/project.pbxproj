@@ -16,7 +16,6 @@
 		8917059B28CF70A90075ECD9 /* NSControl+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8917059A28CF70A90075ECD9 /* NSControl+Utils.swift */; };
 		8917059D28CF717A0075ECD9 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8917059C28CF717A0075ECD9 /* ImageView.swift */; };
 		8917059F28CF85DF0075ECD9 /* PlayerSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8917059E28CF85DF0075ECD9 /* PlayerSlider.swift */; };
-		8925B7FB2CA7E1BC001A8388 /* YYCategories in Frameworks */ = {isa = PBXBuildFile; productRef = 8925B7FA2CA7E1BC001A8388 /* YYCategories */; };
 		8925B91B2CA7F901001A8388 /* BangumiNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8E32CA7F901001A8388 /* BangumiNetworkHandle.swift */; };
 		8925B91C2CA7F901001A8388 /* PCQRModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8B92CA7F901001A8388 /* PCQRModel.swift */; };
 		8925B91D2CA7F901001A8388 /* VLCPlayerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8CE2CA7F901001A8388 /* VLCPlayerWrapper.swift */; };
@@ -135,6 +134,8 @@
 		8994621328CCE865009AC640 /* DanmakuSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994621128CCE865009AC640 /* DanmakuSettingViewController.swift */; };
 		8994621728CCE8F7009AC640 /* MediaSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994621528CCE8F7009AC640 /* MediaSettingViewController.swift */; };
 		8994622428CCF088009AC640 /* GotoLastWatchPointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994622328CCF088009AC640 /* GotoLastWatchPointView.swift */; };
+		8994E2442DB69B1300765AF6 /* YYCategories in Frameworks */ = {isa = PBXBuildFile; productRef = 8994E2432DB69B1300765AF6 /* YYCategories */; };
+		8994E2472DB69BB600765AF6 /* YYCategories in Frameworks */ = {isa = PBXBuildFile; productRef = 8994E2462DB69BB600765AF6 /* YYCategories */; };
 		89A1C5E728D377A700DC514E /* SheetTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A1C5E628D377A700DC514E /* SheetTableViewCell.swift */; };
 		89A1C5E928D377AD00DC514E /* SheetTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89A1C5E828D377AD00DC514E /* SheetTableViewCell.xib */; };
 		89A1C5EB28D37AFE00DC514E /* NSTextField+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A1C5EA28D37AFE00DC514E /* NSTextField+Utils.swift */; };
@@ -323,10 +324,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8925B7FB2CA7E1BC001A8388 /* YYCategories in Frameworks */,
+				8994E2442DB69B1300765AF6 /* YYCategories in Frameworks */,
 				89B7EA5A2C9B14F500527B84 /* RxSwift in Frameworks */,
 				89B7EA522C9B14C700527B84 /* SnapKit in Frameworks */,
 				89B7EA552C9B14DA00527B84 /* Alamofire in Frameworks */,
+				8994E2472DB69BB600765AF6 /* YYCategories in Frameworks */,
 				89B7EA582C9B14F500527B84 /* RxCocoa in Frameworks */,
 				8953D0162C99E191003EF386 /* DanmakuRender in Frameworks */,
 				F7CC679A78A31AB0A704CFA9 /* Pods_AniXPlayer.framework in Frameworks */,
@@ -914,7 +916,8 @@
 				89B7EA542C9B14DA00527B84 /* Alamofire */,
 				89B7EA572C9B14F500527B84 /* RxCocoa */,
 				89B7EA592C9B14F500527B84 /* RxSwift */,
-				8925B7FA2CA7E1BC001A8388 /* YYCategories */,
+				8994E2432DB69B1300765AF6 /* YYCategories */,
+				8994E2462DB69BB600765AF6 /* YYCategories */,
 			);
 			productName = AniXPlayer;
 			productReference = 89945FE728CA3BAE009AC640 /* AniXPlayer.app */;
@@ -950,7 +953,7 @@
 				89B7EA502C9B14C700527B84 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				89B7EA532C9B14DA00527B84 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				89B7EA562C9B14F500527B84 /* XCRemoteSwiftPackageReference "RxSwift" */,
-				8925B7F92CA7E1BC001A8388 /* XCRemoteSwiftPackageReference "YYCategories" */,
+				8994E2452DB69BB600765AF6 /* XCRemoteSwiftPackageReference "YYCategories" */,
 			);
 			productRefGroup = 89945FE828CA3BAE009AC640 /* Products */;
 			projectDirPath = "";
@@ -1397,20 +1400,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		8925B7F92CA7E1BC001A8388 /* XCRemoteSwiftPackageReference "YYCategories" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sunsx9316/YYCategories";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.0;
-			};
-		};
 		8953D0142C99E191003EF386 /* XCRemoteSwiftPackageReference "DanmakuRender-Swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sunsx9316/DanmakuRender-Swift";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.5.0;
+			};
+		};
+		8994E2452DB69BB600765AF6 /* XCRemoteSwiftPackageReference "YYCategories" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sunsx9316/YYCategories";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.2;
 			};
 		};
 		89B7EA502C9B14C700527B84 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
@@ -1440,15 +1443,19 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		8925B7FA2CA7E1BC001A8388 /* YYCategories */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 8925B7F92CA7E1BC001A8388 /* XCRemoteSwiftPackageReference "YYCategories" */;
-			productName = YYCategories;
-		};
 		8953D0152C99E191003EF386 /* DanmakuRender */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 8953D0142C99E191003EF386 /* XCRemoteSwiftPackageReference "DanmakuRender-Swift" */;
 			productName = DanmakuRender;
+		};
+		8994E2432DB69B1300765AF6 /* YYCategories */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = YYCategories;
+		};
+		8994E2462DB69BB600765AF6 /* YYCategories */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8994E2452DB69BB600765AF6 /* XCRemoteSwiftPackageReference "YYCategories" */;
+			productName = YYCategories;
 		};
 		89B7EA512C9B14C700527B84 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;

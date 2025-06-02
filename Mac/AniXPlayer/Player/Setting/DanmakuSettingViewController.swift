@@ -108,6 +108,8 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
                 .loadDanmaku, .danmakuArea, .mergeSameDanmaku,
                 .danmakuEffectStyle, .filterDanmaku:
             return 40
+        case .openDanmakuRandomColor:
+            return 40
         }
     }
     
@@ -272,6 +274,8 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
                 self.danmakuModel.onChangeDanmaEffectStyle(style)
             }
             return cell
+        case .openDanmakuRandomColor:
+            return nil
         }
     }
     
