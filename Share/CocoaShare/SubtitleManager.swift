@@ -77,6 +77,7 @@ class SubtitleManager {
     func downCustomSubtitle(_ file: File, completion: @escaping((Result<SubtitleProtocol, Error>) -> Void)) {
         var cacheURL = PathUtils.cacheURL
         cacheURL.appendPathComponent(file.fileId)
+        cacheURL.appendPathExtension(file.url.pathExtension)
         
         let subtitle = ExternalSubtitle(subtitleName: NSLocalizedString("(外部字幕) \(file.url.lastPathComponent)", comment: ""), url: cacheURL)
         
