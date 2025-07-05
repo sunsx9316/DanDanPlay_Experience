@@ -267,6 +267,8 @@
 	</array>
 	<key>NSCameraUsageDescription</key>
 	<string>请允许 AniXPlayer 访问您的相机扫描二维码</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>请允许 AniXPlayer 访问本地网络</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
