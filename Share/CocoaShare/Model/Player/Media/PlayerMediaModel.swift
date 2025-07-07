@@ -157,7 +157,7 @@ extension PlayerMediaModel {
                                            dataSource:
                                             [
                                                 .subtitleMargin,
-                                                .subtitleFont,
+//                                                .subtitleFont,
                                                 .subtitleFontSize,
                                                 .subtitleSafeArea,
                                                 .subtitleDelay,
@@ -170,7 +170,7 @@ extension PlayerMediaModel {
                                            dataSource:
                                             [
                                                 .subtitleMargin,
-                                                .subtitleFont,
+//                                                .subtitleFont,
                                                 .subtitleSafeArea,
                                                 .subtitleDelay,
                                                 .subtitleTrack,

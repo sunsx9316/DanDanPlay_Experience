@@ -8,7 +8,7 @@
 #if os(iOS)
 
 import Foundation
-import MobileVLCKit
+import VLCKit
 import ANXLog
 
 class SMBFile: File {
@@ -125,7 +125,7 @@ class SMBFile: File {
         var options = [AnyHashable : Any]()
         options["smb-user"] = auth?.userName
         options["smb-pwd"] = auth?.password
-        media.addOptions(options)
+        media?.addOptions(options)
         return media
     }
     

@@ -6,11 +6,7 @@
 //
 
 import Foundation
-#if os(iOS)
-import MobileVLCKit
-#else
 import VLCKit
-#endif
 
 typealias FileProgressAction = ((Double) -> Void)
 

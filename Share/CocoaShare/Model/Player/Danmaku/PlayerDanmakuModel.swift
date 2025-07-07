@@ -173,7 +173,7 @@ class PlayerDanmakuModel {
         let container = self.danmakuRender.canvas.hitTest(point, with: nil)
 #endif
         
-        if let container = container as? DanmakuContainerProtocol {
+        if let container = container as? DanmakuContainerProtocol, self.isShowDanmaku {
             if container !== self.selectedDanmakuContainer {
                 self.deselectDanmaku()
                 self.selectedDanmakuContainer = container

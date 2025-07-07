@@ -6,12 +6,10 @@
 //
 
 import Foundation
+import VLCKit
 
 #if os(iOS)
-import MobileVLCKit
 import AVFoundation
-#else
-import VLCKit
 #endif
 
 class MediaThumbnailer: NSObject {

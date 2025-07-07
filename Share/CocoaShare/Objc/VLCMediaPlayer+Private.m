@@ -10,11 +10,7 @@
 @implementation VLCMediaPlayer (Private)
 
 - (void)anx_setTextRendererFontSize:(NSNumber *)fontSize {
-    SEL selector = NSSelectorFromString(@"setTextRendererFontSize:");
-    if ([self respondsToSelector:selector]) {
-        void (*setter)(id, SEL, NSNumber*) = (void (*)(id, SEL, NSNumber *))[self methodForSelector:selector];
-        setter(self, selector, fontSize);
-    }
+    [self setCurrentSubTitleFontScale:fontSize.floatValue];
 }
 
 - (void)anx_setTextRendererFont:(NSString *)fontname {

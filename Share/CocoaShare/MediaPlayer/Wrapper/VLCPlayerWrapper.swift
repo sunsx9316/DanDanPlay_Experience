@@ -7,11 +7,9 @@
 
 import Foundation
 import ANXLog
-#if os(iOS)
-import MobileVLCKit
-import YYCategories
-#else
 import VLCKit
+#if os(iOS)
+import YYCategories
 #endif
 
 fileprivate extension Timer {
@@ -23,6 +21,23 @@ fileprivate extension Timer {
         let action = sender.userInfo as? (Timer) -> Void
         action?(sender)
     }
+}
+
+extension VLCMediaPlayer.Track: SubtitleProtocol {
+    var subtitleName: String {
+        return self.trackName;
+    }
+    
+    var isExternalSubtitle: Bool {
+        return codecName() == "Text subtitles with various tags"
+    }
+}
+
+extension VLCMediaPlayer.Track: AudioChannelProtocol {
+    var audioName: String {
+        return self.trackName
+    }
+    
 }
 
 /// 内嵌字幕
@@ -43,6 +58,58 @@ struct AudioChannel: AudioChannelProtocol {
     let audioName: String
     
     let audioId: Int32
+}
+
+fileprivate class SubtitleTaskQueue {
+    
+    typealias CompletionAction = (String) -> Void
+    typealias StartAction = () -> Void
+    
+    class Task {
+        var completionCallBack: (CompletionAction)?
+        var startCallBack: (StartAction)?
+        
+        init(startCallBack: @escaping(StartAction), completionCallBack: @escaping(CompletionAction)) {
+            self.completionCallBack = completionCallBack
+            self.startCallBack = startCallBack
+        }
+        
+        func start() {
+            self.startCallBack?()
+        }
+        
+        func completion(trackId: String) {
+            self.completionCallBack?(trackId)
+        }
+    }
+    
+    private lazy var taskQueue = [Task]()
+    
+    private(set) var currentTask: Task?
+    
+    func AddTask(task: Task) {
+        taskQueue.append(task)
+        let oldCompletionCallBack = task.completionCallBack
+        task.completionCallBack = { [weak self] trackId in
+            /// 任务完成，移除队列
+            self?.taskQueue.removeAll { aTask in
+                return aTask === task
+            }
+            
+            oldCompletionCallBack?(trackId)
+            
+            /// 开启下一个任务
+            self?.startNext()
+        }
+        
+        startNext()
+    }
+    
+    private func startNext() {
+        self.currentTask = self.taskQueue.first
+        self.currentTask?.start()
+    }
+    
 }
 
 class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
@@ -75,8 +142,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     
     private let endFlagProgress = 0.99
     
-    /// 当前选择的字幕文件
-    private var currentSubTitleFile: SubtitleProtocol?
+    private lazy var externalSubTitleFiles = [String: ExternalSubtitle]()
     
     private var mediaThumbnailer: MediaThumbnailer?
     
@@ -85,6 +151,8 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     private lazy var mediaOptionsDic = [Options: Any]()
     
     private lazy var initActionDic = [InitAction: () -> Void]()
+    
+    private lazy var subtitleTaskQueue = SubtitleTaskQueue()
     
     var currentPlayItem: File? {
         didSet {
@@ -97,7 +165,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
             }
             
             self.player?.stop()
-            self.currentSubTitleFile = nil
+            self.externalSubTitleFiles.removeAll()
             let media = self.currentPlayItem?.createMedia(delegate: self)
             self.player?.media = media
 #if os(macOS)
@@ -112,7 +180,20 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     }
     
     var subtitleList: [SubtitleProtocol] {
-        return self.player?.videoSubTitlesIndexes.indices.compactMap({ subtitleWithIndexInPlayer($0) }) ?? []
+        
+        var tracks = [SubtitleProtocol]()
+        
+        /// 内嵌字幕
+        if let innerTrack = self.player?.textTracks.filter ({ track in
+            return self.externalSubTitleFiles[track.trackId] == nil && !track.isExternalSubtitle
+        }) {
+            tracks.append(contentsOf: innerTrack)
+        }
+        
+        let arr = Array(self.externalSubTitleFiles.values)
+        tracks.append(contentsOf: arr)
+        
+        return tracks
     }
     
     var currentSubtitle: SubtitleProtocol? {
@@ -120,31 +201,51 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
             
             guard let player = self.player else { return nil }
             
-            if let currentSubTitleFile = self.currentSubTitleFile {
-                return currentSubTitleFile
+            if let selectedSubtitle = player.textTracks.first(where: { track in
+                return track.isSelected
+            }) {
+                if let externalSubTitleFile = self.externalSubTitleFiles[selectedSubtitle.trackId] {
+                    return externalSubTitleFile
+                }
+                
+                return selectedSubtitle
             }
             
-            let currentVideoSubTitleIndex = player.currentVideoSubTitleIndex
-            if let fristIndex = player.videoSubTitlesIndexes.firstIndex(where: { (value) -> Bool in
-                if let value = value as? Int, value == currentVideoSubTitleIndex {
-                    return true
-                }
-                return false
-            }) {
-                return subtitleWithIndexInPlayer(fristIndex)
-            }
             return nil
         }
         
         set {
-            self.currentSubTitleFile = newValue
+            
+            func setSubtitleTrack(trackId: String) {
+                if let firstIndex = player?.textTracks.firstIndex(where: { track in
+                    return track.trackId == trackId
+                }) {
+                    self.player?.selectTrack(at: firstIndex, type: .text)
+                }
+            }
             
             func setup() {
-                if let sub = newValue as? Subtitle {
-                    self.player?.currentVideoSubTitleIndex = Int32(sub.index)
+                
+                if let sub = newValue as? VLCMediaPlayer.Track {
+                    setSubtitleTrack(trackId: sub.trackId)
                 } else if let sub = newValue as? ExternalSubtitle {
-                    ANX.logInfo(.subtitle, "加载外部字幕 url: \(sub.url)")
-                    self.player?.addPlaybackSlave(sub.url, type: .subtitle, enforce: true)
+                    
+                    for (key, aSub) in self.externalSubTitleFiles {
+                        /// 已加载的外部字幕
+                        if aSub.url == sub.url {
+                            setSubtitleTrack(trackId: key)
+                            return
+                        }
+                    }
+                    
+                    self.subtitleTaskQueue.AddTask(task: SubtitleTaskQueue.Task(startCallBack: { [weak self] in
+                        let result = self?.player?.addPlaybackSlave(sub.url, type: .subtitle, enforce: true) ?? 0
+                        ANX.logInfo(.subtitle, "加载外部字幕 url: \(sub.url) result:\(result)")
+                    }, completionCallBack: { [weak self] trackId in
+                        /// 存储Track和外部文件的映射关系
+                        self?.externalSubTitleFiles[trackId] = sub
+                        setSubtitleTrack(trackId: trackId)
+                    }))
                 }
             }
             
@@ -263,13 +364,16 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         return self.player?.isPlaying ?? false
     }
     
-    /// 10 .. 500
+    /// 10 .. 120
     var fontSize: Float? {
         didSet {
             func setup() {
                 if let fontSize = self.fontSize {
-                    /// 值越大字体越小，要进行区间的重新映射
-                    self.player?.anx_setTextRendererFontSize((500 / fontSize) as NSNumber)
+                    let anxFontSizeRange: (min: Float, max: Float) = (min: 10, max: 120)
+                    let vlcFontSizeRange: (min: Float, max: Float) = (min: 0.1, max: 5) // vlc的区间为 0.1~5
+                    
+                    let vlcFontSize = vlcFontSizeRange.min + ((fontSize - anxFontSizeRange.min) * (vlcFontSizeRange.max - vlcFontSizeRange.min) / (anxFontSizeRange.max - anxFontSizeRange.min))
+                    self.player?.anx_setTextRendererFontSize(vlcFontSize as NSNumber)
                 }
             }
             
@@ -307,31 +411,27 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     }
     
     var audioChannelList: [AudioChannelProtocol] {
-        return self.player?.audioTrackIndexes.indices.compactMap({ audioChannelWithIndexInPlayer($0) }) ?? []
+        return self.player?.audioTracks ?? []
     }
     
     var currentAudioChannel: AudioChannelProtocol? {
         get {
-            guard let player = self.player else { return nil }
             
-            let currentAudioTrackIndex = player.currentAudioTrackIndex
-            if let fristIndex = player.audioTrackIndexes.firstIndex(where: { (value) -> Bool in
-                if let value = value as? Int, value == currentAudioTrackIndex {
-                    return true
-                }
-                return false
-            }) {
-                return audioChannelWithIndexInPlayer(fristIndex)
+            return self.player?.audioTracks.first { track in
+                return track.isSelected
             }
-            return nil
         }
         
         set {
             func setup() {
-                if let audioChannel = newValue {
-                    self.player?.currentAudioTrackIndex = audioChannel.audioId
+                if let sub = newValue as? VLCMediaPlayer.Track {
+                    if let firstIndex = player?.textTracks.firstIndex(where: { track in
+                        return track.trackId == sub.trackId
+                    }) {
+                        self.player?.selectTrack(at: firstIndex, type: .audio)
+                    }
                 } else {
-                    self.player?.currentAudioTrackIndex = -1
+                    self.player?.selectTrack(at: -1, type: .audio)
                 }
             }
             
@@ -352,8 +452,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     var aspectRatio: PlayerAspectRatio {
         get {
             if let videoAspectRatio = self.player?.videoAspectRatio {
-                let str = String(cString: videoAspectRatio)
-                return PlayerAspectRatio(rawValue: str) ?? .default
+                return PlayerAspectRatio(rawValue: videoAspectRatio) ?? .default
             }
             return .default
         }
@@ -364,7 +463,6 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
                 case .default:
                     self.player?.scaleFactor = 0
                     self.player?.videoAspectRatio = nil
-                    self.player?.videoCropGeometry = nil
                 case .fillToScreen:
                     if let window = self.mediaView.window {
                         self.player?.videoAspectRatio = nil
@@ -404,8 +502,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
                 
                 case .fourToThree, .sixteenToNine, .sixteenToTen, .other(_, _):
                     self.player?.scaleFactor = 0
-                    self.player?.videoCropGeometry = nil
-                    self.player?.videoAspectRatio = UnsafeMutablePointer(mutating: (newValue.rawValue as NSString).utf8String)
+                    self.player?.videoAspectRatio = newValue.rawValue
                 }
             }
             
@@ -423,7 +520,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
             return .stop
         case .paused:
             return .pause
-        case .playing, .esAdded:
+        case .playing:
             return .playing
         case .buffering:
             if self.timeIsUpdate {
@@ -438,7 +535,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     
     func setPosition(_ position: Double) {
         let position = max(min(position, 1), 0)
-        self.player?.position = Float(position)
+        self.player?.position = position
     }
     
     func play(_ media: File) {
@@ -467,43 +564,6 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     }
     
     //MARK: Private Method
-    private func subtitleWithIndexInPlayer(_ index: Int) -> Subtitle? {
-        guard let player = self.player else { return nil }
-        
-        if index < player.videoSubTitlesIndexes.count,
-           let indexNumber = player.videoSubTitlesIndexes[index] as? Int {
-            
-            let name: String
-            if index < player.videoSubTitlesNames.count {
-                name = player.videoSubTitlesNames[index] as? String ?? "未知名称"
-            } else {
-                name = "未知名称"
-            }
-            
-            return Subtitle(subtitleName: name, index: indexNumber)
-        } else {
-            return nil
-        }
-    }
-    
-    private func audioChannelWithIndexInPlayer(_ index: Int) -> AudioChannelProtocol? {
-        guard let player = self.player else { return nil }
-        
-        if index < player.audioTrackIndexes.count,
-           let indexNumber = player.audioTrackIndexes[index] as? Int32 {
-            
-            let name: String
-            if index < player.audioTrackNames.count {
-                name = player.audioTrackNames[index] as? String ?? "未知名称"
-            } else {
-                name = "未知名称"
-            }
-            
-            return AudioChannel(audioName: name, audioId: indexNumber)
-        } else {
-            return nil
-        }
-    }
     
     private func reloadOptionAndCreatePlayer() {
         guard let item = self.currentPlayItem else { return }
@@ -547,31 +607,48 @@ extension VLCPlayerWarrper: FileDelegate {
 
 extension VLCPlayerWarrper: VLCMediaPlayerDelegate {
     
-    func mediaPlayerTimeChanged(_ aNotification: Notification) {
+    func mediaPlayerTrackAdded(_ trackId: String, with trackType: VLCMedia.TrackType) {
+        ANX.logInfo(.player, "加载轨道 trackType: \(trackType), trackId:\(trackId)")
         
-        let nowTime = self.currentTime
-        let length = self.length
-        
-        let position = length > 0 ? nowTime / length : 0
-        
-        self.timeChangedCallBack?(self, position)
-        self.playerTimer?.invalidate()
-        self.playerTimer = Timer.mp_scheduledTimer(timeInterval: 1, repeats: false) { [weak self] (aTimer) in
-            guard let self = self else { return }
+        if trackType == .text {
+            let textTrack = self.player?.textTracks.first { track in
+                return track.trackId == trackId
+            }
             
-            self.timeIsUpdate = false
-            self.stateChangedCallBack?(self, self.state)
+            if let currentTask = self.subtitleTaskQueue.currentTask, textTrack?.isExternalSubtitle == true {
+                currentTask.completion(trackId: trackId)
+            }
         }
-        
-        if self.timeIsUpdate == false {
-            self.timeIsUpdate = true
-            self.stateChangedCallBack?(self, self.state)
-        }
-        
-        self.timeChangedCallBack?(self, self.position)
     }
     
-    func mediaPlayerStateChanged(_ aNotification: Notification) {
+    func mediaPlayerTimeChanged(_ aNotification: Notification) {
+        
+        DispatchQueue.main.async {
+            let nowTime = self.currentTime
+            let length = self.length
+            
+            let position = length > 0 ? nowTime / length : 0
+            
+            self.timeChangedCallBack?(self, position)
+            self.playerTimer?.invalidate()
+            self.playerTimer = Timer.mp_scheduledTimer(timeInterval: 1, repeats: false) { [weak self] (aTimer) in
+                guard let self = self else { return }
+                
+                self.timeIsUpdate = false
+                self.stateChangedCallBack?(self, self.state)
+            }
+            
+            if self.timeIsUpdate == false {
+                self.timeIsUpdate = true
+                self.stateChangedCallBack?(self, self.state)
+            }
+            
+            self.timeChangedCallBack?(self, self.position)
+        }
+        
+    }
+    
+    func mediaPlayerStateChanged(_ newState: VLCMediaPlayerState) {
         self.stateChangedCallBack?(self, self.state)
     }
 }
