@@ -16,7 +16,7 @@ ANXLogHelperModule ANXLogHelperModuleHTTP = @"HTTP";
 ANXLogHelperModule ANXLogHelperModuleSubtitle = @"Subtitle";
 ANXLogHelperModule ANXLogHelperModuleSMB = @"SMB";
 ANXLogHelperModule ANXLogHelperModuleUI = @"UI";
-
+ANXLogHelperModule ANXLogHelperModulePlayer = @"Player";
 
 static NSUInteger g_processID = 0;
 

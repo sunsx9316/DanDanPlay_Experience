@@ -16,6 +16,7 @@ FOUNDATION_EXPORT ANXLogHelperModule ANXLogHelperModuleHTTP;
 FOUNDATION_EXPORT ANXLogHelperModule ANXLogHelperModuleSubtitle;
 FOUNDATION_EXPORT ANXLogHelperModule ANXLogHelperModuleSMB;
 FOUNDATION_EXPORT ANXLogHelperModule ANXLogHelperModuleUI;
+FOUNDATION_EXPORT ANXLogHelperModule ANXLogHelperModulePlayer;
 
 
 typedef NS_ENUM(NSUInteger, ANXLogLevel) {
