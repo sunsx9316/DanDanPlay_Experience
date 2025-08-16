@@ -28,6 +28,25 @@ private class PlayMediaInfo: HistoryManager.WatchProgressStoreable {
     }
 }
 
+extension PlayerAspectRatio {
+    var name: String {
+        switch self {
+        case .default:
+            return NSLocalizedString("默认", comment: "")
+        case .fillToScreen:
+            return NSLocalizedString("填充屏幕", comment: "")
+        case .fourToThree:
+            return NSLocalizedString("4:3", comment: "")
+        case .sixteenToNine:
+            return NSLocalizedString("16:9", comment: "")
+        case .sixteenToTen:
+            return NSLocalizedString("16:10", comment: "")
+        case .other(let w, let h):
+            return "\(w):\(h)"
+        }
+    }
+}
+
 // MARK: - 便捷接口
 extension PlayerMediaModel {
     var mediaView: ANXView {
@@ -134,13 +153,21 @@ extension PlayerMediaModel {
         return self.player.volume
     }
     
+    var aspectRatio: PlayerAspectRatio {
+        return self.player.aspectRatio
+    }
+    
+    var aspectRatioList: [PlayerAspectRatio] {
+        return [PlayerAspectRatio.default, PlayerAspectRatio.fillToScreen, PlayerAspectRatio.fourToThree, PlayerAspectRatio.sixteenToNine, PlayerAspectRatio.sixteenToTen]
+    }
+    
     var mediaSetting: [MediaSettingInfo] {
         var dataSource = [MediaSettingInfo]()
         
         dataSource.append(MediaSettingInfo(title: NSLocalizedString("媒体信息", comment: ""),
                                            dataSource: [.matchInfo]))
         
-        var mediaSetting: [MediaSettingType] = [.autoJumpTitleEnding, .jumpTitleDuration, .jumpEndingDuration, .playerSpeed, .playerMode]
+        var mediaSetting: [MediaSettingType] = [.autoJumpTitleEnding, .jumpTitleDuration, .jumpEndingDuration, .playerSpeed, .playerMode, .aspectRatio]
         mediaSetting = mediaSetting.filter ({ setting in
             if !self.autoJumpTitleEnding {
                 if setting == .jumpTitleDuration || setting == .jumpEndingDuration {
@@ -288,6 +315,12 @@ class PlayerMediaModel {
         self.player.volume += Int(addBy)
         self.context.volume.onNext(self.player.volume)
         ANX.logInfo(.UI, "更改音量: \(self.player.volume)")
+    }
+    
+    func onChangeAspectRatio(_ aspectRatio: PlayerAspectRatio) {
+        Preferences.shared.aspectRatio = aspectRatio
+        self.context.aspectRatio.onNext(aspectRatio)
+        ANX.logInfo(.UI, "更改宽高比: \(aspectRatio)")
     }
     
     func playerSpeedRange() -> (min: Float, max: Float, step: Float) {
@@ -537,6 +570,12 @@ class PlayerMediaModel {
     }
     
     private func bindContext() {
+        self.context.aspectRatio.subscribe (onNext: { [weak self] aspectRatio in
+            guard let self = self else { return }
+            
+            self.player.aspectRatio = aspectRatio
+        }).disposed(by: self.disposeBag)
+        
         self.context.playerMode.subscribe (onNext: { [weak self] playMode in
             guard let self = self else { return }
             

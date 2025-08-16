@@ -24,6 +24,7 @@ class PlayerViewController: ViewController {
     
     private lazy var containerView: UIView = {
         let view = UIView()
+        view.backgroundColor = .black
         return view
     }()
     

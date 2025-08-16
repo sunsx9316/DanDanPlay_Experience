@@ -152,6 +152,11 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             cell.titleLabel.text = type.title
             cell.valueLabel.text = self.mediaModel.playerMode.title
             return cell
+        case .aspectRatio:
+            let cell = tableView.dequeueCell(class: SheetTableViewCell.self, indexPath: indexPath)
+            cell.titleLabel.text = type.title
+            cell.valueLabel.text = self.mediaModel.aspectRatio.name
+            return cell
         case .loadSubtitle:
             let cell = tableView.dequeueCell(class: TitleTableViewCell.self, indexPath: indexPath)
             cell.label.text = type.title
@@ -447,6 +452,26 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             let actions = audioChannelList.compactMap { (mode) -> UIAlertAction? in
                 return UIAlertAction(title: mode.audioName, style: .default) { (UIAlertAction) in
                     self.mediaModel.currentAudioChannel = mode
+                    self.tableView.reloadData()
+                }
+            }
+            
+            for action in actions {
+                vc.addAction(action)
+            }
+            
+            vc.addAction(.init(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: { (_) in
+                
+            }))
+            self.present(vc, atView: tableView.cellForRow(at: indexPath))
+        } else if type == .aspectRatio {
+            let aspectRatioList = self.mediaModel.aspectRatioList
+            
+            let vc = UIAlertController(title: type.title, message: nil, preferredStyle: .actionSheet)
+            
+            let actions = aspectRatioList.compactMap { (mode) -> UIAlertAction? in
+                return UIAlertAction(title: mode.name, style: .default) { (UIAlertAction) in
+                    self.mediaModel.onChangeAspectRatio(mode)
                     self.tableView.reloadData()
                 }
             }

@@ -125,6 +125,9 @@ class Preferences {
         /// 弹幕随机颜色
         case openDanmakuRandomColor
         
+        /// 长宽比
+        case aspectRatio
+        
         var storeKey: String {
             return self.rawValue
         }
@@ -132,6 +135,9 @@ class Preferences {
     
     static let shared = Preferences()
     private init() {}
+    
+    @StoreWrapper(defaultValue: PlayerAspectRatio.default, key: .aspectRatio)
+    var aspectRatio: PlayerAspectRatio
     
     @StoreWrapper(defaultValue: ANXColor.defaultMainColor, key: .mainColor)
     var mainColor: ANXColor

@@ -152,3 +152,14 @@ extension DanmakuEffectStyle: Storeable {
         return self.rawValue
     }
 }
+
+extension PlayerAspectRatio: Storeable {
+    static func create(from: String) -> PlayerAspectRatio? {
+        let rawValue = from
+        return PlayerAspectRatio(rawValue: rawValue)
+    }
+    
+    func toValue() -> String {
+        return self.rawValue
+    }
+}

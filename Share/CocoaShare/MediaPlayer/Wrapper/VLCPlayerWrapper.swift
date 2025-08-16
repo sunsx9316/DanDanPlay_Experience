@@ -146,7 +146,11 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     
     private var mediaThumbnailer: MediaThumbnailer?
     
-    lazy var mediaView: ANXView = ANXView()
+    lazy var mediaView: ANXView = {
+        let view = ANXView()
+        view.backgroundColor = .black
+        return view
+    }();
     
     private lazy var mediaOptionsDic = [Options: Any]()
     

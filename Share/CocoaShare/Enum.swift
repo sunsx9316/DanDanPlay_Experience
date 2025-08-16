@@ -29,6 +29,7 @@ enum MediaSettingType: CaseIterable {
     case subtitleDelay
     case audioDelay
     case loadSubtitle
+    case aspectRatio
     
     
     var title: String {
@@ -63,6 +64,8 @@ enum MediaSettingType: CaseIterable {
             return NSLocalizedString("音频时间偏移", comment: "")
         case .subtitleFont:
             return NSLocalizedString("字幕字体", comment: "")
+        case .aspectRatio:
+            return NSLocalizedString("宽高比", comment: "")
         }
     }
 }
