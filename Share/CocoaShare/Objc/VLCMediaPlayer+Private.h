@@ -7,7 +7,11 @@
 
 #import <Foundation/Foundation.h>
 
+#ifdef TARGET_OS_IPHONE
+#import <MobileVLCKit/MobileVLCKit.h>
+#else
 #import <VLCKit/VLCKit.h>
+#endif
 
 NS_ASSUME_NONNULL_BEGIN
 

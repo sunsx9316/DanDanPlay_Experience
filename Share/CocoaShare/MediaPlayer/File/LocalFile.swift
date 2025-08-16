@@ -6,7 +6,11 @@
 //
 
 import Foundation
+#if os(iOS)
+import MobileVLCKit
+#else
 import VLCKit
+#endif
 
 class LocalFile: File {
 

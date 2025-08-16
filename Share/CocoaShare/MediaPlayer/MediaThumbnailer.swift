@@ -6,7 +6,12 @@
 //
 
 import Foundation
+
+#if os(iOS)
+import MobileVLCKit
+#else
 import VLCKit
+#endif
 
 #if os(iOS)
 import AVFoundation

@@ -8,7 +8,7 @@
 #if os(iOS)
 
 import Foundation
-import VLCKit
+import MobileVLCKit
 import FilesProvider
 
 
@@ -53,7 +53,7 @@ class FTPFile: File {
         var options = [AnyHashable : Any]()
         options["ftp-user"] = auth?.userName
         options["ftp-pwd"] = auth?.password
-        media?.addOptions(options)
+        media.addOptions(options)
         return media
     }
     

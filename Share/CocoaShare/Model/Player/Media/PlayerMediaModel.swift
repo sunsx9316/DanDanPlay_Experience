@@ -158,7 +158,7 @@ extension PlayerMediaModel {
     }
     
     var aspectRatioList: [PlayerAspectRatio] {
-        return [PlayerAspectRatio.default, PlayerAspectRatio.fillToScreen, PlayerAspectRatio.fourToThree, PlayerAspectRatio.sixteenToNine, PlayerAspectRatio.sixteenToTen]
+        return [PlayerAspectRatio.default, PlayerAspectRatio.fourToThree, PlayerAspectRatio.sixteenToNine, PlayerAspectRatio.sixteenToTen]
     }
     
     var mediaSetting: [MediaSettingInfo] {

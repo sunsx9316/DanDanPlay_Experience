@@ -159,6 +159,7 @@
 		897F9B602822B2EA00130613 /* SnapshotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897F9B5F2822B2EA00130613 /* SnapshotView.swift */; };
 		89945FDD28C8E7C6009AC640 /* GotoLastWatchPointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89945FDC28C8E7C6009AC640 /* GotoLastWatchPointView.swift */; };
 		8994607628CC6CE1009AC640 /* HttpServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994607528CC6CE1009AC640 /* HttpServer.swift */; };
+		89998FEB2E50A53600889699 /* VLCKitSPM in Frameworks */ = {isa = PBXBuildFile; productRef = 89998FEA2E50A53600889699 /* VLCKitSPM */; };
 		899A11BE2A18C0A5009B2953 /* TitleDetailOpertationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899A11BC2A18C0A5009B2953 /* TitleDetailOpertationTableViewCell.swift */; };
 		899A11C12A18C0DC009B2953 /* TitleDetailOpertationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 899A11C02A18C0DC009B2953 /* TitleDetailOpertationTableViewCell.xib */; };
 		899A9DDF262F35EB00C54AC9 /* SliderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897CF530262F317B00CC297A /* SliderTableViewCell.swift */; };
@@ -474,6 +475,7 @@
 			files = (
 				89B7EA4F2C9B141100527B84 /* DanmakuRender in Frameworks */,
 				8953D0442C99E6F0003EF386 /* SVGKit in Frameworks */,
+				89998FEB2E50A53600889699 /* VLCKitSPM in Frameworks */,
 				8953D0472C99E759003EF386 /* DynamicButton in Frameworks */,
 				89F1CA8C2E1962110004406D /* VLCKitSPM in Frameworks */,
 				89B7EA4C2C9B120100527B84 /* DanmakuRender in Frameworks */,
@@ -1318,6 +1320,7 @@
 				89D148742D44E4A700E7FDF5 /* YYCategories */,
 				89FFD1282D44E65000428206 /* YYCategories */,
 				89F1CA8B2E1962110004406D /* VLCKitSPM */,
+				89998FEA2E50A53600889699 /* VLCKitSPM */,
 			);
 			productName = AniXPlayer;
 			productReference = 890DF6C926160826002D8AE5 /* AniXPlayer.app */;
@@ -1362,7 +1365,7 @@
 				89B7EA4D2C9B141100527B84 /* XCRemoteSwiftPackageReference "DanmakuRender-Swift" */,
 				890A0B2C2CAD624200AE1F6B /* XCRemoteSwiftPackageReference "Color-Picker-for-iOS" */,
 				89FFD1272D44E65000428206 /* XCRemoteSwiftPackageReference "YYCategories" */,
-				89F1CA8A2E1962110004406D /* XCLocalSwiftPackageReference "../Share/VLCKit" */,
+				89998FE92E50A53600889699 /* XCLocalSwiftPackageReference "../Share/VLCKit" */,
 			);
 			productRefGroup = 890DF6CA26160826002D8AE5 /* Products */;
 			projectDirPath = "";
@@ -1815,7 +1818,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2025081601;
+				CURRENT_PROJECT_VERSION = 2025081602;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				ENABLE_BITCODE = NO;
@@ -1849,7 +1852,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2025081601;
+				CURRENT_PROJECT_VERSION = 2025081602;
 				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1896,7 +1899,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		89F1CA8A2E1962110004406D /* XCLocalSwiftPackageReference "../Share/VLCKit" */ = {
+		89998FE92E50A53600889699 /* XCLocalSwiftPackageReference "../Share/VLCKit" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Share/VLCKit;
 		};
@@ -2069,6 +2072,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8953D0452C99E758003EF386 /* XCRemoteSwiftPackageReference "DynamicButton" */;
 			productName = DynamicButton;
+		};
+		89998FEA2E50A53600889699 /* VLCKitSPM */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = VLCKitSPM;
 		};
 		89B7EA4B2C9B120100527B84 /* DanmakuRender */ = {
 			isa = XCSwiftPackageProductDependency;

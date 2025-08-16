@@ -7,7 +7,7 @@
 
 #if os(iOS)
 
-import VLCKit
+import MobileVLCKit
 import YYCategories
 
 class PCFile: File {

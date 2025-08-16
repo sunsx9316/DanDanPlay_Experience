@@ -113,6 +113,7 @@ protocol SubtitleProtocol {
 
 protocol AudioChannelProtocol {
     var audioName: String { get }
+    var audioId: Int32 { get }
 }
 
 enum PlayerAspectRatio: RawRepresentable {

@@ -8,7 +8,7 @@
 #if os(iOS)
 
 import Foundation
-import VLCKit
+import MobileVLCKit
 import FilesProvider
 
 
