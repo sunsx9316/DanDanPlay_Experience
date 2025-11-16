@@ -124,7 +124,6 @@ enum PlayerAspectRatio: RawRepresentable {
     case fourToThree
     case sixteenToNine
     case sixteenToTen
-    case other(_ width: Int, _ height: Int)
     
     init?(rawValue: RawValue) {
         switch rawValue {
@@ -139,14 +138,7 @@ enum PlayerAspectRatio: RawRepresentable {
         case "16:10":
             self = .sixteenToTen
         default:
-            let arr = rawValue.components(separatedBy: ":")
-            if arr.count < 2 {
-                return nil
-            }
-            
-            let width = Int(arr[0]) ?? 0
-            let height = Int(arr[1]) ?? 0
-            self = .other(width, height)
+            self = .default
         }
     }
     
@@ -162,8 +154,6 @@ enum PlayerAspectRatio: RawRepresentable {
             return "16:9"
         case .sixteenToTen:
             return "16:10"
-        case .other(let width, let height):
-            return "\(width):\(height)"
         }
     }
 }

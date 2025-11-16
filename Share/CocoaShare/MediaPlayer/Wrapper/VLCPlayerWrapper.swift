@@ -416,7 +416,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
                         self.player?.videoAspectRatio = nil
                     }
                 
-                case .fourToThree, .sixteenToNine, .sixteenToTen, .other(_, _):
+                case .fourToThree, .sixteenToNine, .sixteenToTen:
                     self.player?.scaleFactor = 0
                     self.player?.videoCropGeometry = nil
                     self.player?.videoAspectRatio = UnsafeMutablePointer(mutating: (newValue.rawValue as NSString).utf8String)

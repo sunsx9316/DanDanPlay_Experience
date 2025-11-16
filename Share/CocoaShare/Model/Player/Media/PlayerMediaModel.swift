@@ -41,8 +41,6 @@ extension PlayerAspectRatio {
             return NSLocalizedString("16:9", comment: "")
         case .sixteenToTen:
             return NSLocalizedString("16:10", comment: "")
-        case .other(let w, let h):
-            return "\(w):\(h)"
         }
     }
 }
