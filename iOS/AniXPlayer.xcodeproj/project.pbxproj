@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -159,7 +159,6 @@
 		897F9B602822B2EA00130613 /* SnapshotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897F9B5F2822B2EA00130613 /* SnapshotView.swift */; };
 		89945FDD28C8E7C6009AC640 /* GotoLastWatchPointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89945FDC28C8E7C6009AC640 /* GotoLastWatchPointView.swift */; };
 		8994607628CC6CE1009AC640 /* HttpServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994607528CC6CE1009AC640 /* HttpServer.swift */; };
-		89998FEB2E50A53600889699 /* VLCKitSPM in Frameworks */ = {isa = PBXBuildFile; productRef = 89998FEA2E50A53600889699 /* VLCKitSPM */; };
 		899A11BE2A18C0A5009B2953 /* TitleDetailOpertationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899A11BC2A18C0A5009B2953 /* TitleDetailOpertationTableViewCell.swift */; };
 		899A11C12A18C0DC009B2953 /* TitleDetailOpertationTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 899A11C02A18C0DC009B2953 /* TitleDetailOpertationTableViewCell.xib */; };
 		899A9DDF262F35EB00C54AC9 /* SliderTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897CF530262F317B00CC297A /* SliderTableViewCell.swift */; };
@@ -232,7 +231,6 @@
 		89E0D82C266BDB8600E2337B /* PlayerUIBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0D82B266BDB8600E2337B /* PlayerUIBottomView.swift */; };
 		89E109B426443F4F00825308 /* BaseLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E109B326443F4F00825308 /* BaseLoginHistoryViewController.swift */; };
 		89E109B62644424800825308 /* BaseConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E109B52644424800825308 /* BaseConnectSvrViewController.swift */; };
-		89F1CA8C2E1962110004406D /* VLCKitSPM in Frameworks */ = {isa = PBXBuildFile; productRef = 89F1CA8B2E1962110004406D /* VLCKitSPM */; };
 		89FFD1292D44E65000428206 /* YYCategories in Frameworks */ = {isa = PBXBuildFile; productRef = 89FFD1282D44E65000428206 /* YYCategories */; };
 		89FFD12B2D44EB2700428206 /* AppKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD12A2D44EB2700428206 /* AppKey.swift */; };
 		89FFD1312D4B838500428206 /* Launcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD1302D4B838500428206 /* Launcher.swift */; };
@@ -475,9 +473,7 @@
 			files = (
 				89B7EA4F2C9B141100527B84 /* DanmakuRender in Frameworks */,
 				8953D0442C99E6F0003EF386 /* SVGKit in Frameworks */,
-				89998FEB2E50A53600889699 /* VLCKitSPM in Frameworks */,
 				8953D0472C99E759003EF386 /* DynamicButton in Frameworks */,
-				89F1CA8C2E1962110004406D /* VLCKitSPM in Frameworks */,
 				89B7EA4C2C9B120100527B84 /* DanmakuRender in Frameworks */,
 				89D148722D44E2B000E7FDF5 /* YYCategories in Frameworks */,
 				8953D0292C99E3D8003EF386 /* RxSwift in Frameworks */,
@@ -1319,8 +1315,6 @@
 				89D148712D44E2B000E7FDF5 /* YYCategories */,
 				89D148742D44E4A700E7FDF5 /* YYCategories */,
 				89FFD1282D44E65000428206 /* YYCategories */,
-				89F1CA8B2E1962110004406D /* VLCKitSPM */,
-				89998FEA2E50A53600889699 /* VLCKitSPM */,
 			);
 			productName = AniXPlayer;
 			productReference = 890DF6C926160826002D8AE5 /* AniXPlayer.app */;
@@ -1365,7 +1359,6 @@
 				89B7EA4D2C9B141100527B84 /* XCRemoteSwiftPackageReference "DanmakuRender-Swift" */,
 				890A0B2C2CAD624200AE1F6B /* XCRemoteSwiftPackageReference "Color-Picker-for-iOS" */,
 				89FFD1272D44E65000428206 /* XCRemoteSwiftPackageReference "YYCategories" */,
-				89998FE92E50A53600889699 /* XCLocalSwiftPackageReference "../Share/VLCKit" */,
 			);
 			productRefGroup = 890DF6CA26160826002D8AE5 /* Products */;
 			projectDirPath = "";
@@ -1818,7 +1811,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2025081602;
+				CURRENT_PROJECT_VERSION = 2025111501;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				ENABLE_BITCODE = NO;
@@ -1852,7 +1845,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2025081602;
+				CURRENT_PROJECT_VERSION = 2025111501;
 				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1898,116 +1891,109 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		89998FE92E50A53600889699 /* XCLocalSwiftPackageReference "../Share/VLCKit" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../Share/VLCKit;
-		};
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCRemoteSwiftPackageReference section */
 		890A0B2C2CAD624200AE1F6B /* XCRemoteSwiftPackageReference "Color-Picker-for-iOS" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hayashi311/Color-Picker-for-iOS";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.0.2;
+				kind = exactVersion;
+				version = 3.0.2;
 			};
 		};
 		8953D01F2C99E306003EF386 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.9.1;
+				kind = exactVersion;
+				version = 5.9.1;
 			};
 		};
 		8953D0222C99E374003EF386 /* XCRemoteSwiftPackageReference "MJRefresh" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/CoderMJLee/MJRefresh";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.7.9;
+				kind = exactVersion;
+				version = 3.7.9;
 			};
 		};
 		8953D0252C99E3D8003EF386 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ReactiveX/RxSwift";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 6.7.1;
+				kind = exactVersion;
+				version = 6.7.1;
 			};
 		};
 		8953D02A2C99E430003EF386 /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImage";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.19.7;
+				kind = exactVersion;
+				version = 5.19.7;
 			};
 		};
 		8953D0302C99E48A003EF386 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.7.1;
+				kind = exactVersion;
+				version = 5.7.1;
 			};
 		};
 		8953D0332C99E4C7003EF386 /* XCRemoteSwiftPackageReference "MBProgressHUD" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/jdg/MBProgressHUD";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.2.0;
+				kind = exactVersion;
+				version = 1.2.0;
 			};
 		};
 		8953D0362C99E502003EF386 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 7.1.1;
+				kind = exactVersion;
+				version = 7.1.1;
 			};
 		};
 		8953D0392C99E55C003EF386 /* XCRemoteSwiftPackageReference "FileProvider" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/amosavian/FileProvider";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.26.0;
+				kind = exactVersion;
+				version = 0.26.0;
 			};
 		};
 		8953D0422C99E6F0003EF386 /* XCRemoteSwiftPackageReference "SVGKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SVGKit/SVGKit";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.0.0;
+				kind = exactVersion;
+				version = 3.0.0;
 			};
 		};
 		8953D0452C99E758003EF386 /* XCRemoteSwiftPackageReference "DynamicButton" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/yannickl/DynamicButton";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 6.2.1;
+				kind = exactVersion;
+				version = 6.2.1;
 			};
 		};
 		89B7EA4D2C9B141100527B84 /* XCRemoteSwiftPackageReference "DanmakuRender-Swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sunsx9316/DanmakuRender-Swift";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.5.0;
+				kind = exactVersion;
+				version = 1.5.0;
 			};
 		};
 		89FFD1272D44E65000428206 /* XCRemoteSwiftPackageReference "YYCategories" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sunsx9316/YYCategories";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.1;
+				kind = exactVersion;
+				version = 1.0.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -2073,10 +2059,6 @@
 			package = 8953D0452C99E758003EF386 /* XCRemoteSwiftPackageReference "DynamicButton" */;
 			productName = DynamicButton;
 		};
-		89998FEA2E50A53600889699 /* VLCKitSPM */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = VLCKitSPM;
-		};
 		89B7EA4B2C9B120100527B84 /* DanmakuRender */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DanmakuRender;
@@ -2093,10 +2075,6 @@
 		89D148742D44E4A700E7FDF5 /* YYCategories */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = YYCategories;
-		};
-		89F1CA8B2E1962110004406D /* VLCKitSPM */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = VLCKitSPM;
 		};
 		89FFD1282D44E65000428206 /* YYCategories */ = {
 			isa = XCSwiftPackageProductDependency;
