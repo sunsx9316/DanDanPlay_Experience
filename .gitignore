@@ -74,3 +74,5 @@ Share/CocoaShare/Networking/User/AppKey.swift
 Share/CocoaShare/Networking/User/AppKey.swift
 Share/CocoaShare/Networking/User/AppKey.swift
 Share/CocoaShare/Networking/AppKey.swift
+.vscode/launch.json
+buildServer.json
