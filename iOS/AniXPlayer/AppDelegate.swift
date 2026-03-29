@@ -41,11 +41,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if url.isMediaFile || url.isSubtitleFile || url.isDanmakuFile {
             let fileName = url.lastPathComponent
             let toUrl = UIApplication.shared.documentsURL.appendingPathComponent(fileName)
+            
+                // 1. 开启安全资源访问
+            let canAccess = url.startAccessingSecurityScopedResource()
+            
+                // 无论成功与否，最好在 defer 中确保关闭访问，防止资源泄露
+            defer {
+                if canAccess {
+                    url.stopAccessingSecurityScopedResource()
+                }
+            }
+            
             do {
                 try FileManager.default.copyItem(at: url, to: toUrl)
                 app.keyWindow?.showHUD(String(format: NSLocalizedString("导入 %@ 成功，请在“本地文件”中查看。", comment: ""), fileName))
             } catch let error {
                 debugPrint(error)
+                app.keyWindow?.showHUD(error.localizedDescription)
             }
         }
         
