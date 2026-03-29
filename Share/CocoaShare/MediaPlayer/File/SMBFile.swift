@@ -11,6 +11,7 @@ import Foundation
 import ANXLog
 #if os(iOS)
 import MobileVLCKit
+import YYCategories
 #else
 import VLCKit
 #endif
@@ -72,7 +73,7 @@ class SMBFile: File {
         
         var urlComponents = URLComponents(string: "")
         urlComponents?.scheme = "smbshare"
-        urlComponents?.host = shareName
+        urlComponents?.host = (shareName as NSString).byURLEncode()
         if let url = urlComponents?.url {
             self.url = url
         } else {
