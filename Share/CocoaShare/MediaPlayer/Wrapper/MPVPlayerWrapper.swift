@@ -25,10 +25,8 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
     // MARK: - 私有属性
 
     private var mpv: MPV?
+    
     private let eventQueue = DispatchQueue(label: "com.anxplayer.mpvwrapper", qos: .userInitiated)
-
-    /// 渲染视图
-    private var renderView: MPVView?
 
     /// 当前选择的字幕文件
     private var currentSubTitleFile: SubtitleProtocol?
@@ -38,9 +36,6 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
 
     /// 音频轨道列表
     private var audioTracks: [AudioChannelProtocol] = []
-
-    /// 是否已初始化
-    private var isInitialized = false
 
     /// 播放时长
     private var duration: TimeInterval = 0
@@ -59,24 +54,20 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
 
     // MARK: - 媒体视图
 
-    var mediaView: ANXView {
-        if renderView == nil {
-            renderView = MPVView(frame: .zero)
-        }
-        return renderView!
-    }
+    lazy var mediaView: ANXView = {
+        let renderView = MPVView(frame: .zero)
+        return renderView
+    }()
 
     // MARK: - 协议属性
 
     var currentPlayItem: File? {
         didSet {
-            if !isInitialized {
-                setupMpv()
-                for action in initActions {
+            if self.mpv == nil {
+                initializeMpv()
+                for action in self.initActions {
                     action()
                 }
-                
-                isInitialized = true
             }
 
             if let item = currentPlayItem {
@@ -107,7 +98,7 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
                 }
             }
 
-            if isInitialized {
+            if self.mpv != nil {
                 setup()
             } else {
                 initActions.append(setup)
@@ -128,7 +119,7 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
                 }
             }
 
-            if isInitialized {
+            if self.mpv != nil {
                 setup()
             } else {
                 initActions.append(setup)
@@ -147,7 +138,7 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
                 self.mpv?.audio.volume = Int64(self.volume)
             }
 
-            if isInitialized {
+            if self.mpv != nil {
                 setup()
             } else {
                 initActions.append(setup)
@@ -166,7 +157,7 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
                 self.mpv?.playback.setSpeed(self.speed)
             }
 
-            if isInitialized {
+            if self.mpv != nil {
                 setup()
             } else {
                 initActions.append(setup)
@@ -192,7 +183,7 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
                 }
             }
 
-            if isInitialized {
+            if self.mpv != nil {
                 setup()
             } else {
                 initActions.append(setup)
@@ -232,7 +223,7 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
                 self.mpv?.subtitle.fontSize = Int64(size)
             }
 
-            if isInitialized {
+            if self.mpv != nil {
                 setup()
             } else {
                 initActions.append(setup)
@@ -254,7 +245,7 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
                 self.mpv?.subtitle.color = color
             }
 
-            if isInitialized {
+            if self.mpv != nil {
                 setup()
             } else {
                 initActions.append(setup)
@@ -294,17 +285,128 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
         mpv?.stop()
         stateChangedCallBack?(self, .stop)
     }
+    
+    func terminate() {
+        stopPlaybackPolling()
+        self.mpv?.quit()
+        stateChangedCallBack?(self, .stop)
+    }
 
     func isEndPosition(_ position: Double) -> Bool {
         return position >= endFlagProgress
     }
 
     // MARK: - 初始化
+    
+    private func initializeMpv() {
+        guard let mpvHandle = MPV() else {
+            print("[MPVView] failed to create mpv")
+            return
+        }
+        self.mpv = mpvHandle
 
-    private func setupMpv() {
-        guard let view = renderView else { return }
-        view.mpvDelegate = self
-        self.mpv = view.mpv
+        // 渲染引擎配置
+        mpvHandle.setOptionString(.vo, "gpu-next")
+        mpvHandle.setOptionString(.gpuApi, "vulkan")
+        mpvHandle.setOptionString(.gpuContext, "moltenvk")
+        mpvHandle.video.hardwareDecoding = "videotoolbox"
+
+        // 字幕配置 - 字体设置必须在初始化前完成
+        setupSubtitleFonts(mpvHandle: mpvHandle)
+        mpvHandle.subtitle.fontSize = 48
+        mpvHandle.subtitle.color = UIColor.white
+        mpvHandle.subtitle.backColor = UIColor.black.withAlphaComponent(0.5)
+        mpvHandle.setOptionString(.subtitleAuto, "exact")
+        mpvHandle.setOptionString(.subtitleUseMargins, "no")
+        mpvHandle.setOptionString(.subtitleAss, "yes")
+        mpvHandle.setOptionString(.subtitleAssOverride, "force")
+
+        // 视频窗口
+        let opaque = Unmanaged.passUnretained(self.mediaView.layer).toOpaque()
+        let rawPtr = Int(bitPattern: opaque)
+        mpvHandle.video.windowId = Int64(rawPtr)
+
+        mpvHandle.initialize()
+
+        mpvHandle.observeProperty(.trackList)
+
+        startEventLoop()
+    }
+
+    private func setupSubtitleFonts(mpvHandle: MPV) {
+        let fontCacheDir = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("Fonts")
+        let fontNames = [
+            "SourceHanSansSC-Regular",
+            "SourceHanSansTC-Regular"
+        ]
+
+        do {
+            try FileManager.default.createDirectory(at: fontCacheDir, withIntermediateDirectories: true)
+
+            for fontName in fontNames {
+                let ttfPath = Bundle.main.path(forResource: fontName, ofType: "ttf")
+                let otfPath = Bundle.main.path(forResource: fontName, ofType: "otf")
+                let sourcePath = ttfPath ?? otfPath
+                let ext = ttfPath != nil ? "ttf" : "otf"
+
+                if let bundlePath = sourcePath {
+                    let destPath = fontCacheDir.appendingPathComponent("\(fontName).\(ext)")
+                    if FileManager.default.fileExists(atPath: destPath.path) {
+                        try FileManager.default.removeItem(at: destPath)
+                    }
+                    try FileManager.default.copyItem(atPath: bundlePath, toPath: destPath.path)
+                }
+            }
+
+            mpvHandle.setOptionString(.subtitleFontsDir, fontCacheDir.path)
+            mpvHandle.setOptionString(.subtitleFont, "SourceHanSansSC-Regular")
+        } catch {
+            print("[MPVView] Failed to setup fonts: \(error)")
+        }
+    }
+
+    private func startEventLoop() {
+        eventQueue.async { [weak self] in
+            self?.eventLoop()
+        }
+    }
+
+    private func eventLoop() {
+        while true {
+            guard let event = self.mpv?.waitEvent(0.1) else { break }
+            
+            if event.id == .shutdown {
+                self.mpv?.video.windowId = 0
+                self.mpv = nil
+                break
+            } else {
+                handleEvent(event)
+            }
+        }
+    }
+
+    private func handleEvent(_ event: MPVEvent) {
+        switch event.id {
+        case .propertyChange:
+            if event.propertyName == "track-list" {
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    self.updateTrackLists()
+                }
+            }
+        case .fileLoaded:
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.updateTrackLists()
+            }
+        case .endFile:
+            DispatchQueue.main.async { [weak self] in
+                guard let self = self else { return }
+                self.stopPlaybackPolling()
+            }
+        default:
+            break
+        }
     }
 
     // MARK: - 播放轮询
@@ -355,43 +457,9 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
     }
 }
 
-// MARK: - MPVViewDelegate
-
-extension MPVPlayerWrapper: MPVViewDelegate {
-    func mpvViewDidLoadFile(_ view: MPVView) {
-        updateTrackLists()
-    }
-
-    func mpvViewDidEndFile(_ view: MPVView) {
-        stopPlaybackPolling()
-        stateChangedCallBack?(self, .stop)
-    }
-
-    func mpvViewTrackListChanged(_ view: MPVView) {
-        updateTrackLists()
-    }
-}
-
-// MARK: - MPVViewDelegate
-
-protocol MPVViewDelegate: AnyObject {
-    func mpvViewDidLoadFile(_ view: MPVView)
-    func mpvViewDidEndFile(_ view: MPVView)
-    func mpvViewTrackListChanged(_ view: MPVView)
-}
-
 // MARK: - MPVView
 
 class MPVView: UIView {
-
-    weak var mpvDelegate: MPVPlayerWrapper?
-
-    private(set) var mpv: MPV?
-    private let eventQueue = DispatchQueue(label: "com.anxplayer.mpvview", qos: .userInitiated)
-
-    var onFileLoaded: (() -> Void)?
-    var onEndFile: (() -> Void)?
-    var onTrackListChanged: (() -> Void)?
 
     override class var layerClass: AnyClass {
         return CAMetalLayer.self
@@ -418,119 +486,6 @@ class MPVView: UIView {
         metalLayer.framebufferOnly = true
         metalLayer.backgroundColor = UIColor.black.cgColor
         metalLayer.contentsScale = UIScreen.main.scale
-        initializeMpv()
-    }
-
-    private func initializeMpv() {
-        guard let mpvHandle = MPV() else {
-            print("[MPVView] failed to create mpv")
-            return
-        }
-        self.mpv = mpvHandle
-
-        // 渲染引擎配置
-        mpvHandle.setOptionString(.vo, "gpu-next")
-        mpvHandle.setOptionString(.gpuApi, "vulkan")
-        mpvHandle.setOptionString(.gpuContext, "moltenvk")
-        mpvHandle.video.hardwareDecoding = "videotoolbox"
-
-        // 字幕配置 - 字体设置必须在初始化前完成
-        setupSubtitleFonts(mpvHandle: mpvHandle)
-        mpvHandle.subtitle.fontSize = 48
-        mpvHandle.subtitle.color = UIColor.white
-        mpvHandle.subtitle.backColor = UIColor.black.withAlphaComponent(0.5)
-        mpvHandle.setOptionString(.subtitleAuto, "exact")
-        mpvHandle.setOptionString(.subtitleUseMargins, "no")
-        mpvHandle.setOptionString(.subtitleAss, "yes")
-        mpvHandle.setOptionString(.subtitleAssOverride, "force")
-
-        // 视频窗口
-        let opaque = Unmanaged.passUnretained(metalLayer).toOpaque()
-        let rawPtr = Int(bitPattern: opaque)
-        mpvHandle.video.windowId = Int64(rawPtr)
-
-        _ = mpvHandle.initialize()
-
-        mpvHandle.observeProperty(.trackList)
-
-        startEventLoop()
-    }
-
-    private func setupSubtitleFonts(mpvHandle: MPV) {
-        let fontCacheDir = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("Fonts")
-        let fontNames = [
-            "SourceHanSansSC-Regular",
-            "SourceHanSansTC-Regular"
-        ]
-
-        do {
-            try FileManager.default.createDirectory(at: fontCacheDir, withIntermediateDirectories: true)
-
-            for fontName in fontNames {
-                let ttfPath = Bundle.main.path(forResource: fontName, ofType: "ttf")
-                let otfPath = Bundle.main.path(forResource: fontName, ofType: "otf")
-                let sourcePath = ttfPath ?? otfPath
-                let ext = ttfPath != nil ? "ttf" : "otf"
-
-                if let bundlePath = sourcePath {
-                    let destPath = fontCacheDir.appendingPathComponent("\(fontName).\(ext)")
-                    if FileManager.default.fileExists(atPath: destPath.path) {
-                        try FileManager.default.removeItem(at: destPath)
-                    }
-                    try FileManager.default.copyItem(atPath: bundlePath, toPath: destPath.path)
-                }
-            }
-
-            mpvHandle.setOptionString(.subtitleFontsDir, fontCacheDir.path)
-            mpvHandle.setOptionString(.subtitleFont, "SourceHanSansSC-Regular")
-        } catch {
-            print("[MPVView] Failed to setup fonts: \(error)")
-        }
-    }
-
-    private func startEventLoop() {
-        eventQueue.async { [weak self] in
-            self?.eventLoop()
-        }
-    }
-
-    private func eventLoop() {
-        guard let mpv = mpv else { return }
-
-        while true {
-            guard let event = mpv.waitEvent(0.1) else { break }
-            if event.id == .shutdown {
-                break
-            }
-            handleEvent(event)
-        }
-    }
-
-    private func handleEvent(_ event: MPVEvent) {
-        switch event.id {
-        case .propertyChange:
-            if event.propertyName == "track-list" {
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    self.mpvDelegate?.mpvViewTrackListChanged(self)
-                    self.onTrackListChanged?()
-                }
-            }
-        case .fileLoaded:
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.mpvDelegate?.mpvViewDidLoadFile(self)
-                self.onFileLoaded?()
-            }
-        case .endFile:
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.mpvDelegate?.mpvViewDidEndFile(self)
-                self.onEndFile?()
-            }
-        default:
-            break
-        }
     }
 }
 #endif

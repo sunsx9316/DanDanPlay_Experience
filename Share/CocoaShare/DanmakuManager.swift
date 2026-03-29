@@ -164,7 +164,7 @@ class DanmakuManager {
     ///   - file: 弹幕文件
     ///   - completion: 完成回调
     func downCustomDanmaku(_ file: File, completion: @escaping((Result<URL, Error>) -> Void)) {
-        var cacheURL = PathUtils.cacheURL
+        let cacheURL = PathUtils.cacheURL
         
         let fileURL = cacheURL.appendingPathComponent(file.fileId)
         

@@ -99,6 +99,11 @@ class PlayerViewController: ViewController {
         }
     }
     
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        self.playerModel.mediaModel.terminate()
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.addSubview(self.containerView)

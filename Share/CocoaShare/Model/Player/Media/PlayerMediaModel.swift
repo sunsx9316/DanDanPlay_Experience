@@ -460,8 +460,8 @@ class PlayerMediaModel {
     /// - Parameter file: 文件
     /// - Returns: 加载状态
     func loadSubtitleByUser(_ file: File) -> Observable<Void> {
-        return Observable<Void>.create { (sub) in
-            SubtitleManager.shared.downCustomSubtitle(file) { [weak self] result1 in
+        return Observable<Void>.create { [weak self] (sub) in
+            SubtitleManager.shared.downCustomSubtitle(file) { result1 in
                 switch result1 {
                 case .success(let subtitle):
                     DispatchQueue.main.async {
@@ -490,13 +490,11 @@ class PlayerMediaModel {
     /// - Parameter media: 媒体
     /// - Returns: 状态
     private func loadSubtitle(_ media: File) -> Observable<SubtitleProtocol?> {
-        return Observable<SubtitleProtocol?>.create { (sub) in
-            SubtitleManager.shared.loadLocalSubtitle(media) { [weak self] result in
-                guard let self = self else { return }
-                
+        return Observable<SubtitleProtocol?>.create { [weak self] (sub) in
+            SubtitleManager.shared.loadLocalSubtitle(media) { result in
                 switch result {
                 case .success(let subtitle):
-                    self.player.currentSubtitle = subtitle
+                    self?.player.currentSubtitle = subtitle
                     sub.onNext(subtitle)
                 case .failure(_):
                     break
@@ -639,6 +637,10 @@ extension PlayerMediaModel {
     
     func stop() {
         self.player.stop()
+    }
+    
+    func terminate() {
+        self.player.terminate()
     }
     
     /// 设置播放器进度

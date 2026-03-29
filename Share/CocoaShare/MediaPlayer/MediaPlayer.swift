@@ -78,6 +78,8 @@ protocol MediaPlayerProtocol: AnyObject {
     
     func stop()
     
+    func terminate()
+    
     func isEndPosition(_ position: Double) -> Bool
 }
 
@@ -378,6 +380,10 @@ class MediaPlayer {
     
     func stop() {
         self.player.stop()
+    }
+    
+    func terminate() {
+        self.player.terminate()
     }
     
     func addMediaToPlayList(_ media: File) {

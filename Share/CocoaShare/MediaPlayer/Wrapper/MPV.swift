@@ -235,13 +235,13 @@ public enum MPVCommand {
 extension MPV {
     /// 执行 mpv 命令
     func executeCommand(_ args: [String]) {
-        guard let mpv = mpv else { return }
-
-        var cargs: [UnsafePointer<CChar>?] = args.map { UnsafePointer(strdup($0)) }
+        
+        var cargs = args.map { UnsafePointer<CChar>(strdup($0)) }
         cargs.append(nil)
 
-        _ = cargs.withUnsafeMutableBufferPointer { buffer in
-            mpv_command(mpv, buffer.baseAddress)
+        cargs.withUnsafeMutableBufferPointer { [weak self] buffer in
+            guard let self = self else { return }
+            mpv_command(self.mpv, buffer.baseAddress)
         }
 
         for ptr in cargs {
@@ -368,7 +368,7 @@ public class MPV {
     // MARK: - 初始化
 
     /// 初始化 mpv 实例
-    public func initialize() -> Int32 {
+    @discardableResult public func initialize() -> Int32 {
         guard let mpv = mpv else { return -1 }
         return mpv_initialize(mpv)
     }
@@ -405,10 +405,9 @@ public class MPV {
 
     // MARK: - 终止
 
-    /// 终止 mpv 实例
-    public func terminate() {
-        guard let mpv = mpv else { return }
-        mpv_terminate_destroy(mpv)
+    /// 异步退出 mpv 
+    public func quit() {
+        executeCommand(["quit"])
     }
 }
 
