@@ -115,8 +115,16 @@ class BaseConnectSvrViewController: ViewController {
                                                          attributes: [.foregroundColor : UIColor.lightGray])
         
         self.update(with: self.loginInfo)
+
+        self.addressLabel.addTarget(self, action: #selector(addressTextFieldDidBeginEditing), for: .editingDidBegin)
     }
-    
+
+    @objc private func addressTextFieldDidBeginEditing() {
+        if self.addressLabel.text?.isEmpty == true {
+            self.addressLabel.text = "http://"
+        }
+    }
+
     func update(with loginInfo: LoginInfo?) {
         self.userNameLabel.text = loginInfo?.auth?.userName
         self.passwordLabel.text = loginInfo?.auth?.password

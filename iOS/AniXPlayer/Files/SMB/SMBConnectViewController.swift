@@ -143,6 +143,14 @@ class SMBConnectViewController: ViewController {
             self.segmentedControl.selectedSegmentIndex = 0
             self.selectedIndex(0)
         }
+
+        self.addressLabel.addTarget(self, action: #selector(addressTextFieldDidBeginEditing), for: .editingDidBegin)
+    }
+
+    @objc private func addressTextFieldDidBeginEditing() {
+        if self.addressLabel.text?.isEmpty == true {
+            self.addressLabel.text = "smb://"
+        }
     }
     
     //MARK: Private Method
