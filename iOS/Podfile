@@ -29,4 +29,7 @@ post_install do |installer|
             end
         end
     end
+
+    # 安装 Git Hooks
+    system("chmod +x ../scripts/install_hooks.sh && ../scripts/install_hooks.sh")
 end

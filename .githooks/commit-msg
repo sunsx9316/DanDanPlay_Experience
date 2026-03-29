@@ -1,0 +1,27 @@
+#!/bin/sh
+
+COMMIT_MSG=$(cat "$1")
+PATTERN="^(feat|fix|docs|style|refactor|perf|test|chore|opt|update)(\([a-z0-9_-]+\))?: .{1,72}$"
+
+if ! echo "$COMMIT_MSG" | grep -qE "$PATTERN"; then
+    echo ""
+    echo "❌ 提交格式错误！"
+    echo ""
+    echo "正确格式: <type>(<scope>): <subject>"
+    echo ""
+    echo "type 可选:"
+    echo "  feat    新功能"
+    echo "  fix     修复 bug"
+    echo "  docs    文档更新"
+    echo "  style   代码格式（不影响功能）"
+    echo "  refactor 重构（不修复问题不新功能）"
+    echo "  perf    性能优化"
+    echo "  test    添加/修改测试"
+    echo "  chore   构建/工具/依赖更新"
+    echo "  opt     优化/小改进"
+    echo "  update  更新现有功能"
+    echo ""
+    echo "示例:     feat(player): 添加 MPV 播放器支持"
+    echo ""
+    exit 1
+fi
