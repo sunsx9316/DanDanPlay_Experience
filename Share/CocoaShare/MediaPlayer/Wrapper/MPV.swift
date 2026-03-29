@@ -19,25 +19,86 @@ import AppKit
 // MARK: - MPV 事件类型
 
 /// MPV 事件 ID
+///
+/// 详细说明参考 mpv 官方文档: https://mpv.io/manual/stable/
 public enum MPVEventID: Int {
+    /// 无事件发生。超时或偶发唤醒时触发。
     case none = 0
+
+    /// 播放器退出时触发。播放器进入状态，尝试断开所有客户端的连接。
+    /// 大多数对播放器的请求将失败，客户端应该响应此事件并尽快调用 mpv_destroy() 退出。
     case shutdown = 1
+
+    /// 查看 mpv_request_log_messages()。
     case logMessage = 2
+
+    /// 响应 mpv_get_property_async() 请求。
+    /// 参见 mpv_event 和 mpv_event_property。
     case getPropertyReply = 3
+
+    /// 响应 mpv_set_property_async() 请求。
     case setPropertyReply = 4
+
+    /// 响应 mpv_command_async() 或 mpv_command_node_async() 请求。
+    /// 参见 mpv_event 和 mpv_event_command。
     case commandReply = 5
+
+    /// 文件播放开始前触发（文件加载前）。
+    /// 参见 mpv_event 和 mpv_event_start_file。
     case startFile = 6
+
+    /// 播放结束后触发（文件卸载后）。
+    /// 参见 mpv_event 和 mpv_event_end_file。
     case endFile = 7
+
+    /// 文件加载完成时触发（已读取头信息等），解码开始。
     case fileLoaded = 8
+
+    /// 进入空闲模式。没有文件播放，播放核心等待新命令。
+    ///
+    /// @deprecated 等同于使用 mpv_observe_property() 观察 "idle-active" 属性。
+    ///             此事件是冗余的，可能会在将来被移除。
     case idle = 11
+
+    /// 每次显示视频帧后触发。当前如果没有视频或播放暂停，会以较低频率发送。
+    ///
+    /// @deprecated 建议使用 mpv_observe_property() 观察相关属性（如 "playback-time"）。
     case tick = 14
+
+    /// 由 script-message 输入命令触发。命令使用第一个参数作为客户端名称来分发消息，
+    /// 并将第二个参数开始的所有参数作为字符串传递。
+    /// 参见 mpv_event 和 mpv_event_client_message。
     case clientMessage = 16
+
+    /// 视频以某种方式改变时触发。可能发生在分辨率变化、像素格式变化或视频滤镜变化时。
+    /// 此事件在视频滤镜和 VO 重新配置后发送。嵌入 mpv 窗口的应用程序应监听此事件以便调整窗口大小。
+    /// 注意：此事件可能随机发生，在执行昂贵操作之前应自行检查视频参数是否真的发生了变化。
     case videoReconfig = 17
+
+    /// 类似于 MPV_EVENT_VIDEO_RECONFIG。由于没有音频输出嵌入等功能，这个事件相对不太有趣。
     case audioReconfig = 18
+
+    /// 开始跳转时触发。播放停止。通常跳转完成后会通过 MPV_EVENT_PLAYBACK_RESTART 恢复播放。
     case seek = 20
+
+    /// 发生某种不连续（如跳转），播放重新初始化。通常在播放开始和跳转后发生。
+    /// 主要目的是允许客户端检测跳转请求何时完成。
     case playbackRestart = 21
+
+    /// 因 mpv_observe_property() 发送的事件。
+    /// 参见 mpv_event 和 mpv_event_property。
     case propertyChange = 22
+
+    /// 如果内部每个 mpv_handle 的环形缓冲区溢出，至少有 1 个事件被丢弃时触发。
+    /// 可能发生在客户端没有足够快地使用 mpv_wait_event() 读取事件队列，
+    /// 或者客户端一次发出大量异步调用时。
+    ///
+    /// 返回此事件后，事件传递将正常继续（这会强制客户端完全清空队列）。
     case queueOverflow = 24
+
+    /// 如果使用 mpv_hook_add() 注册了钩子处理程序，并且钩子被调用时触发。
+    /// 收到此事件后必须处理它，并使用 mpv_hook_continue() 继续钩子。
+    /// 参见 mpv_event 和 mpv_event_hook。
     case hook = 25
 
     init(from rawValue: mpv_event_id) {
