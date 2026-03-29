@@ -1,7 +1,7 @@
 #!/bin/sh
 
 COMMIT_MSG=$(cat "$1")
-PATTERN="^(feat|fix|docs|style|refactor|perf|test|chore|opt|update)(\([a-z0-9_-]+\))?: .{1,72}$"
+PATTERN="^(feat|fix|docs|style|refactor|perf|test|chore|opt|update)(\([^)]+\))?: .{1,72}$"
 
 if ! echo "$COMMIT_MSG" | grep -qE "$PATTERN"; then
     echo ""
