@@ -24,7 +24,9 @@ class GlobalSettingContext {
     lazy var host = BehaviorSubject<String>(value: Preferences.shared.host)
     
     lazy var mainColor = BehaviorSubject<ANXColor>(value: Preferences.shared.mainColor)
-    
+
+    lazy var playerCore = BehaviorSubject<Int>(value: Preferences.shared.playerCore)
+
 }
 
 extension GlobalSettingModel {
@@ -55,6 +57,10 @@ extension GlobalSettingModel {
     var mainColor: ANXColor? {
         return (try? self.context.mainColor.value())
     }
+
+    var playerCore: MediaPlayer.CoreType {
+        return MediaPlayer.CoreType(rawValue: Preferences.shared.playerCore) ?? .vlc
+    }
 }
 
 class GlobalSettingModel {
@@ -65,7 +71,8 @@ class GlobalSettingModel {
 #if os(iOS)
         return GlobalSettingType.allCases
 #else
-        return GlobalSettingType.allCases.filter({ $0 != .mainColor })
+        // Mac 不支持 MPV
+        return GlobalSettingType.allCases.filter({ $0 != .mainColor && $0 != .playerCore })
 #endif
     }
     
@@ -110,6 +117,8 @@ class GlobalSettingModel {
             return NSLocalizedString("清除播放记录、历史等", comment: "")
         case .mainColor:
             return NSLocalizedString("App主题色", comment: "")
+        case .playerCore:
+            return self.playerCore.displayName
         }
     }
     
@@ -148,7 +157,12 @@ class GlobalSettingModel {
         Preferences.shared.mainColor = color
         self.context.mainColor.onNext(color)
     }
-    
+
+    func onChangePlayerCore(_ coreType: MediaPlayer.CoreType) {
+        Preferences.shared.playerCore = coreType.rawValue
+        self.context.playerCore.onNext(coreType.rawValue)
+    }
+
     func cleanupCache() {
         CacheManager.shared.cleanupCache()
     }

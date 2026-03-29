@@ -127,6 +127,9 @@ class Preferences {
         
         /// 长宽比
         case aspectRatio
+
+        /// 播放器内核
+        case playerCore
         
         var storeKey: String {
             return self.rawValue
@@ -138,6 +141,9 @@ class Preferences {
     
     @StoreWrapper(defaultValue: PlayerAspectRatio.default, key: .aspectRatio)
     var aspectRatio: PlayerAspectRatio
+
+    @StoreWrapper(defaultValue: 0, key: .playerCore)
+    var playerCore: Int
     
     @StoreWrapper(defaultValue: ANXColor.defaultMainColor, key: .mainColor)
     var mainColor: ANXColor

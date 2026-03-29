@@ -63,7 +63,7 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = self.model.subtitle(settingType: type)
             return cell
-        case .subtitleLoadOrder, .mainColor:
+        case .subtitleLoadOrder, .mainColor, .playerCore:
             let cell = tableView.dequeueCell(class: TitleDetailMoreTableViewCell.self, indexPath: indexPath)
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = self.model.subtitle(settingType: type)
@@ -158,6 +158,25 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
             } else {
                 self.view.showHUD(NSLocalizedString("仅会员支持，请使用电脑版开通", comment: ""))
             }
+        }
+        else if type == .playerCore {
+            let vc = UIAlertController(title: NSLocalizedString("播放器内核", comment: ""), message: nil, preferredStyle: .actionSheet)
+
+            for coreType in MediaPlayer.CoreType.allCases {
+                vc.addAction(.init(title: coreType.displayName, style: .default, handler: { [weak self] _ in
+                    self?.model.onChangePlayerCore(coreType)
+                    self?.tableView.reloadData()
+                }))
+            }
+
+            vc.addAction(.init(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: nil))
+
+            if let popover = vc.popoverPresentationController {
+                popover.sourceView = tableView.cellForRow(at: indexPath)
+                popover.sourceRect = tableView.cellForRow(at: indexPath)?.bounds ?? .zero
+            }
+
+            self.present(vc, animated: true)
         }
         else if type == .log {
             let vc = UIDocumentPickerViewController(documentTypes: [String("public.data")], in: .import)

@@ -147,7 +147,9 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         set {
             self.currentSubTitleFile = newValue
             
-            func setup() {
+            let setup = { [weak self] in
+                guard let self = self else { return }
+                
                 if let sub = newValue as? Subtitle {
                     self.player?.currentVideoSubTitleIndex = Int32(sub.index)
                 } else if let sub = newValue as? ExternalSubtitle {
@@ -184,7 +186,9 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         
         set {
             
-            func setup() {
+            let setup = {  [weak self] in
+                guard let self = self else { return }
+                
                 self.player?.audio?.volume = Int32(newValue)
             }
             
@@ -202,7 +206,9 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         }
         
         set {
-            func setup() {
+            let setup = { [weak self] in
+                guard let self = self else { return }
+                
                 self.player?.currentVideoSubTitleDelay = Int(newValue * -1000000.0)
             }
             
@@ -220,7 +226,9 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         }
         
         set {
-            func setup() {
+            let setup = { [weak self] in
+                guard let self = self else { return }
+                
                 self.player?.currentAudioPlaybackDelay = Int(newValue * -1000000.0)
             }
             
@@ -238,7 +246,9 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         }
         
         set {
-            func setup() {
+            let setup = { [weak self] in
+                guard let self = self else { return }
+                
                 self.player?.rate = Float(newValue)
             }
             
@@ -274,7 +284,9 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     /// 10 .. 120
     var fontSize: Float? {
         didSet {
-            func setup() {
+            let setup = { [weak self] in
+                guard let self = self else { return }
+                
                 if let fontSize = self.fontSize {
                     let anxFontSizeRange: (min: Float, max: Float) = (min: 10, max: 120)
                     let vlcFontSizeRange: (min: Float, max: Float) = (min: 0.1, max: 5) // vlc的区间为 0.1~5
@@ -295,7 +307,9 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     var fontName: String? {
         didSet {
             
-            func setup() {
+            let setup = { [weak self] in
+                guard let self = self else { return }
+                
                 if let fontName = self.fontName {
                     self.player?.anx_setTextRendererFont(fontName)
                 }
@@ -338,12 +352,15 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         }
         
         set {
-            func setup() {
+            let setup = { [weak self] in
+                guard let self = self else { return }
+                
                 if let audioChannel = newValue {
                     self.player?.currentAudioTrackIndex = audioChannel.audioId
                 } else {
                     self.player?.currentAudioTrackIndex = -1
                 }
+                return
             }
             
             if self.player != nil {
@@ -370,7 +387,9 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         }
         
         set {
-            func setup() {
+            let setup = { [weak self] in
+                guard let self = self else { return }
+                
                 switch newValue {
                 case .default:
                     self.player?.scaleFactor = 0

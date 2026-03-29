@@ -221,7 +221,8 @@ class PlayerMediaModel {
     
     
     private lazy var player: MediaPlayer = {
-        let player = MediaPlayer(coreType: .vlc)
+        let coreType = MediaPlayer.CoreType(rawValue: Preferences.shared.playerCore) ?? .vlc
+        let player = MediaPlayer(coreType: coreType)
         player.delegate = self
         return player
     }()

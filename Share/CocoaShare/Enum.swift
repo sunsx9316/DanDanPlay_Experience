@@ -163,6 +163,7 @@ enum DanmakuAreaType: Int, CaseIterable {
 
 /// 全局设置
 enum GlobalSettingType: CaseIterable {
+    case playerCore
     case fastMatch
     case autoLoadCustomDanmaku
     case autoLoadCustomSubtitle
@@ -173,7 +174,7 @@ enum GlobalSettingType: CaseIterable {
     case log
     case cleanupCache
     case cleanupHistory
-    
+
     var title: String {
         switch self {
         case .fastMatch:
@@ -196,6 +197,8 @@ enum GlobalSettingType: CaseIterable {
             return NSLocalizedString("清除播放记录", comment: "")
         case .mainColor:
             return NSLocalizedString("主题色", comment: "")
+        case .playerCore:
+            return NSLocalizedString("播放器内核", comment: "")
         }
     }
 }

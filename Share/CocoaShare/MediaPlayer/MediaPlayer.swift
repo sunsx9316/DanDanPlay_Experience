@@ -159,12 +159,19 @@ enum PlayerAspectRatio: RawRepresentable {
 }
 
 class MediaPlayer {
-    
-    enum CoreType {
-        case vlc
-        case mpv
+
+    enum CoreType: Int, CaseIterable {
+        case vlc = 0
+        case mpv = 1
+
+        var displayName: String {
+            switch self {
+            case .vlc: return "VLC"
+            case .mpv: return "MPV"
+            }
+        }
     }
-    
+
     private let coreType: CoreType
     
     private(set) lazy var playList = [File]()
@@ -336,7 +343,7 @@ class MediaPlayer {
         case .vlc:
             self.player = VLCPlayerWarrper()
         case .mpv:
-            fatalError("暂未支持的内核类型")
+            self.player = MPVPlayerWrapper()
         }
         self.setupInit()
     }
