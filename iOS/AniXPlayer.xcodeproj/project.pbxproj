@@ -122,6 +122,7 @@
 		8925B8B62CA7E4C3001A8388 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8572CA7E4C3001A8388 /* Store.swift */; };
 		8925B8B72CA7E4C3001A8388 /* PCQRModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8082CA7E4C3001A8388 /* PCQRModel.swift */; };
 		8925B9632CAD4C12001A8388 /* SetMainColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B9622CAD4C12001A8388 /* SetMainColorViewController.swift */; };
+		8931A91B2F79737000125F69 /* FTPConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8931A91A2F79737000125F69 /* FTPConnectSvrViewController.swift */; };
 		8931F0E52674CA6A00590569 /* UIBarButtonItem+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8931F0E42674CA6A00590569 /* UIBarButtonItem+Helper.swift */; };
 		8931F0EB2674CD3300590569 /* HttpServerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8931F0EA2674CD3300590569 /* HttpServerViewController.swift */; };
 		8931F0EE26750D6500590569 /* UIView+HitTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8931F0ED26750D6500590569 /* UIView+HitTest.m */; };
@@ -394,6 +395,7 @@
 		8925B86A2CA7E4C3001A8388 /* HistoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryManager.swift; sourceTree = "<group>"; };
 		8925B86B2CA7E4C3001A8388 /* SubtitleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtitleManager.swift; sourceTree = "<group>"; };
 		8925B9622CAD4C12001A8388 /* SetMainColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetMainColorViewController.swift; sourceTree = "<group>"; };
+		8931A91A2F79737000125F69 /* FTPConnectSvrViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FTPConnectSvrViewController.swift; sourceTree = "<group>"; };
 		8931F0E42674CA6A00590569 /* UIBarButtonItem+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+Helper.swift"; sourceTree = "<group>"; };
 		8931F0EA2674CD3300590569 /* HttpServerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpServerViewController.swift; sourceTree = "<group>"; };
 		8931F0EC26750D6500590569 /* UIView+HitTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+HitTest.h"; sourceTree = "<group>"; };
@@ -1113,6 +1115,7 @@
 			isa = PBXGroup;
 			children = (
 				8949F8922662AA8E00274520 /* FTPLoginHistoryViewController.swift */,
+				8931A91A2F79737000125F69 /* FTPConnectSvrViewController.swift */,
 			);
 			path = FTP;
 			sourceTree = "<group>";
@@ -1693,6 +1696,7 @@
 				890DF76F26160B3E002D8AE5 /* FolderTableViewCell.swift in Sources */,
 				89FFD12B2D44EB2700428206 /* AppKey.swift in Sources */,
 				8944E876263AF48C00EF00B1 /* LinkHistoryTableViewCell.swift in Sources */,
+				8931A91B2F79737000125F69 /* FTPConnectSvrViewController.swift in Sources */,
 				890DF77026160B3E002D8AE5 /* FileTableViewCell.swift in Sources */,
 				890DF6FA26160A36002D8AE5 /* RefreshHeader.swift in Sources */,
 				8925B9632CAD4C12001A8388 /* SetMainColorViewController.swift in Sources */,

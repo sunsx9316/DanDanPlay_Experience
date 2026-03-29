@@ -13,19 +13,19 @@ protocol BaseConnectSvrViewControllerDelegate: AnyObject {
 
 class BaseConnectSvrViewController: ViewController {
     
-    private lazy var addressLabel: TextField = {
+    private(set) lazy var addressLabel: TextField = {
         let textField = TextField()
         return textField
     }()
     
-    private lazy var userNameLabel: TextField = {
+    private(set) lazy var userNameLabel: TextField = {
         let textField = TextField()
         textField.attributedPlaceholder = .init(string: NSLocalizedString("登录用户名", comment: ""),
                                                 attributes: [.foregroundColor : UIColor.lightGray])
         return textField
     }()
     
-    private lazy var passwordLabel: TextField = {
+    private(set) lazy var passwordLabel: TextField = {
         let textField = TextField()
         textField.attributedPlaceholder = .init(string: NSLocalizedString("登录密码", comment: ""),
                                                 attributes: [.foregroundColor : UIColor.lightGray])
@@ -33,7 +33,7 @@ class BaseConnectSvrViewController: ViewController {
         return textField
     }()
     
-    private lazy var loginButton: Button = {
+    private(set) lazy var loginButton: Button = {
         let button = Button()
         button.setTitle(NSLocalizedString("登录", comment: ""), for: .normal)
         button.backgroundColor = .mainColor
@@ -115,14 +115,6 @@ class BaseConnectSvrViewController: ViewController {
                                                          attributes: [.foregroundColor : UIColor.lightGray])
         
         self.update(with: self.loginInfo)
-
-        self.addressLabel.addTarget(self, action: #selector(addressTextFieldDidBeginEditing), for: .editingDidBegin)
-    }
-
-    @objc private func addressTextFieldDidBeginEditing() {
-        if self.addressLabel.text?.isEmpty == true {
-            self.addressLabel.text = "http://"
-        }
     }
 
     func update(with loginInfo: LoginInfo?) {

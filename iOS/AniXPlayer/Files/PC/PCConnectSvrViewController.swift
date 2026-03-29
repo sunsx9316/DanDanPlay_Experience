@@ -14,6 +14,8 @@ class PCConnectSvrViewController: BaseConnectSvrViewController {
 
         let rightBarButtonItem = UIBarButtonItem(imageName: "Public/add", target: self, action: #selector(onTouchAddButton))
         self.navigationItem.rightBarButtonItem = rightBarButtonItem
+        
+        self.addressLabel.addTarget(self, action: #selector(addressTextFieldDidBeginEditing), for: .editingDidBegin)
     }
     
     @objc private func onTouchAddButton() {
@@ -26,5 +28,10 @@ class PCConnectSvrViewController: BaseConnectSvrViewController {
         self.navigationController?.pushViewController(vc, animated: true)
     }
     
+    @objc private func addressTextFieldDidBeginEditing() {
+        if self.addressLabel.text?.isEmpty == true {
+            self.addressLabel.text = "http://"
+        }
+    }
 
 }

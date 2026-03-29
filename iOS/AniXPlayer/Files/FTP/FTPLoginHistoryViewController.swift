@@ -18,5 +18,12 @@ class FTPLoginHistoryViewController: BaseLoginHistoryViewController<FTPFile> {
             Preferences.shared.ftpLoginInfos = newValue
         }
     }
+    
+    override func jumpToConnectViewController(_ loginInfo: LoginInfo? = nil) {
+        let vc = FTPConnectSvrViewController(loginInfo: loginInfo, fileManager: FTPFile.fileManager)
+        vc.delegate = self
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
 
 }
