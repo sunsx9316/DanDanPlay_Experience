@@ -9,6 +9,7 @@
 
 import MobileVLCKit
 import YYCategories
+import MPVFramework
 
 class PCFile: File {
     
@@ -105,8 +106,12 @@ class PCFile: File {
     }
     
     
-    func createMedia(delegate: FileDelegate) -> VLCMedia? {
+    func createVLCMedia(delegate: FileDelegate) -> VLCMedia? {
         return .init(url: self.downloadURL)
+    }
+    
+    func createMPVMedia() -> MPVMedia? {
+        return MPVMedia(url: self.downloadURL)
     }
 
     func getFileHashWithProgress(_ progress: FileProgressAction?,

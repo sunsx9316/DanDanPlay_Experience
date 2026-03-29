@@ -70,8 +70,9 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
                 }
             }
 
-            if let item = currentPlayItem {
-                mpv?.loadFile(item.url.path)
+            if let item = currentPlayItem,
+                let media = item.createMPVMedia() {  
+                mpv?.loadFile(media.url.absoluteString)
             }
         }
     }

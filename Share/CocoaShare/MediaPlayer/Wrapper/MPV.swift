@@ -45,6 +45,19 @@ public enum MPVEventID: Int {
     }
 }
 
+public class MPVMedia {
+    
+    
+    public private(set)var url: URL
+    
+    public var options: [String: String]?
+    
+    public init(url: URL, options: [String: String]? = nil) {
+        self.url = url
+        self.options = options
+    }
+}
+
 // MARK: - MPV 事件数据
 
 /// MPV 事件包装器
@@ -121,6 +134,8 @@ public enum MPVProperty {
     case vo
     case gpuApi
     case gpuContext
+    
+    case protocolList
 
     public var rawValue: String {
         switch self {
@@ -162,6 +177,7 @@ public enum MPVProperty {
         case .vo: return "vo"
         case .gpuApi: return "gpu-api"
         case .gpuContext: return "gpu-context"
+        case .protocolList: return "protocol-list"
         }
     }
 }

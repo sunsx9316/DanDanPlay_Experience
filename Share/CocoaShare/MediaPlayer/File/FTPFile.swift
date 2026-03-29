@@ -9,6 +9,7 @@
 
 import Foundation
 import MobileVLCKit
+import MPVFramework
 import FilesProvider
 
 
@@ -46,7 +47,7 @@ class FTPFile: File {
         self.type = .folder
     }
     
-    func createMedia(delegate: FileDelegate) -> VLCMedia? {
+    func createVLCMedia(delegate: FileDelegate) -> VLCMedia? {
         let media = VLCMedia(url: self.url)
         let auth = FTPFileManager.shared.loginInfo?.auth
         
@@ -54,6 +55,22 @@ class FTPFile: File {
         options["ftp-user"] = auth?.userName
         options["ftp-pwd"] = auth?.password
         media.addOptions(options)
+        return media
+    }
+    
+    func createMPVMedia() -> MPVMedia? {
+        if let auth = FTPFileManager.shared.loginInfo?.auth,
+            var components = URLComponents(string: self.url.absoluteString) {
+            // 直接赋值新的凭据，它会自动替换掉旧的
+            components.user = auth.userName
+            components.password = auth.password
+            
+            if let newURL = components.url {
+                return MPVMedia(url: newURL)
+            }
+        }
+        
+        let media = MPVMedia(url: self.url)
         return media
     }
     

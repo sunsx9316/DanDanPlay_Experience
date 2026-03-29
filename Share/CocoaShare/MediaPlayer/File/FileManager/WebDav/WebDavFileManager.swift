@@ -38,7 +38,7 @@ class WebDavFileManager: FileManagerProtocol {
     
     private var client: WebDAVFileProvider?
     
-    private var loginInfo: LoginInfo?
+    private(set) var loginInfo: LoginInfo?
     
     var desc: String {
         return NSLocalizedString("WebDav", comment: "")

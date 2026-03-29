@@ -12,6 +12,7 @@ import ANXLog
 #if os(iOS)
 import MobileVLCKit
 import YYCategories
+import MPVFramework
 #else
 import VLCKit
 #endif
@@ -123,7 +124,7 @@ class SMBFile: File {
         }
     }
     
-    func createMedia(delegate: FileDelegate) -> VLCMedia? {
+    func createVLCMedia(delegate: FileDelegate) -> VLCMedia? {
         let media = VLCMedia(url: self.url)
         let auth = SMBFileManager.shared.loginInfo?.auth
         
@@ -131,6 +132,22 @@ class SMBFile: File {
         options["smb-user"] = auth?.userName
         options["smb-pwd"] = auth?.password
         media.addOptions(options)
+        return media
+    }
+    
+    func createMPVMedia() -> MPVMedia? {
+        if let auth = SMBFileManager.shared.loginInfo?.auth,
+            var components = URLComponents(string: self.url.absoluteString) {
+            // 直接赋值新的凭据，它会自动替换掉旧的
+            components.user = auth.userName
+            components.password = auth.password
+            
+            if let newURL = components.url {
+                return MPVMedia(url: newURL)
+            }
+        }
+        
+        let media = MPVMedia(url: self.url)
         return media
     }
     

@@ -9,6 +9,7 @@
 
 import Foundation
 import MobileVLCKit
+import MPVFramework
 import FilesProvider
 
 
@@ -70,13 +71,37 @@ class WebDavFile: File {
         self.path = self.url.path
     }
     
-    func createMedia(delegate: FileDelegate) -> VLCMedia? {
-        let inputStream = WebDAVInputStream(file: self)
-        WebDavFile.inputStream = inputStream
-        inputStream?.streamDelegate = self
-        self.inputStream = inputStream
-        self.fileDelegate = delegate
-        return VLCMedia(stream: inputStream!)
+    func createVLCMedia(delegate: FileDelegate) -> VLCMedia? {
+        
+        if let auth = WebDavFileManager.shared.loginInfo?.auth,
+            var components = URLComponents(string: self.url.absoluteString) {
+            // 直接赋值新的凭据，它会自动替换掉旧的
+            components.user = auth.userName
+            components.password = auth.password
+            
+            if let newURL = components.url {
+                return VLCMedia(url: newURL)
+            }
+        }
+        
+        let media = VLCMedia(url: self.url)
+        return media
+    }
+    
+    func createMPVMedia() -> MPVMedia? {
+        if let auth = WebDavFileManager.shared.loginInfo?.auth,
+            var components = URLComponents(string: self.url.absoluteString) {
+            // 直接赋值新的凭据，它会自动替换掉旧的
+            components.user = auth.userName
+            components.password = auth.password
+            
+            if let newURL = components.url {
+                return MPVMedia(url: newURL)
+            }
+        }
+        
+        let media = MPVMedia(url: self.url)
+        return media
     }
     
     func getFileHashWithProgress(_ progress: FileProgressAction?,

@@ -8,6 +8,7 @@
 import Foundation
 #if os(iOS)
 import MobileVLCKit
+import MPVFramework
 #else
 import VLCKit
 #endif
@@ -68,8 +69,12 @@ class LocalFile: File {
         }
     }
     
-    func createMedia(delegate: FileDelegate) -> VLCMedia? {
+    func createVLCMedia(delegate: FileDelegate) -> VLCMedia? {
         return VLCMedia(url: self.url)
+    }
+    
+    func createMPVMedia() -> MPVMedia? {
+        return MPVMedia(url: self.url)
     }
     
 }

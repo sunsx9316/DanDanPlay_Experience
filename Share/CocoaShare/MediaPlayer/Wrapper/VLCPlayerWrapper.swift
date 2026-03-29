@@ -106,7 +106,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
             
             self.player?.stop()
             self.currentSubTitleFile = nil
-            let media = self.currentPlayItem?.createMedia(delegate: self)
+            let media = self.currentPlayItem?.createVLCMedia(delegate: self)
             self.player?.media = media
 #if os(macOS)
             media?.synchronousParse()

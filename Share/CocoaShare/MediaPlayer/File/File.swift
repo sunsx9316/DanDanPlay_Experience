@@ -8,6 +8,7 @@
 import Foundation
 #if os(iOS)
 import MobileVLCKit
+import MPVFramework
 #else
 import VLCKit
 #endif
@@ -79,7 +80,9 @@ protocol File: HistoryManager.lastWatchDateStoreable {
     /// 创建播放的媒体文件
     /// - Parameter delegate: 媒体代理
     /// - Returns: 媒体文件
-    func createMedia(delegate: FileDelegate) -> VLCMedia?
+    func createVLCMedia(delegate: FileDelegate) -> VLCMedia?
+    
+    func createMPVMedia() -> MPVMedia?
 }
 
 extension File {
