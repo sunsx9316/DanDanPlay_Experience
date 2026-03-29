@@ -1568,9 +1568,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1963,7 +1967,7 @@
 					"$(PROJECT_DIR)/AniXPlayer/Vendor",
 				);
 				INFOPLIST_FILE = AniXPlayer/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 12;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -1996,7 +2000,7 @@
 					"$(PROJECT_DIR)/AniXPlayer/Vendor",
 				);
 				INFOPLIST_FILE = AniXPlayer/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 12;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -703,8 +703,8 @@ extension PlayerViewController: MatchsViewControllerDelegate {
         let totalTime = self.mediaModel.length
         
         if totalTime == 0 && retryTime < 5 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.showGotoLastWatchTime(lastWatchProgress: lastWatchProgress, retryTime: retryTime + 1)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+                self?.showGotoLastWatchTime(lastWatchProgress: lastWatchProgress, retryTime: retryTime + 1)
             }
         } else if totalTime > 0 {
             func lastTimeString() -> String {
@@ -727,8 +727,8 @@ extension PlayerViewController: MatchsViewControllerDelegate {
             customView.show(from: self.view)
             self.gotoLastWatchPointView = customView
         } else {
-            if let url = self.mediaModel.media?.url {
-                ANX.logError(.UI, "视频时长获取失败 \(url)")
+            if let path = self.mediaModel.media?.url.path {
+                ANX.logError(.UI, "视频时长获取失败 \(path)")
             }
         }
     }
