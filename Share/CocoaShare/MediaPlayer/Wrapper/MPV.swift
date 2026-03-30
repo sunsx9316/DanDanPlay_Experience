@@ -146,6 +146,7 @@ public enum MPVProperty {
     case pause
     case cache
     case playbackTime
+    case speed
 
     // Time
     case timePos
@@ -203,6 +204,7 @@ public enum MPVProperty {
         case .pause: return "pause"
         case .cache: return "cache"
         case .playbackTime: return "playback-time"
+        case .speed: return "speed"
         case .timePos: return "time-pos"
         case .timeStart: return "time-start"
         case .duration: return "duration"
@@ -510,7 +512,7 @@ public class PlaybackAPI {
 
     /// 设置播放速度
     public func setSpeed(_ speed: Double) {
-        player?.setProperty(.playbackTime, speed)
+        player?.setProperty(.speed, speed)
     }
 }
 
