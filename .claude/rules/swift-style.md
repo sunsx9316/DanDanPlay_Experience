@@ -157,3 +157,69 @@ return all.sorted { a, b in
     // ...
 }
 ```
+
+## NSLocalizedString 使用规范
+
+**使用 `NSLocalizedString` 后必须同步更新 `Localizable.xcstrings`**：
+
+```json
+// Localizable.xcstrings 格式
+"中文原文" : {
+  "localizations" : {
+    "en" : {
+      "stringUnit" : {
+        "state" : "translated",
+        "value" : "English"
+      }
+    },
+    "zh-Hans" : {
+      "stringUnit" : {
+        "state" : "translated",
+        "value" : "中文原文"
+      }
+    }
+  }
+}
+```
+
+**规则**：
+- key 保留中文原文
+- `en` 的 `value` 为英文翻译
+- `zh-Hans` 的 `value` 为中文原文
+- 每次添加或修改 `NSLocalizedString` 必须同步更新 `Localizable.xcstrings`
+
+**应用语言切换**：
+- 如需支持运行时语言切换，应使用 `LocalizedString()` 函数替代 `NSLocalizedString()`
+- `LocalizedString()` 会根据 `Preferences.shared.appLanguage` 返回对应语言的翻译
+- 不可切换的纯内部字符串（如日志、调试信息）仍使用 `NSLocalizedString()`
+
+## 枚举存储规范
+
+**已定义枚举存储时应使用枚举类型，而非 Int**：
+
+```swift
+// 推荐 - 存储枚举类型
+@StoreWrapper(defaultValue: .vlc, key: .playerCore)
+var playerCore: MediaPlayer.CoreType
+
+// 不推荐 - 存储为 Int
+@StoreWrapper(defaultValue: 0, key: .playerCore)
+var playerCore: Int
+```
+
+**实现方式**：为枚举添加 `Storeable` 扩展（参见 `Store+Extension.swift`）：
+
+```swift
+extension MediaPlayer.CoreType: Storeable {
+    static func create(from: Int) -> MediaPlayer.CoreType? {
+        let rawValue = from
+        return MediaPlayer.CoreType(rawValue: rawValue)
+    }
+
+    func toValue() -> Int {
+        return self.rawValue
+    }
+}
+```
+
+**注意**：如果枚举 rawValue 类型为 `String`，则 `create` 和 `toValue` 的参数类型也要改为 `String`。
