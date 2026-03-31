@@ -181,17 +181,17 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
         else if type == .appLanguage {
             let vc = UIAlertController(title: NSLocalizedString("语言", comment: ""), message: nil, preferredStyle: .actionSheet)
 
-            // 语言选项：0=系统默认, 1=中文, 2=英文
-            let languageOptions = [
-                (0, NSLocalizedString("系统语言", comment: "")),
-                (1, NSLocalizedString("中文", comment: "")),
-                (2, NSLocalizedString("英文", comment: ""))
-            ]
+            for language in AppLanguage.allCases {
+                vc.addAction(.init(title: language.displayName, style: .default, handler: { [weak self] _ in
+                    self?.model.onChangeAppLanguage(language)
 
-            for (languageCode, languageName) in languageOptions {
-                vc.addAction(.init(title: languageName, style: .default, handler: { [weak self] _ in
-                    self?.model.onChangeAppLanguage(languageCode)
-                    self?.tableView.reloadData()
+                    // 弹出提示要求重启
+                    let alert = UIAlertController(title: NSLocalizedString("提示", comment: ""), message: NSLocalizedString("语言切换已生效，退出后将以新语言启动", comment: ""), preferredStyle: .alert)
+                    alert.addAction(.init(title: NSLocalizedString("退出", comment: ""), style: .destructive, handler: { _ in
+                        exit(0)
+                    }))
+                    alert.addAction(.init(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: nil))
+                    self?.present(alert, animated: true)
                 }))
             }
 
@@ -284,18 +284,19 @@ class SettingViewController: ViewController {
         self.model.context.host.subscribe(onNext: { [weak self] _ in
             self?.tableView.reloadData()
         }).disposed(by: self.bag)
-        
+
         self.model.context.danmakuCacheDay.subscribe(onNext: { [weak self] _ in
             self?.tableView.reloadData()
         }).disposed(by: self.bag)
-        
+
         self.model.context.host.subscribe(onNext: { [weak self] _ in
             self?.tableView.reloadData()
         }).disposed(by: self.bag)
-        
+
         self.model.context.subtitleLoadOrder.subscribe(onNext: { [weak self] _ in
             self?.tableView.reloadData()
         }).disposed(by: self.bag)
+
     }
     
     private func showAddressAlert(_ address: [String], at cell: UIView) {

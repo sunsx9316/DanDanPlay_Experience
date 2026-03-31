@@ -158,8 +158,30 @@ extension PlayerAspectRatio: Storeable {
         let rawValue = from
         return PlayerAspectRatio(rawValue: rawValue)
     }
-    
+
     func toValue() -> String {
+        return self.rawValue
+    }
+}
+
+extension MediaPlayer.CoreType: Storeable {
+    static func create(from: Int) -> MediaPlayer.CoreType? {
+        let rawValue = from
+        return MediaPlayer.CoreType(rawValue: rawValue)
+    }
+
+    func toValue() -> Int {
+        return self.rawValue
+    }
+}
+
+extension AppLanguage: Storeable {
+    static func create(from: Int) -> AppLanguage? {
+        let rawValue = from
+        return AppLanguage(rawValue: rawValue)
+    }
+
+    func toValue() -> Int {
         return self.rawValue
     }
 }

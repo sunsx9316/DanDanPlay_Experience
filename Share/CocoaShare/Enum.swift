@@ -220,3 +220,21 @@ extension DanmakuEffectStyle {
         }
     }
 }
+
+/// 应用语言
+enum AppLanguage: Int, CaseIterable {
+    case system = 0
+    case chinese = 1
+    case english = 2
+
+    var displayName: String {
+        switch self {
+        case .system:
+            return NSLocalizedString("系统语言", comment: "")
+        case .chinese:
+            return NSLocalizedString("中文", comment: "")
+        case .english:
+            return NSLocalizedString("英文", comment: "")
+        }
+    }
+}

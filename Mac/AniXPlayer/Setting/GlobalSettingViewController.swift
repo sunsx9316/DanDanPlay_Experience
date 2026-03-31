@@ -173,25 +173,32 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
             vc.addButton(withTitle: NSLocalizedString("确定", comment: ""))
             vc.addButton(withTitle: NSLocalizedString("取消", comment: ""))
 
-            let languageOptions = [
-                (0, NSLocalizedString("系统语言", comment: "")),
-                (1, NSLocalizedString("中文", comment: "")),
-                (2, NSLocalizedString("英文", comment: ""))
-            ]
-
             let popup = NSPopUpButton(frame: .init(x: 0, y: 0, width: 150, height: 25))
-            for (languageCode, languageName) in languageOptions {
-                popup.addItem(withTitle: languageName)
-                popup.lastItem?.tag = languageCode
+            for language in AppLanguage.allCases {
+                popup.addItem(withTitle: language.displayName)
+                popup.lastItem?.tag = language.rawValue
             }
-            popup.selectItem(at: Preferences.shared.appLanguage)
+            popup.selectItem(withTag: Preferences.shared.appLanguage.rawValue)
             vc.accessoryView = popup
 
             let response: NSApplication.ModalResponse = vc.runModal()
 
             if response == .alertFirstButtonReturn {
-                if let selectedItem = popup.selectedItem {
-                    self.model.onChangeAppLanguage(selectedItem.tag)
+                if let selectedItem = popup.selectedItem,
+                   let language = AppLanguage(rawValue: selectedItem.tag) {
+                    self.model.onChangeAppLanguage(language)
+
+                    // 弹出提示要求重启
+                    let alert = NSAlert()
+                    alert.messageText = NSLocalizedString("提示", comment: "")
+                    alert.informativeText = NSLocalizedString("语言切换已生效，退出后将以新语言启动", comment: "")
+                    alert.alertStyle = .informational
+                    alert.addButton(withTitle: NSLocalizedString("退出", comment: ""))
+                    alert.addButton(withTitle: NSLocalizedString("取消", comment: ""))
+
+                    if alert.runModal() == .alertFirstButtonReturn {
+                        NSApp.terminate(nil)
+                    }
                 }
             }
         }
@@ -259,6 +266,10 @@ class GlobalSettingViewController: ViewController {
         }).disposed(by: self.bag)
         
         self.model.context.subtitleLoadOrder.subscribe(onNext: { [weak self] _ in
+            self?.scrollView.containerView.reloadData()
+        }).disposed(by: self.bag)
+
+        self.model.context.appLanguage.subscribe(onNext: { [weak self] _ in
             self?.scrollView.containerView.reloadData()
         }).disposed(by: self.bag)
     }

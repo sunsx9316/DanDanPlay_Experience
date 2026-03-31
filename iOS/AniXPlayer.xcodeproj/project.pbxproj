@@ -124,6 +124,7 @@
 		8925B9632CAD4C12001A8388 /* SetMainColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B9622CAD4C12001A8388 /* SetMainColorViewController.swift */; };
 		8931A91B2F79737000125F69 /* FTPConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8931A91A2F79737000125F69 /* FTPConnectSvrViewController.swift */; };
 		8931A91F2F7C0A8A00125F69 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 8931A91E2F7C0A8A00125F69 /* Localizable.xcstrings */; };
+		8931A9212F7C297B00125F69 /* Localize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8931A9202F7C297B00125F69 /* Localize.swift */; };
 		8931F0E52674CA6A00590569 /* UIBarButtonItem+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8931F0E42674CA6A00590569 /* UIBarButtonItem+Helper.swift */; };
 		8931F0EB2674CD3300590569 /* HttpServerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8931F0EA2674CD3300590569 /* HttpServerViewController.swift */; };
 		8931F0EE26750D6500590569 /* UIView+HitTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8931F0ED26750D6500590569 /* UIView+HitTest.m */; };
@@ -398,6 +399,7 @@
 		8925B9622CAD4C12001A8388 /* SetMainColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetMainColorViewController.swift; sourceTree = "<group>"; };
 		8931A91A2F79737000125F69 /* FTPConnectSvrViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FTPConnectSvrViewController.swift; sourceTree = "<group>"; };
 		8931A91E2F7C0A8A00125F69 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		8931A9202F7C297B00125F69 /* Localize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localize.swift; sourceTree = "<group>"; };
 		8931F0E42674CA6A00590569 /* UIBarButtonItem+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+Helper.swift"; sourceTree = "<group>"; };
 		8931F0EA2674CD3300590569 /* HttpServerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpServerViewController.swift; sourceTree = "<group>"; };
 		8931F0EC26750D6500590569 /* UIView+HitTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+HitTest.h"; sourceTree = "<group>"; };
@@ -1070,6 +1072,7 @@
 		8925B8622CA7E4C3001A8388 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				8931A9202F7C297B00125F69 /* Localize.swift */,
 				8925B85A2CA7E4C3001A8388 /* ANXColor+Utils.swift */,
 				8925B85B2CA7E4C3001A8388 /* AppInfoHelper.swift */,
 				8925B85C2CA7E4C3001A8388 /* DateFormatter+Helper.swift.swift */,
@@ -1689,6 +1692,7 @@
 				89C79B942A881B200040FEDA /* DanmakuLoadUtil.swift in Sources */,
 				890DF77B26160B3E002D8AE5 /* SevenSwitch.swift in Sources */,
 				890886DD2A01277B005EDBD6 /* PCConnectSvrViewController.swift in Sources */,
+				8931A9212F7C297B00125F69 /* Localize.swift in Sources */,
 				890886D42A0118A4005EDBD6 /* JHQRCodeReader.m in Sources */,
 				897CF529262F309D00CC297A /* PlayerSettingViewController.swift in Sources */,
 				890DF74F26160B1B002D8AE5 /* UIFont+Helper.swift in Sources */,

@@ -145,12 +145,16 @@ class Preferences {
     @StoreWrapper(defaultValue: PlayerAspectRatio.default, key: .aspectRatio)
     var aspectRatio: PlayerAspectRatio
 
-    @StoreWrapper(defaultValue: 0, key: .playerCore)
-    var playerCore: Int
+    #if os(iOS)
+    @StoreWrapper(defaultValue: .mpv, key: .playerCore)
+    #else
+    @StoreWrapper(defaultValue: .vlc, key: .playerCore)
+    #endif
+    var playerCore: MediaPlayer.CoreType
 
-    /// 应用语言 0=系统默认 1=中文 2=英文
-    @StoreWrapper(defaultValue: 0, key: .appLanguage)
-    var appLanguage: Int
+    /// 应用语言
+    @StoreWrapper(defaultValue: .system, key: .appLanguage)
+    var appLanguage: AppLanguage
     
     @StoreWrapper(defaultValue: ANXColor.defaultMainColor, key: .mainColor)
     var mainColor: ANXColor

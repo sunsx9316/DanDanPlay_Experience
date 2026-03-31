@@ -25,9 +25,9 @@ class GlobalSettingContext {
     
     lazy var mainColor = BehaviorSubject<ANXColor>(value: Preferences.shared.mainColor)
 
-    lazy var playerCore = BehaviorSubject<Int>(value: Preferences.shared.playerCore)
+    lazy var playerCore = BehaviorSubject<MediaPlayer.CoreType>(value: Preferences.shared.playerCore)
 
-    lazy var appLanguage = BehaviorSubject<Int>(value: Preferences.shared.appLanguage)
+    lazy var appLanguage = BehaviorSubject<AppLanguage>(value: Preferences.shared.appLanguage)
 
 }
 
@@ -61,10 +61,10 @@ extension GlobalSettingModel {
     }
 
     var playerCore: MediaPlayer.CoreType {
-        return MediaPlayer.CoreType(rawValue: Preferences.shared.playerCore) ?? .vlc
+        return Preferences.shared.playerCore
     }
 
-    var appLanguage: Int {
+    var appLanguage: AppLanguage {
         return Preferences.shared.appLanguage
     }
 }
@@ -85,7 +85,7 @@ class GlobalSettingModel {
     func subtitle(settingType: GlobalSettingType) -> String {
         switch settingType {
         case .appLanguage:
-            return self.appLanguageDisplayName()
+            return Preferences.shared.appLanguage.displayName
         case .fastMatch:
             return NSLocalizedString("关闭则手动关联", comment: "")
         case .danmakuCacheDay:
@@ -127,19 +127,6 @@ class GlobalSettingModel {
             return NSLocalizedString("App主题色", comment: "")
         case .playerCore:
             return self.playerCore.displayName
-        case .appLanguage:
-            return self.appLanguageDisplayName()
-        }
-    }
-
-    private func appLanguageDisplayName() -> String {
-        switch Preferences.shared.appLanguage {
-        case 1:
-            return NSLocalizedString("中文", comment: "")
-        case 2:
-            return NSLocalizedString("英文", comment: "")
-        default:
-            return NSLocalizedString("系统语言", comment: "")
         }
     }
     
@@ -180,15 +167,13 @@ class GlobalSettingModel {
     }
 
     func onChangePlayerCore(_ coreType: MediaPlayer.CoreType) {
-        Preferences.shared.playerCore = coreType.rawValue
-        self.context.playerCore.onNext(coreType.rawValue)
+        Preferences.shared.playerCore = coreType
+        self.context.playerCore.onNext(coreType)
     }
 
-    func onChangeAppLanguage(_ language: Int) {
-        Preferences.shared.appLanguage = language
+    func onChangeAppLanguage(_ language: AppLanguage) {
+        Localize.setLanguage(language)
         self.context.appLanguage.onNext(language)
-        // 通知语言改变
-        NotificationCenter.default.post(name: .appLanguageDidChange, object: nil)
     }
 
     func cleanupCache() {
