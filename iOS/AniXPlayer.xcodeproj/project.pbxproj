@@ -123,6 +123,7 @@
 		8925B8B72CA7E4C3001A8388 /* PCQRModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8082CA7E4C3001A8388 /* PCQRModel.swift */; };
 		8925B9632CAD4C12001A8388 /* SetMainColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B9622CAD4C12001A8388 /* SetMainColorViewController.swift */; };
 		8931A91B2F79737000125F69 /* FTPConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8931A91A2F79737000125F69 /* FTPConnectSvrViewController.swift */; };
+		8931A91F2F7C0A8A00125F69 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 8931A91E2F7C0A8A00125F69 /* Localizable.xcstrings */; };
 		8931F0E52674CA6A00590569 /* UIBarButtonItem+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8931F0E42674CA6A00590569 /* UIBarButtonItem+Helper.swift */; };
 		8931F0EB2674CD3300590569 /* HttpServerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8931F0EA2674CD3300590569 /* HttpServerViewController.swift */; };
 		8931F0EE26750D6500590569 /* UIView+HitTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8931F0ED26750D6500590569 /* UIView+HitTest.m */; };
@@ -396,6 +397,7 @@
 		8925B86B2CA7E4C3001A8388 /* SubtitleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtitleManager.swift; sourceTree = "<group>"; };
 		8925B9622CAD4C12001A8388 /* SetMainColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetMainColorViewController.swift; sourceTree = "<group>"; };
 		8931A91A2F79737000125F69 /* FTPConnectSvrViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FTPConnectSvrViewController.swift; sourceTree = "<group>"; };
+		8931A91E2F7C0A8A00125F69 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		8931F0E42674CA6A00590569 /* UIBarButtonItem+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+Helper.swift"; sourceTree = "<group>"; };
 		8931F0EA2674CD3300590569 /* HttpServerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpServerViewController.swift; sourceTree = "<group>"; };
 		8931F0EC26750D6500590569 /* UIView+HitTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+HitTest.h"; sourceTree = "<group>"; };
@@ -640,6 +642,7 @@
 				89A688992C397E41002B7CA3 /* SVG */,
 				8904475A290189CD0088886B /* GoogleService-Info.plist */,
 				890DF6ED26160A25002D8AE5 /* RefreshText.plist */,
+				8931A91E2F7C0A8A00125F69 /* Localizable.xcstrings */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -1524,6 +1527,7 @@
 				89A688BD2C39931A002B7CA3 /* HomePageFunctionCollectionViewCell.xib in Resources */,
 				890DF824261617D0002D8AE5 /* PickFileTableViewCell.xib in Resources */,
 				899A11C12A18C0DC009B2953 /* TitleDetailOpertationTableViewCell.xib in Resources */,
+				8931A91F2F7C0A8A00125F69 /* Localizable.xcstrings in Resources */,
 				89A6898A2C42E588002B7CA3 /* FavoriteCollectionViewCell.xib in Resources */,
 				89AF9C042631C2680037A133 /* StepTableViewCell.xib in Resources */,
 				89A688C02C399FC2002B7CA3 /* Timeline.svg in Resources */,
@@ -1893,6 +1897,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -1948,6 +1953,7 @@
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
 			};
