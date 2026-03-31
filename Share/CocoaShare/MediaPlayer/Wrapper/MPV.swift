@@ -157,6 +157,7 @@ public enum MPVProperty {
     // Audio
     case audioId
     case audioDevice
+    case audioDelay
     case volume
     case mute
 
@@ -213,6 +214,7 @@ public enum MPVProperty {
         case .remaining: return "remaining"
         case .audioId: return "aid"
         case .audioDevice: return "audio-device"
+        case .audioDelay: return "audio-delay"
         case .volume: return "volume"
         case .mute: return "mute"
         case .videoId: return "vid"
@@ -601,6 +603,16 @@ public class AudioAPI {
     /// 音频设备名称
     public var audioDevice: String? {
         player?.getPropertyString(.audioDevice)
+    }
+
+    /// 音频延迟（秒）
+    public var delay: Double? {
+        get { player?.getPropertyDouble(.audioDelay) }
+        set {
+            if let d = newValue {
+                player?.setProperty(.audioDelay, d)
+            }
+        }
     }
 
     /// 切换静音状态

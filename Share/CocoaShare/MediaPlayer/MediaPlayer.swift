@@ -174,7 +174,7 @@ class MediaPlayer {
         }
     }
 
-    private let coreType: CoreType
+    let coreType: CoreType
     
     private(set) lazy var playList = [File]()
     

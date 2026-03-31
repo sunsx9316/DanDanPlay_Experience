@@ -149,9 +149,45 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
         }
     }
 
-    var subtitleOffsetTime: Double = 0
+    var subtitleOffsetTime: Double {
+        get {
+            // MPV sub-delay 负值表示延后，正值表示提前
+            // 取反后：正值=延后，负值=提前，与 VLC 语义一致
+            return -(self.mpv?.subtitle.delay ?? 0)
+        }
+        set {
+            let setup = { [weak self] in
+                guard let self = self else { return }
+                self.mpv?.subtitle.delay = -newValue
+            }
 
-    var audioOffsetTime: Double = 0
+            if self.mpv != nil {
+                setup()
+            } else {
+                initActions.append(setup)
+            }
+        }
+    }
+
+    var audioOffsetTime: Double {
+        get {
+            // MPV audio-delay 负值表示延后，正值表示提前
+            // 取反后：正值=延后，负值=提前，与 VLC 语义一致
+            return -(self.mpv?.audio.delay ?? 0)
+        }
+        set {
+            let setup = { [weak self] in
+                guard let self = self else { return }
+                self.mpv?.audio.delay = -newValue
+            }
+
+            if self.mpv != nil {
+                setup()
+            } else {
+                initActions.append(setup)
+            }
+        }
+    }
 
     var speed: Double = 1.0 {
         didSet {

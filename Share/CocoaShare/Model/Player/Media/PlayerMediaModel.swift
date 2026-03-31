@@ -609,20 +609,29 @@ class PlayerMediaModel {
         
         self.context.subtitleFontSize.subscribe(onNext: { [weak self] subtitleFontSize in
             guard let self = self else { return }
-            
+
             self.player.fontSize = subtitleFontSize
         }).disposed(by: self.disposeBag)
-        
-        
-        /// 音频直接设置不起效，延迟2秒再试
-        self.context.audioOffsetTime
-            .delaySubscription(.seconds(2), scheduler: MainScheduler.instance)
-            .debounce(.milliseconds(200), scheduler: MainScheduler.instance)
-            .subscribe(onNext: { [weak self] audioOffsetTime in
-            guard let self = self else { return }
-            
-            self.player.audioOffsetTime = Double(audioOffsetTime)
-        }).disposed(by: self.disposeBag)
+
+        if self.player.coreType == .vlc {
+            /// 音频延迟设置（仅 VLC 需要延迟，MPV 即时生效）
+            self.context.audioOffsetTime
+                .delaySubscription(.seconds(2), scheduler: MainScheduler.instance)
+                .debounce(.milliseconds(200), scheduler: MainScheduler.instance)
+                .subscribe(onNext: { [weak self] audioOffsetTime in
+                    guard let self = self else { return }
+                    
+                    self.player.audioOffsetTime = Double(audioOffsetTime)
+                }).disposed(by: self.disposeBag)
+        } else {
+            self.context.audioOffsetTime
+                .subscribe(onNext: { [weak self] audioOffsetTime in
+                    guard let self = self else { return }
+                    
+                    self.player.audioOffsetTime = Double(audioOffsetTime)
+                }).disposed(by: self.disposeBag)
+        }
+
     }
 }
 
