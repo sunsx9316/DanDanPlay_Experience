@@ -130,6 +130,9 @@ class Preferences {
 
         /// 播放器内核
         case playerCore
+
+        /// 应用语言 0=系统默认 1=中文 2=英文
+        case appLanguage
         
         var storeKey: String {
             return self.rawValue
@@ -144,6 +147,10 @@ class Preferences {
 
     @StoreWrapper(defaultValue: 0, key: .playerCore)
     var playerCore: Int
+
+    /// 应用语言 0=系统默认 1=中文 2=英文
+    @StoreWrapper(defaultValue: 0, key: .appLanguage)
+    var appLanguage: Int
     
     @StoreWrapper(defaultValue: ANXColor.defaultMainColor, key: .mainColor)
     var mainColor: ANXColor

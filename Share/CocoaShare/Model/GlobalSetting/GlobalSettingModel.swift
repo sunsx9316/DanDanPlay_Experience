@@ -27,6 +27,8 @@ class GlobalSettingContext {
 
     lazy var playerCore = BehaviorSubject<Int>(value: Preferences.shared.playerCore)
 
+    lazy var appLanguage = BehaviorSubject<Int>(value: Preferences.shared.appLanguage)
+
 }
 
 extension GlobalSettingModel {
@@ -61,6 +63,10 @@ extension GlobalSettingModel {
     var playerCore: MediaPlayer.CoreType {
         return MediaPlayer.CoreType(rawValue: Preferences.shared.playerCore) ?? .vlc
     }
+
+    var appLanguage: Int {
+        return Preferences.shared.appLanguage
+    }
 }
 
 class GlobalSettingModel {
@@ -78,6 +84,8 @@ class GlobalSettingModel {
     
     func subtitle(settingType: GlobalSettingType) -> String {
         switch settingType {
+        case .appLanguage:
+            return self.appLanguageDisplayName()
         case .fastMatch:
             return NSLocalizedString("关闭则手动关联", comment: "")
         case .danmakuCacheDay:
@@ -119,6 +127,19 @@ class GlobalSettingModel {
             return NSLocalizedString("App主题色", comment: "")
         case .playerCore:
             return self.playerCore.displayName
+        case .appLanguage:
+            return self.appLanguageDisplayName()
+        }
+    }
+
+    private func appLanguageDisplayName() -> String {
+        switch Preferences.shared.appLanguage {
+        case 1:
+            return NSLocalizedString("中文", comment: "")
+        case 2:
+            return NSLocalizedString("英文", comment: "")
+        default:
+            return NSLocalizedString("系统语言", comment: "")
         }
     }
     
@@ -161,6 +182,13 @@ class GlobalSettingModel {
     func onChangePlayerCore(_ coreType: MediaPlayer.CoreType) {
         Preferences.shared.playerCore = coreType.rawValue
         self.context.playerCore.onNext(coreType.rawValue)
+    }
+
+    func onChangeAppLanguage(_ language: Int) {
+        Preferences.shared.appLanguage = language
+        self.context.appLanguage.onNext(language)
+        // 通知语言改变
+        NotificationCenter.default.post(name: .appLanguageDidChange, object: nil)
     }
 
     func cleanupCache() {

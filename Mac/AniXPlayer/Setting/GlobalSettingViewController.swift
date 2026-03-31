@@ -75,8 +75,11 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = self.model.subtitle(settingType: type)
             return cell
-        case .mainColor:
-            return nil
+        case .mainColor, .playerCore, .appLanguage:
+            let cell = tableView.dequeueReusableCell(class: TitleDetailTableViewCell.self)
+            cell.titleLabel.text = type.title
+            cell.subtitleLabel.text = self.model.subtitle(settingType: type)
+            return cell
         }
     }
     
@@ -159,13 +162,41 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
             vc.addButton(withTitle: NSLocalizedString("取消", comment: ""))
             
             let response: NSApplication.ModalResponse = vc.runModal()
-            
+
             if response == .alertFirstButtonReturn {
                 self.model.cleanupCache()
             }
+        } else if type == .appLanguage {
+            let vc = NSAlert()
+            vc.messageText = NSLocalizedString("语言", comment: "")
+            vc.alertStyle = .informational
+            vc.addButton(withTitle: NSLocalizedString("确定", comment: ""))
+            vc.addButton(withTitle: NSLocalizedString("取消", comment: ""))
+
+            let languageOptions = [
+                (0, NSLocalizedString("系统语言", comment: "")),
+                (1, NSLocalizedString("中文", comment: "")),
+                (2, NSLocalizedString("英文", comment: ""))
+            ]
+
+            let popup = NSPopUpButton(frame: .init(x: 0, y: 0, width: 150, height: 25))
+            for (languageCode, languageName) in languageOptions {
+                popup.addItem(withTitle: languageName)
+                popup.lastItem?.tag = languageCode
+            }
+            popup.selectItem(at: Preferences.shared.appLanguage)
+            vc.accessoryView = popup
+
+            let response: NSApplication.ModalResponse = vc.runModal()
+
+            if response == .alertFirstButtonReturn {
+                if let selectedItem = popup.selectedItem {
+                    self.model.onChangeAppLanguage(selectedItem.tag)
+                }
+            }
         }
     }
-    
+
 }
 
 class GlobalSettingViewController: ViewController {

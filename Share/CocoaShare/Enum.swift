@@ -163,6 +163,7 @@ enum DanmakuAreaType: Int, CaseIterable {
 
 /// 全局设置
 enum GlobalSettingType: CaseIterable {
+    case appLanguage
     case playerCore
     case fastMatch
     case autoLoadCustomDanmaku
@@ -177,6 +178,8 @@ enum GlobalSettingType: CaseIterable {
 
     var title: String {
         switch self {
+        case .appLanguage:
+            return NSLocalizedString("语言", comment: "")
         case .fastMatch:
             return NSLocalizedString("快速匹配弹幕", comment: "")
         case .danmakuCacheDay:
