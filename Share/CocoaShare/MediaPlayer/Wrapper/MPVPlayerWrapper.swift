@@ -28,21 +28,6 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
     
     private let eventQueue = DispatchQueue(label: "com.anxplayer.mpvwrapper", qos: .userInitiated)
 
-    /// 当前选择的字幕文件
-    private var currentSubTitleFile: SubtitleProtocol?
-
-    /// 字幕轨道列表
-    private var subtitleTracks: [SubtitleProtocol] = []
-
-    /// 音频轨道列表
-    private var audioTracks: [AudioChannelProtocol] = []
-
-    /// 播放时长
-    private var duration: TimeInterval = 0
-
-    /// 当前播放位置
-    private var currentPosition: Double = 0
-
     /// 初始化操作队列
     private var initActions: [() -> Void] = []
 
@@ -78,16 +63,20 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
     }
 
     var subtitleList: [SubtitleProtocol] {
-        return subtitleTracks
+        return _subtitleList
     }
+    private lazy var _subtitleList = [Subtitle]()
 
     var currentSubtitle: SubtitleProtocol? {
         get {
-            return currentSubTitleFile
+            if let id = self.mpv?.subtitle.subtitleId {
+                return self._subtitleList.first { sub in
+                    return sub.trackId == id
+                }
+            }
+            return nil
         }
         set {
-            currentSubTitleFile = newValue
-
             let setup = { [weak self] in
                 guard let self = self else { return }
                 if let sub = newValue as? Subtitle {
@@ -108,14 +97,23 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
     }
 
     var audioChannelList: [AudioChannelProtocol] {
-        return audioTracks
+        return _audioChannelList
     }
+    private lazy var _audioChannelList = [AudioChannel]()
 
     var currentAudioChannel: AudioChannelProtocol? {
-        didSet {
+        get {
+            if let id = self.mpv?.audio.audioId {
+                return self._audioChannelList.first { audio in
+                    return audio.audioId == id
+                }
+            }
+            return nil
+        }
+        set {
             let setup = { [weak self] in
                 guard let self = self else { return }
-                if let channel = self.currentAudioChannel {
+                if let channel = newValue {
                     self.mpv?.audio.audioId = Int64(channel.audioId)
                 }
             }
@@ -192,19 +190,69 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
         }
     }
 
-    var subtitleMargin: Int = 0
+    var subtitleYPosition: Float = 0 {
+        didSet {
+            let setup = { [weak self] in
+
+                guard let self = self else { return }
+
+                // 获取视图高度（考虑缩放比例）
+                let scaleFactor: CGFloat
+                #if os(iOS)
+                scaleFactor = self.mediaView.window?.screen.scale ?? UIScreen.main.scale
+                #else
+                scaleFactor = self.mediaView.window?.backingScaleFactor ?? 1.0
+                #endif
+                let screenHeight = Int64(self.mediaView.bounds.height * scaleFactor)
+
+                // percent=0 时 margin 为 0（贴近底部）
+                // percent=100 时 margin 为 screenHeight（贴近顶部）
+                let percent = Int64(subtitleYPosition)
+                let bottom = (screenHeight * percent) / 100
+
+                // sub-margin-y: 对文本字幕有效
+                self.mpv?.setOptionString(.subtitleMarginY, "\(bottom)")
+
+                // sub-pos: 100=原始位置，<100往上移
+                // percent=0 时贴近底部（原始位置），percent=100 时贴近顶部
+                let posValue = 100 - percent
+                self.mpv?.setOptionString(.subtitlePos, "\(posValue)")
+
+                // sub-ass-override=force 确保覆盖 ASS 内嵌样式
+                self.mpv?.setOptionString(.subtitleAssOverride, "force")
+
+                // 使用 ASS 命令 \margins(l,t,r,b)
+                self.mpv?.execute(.set, args: ["sub-ass", "\\margins(0,\(bottom),0,\(bottom))"])
+            }
+
+            if self.mpv != nil {
+                setup()
+            } else {
+                initActions.append(setup)
+            }
+        }
+    }
 
     var position: Double {
-        guard duration > 0 else { return 0 }
-        return currentPosition
+        if self.length == 0 {
+            return 0
+        }
+        return self.currentTime / self.length
     }
 
     var length: TimeInterval {
-        return duration
+        if let durationValue = self.mpv?.time.duration, durationValue > 0 {
+            return durationValue
+        }
+        
+        return 0
     }
 
     var currentTime: TimeInterval {
-        return currentPosition * duration
+        if let currentTimeValue = self.mpv?.time.position {
+            return currentTimeValue
+        }
+        return 0
     }
 
     var state: PlayerState {
@@ -258,8 +306,7 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
 
     func setPosition(_ position: Double) {
         let pos = max(min(position, 1), 0)
-        currentPosition = pos
-        let time = pos * duration
+        let time = pos * self.length
         mpv?.time.seek(to: time)
     }
 
@@ -314,13 +361,9 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
 
         // 字幕配置 - 字体设置必须在初始化前完成
         setupSubtitleFonts(mpvHandle: mpvHandle)
-        mpvHandle.subtitle.fontSize = 48
-        mpvHandle.subtitle.color = UIColor.white
-        mpvHandle.subtitle.backColor = UIColor.black.withAlphaComponent(0.5)
-        mpvHandle.setOptionString(.subtitleAuto, "exact")
-        mpvHandle.setOptionString(.subtitleUseMargins, "no")
-        mpvHandle.setOptionString(.subtitleAss, "yes")
-        mpvHandle.setOptionString(.subtitleAssOverride, "force")
+        mpvHandle.setOptionString(.subtitleAuto, "no") // 不自动加载字幕
+        mpvHandle.setOptionString(.subtitleAss, "yes") // 渲染ass特效
+        mpvHandle.setOptionString(.subtitleAssOverride, "force") //覆盖ass样式
 
         // 视频窗口
         let opaque = Unmanaged.passUnretained(self.mediaView.layer).toOpaque()
@@ -415,7 +458,9 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
     private func startPlaybackPolling() {
         playbackTimer?.invalidate()
         playbackTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
-            self?.pollPlaybackState()
+            guard let self = self else { return }
+
+            self.timeChangedCallBack?(self, self.position)
         }
     }
 
@@ -424,31 +469,16 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
         playbackTimer = nil
     }
 
-    private func pollPlaybackState() {
-        guard let mpv = mpv, isPlaying else { return }
-
-        if let timeValue = mpv.time.position {
-            currentPosition = duration > 0 ? timeValue / duration : 0
-            timeChangedCallBack?(self, position)
-        }
-
-        if let durationValue = mpv.time.duration, durationValue > 0 {
-            if self.duration != durationValue {
-                self.duration = durationValue
-            }
-        }
-    }
-
     // MARK: - 轨道列表更新
 
     private func updateTrackLists() {
         guard let mpv = mpv else { return }
 
-        subtitleTracks = mpv.track.subtitleTracks.map { track in
+        _subtitleList = mpv.track.subtitleTracks.map { track in
             Subtitle(subtitleName: track.displayName, index: 0, trackId: Int(track.id))
         }
 
-        audioTracks = mpv.track.audioTracks.map { track in
+        _audioChannelList = mpv.track.audioTracks.map { track in
             AudioChannel(audioName: track.displayName, audioId: Int32(track.id))
         }
     }

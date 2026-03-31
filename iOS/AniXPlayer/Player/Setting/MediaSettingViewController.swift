@@ -297,29 +297,29 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
                 self.mediaModel.onChangeSubtitleOffsetTime(value)
             }
             return cell
-        case .subtitleMargin:
+        case .subtitleYPosition:
             let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
             cell.titleLabel.text = type.title
             cell.selectionStyle = .none
-            
-            let range = self.mediaModel.subtitleMarginRange()
-            
+
+            let range = self.mediaModel.subtitleYPositionRange()
+
             cell.step = range.step
             let model = SliderTableViewCell.Model(maxValue: range.max,
                                                   minValue: range.min,
-                                                  currentValue: Float(self.mediaModel.subtitleMargin))
-            
+                                                  currentValue: self.mediaModel.subtitleYPosition)
+
             cell.model = model
-            
+
             cell.onChangeSliderCallBack = { [weak self] (aCell) in
                 guard let self = self else { return }
-                
-                let currentValue = Int(aCell.valueSlider.value)
+
+                let currentValue = aCell.valueSlider.value
                 let model = aCell.model
-                model?.currentValue = Float(currentValue)
+                model?.currentValue = currentValue
                 aCell.model = model
-                
-                self.mediaModel.onChangeSubtitleMargin(currentValue)
+
+                self.mediaModel.onChangeSubtitleYPosition(currentValue)
             }
             return cell
         case .subtitleFontSize:

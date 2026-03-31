@@ -10,8 +10,10 @@ import ANXLog
 
 #if os(iOS)
 import MobileVLCKit
+import UIKit
 #else
 import VLCKit
+import AppKit
 #endif
 
 #if os(iOS)
@@ -52,7 +54,7 @@ struct AudioChannel: AudioChannelProtocol {
 class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     
     private enum Options: String {
-        case subtitleMargin = "--sub-margin"
+        case subtitleYPosition = "--sub-margin"
 //        case subtitleTextScale = "--sub-text-scale"
 //        case subtitleColor = "--freetype-color"
 //        case subtitleName = "--freetype-font"
@@ -166,14 +168,14 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         }
     }
     
-    var subtitleMargin: Int {
+    var subtitleYPosition: Float {
         get {
-            return Int(self.mediaOptionsDic[.subtitleMargin] as? Int ?? 0)
+            return self.mediaOptionsDic[.subtitleYPosition] as? Float ?? 0
         }
-        
+
         set {
-            if newValue != (self.mediaOptionsDic[.subtitleMargin] as? Int) {
-                self.mediaOptionsDic[.subtitleMargin] = newValue
+            if newValue != (self.mediaOptionsDic[.subtitleYPosition] as? Float ?? 0) {
+                self.mediaOptionsDic[.subtitleYPosition] = newValue
                 self.reloadOptionAndCreatePlayer()
             }
         }
@@ -562,14 +564,25 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     }
     
     private func createPlayerInstance() -> VLCMediaPlayer {
-        let options = self.mediaOptionsDic.compactMap { option in
+        let options = self.mediaOptionsDic.compactMap { option -> String? in
+            // subtitleYPosition 需要从百分比转换为像素值（考虑视图缩放比例）
+            if option.key == .subtitleYPosition, let percentage = option.value as? Float {
+                let scaleFactor: CGFloat
+                #if os(iOS)
+                scaleFactor = self.mediaView.window?.screen.scale ?? UIScreen.main.scale
+                #else
+                scaleFactor = self.mediaView.window?.backingScaleFactor ?? 1.0
+                #endif
+                let pixelValue = Int(self.mediaView.bounds.height * scaleFactor * CGFloat(percentage) / 100)
+                return "\(option.key.rawValue)=\(pixelValue)"
+            }
             return "\(option.key.rawValue)=\(option.value)"
         }
-        
+
         let player = VLCMediaPlayer(options: options)
         player.drawable = self.mediaView
         player.delegate = self
-        
+
         return player
     }
     

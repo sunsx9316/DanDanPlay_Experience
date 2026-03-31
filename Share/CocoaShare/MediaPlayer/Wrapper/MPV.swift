@@ -171,7 +171,7 @@ public enum MPVProperty {
     case subtitleId
     case secondarySubtitleId
     case subtitleDelay
-    case subtitleMargin
+    case subtitleYPosition
     case subtitleFontSize
     case subtitleColor
     case subtitleBackColor
@@ -181,6 +181,8 @@ public enum MPVProperty {
     case subtitleAssOverride
     case subtitleAuto
     case subtitleUseMargins
+    case subtitleMarginY
+    case subtitlePos
 
     // Track
     case trackList
@@ -196,7 +198,7 @@ public enum MPVProperty {
     case vo
     case gpuApi
     case gpuContext
-    
+
     case protocolList
 
     public var rawValue: String {
@@ -221,7 +223,7 @@ public enum MPVProperty {
         case .subtitleId: return "sid"
         case .secondarySubtitleId: return "secondary-sid"
         case .subtitleDelay: return "sub-delay"
-        case .subtitleMargin: return "sub-margin"
+        case .subtitleYPosition: return "sub-margin"
         case .subtitleFontSize: return "sub-font-size"
         case .subtitleColor: return "sub-color"
         case .subtitleBackColor: return "sub-back-color"
@@ -231,6 +233,8 @@ public enum MPVProperty {
         case .subtitleAssOverride: return "sub-ass-override"
         case .subtitleAuto: return "sub-auto"
         case .subtitleUseMargins: return "sub-use-margins"
+        case .subtitleMarginY: return "sub-margin-y"
+        case .subtitlePos: return "sub-pos"
         case .trackList: return "track-list"
         case .trackType(let i): return "track-list/\(i)/type"
         case .trackId(let i): return "track-list/\(i)/id"
@@ -283,6 +287,9 @@ public enum MPVCommand {
     case overlayAdd
     case overlayRemove
 
+    // Other
+    case quit
+
     public var rawValue: String {
         switch self {
         case .loadFile: return "loadfile"
@@ -305,6 +312,7 @@ public enum MPVCommand {
         case .showText: return "show-text"
         case .overlayAdd: return "overlay-add"
         case .overlayRemove: return "overlay-remove"
+        case .quit: return "quit"
         }
     }
 }
@@ -313,16 +321,16 @@ public enum MPVCommand {
 
 extension MPV {
     /// 执行 mpv 命令
-    func executeCommand(_ args: [String]) {
-        
-        var cargs = args.map { UnsafePointer<CChar>(strdup($0)) }
+    public func execute(_ command: MPVCommand, args: [String] = []) {
+        let newArgs = [command.rawValue] + args
+        var cargs = newArgs.map { UnsafePointer<CChar>(strdup($0)) }
         cargs.append(nil)
-
+        
         cargs.withUnsafeMutableBufferPointer { [weak self] buffer in
             guard let self = self else { return }
             mpv_command(self.mpv, buffer.baseAddress)
         }
-
+        
         for ptr in cargs {
             if let p = ptr {
                 free(UnsafeMutablePointer(mutating: p))
@@ -332,13 +340,13 @@ extension MPV {
 
     /// 转换颜色为十六进制字符串
     #if os(iOS)
-    static func colorToHex(_ color: UIColor) -> String {
+    fileprivate static func colorToHex(_ color: UIColor) -> String {
         var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
         color.getRed(&r, green: &g, blue: &b, alpha: &a)
         return String(format: "#%02X%02X%02X", Int(r * 255), Int(g * 255), Int(b * 255))
     }
     #elseif os(macOS)
-    static func colorToHex(_ color: NSColor) -> String {
+    fileprivate static func colorToHex(_ color: NSColor) -> String {
         guard let rgb = color.usingColorSpace(.sRGB) else { return "#FFFFFF" }
         return String(format: "#%02X%02X%02X",
                       Int(rgb.redComponent * 255),
@@ -409,6 +417,14 @@ public class MPV {
         var data: Int = value ? 1 : 0
         mpv_set_property(mpv, property.rawValue, MPV_FORMAT_FLAG, &data)
     }
+    
+    public func setProperty(_ property: MPVProperty, _ value: String) {
+        guard let mpv = mpv else { return }
+        value.withCString { cString in
+            var mutableCString: UnsafePointer<Int8>? = cString
+            mpv_set_property(mpv, property.rawValue, MPV_FORMAT_STRING, &mutableCString)
+        }
+    }
 
     // MARK: - 属性获取
 
@@ -474,19 +490,19 @@ public class MPV {
     /// 加载文件
     public func loadFile(_ path: String, replace: Bool = true) {
         let action = replace ? "replace" : "append"
-        executeCommand(["loadfile", path, action])
+        execute(.loadFile, args: [path, action])
     }
 
     /// 停止播放
     public func stop() {
-        executeCommand(["stop"])
+        execute(.stop)
     }
 
     // MARK: - 终止
 
     /// 异步退出 mpv 
     public func quit() {
-        executeCommand(["quit"])
+        execute(.quit)
     }
 }
 
@@ -507,7 +523,7 @@ public class PlaybackAPI {
 
     /// 切换暂停状态
     public func togglePause() {
-        player?.executeCommand(["cycle", "pause"])
+        player?.execute(.cycle, args: ["pause"])
     }
 
     /// 设置播放速度
@@ -543,7 +559,7 @@ public class TimeAPI {
     /// 跳转到指定时间
     public func seek(to seconds: Double, absolute: Bool = true) {
         let type = absolute ? "absolute" : "relative"
-        player?.executeCommand(["seek", String(seconds), type])
+        player?.execute(.seek, args: [String(seconds), type])
     }
 }
 
@@ -589,12 +605,12 @@ public class AudioAPI {
 
     /// 切换静音状态
     public func toggleMute() {
-        player?.executeCommand(["cycle", "mute"])
+        player?.execute(.cycle, args: ["mute"])
     }
 
     /// 增加音量
     public func addVolume(_ delta: Int64) {
-        player?.executeCommand(["add", "volume", String(delta)])
+        player?.execute(.add, args: ["volume", String(delta)])
     }
 }
 
@@ -761,12 +777,12 @@ public class SubtitleAPI {
     /// 添加外部字幕文件
     public func addExternal(path: String, select: Bool = true) {
         let action = select ? "select" : "auto"
-        player?.executeCommand(["sub-add", path, action])
+        player?.execute(.subAdd, args: [path, action])
     }
 
     /// 移除外部字幕
     public func removeExternal(path: String) {
-        player?.executeCommand(["sub-remove", path])
+        player?.execute(.subRemove, args: [path])
     }
 }
 
@@ -882,22 +898,22 @@ public class ScreenshotAPI {
 
     /// 截图（包含字幕）
     public func capture() {
-        player?.executeCommand(["screenshot"])
+        player?.execute(.screenshot)
     }
 
     /// 截图（不包含字幕）
     public func captureWithoutSubtitle() {
-        player?.executeCommand(["screenshot", "video"])
+        player?.execute(.screenshot, args: ["video"])
     }
 
     /// 截图（包含窗口元素，如 OSD）
     public func captureWithOSD() {
-        player?.executeCommand(["screenshot", "window"])
+        player?.execute(.screenshot, args: ["window"])
     }
 
     /// 保存截图到指定文件
     public func saveToFile(path: String, format: String = "png") {
-        player?.executeCommand(["screenshot-to-file", path, format])
+        player?.execute(.screenshotToFile, args: [path, format])
     }
 }
 

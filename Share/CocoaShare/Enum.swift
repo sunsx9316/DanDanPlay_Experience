@@ -14,7 +14,7 @@ enum MediaSettingType: CaseIterable {
     case matchInfo
     
     case playerSpeed
-    case subtitleMargin
+    case subtitleYPosition
     case subtitleFontSize
     case subtitleFont
     
@@ -54,8 +54,8 @@ enum MediaSettingType: CaseIterable {
             return NSLocalizedString("跳过片尾时长", comment: "")
         case .subtitleDelay:
             return NSLocalizedString("字幕时间偏移", comment: "")
-        case .subtitleMargin:
-            return NSLocalizedString("字幕Y轴偏移", comment: "")
+        case .subtitleYPosition:
+            return NSLocalizedString("字幕Y轴偏移百分比", comment: "")
         case .subtitleFontSize:
             return NSLocalizedString("字幕大小", comment: "")
         case .matchInfo:

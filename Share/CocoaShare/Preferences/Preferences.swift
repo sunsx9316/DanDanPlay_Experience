@@ -101,8 +101,8 @@ class Preferences {
         /// 登录信息
         case loginInfo
         
-        /// 字幕偏移
-        case subtitleMargin
+        /// 字幕Y位置百分比
+        case subtitleYPosition
         
         /// 字幕字体大小
         case subtitleFontSize
@@ -187,8 +187,8 @@ class Preferences {
     @StoreWrapper(defaultValue: 0.0, key: .jumpEndingDuration)
     var jumpEndingDuration: Double
     
-    @StoreWrapper(defaultValue: 0, key: .subtitleMargin)
-    var subtitleMargin: Int
+    @StoreWrapper(defaultValue: 0, key: .subtitleYPosition)
+    var subtitleYPosition: Float
     
     @StoreWrapper(defaultValue: 20, key: .subtitleFontSize)
     var subtitleFontSize: Float
@@ -432,7 +432,7 @@ extension Preferences {
                 return Store.shared.value(forKey: key.storeKey) ?? self.value
             }
             set {
-                _ = Store.shared.set(newValue, forKey: key.storeKey)
+                Store.shared.set(newValue, forKey: key.storeKey)
             }
         }
     }

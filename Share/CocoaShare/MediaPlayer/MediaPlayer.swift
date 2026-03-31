@@ -50,7 +50,7 @@ protocol MediaPlayerProtocol: AnyObject {
     
     var aspectRatio: PlayerAspectRatio { set get }
     
-    var subtitleMargin: Int { set get }
+    var subtitleYPosition: Float { set get }
     
     var position: Double { get }
     
@@ -220,13 +220,13 @@ class MediaPlayer {
     
     var playMode = PlayerMode.autoPlayNext
     
-    var subtitleMargin: Int  {
+    var subtitleYPosition: Float  {
         get {
-            return self.player.subtitleMargin
+            return self.player.subtitleYPosition
         }
-        
+
         set {
-            self.player.subtitleMargin = newValue
+            self.player.subtitleYPosition = newValue
         }
     }
     

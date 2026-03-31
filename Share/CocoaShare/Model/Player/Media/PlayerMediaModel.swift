@@ -71,8 +71,8 @@ extension PlayerMediaModel {
         return (try? self.context.audioOffsetTime.value()) ?? 0
     }
     
-    var subtitleMargin: Int {
-        return (try? self.context.subtitleMargin.value()) ?? 0
+    var subtitleYPosition: Float {
+        return (try? self.context.subtitleYPosition.value()) ?? 0
     }
     
     var subtitleFontSize: CGFloat {
@@ -181,7 +181,7 @@ extension PlayerMediaModel {
         dataSource.append(MediaSettingInfo(title: NSLocalizedString("字幕设置", comment: ""),
                                            dataSource:
                                             [
-                                                .subtitleMargin,
+                                                .subtitleYPosition,
 //                                                .subtitleFont,
                                                 .subtitleFontSize,
                                                 .subtitleSafeArea,
@@ -194,7 +194,7 @@ extension PlayerMediaModel {
         dataSource.append(MediaSettingInfo(title: NSLocalizedString("字幕设置", comment: ""),
                                            dataSource:
                                             [
-                                                .subtitleMargin,
+                                                .subtitleYPosition,
 //                                                .subtitleFont,
                                                 .subtitleSafeArea,
                                                 .subtitleDelay,
@@ -268,10 +268,10 @@ class PlayerMediaModel {
         ANX.logInfo(.UI, "更改音频偏移: \(audioOffsetTime)")
     }
     
-    func onChangeSubtitleMargin(_ subtitleMargin: Int) {
-        Preferences.shared.subtitleMargin = subtitleMargin
-        self.context.subtitleMargin.onNext(subtitleMargin)
-        ANX.logInfo(.UI, "更改字体间距: \(subtitleMargin)")
+    func onChangeSubtitleYPosition(_ subtitleYPosition: Float) {
+        Preferences.shared.subtitleYPosition = subtitleYPosition
+        self.context.subtitleYPosition.onNext(subtitleYPosition)
+        ANX.logInfo(.UI, "更改字幕Y位置: \(subtitleYPosition)%")
     }
     
     func onChangeSubtitleFontSize(_ subtitleFontSize: Float) {
@@ -334,8 +334,8 @@ class PlayerMediaModel {
         return (0, 600, 1)
     }
     
-    func subtitleMarginRange() -> (min: Float, max: Float, step: Float) {
-        return (0, 1000, 1)
+    func subtitleYPositionRange() -> (min: Float, max: Float, step: Float) {
+        return (0, 100, 1)
     }
     
     func subtitleFontSizeRange() -> (min: Float, max: Float, step: Float) {
@@ -591,10 +591,10 @@ class PlayerMediaModel {
             self.player.subtitleOffsetTime = Double(subtitleOffsetTime)
         }).disposed(by: self.disposeBag)
         
-        self.context.subtitleMargin.subscribe(onNext: { [weak self] subtitleMargin in
+        self.context.subtitleYPosition.subscribe(onNext: { [weak self] subtitleYPosition in
             guard let self = self else { return }
-            
-            self.player.subtitleMargin = subtitleMargin
+
+            self.player.subtitleYPosition = subtitleYPosition
         }).disposed(by: self.disposeBag)
         
         self.context.subtitleFontName.subscribe(onNext: { [weak self] subtitleFontName in

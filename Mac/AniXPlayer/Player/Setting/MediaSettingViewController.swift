@@ -131,7 +131,7 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
             return 40
         } else if let type = item as? MediaSettingType {
             switch type {
-            case .playerSpeed, .jumpTitleDuration, .jumpEndingDuration, .subtitleMargin, .subtitleFontSize, .subtitleFont:
+            case .playerSpeed, .jumpTitleDuration, .jumpEndingDuration, .subtitleYPosition, .subtitleFontSize, .subtitleFont:
                 return 80
             case .subtitleSafeArea, .subtitleTrack, .audioTrack, 
                     .playerMode, .loadSubtitle, .subtitleDelay,
@@ -333,27 +333,27 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
                     self.mediaModel.onChangeJumpEndingDuration(Double(currentValue))
                 }
                 return cell
-            case .subtitleMargin:
+            case .subtitleYPosition:
                 let cell = outlineView.dequeueReusableCell(class: SliderTableViewCell.self)
                 cell.titleLabel.text = type.title
-                let range = self.mediaModel.subtitleMarginRange()
-                
+                let range = self.mediaModel.subtitleYPositionRange()
+
                 cell.step = range.step
                 let model = SliderTableViewCell.Model(maxValue: range.max,
                                                       minValue: range.min,
-                                                      currentValue: Float(self.mediaModel.subtitleMargin))
-                
+                                                      currentValue: self.mediaModel.subtitleYPosition)
+
                 cell.model = model
-                
+
                 cell.onChangeSliderCallBack = { [weak self] (aCell) in
                     guard let self = self else { return }
-                    
-                    let currentValue = aCell.valueSlider.integerValue
+
+                    let currentValue = aCell.valueSlider.floatValue
                     let model = aCell.model
-                    model?.currentValue = Float(currentValue)
+                    model?.currentValue = currentValue
                     aCell.model = model
-                    
-                    self.mediaModel.onChangeSubtitleMargin(currentValue)
+
+                    self.mediaModel.onChangeSubtitleYPosition(currentValue)
                 }
                 return cell
             case .subtitleFontSize:

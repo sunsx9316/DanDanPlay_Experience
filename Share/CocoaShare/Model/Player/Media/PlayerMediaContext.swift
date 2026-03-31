@@ -37,7 +37,7 @@ class PlayerMediaContext {
     
     lazy var audioOffsetTime = BehaviorSubject<Int>(value: Preferences.shared.audioOffsetTime)
     
-    lazy var subtitleMargin = BehaviorSubject<Int>(value: Preferences.shared.subtitleMargin)
+    lazy var subtitleYPosition = BehaviorSubject<Float>(value: Preferences.shared.subtitleYPosition)
     
     lazy var subtitleFontSize = BehaviorSubject<Float>(value: Preferences.shared.subtitleFontSize)
     

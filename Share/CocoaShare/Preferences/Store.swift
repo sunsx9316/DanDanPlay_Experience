@@ -171,7 +171,7 @@ extension Preferences {
                 (.danmakuOffsetTime, { self._migrateInt(from: mmkv, key: $0) }),
                 (.subtitleOffsetTime, { self._migrateInt(from: mmkv, key: $0) }),
                 (.audioOffsetTime, { self._migrateInt(from: mmkv, key: $0) }),
-                (.subtitleMargin, { self._migrateInt(from: mmkv, key: $0) }),
+                (.subtitleYPosition, { self._migrateFloat(from: mmkv, key: $0) }),
                 
                 // Double 类型
                 (.playerSpeed, { self._migrateDouble(from: mmkv, key: $0) }),
