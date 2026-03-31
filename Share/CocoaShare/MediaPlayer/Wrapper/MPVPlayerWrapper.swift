@@ -14,8 +14,12 @@ import MPVFramework
 // MARK: - 内嵌字幕
 private struct Subtitle: SubtitleProtocol {
     let subtitleName: String
-    let index: Int
-    let trackId: Int
+    let trackId: Int64
+}
+
+private struct AudioChannel: AudioChannelProtocol {
+    let audioName: String
+    let audioId: Int64
 }
 
 // MARK: - MPVPlayerWrapper
@@ -475,11 +479,11 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
         guard let mpv = mpv else { return }
 
         _subtitleList = mpv.track.subtitleTracks.map { track in
-            Subtitle(subtitleName: track.displayName, index: 0, trackId: Int(track.id))
+            Subtitle(subtitleName: track.displayName, trackId: track.id)
         }
 
         _audioChannelList = mpv.track.audioTracks.map { track in
-            AudioChannel(audioName: track.displayName, audioId: Int32(track.id))
+            AudioChannel(audioName: track.displayName, audioId: track.id)
         }
     }
 
@@ -495,11 +499,7 @@ class MPVView: UIView {
     override class var layerClass: AnyClass {
         return CAMetalLayer.self
     }
-
-    var metalLayer: CAMetalLayer {
-        return layer as! CAMetalLayer
-    }
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -512,11 +512,14 @@ class MPVView: UIView {
 
     private func setup() {
         backgroundColor = .black
-        metalLayer.device = MTLCreateSystemDefaultDevice()
-        metalLayer.pixelFormat = .bgra8Unorm
-        metalLayer.framebufferOnly = true
-        metalLayer.backgroundColor = UIColor.black.cgColor
-        metalLayer.contentsScale = UIScreen.main.scale
+        
+        if let metalLayer = self.layer as? CAMetalLayer {
+            metalLayer.device = MTLCreateSystemDefaultDevice()
+            metalLayer.pixelFormat = .bgra8Unorm
+            metalLayer.framebufferOnly = true
+            metalLayer.backgroundColor = UIColor.black.cgColor
+            metalLayer.contentsScale = UIScreen.main.scale
+        }
     }
 }
 #endif

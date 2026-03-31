@@ -19,6 +19,12 @@ private enum SubtitleLoadError: LocalizedError {
     }
 }
 
+    /// 外挂字幕
+struct ExternalSubtitle: SubtitleProtocol {
+    let subtitleName: String
+    let url: URL
+}
+
 class SubtitleManager {
     
     static let shared = SubtitleManager()

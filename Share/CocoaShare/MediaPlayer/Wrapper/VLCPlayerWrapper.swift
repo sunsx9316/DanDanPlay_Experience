@@ -34,21 +34,12 @@ fileprivate extension Timer {
 /// 内嵌字幕
 private struct Subtitle: SubtitleProtocol {
     let subtitleName: String
-    
     let index: Int
 }
 
-/// 外挂字幕
-struct ExternalSubtitle: SubtitleProtocol {
-    let subtitleName: String
-    
-    let url: URL
-}
-
-struct AudioChannel: AudioChannelProtocol {
+private struct AudioChannel: AudioChannelProtocol {
     let audioName: String
-    
-    let audioId: Int32
+    let audioId: Int64
 }
 
 class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
@@ -358,7 +349,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
                 guard let self = self else { return }
                 
                 if let audioChannel = newValue {
-                    self.player?.currentAudioTrackIndex = audioChannel.audioId
+                    self.player?.currentAudioTrackIndex = Int32(audioChannel.audioId)
                 } else {
                     self.player?.currentAudioTrackIndex = -1
                 }
@@ -532,7 +523,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         guard let player = self.player else { return nil }
         
         if index < player.audioTrackIndexes.count,
-           let indexNumber = player.audioTrackIndexes[index] as? Int32 {
+           let indexNumber = player.audioTrackIndexes[index] as? Int64 {
             
             var name: String
             if index < player.audioTrackNames.count {
