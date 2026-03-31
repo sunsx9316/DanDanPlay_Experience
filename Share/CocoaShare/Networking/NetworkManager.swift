@@ -55,7 +55,7 @@ class NetworkManager {
                 
                 complection(.success(data))
             case .failure(let error):
-                ANX.logInfo(.HTTP, "get 请求失败 url: \(url), 参数: \(parameters), error:\(error), response:\(response.response), req:\(response.request?.headers)")
+                ANX.logInfo(.HTTP, "get 请求失败 url: \(url), 参数: \(parameters), error:\(error), response:\(String(describing: response.response)), req:\(String(describing: response.request?.headers))")
                 
                 complection(.failure(error))
             }
