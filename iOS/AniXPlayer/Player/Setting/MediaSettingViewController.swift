@@ -287,13 +287,13 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             cell.stepper.minimumValue = range.min
             cell.stepper.maximumValue = range.max
             cell.stepper.value = Double(offsetTime)
-            cell.valueLabel.text = "\(Int(offsetTime))s"
+            cell.valueLabel.text = readableString(offsetTime)
             cell.onTouchStepperCallBack = { [weak self] (aCell) in
                 guard let self = self else { return }
                 
                 let value = Int(aCell.stepper.value)
-                aCell.valueLabel.text = "\(value)s"
-                
+                aCell.valueLabel.text = readableString(value)
+
                 self.mediaModel.onChangeSubtitleOffsetTime(value)
             }
             return cell
@@ -370,13 +370,13 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             cell.stepper.minimumValue = range.min
             cell.stepper.maximumValue = range.max
             cell.stepper.value = Double(offsetTime)
-            cell.valueLabel.text = "\(Int(offsetTime))s"
+            cell.valueLabel.text = readableString(offsetTime)
             cell.onTouchStepperCallBack = { [weak self] (aCell) in
                 guard let self = self else { return }
-                
+
                 let value = Int(aCell.stepper.value)
-                aCell.valueLabel.text = "\(value)s"
-                
+                aCell.valueLabel.text = readableString(value)
+
                 self.mediaModel.onChangeAudioOffsetTime(value)
             }
             return cell
@@ -492,6 +492,15 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
     private func onTouchAlertAction(_ type: PlayerMode) {
         self.mediaModel.onChangePlayerMode(type)
         self.tableView.reloadData()
+    }
+    
+    private func readableString(_ offsetTime: Int) -> String {
+        if offsetTime < 0 {
+            return String(format: NSLocalizedString("延后(%ds)", comment: ""), abs(offsetTime))
+        } else if offsetTime > 0 {
+            return String(format: NSLocalizedString("提前(%ds)", comment: ""), abs(offsetTime))
+        }
+        return NSLocalizedString("无偏移", comment: "")
     }
     
 }

@@ -175,12 +175,12 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
             cell.stepper.minimumValue = -500
             cell.stepper.maximumValue = 500
             cell.stepper.value = Double(danmakuOffsetTime)
-            cell.valueLabel.text = "\(Int(danmakuOffsetTime))s"
+            cell.valueLabel.text = readableString(danmakuOffsetTime)
             cell.onTouchStepperCallBack = { [weak self] (aCell) in
                 guard let self = self else { return }
                 
                 let value = Int(aCell.stepper.value)
-                aCell.valueLabel.text = "\(value)s"
+                aCell.valueLabel.text = readableString(value)
                 self.danmakuModel.onChangeDanmakuOffsetTime(value)
             }
             return cell
@@ -306,4 +306,12 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
         }
     }
     
+    private func readableString(_ offsetTime: Int) -> String {
+        if offsetTime < 0 {
+            return String(format: NSLocalizedString("延后(%ds)", comment: ""), abs(offsetTime))
+        } else if offsetTime > 0 {
+            return String(format: NSLocalizedString("提前(%ds)", comment: ""), abs(offsetTime))
+        }
+        return NSLocalizedString("无偏移", comment: "")
+    }
 }
