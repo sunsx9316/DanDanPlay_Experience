@@ -387,14 +387,14 @@ class MediaPlayer {
     }
     
     func addMediaToPlayList(_ media: File) {
-        if !self.playList.contains(where: { $0.url == media.url }) {
+        if !self.playList.contains(where: { $0 == media }) {
             self.playList.append(media)
             self.delegate?.playerListDidChange(self)
         }
     }
     
     func removeMediaFromPlayList(_ media: File) {
-        self.playList.removeAll(where: { $0.url == media.url })
+        self.playList.removeAll(where: { $0 == media })
         self.delegate?.playerListDidChange(self)
     }
     
@@ -454,7 +454,7 @@ class MediaPlayer {
     private func tryPlayNextItem() {
         
         func nextItemWithCycle(_ cycle: Bool) -> File? {
-            if let index = self.playList.firstIndex(where: { $0.url == self.currentPlayItem?.url }) {
+            if let index = self.playList.firstIndex(where: { $0 == self.currentPlayItem }) {
                 if index == self.playList.count - 1 {
                     return cycle ? self.playList.first : nil
                 }

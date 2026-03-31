@@ -85,7 +85,7 @@ class PCFileManager: FileManagerProtocol {
                         
                         var fileDic = [Int: PCFile]()
                         /// 根目录展示文件夹
-                        if directory.url == PCFile.rootFile.url {
+                        if directory == PCFile.rootFile {
                             
                             for model in libraryModels {
                                 var parentFile: PCFile

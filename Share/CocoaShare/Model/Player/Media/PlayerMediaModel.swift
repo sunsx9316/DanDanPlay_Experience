@@ -411,7 +411,7 @@ class PlayerMediaModel {
     /// 获取下一个应该播放的视频
     /// - Returns: 下一个应该播放的视频
     func nextMedia() -> File? {
-        if let index = self.player.playList.firstIndex(where: { $0.url == self.media?.url }) {
+        if let index = self.player.playList.firstIndex(where: { $0 == self.media }) {
             if index != self.player.playList.count - 1 {
                 return self.player.playList[index + 1]
             }

@@ -69,7 +69,7 @@ extension FileBrowserViewController: UITableViewDelegate, UITableViewDataSource 
         case .file:
             let cell = tableView.dequeueCell(class: FileTableViewCell.self, indexPath: indexPath)
             cell.file = file
-            if file.url == self.selectedFile?.url {
+            if file == self.selectedFile {
                 cell.backgroundView?.backgroundColor = .headViewBackgroundColor
             } else {
                 cell.backgroundView?.backgroundColor = .backgroundColor

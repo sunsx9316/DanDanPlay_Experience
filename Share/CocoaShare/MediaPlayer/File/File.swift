@@ -107,7 +107,7 @@ extension File {
     }
     
     var isCanDelete: Bool {
-        if self.url == Swift.type(of: self).rootFile.url {
+        if self == Swift.type(of: self).rootFile {
             return false
         }
         return true
@@ -131,4 +131,35 @@ extension File {
     func getDataWithProgress(_ progress: FileProgressAction?, completion: @escaping ((Result<Data, Error>) -> Void)) {
         Swift.type(of: self).fileManager.getDataWithFile(self, range: nil, progress: progress, completion: completion)
     }
+}
+
+extension File {
+    // 定义一个通用的比较方法
+    func isEqual(to other: any File) -> Bool {
+        guard let comp1 = URLComponents(url: self.url, resolvingAgainstBaseURL: false),
+              let comp2 = URLComponents(url: other.url, resolvingAgainstBaseURL: false) else {
+            return self.url == other.url
+        }
+        
+        // 忽略 user 和 password 的逻辑
+        return comp1.scheme == comp2.scheme &&
+               comp1.host == comp2.host &&
+               comp1.path == comp2.path &&
+               comp1.query == comp2.query
+    }
+}
+
+// 重载运算符，支持不同类型的 File 比较
+func == (lhs: any File, rhs: any File) -> Bool {
+    return lhs.isEqual(to: rhs)
+}
+
+func == (lhs: any File, rhs: (any File)?) -> Bool {
+    guard let rhs = rhs else { return false }
+    return lhs.isEqual(to: rhs)
+}
+
+func == (lhs: (any File)?, rhs: any File) -> Bool {
+    guard let lhs = lhs else { return false }
+    return lhs.isEqual(to: rhs)
 }
