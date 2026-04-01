@@ -18,7 +18,9 @@ extension HttpServerViewController: HttpServerDelegate {
     }
     
     func httpServerDidStart(_ httpServer: HttpServer) {
-        self.resetAddress()
+        DispatchQueue.main.async {
+            self.resetAddress()
+        }
     }
 }
 
@@ -75,6 +77,16 @@ class HttpServerViewController: ViewController {
         super.traitCollectionDidChange(previousTraitCollection)
         self.tableView.reloadData()
         self.setupUI()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        UIApplication.shared.isIdleTimerDisabled = true
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        UIApplication.shared.isIdleTimerDisabled = false
     }
 
     override func viewDidLoad() {
