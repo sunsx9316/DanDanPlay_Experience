@@ -1122,25 +1122,15 @@
         }
       }
     },
-    "导入 %@ 成功，请在\"本地文件\"中查看。" : {
-      "extractionState" : "stale",
+    "导入 %@ 成功，请在“本地文件”中查看。" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Imported %@, check in \"Local Files\"."
           }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "导入 %@ 成功，请在\"本地文件\"中查看。"
-          }
         }
       }
-    },
-    "导入 %@ 成功，请在“本地文件”中查看。" : {
-
     },
     "将.xlog文件提供给开发者" : {
       "localizations" : {
@@ -1462,25 +1452,15 @@
         }
       }
     },
-    "拖拽到窗口 或 点击\"Upload Files…\" 上传文件" : {
-      "extractionState" : "stale",
+    "拖拽到窗口 或 点击“Upload Files…” 上传文件" : {
       "localizations" : {
         "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Drag to window or click \"Upload Files...\" to upload"
           }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "拖拽到窗口 或 点击\"Upload Files…\" 上传文件"
-          }
         }
       }
-    },
-    "拖拽到窗口 或 点击“Upload Files…” 上传文件" : {
-
     },
     "描边" : {
       "localizations" : {
@@ -2301,6 +2281,7 @@
       }
     },
     "系统语言" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

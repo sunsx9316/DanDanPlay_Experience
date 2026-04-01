@@ -162,7 +162,7 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
         else if type == .playerCore {
             let vc = UIAlertController(title: NSLocalizedString("播放器内核", comment: ""), message: nil, preferredStyle: .actionSheet)
 
-            for coreType in MediaPlayer.CoreType.allCases {
+            for coreType in MediaPlayer.CoreType.allCoreType {
                 vc.addAction(.init(title: coreType.displayName, style: .default, handler: { [weak self] _ in
                     self?.model.onChangePlayerCore(coreType)
                     self?.tableView.reloadData()

@@ -25,13 +25,17 @@ private class Coordinator: NSObject, GCDWebUploaderDelegate {
     }
     
     func webUploader(_ uploader: GCDWebUploader, didUploadFileAtPath path: String) {
-        guard let svr = self.svr else { return }
-        svr.delegate?.httpServer(svr, didReceiveFileAtPath: path)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self, let svr = self.svr else { return }
+            svr.delegate?.httpServer(svr, didReceiveFileAtPath: path)
+        }
     }
     
     func webServerDidStart(_ server: GCDWebServer) {
-        guard let svr = self.svr else { return }
-        svr.delegate?.httpServerDidStart(svr)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self, let svr = self.svr  else { return }
+            svr.delegate?.httpServerDidStart(svr)
+        }
     }
 }
 

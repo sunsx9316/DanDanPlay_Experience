@@ -16,7 +16,6 @@
 		890886DD2A01277B005EDBD6 /* PCConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890886DC2A01277B005EDBD6 /* PCConnectSvrViewController.swift */; };
 		890A0B2E2CAD624200AE1F6B /* Colorful in Frameworks */ = {isa = PBXBuildFile; productRef = 890A0B2D2CAD624200AE1F6B /* Colorful */; };
 		890DF6CD26160826002D8AE5 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890DF6CC26160826002D8AE5 /* AppDelegate.swift */; };
-		890DF6D426160826002D8AE5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 890DF6D226160826002D8AE5 /* Main.storyboard */; };
 		890DF6D626160827002D8AE5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 890DF6D526160827002D8AE5 /* Assets.xcassets */; };
 		890DF6D926160827002D8AE5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 890DF6D726160827002D8AE5 /* LaunchScreen.storyboard */; };
 		890DF6EE26160A25002D8AE5 /* RefreshText.plist in Resources */ = {isa = PBXBuildFile; fileRef = 890DF6ED26160A25002D8AE5 /* RefreshText.plist */; };
@@ -159,7 +158,7 @@
 		895B41522F7445A400B4DA4C /* MPVPlayerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895B41512F7445A400B4DA4C /* MPVPlayerWrapper.swift */; };
 		895B41562F74468D00B4DA4C /* SourceHanSansSC-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 895B41542F74468D00B4DA4C /* SourceHanSansSC-Regular.otf */; };
 		895B41572F74468D00B4DA4C /* SourceHanSansTC-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 895B41552F74468D00B4DA4C /* SourceHanSansTC-Regular.otf */; };
-		895B41C42F759C8100B4DA4C /* MPVFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 895B41BC2F759C8100B4DA4C /* MPVFramework.framework */; };
+		895B41C42F759C8100B4DA4C /* MPVFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 895B41BC2F759C8100B4DA4C /* MPVFramework.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		895B41C52F759C8100B4DA4C /* MPVFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 895B41BC2F759C8100B4DA4C /* MPVFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		895B41CC2F759CFB00B4DA4C /* MPVKit-GPL in Frameworks */ = {isa = PBXBuildFile; productRef = 895B41CB2F759CFB00B4DA4C /* MPVKit-GPL */; };
 		895B41D52F75A2E200B4DA4C /* MPV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895B41D42F75A2E200B4DA4C /* MPV.swift */; };
@@ -288,7 +287,6 @@
 		890886DC2A01277B005EDBD6 /* PCConnectSvrViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCConnectSvrViewController.swift; sourceTree = "<group>"; };
 		890DF6C926160826002D8AE5 /* AniXPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AniXPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		890DF6CC26160826002D8AE5 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		890DF6D326160826002D8AE5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		890DF6D526160827002D8AE5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		890DF6D826160827002D8AE5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		890DF6DA26160827002D8AE5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -410,7 +408,6 @@
 		8931F0F526773A2300590569 /* SubtitleOrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtitleOrderViewController.swift; sourceTree = "<group>"; };
 		8931F0F72677457100590569 /* EditableTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditableTableViewCell.swift; sourceTree = "<group>"; };
 		8931F0F82677457100590569 /* EditableTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = EditableTableViewCell.xib; sourceTree = "<group>"; };
-		8931F12D2678FD1400590569 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Main.strings"; sourceTree = "<group>"; };
 		8931F12E2678FD1500590569 /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/LaunchScreen.strings"; sourceTree = "<group>"; };
 		8931F165267CF34400590569 /* MediaLibNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaLibNavigationController.swift; sourceTree = "<group>"; };
 		8944E870263AF11A00EF00B1 /* SMBLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMBLoginHistoryViewController.swift; sourceTree = "<group>"; };
@@ -629,7 +626,6 @@
 				89A688D32C3A535A002B7CA3 /* Bangumi */,
 				89E0D826266BBA9400E2337B /* SceneDelegate.swift */,
 				890DF6CC26160826002D8AE5 /* AppDelegate.swift */,
-				890DF6D226160826002D8AE5 /* Main.storyboard */,
 				890DF6D526160827002D8AE5 /* Assets.xcassets */,
 				890DF6D726160827002D8AE5 /* LaunchScreen.storyboard */,
 				890DF6DA26160827002D8AE5 /* Info.plist */,
@@ -1450,8 +1446,9 @@
 		890DF6C126160826002D8AE5 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 2600;
-				LastUpgradeCheck = 1240;
+				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					890DF6C826160826002D8AE5 = {
 						CreatedOnToolsVersion = 12.4;
@@ -1538,7 +1535,6 @@
 				89A688AA2C398347002B7CA3 /* HomePageBangumiQueueTableViewCell.xib in Resources */,
 				897CF533262F317B00CC297A /* SliderTableViewCell.xib in Resources */,
 				89E0D711266B44BE00E2337B /* TitleTableViewCell.xib in Resources */,
-				890DF6D426160826002D8AE5 /* Main.storyboard in Resources */,
 				890DF6EE26160A25002D8AE5 /* RefreshText.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1822,15 +1818,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		890DF6D226160826002D8AE5 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				890DF6D326160826002D8AE5 /* Base */,
-				8931F12D2678FD1400590569 /* zh-Hans */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		890DF6D726160827002D8AE5 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1879,6 +1866,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1895,11 +1883,12 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1942,6 +1931,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1952,10 +1942,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -1972,16 +1963,15 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2025111501;
+				CURRENT_PROJECT_VERSION = 2026040102;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/AniXPlayer/Vendor",
 				);
 				INFOPLIST_FILE = AniXPlayer/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12;
+				IPHONEOS_DEPLOYMENT_TARGET = 14;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2006,15 +1996,14 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2025111501;
-				DEVELOPMENT_TEAM = 94L7P6P9PY;
+				CURRENT_PROJECT_VERSION = 2026040102;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/AniXPlayer/Vendor",
 				);
 				INFOPLIST_FILE = AniXPlayer/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 12;
+				IPHONEOS_DEPLOYMENT_TARGET = 14;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2036,11 +2025,10 @@
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 94L7P6P9PY;
+				DEFINES_MODULE = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -2050,7 +2038,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2085,11 +2073,10 @@
 				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DEVELOPMENT_TEAM = 94L7P6P9PY;
+				DEFINES_MODULE = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
@@ -2099,7 +2086,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

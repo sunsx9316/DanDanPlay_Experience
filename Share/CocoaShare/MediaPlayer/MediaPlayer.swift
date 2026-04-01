@@ -162,7 +162,7 @@ enum PlayerAspectRatio: RawRepresentable {
 
 class MediaPlayer {
 
-    enum CoreType: Int, CaseIterable {
+    enum CoreType: Int {
         case vlc = 0
         case mpv = 1
 
@@ -171,6 +171,18 @@ class MediaPlayer {
             case .vlc: return "VLC"
             case .mpv: return "MPV"
             }
+        }
+        
+        static var allCoreType: [CoreType] {
+#if os(iOS)
+            if #available(iOS 14, *) {
+                return [.mpv, .vlc]
+            } else {
+                return [.vlc]
+            }
+#else
+            return [.vlc]
+#endif
         }
     }
 

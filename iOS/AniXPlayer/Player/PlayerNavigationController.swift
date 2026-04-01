@@ -32,8 +32,21 @@ class PlayerNavigationController: NavigationController {
         if let playerViewController = self.playerViewController {
             self.setViewControllers([playerViewController], animated: false)
         }
+    }
+    
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
         
-        NotificationCenter.default.addObserver(self, selector: #selector(handleDeviceOrientationDidChange), name: UIApplication.didChangeStatusBarOrientationNotification, object: nil)
+        coordinator.animate(alongsideTransition: nil) { _ in
+            if size.width > size.height {
+                    // 横屏布局：隐藏状态栏、全屏播放器
+                    // 获取当前的界面方向
+                if let windowScene = self.view.window?.windowScene {
+                    let orientation = windowScene.interfaceOrientation
+                    UserDefaults.standard.set(orientation.rawValue, forKey: self.defaultOrientationKey)
+                }
+            }
+        }
     }
     
     override var shouldAutorotate: Bool {
@@ -50,20 +63,6 @@ class PlayerNavigationController: NavigationController {
               (orientation == .landscapeLeft || orientation == .landscapeRight) else { return .landscapeLeft }
         
         return orientation
-    }
-    
-    //MARK: Private
-    @objc private func handleDeviceOrientationDidChange(_ notification: Notification) {
-        
-        guard let orientationRawValue = notification.userInfo?[UIApplication.statusBarOrientationUserInfoKey] as? Int,
-              let orientation = UIInterfaceOrientation(rawValue: orientationRawValue) else { return }
-        
-        switch orientation {
-        case .landscapeLeft, .landscapeRight:
-            UserDefaults.standard.set(orientation.rawValue, forKey: defaultOrientationKey)
-        default:
-            break
-        }
     }
 
 }

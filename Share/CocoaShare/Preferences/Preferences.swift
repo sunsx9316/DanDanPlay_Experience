@@ -145,15 +145,21 @@ class Preferences {
     @StoreWrapper(defaultValue: PlayerAspectRatio.default, key: .aspectRatio)
     var aspectRatio: PlayerAspectRatio
 
-    #if os(iOS)
-    @StoreWrapper(defaultValue: .mpv, key: .playerCore)
-    #else
-    @StoreWrapper(defaultValue: .vlc, key: .playerCore)
-    #endif
+    @StoreWrapper(defaultValueGetter: {
+#if os(iOS)
+        if #available(iOS 14, *) {
+            return .mpv
+        } else {
+            return .vlc
+        }
+#else
+        return .vlc
+#endif
+    }, key: .playerCore)
     var playerCore: MediaPlayer.CoreType
 
     /// 应用语言
-    @StoreWrapper(defaultValue: .system, key: .appLanguage)
+    @StoreWrapper(defaultValue: .chinese, key: .appLanguage)
     var appLanguage: AppLanguage
     
     @StoreWrapper(defaultValue: ANXColor.defaultMainColor, key: .mainColor)
@@ -435,6 +441,11 @@ extension Preferences {
         
         init(defaultValue: Value, key: KeyName) {
             self.value = defaultValue
+            self.key = key
+        }
+        
+        init(defaultValueGetter: () -> Value, key: KeyName) {
+            self.value = defaultValueGetter()
             self.key = key
         }
 

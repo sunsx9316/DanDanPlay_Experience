@@ -13,8 +13,6 @@ class Localize {
     static func setLanguage(_ language: AppLanguage) {
             // 1. 设置 AppleLanguages
         switch language {
-        case .system:
-            UserDefaults.standard.removeObject(forKey: "AppleLanguages")
         case .chinese:
             UserDefaults.standard.set(["zh-Hans"], forKey: "AppleLanguages")
         case .english:
