@@ -147,6 +147,7 @@ public enum MPVProperty {
     case cache
     case playbackTime
     case speed
+    case endOfReached
 
     // Time
     case timePos
@@ -247,6 +248,7 @@ public enum MPVProperty {
         case .gpuApi: return "gpu-api"
         case .gpuContext: return "gpu-context"
         case .protocolList: return "protocol-list"
+        case .endOfReached: return "eof-reached"
         }
     }
 }
@@ -473,9 +475,9 @@ public class MPV {
     // MARK: - 属性观察
 
     /// 观察属性变化
-    public func observeProperty(_ property: MPVProperty) {
+    public func observeProperty(_ property: MPVProperty, id: UInt64) {
         guard let mpv = mpv else { return }
-        mpv_observe_property(mpv, 0, property.rawValue, MPV_FORMAT_NONE)
+        mpv_observe_property(mpv, id, property.rawValue, MPV_FORMAT_NONE)
     }
 
     // MARK: - 事件

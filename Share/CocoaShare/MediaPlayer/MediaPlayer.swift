@@ -38,6 +38,8 @@ protocol MediaPlayerProtocol: AnyObject {
     
     var stateChangedCallBack: ((MediaPlayerProtocol, PlayerState) -> Void)? { set get }
     
+    var endOfFileCallBack: ((MediaPlayerProtocol) -> Void)? { set get }
+    
     var bufferInfoDidChangeCallBack: ((MediaPlayerProtocol, File, MediaBufferInfo) -> Void)? { set get }
     
     var volume: Int { set get }
@@ -79,8 +81,6 @@ protocol MediaPlayerProtocol: AnyObject {
     func stop()
     
     func terminate()
-    
-    func isEndPosition(_ position: Double) -> Bool
 }
 
 enum PlayerMode: Int, CaseIterable {
@@ -370,10 +370,6 @@ class MediaPlayer {
     
     func setPosition(_ position: Double) {
         self.player.setPosition(position)
-        
-        if self.player.isEndPosition(position) {
-            self.tryPlayNextItem()
-        }
     }
     
     func play(_ media: File) {
@@ -437,9 +433,12 @@ class MediaPlayer {
             guard let self = self else { return }
             
             self.delegate?.player(self, stateDidChange: newState)
-            if ins.isEndPosition(self.position) {
-                self.tryPlayNextItem()
-            }
+        }
+        
+        self.player.endOfFileCallBack = { [weak self] _ in
+            guard let self = self else { return }
+            
+            self.tryPlayNextItem()
         }
         
         self.player.bufferInfoDidChangeCallBack = { [weak self] (ins, file, bufferInfo) in

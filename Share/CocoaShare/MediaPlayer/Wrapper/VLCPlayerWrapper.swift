@@ -370,6 +370,8 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     
     var bufferInfoDidChangeCallBack: ((MediaPlayerProtocol, File, MediaBufferInfo) -> Void)?
     
+    var endOfFileCallBack: ((MediaPlayerProtocol) -> Void)?
+    
     var aspectRatio: PlayerAspectRatio {
         get {
             if let videoAspectRatio = self.player?.videoAspectRatio {
@@ -465,6 +467,8 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     func setPosition(_ position: Double) {
         let position = max(min(position, 1), 0)
         self.player?.position = Float(position)
+        
+        checkIsEndPosition(position: position)
     }
     
     func play(_ media: File) {
@@ -486,10 +490,6 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     
     func terminate() {
         stop()
-    }
-    
-    func isEndPosition(_ position: Double) -> Bool {
-        return position >= self.endFlagProgress
     }
     
     deinit {
@@ -577,6 +577,12 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         return player
     }
     
+    private func checkIsEndPosition(position: Double) {
+        if position >= self.endFlagProgress {
+            self.endOfFileCallBack?(self)
+        }
+    }
+    
 }
 
 extension VLCPlayerWarrper: FileDelegate {
@@ -609,11 +615,13 @@ extension VLCPlayerWarrper: VLCMediaPlayerDelegate {
                 
                 self.timeIsUpdate = false
                 self.stateChangedCallBack?(self, self.state)
+                self.checkIsEndPosition(position: self.position)
             }
             
             if self.timeIsUpdate == false {
                 self.timeIsUpdate = true
                 self.stateChangedCallBack?(self, self.state)
+                self.checkIsEndPosition(position: self.position)
             }
             
             self.timeChangedCallBack?(self, self.position)
@@ -623,5 +631,6 @@ extension VLCPlayerWarrper: VLCMediaPlayerDelegate {
     
     func mediaPlayerStateChanged(_ aNotification: Notification) {
         self.stateChangedCallBack?(self, self.state)
+        self.checkIsEndPosition(position: self.position)
     }
 }

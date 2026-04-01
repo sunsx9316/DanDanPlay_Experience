@@ -133,6 +133,7 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
     var timeChangedCallBack: ((MediaPlayerProtocol, Double) -> Void)?
     var stateChangedCallBack: ((MediaPlayerProtocol, PlayerState) -> Void)?
     var bufferInfoDidChangeCallBack: ((MediaPlayerProtocol, File, MediaBufferInfo) -> Void)?
+    var endOfFileCallBack: ((MediaPlayerProtocol) -> Void)?
 
     var volume: Int = 100 {
         didSet {
@@ -356,16 +357,13 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
     }
 
     func play() {
-        guard let mpv = mpv else { return }
-        mpv.playback.isPaused = false
+        mpv?.playback.isPaused = false
         startPlaybackPolling()
-        stateChangedCallBack?(self, .playing)
     }
 
     func pause() {
         mpv?.playback.isPaused = true
         stopPlaybackPolling()
-        stateChangedCallBack?(self, .pause)
     }
 
     func stop() {
@@ -378,10 +376,6 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
         stopPlaybackPolling()
         self.mpv?.quit()
         stateChangedCallBack?(self, .stop)
-    }
-
-    func isEndPosition(_ position: Double) -> Bool {
-        return position >= endFlagProgress
     }
 
     // MARK: - 初始化
@@ -412,7 +406,9 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
 
         mpvHandle.initialize()
 
-        mpvHandle.observeProperty(.trackList)
+        mpvHandle.observeProperty(.trackList, id: 1)
+        mpvHandle.observeProperty(.pause, id: 2)
+        mpvHandle.observeProperty(.endOfReached, id: 3)
 
         startEventLoop()
     }
@@ -477,6 +473,12 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
                     guard let self = self else { return }
                     self.updateTrackLists()
                 }
+            } else if event.propertyName == "pause" {
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    let isPaused = self.mpv?.playback.isPaused ?? false
+                    self.stateChangedCallBack?(self, isPaused ? .pause : .playing)
+                }
             }
         case .fileLoaded:
             DispatchQueue.main.async { [weak self] in
@@ -487,6 +489,8 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 self.stopPlaybackPolling()
+                self.stateChangedCallBack?(self, .stop)
+                self.endOfFileCallBack?(self)
             }
         default:
             break
