@@ -50,7 +50,9 @@ class PlayerMediaContext {
     lazy var jumpEndingDuration = BehaviorSubject<Double>(value: Preferences.shared.jumpEndingDuration)
     
     lazy var aspectRatio = BehaviorSubject<PlayerAspectRatio>(value: Preferences.shared.aspectRatio)
-    
+
+    lazy var subtitleColor = BehaviorSubject<ANXColor?>(value: Preferences.shared.subtitleColor)
+
     lazy var volume = PublishSubject<Int>()
     
     /// 播放文件事件

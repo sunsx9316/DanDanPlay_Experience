@@ -329,10 +329,9 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
 
     var fontColor: ANXColor? {
         didSet {
-            guard let color = self.fontColor else { return }
             let setup = { [weak self] in
                 guard let self = self else { return }
-                self.mpv?.subtitle.color = color
+                self.mpv?.subtitle.color = self.fontColor
             }
 
             if self.mpv != nil {

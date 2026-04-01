@@ -124,6 +124,7 @@
 		8931A91B2F79737000125F69 /* FTPConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8931A91A2F79737000125F69 /* FTPConnectSvrViewController.swift */; };
 		8931A91F2F7C0A8A00125F69 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 8931A91E2F7C0A8A00125F69 /* Localizable.xcstrings */; };
 		8931A9212F7C297B00125F69 /* Localize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8931A9202F7C297B00125F69 /* Localize.swift */; };
+		8931A9232F7D791000125F69 /* SetSubtitleColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8931A9222F7D791000125F69 /* SetSubtitleColorViewController.swift */; };
 		8931F0E52674CA6A00590569 /* UIBarButtonItem+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8931F0E42674CA6A00590569 /* UIBarButtonItem+Helper.swift */; };
 		8931F0EB2674CD3300590569 /* HttpServerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8931F0EA2674CD3300590569 /* HttpServerViewController.swift */; };
 		8931F0EE26750D6500590569 /* UIView+HitTest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8931F0ED26750D6500590569 /* UIView+HitTest.m */; };
@@ -398,6 +399,7 @@
 		8931A91A2F79737000125F69 /* FTPConnectSvrViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FTPConnectSvrViewController.swift; sourceTree = "<group>"; };
 		8931A91E2F7C0A8A00125F69 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		8931A9202F7C297B00125F69 /* Localize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localize.swift; sourceTree = "<group>"; };
+		8931A9222F7D791000125F69 /* SetSubtitleColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetSubtitleColorViewController.swift; sourceTree = "<group>"; };
 		8931F0E42674CA6A00590569 /* UIBarButtonItem+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIBarButtonItem+Helper.swift"; sourceTree = "<group>"; };
 		8931F0EA2674CD3300590569 /* HttpServerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpServerViewController.swift; sourceTree = "<group>"; };
 		8931F0EC26750D6500590569 /* UIView+HitTest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIView+HitTest.h"; sourceTree = "<group>"; };
@@ -1162,6 +1164,7 @@
 		897CF527262F308300CC297A /* Setting */ = {
 			isa = PBXGroup;
 			children = (
+				8931A9222F7D791000125F69 /* SetSubtitleColorViewController.swift */,
 				897CF528262F309D00CC297A /* PlayerSettingViewController.swift */,
 				897CF52C262F30D200CC297A /* DanmakuSettingViewController.swift */,
 				89AF9C062631D4B00037A133 /* MediaSettingViewController.swift */,
@@ -1713,6 +1716,7 @@
 				89FFD1312D4B838500428206 /* Launcher.swift in Sources */,
 				89A688A92C398347002B7CA3 /* HomePageBangumiQueueTableViewCell.swift in Sources */,
 				8925B8702CA7E4C3001A8388 /* Bangumi.swift in Sources */,
+				8931A9232F7D791000125F69 /* SetSubtitleColorViewController.swift in Sources */,
 				895B41522F7445A400B4DA4C /* MPVPlayerWrapper.swift in Sources */,
 				8925B8712CA7E4C3001A8388 /* CacheManager.swift in Sources */,
 				8925B8722CA7E4C3001A8388 /* File.swift in Sources */,

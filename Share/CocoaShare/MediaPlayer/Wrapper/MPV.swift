@@ -744,6 +744,8 @@ public class SubtitleAPI {
         set {
             if let color = newValue {
                 player?.setOptionString(.subtitleColor, MPV.colorToHex(color))
+            } else {
+                player?.setOptionString(.subtitleColor, MPV.colorToHex(UIColor.white))
             }
         }
     }
@@ -756,7 +758,9 @@ public class SubtitleAPI {
         }
         set {
             if let color = newValue {
-                player?.setOptionString(.subtitleBackColor, MPV.colorToHex(color) + "80")
+                player?.setOptionString(.subtitleBackColor, MPV.colorToHex(color) + "80") // 50% alpha
+            } else {
+                player?.setOptionString(.subtitleBackColor, "")
             }
         }
     }
@@ -770,6 +774,8 @@ public class SubtitleAPI {
         set {
             if let color = newValue {
                 player?.setOptionString(.subtitleColor, MPV.colorToHex(color))
+            } else {
+                player?.setOptionString(.subtitleColor, "")
             }
         }
     }
@@ -783,6 +789,8 @@ public class SubtitleAPI {
         set {
             if let color = newValue {
                 player?.setOptionString(.subtitleBackColor, MPV.colorToHex(color) + "80")
+            }  else {
+                player?.setOptionString(.subtitleBackColor, "")
             }
         }
     }

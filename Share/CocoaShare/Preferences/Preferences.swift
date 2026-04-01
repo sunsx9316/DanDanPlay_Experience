@@ -133,7 +133,10 @@ class Preferences {
 
         /// 应用语言 0=系统默认 1=中文 2=英文
         case appLanguage
-        
+
+        /// 字幕颜色
+        case subtitleColor
+
         var storeKey: String {
             return self.rawValue
         }
@@ -161,6 +164,22 @@ class Preferences {
     /// 应用语言
     @StoreWrapper(defaultValue: .chinese, key: .appLanguage)
     var appLanguage: AppLanguage
+
+    /// 字幕颜色（nil 表示使用默认颜色）
+    var subtitleColor: ANXColor? {
+        get {
+            let key = KeyName.subtitleColor
+            return Store.shared.value(forKey: key.storeKey)
+        }
+        set {
+            let key = KeyName.subtitleColor
+            if let newValue = newValue {
+                Store.shared.set(newValue, forKey: key.storeKey)
+            } else {
+                Store.shared.remove(key.storeKey)
+            }
+        }
+    }
     
     @StoreWrapper(defaultValue: ANXColor.defaultMainColor, key: .mainColor)
     var mainColor: ANXColor
@@ -270,7 +289,7 @@ class Preferences {
     
     var pcLoginInfos: [LoginInfo]? {
         get {
-            if let jsonData: Data = Store.shared.value(forKey: KeyName.pcLoginInfo.rawValue) {
+            if let jsonData: Data = Store.shared.value(forKey: KeyName.pcLoginInfo.storeKey) {
                 do {
                     let loginInfo = try JSONDecoder().decode([LoginInfo].self, from: jsonData)
                     return loginInfo
@@ -285,19 +304,19 @@ class Preferences {
             if let newValue = newValue {
                 do {
                     let data = try JSONEncoder().encode(newValue)
-                    Store.shared.set(data, forKey: KeyName.pcLoginInfo.rawValue)
+                    Store.shared.set(data, forKey: KeyName.pcLoginInfo.storeKey)
                 } catch let error {
                     debugPrint("设置 pcLoginInfos 失败 error: \(error)")
                 }
             } else {
-                Store.shared.remove(KeyName.pcLoginInfo.rawValue)
+                Store.shared.remove(KeyName.pcLoginInfo.storeKey)
             }
         }
     }
     
     var smbLoginInfos: [LoginInfo]? {
         get {
-            if let jsonData: Data = Store.shared.value(forKey: KeyName.smbLoginInfo.rawValue) {
+            if let jsonData: Data = Store.shared.value(forKey: KeyName.smbLoginInfo.storeKey) {
                 do {
                     let smbLoginInfo = try JSONDecoder().decode([LoginInfo].self, from: jsonData)
                     return smbLoginInfo
@@ -312,19 +331,19 @@ class Preferences {
             if let newValue = newValue {
                 do {
                     let data = try JSONEncoder().encode(newValue)
-                    Store.shared.set(data, forKey: KeyName.smbLoginInfo.rawValue)
+                    Store.shared.set(data, forKey: KeyName.smbLoginInfo.storeKey)
                 } catch let error {
                     debugPrint("设置 smbLoginInfo 失败 error: \(error)")
                 }
             } else {
-                Store.shared.remove(KeyName.smbLoginInfo.rawValue)
+                Store.shared.remove(KeyName.smbLoginInfo.storeKey)
             }
         }
     }
     
     var webDavLoginInfos: [LoginInfo]? {
         get {
-            if let jsonData: Data = Store.shared.value(forKey: KeyName.webDavLoginInfo.rawValue) {
+            if let jsonData: Data = Store.shared.value(forKey: KeyName.webDavLoginInfo.storeKey) {
                 do {
                     let loginInfo = try JSONDecoder().decode([LoginInfo].self, from: jsonData)
                     return loginInfo
@@ -339,19 +358,19 @@ class Preferences {
             if let newValue = newValue {
                 do {
                     let data = try JSONEncoder().encode(newValue)
-                    Store.shared.set(data, forKey: KeyName.webDavLoginInfo.rawValue)
+                    Store.shared.set(data, forKey: KeyName.webDavLoginInfo.storeKey)
                 } catch let error {
                     debugPrint("设置 webDavLoginInfos 失败 error: \(error)")
                 }
             } else {
-                Store.shared.remove(KeyName.webDavLoginInfo.rawValue)
+                Store.shared.remove(KeyName.webDavLoginInfo.storeKey)
             }
         }
     }
     
     var ftpLoginInfos: [LoginInfo]? {
         get {
-            if let jsonData: Data = Store.shared.value(forKey: KeyName.ftpLoginInfo.rawValue) {
+            if let jsonData: Data = Store.shared.value(forKey: KeyName.ftpLoginInfo.storeKey) {
                 do {
                     let loginInfo = try JSONDecoder().decode([LoginInfo].self, from: jsonData)
                     return loginInfo
@@ -366,19 +385,19 @@ class Preferences {
             if let newValue = newValue {
                 do {
                     let data = try JSONEncoder().encode(newValue)
-                    Store.shared.set(data, forKey: KeyName.ftpLoginInfo.rawValue)
+                    Store.shared.set(data, forKey: KeyName.ftpLoginInfo.storeKey)
                 } catch let error {
                     debugPrint("设置 webDavLoginInfos 失败 error: \(error)")
                 }
             } else {
-                Store.shared.remove(KeyName.ftpLoginInfo.rawValue)
+                Store.shared.remove(KeyName.ftpLoginInfo.storeKey)
             }
         }
     }
     
     var subtitleLoadOrder: [String]? {
         get {
-            if let jsonData: Data = Store.shared.value(forKey: KeyName.subtitleLoadOrder.rawValue) {
+            if let jsonData: Data = Store.shared.value(forKey: KeyName.subtitleLoadOrder.storeKey) {
                 do {
                     let loadOrder = try JSONDecoder().decode([String].self, from: jsonData)
                     return loadOrder
@@ -393,19 +412,19 @@ class Preferences {
             if let newValue = newValue {
                 do {
                     let data = try JSONEncoder().encode(newValue)
-                    Store.shared.set(data, forKey: KeyName.subtitleLoadOrder.rawValue)
+                    Store.shared.set(data, forKey: KeyName.subtitleLoadOrder.storeKey)
                 } catch let error {
                     debugPrint("设置 subtitleLoadOrder 失败 error: \(error)")
                 }
             } else {
-                Store.shared.remove(KeyName.subtitleLoadOrder.rawValue)
+                Store.shared.remove(KeyName.subtitleLoadOrder.storeKey)
             }
         }
     }
     
     var filterDanmakus: [FilterDanmaku]? {
         get {
-            if let jsonData: Data = Store.shared.value(forKey: KeyName.filterDanmaku.rawValue) {
+            if let jsonData: Data = Store.shared.value(forKey: KeyName.filterDanmaku.storeKey) {
                 do {
                     let shildDanmaku = try JSONDecoder().decode([FilterDanmaku].self, from: jsonData)
                     return shildDanmaku
@@ -420,12 +439,12 @@ class Preferences {
             if let newValue = newValue {
                 do {
                     let data = try JSONEncoder().encode(newValue)
-                    Store.shared.set(data, forKey: KeyName.filterDanmaku.rawValue)
+                    Store.shared.set(data, forKey: KeyName.filterDanmaku.storeKey)
                 } catch let error {
                     debugPrint("设置 filterDanmaku 失败 error: \(error)")
                 }
             } else {
-                Store.shared.remove(KeyName.filterDanmaku.rawValue)
+                Store.shared.remove(KeyName.filterDanmaku.storeKey)
             }
         }
     }

@@ -80,7 +80,7 @@ class MediaSettingViewController: ViewController {
 }
 
 
-extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource {
+extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource, UIPopoverPresentationControllerDelegate {
     
     func numberOfSections(in tableView: UITableView) -> Int {
         return self.dataSource.count
@@ -388,6 +388,14 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = self.mediaModel.subtitleFontReadableName()
             return cell
+        case .subtitleColor:
+            let cell = tableView.dequeueCell(class: TitleDetailMoreTableViewCell.self, indexPath: indexPath)
+            cell.backgroundView?.backgroundColor = .clear
+            cell.backgroundColor = .clear
+            cell.selectionStyle = .none
+            cell.titleLabel.text = type.title
+            cell.subtitleLabel.backgroundColor = self.mediaModel.subtitleColor ?? .clear
+            return cell
         }
     }
     
@@ -486,9 +494,25 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             self.present(vc, atView: tableView.cellForRow(at: indexPath))
         } else if type == .subtitleFont {
             self.delegate?.changeSubtitleFontInMediaSettingViewController(self)
+        } else if type == .subtitleColor {
+            let vc = SetSubtitleColorViewController(mediaModel: self.mediaModel)
+            vc.dismissCallBack = { [weak self] in
+                guard let self = self else { return }
+                
+                self.tableView.reloadData()
+            }
+            vc.modalPresentationStyle = .popover
+            vc.preferredContentSize = CGSize(width: 300, height: 350)
+            if let popover = vc.popoverPresentationController {
+                popover.sourceView = tableView.cellForRow(at: indexPath)
+                popover.sourceRect = tableView.cellForRow(at: indexPath)?.bounds ?? .zero
+                popover.permittedArrowDirections = []
+                popover.delegate = self
+            }
+            present(vc, animated: true)
         }
     }
-    
+
     private func onTouchAlertAction(_ type: PlayerMode) {
         self.mediaModel.onChangePlayerMode(type)
         self.tableView.reloadData()
@@ -502,5 +526,10 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
         }
         return NSLocalizedString("无偏移", comment: "")
     }
-    
+
+    // MARK: - UIPopoverPresentationControllerDelegate
+
+    func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .none
+    }
 }

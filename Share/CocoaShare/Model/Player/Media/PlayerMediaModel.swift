@@ -82,7 +82,11 @@ extension PlayerMediaModel {
     var subtitleFontName: String {
         return (try? self.context.subtitleFontName.value()) ?? ""
     }
-    
+
+    var subtitleColor: ANXColor? {
+        return (try? self.context.subtitleColor.value())
+    }
+
     var autoJumpTitleEnding: Bool {
         return (try? self.context.autoJumpTitleEnding.value()) ?? false
     }
@@ -178,18 +182,20 @@ extension PlayerMediaModel {
         dataSource.append(MediaSettingInfo(title: NSLocalizedString("播放设置", comment: ""), dataSource: mediaSetting))
         
 #if os(iOS)
+        var subtitleSettings: [MediaSettingType] = [
+            .subtitleYPosition,
+//            .subtitleFont,
+            .subtitleFontSize,
+            .subtitleSafeArea,
+            .subtitleDelay,
+            .subtitleTrack,
+            .loadSubtitle
+        ]
+        if self.player.coreType == .mpv {
+            subtitleSettings.append(.subtitleColor)
+        }
         dataSource.append(MediaSettingInfo(title: NSLocalizedString("字幕设置", comment: ""),
-                                           dataSource:
-                                            [
-                                                .subtitleYPosition,
-//                                                .subtitleFont,
-                                                .subtitleFontSize,
-                                                .subtitleSafeArea,
-                                                .subtitleDelay,
-                                                .subtitleTrack,
-                                                .loadSubtitle
-                                            ]
-                                          ))
+                                           dataSource: subtitleSettings))
 #else
         dataSource.append(MediaSettingInfo(title: NSLocalizedString("字幕设置", comment: ""),
                                            dataSource:
@@ -283,14 +289,20 @@ class PlayerMediaModel {
         let fontName = subtitleFont?.fontName ?? ""
         Preferences.shared.subtitleFontName = fontName
         self.context.subtitleFontName.onNext(fontName)
-        
+
         if let subtitleFont = subtitleFont {
             ANX.logInfo(.UI, "更改字幕字体: \(subtitleFont)")
         } else {
             ANX.logInfo(.UI, "更改字幕字体为默认")
         }
     }
-    
+
+    func onChangeSubtitleColor(_ subtitleColor: ANXColor?) {
+        Preferences.shared.subtitleColor = subtitleColor
+        self.context.subtitleColor.onNext(subtitleColor)
+        ANX.logInfo(.UI, "更改字幕颜色")
+    }
+
     func onChangeAutoJumpTitleEnding(_ autoJumpTitleEnding: Bool) {
         Preferences.shared.autoJumpTitleEnding = autoJumpTitleEnding
         self.context.autoJumpTitleEnding.onNext(autoJumpTitleEnding)
@@ -610,6 +622,12 @@ class PlayerMediaModel {
             guard let self = self else { return }
 
             self.player.fontSize = subtitleFontSize
+        }).disposed(by: self.disposeBag)
+
+        self.context.subtitleColor.subscribe(onNext: { [weak self] subtitleColor in
+            guard let self = self else { return }
+
+            self.player.fontColor = subtitleColor
         }).disposed(by: self.disposeBag)
 
         if self.player.coreType == .vlc {

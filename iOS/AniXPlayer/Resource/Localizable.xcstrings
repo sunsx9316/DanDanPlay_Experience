@@ -513,6 +513,22 @@
         }
       }
     },
+    "关闭" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Close"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "关闭"
+          }
+        }
+      }
+    },
     "关闭则手动关联" : {
       "localizations" : {
         "en" : {
@@ -1057,6 +1073,22 @@
         }
       }
     },
+    "字幕颜色" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subtitle Color"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "字幕颜色"
+          }
+        }
+      }
+    },
     "完成" : {
       "localizations" : {
         "en" : {
@@ -1128,6 +1160,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Imported %@, check in \"Local Files\"."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "导入 %@ 成功，请在“本地文件”中查看。"
           }
         }
       }
@@ -1458,6 +1496,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Drag to window or click \"Upload Files...\" to upload"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "拖拽到窗口 或 点击“Upload Files…” 上传文件"
           }
         }
       }
@@ -2280,23 +2324,6 @@
         }
       }
     },
-    "系统语言" : {
-      "extractionState" : "stale",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "System"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "系统语言"
-          }
-        }
-      }
-    },
     "编辑" : {
       "localizations" : {
         "en" : {
@@ -2522,7 +2549,20 @@
       }
     },
     "语言切换已生效，退出后将以新语言启动" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Language change will take effect after exiting"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "语言切换已生效，退出后将以新语言启动"
+          }
+        }
+      }
     },
     "请求域名" : {
       "localizations" : {
@@ -2685,7 +2725,20 @@
       }
     },
     "退出" : {
-
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Exit"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "退出"
+          }
+        }
+      }
     },
     "退出登录" : {
       "localizations" : {
