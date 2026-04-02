@@ -106,6 +106,72 @@ public enum MPVEventID: Int {
     }
 }
 
+// MARK: - 事件类型匹配
+
+/// 事件类型，用于注册处理器
+public enum MPVEventType {
+    /// 属性变化事件
+    case propertyChange(String)
+    /// 文件加载完成
+    case fileLoaded
+    /// 文件开始播放
+    case startFile
+    /// 文件播放结束
+    case endFile
+    /// 播放重启（seek后等）
+    case playbackRestart
+    /// seek开始
+    case seek
+    /// 视频重新配置
+    case videoReconfig
+    /// 音频重新配置
+    case audioReconfig
+    /// 关机
+    case shutdown
+    /// 日志消息
+    case logMessage
+    /// 客户端消息
+    case clientMessage
+    /// 空闲状态
+    case idle
+    /// 任意事件（用于 onEvent）
+    case any
+
+    func matches(_ event: MPVEvent) -> Bool {
+        switch self {
+        case .any:
+            return true
+        case .propertyChange(let name):
+            if case .property(let propName, _) = event.data {
+                return propName == name
+            }
+            return event.id == .propertyChange && name.isEmpty
+        case .fileLoaded:
+            return event.id == .fileLoaded
+        case .startFile:
+            return event.id == .startFile
+        case .endFile:
+            return event.id == .endFile
+        case .playbackRestart:
+            return event.id == .playbackRestart
+        case .seek:
+            return event.id == .seek
+        case .videoReconfig:
+            return event.id == .videoReconfig
+        case .audioReconfig:
+            return event.id == .audioReconfig
+        case .shutdown:
+            return event.id == .shutdown
+        case .logMessage:
+            return event.id == .logMessage
+        case .clientMessage:
+            return event.id == .clientMessage
+        case .idle:
+            return event.id == .idle
+        }
+    }
+}
+
 public class MPVMedia {
     
     
@@ -119,22 +185,268 @@ public class MPVMedia {
     }
 }
 
+// MARK: - MPV Node 类型
+
+/// MPV Node 值（用于复杂数据结构）
+public enum MPVNodeValue {
+    case string(String)
+    case flag(Bool)
+    case int64(Int64)
+    case double(Double)
+    case array([MPVNodeValue])
+    case map([String: MPVNodeValue])
+    case byteArray(Data)
+
+    init(from node: mpv_node) {
+        switch node.format {
+        case MPV_FORMAT_STRING:
+            self = .string(String(cString: node.u.string))
+        case MPV_FORMAT_FLAG:
+            self = .flag(node.u.flag != 0)
+        case MPV_FORMAT_INT64:
+            self = .int64(node.u.int64)
+        case MPV_FORMAT_DOUBLE:
+            self = .double(node.u.double_)
+        case MPV_FORMAT_NODE_ARRAY:
+            self = .array(Self.parseArray(node.u.list))
+        case MPV_FORMAT_NODE_MAP:
+            self = .map(Self.parseMap(node.u.list))
+        case MPV_FORMAT_BYTE_ARRAY:
+            if let ba = node.u.ba {
+                self = .byteArray(Data(bytes: ba.pointee.data, count: ba.pointee.size))
+            } else {
+                self = .byteArray(Data())
+            }
+        default:
+            self = .string("")
+        }
+    }
+
+    private static func parseArray(_ list: UnsafeMutablePointer<mpv_node_list>?) -> [MPVNodeValue] {
+        guard let list = list else { return [] }
+        var result: [MPVNodeValue] = []
+        let count = Int(list.pointee.num)
+        for i in 0..<count {
+            let value = list.pointee.values[i]
+            result.append(MPVNodeValue(from: value))
+        }
+        return result
+    }
+
+    private static func parseMap(_ list: UnsafeMutablePointer<mpv_node_list>?) -> [String: MPVNodeValue] {
+        guard let list = list else { return [:] }
+        var result: [String: MPVNodeValue] = [:]
+        let count = Int(list.pointee.num)
+        for i in 0..<count {
+            guard let keyPtr = list.pointee.keys[i] else { continue }
+            let key = String(cString: keyPtr)
+            let value = list.pointee.values[i]
+            result[key] = MPVNodeValue(from: value)
+        }
+        return result
+    }
+}
+
+/// MPV Node 包装器
+public struct MPVNode {
+    public let value: MPVNodeValue
+
+    public init(from node: mpv_node) {
+        self.value = MPVNodeValue(from: node)
+    }
+
+    /// 获取字符串值
+    public var stringValue: String? {
+        if case .string(let s) = value { return s }
+        return nil
+    }
+
+    /// 获取布尔值
+    public var flagValue: Bool? {
+        if case .flag(let f) = value { return f }
+        return nil
+    }
+
+    /// 获取整数值
+    public var int64Value: Int64? {
+        if case .int64(let i) = value { return i }
+        return nil
+    }
+
+    /// 获取浮点值
+    public var doubleValue: Double? {
+        if case .double(let d) = value { return d }
+        return nil
+    }
+
+    /// 获取数组
+    public var arrayValue: [MPVNodeValue]? {
+        if case .array(let a) = value { return a }
+        return nil
+    }
+
+    /// 获取字典
+    public var mapValue: [String: MPVNodeValue]? {
+        if case .map(let m) = value { return m }
+        return nil
+    }
+}
+
+// MARK: - MPV 属性值
+
+/// MPV 属性值类型
+public enum MPVPropertyValue {
+    case string(String)
+    case osdString(String)
+    case flag(Bool)
+    case int64(Int64)
+    case double(Double)
+    case node(MPVNode)
+    case none
+
+    init(from format: mpv_format, data: UnsafeRawPointer?) {
+        guard let data = data else {
+            self = .none
+            return
+        }
+
+        switch format {
+        case MPV_FORMAT_STRING:
+            let str = data.assumingMemoryBound(to: UnsafePointer<CChar>.self).pointee
+            self = .string(String(cString: str))
+        case MPV_FORMAT_OSD_STRING:
+            let str = data.assumingMemoryBound(to: UnsafePointer<CChar>.self).pointee
+            self = .osdString(String(cString: str))
+        case MPV_FORMAT_FLAG:
+            let flag = data.assumingMemoryBound(to: Int32.self).pointee
+            self = .flag(flag != 0)
+        case MPV_FORMAT_INT64:
+            let value = data.assumingMemoryBound(to: Int64.self).pointee
+            self = .int64(value)
+        case MPV_FORMAT_DOUBLE:
+            let value = data.assumingMemoryBound(to: Double.self).pointee
+            self = .double(value)
+        case MPV_FORMAT_NODE:
+            let node = data.assumingMemoryBound(to: mpv_node.self).pointee
+            self = .node(MPVNode(from: node))
+        default:
+            self = .none
+        }
+    }
+}
+
 // MARK: - MPV 事件数据
+
+/// MPV 事件数据
+public enum MPVEventData {
+    /// 属性变化事件数据
+    case property(name: String, value: MPVPropertyValue)
+    /// 日志消息事件数据
+    case logMessage(prefix: String, level: String, text: String)
+    /// 客户端消息事件数据
+    case clientMessage(args: [String])
+    /// 文件开始事件数据
+    case startFile(playlistEntryId: Int64)
+    /// 文件结束事件数据
+    case endFile(reason: MPVEndFileReason, error: Int, playlistEntryId: Int64, playlistInsertId: Int64, playlistInsertNumEntries: Int)
+    /// 钩子事件数据
+    case hook(name: String, id: UInt64)
+    /// 命令回复事件数据
+    case commandReply(result: mpv_node)
+    /// 空数据（用于无data的事件）
+    case none
+}
+
+/// MPV 文件结束原因
+public enum MPVEndFileReason: UInt32 {
+    /// 文件结束
+    case eof = 0
+    /// 播放停止
+    case stop = 2
+    /// 退出
+    case quit = 3
+    /// 错误
+    case error = 4
+    /// 重定向
+    case redirect = 5
+
+    init(from reason: Int32) {
+        self = MPVEndFileReason(rawValue: UInt32(bitPattern: reason)) ?? .eof
+    }
+}
 
 /// MPV 事件包装器
 public struct MPVEvent {
+    /// 事件ID
     public let id: MPVEventID
-    public let propertyName: String?
+    /// 错误码（用于回复类事件：GET_PROPERTY_REPLY, SET_PROPERTY_REPLY, COMMAND_REPLY）
+    public let error: Int
+    /// 回复用户数据（用于回复类事件和 PROPERTY_CHANGE, HOOK）
+    public let replyUserdata: UInt64
+    /// 事件数据
+    public let data: MPVEventData
 
     init(from event: UnsafeMutablePointer<mpv_event>) {
         self.id = MPVEventID(from: event.pointee.event_id)
+        self.error = Int(event.pointee.error)
+        self.replyUserdata = event.pointee.reply_userdata
 
-        var name: String? = nil
-        if self.id == .propertyChange, let data = event.pointee.data {
-            let property = data.assumingMemoryBound(to: mpv_event_property.self).pointee
-            name = String(cString: property.name)
+        guard let eventData = event.pointee.data else {
+            self.data = .none
+            return
         }
-        self.propertyName = name
+
+        switch self.id {
+        case .getPropertyReply, .propertyChange:
+            let property = eventData.assumingMemoryBound(to: mpv_event_property.self).pointee
+            let name = String(cString: property.name)
+            let value = MPVPropertyValue(from: property.format, data: property.data)
+            self.data = .property(name: name, value: value)
+
+        case .logMessage:
+            let logMsg = eventData.assumingMemoryBound(to: mpv_event_log_message.self).pointee
+            let prefix = String(cString: logMsg.prefix)
+            let level = String(cString: logMsg.level)
+            let text = String(cString: logMsg.text)
+            self.data = .logMessage(prefix: prefix, level: level, text: text)
+
+        case .clientMessage:
+            let clientMsg = eventData.assumingMemoryBound(to: mpv_event_client_message.self).pointee
+            var args: [String] = []
+            for i in 0..<Int(clientMsg.num_args) {
+                if let arg = clientMsg.args?[i] {
+                    args.append(String(cString: arg))
+                }
+            }
+            self.data = .clientMessage(args: args)
+
+        case .startFile:
+            let startFile = eventData.assumingMemoryBound(to: mpv_event_start_file.self).pointee
+            self.data = .startFile(playlistEntryId: startFile.playlist_entry_id)
+
+        case .endFile:
+            let endFile = eventData.assumingMemoryBound(to: mpv_event_end_file.self).pointee
+            let reason = MPVEndFileReason(rawValue: endFile.reason.rawValue) ?? .eof
+            self.data = .endFile(
+                reason: reason,
+                error: Int(endFile.error),
+                playlistEntryId: endFile.playlist_entry_id,
+                playlistInsertId: endFile.playlist_insert_id,
+                playlistInsertNumEntries: Int(endFile.playlist_insert_num_entries)
+            )
+
+        case .hook:
+            let hook = eventData.assumingMemoryBound(to: mpv_event_hook.self).pointee
+            let name = String(cString: hook.name)
+            self.data = .hook(name: name, id: hook.id)
+
+        case .commandReply:
+            let commandReply = eventData.assumingMemoryBound(to: mpv_event_command.self).pointee
+            self.data = .commandReply(result: commandReply.result)
+
+        default:
+            self.data = .none
+        }
     }
 }
 
@@ -367,6 +679,25 @@ public class MPV {
     // MARK: - 私有属性
 
     private var mpv: OpaquePointer?
+    private let eventQueue: DispatchQueue = DispatchQueue(label: "com.cocoashare.mpv.event")
+    private var eventHandlers: [EventHandler] = []
+    private var observedProperties: Set<String> = []
+    private var propertyChangeHandlers: [String: [(MPVPropertyValue) -> Void]] = [:]
+
+    /// 事件循环状态
+    /// - idle: 循环未运行，可以启动新循环
+    /// - running: 循环正在运行，shutdown时会转为idle
+    private enum LoopState {
+        case idle
+        case running
+    }
+    private var loopState: LoopState = .idle
+
+    /// 事件处理器结构
+    private struct EventHandler {
+        let type: MPVEventType
+        let handler: (MPVEvent) -> Void
+    }
 
     // MARK: - 类型安全的 API (lazy 存储)
 
@@ -402,27 +733,27 @@ public class MPV {
     }
 
     /// 设置整数属性
-    public func setProperty(_ property: MPVProperty, _ value: Int64) {
+    func setProperty(_ property: MPVProperty, _ value: Int64) {
         guard let mpv = mpv else { return }
         var data = value
         mpv_set_property(mpv, property.rawValue, MPV_FORMAT_INT64, &data)
     }
 
     /// 设置浮点数属性
-    public func setProperty(_ property: MPVProperty, _ value: Double) {
+    func setProperty(_ property: MPVProperty, _ value: Double) {
         guard let mpv = mpv else { return }
         var data = value
         mpv_set_property(mpv, property.rawValue, MPV_FORMAT_DOUBLE, &data)
     }
 
     /// 设置布尔属性
-    public func setProperty(_ property: MPVProperty, _ value: Bool) {
+    func setProperty(_ property: MPVProperty, _ value: Bool) {
         guard let mpv = mpv else { return }
         var data: Int = value ? 1 : 0
         mpv_set_property(mpv, property.rawValue, MPV_FORMAT_FLAG, &data)
     }
     
-    public func setProperty(_ property: MPVProperty, _ value: String) {
+    func setProperty(_ property: MPVProperty, _ value: String) {
         guard let mpv = mpv else { return }
         value.withCString { cString in
             var mutableCString: UnsafePointer<Int8>? = cString
@@ -433,7 +764,7 @@ public class MPV {
     // MARK: - 属性获取
 
     /// 获取整数属性
-    public func getPropertyInt64(_ property: MPVProperty) -> Int64? {
+    func getPropertyInt64(_ property: MPVProperty) -> Int64? {
         guard let mpv = mpv else { return nil }
         var data = Int64()
         let ret = mpv_get_property(mpv, property.rawValue, MPV_FORMAT_INT64, &data)
@@ -441,7 +772,7 @@ public class MPV {
     }
 
     /// 获取浮点数属性
-    public func getPropertyDouble(_ property: MPVProperty) -> Double? {
+    func getPropertyDouble(_ property: MPVProperty) -> Double? {
         guard let mpv = mpv else { return nil }
         var data = Double()
         let ret = mpv_get_property(mpv, property.rawValue, MPV_FORMAT_DOUBLE, &data)
@@ -449,7 +780,7 @@ public class MPV {
     }
 
     /// 获取布尔属性
-    public func getPropertyFlag(_ property: MPVProperty) -> Bool? {
+    func getPropertyFlag(_ property: MPVProperty) -> Bool? {
         guard let mpv = mpv else { return nil }
         var data = Int64()
         let ret = mpv_get_property(mpv, property.rawValue, MPV_FORMAT_FLAG, &data)
@@ -457,7 +788,7 @@ public class MPV {
     }
 
     /// 获取字符串属性
-    public func getPropertyString(_ property: MPVProperty) -> String? {
+    func getPropertyString(_ property: MPVProperty) -> String? {
         guard let mpv = mpv else { return nil }
         let cstr = mpv_get_property_string(mpv, property.rawValue)
         defer { mpv_free(cstr) }
@@ -475,18 +806,99 @@ public class MPV {
     // MARK: - 属性观察
 
     /// 观察属性变化
-    public func observeProperty(_ property: MPVProperty, id: UInt64) {
+    /// - Parameter property: 要观察的属性
+    /// - Parameter handler: 属性变化时的回调，参数为属性值
+    public func observe(_ property: MPVProperty, handler: @escaping (MPVPropertyValue) -> Void) {
+        let name = property.rawValue
+        observedProperties.insert(name)
+
+        // 注册特定属性的处理函数
+        if propertyChangeHandlers[name] == nil {
+            propertyChangeHandlers[name] = []
+        }
+        propertyChangeHandlers[name]?.append(handler)
+
+        // 注册到 mpv
         guard let mpv = mpv else { return }
-        mpv_observe_property(mpv, id, property.rawValue, MPV_FORMAT_NONE)
+        mpv_observe_property(mpv, 0, name, MPV_FORMAT_NONE)
+
+        // 启动事件循环
+        startEventLoopIfNeeded()
     }
 
-    // MARK: - 事件
+    // MARK: - 事件处理
 
-    /// 等待事件
-    public func waitEvent(_ timeout: Double) -> MPVEvent? {
-        guard let mpv = mpv else { return nil }
-        guard let event = mpv_wait_event(mpv, timeout) else { return nil }
-        return MPVEvent(from: event)
+    /// 注册通用事件处理器
+    /// - Parameters:
+    ///   - type: 事件类型
+    ///   - handler: 事件回调
+    public func on(_ type: MPVEventType, handler: @escaping (MPVEvent) -> Void) {
+        let wrapper: (MPVEvent) -> Void
+        switch type {
+        case .propertyChange(let name) where !name.isEmpty:
+            // 特定属性名的处理
+            wrapper = { event in
+                if case .property(let propName, let value) = event.data, propName == name {
+                    handler(event)
+                }
+            }
+        default:
+            wrapper = handler
+        }
+
+        eventHandlers.append(EventHandler(type: type, handler: wrapper))
+        startEventLoopIfNeeded()
+    }
+
+    /// 停止事件循环
+    public func stopEventLoop() {
+        loopState = .idle
+    }
+
+    // MARK: - 私有方法
+
+    /// 启动事件循环（如果尚未运行）
+    private func startEventLoopIfNeeded() {
+        eventQueue.async { [weak self] in
+            guard let self = self else { return }
+            guard self.loopState == .idle else { return }
+
+            self.loopState = .running
+
+            while self.loopState == .running {
+                // 检查 mpv 是否已销毁
+                guard let mpv = self.mpv else { break }
+
+                guard let eventPointer = mpv_wait_event(mpv, 0.1) else { continue }
+                let event = MPVEvent(from: eventPointer)
+
+                // shutdown 事件时停止循环
+                if event.id == .shutdown {
+                    self.loopState = .idle
+                }
+
+                self.dispatchEvent(event)
+            }
+        }
+    }
+
+    /// 分发事件到处理器
+    private func dispatchEvent(_ event: MPVEvent) {
+        // 1. 如果是属性变化事件，调用对应的 property handler
+        if case .property(let name, let value) = event.data {
+            if let handlers = propertyChangeHandlers[name] {
+                for handler in handlers {
+                    handler(value)
+                }
+            }
+        }
+
+        // 2. 分发到通用事件处理器
+        for eh in eventHandlers {
+            if eh.type.matches(event) {
+                eh.handler(event)
+            }
+        }
     }
 
     // MARK: - 文件操作
@@ -688,6 +1100,22 @@ public class VideoAPI {
 // MARK: - Subtitle API
 
 public class SubtitleAPI {
+    
+    public enum AutoLoadMode: String {
+        case no
+        case exact //精确匹配 - 默认值)
+        case fuzzy //模糊匹配
+        case all //全部加载
+    }
+    
+    public enum AssOverride: String {
+        case no // 完全不覆盖。严格遵循字幕脚本（ASS/SSA）定义的样式进行渲染。
+        case yes //     基础覆盖（默认值）。应用所有的 --sub-ass-* 样式覆盖选项。这可能会导致某些精细特效显示异常。
+        case scale //缩放覆盖。类似于 yes，但额外应用 --sub-scale 属性进行缩放。
+        case force // 强制全面覆盖。强制应用所有以 --sub-* 开头的通用字幕属性（如 sub-color, sub-font 等），会极大地破坏特效字幕的原始布局。
+        case strip //    彻底剥离样式。将 ASS/SSA 字幕的所有标签和样式信息移除，直接作为纯文本渲染。
+    }
+    
     private weak var player: MPV?
 
     init(mpv: MPV) {
@@ -733,6 +1161,58 @@ public class SubtitleAPI {
             }
         }
     }
+    
+    public var assOverride: AssOverride? {
+        get {
+            if let value = player?.getPropertyString(.subtitleAssOverride) {
+                return AssOverride(rawValue: value)
+            }
+            return nil
+        }
+        
+        set {
+            if let value = newValue {
+                player?.setOptionString(.subtitleAssOverride, value.rawValue)
+            }
+        }
+    }
+    
+    public var position: Int64 {
+        get {
+            player?.getPropertyInt64(.subtitlePos) ?? 0
+        }
+        
+        set {
+            player?.setProperty(.subtitlePos, newValue)
+        }
+    }
+    
+    public var marginY: Int64 {
+        get {
+            player?.getPropertyInt64(.subtitleMarginY) ?? 0
+        }
+        
+        set {
+            player?.setProperty(.subtitleMarginY, newValue)
+        }
+    }
+    
+    public var autoLoad: AutoLoadMode? {
+        get {
+            if let value = player?.getPropertyString(.subtitleAuto) {
+                return AutoLoadMode(rawValue: value)
+            }
+            return nil
+        }
+        
+        set {
+            if let value = newValue {
+                player?.setProperty(.subtitleAuto, value.rawValue)
+            }
+        }
+    }
+    
+    
 
     #if os(iOS)
     /// 字幕颜色

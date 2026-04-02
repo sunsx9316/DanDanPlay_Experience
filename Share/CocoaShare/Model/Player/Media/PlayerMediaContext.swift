@@ -52,6 +52,8 @@ class PlayerMediaContext {
     lazy var aspectRatio = BehaviorSubject<PlayerAspectRatio>(value: Preferences.shared.aspectRatio)
 
     lazy var subtitleColor = BehaviorSubject<ANXColor?>(value: Preferences.shared.subtitleColor)
+    
+    lazy var subtitleStyle = BehaviorSubject<Bool>(value: Preferences.shared.subtitleStyle)
 
     lazy var volume = PublishSubject<Int>()
     

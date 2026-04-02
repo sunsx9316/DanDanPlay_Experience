@@ -46,6 +46,8 @@ protocol MediaPlayerProtocol: AnyObject {
     
     var subtitleOffsetTime: Double { set get }
     
+    var subtitleStyle: Bool { set get }
+    
     var audioOffsetTime: Double { set get }
     
     var speed: Double { set get }
@@ -260,6 +262,16 @@ class MediaPlayer {
         
         set {
             self.player.subtitleOffsetTime = newValue
+        }
+    }
+    
+    var subtitleStyle: Bool {
+        get {
+            return self.player.subtitleStyle
+        }
+        
+        set {
+            self.player.subtitleStyle = newValue
         }
     }
     

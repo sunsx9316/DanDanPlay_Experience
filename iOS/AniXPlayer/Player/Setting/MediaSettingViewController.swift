@@ -396,6 +396,19 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             cell.titleLabel.text = type.title
             cell.subtitleLabel.backgroundColor = self.mediaModel.subtitleColor ?? .clear
             return cell
+        case .subtitleStyle:
+            let cell = tableView.dequeueCell(class: SwitchTableViewCell.self, indexPath: indexPath)
+            cell.aSwitch.isOn = Preferences.shared.subtitleStyle
+            cell.titleLabel.text = type.title
+            cell.selectionStyle = .none
+            cell.onTouchSliderCallBack = { [weak self] (aCell) in
+                guard let self = self else { return }
+
+                let isOn = aCell.aSwitch.isOn
+                self.mediaModel.onChangeSubtitleStyle(isOn)
+                self.reloadData()
+            }
+            return cell
         }
     }
     
@@ -506,10 +519,10 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             if let popover = vc.popoverPresentationController {
                 popover.sourceView = tableView.cellForRow(at: indexPath)
                 popover.sourceRect = tableView.cellForRow(at: indexPath)?.bounds ?? .zero
-                popover.permittedArrowDirections = []
+                popover.permittedArrowDirections = [.right]
                 popover.delegate = self
             }
-            present(vc, animated: true)
+            self.present(vc, animated: true)
         }
     }
 

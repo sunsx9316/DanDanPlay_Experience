@@ -137,6 +137,9 @@ class Preferences {
         /// 字幕颜色
         case subtitleColor
 
+        /// 字幕样式开关
+        case subtitleStyle
+
         var storeKey: String {
             return self.rawValue
         }
@@ -180,7 +183,11 @@ class Preferences {
             }
         }
     }
-    
+
+    /// 字幕样式开关
+    @StoreWrapper(defaultValue: true, key: .subtitleStyle)
+    var subtitleStyle: Bool
+
     @StoreWrapper(defaultValue: ANXColor.defaultMainColor, key: .mainColor)
     var mainColor: ANXColor
     

@@ -20,6 +20,7 @@ class SetSubtitleColorViewController: ViewController {
     }
     
     deinit {
+        self.mediaModel.onChangeSubtitleColor(self.pickColor)
         self.dismissCallBack?()
     }
 
@@ -30,11 +31,6 @@ class SetSubtitleColorViewController: ViewController {
     private lazy var colorPicker: ColorPicker = {
         let picker = ColorPicker()
         picker.addTarget(self, action: #selector(onColorPickChange(_:)), for: .valueChanged)
-        if let color = Preferences.shared.subtitleColor {
-            picker.set(color: color, colorSpace: .sRGB)
-        } else {
-            picker.set(color: .white, colorSpace: .sRGB)
-        }
         return picker
     }()
 
@@ -42,7 +38,6 @@ class SetSubtitleColorViewController: ViewController {
         let view = UIView()
         view.layer.borderWidth = 1
         view.layer.borderColor = UIColor.white.cgColor
-        view.backgroundColor = Preferences.shared.subtitleColor ?? .white
         view.layer.cornerRadius = 4
         return view
     }()
@@ -60,11 +55,15 @@ class SetSubtitleColorViewController: ViewController {
         button.addTarget(self, action: #selector(onTouchResetButton(_:)), for: .touchUpInside)
         return button
     }()
+    
+    private lazy var pickColor = Preferences.shared.subtitleColor
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         self.title = NSLocalizedString("字幕颜色", comment: "")
+        
+        self.view.backgroundColor = .clear
 
         let closeButton = UIBarButtonItem(title: NSLocalizedString("关闭", comment: ""), style: .plain, target: self, action: #selector(onTouchCloseButton(_:)))
         self.navigationItem.rightBarButtonItem = closeButton
@@ -95,6 +94,10 @@ class SetSubtitleColorViewController: ViewController {
             make.trailing.equalTo(self.view.safeAreaLayoutGuide).offset(-20)
             make.height.equalToSuperview().multipliedBy(0.5)
         }
+        
+        let pickColor = self.pickColor ?? .white
+        self.colorPicker.set(color: pickColor, colorSpace: .sRGB)
+        self.colorPreview.backgroundColor = pickColor
     }
 
     @objc private func onTouchCloseButton(_ sender: UIBarButtonItem) {
@@ -103,11 +106,11 @@ class SetSubtitleColorViewController: ViewController {
 
     @objc private func onColorPickChange(_ picker: ColorPicker) {
         self.colorPreview.backgroundColor = picker.color
-        self.mediaModel.onChangeSubtitleColor(picker.color)
+        self.pickColor = picker.color
     }
 
     @objc private func onTouchResetButton(_ button: UIButton) {
-        self.mediaModel.onChangeSubtitleColor(nil)
+        self.pickColor = nil
         self.colorPreview.backgroundColor = .white
         self.dismiss(animated: true)
     }

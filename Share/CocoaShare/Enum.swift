@@ -17,6 +17,8 @@ enum MediaSettingType: CaseIterable {
     case subtitleYPosition
     case subtitleFontSize
     case subtitleFont
+    case subtitleColor
+    case subtitleStyle
     
     case autoJumpTitleEnding
     case jumpTitleDuration
@@ -30,9 +32,8 @@ enum MediaSettingType: CaseIterable {
     case audioDelay
     case loadSubtitle
     case aspectRatio
-    case subtitleColor
-    
-    
+
+
     var title: String {
         switch self {
         case .subtitleSafeArea:
@@ -69,6 +70,8 @@ enum MediaSettingType: CaseIterable {
             return NSLocalizedString("宽高比", comment: "")
         case .subtitleColor:
             return NSLocalizedString("字幕颜色", comment: "")
+        case .subtitleStyle:
+            return NSLocalizedString("字幕样式", comment: "")
         }
     }
 }

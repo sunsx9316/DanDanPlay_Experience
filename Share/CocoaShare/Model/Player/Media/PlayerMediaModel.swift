@@ -180,35 +180,20 @@ extension PlayerMediaModel {
         })
         
         dataSource.append(MediaSettingInfo(title: NSLocalizedString("播放设置", comment: ""), dataSource: mediaSetting))
+
+        var subtitleSettings: [MediaSettingType] = [.subtitleSafeArea, .subtitleDelay, .subtitleTrack, .loadSubtitle]
         
-#if os(iOS)
-        var subtitleSettings: [MediaSettingType] = [
-            .subtitleYPosition,
-//            .subtitleFont,
-            .subtitleFontSize,
-            .subtitleSafeArea,
-            .subtitleDelay,
-            .subtitleTrack,
-            .loadSubtitle
-        ]
         if self.player.coreType == .mpv {
-            subtitleSettings.append(.subtitleColor)
+            subtitleSettings.append(.subtitleStyle)
+            if Preferences.shared.subtitleStyle {
+                subtitleSettings.append(contentsOf: [.subtitleYPosition, .subtitleFontSize, .subtitleColor])
+            }
+        } else {
+            subtitleSettings.append(contentsOf: [.subtitleYPosition, .subtitleFontSize])
         }
+
         dataSource.append(MediaSettingInfo(title: NSLocalizedString("字幕设置", comment: ""),
                                            dataSource: subtitleSettings))
-#else
-        dataSource.append(MediaSettingInfo(title: NSLocalizedString("字幕设置", comment: ""),
-                                           dataSource:
-                                            [
-                                                .subtitleYPosition,
-//                                                .subtitleFont,
-                                                .subtitleSafeArea,
-                                                .subtitleDelay,
-                                                .subtitleTrack,
-                                                .loadSubtitle
-                                            ]
-                                          ))
-#endif
         
         dataSource.append(MediaSettingInfo(title: NSLocalizedString("音频设置", comment: ""),
                                            dataSource: [.audioDelay, .audioTrack]))
@@ -301,6 +286,12 @@ class PlayerMediaModel {
         Preferences.shared.subtitleColor = subtitleColor
         self.context.subtitleColor.onNext(subtitleColor)
         ANX.logInfo(.UI, "更改字幕颜色")
+    }
+
+    func onChangeSubtitleStyle(_ enabled: Bool) {
+        Preferences.shared.subtitleStyle = enabled
+        self.context.subtitleStyle.onNext(enabled)
+        ANX.logInfo(.UI, "更改字幕样式开关: \(enabled)")
     }
 
     func onChangeAutoJumpTitleEnding(_ autoJumpTitleEnding: Bool) {
@@ -562,7 +553,7 @@ class PlayerMediaModel {
             //播放结束不保存进度
             if position >= 0.99 {
                 HistoryManager.shared.storeWatchProgress(media: playItem, progress: nil)
-            } else {
+            } else if position > 0 {
                 ANX.logInfo(.UI, "保存上次播放进度 key: \(currentPlayItem.fileName), progress：\(position)")
                 HistoryManager.shared.storeWatchProgress(media: playItem, progress: position)
             }
@@ -594,6 +585,14 @@ class PlayerMediaModel {
             guard let self = self else { return }
             
             self.player.speed = speed
+        }).disposed(by: self.disposeBag)
+        
+        /// 字幕开关需要设置在所有字幕属性的前面
+        self.context.subtitleStyle
+            .subscribe(onNext: { [weak self] on in
+            guard let self = self else { return }
+            
+            self.player.subtitleStyle = on
         }).disposed(by: self.disposeBag)
         
         self.context.subtitleOffsetTime.subscribe(onNext: { [weak self] subtitleOffsetTime in

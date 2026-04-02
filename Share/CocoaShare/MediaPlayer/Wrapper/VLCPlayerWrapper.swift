@@ -44,6 +44,7 @@ private struct AudioChannel: AudioChannelProtocol {
 
 class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     
+    
     private enum Options: String {
         case subtitleYPosition = "--sub-margin"
 //        case subtitleTextScale = "--sub-text-scale"
@@ -210,6 +211,13 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
             }
             
             self.initActionDic[.subtitleOffsetTime] = setup
+        }
+    }
+    
+    var subtitleStyle: Bool  {
+        set {}
+        get {
+            return true
         }
     }
     

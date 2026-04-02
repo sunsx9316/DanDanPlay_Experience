@@ -10,6 +10,7 @@
 
 import Foundation
 import MPVFramework
+import ANXLog
 
 // MARK: - 内嵌字幕
 private struct Subtitle: SubtitleProtocol {
@@ -28,37 +29,25 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
 
     // MARK: - 私有属性
 
-    private var mpv: MPV?
+    private lazy var mpv = MPV()
     
     private let eventQueue = DispatchQueue(label: "com.anxplayer.mpvwrapper", qos: .userInitiated)
-
-    /// 初始化操作队列
-    private var initActions: [() -> Void] = []
 
     /// 播放轮询定时器
     private var playbackTimer: Timer?
 
-    /// 结束位置阈值
-    private let endFlagProgress = 0.99
-
     // MARK: - 媒体视图
+    
+    private lazy var _mediaView = MPVView(frame: .zero)
 
-    lazy var mediaView: ANXView = {
-        let renderView = MPVView(frame: .zero)
-        return renderView
-    }()
+    var mediaView: ANXView {
+        return _mediaView
+    }
 
     // MARK: - 协议属性
 
     var currentPlayItem: File? {
         didSet {
-            if self.mpv == nil {
-                initializeMpv()
-                for action in self.initActions {
-                    action()
-                }
-            }
-
             if let item = currentPlayItem,
                 let media = item.createMPVMedia() {  
                 mpv?.loadFile(media.url.absoluteString)
@@ -81,21 +70,15 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
             return nil
         }
         set {
-            let setup = { [weak self] in
-                guard let self = self else { return }
-                if let sub = newValue as? Subtitle {
-                    self.mpv?.subtitle.subtitleId = Int64(sub.trackId)
-                } else if let sub = newValue as? ExternalSubtitle {
-                    self.mpv?.subtitle.addExternal(path: sub.url.path)
-                } else {
-                    self.mpv?.subtitle.subtitleId = 0
-                }
-            }
-
-            if self.mpv != nil {
-                setup()
+            if let sub = newValue as? Subtitle {
+                ANX.logInfo(.player, "[MPV] 选择字幕: \(sub.subtitleName) (id: \(sub.trackId))")
+                self.mpv?.subtitle.subtitleId = Int64(sub.trackId)
+            } else if let sub = newValue as? ExternalSubtitle {
+                ANX.logInfo(.player, "[MPV] 添加外部字幕: \(sub.url.lastPathComponent)")
+                self.mpv?.subtitle.addExternal(path: sub.url.path)
             } else {
-                initActions.append(setup)
+                ANX.logInfo(.player, "[MPV] 关闭字幕")
+                self.mpv?.subtitle.subtitleId = 0
             }
         }
     }
@@ -115,18 +98,10 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
             return nil
         }
         set {
-            let setup = { [weak self] in
-                guard let self = self else { return }
-                if let channel = newValue {
-                    self.mpv?.audio.audioId = Int64(channel.audioId)
-                }
+            if let audio = newValue {
+                ANX.logInfo(.player, "[MPV] 选择音轨: \(audio.audioName) (id: \(audio.audioId))")
             }
-
-            if self.mpv != nil {
-                setup()
-            } else {
-                initActions.append(setup)
-            }
+            self.mpv?.audio.audioId = newValue?.audioId
         }
     }
 
@@ -137,16 +112,8 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
 
     var volume: Int = 100 {
         didSet {
-            let setup = { [weak self] in
-                guard let self = self else { return }
-                self.mpv?.audio.volume = Int64(self.volume)
-            }
-
-            if self.mpv != nil {
-                setup()
-            } else {
-                initActions.append(setup)
-            }
+            ANX.logDebug(.player, "[MPV] 音量: \(oldValue) -> \(self.volume)")
+            self.mpv?.audio.volume = Int64(self.volume)
         }
     }
 
@@ -157,16 +124,19 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
             return -(self.mpv?.subtitle.delay ?? 0)
         }
         set {
-            let setup = { [weak self] in
-                guard let self = self else { return }
-                self.mpv?.subtitle.delay = -newValue
-            }
+            ANX.logDebug(.player, "[MPV] 字幕延迟: \(newValue)ms")
+            self.mpv?.subtitle.delay = -newValue
+        }
+    }
 
-            if self.mpv != nil {
-                setup()
-            } else {
-                initActions.append(setup)
-            }
+    var subtitleStyle: Bool {
+        get {
+            self.mpv?.subtitle.assOverride != .no
+        }
+
+        set {
+            ANX.logDebug(.player, "[MPV] 字幕样式: \(newValue ? "强制" : "关闭")")
+            self.mpv?.subtitle.assOverride = newValue ? .force : .no
         }
     }
 
@@ -177,100 +147,60 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
             return -(self.mpv?.audio.delay ?? 0)
         }
         set {
-            let setup = { [weak self] in
-                guard let self = self else { return }
-                self.mpv?.audio.delay = -newValue
-            }
-
-            if self.mpv != nil {
-                setup()
-            } else {
-                initActions.append(setup)
-            }
+            ANX.logDebug(.player, "[MPV] 音频延迟: \(newValue)ms")
+            self.mpv?.audio.delay = -newValue
         }
     }
 
     var speed: Double = 1.0 {
         didSet {
-            let setup = { [weak self] in
-                guard let self = self else { return }
-                self.mpv?.playback.setSpeed(self.speed)
-            }
-
-            if self.mpv != nil {
-                setup()
-            } else {
-                initActions.append(setup)
-            }
+            ANX.logInfo(.player, "[MPV] 播放速度: \(self.speed)")
+            self.mpv?.playback.setSpeed(self.speed)
         }
     }
 
     var aspectRatio: PlayerAspectRatio = .default {
         didSet {
-            let setup = { [weak self] in
-                guard let self = self else { return }
-                switch self.aspectRatio {
-                case .default:
-                    self.mpv?.video.aspectRatio = 0
-                case .fillToScreen:
-                    self.mpv?.video.aspectRatio = -1
-                case .fourToThree:
-                    self.mpv?.video.aspectRatio = 4.0 / 3.0
-                case .sixteenToNine:
-                    self.mpv?.video.aspectRatio = 16.0 / 9.0
-                case .sixteenToTen:
-                    self.mpv?.video.aspectRatio = 16.0 / 10.0
-                }
-            }
-
-            if self.mpv != nil {
-                setup()
-            } else {
-                initActions.append(setup)
+            switch self.aspectRatio {
+            case .default:
+                self.mpv?.video.aspectRatio = 0
+            case .fillToScreen:
+                self.mpv?.video.aspectRatio = -1
+            case .fourToThree:
+                self.mpv?.video.aspectRatio = 4.0 / 3.0
+            case .sixteenToNine:
+                self.mpv?.video.aspectRatio = 16.0 / 9.0
+            case .sixteenToTen:
+                self.mpv?.video.aspectRatio = 16.0 / 10.0
             }
         }
     }
 
     var subtitleYPosition: Float = 0 {
         didSet {
-            let setup = { [weak self] in
+            // 获取视图高度（考虑缩放比例）
+            let scaleFactor: CGFloat
+#if os(iOS)
+            scaleFactor = self.mediaView.window?.screen.scale ?? UIScreen.main.scale
+#else
+            scaleFactor = self.mediaView.window?.backingScaleFactor ?? 1.0
+#endif
+            let screenHeight = Int64(self.mediaView.bounds.height * scaleFactor)
 
-                guard let self = self else { return }
+            // percent=0 时 margin 为 0（贴近底部）
+            // percent=100 时 margin 为 screenHeight（贴近顶部）
+            let percent = Int64(subtitleYPosition)
+            let bottom = (screenHeight * percent) / 100
 
-                // 获取视图高度（考虑缩放比例）
-                let scaleFactor: CGFloat
-                #if os(iOS)
-                scaleFactor = self.mediaView.window?.screen.scale ?? UIScreen.main.scale
-                #else
-                scaleFactor = self.mediaView.window?.backingScaleFactor ?? 1.0
-                #endif
-                let screenHeight = Int64(self.mediaView.bounds.height * scaleFactor)
+            // sub-margin-y: 对文本字幕有效
+            self.mpv?.subtitle.marginY = bottom
 
-                // percent=0 时 margin 为 0（贴近底部）
-                // percent=100 时 margin 为 screenHeight（贴近顶部）
-                let percent = Int64(subtitleYPosition)
-                let bottom = (screenHeight * percent) / 100
+            // sub-pos: 100=原始位置，<100往上移
+            // percent=0 时贴近底部（原始位置），percent=100 时贴近顶部
+            let posValue = 100 - percent
+            self.mpv?.subtitle.position = posValue
 
-                // sub-margin-y: 对文本字幕有效
-                self.mpv?.setOptionString(.subtitleMarginY, "\(bottom)")
-
-                // sub-pos: 100=原始位置，<100往上移
-                // percent=0 时贴近底部（原始位置），percent=100 时贴近顶部
-                let posValue = 100 - percent
-                self.mpv?.setOptionString(.subtitlePos, "\(posValue)")
-
-                // sub-ass-override=force 确保覆盖 ASS 内嵌样式
-                self.mpv?.setOptionString(.subtitleAssOverride, "force")
-
-                // 使用 ASS 命令 \margins(l,t,r,b)
-                self.mpv?.execute(.set, args: ["sub-ass", "\\margins(0,\(bottom),0,\(bottom))"])
-            }
-
-            if self.mpv != nil {
-                setup()
-            } else {
-                initActions.append(setup)
-            }
+            ANX.logDebug(.player, "[MPV] 字幕位置: \(percent)%")
         }
     }
 
@@ -308,16 +238,8 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
     var fontSize: Float? {
         didSet {
             guard let size = self.fontSize else { return }
-            let setup = { [weak self] in
-                guard let self = self else { return }
-                self.mpv?.subtitle.fontSize = Int64(size)
-            }
-
-            if self.mpv != nil {
-                setup()
-            } else {
-                initActions.append(setup)
-            }
+            ANX.logDebug(.player, "[MPV] 字体大小: \(size)")
+            self.mpv?.subtitle.fontSize = Int64(size)
         }
     }
 
@@ -329,17 +251,14 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
 
     var fontColor: ANXColor? {
         didSet {
-            let setup = { [weak self] in
-                guard let self = self else { return }
-                self.mpv?.subtitle.color = self.fontColor
-            }
-
-            if self.mpv != nil {
-                setup()
-            } else {
-                initActions.append(setup)
-            }
+            ANX.logDebug(.player, "[MPV] 字体颜色已更改")
+            self.mpv?.subtitle.color = self.fontColor
         }
+    }
+    
+    override init() {
+        super.init()
+        initializeMpv()
     }
 
     // MARK: - 协议方法
@@ -347,6 +266,7 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
     func setPosition(_ position: Double) {
         let pos = max(min(position, 1), 0)
         let time = pos * self.length
+        ANX.logInfo(.player, "[MPV] 跳转: \(time)s (进度: \(pos))")
         mpv?.time.seek(to: time)
     }
 
@@ -356,32 +276,39 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
     }
 
     func play() {
+        ANX.logInfo(.player, "[MPV] 播放")
         mpv?.playback.isPaused = false
         startPlaybackPolling()
     }
 
     func pause() {
+        ANX.logInfo(.player, "[MPV] 暂停")
         mpv?.playback.isPaused = true
         stopPlaybackPolling()
     }
 
     func stop() {
+        ANX.logInfo(.player, "[MPV] 停止")
         stopPlaybackPolling()
         mpv?.stop()
         stateChangedCallBack?(self, .stop)
     }
-    
+
     func terminate() {
+        ANX.logInfo(.player, "[MPV] 终止")
         stopPlaybackPolling()
         self.mpv?.quit()
+
+        let metalLayer = self._mediaView.metalLayer
+        metalLayer.device = nil
         stateChangedCallBack?(self, .stop)
     }
 
     // MARK: - 初始化
-    
+
     private func initializeMpv() {
         guard let mpvHandle = MPV() else {
-            print("[MPVView] failed to create mpv")
+            ANX.logError(.player, "[MPV] 创建失败")
             return
         }
         self.mpv = mpvHandle
@@ -394,22 +321,72 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
 
         // 字幕配置 - 字体设置必须在初始化前完成
         setupSubtitleFonts(mpvHandle: mpvHandle)
-        mpvHandle.setOptionString(.subtitleAuto, "no") // 不自动加载字幕
-        mpvHandle.setOptionString(.subtitleAss, "yes") // 渲染ass特效
-        mpvHandle.setOptionString(.subtitleAssOverride, "force") //覆盖ass样式
+        mpvHandle.subtitle.autoLoad = .no // 不自动加载字幕
+        mpvHandle.subtitle.assOverride = .yes // 渲染ass特效
 
         // 视频窗口
-        let opaque = Unmanaged.passUnretained(self.mediaView.layer).toOpaque()
+        let opaque = Unmanaged.passUnretained(self._mediaView.metalLayer).toOpaque()
         let rawPtr = Int(bitPattern: opaque)
         mpvHandle.video.windowId = Int64(rawPtr)
 
         mpvHandle.initialize()
 
-        mpvHandle.observeProperty(.trackList, id: 1)
-        mpvHandle.observeProperty(.pause, id: 2)
-        mpvHandle.observeProperty(.endOfReached, id: 3)
+        // 使用新的事件处理 API
+        setupEventHandlers(mpvHandle)
+    }
 
-        startEventLoop()
+    private func setupEventHandlers(_ mpv: MPV) {
+        // 观察 track-list 变化
+        mpv.observe(.trackList) { [weak self] _ in
+            ANX.logDebug(.player, "[MPV] 轨道列表已更改")
+            DispatchQueue.main.async {
+                self?.updateTrackLists()
+            }
+        }
+
+        // 观察 pause 变化
+        mpv.observe(.pause) { [weak self] value in
+            if case .flag(let isPaused) = value {
+                ANX.logInfo(.player, "[MPV] 暂停状态: \(isPaused ? "是" : "否")")
+            }
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                let isPaused = self.mpv?.playback.isPaused ?? false
+                self.stateChangedCallBack?(self, isPaused ? .pause : .playing)
+            }
+        }
+
+        // 文件播放结束（获取具体原因）
+        mpv.on(.endFile) { [weak self] event in
+            if case .endFile(let reason, let error, _, _, _) = event.data {
+                ANX.logInfo(.player, "[MPV] 文件结束: reason=\(reason), error=\(error)")
+                DispatchQueue.main.async {
+                    guard let self = self, reason == .eof else { return }
+                    self.stopPlaybackPolling()
+                    self.endOfFileCallBack?(self)
+                }
+            }
+        }
+
+        // 文件加载完成
+        mpv.on(.fileLoaded) { [weak self] _ in
+            ANX.logInfo(.player, "[MPV] 文件加载完成")
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                self.updateTrackLists()
+            }
+        }
+
+        // 关机事件
+        mpv.on(.shutdown) { [weak self] _ in
+            ANX.logInfo(.player, "[MPV] 关机")
+            DispatchQueue.main.async {
+                guard let self = self else { return }
+                self.mpv?.video.windowId = 0
+                self.mpv?.stopEventLoop()
+                self.mpv = nil
+            }
+        }
     }
 
     private func setupSubtitleFonts(mpvHandle: MPV) {
@@ -441,58 +418,6 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
             mpvHandle.setOptionString(.subtitleFont, "SourceHanSansSC-Regular")
         } catch {
             print("[MPVView] Failed to setup fonts: \(error)")
-        }
-    }
-
-    private func startEventLoop() {
-        eventQueue.async { [weak self] in
-            self?.eventLoop()
-        }
-    }
-
-    private func eventLoop() {
-        while true {
-            guard let event = self.mpv?.waitEvent(0.1) else { break }
-            
-            if event.id == .shutdown {
-                self.mpv?.video.windowId = 0
-                self.mpv = nil
-                break
-            } else {
-                handleEvent(event)
-            }
-        }
-    }
-
-    private func handleEvent(_ event: MPVEvent) {
-        switch event.id {
-        case .propertyChange:
-            if event.propertyName == "track-list" {
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    self.updateTrackLists()
-                }
-            } else if event.propertyName == "pause" {
-                DispatchQueue.main.async { [weak self] in
-                    guard let self = self else { return }
-                    let isPaused = self.mpv?.playback.isPaused ?? false
-                    self.stateChangedCallBack?(self, isPaused ? .pause : .playing)
-                }
-            }
-        case .fileLoaded:
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.updateTrackLists()
-            }
-        case .endFile:
-            DispatchQueue.main.async { [weak self] in
-                guard let self = self else { return }
-                self.stopPlaybackPolling()
-                self.stateChangedCallBack?(self, .stop)
-                self.endOfFileCallBack?(self)
-            }
-        default:
-            break
         }
     }
 
@@ -534,10 +459,8 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
 // MARK: - MPVView
 
 class MPVView: UIView {
-
-    override class var layerClass: AnyClass {
-        return CAMetalLayer.self
-    }
+    
+    private(set) lazy var metalLayer = CAMetalLayer()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -548,17 +471,23 @@ class MPVView: UIView {
         super.init(coder: coder)
         setup()
     }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.metalLayer.frame = self.bounds
+    }
 
     private func setup() {
         backgroundColor = .black
         
-        if let metalLayer = self.layer as? CAMetalLayer {
-            metalLayer.device = MTLCreateSystemDefaultDevice()
-            metalLayer.pixelFormat = .bgra8Unorm
-            metalLayer.framebufferOnly = true
-            metalLayer.backgroundColor = UIColor.black.cgColor
-            metalLayer.contentsScale = UIScreen.main.scale
-        }
+        metalLayer.device = MTLCreateSystemDefaultDevice()
+        metalLayer.pixelFormat = .bgra8Unorm
+        metalLayer.framebufferOnly = false
+        metalLayer.backgroundColor = UIColor.black.cgColor
+        metalLayer.contentsScale = UIScreen.main.scale
+        metalLayer.frame = self.bounds
+        
+        self.layer.addSublayer(metalLayer)
     }
 }
 #endif

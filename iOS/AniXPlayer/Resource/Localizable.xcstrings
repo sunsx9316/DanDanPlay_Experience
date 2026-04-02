@@ -2915,6 +2915,22 @@
           }
         }
       }
+    },
+    "字幕样式" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subtitle Style"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "字幕样式"
+          }
+        }
+      }
     }
   },
   "version" : "1.1"

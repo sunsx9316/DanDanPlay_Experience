@@ -87,8 +87,6 @@ class PlayerViewController: ViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        UIApplication.shared.isIdleTimerDisabled = true
-        
         UIViewController.attemptRotationToDeviceOrientation()
         self.navigationController?.setNavigationBarHidden(true, animated: animated)
     }
@@ -103,7 +101,6 @@ class PlayerViewController: ViewController {
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        UIApplication.shared.isIdleTimerDisabled = false
         
         self.playerModel.mediaModel.terminate()
     }
@@ -198,6 +195,7 @@ class PlayerViewController: ViewController {
             guard let self = self else { return }
             
             self.uiView.isPlay = isPlay
+            UIApplication.shared.isIdleTimerDisabled = isPlay
         }).disposed(by: self.disposeBag)
         
         self.mediaModel.context.buffer.subscribe(onNext: { [weak self] bufferInfos in
