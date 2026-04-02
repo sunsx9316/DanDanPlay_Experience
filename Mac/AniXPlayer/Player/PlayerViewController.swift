@@ -130,23 +130,27 @@ class PlayerViewController: ViewController {
     
     override func keyDown(with event: NSEvent) {
         let keyCode = Int(event.keyCode)
-        
+
         switch keyCode {
         case kVK_Tab:
             break
         case kVK_Return:
+            ANX.logInfo(.player, "[Player] 键盘切换全屏")
             self.onToggleFullScreen()
         case kVK_Space:
+            ANX.logInfo(.player, "[Player] 键盘空格播放/暂停")
             self.mediaModel.changePlayState()
         case kVK_LeftArrow, kVK_RightArrow:
             let shortJumpValue: Int32 = 5
-            
+
             let jumpTime = keyCode == kVK_LeftArrow ? TimeInterval(-shortJumpValue) : TimeInterval(shortJumpValue)
+            ANX.logInfo(.player, "[Player] 键盘方向键跳转: \(jumpTime)s")
             self.playerModel.changePosition(diffValue: jumpTime)
         case kVK_UpArrow, kVK_DownArrow:
             let volumeAddingValue: CGFloat = 20
-            
+
             let volumeValue = keyCode == kVK_DownArrow ? -volumeAddingValue : volumeAddingValue
+            ANX.logInfo(.player, "[Player] 键盘方向键音量: \(volumeValue)")
             self.mediaModel.onChangeVolume(volumeValue)
         default:
             super.keyDown(with: event)
@@ -533,21 +537,24 @@ extension PlayerViewController: PlayerUIViewDataSource {
 extension PlayerViewController: PlayerUIViewDelegate, NSMenuDelegate {
     
     func openButtonDidClick(playerUIView: PlayerUIView, button: NSButton) {
+        ANX.logInfo(.player, "[Player] 点击打开文件按钮")
         self.pickFile()
     }
-    
+
     func onTouchDanmakuSettingButton(playerUIView: PlayerUIView, button: NSButton) {
+        ANX.logInfo(.player, "[Player] 打开弹幕设置")
         self.dismissPresented()
-        
+
         let vc = DanmakuSettingViewController(danmakuModel: self.danmakuModel)
         vc.delegate = self
-        
+
         self.present(vc, asPopoverRelativeTo: .zero, of: button, preferredEdge: .minY, behavior: .transient)
     }
-    
+
     func onTouchMediaSettingButton(playerUIView: PlayerUIView, button: NSButton) {
+        ANX.logInfo(.player, "[Player] 打开媒体设置")
         self.dismissPresented()
-        
+
         let vc = MediaSettingViewController(mediaModel: self.mediaModel)
         vc.delegate = self
         self.present(vc, asPopoverRelativeTo: .zero, of: button, preferredEdge: .minY, behavior: .transient)
@@ -558,22 +565,25 @@ extension PlayerViewController: PlayerUIViewDelegate, NSMenuDelegate {
     }
     
     func onTouchPlayerList(playerUIView: PlayerUIView, button: NSButton) {
+        ANX.logInfo(.player, "[Player] 打开播放列表")
         self.dismissPresented()
-        
+
         let vc = PlayerListViewController()
         vc.delegate = self
         self.present(vc, asPopoverRelativeTo: .zero, of: button, preferredEdge: .minY, behavior: .transient)
     }
-    
+
     func onTouchDanmakuSwitch(playerUIView: PlayerUIView, isOn: Bool) {
+        ANX.logInfo(.player, "[Player] 弹幕开关: \(isOn ? "开启" : "关闭")")
         self.danmakuCanvas.isHidden = !isOn
     }
-    
+
     func onTouchSendDanmakuButton(playerUIView: PlayerUIView) {
         guard let item = self.mediaModel.media, self.mediaModel.isMatch(media: item) else {
             self.view.show(text: NSLocalizedString("需要指定视频弹幕列表，才能发弹幕哟~", comment: ""))
             return
         }
+        ANX.logInfo(.player, "[Player] 打开发送弹幕页面")
         
 //        let vc = SendDanmakuViewController()
 //        vc.onTouchSendButtonCallBack = { [weak self] (text, aVC) in
@@ -608,24 +618,31 @@ extension PlayerViewController: PlayerUIViewDelegate, NSMenuDelegate {
     }
     
     func onTouchPlayButton(playerUIView: PlayerUIView, isSelected: Bool) {
+        ANX.logInfo(.player, "[Player] 点击播放按钮")
         self.mediaModel.changePlayState()
     }
-    
+
     func doubleTap(playerUIView: PlayerUIView) {
+        ANX.logInfo(.player, "[Player] 双击切换全屏")
         self.onToggleFullScreen()
     }
-    
+
     func onTouchNextButton(playerUIView: PlayerUIView) {
         if let media = self.mediaModel.nextMedia() {
+            ANX.logInfo(.player, "[Player] 切换下一集: \(media.fileName)")
             self.playerModel.tryParseMedia(media)
+        } else {
+            ANX.logInfo(.player, "[Player] 没有下一集")
         }
     }
-    
+
     func tapSlider(playerUIView: PlayerUIView, progress: CGFloat) {
+        ANX.logInfo(.player, "[Player] 滑动跳转进度: \(Int(progress * 100))%")
         self.playerModel.changePosition(progress)
     }
-    
+
     func changeProgress(playerUIView: PlayerUIView, diffValue: CGFloat) {
+        ANX.logDebug(.player, "[Player] 进度微调: \(diffValue)s")
         self.playerModel.changePosition(diffValue: diffValue)
     }
     
@@ -639,16 +656,19 @@ extension PlayerViewController: PlayerUIViewDelegate, NSMenuDelegate {
         let pointInDanmakuCanvas = self.danmakuCanvas.convert(point, from: playerUIView)
         if let danmakuCanvas = self.danmakuModel.selectedDanmaku(at: pointInDanmakuCanvas) {
             /// 命中弹幕，弹出气泡
+            ANX.logInfo(.player, "[Player] 右键点击弹幕")
             let menu = NSMenu(title: NSLocalizedString("操作弹幕", comment: ""))
             menu.delegate = self
             self.danmakuMenu = menu
             menu.addItem(NSMenuItem(title: NSLocalizedString("复制弹幕", comment: ""), action: { [weak self] _ in
                 self?.danmakuModel.copyDanmkuText(danmakuCanvas)
+                ANX.logInfo(.player, "[Player] 复制弹幕")
             }))
             menu.addItem(NSMenuItem(title: NSLocalizedString("屏蔽弹幕", comment: ""), action: { [weak self] _ in
                 self?.danmakuModel.onAddFilterDanmku(danmakuCanvas)
+                ANX.logInfo(.player, "[Player] 屏蔽该弹幕")
             }))
-            
+
             menu.popUp(positioning: nil, at: pointInDanmakuCanvas, in: self.danmakuCanvas)
         }
     }
@@ -666,13 +686,15 @@ extension PlayerViewController: PlayerListViewControllerDelegate {
     
     func playerListViewController(_ viewController: PlayerListViewController, didSelectedRow: Int) {
         self.dismissPresented()
-        
+
         let file = self.mediaModel.playList[didSelectedRow]
+        ANX.logInfo(.player, "[Player] 从播放列表选择: \(file.fileName)")
         self.playerModel.tryParseMedia(file)
     }
-    
+
     func playerListViewController(_ viewController: PlayerListViewController, didDeleteRow: Int) {
         let file = self.mediaModel.playList[didDeleteRow]
+        ANX.logInfo(.player, "[Player] 从播放列表删除: \(file.fileName)")
         self.mediaModel.removeMediaFromPlayList(file)
     }
     

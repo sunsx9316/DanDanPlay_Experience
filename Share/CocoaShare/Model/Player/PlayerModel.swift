@@ -8,6 +8,7 @@
 import Foundation
 import DanmakuRender
 import RxSwift
+import ANXLog
 
 
 class PlayerModel {
@@ -99,9 +100,10 @@ extension PlayerModel {
     /// 解析视频，状态会传递给parseMediaState
     /// - Parameter media: 视频
     func tryParseMedia(_ media: File) {
+        ANX.logInfo(.player, "[Player] 开始解析媒体: \(media.fileName)")
         _ = self.tryParseMediaOneTime(media).subscribe { [weak self] event in
             guard let self = self else { return }
-            
+
             self.parseMediaState.on(.next(event))
         }
     }
@@ -207,13 +209,15 @@ extension PlayerModel {
     ///   - episodeId: 弹幕分级id
     ///   - danmakus: 弹幕
     func startPlay(_ media: File, matchInfo: MatchInfo?, danmakus: DanmakuMapResult) -> Observable<MediaLoadState> {
+        ANX.logInfo(.player, "[Player] 开始播放媒体: \(media.fileName), 弹幕数量: \(danmakus.count)")
         return Observable<MediaLoadState>.create { [weak self] sub in
-            
+
             var isStartPlay = false
             _ = self?.danmakuModel.setupDanmaku(danmakus).subscribe(onNext: { state in
                 if state.filtered == 3 {
                     if !isStartPlay {
                         isStartPlay = true
+                        ANX.logInfo(.player, "[Player] 弹幕加载完成，开始播放")
                         _ = self?.mediaModel.startPlay(media, matchInfo: matchInfo).subscribe({ event in
                             sub.on(event)
                         })
@@ -224,12 +228,13 @@ extension PlayerModel {
             }, onCompleted: {
                 if !isStartPlay {
                     sub.onNext(.filterDanmaku(progress: 1))
+                    ANX.logInfo(.player, "[Player] 弹幕加载完成，开始播放")
                     _ = self?.mediaModel.startPlay(media, matchInfo: matchInfo).subscribe({ event in
                         sub.on(event)
                     })
                 }
             })
-            
+
             return Disposables.create()
         }
     }

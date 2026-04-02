@@ -377,7 +377,7 @@ class MediaPlayer {
     deinit {
         NotificationCenter.default.removeObserver(self)
         self.player.stop()
-        debugPrint("player deinit")
+        ANX.logInfo(.player, "[MediaPlayer] 播放器释放")
     }
     
     func setPosition(_ position: Double) {
@@ -423,10 +423,11 @@ class MediaPlayer {
     #if os(iOS)
     @objc private func handleInterreption(_ notice: Notification) {
         guard let interruptionType = notice.userInfo?[AVAudioSessionInterruptionTypeKey] as? AVAudioSession.InterruptionType else { return }
-        
+
         switch interruptionType {
         case .began:
             if self.isPlaying {
+                ANX.logInfo(.player, "[MediaPlayer] 音频被打断，暂停播放")
                 self.pause()
             }
         default:
@@ -475,7 +476,7 @@ class MediaPlayer {
     }
     
     private func tryPlayNextItem() {
-        
+
         func nextItemWithCycle(_ cycle: Bool) -> File? {
             if let index = self.playList.firstIndex(where: { $0 == self.currentPlayItem }) {
                 if index == self.playList.count - 1 {
@@ -485,24 +486,28 @@ class MediaPlayer {
             }
             return nil
         }
-        
+
         switch self.playMode {
         case .playOnce:
+            ANX.logInfo(.player, "[MediaPlayer] 播放模式: 单次播放")
             break
         case .autoPlayNext:
             if let nextItem = nextItemWithCycle(false) {
+                ANX.logInfo(.player, "[MediaPlayer] 自动播放下一集: \(nextItem.fileName)")
                 if self.changeCurrentItem(nextItem) {
                     self.play(nextItem)
                 }
             }
         case .repeatCurrentItem:
             if let currentPlayItem = self.currentPlayItem {
+                ANX.logInfo(.player, "[MediaPlayer] 重复播放当前: \(currentPlayItem.fileName)")
                 if self.changeCurrentItem(currentPlayItem) {
                     self.play(currentPlayItem)
                 }
             }
         case .repeatList:
             if let nextItem = nextItemWithCycle(true) {
+                ANX.logInfo(.player, "[MediaPlayer] 列表循环播放下一集: \(nextItem.fileName)")
                 if self.changeCurrentItem(nextItem) {
                     self.play(nextItem)
                 }

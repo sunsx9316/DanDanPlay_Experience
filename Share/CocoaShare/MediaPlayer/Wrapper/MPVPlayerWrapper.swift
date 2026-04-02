@@ -124,7 +124,7 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
             return -(self.mpv?.subtitle.delay ?? 0)
         }
         set {
-            ANX.logDebug(.player, "[MPV] 字幕延迟: \(newValue)ms")
+            ANX.logDebug(.player, "[MPV] 字幕延迟: \(newValue)s")
             self.mpv?.subtitle.delay = -newValue
         }
     }
@@ -147,7 +147,7 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
             return -(self.mpv?.audio.delay ?? 0)
         }
         set {
-            ANX.logDebug(.player, "[MPV] 音频延迟: \(newValue)ms")
+            ANX.logDebug(.player, "[MPV] 音频延迟: \(newValue)s")
             self.mpv?.audio.delay = -newValue
         }
     }

@@ -143,12 +143,15 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
             
             let setup = { [weak self] in
                 guard let self = self else { return }
-                
+
                 if let sub = newValue as? Subtitle {
+                    ANX.logInfo(.player, "[VLC] 选择字幕: \(sub.subtitleName) (index: \(sub.index))")
                     self.player?.currentVideoSubTitleIndex = Int32(sub.index)
                 } else if let sub = newValue as? ExternalSubtitle {
-                    ANX.logInfo(.subtitle, "加载外部字幕 url: \(sub.url)")
+                    ANX.logInfo(.player, "[VLC] 添加外部字幕: \(sub.url.lastPathComponent)")
                     self.player?.addPlaybackSlave(sub.url, type: .subtitle, enforce: true)
+                } else {
+                    ANX.logInfo(.player, "[VLC] 关闭字幕")
                 }
             }
             
@@ -167,6 +170,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
 
         set {
             if newValue != (self.mediaOptionsDic[.subtitleYPosition] as? Float ?? 0) {
+                ANX.logDebug(.player, "[VLC] 字幕位置: \(newValue)%")
                 self.mediaOptionsDic[.subtitleYPosition] = newValue
                 self.reloadOptionAndCreatePlayer()
             }
@@ -177,19 +181,18 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         get {
             return Int(self.player?.audio?.volume ?? 0)
         }
-        
+
         set {
-            
             let setup = {  [weak self] in
                 guard let self = self else { return }
-                
+                ANX.logDebug(.player, "[VLC] 音量: \(newValue)")
                 self.player?.audio?.volume = Int32(newValue)
             }
-            
+
             if self.player != nil {
                 setup()
             }
-            
+
             self.initActionDic[.volume] = setup
         }
     }
@@ -202,61 +205,61 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         set {
             let setup = { [weak self] in
                 guard let self = self else { return }
-                
+                ANX.logDebug(.player, "[VLC] 字幕延迟: \(newValue)s")
                 self.player?.currentVideoSubTitleDelay = Int(newValue * -1000000.0)
             }
-            
+
             if self.player != nil {
                 setup()
             }
-            
+
             self.initActionDic[.subtitleOffsetTime] = setup
         }
     }
-    
+
     var subtitleStyle: Bool  {
         set {}
         get {
             return true
         }
     }
-    
+
     var audioOffsetTime: Double {
         get {
             return Double(self.player?.currentAudioPlaybackDelay ?? 0) / -1000000.0
         }
-        
+
         set {
             let setup = { [weak self] in
                 guard let self = self else { return }
-                
+                ANX.logDebug(.player, "[VLC] 音频延迟: \(newValue)s")
                 self.player?.currentAudioPlaybackDelay = Int(newValue * -1000000.0)
             }
-            
+
             if self.player != nil {
                 setup()
             }
-            
+
             self.initActionDic[.audioOffsetTime] = setup
         }
     }
-    
+
     var speed: Double {
         get {
             return Double(self.player?.rate ?? 0)
         }
-        
+
         set {
             let setup = { [weak self] in
                 guard let self = self else { return }
-                
+                ANX.logInfo(.player, "[VLC] 播放速度: \(newValue)")
                 self.player?.rate = Float(newValue)
             }
-            
+
             if self.player != nil {
                 setup()
             }
-            
+
             self.initActionDic[.speed] = setup
         }
     }
@@ -287,46 +290,48 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         didSet {
             let setup = { [weak self] in
                 guard let self = self else { return }
-                
+
                 if let fontSize = self.fontSize {
+                    ANX.logDebug(.player, "[VLC] 字体大小: \(fontSize)")
                     let anxFontSizeRange: (min: Float, max: Float) = (min: 10, max: 120)
                     let vlcFontSizeRange: (min: Float, max: Float) = (min: 0.1, max: 5) // vlc的区间为 0.1~5
-                    
+
                     let vlcFontSize = vlcFontSizeRange.min + ((fontSize - anxFontSizeRange.min) * (vlcFontSizeRange.max - vlcFontSizeRange.min) / (anxFontSizeRange.max - anxFontSizeRange.min))
                     self.player?.anx_setTextRendererFontSize(vlcFontSize as NSNumber)
                 }
             }
-            
+
             if self.player != nil {
                 setup()
             }
-            
+
             self.initActionDic[.subtitleFontSize] = setup
         }
     }
-    
+
     var fontName: String? {
         didSet {
-            
+
             let setup = { [weak self] in
                 guard let self = self else { return }
-                
+
                 if let fontName = self.fontName {
                     self.player?.anx_setTextRendererFont(fontName)
                 }
             }
-            
+
             if self.player != nil {
                 setup()
             }
-            
+
             self.initActionDic[.subtitleFontName] = setup
         }
     }
-    
+
     var fontColor: ANXColor? {
         didSet {
             if let fontColor = self.fontColor {
+                ANX.logDebug(.player, "[VLC] 字体颜色已更改")
                 self.player?.anx_setTextRendererFontColor(fontColor.rgbValue() as NSNumber)
             }
         }
@@ -355,8 +360,9 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         set {
             let setup = { [weak self] in
                 guard let self = self else { return }
-                
+
                 if let audioChannel = newValue {
+                    ANX.logInfo(.player, "[VLC] 选择音轨: \(audioChannel.audioName) (id: \(audioChannel.audioId))")
                     self.player?.currentAudioTrackIndex = Int32(audioChannel.audioId)
                 } else {
                     self.player?.currentAudioTrackIndex = -1
@@ -474,29 +480,35 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     
     func setPosition(_ position: Double) {
         let position = max(min(position, 1), 0)
+        ANX.logInfo(.player, "[VLC] 跳转: 进度 \(position)")
         self.player?.position = Float(position)
-        
+
         checkIsEndPosition(position: position)
     }
     
     func play(_ media: File) {
+        ANX.logInfo(.player, "[VLC] 播放文件: \(media.fileName)")
         self.currentPlayItem = media
         self.player?.play()
     }
-    
+
     func play() {
+        ANX.logInfo(.player, "[VLC] 播放")
         self.player?.play()
     }
-    
+
     func pause() {
+        ANX.logInfo(.player, "[VLC] 暂停")
         self.player?.pause()
     }
-    
+
     func stop() {
+        ANX.logInfo(.player, "[VLC] 停止")
         self.player?.stop()
     }
-    
+
     func terminate() {
+        ANX.logInfo(.player, "[VLC] 终止")
         stop()
     }
     

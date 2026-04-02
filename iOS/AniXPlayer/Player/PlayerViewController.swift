@@ -333,36 +333,39 @@ extension PlayerViewController: UIPopoverPresentationControllerDelegate {
 //MARK: - PlayerUIViewDelegate
 extension PlayerViewController: PlayerUIViewDelegate {
     func singleTap(playerUIView: PlayerUIView, point: CGPoint, showUIViewCallBack: @escaping (() -> Void)) {
-        
-        
+
+
         let pointInDanmakuCanvas = self.danmakuModel.danmakuView.convert(point, from: playerUIView)
         if let danmakuCanvas = self.danmakuModel.selectedDanmaku(at: pointInDanmakuCanvas) {
             /// 命中弹幕，弹出气泡
+            ANX.logInfo(.player, "[Player] 点击弹幕")
             let vc = DanmakuOperationViewViewController()
             vc.onTouchCopyButtonCallBack = { [weak self] avc in
                 avc.dismiss(animated: true)
                 self?.danmakuModel.copyDanmkuText(danmakuCanvas)
+                ANX.logInfo(.player, "[Player] 复制弹幕文本")
             }
-            
+
             vc.onTouchFilterButtonCallBack = { [weak self] avc in
                 avc.dismiss(animated: true)
                 self?.danmakuModel.onAddFilterDanmku(danmakuCanvas)
+                ANX.logInfo(.player, "[Player] 屏蔽该弹幕")
             }
-            
+
             vc.dismissCallBack = { [weak self] avc in
                 self?.danmakuModel.deselectDanmaku()
             }
-            
+
             vc.modalPresentationStyle = .popover
             vc.popoverPresentationController?.sourceView = self.danmakuModel.danmakuView
             vc.popoverPresentationController?.sourceRect = CGRect(x: danmakuCanvas.frame.midX, y: danmakuCanvas.frame.maxY, width: 0, height: 0);
             vc.popoverPresentationController?.permittedArrowDirections = .up;
             vc.preferredContentSize = CGSize.init(width: 120, height: 50);
-            
+
             if let pres = vc.presentationController {
                 pres.delegate = self
             }
-            
+
             self.present(vc, animated: true, completion: nil)
         } else {
             showUIViewCallBack()
@@ -379,6 +382,7 @@ extension PlayerViewController: PlayerUIViewDelegate {
     }
     
     func onTouchMoreButton(playerUIView: PlayerUIView) {
+        ANX.logInfo(.player, "[Player] 打开播放设置")
         let vc = PlayerSettingViewController(playerModel: self.playerModel)
         vc.delegate = self
         vc.transitioningDelegate = self.animater
@@ -388,10 +392,12 @@ extension PlayerViewController: PlayerUIViewDelegate {
     }
     
     func onTouchPlayerList(playerUIView: PlayerUIView) {
+        ANX.logInfo(.player, "[Player] 打开播放列表")
         self.showFilesVCWithType(.video)
     }
     
     func onTouchDanmakuSwitch(playerUIView: PlayerUIView, isOn: Bool) {
+        ANX.logInfo(.player, "[Player] 弹幕开关: \(isOn ? "开启" : "关闭")")
         self.danmakuCanvas.isHidden = !isOn
     }
     
@@ -400,16 +406,16 @@ extension PlayerViewController: PlayerUIViewDelegate {
             self.view.showHUD("需要指定视频弹幕列表，才能发弹幕哟~")
             return
         }
-        
+        ANX.logInfo(.player, "[Player] 打开发送弹幕页面")
         let vc = SendDanmakuViewController()
         vc.onTouchSendButtonCallBack = { [weak self] (text, aVC) in
             guard let self = self else { return }
-            
+
             guard let item = self.mediaModel.media, !self.mediaModel.isMatch(media: item) else {
                 self.view.showHUD("需要指定视频弹幕列表，才能发弹幕哟~")
                 return
             }
-            
+            ANX.logInfo(.player, "[Player] 发送弹幕: \(text)")
             aVC.navigationController?.popViewController(animated: true)
         }
         self.navigationController?.pushViewController(vc, animated: true)
@@ -425,21 +431,24 @@ extension PlayerViewController: PlayerUIViewDelegate {
     
     func onTouchNextButton(playerUIView: PlayerUIView) {
         if let media = self.mediaModel.nextMedia() {
+            ANX.logInfo(.player, "[Player] 切换下一集: \(media.fileName)")
             self.playerModel.tryParseMedia(media)
+        } else {
+            ANX.logInfo(.player, "[Player] 没有下一集")
         }
     }
     
     func longPress(playerUIView: PlayerUIView, isBegin: Bool) {
         self.speedUpHUD?.hide(animated: false)
-        
+
         if isBegin {
             //记录原来的速度
             if self.originSpeed == nil {
                 self.originSpeed = self.mediaModel.playerSpeed
             }
-            
+            ANX.logInfo(.player, "[Player] 长按开始倍速播放: 4x (原速度: \(self.originSpeed ?? 1.0))")
             self.playerModel.changeSpeed(4)
-            
+
             let view = MBProgressHUD.showAdded(to: self.view, animated: true)
             self.speedUpHUD = view
             view.offset.y = -1000
@@ -450,15 +459,16 @@ extension PlayerViewController: PlayerUIViewDelegate {
             view.label.numberOfLines = 0
             view.contentColor = .white
             view.isUserInteractionEnabled = true
-            
+
             let speedUpView = SpeedUpView()
             speedUpView.titleLabel.text = NSLocalizedString("倍速播放中", comment: "")
             speedUpView.startAnimate()
             view.customView = speedUpView
-            
+
         } else {
             //结束恢复默认速度
             if let originSpeed = self.originSpeed {
+                ANX.logInfo(.player, "[Player] 长按结束恢复速度: \(originSpeed)")
                 self.playerModel.changeSpeed(originSpeed)
                 self.originSpeed = nil
             }
@@ -466,10 +476,12 @@ extension PlayerViewController: PlayerUIViewDelegate {
     }
     
     func tapSlider(playerUIView: PlayerUIView, progress: CGFloat) {
+        ANX.logInfo(.player, "[Player] 滑动跳转进度: \(Int(progress * 100))%")
         self.playerModel.changePosition(progress)
     }
-    
+
     func changeProgress(playerUIView: PlayerUIView, diffValue: CGFloat) {
+        ANX.logDebug(.player, "[Player] 进度微调: \(diffValue)s")
         self.playerModel.changePosition(diffValue: diffValue)
     }
     
@@ -482,9 +494,12 @@ extension PlayerViewController: PlayerUIViewDelegate {
     }
     
     private func changePlayState() {
-        if self.mediaModel.changePlayState() == .pause {
+        let state = self.mediaModel.changePlayState()
+        if state == .pause {
+            ANX.logInfo(.player, "[Player] 用户暂停播放")
             self.showPlayStateHUD(isPlay: false)
         } else {
+            ANX.logInfo(.player, "[Player] 用户开始播放")
             self.showPlayStateHUD(isPlay: true)
         }
     }
