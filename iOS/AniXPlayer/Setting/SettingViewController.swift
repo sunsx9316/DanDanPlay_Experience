@@ -63,33 +63,10 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = self.model.subtitle(settingType: type)
             return cell
-        case .subtitleLoadOrder, .mainColor, .playerCore, .appLanguage:
+        case .subtitleLoadOrder, .mainColor, .playerCore, .appLanguage, .host:
             let cell = tableView.dequeueCell(class: TitleDetailMoreTableViewCell.self, indexPath: indexPath)
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = self.model.subtitle(settingType: type)
-            return cell
-        case .host:
-            let cell = tableView.dequeueCell(class: TitleDetailOpertationTableViewCell.self, indexPath: indexPath)
-            cell.titleLabel.text = type.title
-            cell.subtitleLabel.text = self.model.subtitle(settingType: type)
-            cell.button.setTitle(NSLocalizedString("获取备用地址", comment: ""), for: .normal)
-            cell.touchButtonCallBack = { [weak self] aCell in
-
-                aCell.isShowLoading = true
-                
-                _ = self?.model.backupAddress().subscribe(onNext: { ips in
-                    
-                    if let ips = ips, !ips.isEmpty {
-                        self?.showAddressAlert(ips, at: aCell)
-                    }
-                    
-                }, onError: { error in
-                    aCell.isShowLoading = false
-                    self?.view.showError(error)
-                }, onCompleted: {
-                    aCell.isShowLoading = false
-                })
-            }
             return cell
         case .log, .cleanupCache, .cleanupHistory:
             let cell = tableView.dequeueCell(class: TitleDetailTableViewCell.self, indexPath: indexPath)
@@ -130,34 +107,14 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
             }))
             self.present(vc, atView: tableView.cellForRow(at: indexPath))
         } else if type == .host {
-            let vc = UIAlertController(title: type.title, message: nil, preferredStyle: .alert)
-            weak var aTextField: UITextField?
-            vc.addTextField { textField in
-                textField.keyboardType = .numberPad
-                textField.placeholder = NSLocalizedString("例：\(DefaultHost)", comment: "")
-                textField.text = self.model.host
-                aTextField = textField
-            }
-
-            vc.addAction(.init(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: { (_) in
-                
-            }))
-            
-            vc.addAction(.init(title: NSLocalizedString("确定", comment: ""), style: .destructive, handler: { (_) in
-                let host = aTextField?.text ?? ""
-                self.model.onChangeHost(host)
-            }))
-            self.present(vc, atView: tableView.cellForRow(at: indexPath))
+            let vc = ServerHostListViewController(globalSettingModel: self.model)
+            self.navigationController?.pushViewController(vc, animated: true)
         } else if type == .subtitleLoadOrder {
             let vc = SubtitleOrderViewController(globalSettingModel: self.model)
             self.navigationController?.pushViewController(vc, animated: true)
         } else if type == .mainColor {
-            if let memberDate = Preferences.shared.loginInfo?.privileges?.member, memberDate >= Date() {
-                let vc = SetMainColorViewController(globalSettingModel: self.model)
-                self.navigationController?.pushViewController(vc, animated: true)
-            } else {
-                self.view.showHUD(NSLocalizedString("仅会员支持，请使用电脑版开通", comment: ""))
-            }
+            let vc = SetMainColorViewController(globalSettingModel: self.model)
+            self.navigationController?.pushViewController(vc, animated: true)
         }
         else if type == .playerCore {
             let vc = UIAlertController(title: NSLocalizedString("播放器内核", comment: ""), message: nil, preferredStyle: .actionSheet)

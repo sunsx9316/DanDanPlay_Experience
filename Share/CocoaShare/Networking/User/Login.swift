@@ -10,7 +10,8 @@ import Foundation
 /// 用户权益过期时间（全部为北京时间）
 struct UserPrivileges: Codable {
     /// 会员权益过期时间（北京时间）
-    var member: Date?
+//    var member: Date?
+    
     /// 弹弹play资源监视器权益过期时间（北京时间）
     var resmonitor: Date?
     
@@ -24,9 +25,9 @@ struct UserPrivileges: Codable {
         
         let dateFormatter = DateFormatter.anix_YYYY_MM_dd_T_HH_mm_ssFormatter
         
-        if let member = member {
-            try container.encode(dateFormatter.string(from: member), forKey:.member)
-        }
+//        if let member = member {
+//            try container.encode(dateFormatter.string(from: member), forKey:.member)
+//        }
          
         if let resmonitor = resmonitor {
             try container.encode(dateFormatter.string(from: resmonitor), forKey:.resmonitor)
@@ -37,10 +38,10 @@ struct UserPrivileges: Codable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         
         let dateFormatter = DateFormatter.anix_YYYY_MM_dd_T_HH_mm_ssFormatter
-        if let memberStr = try container.decodeIfPresent(String.self, forKey: .member),
-           let data = dateFormatter.date(from: memberStr) {
-            self.member = data
-        }
+//        if let memberStr = try container.decodeIfPresent(String.self, forKey: .member),
+//           let data = dateFormatter.date(from: memberStr) {
+//            self.member = data
+//        }
         
         if let resmonitorStr = try container.decodeIfPresent(String.self, forKey: .resmonitor),
            let data = dateFormatter.date(from: resmonitorStr) {

@@ -140,6 +140,12 @@ class Preferences {
         /// 字幕样式开关
         case subtitleStyle
 
+        /// 自定义域名列表
+        case customHosts
+
+        /// 备用域名缓存
+        case backupHosts
+
         var storeKey: String {
             return self.rawValue
         }
@@ -441,7 +447,7 @@ class Preferences {
             }
             return nil
         }
-        
+
         set {
             if let newValue = newValue {
                 do {
@@ -455,7 +461,63 @@ class Preferences {
             }
         }
     }
-    
+
+    /// 自定义域名列表
+    var customHosts: [String]? {
+        get {
+            if let jsonData: Data = Store.shared.value(forKey: KeyName.customHosts.storeKey) {
+                do {
+                    let hosts = try JSONDecoder().decode([String].self, from: jsonData)
+                    return hosts
+                } catch let error {
+                    debugPrint("读取 customHosts 失败 error: \(error)")
+                }
+            }
+            return nil
+        }
+
+        set {
+            if let newValue = newValue {
+                do {
+                    let data = try JSONEncoder().encode(newValue)
+                    Store.shared.set(data, forKey: KeyName.customHosts.storeKey)
+                } catch let error {
+                    debugPrint("设置 customHosts 失败 error: \(error)")
+                }
+            } else {
+                Store.shared.remove(KeyName.customHosts.storeKey)
+            }
+        }
+    }
+
+    /// 备用域名缓存
+    var backupHosts: [String]? {
+        get {
+            if let jsonData: Data = Store.shared.value(forKey: KeyName.backupHosts.storeKey) {
+                do {
+                    let hosts = try JSONDecoder().decode([String].self, from: jsonData)
+                    return hosts
+                } catch let error {
+                    debugPrint("读取 backupHosts 失败 error: \(error)")
+                }
+            }
+            return nil
+        }
+
+        set {
+            if let newValue = newValue {
+                do {
+                    let data = try JSONEncoder().encode(newValue)
+                    Store.shared.set(data, forKey: KeyName.backupHosts.storeKey)
+                } catch let error {
+                    debugPrint("设置 backupHosts 失败 error: \(error)")
+                }
+            } else {
+                Store.shared.remove(KeyName.backupHosts.storeKey)
+            }
+        }
+    }
+
 }
 
 extension Preferences {

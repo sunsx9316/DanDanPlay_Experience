@@ -15,10 +15,24 @@ applyTo: "**/*.{swift,m,h}"
 
 ### 1. 闭包持有 self
 
+使用 `[weak self]` 后，必须用 `guard let self = self else { return }` 确保持有强引用：
+
 ```swift
-// 推荐 - 使用 weak
+// 推荐 - weak + guard 配对
 Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
-    self?.pollPlaybackState()
+    guard let self = self else { return }
+    self.pollPlaybackState()
+}
+
+// 推荐 - 系统回调场景
+panel.beginSheetModal(for: window) { [weak self] res in
+    guard let self = self else { return }
+    self.handleResponse(res)
+}
+
+// 不推荐 - 仅用 weak 但不解包
+Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+    self?.pollPlaybackState()  // 可用，但不符合本项目规范
 }
 
 // 不推荐 - 隐式强引用
@@ -26,6 +40,11 @@ Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
     self.pollPlaybackState()  // 循环引用！
 }
 ```
+
+**为什么需要 `guard let`？**
+- `[weak self]` 允许 self 在闭包执行前被释放
+- `guard let self = self else { return }` 确保闭包执行期间 self 有效
+- 避免在闭包执行过程中 self 被 dealloc 导致崩溃
 
 ### 2. 组合模式（父-子对象）
 

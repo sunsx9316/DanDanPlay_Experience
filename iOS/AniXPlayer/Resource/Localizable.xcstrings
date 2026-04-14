@@ -401,22 +401,6 @@
         }
       }
     },
-    "仅会员支持，请使用电脑版开通" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Member only, please use desktop version"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "仅会员支持，请使用电脑版开通"
-          }
-        }
-      }
-    },
     "作品详情" : {
       "localizations" : {
         "en" : {
@@ -833,6 +817,22 @@
         }
       }
     },
+    "域名列表" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Domain List"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "域名列表"
+          }
+        }
+      }
+    },
     "填充屏幕" : {
       "localizations" : {
         "en" : {
@@ -1041,6 +1041,22 @@
         }
       }
     },
+    "字幕样式" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Subtitle Style"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "字幕样式"
+          }
+        }
+      }
+    },
     "字幕设置" : {
       "localizations" : {
         "en" : {
@@ -1101,6 +1117,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "完成"
+          }
+        }
+      }
+    },
+    "官方域名" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Official Domain"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "官方域名"
           }
         }
       }
@@ -1938,6 +1970,22 @@
         }
       }
     },
+    "添加自定义域名" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Add Custom Domain"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "添加自定义域名"
+          }
+        }
+      }
+    },
     "清除成功！" : {
       "localizations" : {
         "en" : {
@@ -2436,6 +2484,22 @@
         }
       }
     },
+    "自定义域名" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Custom Domain"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自定义域名"
+          }
+        }
+      }
+    },
     "英文" : {
       "localizations" : {
         "en" : {
@@ -2448,22 +2512,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "英文"
-          }
-        }
-      }
-    },
-    "获取备用地址" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Get Backup URL"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "获取备用地址"
           }
         }
       }
@@ -2912,22 +2960,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "默认"
-          }
-        }
-      }
-    },
-    "字幕样式" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Subtitle Style"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "字幕样式"
           }
         }
       }
