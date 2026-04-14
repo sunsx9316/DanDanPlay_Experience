@@ -18,6 +18,8 @@ class AnimatesTableViewCell: EpisodeTableViewCell {
         label.layer.masksToBounds = true
         label.textAlignment = .center
         label.padding = .init(width: 6, height: 6)
+        label.setContentHuggingPriority(.required, for: .horizontal)
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
         return label
     }()
     
