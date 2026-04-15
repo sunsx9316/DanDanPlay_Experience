@@ -70,7 +70,7 @@ class SMBServiceBrowser: NSObject {
     func startScanning(_ callBack: @escaping(ScanningAction)) {
         self.scanningCallBack = callBack
         // 开始查找 SMB 服务
-        self.netServiceBrowser.searchForServices(ofType: "_smb._tcp.", inDomain: "")
+        self.netServiceBrowser.searchForServices(ofType: "_smb._tcp.", inDomain: "local.")
     }
     
     deinit {
