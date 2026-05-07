@@ -10,18 +10,20 @@ import SnapKit
 import DanmakuRender
 
 protocol DanmakuSettingViewControllerDelegate: AnyObject {
-    
+
     func loadDanmakuFileInDanmakuSettingViewController(vc: DanmakuSettingViewController)
-    
+
     func searchDanmakuInDanmakuSettingViewController(vc: DanmakuSettingViewController)
-    
+
     func filterDanmakuInDanmakuSettingViewController(vc: DanmakuSettingViewController)
+
+    func showDanmakuListInDanmakuSettingViewController(vc: DanmakuSettingViewController)
 }
 
 class DanmakuSettingViewController: ViewController {
     
     private var dataSource: [DanmakuSettingType] {
-        return self.danmakuModel.danmakuSetting
+        return self.danmakuModel.danmakuSetting.flatMap { $0 }
     }
     
     private lazy var scrollView: ScrollView<TableView> = {
@@ -88,6 +90,8 @@ class DanmakuSettingViewController: ViewController {
             self.delegate?.searchDanmakuInDanmakuSettingViewController(vc: self)
         } else if type == .filterDanmaku {
             self.delegate?.filterDanmakuInDanmakuSettingViewController(vc: self)
+        } else if type == .danmakuInfo {
+            self.delegate?.showDanmakuListInDanmakuSettingViewController(vc: self)
         }
     }
 
@@ -104,11 +108,10 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
         switch type {
         case .danmakuFontSize, .danmakuSpeed, .danmakuAlpha, .danmakuDensity:
             return 80
-        case .showDanmaku, .danmakuOffsetTime, .searchDanmaku,
+        case .danmakuInfo, .showDanmaku, .danmakuOffsetTime, .searchDanmaku,
                 .loadDanmaku, .danmakuArea, .mergeSameDanmaku,
-                .danmakuEffectStyle, .filterDanmaku:
-            return 40
-        case .openDanmakuRandomColor:
+                .danmakuEffectStyle, .filterDanmaku,
+                .openDanmakuRandomColor:
             return 40
         }
     }
@@ -245,6 +248,11 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
                 
                 self.danmakuModel.onChangeDanmakuDensity(currentValue)
             }
+            return cell
+        case .danmakuInfo:
+            let cell = tableView.dequeueReusableCell(class: TitleTableViewCell.self)
+            let count = self.danmakuModel.danmakuList.count
+            cell.label.text = String(format: NSLocalizedString("弹幕信息(%d条)", comment: ""), count)
             return cell
         case .loadDanmaku, .searchDanmaku, .filterDanmaku:
             let cell = tableView.dequeueReusableCell(class: TitleTableViewCell.self)

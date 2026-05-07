@@ -753,6 +753,9 @@
         }
       }
     },
+    "发个弹幕吧" : {
+
+    },
     "发光" : {
       "localizations" : {
         "en" : {
@@ -768,6 +771,31 @@
           }
         }
       }
+    },
+    "发送" : {
+
+    },
+    "发送失败" : {
+
+    },
+    "发送弹幕" : {
+
+    },
+    "发送成功" : {
+
+    },
+    "发送时间: %02d:%02d" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "new",
+            "value" : "发送时间: %1$02d:%2$02d"
+          }
+        }
+      }
+    },
+    "发送时间: 00:00" : {
+
     },
     "取消" : {
       "localizations" : {
@@ -797,6 +825,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "合并重复弹幕"
+          }
+        }
+      }
+    },
+    "固定" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fixed"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "固定"
           }
         }
       }
@@ -1234,6 +1278,9 @@
         }
       }
     },
+    "底部" : {
+
+    },
     "延后(%ds)" : {
       "localizations" : {
         "en" : {
@@ -1298,6 +1345,22 @@
         }
       }
     },
+    "弹幕信息(%d条)" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Danmaku Info(%d)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "弹幕信息(%d条)"
+          }
+        }
+      }
+    },
     "弹幕偏移时间" : {
       "localizations" : {
         "en" : {
@@ -1310,6 +1373,25 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "弹幕偏移时间"
+          }
+        }
+      }
+    },
+    "弹幕内容不能超过100个字符" : {
+
+    },
+    "弹幕列表" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Danmaku List"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "弹幕列表"
           }
         }
       }
@@ -1377,6 +1459,9 @@
           }
         }
       }
+    },
+    "弹幕模式" : {
+
     },
     "弹幕缓存时间" : {
       "localizations" : {
@@ -1457,6 +1542,9 @@
           }
         }
       }
+    },
+    "弹幕颜色" : {
+
     },
     "快速匹配弹幕" : {
       "localizations" : {
@@ -1778,6 +1866,9 @@
         }
       }
     },
+    "无效的弹幕库" : {
+
+    },
     "日志" : {
       "localizations" : {
         "en" : {
@@ -1825,6 +1916,9 @@
           }
         }
       }
+    },
+    "普通" : {
+
     },
     "服务器地址格式不正确！" : {
       "localizations" : {
@@ -2078,6 +2172,22 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "满屏"
+          }
+        }
+      }
+    },
+    "滚动" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scroll"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "滚动"
           }
         }
       }
@@ -2404,6 +2514,12 @@
         }
       }
     },
+    "置底" : {
+
+    },
+    "置顶" : {
+
+    },
     "自动加载本地字幕" : {
       "localizations" : {
         "en" : {
@@ -2643,6 +2759,9 @@
           }
         }
       }
+    },
+    "请输入弹幕内容" : {
+
     },
     "请输入用户名" : {
       "localizations" : {
@@ -2931,6 +3050,9 @@
           }
         }
       }
+    },
+    "顶部" : {
+
     },
     "颜色预览：" : {
       "localizations" : {

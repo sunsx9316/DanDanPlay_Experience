@@ -104,7 +104,7 @@ class PlayerViewController: ViewController {
         
         self.playerModel.mediaModel.terminate()
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.addSubview(self.containerView)
@@ -402,23 +402,52 @@ extension PlayerViewController: PlayerUIViewDelegate {
     }
     
     func onTouchSendDanmakuButton(playerUIView: PlayerUIView) {
-        guard let item = self.mediaModel.media, !self.mediaModel.isMatch(media: item) else {
+        guard let item = self.mediaModel.media, let matchInfo = self.mediaModel.matchInfo(media: item), matchInfo.matchId > 0 else {
             self.view.showHUD("需要指定视频弹幕列表，才能发弹幕哟~")
             return
         }
-        ANX.logInfo(.player, "[Player] 打开发送弹幕页面")
-        let vc = SendDanmakuViewController()
-        vc.onTouchSendButtonCallBack = { [weak self] (text, aVC) in
+        // 已经在UIViewController的bottomView中处理了展开/收起，这里不需要额外操作
+    }
+
+    func playerUIView(_ playerUIView: PlayerUIView, didChangeDanmakuInputViewState isExpanding: Bool) {
+        if isExpanding {
+            ANX.logInfo(.player, "[Player] 展开弹幕输入面板，暂停播放")
+            self.mediaModel.pause()
+        } else {
+            ANX.logInfo(.player, "[Player] 收起弹幕输入面板，继续播放")
+            self.mediaModel.changePlayState()
+        }
+    }
+
+    func playerUIView(_ playerUIView: PlayerUIView, didSendDanmaku text: String, mode: Int, color: Int) {
+        guard let item = self.mediaModel.media, let matchInfo = self.mediaModel.matchInfo(media: item), matchInfo.matchId > 0 else {
+            self.view.showHUD("需要指定视频弹幕列表，才能发弹幕哟~")
+            return
+        }
+
+        ANX.logInfo(.player, "[Player] 发送弹幕: \(text), mode: \(mode), color: \(color)")
+
+        let request = SendCommentRequest(
+            time: self.mediaModel.currentTime,
+            mode: mode,
+            color: color,
+            comment: text
+        )
+
+        CommentNetworkHandle.sendComment(episodeId: matchInfo.matchId, request: request) { [weak self] response, error in
             guard let self = self else { return }
 
-            guard let item = self.mediaModel.media, !self.mediaModel.isMatch(media: item) else {
-                self.view.showHUD("需要指定视频弹幕列表，才能发弹幕哟~")
+            if let error = error {
+                self.view.showHUD(error.localizedDescription)
                 return
             }
-            ANX.logInfo(.player, "[Player] 发送弹幕: \(text)")
-            aVC.navigationController?.popViewController(animated: true)
+
+            if let cid = response?.cid, cid > 0 {
+                self.view.showHUD(NSLocalizedString("发送成功", comment: ""))
+            } else {
+                self.view.showHUD(NSLocalizedString("发送失败", comment: ""))
+            }
         }
-        self.navigationController?.pushViewController(vc, animated: true)
     }
     
     func onTouchPlayButton(playerUIView: PlayerUIView, isSelected: Bool) {
@@ -547,7 +576,19 @@ extension PlayerViewController: DanmakuSettingViewControllerDelegate {
     func loadDanmakuFileInDanmakuSettingViewController(vc: DanmakuSettingViewController) {
         self.showFilesVCWithType(.danmaku)
     }
-    
+
+    func showDanmakuListInDanmakuSettingViewController(vc: DanmakuSettingViewController) {
+        if let presentedViewController = self.presentedViewController {
+            presentedViewController.dismiss(animated: true, completion: nil)
+        }
+
+        let vc = DanmakuListViewController(danmakuModel: self.danmakuModel)
+        let nav = NavigationController(rootViewController: vc)
+        nav.modalPresentationStyle = .custom
+        nav.transitioningDelegate = self.animater
+        self.present(nav, animated: true, completion: nil)
+    }
+
     func searchDanmakuInDanmakuSettingViewController(vc: DanmakuSettingViewController) {
         if let presentedViewController = self.presentedViewController {
             presentedViewController.dismiss(animated: true, completion: nil)

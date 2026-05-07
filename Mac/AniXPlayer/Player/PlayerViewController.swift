@@ -722,6 +722,10 @@ extension PlayerViewController: DanmakuSettingViewControllerDelegate {
         let vc = FilterDanmakuViewController(danmakuModel: self.danmakuModel)
         self.presentAsModalWindow(vc)
     }
+
+    func showDanmakuListInDanmakuSettingViewController(vc: DanmakuSettingViewController) {
+        // Mac 端暂不支持弹幕列表展示
+    }
 }
 
 // MARK: - MediaSettingViewControllerDelegate

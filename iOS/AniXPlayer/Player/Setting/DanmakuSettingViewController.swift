@@ -11,18 +11,20 @@ import RxSwift
 import DanmakuRender
 
 protocol DanmakuSettingViewControllerDelegate: AnyObject {
-    
+
     func loadDanmakuFileInDanmakuSettingViewController(vc: DanmakuSettingViewController)
-    
+
     func searchDanmakuInDanmakuSettingViewController(vc: DanmakuSettingViewController)
-    
+
     func filterDanmakuInDanmakuSettingViewController(vc: DanmakuSettingViewController)
-    
+
+    func showDanmakuListInDanmakuSettingViewController(vc: DanmakuSettingViewController)
+
 }
 
 class DanmakuSettingViewController: ViewController {
     
-    private var dataSource: [DanmakuSettingType] {
+    private var dataSource: [[DanmakuSettingType]] {
         return self.danmakuModel.danmakuSetting
     }
     
@@ -80,14 +82,24 @@ class DanmakuSettingViewController: ViewController {
 }
 
 extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+
+    func numberOfSections(in tableView: UITableView) -> Int {
         return self.dataSource.count
     }
-    
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return self.dataSource[section].count
+    }
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let type = self.dataSource[indexPath.row]
+        let type = self.dataSource[indexPath.section][indexPath.row]
         
         switch type {
+        case .danmakuInfo:
+            let cell = tableView.dequeueCell(class: TitleMoreTableViewCell.self, indexPath: indexPath)
+            let count = self.danmakuModel.danmakuList.count
+            cell.label.text = String(format: NSLocalizedString("弹幕信息(%d条)", comment: ""), count)
+            return cell
         case .danmakuAlpha:
             let cell = tableView.dequeueCell(class: SliderTableViewCell.self, indexPath: indexPath)
             cell.titleLabel.text = type.title
@@ -258,10 +270,12 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        let type = self.dataSource[indexPath.row]
-        
-        if type == .loadDanmaku {
+
+        let type = self.dataSource[indexPath.section][indexPath.row]
+
+        if type == .danmakuInfo {
+            self.delegate?.showDanmakuListInDanmakuSettingViewController(vc: self)
+        } else if type == .loadDanmaku {
             self.delegate?.loadDanmakuFileInDanmakuSettingViewController(vc: self)
         } else if type == .searchDanmaku {
             self.delegate?.searchDanmakuInDanmakuSettingViewController(vc: self)

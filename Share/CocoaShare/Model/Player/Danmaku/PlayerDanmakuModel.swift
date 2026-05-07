@@ -61,8 +61,12 @@ extension PlayerDanmakuModel {
         return (try? self.context.danmakuAlpha.value()) ?? 0
     }
     
-    var danmakuSetting: [DanmakuSettingType] {
-        return DanmakuSettingType.allCases
+    var danmakuSetting: [[DanmakuSettingType]] {
+        return DanmakuSettingType.sections
+    }
+
+    var danmakuList: [DanmakuEntity] {
+        return self.danmakuProducer.allDanmakus
     }
     
     var filterDanmakus: [FilterDanmaku]? {

@@ -25,6 +25,13 @@ class PlayerDanmakuProducer {
         self.danmakuContext = danmakuContext
     }
     
+    var allDanmakus: [DanmakuEntity] {
+        self.lock.lock()
+        let danmakus = self.rawDanmakus.keys.sorted().flatMap { self.rawDanmakus[$0] ?? [] }
+        self.lock.unlock()
+        return danmakus
+    }
+
     func danmaku(at time: UInt) -> [DanmakuEntity]? {
         self.lock.lock()
         let danmaku = self.filterDanmakus[time]
