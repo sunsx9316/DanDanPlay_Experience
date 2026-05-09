@@ -61,7 +61,7 @@ extension PlayerDanmakuModel {
         return (try? self.context.danmakuAlpha.value()) ?? 0
     }
     
-    var danmakuSetting: [[DanmakuSettingType]] {
+    var danmakuSetting: [DanmakuSettingInfo] {
         return DanmakuSettingType.sections
     }
 
@@ -72,6 +72,10 @@ extension PlayerDanmakuModel {
     var filterDanmakus: [FilterDanmaku]? {
         return (try? self.context.filterDanmakus.value())
     }
+    
+    var currentTime: TimeInterval {
+        return self.danmakuRender.time + self.danmakuRender.offsetTime
+    }
 }
 
 /// 弹幕设置
@@ -80,7 +84,7 @@ class PlayerDanmakuModel {
     lazy var context = PlayerDanmakuContext()
     
     /// 当前弹幕的时间
-    private var danmakuTime: UInt?
+    private var timeFlag: UInt?
     
     private lazy var danmakuRender: DanmakuEngine = {
         let danmakuRender = DanmakuEngine()
@@ -248,22 +252,37 @@ class PlayerDanmakuModel {
     
     /// 发送弹幕
     /// - Parameter danmaku: 弹幕
-    func sendDanmaku(_ danmaku: Comment) {
-        //            if !text.isEmpty {
-        //                let danmaku = DanmakuModel()
-        //                danmaku.mode = .normal
-        //                danmaku.time = self.danmakuRender.currentTime + self.danmakuRender.offsetTime
-        //                danmaku.message = text
-        //                danmaku.id = "\(Date().timeIntervalSince1970)"
-        //
-        //                let msg = SendDanmakuMessage()
-        //                msg.danmaku = danmaku
-        //                msg.episodeId = episodeId
-        //                #warning("待处理")
-        ////                MessageHandler.sendMessage(msg)
-        //
-        ////                self.danmakuRender.sendDanmaku(DanmakuManager.shared.conver(danmaku))
-        //            }
+    func sendDanmaku(matchId: Int, danmaku: Comment, completion: @escaping((_ success: Bool, _ msg: String?) -> Void)) {
+
+        if danmaku.message.isEmpty {
+            completion(false, NSLocalizedString("弹幕内容不能为空", comment: ""))
+            return
+        }
+        
+        CommentNetworkHandle.sendComment(episodeId: matchId, comment: danmaku) { [weak self] response, error in
+            guard let self = self else { return }
+
+            if let error = error {
+                completion(false, error.localizedDescription)
+                return
+            }
+
+            if let cid = response?.cid, cid > 0 {
+                let currentTime = ceil(self.currentTime) // 防止回包很慢 导致弹幕不展示的问题
+                var tmpDanmaku = danmaku
+                tmpDanmaku.time = currentTime
+                tmpDanmaku.userId = String(Preferences.shared.loginInfo?.userId ?? -1)
+                let aDanmaku = DanmakuManager.shared.conver(tmpDanmaku)
+                self.danmakuProducer.addDanmaku(at: UInt(currentTime), danmaku: aDanmaku)
+
+                // 清空缓存，确保下次拉取弹幕包含本次发送的弹幕
+                CacheManager.shared.removeDanmakuCache(for: matchId)
+
+                completion(true, NSLocalizedString("发送成功", comment: ""))
+            } else {
+                completion(true, NSLocalizedString("发送失败", comment: ""))
+            }
+        }
     }
     
     
@@ -305,7 +324,7 @@ class PlayerDanmakuModel {
     func setupDanmaku(_ danmakus: DanmakuMapResult) -> Observable<DanmakuFilterProgress> {
         return Observable<DanmakuFilterProgress>.create { sub in
             self.danmakuRender.time = 0
-            self.danmakuTime = nil
+            self.timeFlag = nil
             _ = self.danmakuProducer.setupDanmaku(danmakus).subscribe(onNext: { progress in
                 sub.onNext(progress)
             }, onCompleted: {
@@ -321,7 +340,7 @@ class PlayerDanmakuModel {
     /// 显示弹幕
     private func showDanmakus(at currentTime: UInt) {
         
-        self.danmakuTime = currentTime
+        self.timeFlag = currentTime
         
         if let danmakus = self.danmakuProducer.danmaku(at: currentTime) {
             
@@ -463,7 +482,7 @@ class PlayerDanmakuModel {
             
             let intTime = UInt(danmakuRenderTime)
             /// 一秒只发射一次弹幕
-            if intTime == self?.danmakuTime {
+            if intTime == self?.timeFlag {
                 return false
             }
             

@@ -78,6 +78,11 @@ enum MediaSettingType: CaseIterable {
 
 
 /// 弹幕设置项
+struct DanmakuSettingInfo {
+    var title: String
+    var dataSource: [DanmakuSettingType]
+}
+
 enum DanmakuSettingType: CaseIterable {
     case danmakuInfo
 
@@ -97,24 +102,26 @@ enum DanmakuSettingType: CaseIterable {
     case searchDanmaku
     case loadDanmaku
 
-    static var sections: [[DanmakuSettingType]] {
+    static var sections: [DanmakuSettingInfo] {
         return [
-            [.danmakuInfo],
-            [
-                .danmakuFontSize,
-                .danmakuSpeed,
-                .danmakuAlpha,
-                .danmakuDensity,
-                .danmakuEffectStyle,
-                .danmakuArea,
-                .showDanmaku,
-                .openDanmakuRandomColor,
-                .mergeSameDanmaku,
-                .danmakuOffsetTime,
-                .filterDanmaku,
-                .searchDanmaku,
-                .loadDanmaku,
-            ]
+            DanmakuSettingInfo(title: NSLocalizedString("弹幕信息", comment: ""),
+                               dataSource: [.danmakuInfo]),
+            DanmakuSettingInfo(title: NSLocalizedString("弹幕设置", comment: ""),
+                               dataSource: [
+                                .danmakuFontSize,
+                                .danmakuSpeed,
+                                .danmakuAlpha,
+                                .danmakuDensity,
+                                .danmakuEffectStyle,
+                                .danmakuArea,
+                                .showDanmaku,
+                                .openDanmakuRandomColor,
+                                .mergeSameDanmaku,
+                                .danmakuOffsetTime,
+                                .filterDanmaku,
+                                .searchDanmaku,
+                                .loadDanmaku,
+                               ])
         ]
     }
 

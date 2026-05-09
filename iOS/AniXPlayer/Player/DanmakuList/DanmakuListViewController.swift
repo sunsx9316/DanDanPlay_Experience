@@ -64,5 +64,8 @@ extension DanmakuListViewController: UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+        let danmaku = self.danmakuList[indexPath.row]
+        UIPasteboard.general.string = danmaku.text
+        self.view.showHUD(NSLocalizedString("已复制", comment: ""))
     }
 }

@@ -50,12 +50,7 @@ class DanmakuListCell: TableViewCell {
         let minutes = Int(danmaku.appearTime) / 60
         let seconds = Int(danmaku.appearTime) % 60
         timeLabel.text = String(format: "%02d:%02d", minutes, seconds)
-
-        if danmaku is _FloatDanmaku {
-            modeLabel.text = NSLocalizedString("固定", comment: "")
-        } else {
-            modeLabel.text = NSLocalizedString("滚动", comment: "")
-        }
+        modeLabel.text = danmaku.rawComment?.mode.name
 
         contentLabel.text = danmaku.text
         contentLabel.textColor = danmaku.textColor

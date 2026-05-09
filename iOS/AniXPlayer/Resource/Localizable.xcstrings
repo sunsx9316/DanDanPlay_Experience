@@ -778,23 +778,7 @@
     "发送失败" : {
 
     },
-    "发送弹幕" : {
-
-    },
     "发送成功" : {
-
-    },
-    "发送时间: %02d:%02d" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "new",
-            "value" : "发送时间: %1$02d:%2$02d"
-          }
-        }
-      }
-    },
-    "发送时间: 00:00" : {
 
     },
     "取消" : {
@@ -830,6 +814,7 @@
       }
     },
     "固定" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {
@@ -1278,8 +1263,21 @@
         }
       }
     },
-    "底部" : {
-
+    "已复制" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copied"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已复制"
+          }
+        }
+      }
     },
     "延后(%ds)" : {
       "localizations" : {
@@ -1361,6 +1359,38 @@
         }
       }
     },
+    "弹幕颜色管理" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Danmaku Colors"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "弹幕颜色管理"
+          }
+        }
+      }
+    },
+    "弹幕设置" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Danmaku Settings"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "弹幕设置"
+          }
+        }
+      }
+    },
     "弹幕偏移时间" : {
       "localizations" : {
         "en" : {
@@ -1377,7 +1407,7 @@
         }
       }
     },
-    "弹幕内容不能超过100个字符" : {
+    "弹幕内容不能为空" : {
 
     },
     "弹幕列表" : {
@@ -1460,9 +1490,6 @@
         }
       }
     },
-    "弹幕模式" : {
-
-    },
     "弹幕缓存时间" : {
       "localizations" : {
         "en" : {
@@ -1542,9 +1569,6 @@
           }
         }
       }
-    },
-    "弹幕颜色" : {
-
     },
     "快速匹配弹幕" : {
       "localizations" : {
@@ -1866,9 +1890,6 @@
         }
       }
     },
-    "无效的弹幕库" : {
-
-    },
     "日志" : {
       "localizations" : {
         "en" : {
@@ -1916,9 +1937,6 @@
           }
         }
       }
-    },
-    "普通" : {
-
     },
     "服务器地址格式不正确！" : {
       "localizations" : {
@@ -2760,9 +2778,6 @@
         }
       }
     },
-    "请输入弹幕内容" : {
-
-    },
     "请输入用户名" : {
       "localizations" : {
         "en" : {
@@ -3050,9 +3065,6 @@
           }
         }
       }
-    },
-    "顶部" : {
-
     },
     "颜色预览：" : {
       "localizations" : {

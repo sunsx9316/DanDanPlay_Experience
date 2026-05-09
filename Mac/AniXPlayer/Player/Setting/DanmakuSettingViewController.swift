@@ -23,7 +23,7 @@ protocol DanmakuSettingViewControllerDelegate: AnyObject {
 class DanmakuSettingViewController: ViewController {
     
     private var dataSource: [DanmakuSettingType] {
-        return self.danmakuModel.danmakuSetting.flatMap { $0 }
+        return self.danmakuModel.danmakuSetting.flatMap { $0.dataSource }
     }
     
     private lazy var scrollView: ScrollView<TableView> = {

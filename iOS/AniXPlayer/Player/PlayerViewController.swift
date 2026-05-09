@@ -400,14 +400,6 @@ extension PlayerViewController: PlayerUIViewDelegate {
         ANX.logInfo(.player, "[Player] 弹幕开关: \(isOn ? "开启" : "关闭")")
         self.danmakuCanvas.isHidden = !isOn
     }
-    
-    func onTouchSendDanmakuButton(playerUIView: PlayerUIView) {
-        guard let item = self.mediaModel.media, let matchInfo = self.mediaModel.matchInfo(media: item), matchInfo.matchId > 0 else {
-            self.view.showHUD("需要指定视频弹幕列表，才能发弹幕哟~")
-            return
-        }
-        // 已经在UIViewController的bottomView中处理了展开/收起，这里不需要额外操作
-    }
 
     func playerUIView(_ playerUIView: PlayerUIView, didChangeDanmakuInputViewState isExpanding: Bool) {
         if isExpanding {
@@ -419,7 +411,7 @@ extension PlayerViewController: PlayerUIViewDelegate {
         }
     }
 
-    func playerUIView(_ playerUIView: PlayerUIView, didSendDanmaku text: String, mode: Int, color: Int) {
+    func playerUIView(_ playerUIView: PlayerUIView, didSendDanmaku text: String, mode: Comment.Mode, color: ANXColor) {
         guard let item = self.mediaModel.media, let matchInfo = self.mediaModel.matchInfo(media: item), matchInfo.matchId > 0 else {
             self.view.showHUD("需要指定视频弹幕列表，才能发弹幕哟~")
             return
@@ -427,25 +419,15 @@ extension PlayerViewController: PlayerUIViewDelegate {
 
         ANX.logInfo(.player, "[Player] 发送弹幕: \(text), mode: \(mode), color: \(color)")
 
-        let request = SendCommentRequest(
-            time: self.mediaModel.currentTime,
-            mode: mode,
-            color: color,
-            comment: text
-        )
-
-        CommentNetworkHandle.sendComment(episodeId: matchInfo.matchId, request: request) { [weak self] response, error in
-            guard let self = self else { return }
-
-            if let error = error {
-                self.view.showHUD(error.localizedDescription)
-                return
-            }
-
-            if let cid = response?.cid, cid > 0 {
-                self.view.showHUD(NSLocalizedString("发送成功", comment: ""))
-            } else {
-                self.view.showHUD(NSLocalizedString("发送失败", comment: ""))
+        var comment = Comment()
+        comment.time = self.danmakuModel.currentTime
+        comment.mode = mode
+        comment.color = color
+        comment.message = text
+        
+        self.danmakuModel.sendDanmaku(matchId: matchInfo.matchId, danmaku: comment) { [weak self] isSuccess, msg in
+            if let msg = msg {
+                self?.view.showHUD(msg)
             }
         }
     }

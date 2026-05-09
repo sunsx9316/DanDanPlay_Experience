@@ -92,44 +92,54 @@ class RepeatDanmakuInfo {
 }
 
 protocol DanmakuInfoProtocol: AnyObject {
-    
+
     /// 记录原始的出现时间
     var originAppearTime: TimeInterval? { set get }
     
+    /// 原始弹幕数据
+    var rawComment: Comment? { set get }
+
     /// 弹幕重复信息
     var repeatDanmakuInfo: RepeatDanmakuInfo? { set get }
-    
+
     /// 是否被过滤
     var isFilter: Bool { set get }
-    
+
+    /// 弹幕发送者 userId
+    var userId: String { get set }
+
     var newResizeCallBack: ((CGSize) -> CGSize)? { set get }
-    
+
     var changeFontCallBack: ((DRFont) -> Void)? { set get }
-    
+
     func changeTextColor(isRandom: Bool)
 
 }
 
 class _ScrollDanmaku: ScrollDanmaku, DanmakuInfoProtocol {
-    
+
     var originAppearTime: TimeInterval?
-    
+
     var repeatDanmakuInfo: RepeatDanmakuInfo?
-    
+
     var isFilter: Bool = false
-    
+
+    var userId: String = ""
+
     var newResizeCallBack: ((CGSize) -> CGSize)?
-    
+
     var changeFontCallBack: ((DRFont) -> Void)?
     
+    var rawComment: Comment?
+
     private lazy var randomTextColor = ANXColor(red: Int.random(in: 0...255), green: Int.random(in: 0...255), blue: Int.random(in: 0...255), alpha: 1)
-    
+
     private let originalTextColor: ANXColor
-    
+
     func changeTextColor(isRandom: Bool) {
         if isRandom {
             if self.textColor != self.randomTextColor {
-                self.textColor = self.randomTextColor                
+                self.textColor = self.randomTextColor
             }
         } else {
             if self.textColor != self.originalTextColor {
@@ -137,28 +147,34 @@ class _ScrollDanmaku: ScrollDanmaku, DanmakuInfoProtocol {
             }
         }
     }
-    
+
     override init(text: String, textColor: DRColor, font: DRFont, effectStyle: DanmakuEffectStyle, direction: ScrollDanmaku.Direction) {
         self.originalTextColor = textColor
         super.init(text: text, textColor: textColor, font: font, effectStyle: effectStyle, direction: direction)
     }
-    
+
     override var font: DRFont {
         willSet {
             self.changeFontCallBack?(newValue)
         }
     }
-    
+
     override func moveOutFromCanvas(_ context: DanmakuContext) {
         super.moveOutFromCanvas(context)
         self.repeatDanmakuInfo = nil
     }
-    
+
     override func draw(_ context: CGContext, size: CGSize, isCancelled: @escaping (() -> Bool)) {
         super.draw(context, size: size, isCancelled: isCancelled)
         self.repeatDanmakuInfo?.draw(context, size: size, isCancelled: isCancelled)
+
+        if let currentUserId = Preferences.shared.loginInfo?.userId, self.userId == String(currentUserId) {
+            context.setStrokeColor(UIColor.white.cgColor)
+            context.setLineWidth(1.5)
+            context.stroke(CGRect(origin: .zero, size: size))
+        }
     }
-    
+
     override func newDanmakuSize(_ oldSize: CGSize) -> CGSize {
         var size = super.newDanmakuSize(oldSize)
         if let newSize = self.newResizeCallBack?(size) {
@@ -170,23 +186,27 @@ class _ScrollDanmaku: ScrollDanmaku, DanmakuInfoProtocol {
  
 
 class _FloatDanmaku: FloatDanmaku, DanmakuInfoProtocol {
-    
+
     var originAppearTime: TimeInterval?
     
+    var rawComment: Comment?
+
     var repeatDanmakuInfo: RepeatDanmakuInfo?
-    
+
     var isFilter: Bool = false
-    
+
+    var userId: String = ""
+
     var newResizeCallBack: ((CGSize) -> CGSize)?
-    
+
     var changeFontCallBack: ((DRFont) -> Void)?
-    
+
     var willMoveOutCanvasCallBack: (() -> Void)?
-    
+
     private lazy var randomTextColor = ANXColor(red: Int.random(in: 0...255), green: Int.random(in: 0...255), blue: Int.random(in: 0...255), alpha: 1)
-    
+
     private let originalTextColor: ANXColor
-    
+
     func changeTextColor(isRandom: Bool) {
         if isRandom {
             self.textColor = self.randomTextColor
@@ -194,28 +214,34 @@ class _FloatDanmaku: FloatDanmaku, DanmakuInfoProtocol {
             self.textColor = self.originalTextColor
         }
     }
-    
+
     override init(text: String, textColor: DRColor, font: DRFont, effectStyle: DanmakuEffectStyle, position: FloatDanmaku.Position, lifeTime: TimeInterval) {
         self.originalTextColor = textColor
         super.init(text: text, textColor: textColor, font: font, effectStyle: effectStyle, position: position, lifeTime: lifeTime)
     }
-    
+
     override var font: DRFont {
         willSet {
             self.changeFontCallBack?(newValue)
         }
     }
-    
+
     override func moveOutFromCanvas(_ context: DanmakuContext) {
         super.moveOutFromCanvas(context)
         self.repeatDanmakuInfo = nil
     }
-    
+
     override func draw(_ context: CGContext, size: CGSize, isCancelled: @escaping (() -> Bool)) {
         super.draw(context, size: size, isCancelled: isCancelled)
         self.repeatDanmakuInfo?.draw(context, size: size, isCancelled: isCancelled)
+
+        if let currentUserId = Preferences.shared.loginInfo?.userId, self.userId == String(currentUserId) {
+            context.setStrokeColor(UIColor.white.cgColor)
+            context.setLineWidth(1.5)
+            context.stroke(CGRect(origin: .zero, size: size))
+        }
     }
-    
+
     override func newDanmakuSize(_ oldSize: CGSize) -> CGSize {
         var size = super.newDanmakuSize(oldSize)
         if let newSize = self.newResizeCallBack?(size) {

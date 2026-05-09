@@ -48,6 +48,11 @@ class PlayerDanmakuProducer {
         return startFilter(from: 0, forceParse: true)
     }
     
+    func addDanmaku(at time: UInt, danmaku: DanmakuEntity) {
+        self.rawDanmakus[time]?.append(danmaku)
+        self.filterDanmakus[time]?.append(danmaku)
+    }
+    
     
     /// 开始过滤弹幕
     /// - Parameters:

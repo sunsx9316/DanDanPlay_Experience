@@ -24,7 +24,7 @@ protocol DanmakuSettingViewControllerDelegate: AnyObject {
 
 class DanmakuSettingViewController: ViewController {
     
-    private var dataSource: [[DanmakuSettingType]] {
+    private var dataSource: [DanmakuSettingInfo] {
         return self.danmakuModel.danmakuSetting
     }
     
@@ -38,9 +38,11 @@ class DanmakuSettingViewController: ViewController {
         tableView.registerNibCell(class: TitleTableViewCell.self)
         tableView.registerNibCell(class: SheetTableViewCell.self)
         tableView.registerNibCell(class: TitleMoreTableViewCell.self)
+        tableView.registerClassHeaderFooterView(class: TitleTableViewHeaderFooterView.self)
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
         tableView.backgroundColor = .clear
+        
         tableView.showsVerticalScrollIndicator = false
         tableView.separatorStyle = .singleLine
         tableView.separatorColor = .darkGray
@@ -87,12 +89,23 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
         return self.dataSource.count
     }
 
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let view = tableView.dequeueHeaderFooterView(class: TitleTableViewHeaderFooterView.self)
+        view.titleLabel.text = self.dataSource[section].title
+        view.titleLabel.textColor = .mainColor
+        return view
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 40
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return self.dataSource[section].count
+        return self.dataSource[section].dataSource.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let type = self.dataSource[indexPath.section][indexPath.row]
+        let type = self.dataSource[indexPath.section].dataSource[indexPath.row]
         
         switch type {
         case .danmakuInfo:
@@ -271,7 +284,7 @@ extension DanmakuSettingViewController: UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
 
-        let type = self.dataSource[indexPath.section][indexPath.row]
+        let type = self.dataSource[indexPath.section].dataSource[indexPath.row]
 
         if type == .danmakuInfo {
             self.delegate?.showDanmakuListInDanmakuSettingViewController(vc: self)

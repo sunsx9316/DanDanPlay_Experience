@@ -9,29 +9,106 @@ import UIKit
 import SnapKit
 import YYCategories
 
+// MARK: - ColorItem
+
+class ColorItem {
+    var color: ANXColor
+
+    init(color: ANXColor) {
+        self.color = color
+    }
+}
+
+// MARK: - DanmakuInputViewDelegate
+
 protocol DanmakuInputViewDelegate: AnyObject {
     func danmakuInputView(_ view: DanmakuInputView, didSendDanmaku text: String, mode: Comment.Mode, color: ANXColor)
     func danmakuInputViewDidExpand(_ view: DanmakuInputView)
     func danmakuInputViewDidCollapse(_ view: DanmakuInputView)
 }
 
-fileprivate extension Comment.Mode {
-    var name: String {
-        switch self {
-        case .normal:
-            return NSLocalizedString("滚动", comment: "")
-        case .bottom:
-            return NSLocalizedString("置底", comment: "")
-        case .top:
-            return NSLocalizedString("置顶", comment: "")
+// MARK: - ColorButton
+
+private class ColorButton: UIView {
+
+    let item: ColorItem
+
+    var onTap: ((ColorButton) -> Void)?
+
+    var isSelected: Bool = false {
+        didSet {
+            if isSelected {
+                bgView.layer.borderWidth = 2
+                bgView.layer.borderColor = UIColor.white.cgColor
+                checkmarkLabel.isHidden = false
+            } else {
+                bgView.layer.borderWidth = 0
+                bgView.layer.borderColor = UIColor.clear.cgColor
+                checkmarkLabel.isHidden = true
+            }
         }
     }
+
+    private lazy var bgView: UIView = {
+        let bgView = UIView()
+        bgView.isUserInteractionEnabled = false
+        bgView.layer.cornerRadius = 3
+        bgView.clipsToBounds = true
+        return bgView
+    }()
+
+    private lazy var checkmarkLabel: UILabel = {
+        let label = UILabel()
+        label.text = "✓"
+        label.font = .systemFont(ofSize: 12, weight: .bold)
+        label.textColor = .white
+        label.textAlignment = .center
+        label.backgroundColor = UIColor(white: 0, alpha: 0.5)
+        label.layer.cornerRadius = 7
+        label.clipsToBounds = true
+        label.isHidden = true
+        return label
+    }()
+
+    init(item: ColorItem) {
+        self.item = item
+        super.init(frame: .zero)
+
+        bgView.backgroundColor = item.color
+        addSubview(bgView)
+        addSubview(checkmarkLabel)
+
+        bgView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+            make.width.equalTo(28)
+            make.height.equalTo(20)
+        }
+
+        checkmarkLabel.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().offset(4)
+            make.bottom.equalToSuperview().offset(4)
+            make.width.height.equalTo(14)
+        }
+
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        addGestureRecognizer(tap)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    @objc private func handleTap() {
+        onTap?(self)
+    }
 }
+
+// MARK: - DanmakuInputView
 
 class DanmakuInputView: UIView {
 
     weak var delegate: DanmakuInputViewDelegate?
-    
+
     private lazy var bgView: UIView = {
         let view = UIView()
         let tap = UITapGestureRecognizer.init { [weak self] _ in
@@ -92,7 +169,7 @@ class DanmakuInputView: UIView {
         button.addTarget(self, action: #selector(onTouchSendButton), for: .touchUpInside)
         return button
     }()
-    
+
     /// 弹幕配置视图
     private lazy var danmakuConfigPanel: UIView = {
         let view = UIView()
@@ -108,10 +185,12 @@ class DanmakuInputView: UIView {
         stackView.distribution = .fill
         return stackView
     }()
+     
+    private lazy var modes = Comment.Mode.allCases
 
     /// 模式选择分段控件
     private lazy var modeSegmentedControl: UISegmentedControl = {
-        let items = Comment.Mode.allCases.compactMap { mode in
+        let items = self.modes.compactMap { mode in
             return mode.name
         }
 
@@ -124,17 +203,9 @@ class DanmakuInputView: UIView {
     }()
 
     /// 预设颜色列表
-    private lazy var presetColors: [ANXColor] = [
-        ANXColor(anxRgb: 0xFFFFFF), // 白色
-        ANXColor(anxRgb: 0xFF0000), // 红色
-        ANXColor(anxRgb: 0x00FF00), // 绿色
-        ANXColor(anxRgb: 0x0000FF), // 蓝色
-        ANXColor(anxRgb: 0xFFFF00), // 黄色
-        ANXColor(anxRgb: 0xFF00FF), // 紫色
-    ]
-    
-    private var selectedColor: ANXColor?
-    private var selectedColorButton: UIButton?
+    private var presetItems: [ColorItem] = []
+
+    private var selectedItem: ColorItem?
 
     private var keyboardHeight: CGFloat = 0
 
@@ -265,76 +336,70 @@ class DanmakuInputView: UIView {
 
         self.modeSegmentedControl.snp.makeConstraints { make in
             make.leading.equalTo(self.colorStackView)
-            make.top.equalTo(self.colorStackView.snp.bottom).offset(8)
+            make.top.equalTo(self.colorStackView.snp.bottom).offset(20)
         }
 
         setupColorButtons()
     }
     
-    private func selectedColorButton(_ button: UIButton?, isSelected: Bool) {
-        guard let button = button else { return }
-
-        if isSelected {
-            button.layer.borderWidth = 2
-            button.layer.borderColor = UIColor.white.cgColor
-        } else {
-            button.layer.borderWidth = 0
-            button.layer.borderColor = UIColor.clear.cgColor
-        }
-
-        if let checkmark = button.viewWithTag(999) {
-            checkmark.isHidden = !isSelected
-        }
-    }
-
     private func setupColorButtons() {
-        for (index, color) in self.presetColors.enumerated() {
-            let button = Button(type: .custom)
-            button.backgroundColor = color
-            button.layer.borderWidth = index == 0 ? 2 : 0
-            button.layer.borderColor = index == 0 ? UIColor.white.cgColor : UIColor.clear.cgColor
-            button.clipsToBounds = true
-            button.layer.cornerRadius = 3
-            button.addBlock(for: .touchUpInside) { [weak self, weak weakButton = button] _ in
+        self.presetItems = Preferences.shared.sendDanmakuColors.map { ColorItem(color: $0) }
+        let items = self.presetItems
+
+        for (index, item) in items.enumerated() {
+            let colorButton = ColorButton(item: item)
+            colorButton.onTap = { [weak self] _ in
                 guard let self = self else { return }
-
-                self.selectedColor = color
-
-                self.selectedColorButton(self.selectedColorButton, isSelected: false)
-                self.selectedColorButton = weakButton
-                self.selectedColorButton(weakButton, isSelected: true)
+                self.selectItem(item)
             }
 
             if index == 0 {
-                self.selectedColor = color
-                self.selectedColorButton(button, isSelected: true)
+                colorButton.isSelected = true
+                self.selectedItem = item
             }
 
-            let checkmark = UILabel()
-            checkmark.tag = 999
-            checkmark.text = "✓"
-            checkmark.font = .systemFont(ofSize: 12, weight: .bold)
-            checkmark.textColor = .white
-            checkmark.textAlignment = .center
-            checkmark.backgroundColor = UIColor(white: 0, alpha: 0.3)
-            checkmark.layer.cornerRadius = 7
-            checkmark.clipsToBounds = true
-            checkmark.isHidden = index != 0
-            button.addSubview(checkmark)
-
-            checkmark.snp.makeConstraints { make in
-                make.trailing.equalToSuperview().offset(2)
-                make.bottom.equalToSuperview().offset(2)
-                make.width.height.equalTo(14)
-            }
-
-            self.colorStackView.addArrangedSubview(button)
-
-            button.snp.makeConstraints { make in
-                make.width.equalTo(28)
-                make.height.equalTo(20)
-            }
+            self.colorStackView.addArrangedSubview(colorButton)
         }
+
+        // 添加 + 按钮
+        let addButton = Button(type: .system)
+        addButton.setTitle("+", for: .normal)
+        addButton.setTitleColor(.white, for: .normal)
+        addButton.titleLabel?.font = .systemFont(ofSize: 18, weight: .medium)
+        addButton.backgroundColor = UIColor(white: 0.3, alpha: 1)
+        addButton.layer.cornerRadius = 3
+        addButton.addBlock(for: .touchUpInside) { [weak self] _ in
+            guard let self = self else { return }
+
+            let items = self.presetItems
+            let vc = ColorManagementViewController(items: items, selectedItem: self.selectedItem)
+            vc.onSave = { [weak self] newItems in
+                Preferences.shared.sendDanmakuColors = newItems.map { $0.color }
+                self?.reloadColorButtons()
+            }
+
+            let nav = NavigationController(rootViewController: vc)
+            self.viewController?.present(nav, animated: true)
+        }
+
+        addButton.snp.makeConstraints { make in
+            make.width.equalTo(28)
+            make.height.equalTo(20)
+        }
+        self.colorStackView.addArrangedSubview(addButton)
+    }
+
+    private func selectItem(_ item: ColorItem) {
+        self.selectedItem = item
+        for case let button as ColorButton in colorStackView.arrangedSubviews {
+            button.isSelected = button.item === item
+        }
+    }
+
+    private func reloadColorButtons() {
+        self.selectedItem = nil
+        self.colorStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        setupColorButtons()
     }
 
     // MARK: - Actions
@@ -352,21 +417,19 @@ class DanmakuInputView: UIView {
     }
 
     private func sendDanmaku() {
-        guard let text = self.danmakuTextField.text, !text.isEmpty, let color = self.selectedColor else {
+        guard let text = self.danmakuTextField.text, !text.isEmpty,
+              let color = self.selectedItem?.color else {
             return
         }
-
-        let mode: Comment.Mode
-        switch self.modeSegmentedControl.selectedSegmentIndex {
-        case 0: mode = .normal  // 普通
-        case 1: mode = .top  // 顶部
-        case 2: mode = .bottom  // 底部
-        default: mode = .normal
+        
+        let idx = self.modeSegmentedControl.selectedSegmentIndex
+        if idx < modes.count && idx >= 0 {
+            let mode = modes[idx]
+            delegate?.danmakuInputView(self, didSendDanmaku: text, mode: mode, color: color)
+            self.danmakuTextField.text = ""
+            self.collapse()
         }
 
-        delegate?.danmakuInputView(self, didSendDanmaku: text, mode: mode, color: color)
-        self.danmakuTextField.text = ""
-        self.danmakuTextField.resignFirstResponder()
     }
 }
 

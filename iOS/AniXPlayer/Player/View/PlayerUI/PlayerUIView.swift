@@ -12,32 +12,34 @@ import DynamicButton
 import MBProgressHUD
 
 protocol PlayerUIViewDelegate: AnyObject {
-    
+
     func onTouchMoreButton(playerUIView: PlayerUIView)
-    
+
     func onTouchDanmakuSwitch(playerUIView: PlayerUIView, isOn: Bool)
-    
+
     func onTouchPlayerList(playerUIView: PlayerUIView)
-    
-    func onTouchSendDanmakuButton(playerUIView: PlayerUIView)
-    
+
     func onTouchPlayButton(playerUIView: PlayerUIView, isSelected: Bool)
-    
+
     func onTouchNextButton(playerUIView: PlayerUIView)
-    
+
     func doubleTap(playerUIView: PlayerUIView)
-    
+
     func singleTap(playerUIView: PlayerUIView, point: CGPoint, showUIViewCallBack: @escaping(() -> Void))
-    
+
     func longPress(playerUIView: PlayerUIView, isBegin: Bool)
-    
+
     func tapSlider(playerUIView: PlayerUIView, progress: CGFloat)
-    
+
     func playerUIView(_ playerUIView: PlayerUIView, didChangeControlViewState show: Bool)
-    
+
     func playerUIView(_ playerUIView: PlayerUIView, didChangeScale scale: Double)
-    
+
     func playerUIViewDidRestScale(_ playerUIView: PlayerUIView)
+
+    func playerUIView(_ playerUIView: PlayerUIView, didChangeDanmakuInputViewState isExpanding: Bool)
+
+    func playerUIView(_ playerUIView: PlayerUIView, didSendDanmaku text: String, mode: Comment.Mode, color: ANXColor)
 }
 
 protocol PlayerUIViewDataSource: AnyObject {
@@ -146,7 +148,15 @@ class PlayerUIView: UIView {
         bottomView.playerListButton.addTarget(self, action: #selector(onTouchPlayerList(_:)), for: .touchUpInside)
         bottomView.nextButton.addTarget(self, action: #selector(onTouchNextButton(_:)), for: .touchUpInside)
         bottomView.playButton.addTarget(self, action: #selector(onTouchPlayButton(_:)), for: .touchUpInside)
+        bottomView.danmakuInputButton.addTarget(self, action: #selector(onTouchDanmakuInputButton), for: .touchUpInside)
         return bottomView
+    }()
+    
+    /// 弹幕输入面板
+    private lazy var danmakuInputView: DanmakuInputView = {
+        let view = DanmakuInputView()
+        view.delegate = self
+        return view
     }()
     
     private weak var _brightnessView: SliderControlView?
@@ -295,7 +305,7 @@ class PlayerUIView: UIView {
             if self.hiddenControlView == false {
                 self.hiddenControlView = true
                 self.autoHiddenTimer?.invalidate()
-                
+
                 UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
                     self.topView.transform = CGAffineTransform(translationX: 0, y: -self.topView.frame.height)
                     self.bottomView.transform = CGAffineTransform(translationX: 0, y: self.bottomView.frame.height)
@@ -309,6 +319,10 @@ class PlayerUIView: UIView {
     }
     
     //MARK: - Private Method
+    
+    @objc private func onTouchDanmakuInputButton() {
+        danmakuInputView.expand()
+    }
     
     //MARK: 点击
     @IBAction private func onTouchBackButton(_ sender: UIButton) {
@@ -472,6 +486,11 @@ class PlayerUIView: UIView {
         self.addSubview(self.gestureView)
         self.addSubview(self.topView)
         self.addSubview(self.bottomView)
+        self.addSubview(self.danmakuInputView)
+        
+        self.danmakuInputView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
         
         self.gestureView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -542,5 +561,20 @@ class PlayerUIView: UIView {
         let current = Date(timeIntervalSince1970: currentTime)
         let total = Date(timeIntervalSince1970: totalTime)
         self.timeSnapHUD?.label.text = timeFormatter.string(from: current) + "/" + timeFormatter.string(from: total)
+    }
+}
+
+// MARK: - PlayerUIBottomViewDelegate
+extension PlayerUIView: DanmakuInputViewDelegate {
+    func danmakuInputView(_ view: DanmakuInputView, didSendDanmaku text: String, mode: Comment.Mode, color: ANXColor) {
+        self.delegate?.playerUIView(self, didSendDanmaku: text, mode: mode, color: color)
+    }
+    
+    func danmakuInputViewDidExpand(_ view: DanmakuInputView) {
+        self.delegate?.playerUIView(self, didChangeDanmakuInputViewState: true)
+    }
+    
+    func danmakuInputViewDidCollapse(_ view: DanmakuInputView) {
+        self.delegate?.playerUIView(self, didChangeDanmakuInputViewState: false)
     }
 }

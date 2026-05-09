@@ -26,5 +26,8 @@ class TableView: UITableView {
         self.estimatedSectionFooterHeight = 0
         self.contentInsetAdjustmentBehavior = .automatic
         self.tableFooterView = UIView()
+        if #available(iOS 15.0, *) {
+            self.sectionHeaderTopPadding = 0
+        }
     }
 }

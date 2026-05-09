@@ -159,6 +159,45 @@ class DanmakuManager {
         return dic
     }
     
+        /// 根据视频查找本地弹幕
+        /// - Parameters:
+        ///   - media: 视频
+        ///   - completion: 完成回调
+    func findCustomDanmakuWithMedia(_ media: File, completion: @escaping((Result<[File], Error>) -> Void)) {
+        type(of: media).fileManager.danmakusOfMedia(media) { result in
+            switch result {
+            case .success(let files):
+                completion(.success(files))
+            case .failure(let error):
+                completion(.failure(error))
+            }
+        }
+    }
+    
+        /// 将弹幕数据转为可播放的弹幕模型
+        /// - Parameter model: 弹幕数据
+        /// - Returns: 弹幕模型
+    func conver(_ model: Comment) -> DanmakuEntity {
+        let fontSize = CGFloat(Preferences.shared.danmakuFontSize)
+        let danmakuEffectStyle = Preferences.shared.danmakuEffectStyle
+
+        switch model.mode {
+        case .normal:
+            let aDanmaku = _ScrollDanmaku(text: model.message, textColor: model.color, font: .systemFont(ofSize: fontSize), effectStyle: danmakuEffectStyle, direction: .toLeft)
+            aDanmaku.appearTime = model.time
+            aDanmaku.userId = model.userId
+            aDanmaku.rawComment = model
+            return aDanmaku
+        case .bottom, .top:
+            let position: FloatDanmaku.Position = model.mode == .bottom ? .atBottom : .atTop
+            let aDanmaku = _FloatDanmaku(text: model.message, textColor: model.color, font: .systemFont(ofSize: fontSize), effectStyle: danmakuEffectStyle, position: position, lifeTime: 3)
+            aDanmaku.appearTime = model.time
+            aDanmaku.userId = model.userId
+            aDanmaku.rawComment = model
+            return aDanmaku
+        }
+    }
+    
     /// 下载本地弹幕
     /// - Parameters:
     ///   - file: 弹幕文件
@@ -234,41 +273,5 @@ class DanmakuManager {
                     }
                 }
             }
-    }
-    
-    
-    /// 根据视频查找本地弹幕
-    /// - Parameters:
-    ///   - media: 视频
-    ///   - completion: 完成回调
-    func findCustomDanmakuWithMedia(_ media: File, completion: @escaping((Result<[File], Error>) -> Void)) {
-        type(of: media).fileManager.danmakusOfMedia(media) { result in
-            switch result {
-            case .success(let files):
-                completion(.success(files))
-            case .failure(let error):
-                completion(.failure(error))
-            }
-        }
-    }
-    
-    /// 将弹幕数据转为可播放的弹幕模型
-    /// - Parameter model: 弹幕数据
-    /// - Returns: 弹幕模型
-    private func conver(_ model: Comment) -> DanmakuEntity {
-        let fontSize = CGFloat(Preferences.shared.danmakuFontSize)
-        let danmakuEffectStyle = Preferences.shared.danmakuEffectStyle
-        
-        switch model.mode {
-        case .normal:
-            let aDanmaku = _ScrollDanmaku(text: model.message, textColor: model.color, font: .systemFont(ofSize: fontSize), effectStyle: danmakuEffectStyle, direction: .toLeft)
-            aDanmaku.appearTime = model.time
-            return aDanmaku
-        case .bottom, .top:
-            let position: FloatDanmaku.Position = model.mode == .bottom ? .atBottom : .atTop
-            let aDanmaku = _FloatDanmaku(text: model.message, textColor: model.color, font: .systemFont(ofSize: fontSize), effectStyle: danmakuEffectStyle, position: position, lifeTime: 3)
-            aDanmaku.appearTime = model.time
-            return aDanmaku
-        }
     }
 }

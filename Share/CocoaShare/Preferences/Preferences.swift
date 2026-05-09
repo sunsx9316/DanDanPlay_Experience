@@ -46,6 +46,9 @@ class Preferences {
         
         /// 发送的弹幕颜色
         case sendDanmakuColor
+
+        /// 发送弹幕颜色列表
+        case sendDanmakuColors
         
         /// 弹幕开关
         case showDanmaku
@@ -261,6 +264,38 @@ class Preferences {
     
     @StoreWrapper(defaultValue: ANXColor.white, key: .sendDanmakuColor)
     var sendDanmakuColor: ANXColor
+
+    static let defaultSendDanmakuColors: [ANXColor] = [
+        ANXColor(anxRgb: 0xFFFFFF),
+        ANXColor(anxRgb: 0xFF0000),
+        ANXColor(anxRgb: 0x00FF00),
+        ANXColor(anxRgb: 0x0000FF),
+        ANXColor(anxRgb: 0xFFFF00),
+        ANXColor(anxRgb: 0xFF00FF),
+    ]
+
+    var sendDanmakuColors: [ANXColor] {
+        get {
+            if let jsonData: Data = Store.shared.value(forKey: KeyName.sendDanmakuColors.storeKey) {
+                do {
+                    let hexValues = try JSONDecoder().decode([UInt].self, from: jsonData)
+                    return hexValues.compactMap { ANXColor.create(from: $0) }
+                } catch {
+                    debugPrint("读取 sendDanmakuColors 失败 error: \(error)")
+                }
+            }
+            return Self.defaultSendDanmakuColors
+        }
+        set {
+            do {
+                let hexValues = newValue.map { $0.toValue() }
+                let data = try JSONEncoder().encode(hexValues)
+                Store.shared.set(data, forKey: KeyName.sendDanmakuColors.storeKey)
+            } catch {
+                debugPrint("设置 sendDanmakuColors 失败 error: \(error)")
+            }
+        }
+    }
     
     @StoreWrapper(defaultValue: PlayerMode.autoPlayNext, key: .playerMode)
     var playerMode: PlayerMode

@@ -9,10 +9,21 @@ import Foundation
 
 struct Comment: Decodable {
     
-    enum Mode: Int, Decodable {
+    enum Mode: Int, Decodable, CaseIterable {
         case normal = 1
         case bottom = 4
         case top = 5
+        
+        var name: String {
+            switch self {
+            case .normal:
+                return NSLocalizedString("滚动", comment: "")
+            case .bottom:
+                return NSLocalizedString("置底", comment: "")
+            case .top:
+                return NSLocalizedString("置顶", comment: "")
+            }
+        }
     }
     
     var mode: Mode
@@ -99,10 +110,18 @@ struct Comment: Decodable {
 
 
 struct CommentCollection: Decodable {
-    
+
     @Default<[Comment]> var collection: [Comment]
-    
+
     private enum CodingKeys: String, CodingKey {
         case collection = "comments"
+    }
+}
+
+struct SendCommentResponse: Decodable {
+    var cid: Int64?
+
+    private enum CodingKeys: String, CodingKey {
+        case cid
     }
 }

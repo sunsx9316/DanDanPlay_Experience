@@ -22,7 +22,7 @@ enum LanConvert: Int {
 }
 
 class CommentNetworkHandle {
-    
+
     /// 根据文件获取弹幕
     /// - Parameters:
     ///   - episodeId: 剧集id
@@ -35,18 +35,18 @@ class CommentNetworkHandle {
                            withRelated: Bool = true,
                            lanConvert: LanConvert? = nil,
                            completion: @escaping((CommentCollection?, Error?) -> Void)) {
-        
+
         var parameters = [String : String]()
         parameters["withRelated"] = withRelated ? "true" : "false"
-        
+
         if let from = from {
             parameters["from"] = "\(from)"
         }
-        
+
         if let lanConvert = lanConvert {
             parameters["chConvert"] = "\(lanConvert.rawValue)"
         }
-        
+
         let md5Str = ("\(parameters)" as NSString).md5() ?? ""
         if let data = CacheManager.shared.danmakuCacheWithEpisodeId(episodeId, parametersHash: md5Str) {
             ANX.logInfo(.HTTP, "根据文件下载弹幕 匹配到缓存 episodeId: \(episodeId) md5Str: \(md5Str)")
@@ -54,9 +54,9 @@ class CommentNetworkHandle {
             completion(result.result, nil)
             return
         }
-        
+
         ANX.logInfo(.HTTP, "根据文件下载弹幕 请求 parameters: \(parameters)")
-        
+
         NetworkManager.shared.getOnBaseURL(additionUrl: "/comment/\(episodeId)", parameters: parameters) { result in
             switch result {
             case .success(let data):
@@ -69,6 +69,35 @@ class CommentNetworkHandle {
             case .failure(let error):
                 completion(nil, error)
                 ANX.logInfo(.HTTP, "根据文件下载弹幕 请求失败: \(error)")
+            }
+        }
+    }
+
+    /// 发送弹幕
+    /// - Parameters:
+    ///   - episodeId: 弹幕库ID
+    ///   - request: 弹幕内容
+    ///   - completion: 完成回调
+    static func sendComment(episodeId: Int,
+                            comment: Comment,
+                            completion: @escaping((SendCommentResponse?, Error?) -> Void)) {
+        ANX.logInfo(.HTTP, "发送弹幕 episodeId: \(episodeId), request: \(comment)")
+        
+        var parameters = [String: String]()
+        parameters["time"] = "\(comment.time)"
+        parameters["mode"] = "\(comment.mode.rawValue)"
+        parameters["color"] = "\(comment.color.anxRgbValue)"
+        parameters["comment"] = "\(comment.message)"
+
+        NetworkManager.shared.postOnBaseURL(additionUrl: "/comment/\(episodeId)", parameters: parameters) { result in
+            switch result {
+            case .success(let data):
+                let response = Response<SendCommentResponse>(with: data)
+                completion(response.result, response.error)
+                ANX.logInfo(.HTTP, "发送弹幕 请求成功, result: \(String(describing: response.result))")
+            case .failure(let error):
+                completion(nil, error)
+                ANX.logInfo(.HTTP, "发送弹幕 请求失败: \(error)")
             }
         }
     }

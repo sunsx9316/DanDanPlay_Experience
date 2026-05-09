@@ -101,6 +101,16 @@ class CacheManager {
         }
     }
     
+    func removeDanmakuCache(for episodeId: Int) {
+        let episodeFolderURL = PathUtils.cacheURL.appendingPathComponent("\(episodeId)")
+        guard FileManager.default.fileExists(atPath: episodeFolderURL.path) else { return }
+        do {
+            try FileManager.default.removeItem(at: episodeFolderURL)
+        } catch {
+            debugPrint("弹幕缓存删除失败 episodeId:\(episodeId) error:\(error)")
+        }
+    }
+
     func cleanupCache() {
         do {
             try FileManager.default.removeItem(at: PathUtils.cacheURL)
