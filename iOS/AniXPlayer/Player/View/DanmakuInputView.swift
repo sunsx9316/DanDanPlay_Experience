@@ -332,6 +332,7 @@ class DanmakuInputView: UIView {
             make.top.equalToSuperview().offset(12)
             make.leading.equalTo(self.dismissKeyboardButton)
             make.height.equalTo(20)
+            make.trailing.lessThanOrEqualTo(self.sendButton.snp.trailing)
         }
 
         self.modeSegmentedControl.snp.makeConstraints { make in
@@ -359,6 +360,10 @@ class DanmakuInputView: UIView {
             }
 
             self.colorStackView.addArrangedSubview(colorButton)
+            colorButton.snp.makeConstraints { make in
+                make.width.equalTo(28)
+                make.height.equalTo(20)
+            }
         }
 
         // 添加 + 按钮
@@ -368,6 +373,7 @@ class DanmakuInputView: UIView {
         addButton.titleLabel?.font = .systemFont(ofSize: 18, weight: .medium)
         addButton.backgroundColor = UIColor(white: 0.3, alpha: 1)
         addButton.layer.cornerRadius = 3
+        addButton.clipsToBounds = true
         addButton.addBlock(for: .touchUpInside) { [weak self] _ in
             guard let self = self else { return }
 
