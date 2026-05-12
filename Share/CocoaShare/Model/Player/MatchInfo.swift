@@ -7,6 +7,16 @@
 
 import Foundation
 
+// MARK: - 用户匹配缓存
+
+/// 用户手动匹配缓存，用于下次播放同一文件时快速匹配
+struct UserMatchInfo: Codable, MatchInfo {
+    let matchId: Int
+    let matchDesc: String
+}
+
+// MARK: - MatchInfo 协议
+
 /// 匹配信息，用于在播放页展示
 protocol MatchInfo {
     var matchId: Int { get }

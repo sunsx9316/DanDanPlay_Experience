@@ -101,6 +101,20 @@ class CacheManager {
         }
     }
     
+    func userMatchInfo(with fileId: String) -> UserMatchInfo? {
+        let url = PathUtils.cacheURL.appendingPathComponent("userMatch").appendingPathComponent(fileId)
+        guard let data = try? Data(contentsOf: url) else { return nil }
+        return try? JSONDecoder().decode(UserMatchInfo.self, from: data)
+    }
+
+    func setUserMatchInfo(with fileId: String, info: UserMatchInfo) {
+        let dir = PathUtils.cacheURL.appendingPathComponent("userMatch")
+        try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+        let url = dir.appendingPathComponent(fileId)
+        guard let data = try? JSONEncoder().encode(info) else { return }
+        try? data.write(to: url, options: .atomic)
+    }
+
     func removeDanmakuCache(for episodeId: Int) {
         let episodeFolderURL = PathUtils.cacheURL.appendingPathComponent("\(episodeId)")
         guard FileManager.default.fileExists(atPath: episodeFolderURL.path) else { return }

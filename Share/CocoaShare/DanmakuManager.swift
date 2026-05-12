@@ -9,6 +9,7 @@
 import Foundation
 import DanmakuRender
 import YYCategories
+import ANXLog
 
 typealias DanmakuEntity = (BaseDanmaku & DanmakuInfoProtocol)
 typealias DanmakuMapResult = [UInt : [DanmakuEntity]]
@@ -61,28 +62,51 @@ class DanmakuManager {
     func loadDanmaku(_ media: File,
                      progress: LoadingProgressAction?,
                      matchCompletion: @escaping((MatchCollection?, Error?) -> Void),
-                     danmakuCompletion: @escaping((DanmakuMapResult?, _ matchInfo: Match?, Error?) -> Void)) {
+                     danmakuCompletion: @escaping((DanmakuMapResult?, _ matchInfo: MatchInfo?, Error?) -> Void)) {
         progress?(.parseMedia)
-        
+
+        // 检查用户手动匹配缓存
+        if let userMatch = CacheManager.shared.userMatchInfo(with: media.fileId) {
+            ANX.logInfo(.player, "[DanmakuManager] 用户匹配缓存命中 matchId: \(userMatch.matchId)")
+            CommentNetworkHandle.getDanmaku(with: userMatch.matchId) { [weak self] collection, error in
+                guard let self = self else { return }
+                if let collection = collection {
+                    ANX.logInfo(.player, "[DanmakuManager] 用户缓存弹幕下载成功")
+                    danmakuCompletion(self.conver(collection.collection), userMatch, nil)
+                } else {
+                    ANX.logInfo(.player, "[DanmakuManager] 用户缓存弹幕下载失败，降级到正常匹配")
+                    self.performNetworkMatch(media, progress: progress, matchCompletion: matchCompletion, danmakuCompletion: danmakuCompletion)
+                }
+            }
+            return
+        }
+
+        performNetworkMatch(media, progress: progress, matchCompletion: matchCompletion, danmakuCompletion: danmakuCompletion)
+    }
+
+    private func performNetworkMatch(_ media: File,
+                                     progress: LoadingProgressAction?,
+                                     matchCompletion: @escaping((MatchCollection?, Error?) -> Void),
+                                     danmakuCompletion: @escaping((DanmakuMapResult?, _ matchInfo: Match?, Error?) -> Void)) {
         if Preferences.shared.autoLoadCustomDanmaku {
             progress?(.downloadLocalDanmaku)
-            
+
             /// 优先进行本地弹幕的加载
             self.loadLocalDanmaku(media) { [weak self] result, error in
                 guard let self = self else { return }
-                
+
                 let hasLocalDanmaku = result?.isEmpty == false
                 if hasLocalDanmaku {
                     /// 尝试进行网络请求，如果失败，则会使用本地弹幕
                     MatchNetworkHandle.matchAndGetDanmakuWithFile(media, progress: progress) { [weak self] matchCollection, error in
                         guard self != nil else { return }
-                        
+
                         /// 进这里说明匹配到多个结果，或关闭了快速匹配
                         danmakuCompletion(result, nil, nil)
-                        
+
                     } getDanmakuCompletion: { [weak self] collection, matchInfo, error in
                         guard let self = self else { return }
-                        
+
                         /// 如果下载到网络弹幕则使用，否则使用本地弹幕
                         if let collection = collection {
                             danmakuCompletion(self.conver(collection.collection), matchInfo, nil)
@@ -90,7 +114,7 @@ class DanmakuManager {
                             danmakuCompletion(result, nil, nil)
                         }
                     }
-                    
+
                 } else {
                     MatchNetworkHandle.matchAndGetDanmakuWithFile(media, progress: progress, matchCompletion: matchCompletion) { collection, episodeId, error in
                         danmakuCompletion(DanmakuManager.shared.conver(collection?.collection ?? []), episodeId, error)

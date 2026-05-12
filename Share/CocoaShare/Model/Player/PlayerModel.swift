@@ -182,6 +182,10 @@ extension PlayerModel {
     ///   - episodeId: 节目id
     /// - Returns: 加载状态
     func didMatchMedia(_ media: File, matchInfo: MatchInfo) -> Observable<MediaLoadState>  {
+        // 缓存用户手动匹配结果，下次播放同一文件时优先使用
+        let userMatch = UserMatchInfo(matchId: matchInfo.matchId, matchDesc: matchInfo.matchDesc)
+        CacheManager.shared.setUserMatchInfo(with: media.fileId, info: userMatch)
+
         return Observable<MediaLoadState>.create { sub in
             CommentNetworkHandle.getDanmaku(with: matchInfo.matchId) { [weak self] (collection, error) in
                 
