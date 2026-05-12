@@ -99,9 +99,7 @@ class PlayerViewController: ViewController {
         }
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-        
+    deinit {
         self.playerModel.mediaModel.terminate()
     }
 
