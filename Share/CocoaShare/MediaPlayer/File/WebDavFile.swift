@@ -5,12 +5,16 @@
 //  Created by jimhuang on 2021/2/14.
 //
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 
 import Foundation
+#if os(iOS)
 import MobileVLCKit
 import MPVFramework
 import FilesProvider
+#elseif os(tvOS)
+import TVVLCKit
+#endif
 
 
 class WebDavFile: File {
@@ -88,21 +92,23 @@ class WebDavFile: File {
         return media
     }
     
+#if os(iOS)
     func createMPVMedia() -> MPVMedia? {
         if let auth = WebDavFileManager.shared.loginInfo?.auth,
             var components = URLComponents(string: self.url.absoluteString) {
             // 直接赋值新的凭据，它会自动替换掉旧的
             components.user = auth.userName
             components.password = auth.password
-            
+
             if let newURL = components.url {
                 return MPVMedia(url: newURL)
             }
         }
-        
+
         let media = MPVMedia(url: self.url)
         return media
     }
+#endif
     
     func getFileHashWithProgress(_ progress: FileProgressAction?,
                                  completion: @escaping((Result<String, Error>) -> Void)) {

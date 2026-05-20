@@ -8,7 +8,9 @@
 import Foundation
 import RxSwift
 import RxCocoa
+#if os(iOS)
 import DanmakuRender
+#endif
 
 // MARK: - 便捷接口
 extension PlayerDanmakuModel {

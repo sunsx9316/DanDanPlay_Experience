@@ -6,8 +6,10 @@
 //
 
 import Foundation
+#if os(iOS)
 import FirebaseCore
 import FirebaseCrashlytics
+#endif
 import ANXLog
 
 /// 启动器，在app启动时会被调用
@@ -23,10 +25,12 @@ class Launcher {
     }
     
     private static func setupFirebase() {
+#if os(iOS)
 #if os(macOS)
         UserDefaults.standard.register(defaults: ["NSApplicationCrashOnExceptions": true])
 #endif
         FirebaseApp.configure()
+#endif
     }
     
     private static func setupLog() {

@@ -1,0 +1,29 @@
+platform :tvos, '13.0'
+
+inhibit_all_warnings!
+
+target 'AniXPlayer' do
+  use_frameworks!
+  use_modular_headers!
+
+  pod 'MMKV'
+  # pod 'AMSMB2' — tvOS 模拟器不兼容 (libsmb2-tvos.a 仅真机 arm64)，后续处理
+  pod "GCDWebServer/WebUploader"
+  pod 'ANXLog', :path => '../Share/ANXLog'
+  pod 'Alamofire'
+  pod 'RxSwift'
+  pod 'RxCocoa'
+  pod 'SnapKit'
+  pod 'Kingfisher'
+
+end
+
+post_install do |installer|
+    installer.generated_projects.each do |project|
+        project.targets.each do |target|
+            target.build_configurations.each do |config|
+                config.build_settings['TVOS_DEPLOYMENT_TARGET'] = '13.0'
+            end
+        end
+    end
+end

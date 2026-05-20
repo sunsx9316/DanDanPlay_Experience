@@ -5,11 +5,15 @@
 //  Created by jimhuang on 2023/5/1.
 //
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 
+#if os(iOS)
 import MobileVLCKit
 import YYCategories
 import MPVFramework
+#elseif os(tvOS)
+import TVVLCKit
+#endif
 
 class PCFile: File {
     
@@ -109,10 +113,12 @@ class PCFile: File {
     func createVLCMedia(delegate: FileDelegate) -> VLCMedia? {
         return .init(url: self.downloadURL)
     }
-    
+
+#if os(iOS)
     func createMPVMedia() -> MPVMedia? {
         return MPVMedia(url: self.downloadURL)
     }
+#endif
 
     func getFileHashWithProgress(_ progress: FileProgressAction?,
                                  completion: @escaping((Result<String, Error>) -> Void)) {

@@ -7,7 +7,9 @@
 
 import Foundation
 import ANXLog
+#if os(iOS)
 import YYCategories
+#endif
 
 
 /// 语言转换枚举

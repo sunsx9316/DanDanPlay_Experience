@@ -7,12 +7,14 @@
 //
 
 import Foundation
+#if os(iOS)
 import DanmakuRender
 import YYCategories
-import ANXLog
 
 typealias DanmakuEntity = (BaseDanmaku & DanmakuInfoProtocol)
 typealias DanmakuMapResult = [UInt : [DanmakuEntity]]
+#endif
+import ANXLog
 typealias LoadingProgressAction = ((LoadingState) -> Void)
 
 enum LoadingState {
@@ -59,6 +61,7 @@ class DanmakuManager {
     ///   - progress: 进度
     ///   - matchCompletion: 当匹配多个视频时会进行回调
     ///   - danmakuCompletion: 弹幕加载回调
+#if os(iOS)
     func loadDanmaku(_ media: File,
                      progress: LoadingProgressAction?,
                      matchCompletion: @escaping((MatchCollection?, Error?) -> Void),
@@ -127,7 +130,9 @@ class DanmakuManager {
             }
         }
     }
-    
+#endif
+
+#if os(iOS)
     /// 读取弹幕，转换为弹幕map
     /// - Parameter danmakuURL: 弹幕路径
     /// - Returns: 弹幕map
@@ -221,7 +226,8 @@ class DanmakuManager {
             return aDanmaku
         }
     }
-    
+#endif
+
     /// 下载本地弹幕
     /// - Parameters:
     ///   - file: 弹幕文件
@@ -254,6 +260,7 @@ class DanmakuManager {
     // MARK: Private Method
     
     
+#if os(iOS)
     /// 加载本地弹幕
     /// - Parameters:
     ///   - media: 视频
@@ -298,4 +305,5 @@ class DanmakuManager {
                 }
             }
     }
+#endif
 }

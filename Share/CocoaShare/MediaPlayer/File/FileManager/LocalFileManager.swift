@@ -5,7 +5,7 @@
 //  Created by jimhuang on 2021/2/17.
 //
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 import UIKit
 #else
 import Cocoa
@@ -118,8 +118,8 @@ class LocalFileManager: FileManagerProtocol {
     }
     
     func pickFiles(_ directory: File?, from viewController: ANXViewController, filterType: URLFilterType?, completion: @escaping ((Result<[File], Error>) -> Void)) {
-#if os(iOS)
-        
+#if os(iOS) || os(tvOS)
+
 #else
         guard let window = viewController.view.window else { return }
         

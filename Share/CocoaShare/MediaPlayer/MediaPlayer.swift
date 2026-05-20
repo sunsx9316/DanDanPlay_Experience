@@ -7,7 +7,7 @@
 
 import Foundation
 import ANXLog
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 import AVFoundation
 #endif
 
@@ -166,12 +166,16 @@ class MediaPlayer {
 
     enum CoreType: Int {
         case vlc = 0
+#if os(iOS)
         case mpv = 1
+#endif
 
         var displayName: String {
             switch self {
             case .vlc: return "VLC"
+#if os(iOS)
             case .mpv: return "MPV"
+#endif
             }
         }
         
@@ -368,8 +372,10 @@ class MediaPlayer {
         switch coreType {
         case .vlc:
             self.player = VLCPlayerWarrper()
+#if os(iOS)
         case .mpv:
             self.player = MPVPlayerWrapper()
+#endif
         }
         self.setupInit()
     }
@@ -420,7 +426,7 @@ class MediaPlayer {
     
     //MARK: Private Method
     
-    #if os(iOS)
+    #if os(iOS) || os(tvOS)
     @objc private func handleInterreption(_ notice: Notification) {
         guard let interruptionType = notice.userInfo?[AVAudioSessionInterruptionTypeKey] as? AVAudioSession.InterruptionType else { return }
 
@@ -435,10 +441,10 @@ class MediaPlayer {
         }
     }
     #endif
-    
+
     //MARK: Private Method
     private func setupInit() {
-#if os(iOS)
+#if os(iOS) || os(tvOS)
         NotificationCenter.default.addObserver(self, selector: #selector(handleInterreption(_:)), name: AVAudioSession.interruptionNotification, object: nil)
 #endif
         

@@ -30,12 +30,14 @@ TODO: Add long description of the pod here.
 
   s.ios.deployment_target = '8.0'
   s.osx.deployment_target = '10.11'
+  s.tvos.deployment_target = '13.0'
 
   s.source_files = 'ANXLog/Classes/**/*'
   s.ios.vendored_frameworks = 'ANXLog/Resources/iOS/mars.framework'
   s.osx.vendored_frameworks = 'ANXLog/Resources/Mac/mars.framework'
   s.libraries = 'resolv.9', 'z'
-  s.frameworks = 'SystemConfiguration', 'CoreTelephony'
+  s.ios.frameworks = 'SystemConfiguration', 'CoreTelephony'
+  s.osx.frameworks = 'SystemConfiguration', 'CoreTelephony'
   # s.dependency 'SSZipArchive'
   # s.resource_bundles = {
   #   'ANXLog' => ['ANXLog/Assets/*.png']

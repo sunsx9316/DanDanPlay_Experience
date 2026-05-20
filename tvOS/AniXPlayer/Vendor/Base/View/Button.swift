@@ -1,0 +1,42 @@
+//
+//  Button.swift
+//  AniXPlayer
+//
+//  tvOS Button 基类 — 焦点时缩放 + 阴影
+//
+
+import UIKit
+
+class Button: UIButton {
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.setupFocus()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        self.setupFocus()
+    }
+
+    private func setupFocus() {
+        self.adjustsImageWhenHighlighted = false
+    }
+
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+        super.didUpdateFocus(in: context, with: coordinator)
+
+        coordinator.addCoordinatedAnimations({
+            if self.isFocused {
+                self.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+                self.layer.shadowColor = UIColor.white.cgColor
+                self.layer.shadowOpacity = 0.3
+                self.layer.shadowRadius = 10
+                self.layer.shadowOffset = .zero
+            } else {
+                self.transform = .identity
+                self.layer.shadowOpacity = 0
+            }
+        })
+    }
+}

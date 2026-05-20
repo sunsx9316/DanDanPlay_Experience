@@ -5,11 +5,13 @@
 //  Created by jimhuang on 2021/2/17.
 //
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 
 import Foundation
+#if os(iOS)
 import FilesProvider
 import YYCategories
+#endif
 import ANXLog
 
 class WebDavFileManager: FileManagerProtocol {

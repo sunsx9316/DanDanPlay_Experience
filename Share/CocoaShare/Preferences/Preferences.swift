@@ -7,7 +7,9 @@
 //
 
 import Foundation
+#if os(iOS)
 import DanmakuRender
+#endif
 
 class Preferences {
     
@@ -167,6 +169,8 @@ class Preferences {
         } else {
             return .vlc
         }
+#elseif os(tvOS)
+        return .vlc
 #else
         return .vlc
 #endif
@@ -331,9 +335,11 @@ class Preferences {
     @StoreWrapper(defaultValue: 10, key: .danmakuDensity)
     var danmakuDensity: Float
     
+#if os(iOS)
     /// 弹幕边缘样式
     @StoreWrapper(defaultValue: DanmakuEffectStyle.stroke, key: .danmakuEffectStyle)
     var danmakuEffectStyle: DanmakuEffectStyle
+#endif
     
     var pcLoginInfos: [LoginInfo]? {
         get {

@@ -7,6 +7,14 @@
 
 import Foundation
 
+#if os(tvOS)
+extension ANXColor {
+    static var defaultMainColor: ANXColor {
+        return ANXColor(anxRgb: 0x14B409)
+    }
+}
+#endif
+
 public extension ANXColor {
     convenience init(anxRgb rgbValue: Int) {
         self.init(red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,

@@ -6,6 +6,7 @@
 //
 
 import Foundation
+#if os(iOS)
 import DanmakuRender
 
 /// 重复弹幕信息
@@ -250,3 +251,5 @@ class _FloatDanmaku: FloatDanmaku, DanmakuInfoProtocol {
         return size
     }
 }
+
+#endif

@@ -6,7 +6,9 @@
 //
 
 import Foundation
+#if os(iOS)
 import DanmakuRender
+#endif
 import RxSwift
 import ANXLog
 

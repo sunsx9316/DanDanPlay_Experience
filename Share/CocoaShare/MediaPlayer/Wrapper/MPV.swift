@@ -7,13 +7,17 @@
 //  参考 mpv 官方文档 (https://mpv.io/manual/stable/) 进行模块化设计
 //
 
+#if os(iOS)
+
 import Foundation
 import Libmpv
-
-#if os(iOS)
 import UIKit
 #elseif os(macOS)
+import Foundation
+import Libmpv
 import AppKit
+#else
+import Foundation
 #endif
 
 // MARK: - MPV 事件类型
@@ -655,7 +659,7 @@ extension MPV {
     }
 
     /// 转换颜色为十六进制字符串
-    #if os(iOS)
+    #if os(iOS) || os(tvOS)
     fileprivate static func colorToHex(_ color: UIColor) -> String {
         var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
         color.getRed(&r, green: &g, blue: &b, alpha: &a)
@@ -1214,7 +1218,7 @@ public class SubtitleAPI {
     
     
 
-    #if os(iOS)
+    #if os(iOS) || os(tvOS)
     /// 字幕颜色
     public var color: UIColor? {
         get {
@@ -1421,7 +1425,7 @@ public class ScreenshotAPI {
 
 // MARK: - 颜色扩展
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 extension UIColor {
     convenience init(hex: String) {
         var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
