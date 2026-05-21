@@ -5,7 +5,7 @@
 //  Created by jimhuang on 2023/5/1.
 //
 
-#if os(iOS) || os(tvOS)
+#if os(iOS)
 
 #if os(iOS)
 import MobileVLCKit

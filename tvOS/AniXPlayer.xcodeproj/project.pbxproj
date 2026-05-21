@@ -7,216 +7,366 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		030C0F048244568B1E6B66EC /* SearchNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E92E14D174D29E90CEF177 /* SearchNetworkHandle.swift */; };
-		03B312068F03D73E0AA2ED2D /* UpdateInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B316F0954C7DE0177A8D122D /* UpdateInfo.swift */; };
-		069D7723B9DDD6508E10C738 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD928CE902F5FF949CAA65C /* Response.swift */; };
-		077B09E39F1E38FF81DFC542 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41B5D7C9B76B9AFCB0B2EEB /* NetworkManager.swift */; };
-		0948117A00BD5470F8424854 /* FileManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0854E5A88C8533AC102BB5 /* FileManagerProtocol.swift */; };
-		10C682830DB282E8251A3699 /* MatchNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46A2DB3FDFC1AE90280B0D8 /* MatchNetworkHandle.swift */; };
-		1643D4B7836733E526B03128 /* VLCPlayerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3CB0873AE68F0D6AB10B3D /* VLCPlayerWrapper.swift */; };
-		1F95ACEB4A8D95439A1060A7 /* Define.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B18D126724CEFF9FE23AECA /* Define.swift */; };
-		1FB4D7577A6199ED2AC4FE78 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA96D874C503B03756542CB /* SettingViewController.swift */; };
-		208B5A49877067AC67D5BE68 /* Bangumi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 728DC6A8AA0027412C6B6AD1 /* Bangumi.swift */; };
-		2882C918EB62247F4C4FFC30 /* GlobalSettingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB942BFCFA5155903AF29E9A /* GlobalSettingModel.swift */; };
-		2A9EDDA6DDDC0E72A98495D2 /* MatchInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D064D80700042B07A0B26056 /* MatchInfo.swift */; };
-		2BE97A948E2F20E51B9FE843 /* MatchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8814978373ECA658932F20 /* MatchCell.swift */; };
+		01C33CBE33EB994C700C20F6 /* ../Share/CocoaShare/Networking/Config/IPModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4768EC0A4F02C8B9EEAA995 /* ../Share/CocoaShare/Networking/Config/IPModel.swift */; };
+		030C0F048244568B1E6B66EC /* ../Share/CocoaShare/Networking/Search/SearchNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5E92E14D174D29E90CEF177 /* ../Share/CocoaShare/Networking/Search/SearchNetworkHandle.swift */; };
+		0378A80DE8A60E12FE1DB4C3 /* ../Share/CocoaShare/Utils/SMBServiceBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 44A393D4B02C281DA9C45CF2 /* ../Share/CocoaShare/Utils/SMBServiceBrowser.swift */; };
+		03B312068F03D73E0AA2ED2D /* ../Share/CocoaShare/Networking/Config/UpdateInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = B316F0954C7DE0177A8D122D /* ../Share/CocoaShare/Networking/Config/UpdateInfo.swift */; };
+		043CAE3BB2E7F9D9B0F57616 /* ../Share/CocoaShare/Networking/HomePage/HomePageNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01C6A5EAC3F1B6BBF8C3DFB1 /* ../Share/CocoaShare/Networking/HomePage/HomePageNetworkHandle.swift */; };
+		05610B7D84052DFF74CD18DB /* ../Share/CocoaShare/Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D6EA61840ED9C7EAA014ED /* ../Share/CocoaShare/Atomic.swift */; };
+		069D7723B9DDD6508E10C738 /* ../Share/CocoaShare/Networking/Model/Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBD928CE902F5FF949CAA65C /* ../Share/CocoaShare/Networking/Model/Response.swift */; };
+		072C18F0B612F74FD2A79173 /* ../Share/CocoaShare/Networking/Comment/Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 423CB66297F144FC48761C09 /* ../Share/CocoaShare/Networking/Comment/Comment.swift */; };
+		077B09E39F1E38FF81DFC542 /* ../Share/CocoaShare/Networking/NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B41B5D7C9B76B9AFCB0B2EEB /* ../Share/CocoaShare/Networking/NetworkManager.swift */; };
+		07997626354B6D50395F8FE4 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCLibraryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7C74A07418D84F40F7CF984 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCLibraryModel.swift */; };
+		0948117A00BD5470F8424854 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/FileManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0854E5A88C8533AC102BB5 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/FileManagerProtocol.swift */; };
+		0ABB902AD496AB89BE751832 /* AniXPlayer/Player/PlayerLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EF23BEC2DB87C478D1B8FD8 /* AniXPlayer/Player/PlayerLoadingView.swift */; };
+		0C1F2C6F617D39DF73A6441D /* ../Share/CocoaShare/Networking/AppKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A39F557A0A560993F05B23F /* ../Share/CocoaShare/Networking/AppKey.swift */; };
+		0DE9422690259073FF7E0A98 /* ../Share/CocoaShare/Model/Player/MatchInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47DA39B38544B148C19FB78 /* ../Share/CocoaShare/Model/Player/MatchInfo.swift */; };
+		0DEE93781A635EF53D268FA3 /* ../Share/CocoaShare/Model/Player/Media/MediaSettingInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = F98303D054AF97CC103FAFB2 /* ../Share/CocoaShare/Model/Player/Media/MediaSettingInfo.swift */; };
+		0F3488447BD03DD8975DEAA4 /* ../Share/CocoaShare/Preferences/Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7EA11000472F7614371F3D5B /* ../Share/CocoaShare/Preferences/Store.swift */; };
+		10C682830DB282E8251A3699 /* ../Share/CocoaShare/Networking/Match/MatchNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E46A2DB3FDFC1AE90280B0D8 /* ../Share/CocoaShare/Networking/Match/MatchNetworkHandle.swift */; };
+		13A65C01DD02C0753A403641 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/FTPFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1828CFA3AC01AB5CCE75D50 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/FTPFileManager.swift */; };
+		1643D4B7836733E526B03128 /* ../Share/CocoaShare/MediaPlayer/Wrapper/VLCPlayerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D3CB0873AE68F0D6AB10B3D /* ../Share/CocoaShare/MediaPlayer/Wrapper/VLCPlayerWrapper.swift */; };
+		16793B1886213CD888BCC557 /* ../Share/CocoaShare/Model/Player/Media/PlayerMediaContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 560624A82301587D4DE28CCC /* ../Share/CocoaShare/Model/Player/Media/PlayerMediaContext.swift */; };
+		1B522470FC6CDC2CEE589398 /* ../Share/CocoaShare/MediaPlayer/Wrapper/MPV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 452A30C4295F133C308C4238 /* ../Share/CocoaShare/MediaPlayer/Wrapper/MPV.swift */; };
+		1F95ACEB4A8D95439A1060A7 /* ../Share/CocoaShare/Define.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B18D126724CEFF9FE23AECA /* ../Share/CocoaShare/Define.swift */; };
+		1FB4D7577A6199ED2AC4FE78 /* AniXPlayer/Setting/SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAA96D874C503B03756542CB /* AniXPlayer/Setting/SettingViewController.swift */; };
+		208B5A49877067AC67D5BE68 /* ../Share/CocoaShare/Networking/Bangumi/Bangumi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 728DC6A8AA0027412C6B6AD1 /* ../Share/CocoaShare/Networking/Bangumi/Bangumi.swift */; };
+		267713D4DEC2CD8AB04DE5E6 /* ../Share/CocoaShare/Networking/Favorite/FavoriteNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E48CD385AD8E39464870211A /* ../Share/CocoaShare/Networking/Favorite/FavoriteNetworkHandle.swift */; };
+		26AAC167DEE92843B076B5FC /* ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuProducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520542F6007943A191ECDD83 /* ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuProducer.swift */; };
+		2882C918EB62247F4C4FFC30 /* ../Share/CocoaShare/Model/GlobalSetting/GlobalSettingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB942BFCFA5155903AF29E9A /* ../Share/CocoaShare/Model/GlobalSetting/GlobalSettingModel.swift */; };
+		2A523E09AB19EBE3E26F2D50 /* ../Share/CocoaShare/Preferences/Store+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 980873AD96FFF1EA2F1C14A3 /* ../Share/CocoaShare/Preferences/Store+Extension.swift */; };
+		2A9EDDA6DDDC0E72A98495D2 /* ../Share/CocoaShare/Model/Player/MatchInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = D064D80700042B07A0B26056 /* ../Share/CocoaShare/Model/Player/MatchInfo.swift */; };
+		2BE97A948E2F20E51B9FE843 /* AniXPlayer/Match/MatchCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA8814978373ECA658932F20 /* AniXPlayer/Match/MatchCell.swift */; };
+		2D9460A010F51121D2BF8EE5 /* ../Share/CocoaShare/Networking/Config/UpdateInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB0D208C05D31EAABA77D58C /* ../Share/CocoaShare/Networking/Config/UpdateInfo.swift */; };
+		2F092B1EE8925CCE649D8BE6 /* ../Share/CocoaShare/Preferences/Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E6A009465DF0AEC71F74E73 /* ../Share/CocoaShare/Preferences/Preferences.swift */; };
+		349CA0440847DAB3815692BC /* ../Share/CocoaShare/MediaPlayer/File/FileManager/LocalFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 991402C0E18D14DD960897F1 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/LocalFileManager.swift */; };
 		35202BF38B579B6077D5EE5A /* Pods_AniXPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 19A2691D2626EBD52C6165F8 /* Pods_AniXPlayer.framework */; };
-		36042E66D19580680D2FABFC /* FileBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79DAF3179F6D6311D0285F1 /* FileBrowserViewController.swift */; };
-		390F28067599CCAC406D0511 /* Favorite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2FF419D52544E934F4004E /* Favorite.swift */; };
-		3952CD81220FD9C95CAD9E65 /* BangumiDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4D56E62C8BB2DF57A007EF /* BangumiDetailViewController.swift */; };
-		3D14EDB21379FD7A50143F32 /* Localize.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC11DB3C19906F8B7F019AC6 /* Localize.swift */; };
-		3DA7C3AC18D1153B6ACFBA19 /* NSNotification+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D3CF86966D7E706CF01FB5 /* NSNotification+Helper.swift */; };
-		4285A2A0454DF4D855D1858D /* TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F450ACDCBFB5A1B5A6221EFD /* TableViewCell.swift */; };
-		42BFA05CEAE249EAF9A39E2E /* DanmakuManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7840F68336293CFDD29A7202 /* DanmakuManager.swift */; };
-		45219BFA8604A20D848DC04A /* FavoriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA164F7B7CD5D2791AAF2559 /* FavoriteViewController.swift */; };
-		46E7BE8DA0AFF0E19508092E /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E183BA940905A07DA1E95960 /* PlayerViewController.swift */; };
-		48483911FAE6075A8C9FB5E8 /* LocalFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F61E87EF54EFF3B81CA985D /* LocalFileManager.swift */; };
-		4900085E9E13F3FF738D4A5E /* Store+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBDCD892DB2511C6A41752AA /* Store+Extension.swift */; };
-		4ED6C23110911F5DE389F843 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83083549271E0BC4E007EEF /* CollectionViewCell.swift */; };
-		539755556C6177F7C0C81669 /* FileListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D014FEFF5BA52D79A6F6B401 /* FileListCell.swift */; };
+		36042E66D19580680D2FABFC /* AniXPlayer/FileBrowser/FileBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A79DAF3179F6D6311D0285F1 /* AniXPlayer/FileBrowser/FileBrowserViewController.swift */; };
+		38B8D6E16AD3383BFB17608B /* ../Share/CocoaShare/MediaPlayer/File/PCFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = E2C668FF09965B5FC5650D37 /* ../Share/CocoaShare/MediaPlayer/File/PCFile.swift */; };
+		390F28067599CCAC406D0511 /* ../Share/CocoaShare/Networking/Favorite/Favorite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E2FF419D52544E934F4004E /* ../Share/CocoaShare/Networking/Favorite/Favorite.swift */; };
+		3952CD81220FD9C95CAD9E65 /* AniXPlayer/BangumiDetail/BangumiDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB4D56E62C8BB2DF57A007EF /* AniXPlayer/BangumiDetail/BangumiDetailViewController.swift */; };
+		3D14EDB21379FD7A50143F32 /* ../Share/CocoaShare/Utils/Localize.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC11DB3C19906F8B7F019AC6 /* ../Share/CocoaShare/Utils/Localize.swift */; };
+		3DA7C3AC18D1153B6ACFBA19 /* ../Share/CocoaShare/Utils/NSNotification+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3D3CF86966D7E706CF01FB5 /* ../Share/CocoaShare/Utils/NSNotification+Helper.swift */; };
+		4007525956FF0DF65AE91CF5 /* ../Share/CocoaShare/Networking/Model/Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F984905FF337E26D5D3F348 /* ../Share/CocoaShare/Networking/Model/Response.swift */; };
+		4285A2A0454DF4D855D1858D /* AniXPlayer/Vendor/Base/View/TableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F450ACDCBFB5A1B5A6221EFD /* AniXPlayer/Vendor/Base/View/TableViewCell.swift */; };
+		42BFA05CEAE249EAF9A39E2E /* ../Share/CocoaShare/DanmakuManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7840F68336293CFDD29A7202 /* ../Share/CocoaShare/DanmakuManager.swift */; };
+		42F6C08A44BC7A61BA0D2136 /* ../Share/CocoaShare/Model/GlobalSetting/GlobalSettingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 467CA7EA8B5DEECE5258C9CF /* ../Share/CocoaShare/Model/GlobalSetting/GlobalSettingModel.swift */; };
+		45219BFA8604A20D848DC04A /* AniXPlayer/HomePage/Favorite/FavoriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA164F7B7CD5D2791AAF2559 /* AniXPlayer/HomePage/Favorite/FavoriteViewController.swift */; };
+		45F5E1C0D0B0F9ED765DECF0 /* ../Share/CocoaShare/Utils/NumberUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = B61CBDFCF78F184936F21EA2 /* ../Share/CocoaShare/Utils/NumberUtils.swift */; };
+		46E7BE8DA0AFF0E19508092E /* AniXPlayer/Player/PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E183BA940905A07DA1E95960 /* AniXPlayer/Player/PlayerViewController.swift */; };
+		48483911FAE6075A8C9FB5E8 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/LocalFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4F61E87EF54EFF3B81CA985D /* ../Share/CocoaShare/MediaPlayer/File/FileManager/LocalFileManager.swift */; };
+		4900085E9E13F3FF738D4A5E /* ../Share/CocoaShare/Preferences/Store+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBDCD892DB2511C6A41752AA /* ../Share/CocoaShare/Preferences/Store+Extension.swift */; };
+		4CFE4AB934F761682B8CCD54 /* ../Share/CocoaShare/Utils/NSNotification+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A3370717F5EEDC00741AAD /* ../Share/CocoaShare/Utils/NSNotification+Helper.swift */; };
+		4ED6C23110911F5DE389F843 /* AniXPlayer/Vendor/Base/View/CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D83083549271E0BC4E007EEF /* AniXPlayer/Vendor/Base/View/CollectionViewCell.swift */; };
+		50F75B492DB910DF939A4403 /* ../Share/CocoaShare/Networking/Search/Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6640ACD0E2D698886EC64E68 /* ../Share/CocoaShare/Networking/Search/Search.swift */; };
+		539755556C6177F7C0C81669 /* AniXPlayer/FileBrowser/FileListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D014FEFF5BA52D79A6F6B401 /* AniXPlayer/FileBrowser/FileListCell.swift */; };
+		53B879C877B14A069A25CB8F /* ../Share/CocoaShare/MediaPlayer/URL+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCD9708C2C0E99496D08BB33 /* ../Share/CocoaShare/MediaPlayer/URL+Extension.swift */; };
+		55136BB7452840C431056700 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/WebDav/WebDavFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20562D29FC8EB1C06688FD37 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/WebDav/WebDavFileManager.swift */; };
 		57E17EBC55D38101C07D9B65 /* TVVLCKit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = F401AD54573B9662C997FD0B /* TVVLCKit.xcframework */; };
-		5C43D918019706458A05EDAD /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5576ED3B2D276CE74FE580 /* File.swift */; };
-		61C4C26C961AFC75B589E776 /* MediaSettingInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50122A748DE7B29E0BCF01A5 /* MediaSettingInfo.swift */; };
-		632B826A17231524B8F0CB0C /* Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5EC74CA94CE53113481FDD /* Label.swift */; };
-		6382B3F594E1CD1B53C7479B /* MainColorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1FF62324B42DE839D8FC662 /* MainColorCell.swift */; };
-		645E26195021F62000962446 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40F09F3A0BF21B4C27E3918 /* Atomic.swift */; };
-		6A27ED53EEF86C20FEF52BB7 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 022F6440342A705FE30B13DC /* Match.swift */; };
-		6E589D8F829ED93DA1917CF8 /* LocalFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01FE37C6B751A334792AAB4A /* LocalFile.swift */; };
-		6EB80C7279979EE788FA335E /* HomePageSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DE7CD933254899A71D186A /* HomePageSectionHeaderView.swift */; };
-		6F14A7069E2AB7789CD91E73 /* SubtitleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA7C80EB660619AC05EB6B8 /* SubtitleManager.swift */; };
-		7119AF0DFDB7FBA508E3FCED /* AppInfoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214BD167848BBB5F1067C63D /* AppInfoHelper.swift */; };
-		728D3F27008FB938A32623FB /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0587677FE1FB7BC5C280C88 /* Button.swift */; };
-		78AE214A5C53D7B492802118 /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BBDEAFED21446BB5104D6C /* SearchViewController.swift */; };
-		7A141C81B41749DDB61DFE5B /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECDE9663F21E9DD3B0113AC2 /* MainViewController.swift */; };
-		7A64DAB125928AE70B3D2BF9 /* NumberUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4C347BB9DF561FA573D16B /* NumberUtils.swift */; };
-		7B19318444F3187EC3480BCD /* Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7026C59260AFAF3FDCBCBBC0 /* Search.swift */; };
-		7CC501E6AC06B4A8500FB5AE /* IPModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FDF3E28D190E4BEEB04398 /* IPModel.swift */; };
-		848F881EF13844C9B65038E7 /* AppKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65CFD56BBD5D0B5970A6355 /* AppKey.swift */; };
+		5C43D918019706458A05EDAD /* ../Share/CocoaShare/MediaPlayer/File/File.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5576ED3B2D276CE74FE580 /* ../Share/CocoaShare/MediaPlayer/File/File.swift */; };
+		5D70F13D7FE33AF649E7C75D /* ../Share/CocoaShare/Networking/User/Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00556AD5557705A7745AF470 /* ../Share/CocoaShare/Networking/User/Login.swift */; };
+		5D88B45AB7F3E9E0BD06AFA3 /* ../Share/CocoaShare/Utils/Decodable+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C227346D92431B03AC4729DD /* ../Share/CocoaShare/Utils/Decodable+Utils.swift */; };
+		618D2F038DBB8436A29A28B4 /* ../Share/CocoaShare/Danmaku.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AB4861D1FD14DD0B66B22DC /* ../Share/CocoaShare/Danmaku.swift */; };
+		61C4C26C961AFC75B589E776 /* ../Share/CocoaShare/Model/Player/Media/MediaSettingInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50122A748DE7B29E0BCF01A5 /* ../Share/CocoaShare/Model/Player/Media/MediaSettingInfo.swift */; };
+		632B826A17231524B8F0CB0C /* AniXPlayer/Vendor/Base/View/Label.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5EC74CA94CE53113481FDD /* AniXPlayer/Vendor/Base/View/Label.swift */; };
+		6382B3F594E1CD1B53C7479B /* AniXPlayer/Setting/MainColorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1FF62324B42DE839D8FC662 /* AniXPlayer/Setting/MainColorCell.swift */; };
+		645E26195021F62000962446 /* ../Share/CocoaShare/Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = C40F09F3A0BF21B4C27E3918 /* ../Share/CocoaShare/Atomic.swift */; };
+		6A27ED53EEF86C20FEF52BB7 /* ../Share/CocoaShare/Networking/Match/Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 022F6440342A705FE30B13DC /* ../Share/CocoaShare/Networking/Match/Match.swift */; };
+		6E589D8F829ED93DA1917CF8 /* ../Share/CocoaShare/MediaPlayer/File/LocalFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01FE37C6B751A334792AAB4A /* ../Share/CocoaShare/MediaPlayer/File/LocalFile.swift */; };
+		6EB80C7279979EE788FA335E /* AniXPlayer/HomePage/Cell/HomePageSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43DE7CD933254899A71D186A /* AniXPlayer/HomePage/Cell/HomePageSectionHeaderView.swift */; };
+		6F14A7069E2AB7789CD91E73 /* ../Share/CocoaShare/SubtitleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEA7C80EB660619AC05EB6B8 /* ../Share/CocoaShare/SubtitleManager.swift */; };
+		7119AF0DFDB7FBA508E3FCED /* ../Share/CocoaShare/Utils/AppInfoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214BD167848BBB5F1067C63D /* ../Share/CocoaShare/Utils/AppInfoHelper.swift */; };
+		728D3F27008FB938A32623FB /* AniXPlayer/Vendor/Base/View/Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0587677FE1FB7BC5C280C88 /* AniXPlayer/Vendor/Base/View/Button.swift */; };
+		73B03466E8097B6224ED9CC1 /* ../Share/CocoaShare/Utils/Localize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FD6349158CB81572A540317 /* ../Share/CocoaShare/Utils/Localize.swift */; };
+		74B438CE0EC5EC28AA2D2825 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCWelcomeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D763E247FF557AB27B465B8 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCWelcomeModel.swift */; };
+		78AE214A5C53D7B492802118 /* AniXPlayer/Search/SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BBDEAFED21446BB5104D6C /* AniXPlayer/Search/SearchViewController.swift */; };
+		7A141C81B41749DDB61DFE5B /* AniXPlayer/Main/MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECDE9663F21E9DD3B0113AC2 /* AniXPlayer/Main/MainViewController.swift */; };
+		7A64DAB125928AE70B3D2BF9 /* ../Share/CocoaShare/Utils/NumberUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4C347BB9DF561FA573D16B /* ../Share/CocoaShare/Utils/NumberUtils.swift */; };
+		7B19318444F3187EC3480BCD /* ../Share/CocoaShare/Networking/Search/Search.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7026C59260AFAF3FDCBCBBC0 /* ../Share/CocoaShare/Networking/Search/Search.swift */; };
+		7CC501E6AC06B4A8500FB5AE /* ../Share/CocoaShare/Networking/Config/IPModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32FDF3E28D190E4BEEB04398 /* ../Share/CocoaShare/Networking/Config/IPModel.swift */; };
+		848F881EF13844C9B65038E7 /* ../Share/CocoaShare/Networking/AppKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = E65CFD56BBD5D0B5970A6355 /* ../Share/CocoaShare/Networking/AppKey.swift */; };
+		8585CFF06996364427BB6F12 /* ../Share/CocoaShare/Define.swift in Sources */ = {isa = PBXBuildFile; fileRef = 737AA46F38556CF84FCD83E7 /* ../Share/CocoaShare/Define.swift */; };
+		86D359F7FB4374EDD201682B /* ../Share/CocoaShare/DanmakuManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5DB67AD5B4A9322F95AF322 /* ../Share/CocoaShare/DanmakuManager.swift */; };
+		8729C62BDB923887E0BAA338 /* ../Share/CocoaShare/Utils/AppInfoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DD3138A1B5B0A4F7DC8A0AC /* ../Share/CocoaShare/Utils/AppInfoHelper.swift */; };
+		884815B6DF722D60423B8615 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCQRModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A2D947E6E8203253ACCDA92 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCQRModel.swift */; };
 		8951524C2FBE023C00F75DB7 /* DanmakuRender in Frameworks */ = {isa = PBXBuildFile; productRef = 8951524B2FBE023C00F75DB7 /* DanmakuRender */; };
 		8951524F2FBE042500F75DB7 /* TVVLCKitSPM in Frameworks */ = {isa = PBXBuildFile; productRef = 8951524E2FBE042500F75DB7 /* TVVLCKitSPM */; };
-		8D0C6085E1C02D0E22FC87C6 /* FavoriteItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4E61102A1BF7640DD53C66 /* FavoriteItemCell.swift */; };
-		8E9F4AD39D5C8CDB5E49517D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36852569F13D3EDE3D31C23E /* AppDelegate.swift */; };
-		91AE9DDAC51F57738D8C33CB /* HomePageNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7B5209CABA015769C672A3 /* HomePageNetworkHandle.swift */; };
-		923ED09127CDDDF3B25775D2 /* SetMainColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295B3E4BCEC9D90DAB197B89 /* SetMainColorViewController.swift */; };
+		8A826413D9B9C7C6CD574386 /* ../Share/CocoaShare/MediaPlayer/File/LocalFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DA36136101610AC7098296 /* ../Share/CocoaShare/MediaPlayer/File/LocalFile.swift */; };
+		8AB177939C9D42A371BB73B1 /* ../Share/CocoaShare/MediaPlayer/Wrapper/VLCPlayerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8654FDDF5B21E87CE6A61BCC /* ../Share/CocoaShare/MediaPlayer/Wrapper/VLCPlayerWrapper.swift */; };
+		8D0C6085E1C02D0E22FC87C6 /* AniXPlayer/HomePage/Favorite/FavoriteItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA4E61102A1BF7640DD53C66 /* AniXPlayer/HomePage/Favorite/FavoriteItemCell.swift */; };
+		8E9F4AD39D5C8CDB5E49517D /* AniXPlayer/AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36852569F13D3EDE3D31C23E /* AniXPlayer/AppDelegate.swift */; };
+		91AE9DDAC51F57738D8C33CB /* ../Share/CocoaShare/Networking/HomePage/HomePageNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B7B5209CABA015769C672A3 /* ../Share/CocoaShare/Networking/HomePage/HomePageNetworkHandle.swift */; };
+		923ED09127CDDDF3B25775D2 /* AniXPlayer/Setting/SetMainColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 295B3E4BCEC9D90DAB197B89 /* AniXPlayer/Setting/SetMainColorViewController.swift */; };
+		94576D1E33C9155241F1BC70 /* ../Share/CocoaShare/Model/Player/PlayerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF130D32B135A34A44178669 /* ../Share/CocoaShare/Model/Player/PlayerModel.swift */; };
 		9997072C757E489DF2533311 /* CryptoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6CD94929E0E0AE8FA6673F2 /* CryptoHelper.swift */; };
-		A0CD809454B01C96AD9C1F48 /* PathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABB6F0AEE6635A0C08782D9 /* PathUtils.swift */; };
-		A11502CDE5AF04A4F6331A4A /* FavoriteNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9F9063308596374AED508F /* FavoriteNetworkHandle.swift */; };
-		A4AE3E87A4BC2170E9557768 /* ANXColor+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25DC5FD84358D75D5DDD9BAB /* ANXColor+Utils.swift */; };
-		A5AEE31DD8E08D456194F385 /* Decodable+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDEE3A4AE6AB0F241FE230E /* Decodable+Utils.swift */; };
-		A8C1FA6C39E0C2180AF758F3 /* HomePageContinueWatchingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CFDF16899236594EF42D8D4 /* HomePageContinueWatchingCell.swift */; };
-		A99D3DD5E6D989FF9411AA95 /* EpisodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA9109CBCE6AA6CC12C29BC /* EpisodeCell.swift */; };
+		9A8450C2169EA5C3A66148A9 /* ../Share/CocoaShare/Networking/Bangumi/Bangumi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28BC920EA873E6489D3E5E48 /* ../Share/CocoaShare/Networking/Bangumi/Bangumi.swift */; };
+		9EBD159AB86162966F2008FF /* ../Share/CocoaShare/MediaPlayer/File/FTPFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9073B859D6CD2E1BB0AAA2C /* ../Share/CocoaShare/MediaPlayer/File/FTPFile.swift */; };
+		9F2F56CC5194982051272215 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/FileManagerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = F772A4F30A7B8277F2BA0DC6 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/FileManagerProtocol.swift */; };
+		A0CD809454B01C96AD9C1F48 /* ../Share/CocoaShare/Utils/PathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = AABB6F0AEE6635A0C08782D9 /* ../Share/CocoaShare/Utils/PathUtils.swift */; };
+		A11502CDE5AF04A4F6331A4A /* ../Share/CocoaShare/Networking/Favorite/FavoriteNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9F9063308596374AED508F /* ../Share/CocoaShare/Networking/Favorite/FavoriteNetworkHandle.swift */; };
+		A1B3629A0B9661020927E39B /* ../Share/CocoaShare/Networking/Match/Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = BE6D8A5115714FE254742F02 /* ../Share/CocoaShare/Networking/Match/Match.swift */; };
+		A3564C48144F8179A7B5511A /* ../Share/CocoaShare/Networking/HomePage/HomePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8FF4746E79B0B097E057684 /* ../Share/CocoaShare/Networking/HomePage/HomePage.swift */; };
+		A4AE3E87A4BC2170E9557768 /* ../Share/CocoaShare/Utils/ANXColor+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25DC5FD84358D75D5DDD9BAB /* ../Share/CocoaShare/Utils/ANXColor+Utils.swift */; };
+		A5AEE31DD8E08D456194F385 /* ../Share/CocoaShare/Utils/Decodable+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDEE3A4AE6AB0F241FE230E /* ../Share/CocoaShare/Utils/Decodable+Utils.swift */; };
+		A60FB99A34807DB77EC43AD5 /* ../Share/CocoaShare/Networking/Search/SearchNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92695B9EAE76E3A3C1EF3011 /* ../Share/CocoaShare/Networking/Search/SearchNetworkHandle.swift */; };
+		A79B85A232EEB5A2E38BBA90 /* ../Share/CocoaShare/Utils/ANXColor+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC687839B0EC6C2955D61F21 /* ../Share/CocoaShare/Utils/ANXColor+Utils.swift */; };
+		A8C1FA6C39E0C2180AF758F3 /* AniXPlayer/HomePage/Cell/HomePageContinueWatchingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CFDF16899236594EF42D8D4 /* AniXPlayer/HomePage/Cell/HomePageContinueWatchingCell.swift */; };
+		A99D3DD5E6D989FF9411AA95 /* AniXPlayer/BangumiDetail/EpisodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BA9109CBCE6AA6CC12C29BC /* AniXPlayer/BangumiDetail/EpisodeCell.swift */; };
 		AC26950293F8EAC4B3FDB354 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D0E96CB54ACFE56C4673302 /* Foundation.framework */; };
-		AC79D5DA90B688BF5EF038CE /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCE6BDE6DFFC8C5BEFBDDC8 /* CacheManager.swift */; };
-		ADFD2584673E361712955C3B /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703816EB064AD50B141BE5AD /* NavigationController.swift */; };
-		AF86739D0B6E1C9E81503E53 /* MatchsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD785B235D752035FC1DE48D /* MatchsViewController.swift */; };
-		B47A93460A3F6337CE74C44B /* DateFormatter+Helper.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72F0A540A60ABAC1037AC92C /* DateFormatter+Helper.swift.swift */; };
-		B47F3D3925BFC5342FA09DB5 /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20B9187CE583C525B0AEA9CD /* TimelineViewController.swift */; };
-		B508F97A5F34CBCF385977DB /* Launcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24624592B5B20AB662DC268 /* Launcher.swift */; };
-		B530445DEA3B7E033D9B6412 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B4FB48D9A4DDA0D1F31EA2 /* Store.swift */; };
-		B95A3C1CE736A385F9174D97 /* MediaPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07316F2C1B289FB217F23E21 /* MediaPlayer.swift */; };
-		BCFF43CFCD2E2DBB693154C2 /* HomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F1682D3335303FA44678FC7 /* HomePageViewController.swift */; };
-		BD52D1C5D398BFDB008AC996 /* ConfigNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9080095BCEF47A0B66B05CB7 /* ConfigNetworkHandle.swift */; };
-		BEFBEC180566569A2BCE129D /* HomePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1376FE2A828F3B59814AAE /* HomePage.swift */; };
-		C0EF7DC25F19959B076DEB42 /* CommentNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13F1652A98524D50BF8CA144 /* CommentNetworkHandle.swift */; };
-		C462D11A70D7BF74B568FF5A /* UserNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1521B3876BA6933F508C5C18 /* UserNetworkHandle.swift */; };
-		C9749F8CA47C3A99D78F279A /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A9DABE6AFBD7D2CB4E00F6 /* Comment.swift */; };
-		D118C555FCD59EF335E3BF9B /* PlayerControlBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E0FAB1EFA4B1A9203285BF /* PlayerControlBar.swift */; };
-		D3257CCA2887CD28093DFEB5 /* Danmaku.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75EA25C22E9024C5525D96A6 /* Danmaku.swift */; };
-		D4BD204182378FBBA944D961 /* TimelineItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDE63DE29A68F612484A59AF /* TimelineItemCell.swift */; };
-		D803C182CBEED15249CB7DE7 /* Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FEF62591D86B0A80F8E4D17 /* Enum.swift */; };
-		D95EC2CDE9593631C50A6110 /* NavigationSettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC11B8202154CB9C1C9C1C87 /* NavigationSettingCell.swift */; };
-		D9AE3106F58D972D2BC2F347 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E6EC7AF5692A5C796F27E42 /* ViewController.swift */; };
-		DA9125D17DC7D86650376F27 /* SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6298C43F589B8AE7F02D69 /* SearchResultCell.swift */; };
-		DB69ED356F7A2AE218137850 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 737FBF8BBDC96F287698E2DE /* Assets.xcassets */; };
-		DE520B05C638FA37F1D8A2D9 /* URL+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F279C90DC5442459575622 /* URL+Extension.swift */; };
-		E1B2ADD2AEDCF8FD8CDCE29C /* SwitchSettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961DA580667A7CE5A9CDE715 /* SwitchSettingCell.swift */; };
-		E6A62DD7B30FD26BD175AEEE /* HistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D779837359A1A3B2851412D1 /* HistoryManager.swift */; };
-		EBAD987ED5C573A3AE405335 /* FileBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C17C25C9BDC9FF5041849F3 /* FileBrowserViewController.swift */; };
-		ED3F3E878870BCF9C32D7D35 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9080F288E79E23EAF59A030E /* Preferences.swift */; };
-		F46D593D8A2865D981D077D0 /* BangumiNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9116F4904F1EAED5995A5F /* BangumiNetworkHandle.swift */; };
-		F73CBF69F33F7B03FD0EE6B4 /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A93908FFFB2AAD08A7C67C /* Login.swift */; };
-		FA91ECEEDDC39D59E2DB0F71 /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635EA7ACA433E86728B1E3AE /* CollectionView.swift */; };
-		FE62CA20A761B8B8C2CAE8D2 /* TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DA6E40F944AE2757019DB37 /* TableView.swift */; };
-		FFF17628AAF63C16006ECCFD /* HomePageFunctionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B66EF694036F91C66067232 /* HomePageFunctionCell.swift */; };
+		AC79D5DA90B688BF5EF038CE /* ../Share/CocoaShare/CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BCE6BDE6DFFC8C5BEFBDDC8 /* ../Share/CocoaShare/CacheManager.swift */; };
+		ACFB437053D1041C0C881E8A /* ../Share/CocoaShare/Networking/NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 349D96364CE15A6E12E4D7CD /* ../Share/CocoaShare/Networking/NetworkManager.swift */; };
+		ADFD2584673E361712955C3B /* AniXPlayer/Vendor/Base/ViewController/NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 703816EB064AD50B141BE5AD /* AniXPlayer/Vendor/Base/ViewController/NavigationController.swift */; };
+		AF86739D0B6E1C9E81503E53 /* AniXPlayer/Match/MatchsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD785B235D752035FC1DE48D /* AniXPlayer/Match/MatchsViewController.swift */; };
+		B47A93460A3F6337CE74C44B /* ../Share/CocoaShare/Utils/DateFormatter+Helper.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72F0A540A60ABAC1037AC92C /* ../Share/CocoaShare/Utils/DateFormatter+Helper.swift.swift */; };
+		B47F3D3925BFC5342FA09DB5 /* AniXPlayer/HomePage/Timeline/TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20B9187CE583C525B0AEA9CD /* AniXPlayer/HomePage/Timeline/TimelineViewController.swift */; };
+		B508F97A5F34CBCF385977DB /* ../Share/CocoaShare/Launcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E24624592B5B20AB662DC268 /* ../Share/CocoaShare/Launcher.swift */; };
+		B530445DEA3B7E033D9B6412 /* ../Share/CocoaShare/Preferences/Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3B4FB48D9A4DDA0D1F31EA2 /* ../Share/CocoaShare/Preferences/Store.swift */; };
+		B89ACF28DACAB399E4887327 /* ../Share/CocoaShare/Utils/PathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212631F066127976221EB692 /* ../Share/CocoaShare/Utils/PathUtils.swift */; };
+		B942B4D62E02D76F416F1374 /* ../Share/CocoaShare/SubtitleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B2D4F3FAA601EA2E2AF85C1 /* ../Share/CocoaShare/SubtitleManager.swift */; };
+		B95A3C1CE736A385F9174D97 /* ../Share/CocoaShare/MediaPlayer/MediaPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07316F2C1B289FB217F23E21 /* ../Share/CocoaShare/MediaPlayer/MediaPlayer.swift */; };
+		BAB1C44DAB3626587699D179 /* ../Share/CocoaShare/Networking/Bangumi/BangumiNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19096FA5699763E285E58922 /* ../Share/CocoaShare/Networking/Bangumi/BangumiNetworkHandle.swift */; };
+		BCFF43CFCD2E2DBB693154C2 /* AniXPlayer/HomePage/HomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9F1682D3335303FA44678FC7 /* AniXPlayer/HomePage/HomePageViewController.swift */; };
+		BD52D1C5D398BFDB008AC996 /* ../Share/CocoaShare/Networking/Config/ConfigNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9080095BCEF47A0B66B05CB7 /* ../Share/CocoaShare/Networking/Config/ConfigNetworkHandle.swift */; };
+		BEFBEC180566569A2BCE129D /* ../Share/CocoaShare/Networking/HomePage/HomePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E1376FE2A828F3B59814AAE /* ../Share/CocoaShare/Networking/HomePage/HomePage.swift */; };
+		C0714C57128DC2E5EFB7AD75 /* ../Share/CocoaShare/Networking/Match/MatchNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1787303D9B0C27024B51D20A /* ../Share/CocoaShare/Networking/Match/MatchNetworkHandle.swift */; };
+		C0EF7DC25F19959B076DEB42 /* ../Share/CocoaShare/Networking/Comment/CommentNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13F1652A98524D50BF8CA144 /* ../Share/CocoaShare/Networking/Comment/CommentNetworkHandle.swift */; };
+		C462D11A70D7BF74B568FF5A /* ../Share/CocoaShare/Networking/User/UserNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1521B3876BA6933F508C5C18 /* ../Share/CocoaShare/Networking/User/UserNetworkHandle.swift */; };
+		C5E628FEC81C20318F0FEFED /* ../Share/CocoaShare/CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3323045036E412069C67CD64 /* ../Share/CocoaShare/CacheManager.swift */; };
+		C5FE94BD0978EDFBB034E5D0 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/SMBFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CB36BBDFC6277A49068F96E /* ../Share/CocoaShare/MediaPlayer/File/FileManager/SMBFileManager.swift */; };
+		C739C3BE67F105F02AC95902 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/PCFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B3E3F099B385E57A8BB3911D /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/PCFileManager.swift */; };
+		C77FD66923EAB0C8DFA6A721 /* ../Share/CocoaShare/Launcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16AE8E5724059433520E3E9E /* ../Share/CocoaShare/Launcher.swift */; };
+		C8BA80DF8E5991401074EBB7 /* ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55D836F86CCEFCB3CFD76F09 /* ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuContext.swift */; };
+		C9749F8CA47C3A99D78F279A /* ../Share/CocoaShare/Networking/Comment/Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8A9DABE6AFBD7D2CB4E00F6 /* ../Share/CocoaShare/Networking/Comment/Comment.swift */; };
+		CE3786B8AEF3957FFBFB95B1 /* ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A0465C48C65C2931C0A2241 /* ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuModel.swift */; };
+		D0D221C1597AC8586C3DC83A /* ../Share/CocoaShare/MediaPlayer/File/File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 42572661BE43046DD036A894 /* ../Share/CocoaShare/MediaPlayer/File/File.swift */; };
+		D118C555FCD59EF335E3BF9B /* AniXPlayer/Player/PlayerControlBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4E0FAB1EFA4B1A9203285BF /* AniXPlayer/Player/PlayerControlBar.swift */; };
+		D169C9CDA4856476E9625703 /* ../Share/CocoaShare/MediaPlayer/File/WebDAVInputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3449F8CCC70E885FA05AE68A /* ../Share/CocoaShare/MediaPlayer/File/WebDAVInputStream.swift */; };
+		D2DA5771A26E6235EA87ECCC /* ../Share/CocoaShare/Model/Player/Media/PlayerMediaModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CCEC6F8464DA6920DFF891F /* ../Share/CocoaShare/Model/Player/Media/PlayerMediaModel.swift */; };
+		D3257CCA2887CD28093DFEB5 /* ../Share/CocoaShare/Danmaku.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75EA25C22E9024C5525D96A6 /* ../Share/CocoaShare/Danmaku.swift */; };
+		D4BD204182378FBBA944D961 /* AniXPlayer/HomePage/Timeline/TimelineItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FDE63DE29A68F612484A59AF /* AniXPlayer/HomePage/Timeline/TimelineItemCell.swift */; };
+		D635EEA4CC262F2438CE8DD5 /* ../Share/CocoaShare/MediaPlayer/MediaThumbnailer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B01444DCB9999216D3B176A /* ../Share/CocoaShare/MediaPlayer/MediaThumbnailer.swift */; };
+		D73A90359DD48CAF23773AF8 /* ../Share/CocoaShare/Networking/Config/ConfigNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C2C7640CFDFE81DEF4A635E /* ../Share/CocoaShare/Networking/Config/ConfigNetworkHandle.swift */; };
+		D803C182CBEED15249CB7DE7 /* ../Share/CocoaShare/Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FEF62591D86B0A80F8E4D17 /* ../Share/CocoaShare/Enum.swift */; };
+		D8BDBE0DFA045F20511D6DA5 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCSubtitleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46A174DD9A50973A1D58F692 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCSubtitleModel.swift */; };
+		D95EC2CDE9593631C50A6110 /* AniXPlayer/Setting/NavigationSettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC11B8202154CB9C1C9C1C87 /* AniXPlayer/Setting/NavigationSettingCell.swift */; };
+		D9AE3106F58D972D2BC2F347 /* AniXPlayer/Vendor/Base/ViewController/ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E6EC7AF5692A5C796F27E42 /* AniXPlayer/Vendor/Base/ViewController/ViewController.swift */; };
+		DA8F59BF6FDA53A0396BD1D3 /* ../Share/CocoaShare/Networking/Comment/CommentNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE2A5FAAB0A80B3028FF95BB /* ../Share/CocoaShare/Networking/Comment/CommentNetworkHandle.swift */; };
+		DA9125D17DC7D86650376F27 /* AniXPlayer/Search/SearchResultCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = FE6298C43F589B8AE7F02D69 /* AniXPlayer/Search/SearchResultCell.swift */; };
+		DAA36A28040523C9F251F5FE /* ../Share/CocoaShare/Networking/User/UserNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1DD948E96017F32B0FC94DC /* ../Share/CocoaShare/Networking/User/UserNetworkHandle.swift */; };
+		DB69ED356F7A2AE218137850 /* AniXPlayer/Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 737FBF8BBDC96F287698E2DE /* AniXPlayer/Assets.xcassets */; };
+		DE520B05C638FA37F1D8A2D9 /* ../Share/CocoaShare/MediaPlayer/URL+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9F279C90DC5442459575622 /* ../Share/CocoaShare/MediaPlayer/URL+Extension.swift */; };
+		DF8687792558E0530E00C0C0 /* ../Share/CocoaShare/MediaPlayer/File/WebDavFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = A43E1F15F2AA3D33A0517149 /* ../Share/CocoaShare/MediaPlayer/File/WebDavFile.swift */; };
+		E043E1C30CE4A9A96249190C /* ../Share/CocoaShare/Utils/CryptoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F1DC355143D1C4BA30AEA02 /* ../Share/CocoaShare/Utils/CryptoHelper.swift */; };
+		E1B2ADD2AEDCF8FD8CDCE29C /* AniXPlayer/Setting/SwitchSettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961DA580667A7CE5A9CDE715 /* AniXPlayer/Setting/SwitchSettingCell.swift */; };
+		E2E151FDAC60A236114DF9E2 /* ../Share/CocoaShare/MediaPlayer/File/SMBFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109ED514E5D40A59EF06884C /* ../Share/CocoaShare/MediaPlayer/File/SMBFile.swift */; };
+		E6A62DD7B30FD26BD175AEEE /* ../Share/CocoaShare/HistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D779837359A1A3B2851412D1 /* ../Share/CocoaShare/HistoryManager.swift */; };
+		EBAD987ED5C573A3AE405335 /* AniXPlayer/FileBrowser/FileBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C17C25C9BDC9FF5041849F3 /* AniXPlayer/FileBrowser/FileBrowserViewController.swift */; };
+		ED3F3E878870BCF9C32D7D35 /* ../Share/CocoaShare/Preferences/Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9080F288E79E23EAF59A030E /* ../Share/CocoaShare/Preferences/Preferences.swift */; };
+		ED71D7C7EB9271D57E345A0E /* ../Share/CocoaShare/Networking/Favorite/Favorite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95C2AC3C575653F24E39F8DA /* ../Share/CocoaShare/Networking/Favorite/Favorite.swift */; };
+		EF71A57A8F6E61305C19AFF4 /* ../Share/CocoaShare/Utils/DateFormatter+Helper.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F31ED3AAFDA5352F32CE22A /* ../Share/CocoaShare/Utils/DateFormatter+Helper.swift.swift */; };
+		F17494B4F51855FB5DD92C17 /* ../Share/CocoaShare/Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = BAFC5494D698B375F72EAA6E /* ../Share/CocoaShare/Enum.swift */; };
+		F28CBF8F465711E5222FC6E7 /* ../Share/CocoaShare/HistoryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326AFF77235B3174DA3A1407 /* ../Share/CocoaShare/HistoryManager.swift */; };
+		F36FFF5ADE89B7B5E858B5E9 /* ../Share/CocoaShare/MediaPlayer/MediaPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4839F4FA1D6BE1CAAD0EA6E /* ../Share/CocoaShare/MediaPlayer/MediaPlayer.swift */; };
+		F46D593D8A2865D981D077D0 /* ../Share/CocoaShare/Networking/Bangumi/BangumiNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B9116F4904F1EAED5995A5F /* ../Share/CocoaShare/Networking/Bangumi/BangumiNetworkHandle.swift */; };
+		F48051913E35546FCF28BB6D /* ../Share/CocoaShare/MediaPlayer/Wrapper/MPVPlayerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80762143CE14550F69EF1955 /* ../Share/CocoaShare/MediaPlayer/Wrapper/MPVPlayerWrapper.swift */; };
+		F73CBF69F33F7B03FD0EE6B4 /* ../Share/CocoaShare/Networking/User/Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A93908FFFB2AAD08A7C67C /* ../Share/CocoaShare/Networking/User/Login.swift */; };
+		FA91ECEEDDC39D59E2DB0F71 /* AniXPlayer/Vendor/Base/View/CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 635EA7ACA433E86728B1E3AE /* AniXPlayer/Vendor/Base/View/CollectionView.swift */; };
+		FE62CA20A761B8B8C2CAE8D2 /* AniXPlayer/Vendor/Base/View/TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DA6E40F944AE2757019DB37 /* AniXPlayer/Vendor/Base/View/TableView.swift */; };
+		FFF17628AAF63C16006ECCFD /* AniXPlayer/HomePage/Cell/HomePageFunctionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B66EF694036F91C66067232 /* AniXPlayer/HomePage/Cell/HomePageFunctionCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		01FE37C6B751A334792AAB4A /* LocalFile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/LocalFile.swift; sourceTree = SOURCE_ROOT; };
-		022F6440342A705FE30B13DC /* Match.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Match/Match.swift; sourceTree = SOURCE_ROOT; };
-		04029401CCF42DFBD2B9D28F /* PlayerDanmakuProducer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuProducer.swift; sourceTree = SOURCE_ROOT; };
-		07316F2C1B289FB217F23E21 /* MediaPlayer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/MediaPlayer.swift; sourceTree = SOURCE_ROOT; };
-		0CFDF16899236594EF42D8D4 /* HomePageContinueWatchingCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/HomePage/Cell/HomePageContinueWatchingCell.swift; sourceTree = SOURCE_ROOT; };
-		0D3CB0873AE68F0D6AB10B3D /* VLCPlayerWrapper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/Wrapper/VLCPlayerWrapper.swift; sourceTree = SOURCE_ROOT; };
-		1001E7474D71298B461929A7 /* WebDAVInputStream.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/WebDAVInputStream.swift; sourceTree = SOURCE_ROOT; };
-		13F1652A98524D50BF8CA144 /* CommentNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Comment/CommentNetworkHandle.swift; sourceTree = SOURCE_ROOT; };
-		14BBDEAFED21446BB5104D6C /* SearchViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Search/SearchViewController.swift; sourceTree = SOURCE_ROOT; };
-		1521B3876BA6933F508C5C18 /* UserNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/User/UserNetworkHandle.swift; sourceTree = SOURCE_ROOT; };
+		00556AD5557705A7745AF470 /* ../Share/CocoaShare/Networking/User/Login.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/User/Login.swift; sourceTree = SOURCE_ROOT; };
+		01C6A5EAC3F1B6BBF8C3DFB1 /* ../Share/CocoaShare/Networking/HomePage/HomePageNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/HomePage/HomePageNetworkHandle.swift; sourceTree = SOURCE_ROOT; };
+		01FE37C6B751A334792AAB4A /* ../Share/CocoaShare/MediaPlayer/File/LocalFile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/LocalFile.swift; sourceTree = SOURCE_ROOT; };
+		022F6440342A705FE30B13DC /* ../Share/CocoaShare/Networking/Match/Match.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Match/Match.swift; sourceTree = SOURCE_ROOT; };
+		04029401CCF42DFBD2B9D28F /* ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuProducer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuProducer.swift; sourceTree = SOURCE_ROOT; };
+		07316F2C1B289FB217F23E21 /* ../Share/CocoaShare/MediaPlayer/MediaPlayer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/MediaPlayer.swift; sourceTree = SOURCE_ROOT; };
+		0A39F557A0A560993F05B23F /* ../Share/CocoaShare/Networking/AppKey.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/AppKey.swift; sourceTree = SOURCE_ROOT; };
+		0CFDF16899236594EF42D8D4 /* AniXPlayer/HomePage/Cell/HomePageContinueWatchingCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/HomePage/Cell/HomePageContinueWatchingCell.swift; sourceTree = SOURCE_ROOT; };
+		0D3CB0873AE68F0D6AB10B3D /* ../Share/CocoaShare/MediaPlayer/Wrapper/VLCPlayerWrapper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/Wrapper/VLCPlayerWrapper.swift; sourceTree = SOURCE_ROOT; };
+		0EF23BEC2DB87C478D1B8FD8 /* AniXPlayer/Player/PlayerLoadingView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Player/PlayerLoadingView.swift; sourceTree = SOURCE_ROOT; };
+		1001E7474D71298B461929A7 /* ../Share/CocoaShare/MediaPlayer/File/WebDAVInputStream.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/WebDAVInputStream.swift; sourceTree = SOURCE_ROOT; };
+		109ED514E5D40A59EF06884C /* ../Share/CocoaShare/MediaPlayer/File/SMBFile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/SMBFile.swift; sourceTree = SOURCE_ROOT; };
+		13F1652A98524D50BF8CA144 /* ../Share/CocoaShare/Networking/Comment/CommentNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Comment/CommentNetworkHandle.swift; sourceTree = SOURCE_ROOT; };
+		14BBDEAFED21446BB5104D6C /* AniXPlayer/Search/SearchViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Search/SearchViewController.swift; sourceTree = SOURCE_ROOT; };
+		1521B3876BA6933F508C5C18 /* ../Share/CocoaShare/Networking/User/UserNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/User/UserNetworkHandle.swift; sourceTree = SOURCE_ROOT; };
+		16AE8E5724059433520E3E9E /* ../Share/CocoaShare/Launcher.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Launcher.swift; sourceTree = SOURCE_ROOT; };
+		1787303D9B0C27024B51D20A /* ../Share/CocoaShare/Networking/Match/MatchNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Match/MatchNetworkHandle.swift; sourceTree = SOURCE_ROOT; };
+		19096FA5699763E285E58922 /* ../Share/CocoaShare/Networking/Bangumi/BangumiNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Bangumi/BangumiNetworkHandle.swift; sourceTree = SOURCE_ROOT; };
 		19A2691D2626EBD52C6165F8 /* Pods_AniXPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AniXPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		1A466E3BD8F9C77F39CD15EC /* SMBFileManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/SMBFileManager.swift; sourceTree = SOURCE_ROOT; };
-		1E2FF419D52544E934F4004E /* Favorite.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Favorite/Favorite.swift; sourceTree = SOURCE_ROOT; };
+		1A466E3BD8F9C77F39CD15EC /* ../Share/CocoaShare/MediaPlayer/File/FileManager/SMBFileManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/SMBFileManager.swift; sourceTree = SOURCE_ROOT; };
+		1E2FF419D52544E934F4004E /* ../Share/CocoaShare/Networking/Favorite/Favorite.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Favorite/Favorite.swift; sourceTree = SOURCE_ROOT; };
 		1F3CB8ACCE3B7247B3776F27 /* AniXPlayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AniXPlayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		1FEF62591D86B0A80F8E4D17 /* Enum.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Enum.swift; sourceTree = SOURCE_ROOT; };
-		20B9187CE583C525B0AEA9CD /* TimelineViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/HomePage/Timeline/TimelineViewController.swift; sourceTree = SOURCE_ROOT; };
-		214BD167848BBB5F1067C63D /* AppInfoHelper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Utils/AppInfoHelper.swift; sourceTree = SOURCE_ROOT; };
-		22A93908FFFB2AAD08A7C67C /* Login.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/User/Login.swift; sourceTree = SOURCE_ROOT; };
-		25DC5FD84358D75D5DDD9BAB /* ANXColor+Utils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "../Share/CocoaShare/Utils/ANXColor+Utils.swift"; sourceTree = SOURCE_ROOT; };
-		295B3E4BCEC9D90DAB197B89 /* SetMainColorViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Setting/SetMainColorViewController.swift; sourceTree = SOURCE_ROOT; };
-		2B66EF694036F91C66067232 /* HomePageFunctionCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/HomePage/Cell/HomePageFunctionCell.swift; sourceTree = SOURCE_ROOT; };
-		2B9116F4904F1EAED5995A5F /* BangumiNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Bangumi/BangumiNetworkHandle.swift; sourceTree = SOURCE_ROOT; };
-		2C0854E5A88C8533AC102BB5 /* FileManagerProtocol.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/FileManagerProtocol.swift; sourceTree = SOURCE_ROOT; };
-		2CBF78059F6E7814943433F6 /* WebDavFile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/WebDavFile.swift; sourceTree = SOURCE_ROOT; };
-		32FDF3E28D190E4BEEB04398 /* IPModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Config/IPModel.swift; sourceTree = SOURCE_ROOT; };
-		36852569F13D3EDE3D31C23E /* AppDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/AppDelegate.swift; sourceTree = SOURCE_ROOT; };
+		1FEF62591D86B0A80F8E4D17 /* ../Share/CocoaShare/Enum.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Enum.swift; sourceTree = SOURCE_ROOT; };
+		20562D29FC8EB1C06688FD37 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/WebDav/WebDavFileManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/WebDav/WebDavFileManager.swift; sourceTree = SOURCE_ROOT; };
+		20B9187CE583C525B0AEA9CD /* AniXPlayer/HomePage/Timeline/TimelineViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/HomePage/Timeline/TimelineViewController.swift; sourceTree = SOURCE_ROOT; };
+		212631F066127976221EB692 /* ../Share/CocoaShare/Utils/PathUtils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Utils/PathUtils.swift; sourceTree = SOURCE_ROOT; };
+		214BD167848BBB5F1067C63D /* ../Share/CocoaShare/Utils/AppInfoHelper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Utils/AppInfoHelper.swift; sourceTree = SOURCE_ROOT; };
+		22A93908FFFB2AAD08A7C67C /* ../Share/CocoaShare/Networking/User/Login.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/User/Login.swift; sourceTree = SOURCE_ROOT; };
+		25DC5FD84358D75D5DDD9BAB /* ../Share/CocoaShare/Utils/ANXColor+Utils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "../Share/CocoaShare/Utils/ANXColor+Utils.swift"; sourceTree = SOURCE_ROOT; };
+		28BC920EA873E6489D3E5E48 /* ../Share/CocoaShare/Networking/Bangumi/Bangumi.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Bangumi/Bangumi.swift; sourceTree = SOURCE_ROOT; };
+		295B3E4BCEC9D90DAB197B89 /* AniXPlayer/Setting/SetMainColorViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Setting/SetMainColorViewController.swift; sourceTree = SOURCE_ROOT; };
+		2B01444DCB9999216D3B176A /* ../Share/CocoaShare/MediaPlayer/MediaThumbnailer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/MediaThumbnailer.swift; sourceTree = SOURCE_ROOT; };
+		2B66EF694036F91C66067232 /* AniXPlayer/HomePage/Cell/HomePageFunctionCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/HomePage/Cell/HomePageFunctionCell.swift; sourceTree = SOURCE_ROOT; };
+		2B9116F4904F1EAED5995A5F /* ../Share/CocoaShare/Networking/Bangumi/BangumiNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Bangumi/BangumiNetworkHandle.swift; sourceTree = SOURCE_ROOT; };
+		2C0854E5A88C8533AC102BB5 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/FileManagerProtocol.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/FileManagerProtocol.swift; sourceTree = SOURCE_ROOT; };
+		2CBF78059F6E7814943433F6 /* ../Share/CocoaShare/MediaPlayer/File/WebDavFile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/WebDavFile.swift; sourceTree = SOURCE_ROOT; };
+		2D763E247FF557AB27B465B8 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCWelcomeModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCWelcomeModel.swift; sourceTree = SOURCE_ROOT; };
+		2DD3138A1B5B0A4F7DC8A0AC /* ../Share/CocoaShare/Utils/AppInfoHelper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Utils/AppInfoHelper.swift; sourceTree = SOURCE_ROOT; };
+		326AFF77235B3174DA3A1407 /* ../Share/CocoaShare/HistoryManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/HistoryManager.swift; sourceTree = SOURCE_ROOT; };
+		32FDF3E28D190E4BEEB04398 /* ../Share/CocoaShare/Networking/Config/IPModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Config/IPModel.swift; sourceTree = SOURCE_ROOT; };
+		3323045036E412069C67CD64 /* ../Share/CocoaShare/CacheManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/CacheManager.swift; sourceTree = SOURCE_ROOT; };
+		3449F8CCC70E885FA05AE68A /* ../Share/CocoaShare/MediaPlayer/File/WebDAVInputStream.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/WebDAVInputStream.swift; sourceTree = SOURCE_ROOT; };
+		349D96364CE15A6E12E4D7CD /* ../Share/CocoaShare/Networking/NetworkManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/NetworkManager.swift; sourceTree = SOURCE_ROOT; };
+		36852569F13D3EDE3D31C23E /* AniXPlayer/AppDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/AppDelegate.swift; sourceTree = SOURCE_ROOT; };
+		3C2C7640CFDFE81DEF4A635E /* ../Share/CocoaShare/Networking/Config/ConfigNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Config/ConfigNetworkHandle.swift; sourceTree = SOURCE_ROOT; };
 		3D0E96CB54ACFE56C4673302 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS14.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		3E1376FE2A828F3B59814AAE /* HomePage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/HomePage/HomePage.swift; sourceTree = SOURCE_ROOT; };
-		3E6EC7AF5692A5C796F27E42 /* ViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Vendor/Base/ViewController/ViewController.swift; sourceTree = SOURCE_ROOT; };
-		3EDEE3A4AE6AB0F241FE230E /* Decodable+Utils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "../Share/CocoaShare/Utils/Decodable+Utils.swift"; sourceTree = SOURCE_ROOT; };
-		43DE7CD933254899A71D186A /* HomePageSectionHeaderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/HomePage/Cell/HomePageSectionHeaderView.swift; sourceTree = SOURCE_ROOT; };
-		4650B0D4087F6FD00FFA24C7 /* MPVPlayerWrapper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/Wrapper/MPVPlayerWrapper.swift; sourceTree = SOURCE_ROOT; };
-		4B18D126724CEFF9FE23AECA /* Define.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Define.swift; sourceTree = SOURCE_ROOT; };
-		4DA9B7A3498F2A9149218D98 /* MediaThumbnailer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/MediaThumbnailer.swift; sourceTree = SOURCE_ROOT; };
-		4F61E87EF54EFF3B81CA985D /* LocalFileManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/LocalFileManager.swift; sourceTree = SOURCE_ROOT; };
-		50122A748DE7B29E0BCF01A5 /* MediaSettingInfo.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/Player/Media/MediaSettingInfo.swift; sourceTree = SOURCE_ROOT; };
-		5516A5439271A184EDA7B92E /* PCLibraryModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCLibraryModel.swift; sourceTree = SOURCE_ROOT; };
-		5B67AC52F472B675EA0B9902 /* PCWelcomeModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCWelcomeModel.swift; sourceTree = SOURCE_ROOT; };
-		5B7B5209CABA015769C672A3 /* HomePageNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/HomePage/HomePageNetworkHandle.swift; sourceTree = SOURCE_ROOT; };
-		5BCE6BDE6DFFC8C5BEFBDDC8 /* CacheManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/CacheManager.swift; sourceTree = SOURCE_ROOT; };
-		5C74D4B79EECDD402DF60E4D /* SMBFile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/SMBFile.swift; sourceTree = SOURCE_ROOT; };
-		5E5EC74CA94CE53113481FDD /* Label.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Vendor/Base/View/Label.swift; sourceTree = SOURCE_ROOT; };
-		635EA7ACA433E86728B1E3AE /* CollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Vendor/Base/View/CollectionView.swift; sourceTree = SOURCE_ROOT; };
-		686E34A5266C9A76FC0BB843 /* PCFileManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/PCFileManager.swift; sourceTree = SOURCE_ROOT; };
-		6C17C25C9BDC9FF5041849F3 /* FileBrowserViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/FileBrowser/FileBrowserViewController.swift; sourceTree = SOURCE_ROOT; };
-		6F41C7AF440EE894DDD4A3B0 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = AniXPlayer/Info.plist; sourceTree = SOURCE_ROOT; };
-		7026C59260AFAF3FDCBCBBC0 /* Search.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Search/Search.swift; sourceTree = SOURCE_ROOT; };
-		703816EB064AD50B141BE5AD /* NavigationController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Vendor/Base/ViewController/NavigationController.swift; sourceTree = SOURCE_ROOT; };
-		728DC6A8AA0027412C6B6AD1 /* Bangumi.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Bangumi/Bangumi.swift; sourceTree = SOURCE_ROOT; };
-		72F0A540A60ABAC1037AC92C /* DateFormatter+Helper.swift.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "../Share/CocoaShare/Utils/DateFormatter+Helper.swift.swift"; sourceTree = SOURCE_ROOT; };
-		737FBF8BBDC96F287698E2DE /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = AniXPlayer/Assets.xcassets; sourceTree = SOURCE_ROOT; };
+		3E1376FE2A828F3B59814AAE /* ../Share/CocoaShare/Networking/HomePage/HomePage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/HomePage/HomePage.swift; sourceTree = SOURCE_ROOT; };
+		3E6EC7AF5692A5C796F27E42 /* AniXPlayer/Vendor/Base/ViewController/ViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Vendor/Base/ViewController/ViewController.swift; sourceTree = SOURCE_ROOT; };
+		3EDEE3A4AE6AB0F241FE230E /* ../Share/CocoaShare/Utils/Decodable+Utils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "../Share/CocoaShare/Utils/Decodable+Utils.swift"; sourceTree = SOURCE_ROOT; };
+		41DA36136101610AC7098296 /* ../Share/CocoaShare/MediaPlayer/File/LocalFile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/LocalFile.swift; sourceTree = SOURCE_ROOT; };
+		423CB66297F144FC48761C09 /* ../Share/CocoaShare/Networking/Comment/Comment.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Comment/Comment.swift; sourceTree = SOURCE_ROOT; };
+		42572661BE43046DD036A894 /* ../Share/CocoaShare/MediaPlayer/File/File.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/File.swift; sourceTree = SOURCE_ROOT; };
+		43DE7CD933254899A71D186A /* AniXPlayer/HomePage/Cell/HomePageSectionHeaderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/HomePage/Cell/HomePageSectionHeaderView.swift; sourceTree = SOURCE_ROOT; };
+		44A393D4B02C281DA9C45CF2 /* ../Share/CocoaShare/Utils/SMBServiceBrowser.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Utils/SMBServiceBrowser.swift; sourceTree = SOURCE_ROOT; };
+		452A30C4295F133C308C4238 /* ../Share/CocoaShare/MediaPlayer/Wrapper/MPV.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/Wrapper/MPV.swift; sourceTree = SOURCE_ROOT; };
+		4650B0D4087F6FD00FFA24C7 /* ../Share/CocoaShare/MediaPlayer/Wrapper/MPVPlayerWrapper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/Wrapper/MPVPlayerWrapper.swift; sourceTree = SOURCE_ROOT; };
+		467CA7EA8B5DEECE5258C9CF /* ../Share/CocoaShare/Model/GlobalSetting/GlobalSettingModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/GlobalSetting/GlobalSettingModel.swift; sourceTree = SOURCE_ROOT; };
+		46A174DD9A50973A1D58F692 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCSubtitleModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCSubtitleModel.swift; sourceTree = SOURCE_ROOT; };
+		4B18D126724CEFF9FE23AECA /* ../Share/CocoaShare/Define.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Define.swift; sourceTree = SOURCE_ROOT; };
+		4CB36BBDFC6277A49068F96E /* ../Share/CocoaShare/MediaPlayer/File/FileManager/SMBFileManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/SMBFileManager.swift; sourceTree = SOURCE_ROOT; };
+		4DA9B7A3498F2A9149218D98 /* ../Share/CocoaShare/MediaPlayer/MediaThumbnailer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/MediaThumbnailer.swift; sourceTree = SOURCE_ROOT; };
+		4E6A009465DF0AEC71F74E73 /* ../Share/CocoaShare/Preferences/Preferences.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Preferences/Preferences.swift; sourceTree = SOURCE_ROOT; };
+		4F61E87EF54EFF3B81CA985D /* ../Share/CocoaShare/MediaPlayer/File/FileManager/LocalFileManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/LocalFileManager.swift; sourceTree = SOURCE_ROOT; };
+		50122A748DE7B29E0BCF01A5 /* ../Share/CocoaShare/Model/Player/Media/MediaSettingInfo.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/Player/Media/MediaSettingInfo.swift; sourceTree = SOURCE_ROOT; };
+		520542F6007943A191ECDD83 /* ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuProducer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuProducer.swift; sourceTree = SOURCE_ROOT; };
+		5516A5439271A184EDA7B92E /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCLibraryModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCLibraryModel.swift; sourceTree = SOURCE_ROOT; };
+		55D836F86CCEFCB3CFD76F09 /* ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuContext.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuContext.swift; sourceTree = SOURCE_ROOT; };
+		560624A82301587D4DE28CCC /* ../Share/CocoaShare/Model/Player/Media/PlayerMediaContext.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/Player/Media/PlayerMediaContext.swift; sourceTree = SOURCE_ROOT; };
+		5B67AC52F472B675EA0B9902 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCWelcomeModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCWelcomeModel.swift; sourceTree = SOURCE_ROOT; };
+		5B7B5209CABA015769C672A3 /* ../Share/CocoaShare/Networking/HomePage/HomePageNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/HomePage/HomePageNetworkHandle.swift; sourceTree = SOURCE_ROOT; };
+		5BCE6BDE6DFFC8C5BEFBDDC8 /* ../Share/CocoaShare/CacheManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/CacheManager.swift; sourceTree = SOURCE_ROOT; };
+		5C74D4B79EECDD402DF60E4D /* ../Share/CocoaShare/MediaPlayer/File/SMBFile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/SMBFile.swift; sourceTree = SOURCE_ROOT; };
+		5E5EC74CA94CE53113481FDD /* AniXPlayer/Vendor/Base/View/Label.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Vendor/Base/View/Label.swift; sourceTree = SOURCE_ROOT; };
+		5F1DC355143D1C4BA30AEA02 /* ../Share/CocoaShare/Utils/CryptoHelper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Utils/CryptoHelper.swift; sourceTree = SOURCE_ROOT; };
+		5F31ED3AAFDA5352F32CE22A /* ../Share/CocoaShare/Utils/DateFormatter+Helper.swift.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "../Share/CocoaShare/Utils/DateFormatter+Helper.swift.swift"; sourceTree = SOURCE_ROOT; };
+		5F984905FF337E26D5D3F348 /* ../Share/CocoaShare/Networking/Model/Response.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Model/Response.swift; sourceTree = SOURCE_ROOT; };
+		635EA7ACA433E86728B1E3AE /* AniXPlayer/Vendor/Base/View/CollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Vendor/Base/View/CollectionView.swift; sourceTree = SOURCE_ROOT; };
+		6640ACD0E2D698886EC64E68 /* ../Share/CocoaShare/Networking/Search/Search.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Search/Search.swift; sourceTree = SOURCE_ROOT; };
+		686E34A5266C9A76FC0BB843 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/PCFileManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/PCFileManager.swift; sourceTree = SOURCE_ROOT; };
+		6B2D4F3FAA601EA2E2AF85C1 /* ../Share/CocoaShare/SubtitleManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/SubtitleManager.swift; sourceTree = SOURCE_ROOT; };
+		6C17C25C9BDC9FF5041849F3 /* AniXPlayer/FileBrowser/FileBrowserViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/FileBrowser/FileBrowserViewController.swift; sourceTree = SOURCE_ROOT; };
+		6F41C7AF440EE894DDD4A3B0 /* AniXPlayer/Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = AniXPlayer/Info.plist; sourceTree = SOURCE_ROOT; };
+		7026C59260AFAF3FDCBCBBC0 /* ../Share/CocoaShare/Networking/Search/Search.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Search/Search.swift; sourceTree = SOURCE_ROOT; };
+		703816EB064AD50B141BE5AD /* AniXPlayer/Vendor/Base/ViewController/NavigationController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Vendor/Base/ViewController/NavigationController.swift; sourceTree = SOURCE_ROOT; };
+		728DC6A8AA0027412C6B6AD1 /* ../Share/CocoaShare/Networking/Bangumi/Bangumi.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Bangumi/Bangumi.swift; sourceTree = SOURCE_ROOT; };
+		72F0A540A60ABAC1037AC92C /* ../Share/CocoaShare/Utils/DateFormatter+Helper.swift.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "../Share/CocoaShare/Utils/DateFormatter+Helper.swift.swift"; sourceTree = SOURCE_ROOT; };
+		737AA46F38556CF84FCD83E7 /* ../Share/CocoaShare/Define.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Define.swift; sourceTree = SOURCE_ROOT; };
+		737FBF8BBDC96F287698E2DE /* AniXPlayer/Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = AniXPlayer/Assets.xcassets; sourceTree = SOURCE_ROOT; };
 		740A50E1C23CA9C8C82B9DD6 /* Pods-AniXPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.debug.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.debug.xcconfig"; sourceTree = "<group>"; };
-		75EA25C22E9024C5525D96A6 /* Danmaku.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Danmaku.swift; sourceTree = SOURCE_ROOT; };
-		7840F68336293CFDD29A7202 /* DanmakuManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/DanmakuManager.swift; sourceTree = SOURCE_ROOT; };
-		8BA9109CBCE6AA6CC12C29BC /* EpisodeCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/BangumiDetail/EpisodeCell.swift; sourceTree = SOURCE_ROOT; };
-		8DA6E40F944AE2757019DB37 /* TableView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Vendor/Base/View/TableView.swift; sourceTree = SOURCE_ROOT; };
-		9080095BCEF47A0B66B05CB7 /* ConfigNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Config/ConfigNetworkHandle.swift; sourceTree = SOURCE_ROOT; };
-		9080F288E79E23EAF59A030E /* Preferences.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Preferences/Preferences.swift; sourceTree = SOURCE_ROOT; };
-		94B95D6BD3CB827D9C056D4F /* FTPFileManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/FTPFileManager.swift; sourceTree = SOURCE_ROOT; };
-		94FFD5BB68E6E264F8560C2F /* PCSubtitleModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCSubtitleModel.swift; sourceTree = SOURCE_ROOT; };
-		957648D9B99675BBF72350E5 /* WebDavFileManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/WebDav/WebDavFileManager.swift; sourceTree = SOURCE_ROOT; };
-		961DA580667A7CE5A9CDE715 /* SwitchSettingCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Setting/SwitchSettingCell.swift; sourceTree = SOURCE_ROOT; };
-		97DC1AF6CD42CE2ACE295128 /* PlayerMediaModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/Player/Media/PlayerMediaModel.swift; sourceTree = SOURCE_ROOT; };
-		9A8DE8D49DE62BF22DC9E7FD /* PlayerModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/Player/PlayerModel.swift; sourceTree = SOURCE_ROOT; };
-		9B43C982D8BB564CE052C1CF /* MPV.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/Wrapper/MPV.swift; sourceTree = SOURCE_ROOT; };
-		9F1682D3335303FA44678FC7 /* HomePageViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/HomePage/HomePageViewController.swift; sourceTree = SOURCE_ROOT; };
-		A79DAF3179F6D6311D0285F1 /* FileBrowserViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/FileBrowser/FileBrowserViewController.swift; sourceTree = SOURCE_ROOT; };
-		A8DD1C2486702DE5A905A1A7 /* PlayerDanmakuModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuModel.swift; sourceTree = SOURCE_ROOT; };
-		AABB6F0AEE6635A0C08782D9 /* PathUtils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Utils/PathUtils.swift; sourceTree = SOURCE_ROOT; };
-		AB4D56E62C8BB2DF57A007EF /* BangumiDetailViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/BangumiDetail/BangumiDetailViewController.swift; sourceTree = SOURCE_ROOT; };
-		ABE4FBBC41F1F5B1A5130720 /* SMBServiceBrowser.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Utils/SMBServiceBrowser.swift; sourceTree = SOURCE_ROOT; };
-		B316F0954C7DE0177A8D122D /* UpdateInfo.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Config/UpdateInfo.swift; sourceTree = SOURCE_ROOT; };
-		B3D3CF86966D7E706CF01FB5 /* NSNotification+Helper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "../Share/CocoaShare/Utils/NSNotification+Helper.swift"; sourceTree = SOURCE_ROOT; };
-		B41B5D7C9B76B9AFCB0B2EEB /* NetworkManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/NetworkManager.swift; sourceTree = SOURCE_ROOT; };
-		B4E0FAB1EFA4B1A9203285BF /* PlayerControlBar.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Player/PlayerControlBar.swift; sourceTree = SOURCE_ROOT; };
-		BAA96D874C503B03756542CB /* SettingViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Setting/SettingViewController.swift; sourceTree = SOURCE_ROOT; };
-		BD15888A0E73882DC1B69A93 /* PCFile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/PCFile.swift; sourceTree = SOURCE_ROOT; };
-		BEA7C80EB660619AC05EB6B8 /* SubtitleManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/SubtitleManager.swift; sourceTree = SOURCE_ROOT; };
-		C3B4FB48D9A4DDA0D1F31EA2 /* Store.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Preferences/Store.swift; sourceTree = SOURCE_ROOT; };
-		C40F09F3A0BF21B4C27E3918 /* Atomic.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Atomic.swift; sourceTree = SOURCE_ROOT; };
-		C50DA4F60DDCDF3537868567 /* FTPFile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FTPFile.swift; sourceTree = SOURCE_ROOT; };
-		C9F279C90DC5442459575622 /* URL+Extension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "../Share/CocoaShare/MediaPlayer/URL+Extension.swift"; sourceTree = SOURCE_ROOT; };
-		CB942BFCFA5155903AF29E9A /* GlobalSettingModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/GlobalSetting/GlobalSettingModel.swift; sourceTree = SOURCE_ROOT; };
-		CE9F9063308596374AED508F /* FavoriteNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Favorite/FavoriteNetworkHandle.swift; sourceTree = SOURCE_ROOT; };
-		D014FEFF5BA52D79A6F6B401 /* FileListCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/FileBrowser/FileListCell.swift; sourceTree = SOURCE_ROOT; };
-		D064D80700042B07A0B26056 /* MatchInfo.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/Player/MatchInfo.swift; sourceTree = SOURCE_ROOT; };
-		D779837359A1A3B2851412D1 /* HistoryManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/HistoryManager.swift; sourceTree = SOURCE_ROOT; };
-		D83083549271E0BC4E007EEF /* CollectionViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Vendor/Base/View/CollectionViewCell.swift; sourceTree = SOURCE_ROOT; };
-		DA164F7B7CD5D2791AAF2559 /* FavoriteViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/HomePage/Favorite/FavoriteViewController.swift; sourceTree = SOURCE_ROOT; };
-		DA8814978373ECA658932F20 /* MatchCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Match/MatchCell.swift; sourceTree = SOURCE_ROOT; };
-		DBD928CE902F5FF949CAA65C /* Response.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Model/Response.swift; sourceTree = SOURCE_ROOT; };
-		DC11DB3C19906F8B7F019AC6 /* Localize.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Utils/Localize.swift; sourceTree = SOURCE_ROOT; };
-		DC5576ED3B2D276CE74FE580 /* File.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/File.swift; sourceTree = SOURCE_ROOT; };
-		DD785B235D752035FC1DE48D /* MatchsViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Match/MatchsViewController.swift; sourceTree = SOURCE_ROOT; };
-		E183BA940905A07DA1E95960 /* PlayerViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Player/PlayerViewController.swift; sourceTree = SOURCE_ROOT; };
-		E24624592B5B20AB662DC268 /* Launcher.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Launcher.swift; sourceTree = SOURCE_ROOT; };
-		E46A2DB3FDFC1AE90280B0D8 /* MatchNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Match/MatchNetworkHandle.swift; sourceTree = SOURCE_ROOT; };
-		E5E92E14D174D29E90CEF177 /* SearchNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Search/SearchNetworkHandle.swift; sourceTree = SOURCE_ROOT; };
-		E65CFD56BBD5D0B5970A6355 /* AppKey.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/AppKey.swift; sourceTree = SOURCE_ROOT; };
+		75EA25C22E9024C5525D96A6 /* ../Share/CocoaShare/Danmaku.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Danmaku.swift; sourceTree = SOURCE_ROOT; };
+		7840F68336293CFDD29A7202 /* ../Share/CocoaShare/DanmakuManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/DanmakuManager.swift; sourceTree = SOURCE_ROOT; };
+		7A2D947E6E8203253ACCDA92 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCQRModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCQRModel.swift; sourceTree = SOURCE_ROOT; };
+		7CCEC6F8464DA6920DFF891F /* ../Share/CocoaShare/Model/Player/Media/PlayerMediaModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/Player/Media/PlayerMediaModel.swift; sourceTree = SOURCE_ROOT; };
+		7EA11000472F7614371F3D5B /* ../Share/CocoaShare/Preferences/Store.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Preferences/Store.swift; sourceTree = SOURCE_ROOT; };
+		7FD6349158CB81572A540317 /* ../Share/CocoaShare/Utils/Localize.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Utils/Localize.swift; sourceTree = SOURCE_ROOT; };
+		80762143CE14550F69EF1955 /* ../Share/CocoaShare/MediaPlayer/Wrapper/MPVPlayerWrapper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/Wrapper/MPVPlayerWrapper.swift; sourceTree = SOURCE_ROOT; };
+		8654FDDF5B21E87CE6A61BCC /* ../Share/CocoaShare/MediaPlayer/Wrapper/VLCPlayerWrapper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/Wrapper/VLCPlayerWrapper.swift; sourceTree = SOURCE_ROOT; };
+		8A0465C48C65C2931C0A2241 /* ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuModel.swift; sourceTree = SOURCE_ROOT; };
+		8BA9109CBCE6AA6CC12C29BC /* AniXPlayer/BangumiDetail/EpisodeCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/BangumiDetail/EpisodeCell.swift; sourceTree = SOURCE_ROOT; };
+		8DA6E40F944AE2757019DB37 /* AniXPlayer/Vendor/Base/View/TableView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Vendor/Base/View/TableView.swift; sourceTree = SOURCE_ROOT; };
+		9080095BCEF47A0B66B05CB7 /* ../Share/CocoaShare/Networking/Config/ConfigNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Config/ConfigNetworkHandle.swift; sourceTree = SOURCE_ROOT; };
+		9080F288E79E23EAF59A030E /* ../Share/CocoaShare/Preferences/Preferences.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Preferences/Preferences.swift; sourceTree = SOURCE_ROOT; };
+		92695B9EAE76E3A3C1EF3011 /* ../Share/CocoaShare/Networking/Search/SearchNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Search/SearchNetworkHandle.swift; sourceTree = SOURCE_ROOT; };
+		94B95D6BD3CB827D9C056D4F /* ../Share/CocoaShare/MediaPlayer/File/FileManager/FTPFileManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/FTPFileManager.swift; sourceTree = SOURCE_ROOT; };
+		94FFD5BB68E6E264F8560C2F /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCSubtitleModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCSubtitleModel.swift; sourceTree = SOURCE_ROOT; };
+		957648D9B99675BBF72350E5 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/WebDav/WebDavFileManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/WebDav/WebDavFileManager.swift; sourceTree = SOURCE_ROOT; };
+		95C2AC3C575653F24E39F8DA /* ../Share/CocoaShare/Networking/Favorite/Favorite.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Favorite/Favorite.swift; sourceTree = SOURCE_ROOT; };
+		961DA580667A7CE5A9CDE715 /* AniXPlayer/Setting/SwitchSettingCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Setting/SwitchSettingCell.swift; sourceTree = SOURCE_ROOT; };
+		97DC1AF6CD42CE2ACE295128 /* ../Share/CocoaShare/Model/Player/Media/PlayerMediaModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/Player/Media/PlayerMediaModel.swift; sourceTree = SOURCE_ROOT; };
+		980873AD96FFF1EA2F1C14A3 /* ../Share/CocoaShare/Preferences/Store+Extension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "../Share/CocoaShare/Preferences/Store+Extension.swift"; sourceTree = SOURCE_ROOT; };
+		991402C0E18D14DD960897F1 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/LocalFileManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/LocalFileManager.swift; sourceTree = SOURCE_ROOT; };
+		9A8DE8D49DE62BF22DC9E7FD /* ../Share/CocoaShare/Model/Player/PlayerModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/Player/PlayerModel.swift; sourceTree = SOURCE_ROOT; };
+		9AB4861D1FD14DD0B66B22DC /* ../Share/CocoaShare/Danmaku.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Danmaku.swift; sourceTree = SOURCE_ROOT; };
+		9B43C982D8BB564CE052C1CF /* ../Share/CocoaShare/MediaPlayer/Wrapper/MPV.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/Wrapper/MPV.swift; sourceTree = SOURCE_ROOT; };
+		9F1682D3335303FA44678FC7 /* AniXPlayer/HomePage/HomePageViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/HomePage/HomePageViewController.swift; sourceTree = SOURCE_ROOT; };
+		A43E1F15F2AA3D33A0517149 /* ../Share/CocoaShare/MediaPlayer/File/WebDavFile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/WebDavFile.swift; sourceTree = SOURCE_ROOT; };
+		A79DAF3179F6D6311D0285F1 /* AniXPlayer/FileBrowser/FileBrowserViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/FileBrowser/FileBrowserViewController.swift; sourceTree = SOURCE_ROOT; };
+		A8DD1C2486702DE5A905A1A7 /* ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuModel.swift; sourceTree = SOURCE_ROOT; };
+		A9D6EA61840ED9C7EAA014ED /* ../Share/CocoaShare/Atomic.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Atomic.swift; sourceTree = SOURCE_ROOT; };
+		AABB6F0AEE6635A0C08782D9 /* ../Share/CocoaShare/Utils/PathUtils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Utils/PathUtils.swift; sourceTree = SOURCE_ROOT; };
+		AB4D56E62C8BB2DF57A007EF /* AniXPlayer/BangumiDetail/BangumiDetailViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/BangumiDetail/BangumiDetailViewController.swift; sourceTree = SOURCE_ROOT; };
+		ABE4FBBC41F1F5B1A5130720 /* ../Share/CocoaShare/Utils/SMBServiceBrowser.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Utils/SMBServiceBrowser.swift; sourceTree = SOURCE_ROOT; };
+		AF130D32B135A34A44178669 /* ../Share/CocoaShare/Model/Player/PlayerModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/Player/PlayerModel.swift; sourceTree = SOURCE_ROOT; };
+		B316F0954C7DE0177A8D122D /* ../Share/CocoaShare/Networking/Config/UpdateInfo.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Config/UpdateInfo.swift; sourceTree = SOURCE_ROOT; };
+		B3D3CF86966D7E706CF01FB5 /* ../Share/CocoaShare/Utils/NSNotification+Helper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "../Share/CocoaShare/Utils/NSNotification+Helper.swift"; sourceTree = SOURCE_ROOT; };
+		B3E3F099B385E57A8BB3911D /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/PCFileManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/PCFileManager.swift; sourceTree = SOURCE_ROOT; };
+		B41B5D7C9B76B9AFCB0B2EEB /* ../Share/CocoaShare/Networking/NetworkManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/NetworkManager.swift; sourceTree = SOURCE_ROOT; };
+		B4768EC0A4F02C8B9EEAA995 /* ../Share/CocoaShare/Networking/Config/IPModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Config/IPModel.swift; sourceTree = SOURCE_ROOT; };
+		B4839F4FA1D6BE1CAAD0EA6E /* ../Share/CocoaShare/MediaPlayer/MediaPlayer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/MediaPlayer.swift; sourceTree = SOURCE_ROOT; };
+		B4E0FAB1EFA4B1A9203285BF /* AniXPlayer/Player/PlayerControlBar.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Player/PlayerControlBar.swift; sourceTree = SOURCE_ROOT; };
+		B61CBDFCF78F184936F21EA2 /* ../Share/CocoaShare/Utils/NumberUtils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Utils/NumberUtils.swift; sourceTree = SOURCE_ROOT; };
+		BAA96D874C503B03756542CB /* AniXPlayer/Setting/SettingViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Setting/SettingViewController.swift; sourceTree = SOURCE_ROOT; };
+		BAFC5494D698B375F72EAA6E /* ../Share/CocoaShare/Enum.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Enum.swift; sourceTree = SOURCE_ROOT; };
+		BD15888A0E73882DC1B69A93 /* ../Share/CocoaShare/MediaPlayer/File/PCFile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/PCFile.swift; sourceTree = SOURCE_ROOT; };
+		BE6D8A5115714FE254742F02 /* ../Share/CocoaShare/Networking/Match/Match.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Match/Match.swift; sourceTree = SOURCE_ROOT; };
+		BEA7C80EB660619AC05EB6B8 /* ../Share/CocoaShare/SubtitleManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/SubtitleManager.swift; sourceTree = SOURCE_ROOT; };
+		C227346D92431B03AC4729DD /* ../Share/CocoaShare/Utils/Decodable+Utils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "../Share/CocoaShare/Utils/Decodable+Utils.swift"; sourceTree = SOURCE_ROOT; };
+		C3B4FB48D9A4DDA0D1F31EA2 /* ../Share/CocoaShare/Preferences/Store.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Preferences/Store.swift; sourceTree = SOURCE_ROOT; };
+		C40F09F3A0BF21B4C27E3918 /* ../Share/CocoaShare/Atomic.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Atomic.swift; sourceTree = SOURCE_ROOT; };
+		C50DA4F60DDCDF3537868567 /* ../Share/CocoaShare/MediaPlayer/File/FTPFile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FTPFile.swift; sourceTree = SOURCE_ROOT; };
+		C8FF4746E79B0B097E057684 /* ../Share/CocoaShare/Networking/HomePage/HomePage.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/HomePage/HomePage.swift; sourceTree = SOURCE_ROOT; };
+		C9073B859D6CD2E1BB0AAA2C /* ../Share/CocoaShare/MediaPlayer/File/FTPFile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FTPFile.swift; sourceTree = SOURCE_ROOT; };
+		C9F279C90DC5442459575622 /* ../Share/CocoaShare/MediaPlayer/URL+Extension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "../Share/CocoaShare/MediaPlayer/URL+Extension.swift"; sourceTree = SOURCE_ROOT; };
+		CB942BFCFA5155903AF29E9A /* ../Share/CocoaShare/Model/GlobalSetting/GlobalSettingModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/GlobalSetting/GlobalSettingModel.swift; sourceTree = SOURCE_ROOT; };
+		CE9F9063308596374AED508F /* ../Share/CocoaShare/Networking/Favorite/FavoriteNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Favorite/FavoriteNetworkHandle.swift; sourceTree = SOURCE_ROOT; };
+		D014FEFF5BA52D79A6F6B401 /* AniXPlayer/FileBrowser/FileListCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/FileBrowser/FileListCell.swift; sourceTree = SOURCE_ROOT; };
+		D064D80700042B07A0B26056 /* ../Share/CocoaShare/Model/Player/MatchInfo.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/Player/MatchInfo.swift; sourceTree = SOURCE_ROOT; };
+		D779837359A1A3B2851412D1 /* ../Share/CocoaShare/HistoryManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/HistoryManager.swift; sourceTree = SOURCE_ROOT; };
+		D83083549271E0BC4E007EEF /* AniXPlayer/Vendor/Base/View/CollectionViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Vendor/Base/View/CollectionViewCell.swift; sourceTree = SOURCE_ROOT; };
+		DA164F7B7CD5D2791AAF2559 /* AniXPlayer/HomePage/Favorite/FavoriteViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/HomePage/Favorite/FavoriteViewController.swift; sourceTree = SOURCE_ROOT; };
+		DA8814978373ECA658932F20 /* AniXPlayer/Match/MatchCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Match/MatchCell.swift; sourceTree = SOURCE_ROOT; };
+		DBD928CE902F5FF949CAA65C /* ../Share/CocoaShare/Networking/Model/Response.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Model/Response.swift; sourceTree = SOURCE_ROOT; };
+		DC11DB3C19906F8B7F019AC6 /* ../Share/CocoaShare/Utils/Localize.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Utils/Localize.swift; sourceTree = SOURCE_ROOT; };
+		DC5576ED3B2D276CE74FE580 /* ../Share/CocoaShare/MediaPlayer/File/File.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/File.swift; sourceTree = SOURCE_ROOT; };
+		DCD9708C2C0E99496D08BB33 /* ../Share/CocoaShare/MediaPlayer/URL+Extension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "../Share/CocoaShare/MediaPlayer/URL+Extension.swift"; sourceTree = SOURCE_ROOT; };
+		DD785B235D752035FC1DE48D /* AniXPlayer/Match/MatchsViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Match/MatchsViewController.swift; sourceTree = SOURCE_ROOT; };
+		E183BA940905A07DA1E95960 /* AniXPlayer/Player/PlayerViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Player/PlayerViewController.swift; sourceTree = SOURCE_ROOT; };
+		E1DD948E96017F32B0FC94DC /* ../Share/CocoaShare/Networking/User/UserNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/User/UserNetworkHandle.swift; sourceTree = SOURCE_ROOT; };
+		E24624592B5B20AB662DC268 /* ../Share/CocoaShare/Launcher.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Launcher.swift; sourceTree = SOURCE_ROOT; };
+		E2C668FF09965B5FC5650D37 /* ../Share/CocoaShare/MediaPlayer/File/PCFile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/PCFile.swift; sourceTree = SOURCE_ROOT; };
+		E46A2DB3FDFC1AE90280B0D8 /* ../Share/CocoaShare/Networking/Match/MatchNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Match/MatchNetworkHandle.swift; sourceTree = SOURCE_ROOT; };
+		E48CD385AD8E39464870211A /* ../Share/CocoaShare/Networking/Favorite/FavoriteNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Favorite/FavoriteNetworkHandle.swift; sourceTree = SOURCE_ROOT; };
+		E5E92E14D174D29E90CEF177 /* ../Share/CocoaShare/Networking/Search/SearchNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Search/SearchNetworkHandle.swift; sourceTree = SOURCE_ROOT; };
+		E65CFD56BBD5D0B5970A6355 /* ../Share/CocoaShare/Networking/AppKey.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/AppKey.swift; sourceTree = SOURCE_ROOT; };
+		E6A3370717F5EEDC00741AAD /* ../Share/CocoaShare/Utils/NSNotification+Helper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "../Share/CocoaShare/Utils/NSNotification+Helper.swift"; sourceTree = SOURCE_ROOT; };
 		E6CD94929E0E0AE8FA6673F2 /* CryptoHelper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CryptoHelper.swift; sourceTree = "<group>"; };
-		E6FDF2688A684B3521153AB9 /* PlayerMediaContext.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/Player/Media/PlayerMediaContext.swift; sourceTree = SOURCE_ROOT; };
-		E86826E5FC0D65F9E9368D83 /* PCQRModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCQRModel.swift; sourceTree = SOURCE_ROOT; };
-		E8A9DABE6AFBD7D2CB4E00F6 /* Comment.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Comment/Comment.swift; sourceTree = SOURCE_ROOT; };
-		E9415C24EE6D6B9F21DA2F8D /* PlayerDanmakuContext.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuContext.swift; sourceTree = SOURCE_ROOT; };
-		EA4E61102A1BF7640DD53C66 /* FavoriteItemCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/HomePage/Favorite/FavoriteItemCell.swift; sourceTree = SOURCE_ROOT; };
+		E6FDF2688A684B3521153AB9 /* ../Share/CocoaShare/Model/Player/Media/PlayerMediaContext.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/Player/Media/PlayerMediaContext.swift; sourceTree = SOURCE_ROOT; };
+		E86826E5FC0D65F9E9368D83 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCQRModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCQRModel.swift; sourceTree = SOURCE_ROOT; };
+		E8A9DABE6AFBD7D2CB4E00F6 /* ../Share/CocoaShare/Networking/Comment/Comment.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Comment/Comment.swift; sourceTree = SOURCE_ROOT; };
+		E9415C24EE6D6B9F21DA2F8D /* ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuContext.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuContext.swift; sourceTree = SOURCE_ROOT; };
+		EA4E61102A1BF7640DD53C66 /* AniXPlayer/HomePage/Favorite/FavoriteItemCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/HomePage/Favorite/FavoriteItemCell.swift; sourceTree = SOURCE_ROOT; };
 		EC8429B5ACAEF469CC38BE3C /* Pods-AniXPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.release.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.release.xcconfig"; sourceTree = "<group>"; };
-		ECDE9663F21E9DD3B0113AC2 /* MainViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Main/MainViewController.swift; sourceTree = SOURCE_ROOT; };
-		F0587677FE1FB7BC5C280C88 /* Button.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Vendor/Base/View/Button.swift; sourceTree = SOURCE_ROOT; };
-		F1FF62324B42DE839D8FC662 /* MainColorCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Setting/MainColorCell.swift; sourceTree = SOURCE_ROOT; };
+		ECDE9663F21E9DD3B0113AC2 /* AniXPlayer/Main/MainViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Main/MainViewController.swift; sourceTree = SOURCE_ROOT; };
+		EE2A5FAAB0A80B3028FF95BB /* ../Share/CocoaShare/Networking/Comment/CommentNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Comment/CommentNetworkHandle.swift; sourceTree = SOURCE_ROOT; };
+		F0587677FE1FB7BC5C280C88 /* AniXPlayer/Vendor/Base/View/Button.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Vendor/Base/View/Button.swift; sourceTree = SOURCE_ROOT; };
+		F1828CFA3AC01AB5CCE75D50 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/FTPFileManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/FTPFileManager.swift; sourceTree = SOURCE_ROOT; };
+		F1FF62324B42DE839D8FC662 /* AniXPlayer/Setting/MainColorCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Setting/MainColorCell.swift; sourceTree = SOURCE_ROOT; };
 		F401AD54573B9662C997FD0B /* TVVLCKit.xcframework */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = wrapper.xcframework; name = TVVLCKit.xcframework; path = ../Share/TVVLCKit/Sources/TVVLCKitSPM/TVVLCKit.xcframework; sourceTree = SOURCE_ROOT; };
-		F450ACDCBFB5A1B5A6221EFD /* TableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Vendor/Base/View/TableViewCell.swift; sourceTree = SOURCE_ROOT; };
-		FB4C347BB9DF561FA573D16B /* NumberUtils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Utils/NumberUtils.swift; sourceTree = SOURCE_ROOT; };
-		FBDCD892DB2511C6A41752AA /* Store+Extension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "../Share/CocoaShare/Preferences/Store+Extension.swift"; sourceTree = SOURCE_ROOT; };
-		FC11B8202154CB9C1C9C1C87 /* NavigationSettingCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Setting/NavigationSettingCell.swift; sourceTree = SOURCE_ROOT; };
-		FDE63DE29A68F612484A59AF /* TimelineItemCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/HomePage/Timeline/TimelineItemCell.swift; sourceTree = SOURCE_ROOT; };
-		FE6298C43F589B8AE7F02D69 /* SearchResultCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Search/SearchResultCell.swift; sourceTree = SOURCE_ROOT; };
+		F450ACDCBFB5A1B5A6221EFD /* AniXPlayer/Vendor/Base/View/TableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Vendor/Base/View/TableViewCell.swift; sourceTree = SOURCE_ROOT; };
+		F47DA39B38544B148C19FB78 /* ../Share/CocoaShare/Model/Player/MatchInfo.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/Player/MatchInfo.swift; sourceTree = SOURCE_ROOT; };
+		F5DB67AD5B4A9322F95AF322 /* ../Share/CocoaShare/DanmakuManager.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/DanmakuManager.swift; sourceTree = SOURCE_ROOT; };
+		F772A4F30A7B8277F2BA0DC6 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/FileManagerProtocol.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/FileManagerProtocol.swift; sourceTree = SOURCE_ROOT; };
+		F7C74A07418D84F40F7CF984 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCLibraryModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCLibraryModel.swift; sourceTree = SOURCE_ROOT; };
+		F98303D054AF97CC103FAFB2 /* ../Share/CocoaShare/Model/Player/Media/MediaSettingInfo.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Model/Player/Media/MediaSettingInfo.swift; sourceTree = SOURCE_ROOT; };
+		FB0D208C05D31EAABA77D58C /* ../Share/CocoaShare/Networking/Config/UpdateInfo.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Networking/Config/UpdateInfo.swift; sourceTree = SOURCE_ROOT; };
+		FB4C347BB9DF561FA573D16B /* ../Share/CocoaShare/Utils/NumberUtils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ../Share/CocoaShare/Utils/NumberUtils.swift; sourceTree = SOURCE_ROOT; };
+		FBDCD892DB2511C6A41752AA /* ../Share/CocoaShare/Preferences/Store+Extension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "../Share/CocoaShare/Preferences/Store+Extension.swift"; sourceTree = SOURCE_ROOT; };
+		FC11B8202154CB9C1C9C1C87 /* AniXPlayer/Setting/NavigationSettingCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Setting/NavigationSettingCell.swift; sourceTree = SOURCE_ROOT; };
+		FC687839B0EC6C2955D61F21 /* ../Share/CocoaShare/Utils/ANXColor+Utils.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "../Share/CocoaShare/Utils/ANXColor+Utils.swift"; sourceTree = SOURCE_ROOT; };
+		FDE63DE29A68F612484A59AF /* AniXPlayer/HomePage/Timeline/TimelineItemCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/HomePage/Timeline/TimelineItemCell.swift; sourceTree = SOURCE_ROOT; };
+		FE6298C43F589B8AE7F02D69 /* AniXPlayer/Search/SearchResultCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AniXPlayer/Search/SearchResultCell.swift; sourceTree = SOURCE_ROOT; };
 		FF6027326294FBCE3ACE5C18 /* CryptoHelper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CryptoHelper.swift; path = ../Share/CocoaShare/Utils/CryptoHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -255,9 +405,12 @@
 		0AE8B673F7C1156CFD84083F /* Wrapper */ = {
 			isa = PBXGroup;
 			children = (
-				9B43C982D8BB564CE052C1CF /* MPV.swift */,
-				4650B0D4087F6FD00FFA24C7 /* MPVPlayerWrapper.swift */,
-				0D3CB0873AE68F0D6AB10B3D /* VLCPlayerWrapper.swift */,
+				9B43C982D8BB564CE052C1CF /* ../Share/CocoaShare/MediaPlayer/Wrapper/MPV.swift */,
+				4650B0D4087F6FD00FFA24C7 /* ../Share/CocoaShare/MediaPlayer/Wrapper/MPVPlayerWrapper.swift */,
+				0D3CB0873AE68F0D6AB10B3D /* ../Share/CocoaShare/MediaPlayer/Wrapper/VLCPlayerWrapper.swift */,
+				452A30C4295F133C308C4238 /* ../Share/CocoaShare/MediaPlayer/Wrapper/MPV.swift */,
+				80762143CE14550F69EF1955 /* ../Share/CocoaShare/MediaPlayer/Wrapper/MPVPlayerWrapper.swift */,
+				8654FDDF5B21E87CE6A61BCC /* ../Share/CocoaShare/MediaPlayer/Wrapper/VLCPlayerWrapper.swift */,
 			);
 			name = Wrapper;
 			path = ../Share/CocoaShare/MediaPlayer/Wrapper;
@@ -266,11 +419,11 @@
 		0C5D12F065499B7057E5F089 /* Setting */ = {
 			isa = PBXGroup;
 			children = (
-				BAA96D874C503B03756542CB /* SettingViewController.swift */,
-				961DA580667A7CE5A9CDE715 /* SwitchSettingCell.swift */,
-				FC11B8202154CB9C1C9C1C87 /* NavigationSettingCell.swift */,
-				295B3E4BCEC9D90DAB197B89 /* SetMainColorViewController.swift */,
-				F1FF62324B42DE839D8FC662 /* MainColorCell.swift */,
+				BAA96D874C503B03756542CB /* AniXPlayer/Setting/SettingViewController.swift */,
+				961DA580667A7CE5A9CDE715 /* AniXPlayer/Setting/SwitchSettingCell.swift */,
+				FC11B8202154CB9C1C9C1C87 /* AniXPlayer/Setting/NavigationSettingCell.swift */,
+				295B3E4BCEC9D90DAB197B89 /* AniXPlayer/Setting/SetMainColorViewController.swift */,
+				F1FF62324B42DE839D8FC662 /* AniXPlayer/Setting/MainColorCell.swift */,
 			);
 			name = Setting;
 			sourceTree = "<group>";
@@ -287,8 +440,10 @@
 		1F1EB6A3D8715CBA7806CB18 /* Bangumi */ = {
 			isa = PBXGroup;
 			children = (
-				728DC6A8AA0027412C6B6AD1 /* Bangumi.swift */,
-				2B9116F4904F1EAED5995A5F /* BangumiNetworkHandle.swift */,
+				728DC6A8AA0027412C6B6AD1 /* ../Share/CocoaShare/Networking/Bangumi/Bangumi.swift */,
+				2B9116F4904F1EAED5995A5F /* ../Share/CocoaShare/Networking/Bangumi/BangumiNetworkHandle.swift */,
+				28BC920EA873E6489D3E5E48 /* ../Share/CocoaShare/Networking/Bangumi/Bangumi.swift */,
+				19096FA5699763E285E58922 /* ../Share/CocoaShare/Networking/Bangumi/BangumiNetworkHandle.swift */,
 			);
 			name = Bangumi;
 			path = ../Share/CocoaShare/Networking/Bangumi;
@@ -315,7 +470,7 @@
 		350D9180542DBCCB0906AEE0 /* HomePage */ = {
 			isa = PBXGroup;
 			children = (
-				9F1682D3335303FA44678FC7 /* HomePageViewController.swift */,
+				9F1682D3335303FA44678FC7 /* AniXPlayer/HomePage/HomePageViewController.swift */,
 				A3377748E3B5C6AA944ABE17 /* Cell */,
 				C7290F5E8A4A3CA2BB2E4E5A /* Timeline */,
 				E225F2B31A11F1053930B106 /* Favorite */,
@@ -345,14 +500,21 @@
 		3FF73F2676B45BC2DF44A2A2 /* File */ = {
 			isa = PBXGroup;
 			children = (
-				C50DA4F60DDCDF3537868567 /* FTPFile.swift */,
-				DC5576ED3B2D276CE74FE580 /* File.swift */,
+				C50DA4F60DDCDF3537868567 /* ../Share/CocoaShare/MediaPlayer/File/FTPFile.swift */,
+				DC5576ED3B2D276CE74FE580 /* ../Share/CocoaShare/MediaPlayer/File/File.swift */,
 				43351D39828FADA797FA00EC /* MediaPlayer */,
-				01FE37C6B751A334792AAB4A /* LocalFile.swift */,
-				BD15888A0E73882DC1B69A93 /* PCFile.swift */,
-				5C74D4B79EECDD402DF60E4D /* SMBFile.swift */,
-				1001E7474D71298B461929A7 /* WebDAVInputStream.swift */,
-				2CBF78059F6E7814943433F6 /* WebDavFile.swift */,
+				01FE37C6B751A334792AAB4A /* ../Share/CocoaShare/MediaPlayer/File/LocalFile.swift */,
+				BD15888A0E73882DC1B69A93 /* ../Share/CocoaShare/MediaPlayer/File/PCFile.swift */,
+				5C74D4B79EECDD402DF60E4D /* ../Share/CocoaShare/MediaPlayer/File/SMBFile.swift */,
+				1001E7474D71298B461929A7 /* ../Share/CocoaShare/MediaPlayer/File/WebDAVInputStream.swift */,
+				2CBF78059F6E7814943433F6 /* ../Share/CocoaShare/MediaPlayer/File/WebDavFile.swift */,
+				C9073B859D6CD2E1BB0AAA2C /* ../Share/CocoaShare/MediaPlayer/File/FTPFile.swift */,
+				42572661BE43046DD036A894 /* ../Share/CocoaShare/MediaPlayer/File/File.swift */,
+				41DA36136101610AC7098296 /* ../Share/CocoaShare/MediaPlayer/File/LocalFile.swift */,
+				E2C668FF09965B5FC5650D37 /* ../Share/CocoaShare/MediaPlayer/File/PCFile.swift */,
+				109ED514E5D40A59EF06884C /* ../Share/CocoaShare/MediaPlayer/File/SMBFile.swift */,
+				3449F8CCC70E885FA05AE68A /* ../Share/CocoaShare/MediaPlayer/File/WebDAVInputStream.swift */,
+				A43E1F15F2AA3D33A0517149 /* ../Share/CocoaShare/MediaPlayer/File/WebDavFile.swift */,
 			);
 			name = File;
 			path = ../Share/CocoaShare/MediaPlayer/File;
@@ -370,7 +532,8 @@
 			isa = PBXGroup;
 			children = (
 				EF198EDDC9273699508A3D50 /* MediaPlayer */,
-				686E34A5266C9A76FC0BB843 /* PCFileManager.swift */,
+				686E34A5266C9A76FC0BB843 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/PCFileManager.swift */,
+				B3E3F099B385E57A8BB3911D /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/PCFileManager.swift */,
 			);
 			name = PC;
 			path = ../Share/CocoaShare/MediaPlayer/File/FileManager/PC;
@@ -379,10 +542,14 @@
 		48655DEEE4F34043D07C73AA /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				5516A5439271A184EDA7B92E /* PCLibraryModel.swift */,
-				E86826E5FC0D65F9E9368D83 /* PCQRModel.swift */,
-				94FFD5BB68E6E264F8560C2F /* PCSubtitleModel.swift */,
-				5B67AC52F472B675EA0B9902 /* PCWelcomeModel.swift */,
+				5516A5439271A184EDA7B92E /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCLibraryModel.swift */,
+				E86826E5FC0D65F9E9368D83 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCQRModel.swift */,
+				94FFD5BB68E6E264F8560C2F /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCSubtitleModel.swift */,
+				5B67AC52F472B675EA0B9902 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCWelcomeModel.swift */,
+				F7C74A07418D84F40F7CF984 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCLibraryModel.swift */,
+				7A2D947E6E8203253ACCDA92 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCQRModel.swift */,
+				46A174DD9A50973A1D58F692 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCSubtitleModel.swift */,
+				2D763E247FF557AB27B465B8 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCWelcomeModel.swift */,
 			);
 			name = Model;
 			path = ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model;
@@ -391,8 +558,8 @@
 		4B0C1AC4D4704135B2C202A9 /* Match */ = {
 			isa = PBXGroup;
 			children = (
-				DD785B235D752035FC1DE48D /* MatchsViewController.swift */,
-				DA8814978373ECA658932F20 /* MatchCell.swift */,
+				DD785B235D752035FC1DE48D /* AniXPlayer/Match/MatchsViewController.swift */,
+				DA8814978373ECA658932F20 /* AniXPlayer/Match/MatchCell.swift */,
 			);
 			name = Match;
 			sourceTree = "<group>";
@@ -400,7 +567,8 @@
 		4D4B7B02F33A75D0C4F6B36E /* WebDav */ = {
 			isa = PBXGroup;
 			children = (
-				957648D9B99675BBF72350E5 /* WebDavFileManager.swift */,
+				957648D9B99675BBF72350E5 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/WebDav/WebDavFileManager.swift */,
+				20562D29FC8EB1C06688FD37 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/WebDav/WebDavFileManager.swift */,
 			);
 			name = WebDav;
 			path = ../Share/CocoaShare/MediaPlayer/File/FileManager/WebDav;
@@ -409,8 +577,10 @@
 		4DBC917E4FD788108ED7EC0B /* Favorite */ = {
 			isa = PBXGroup;
 			children = (
-				1E2FF419D52544E934F4004E /* Favorite.swift */,
-				CE9F9063308596374AED508F /* FavoriteNetworkHandle.swift */,
+				1E2FF419D52544E934F4004E /* ../Share/CocoaShare/Networking/Favorite/Favorite.swift */,
+				CE9F9063308596374AED508F /* ../Share/CocoaShare/Networking/Favorite/FavoriteNetworkHandle.swift */,
+				95C2AC3C575653F24E39F8DA /* ../Share/CocoaShare/Networking/Favorite/Favorite.swift */,
+				E48CD385AD8E39464870211A /* ../Share/CocoaShare/Networking/Favorite/FavoriteNetworkHandle.swift */,
 			);
 			name = Favorite;
 			path = ../Share/CocoaShare/Networking/Favorite;
@@ -419,9 +589,9 @@
 		4E3404B800EB2CAF2AC8DE7E /* FileBrowser */ = {
 			isa = PBXGroup;
 			children = (
-				6C17C25C9BDC9FF5041849F3 /* FileBrowserViewController.swift */,
-				A79DAF3179F6D6311D0285F1 /* FileBrowserViewController.swift */,
-				D014FEFF5BA52D79A6F6B401 /* FileListCell.swift */,
+				6C17C25C9BDC9FF5041849F3 /* AniXPlayer/FileBrowser/FileBrowserViewController.swift */,
+				A79DAF3179F6D6311D0285F1 /* AniXPlayer/FileBrowser/FileBrowserViewController.swift */,
+				D014FEFF5BA52D79A6F6B401 /* AniXPlayer/FileBrowser/FileListCell.swift */,
 			);
 			name = FileBrowser;
 			sourceTree = "<group>";
@@ -438,17 +608,27 @@
 		5CEC3EDAD2C0020E9124D289 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				25DC5FD84358D75D5DDD9BAB /* ANXColor+Utils.swift */,
-				214BD167848BBB5F1067C63D /* AppInfoHelper.swift */,
-				72F0A540A60ABAC1037AC92C /* DateFormatter+Helper.swift.swift */,
-				3EDEE3A4AE6AB0F241FE230E /* Decodable+Utils.swift */,
-				DC11DB3C19906F8B7F019AC6 /* Localize.swift */,
-				B3D3CF86966D7E706CF01FB5 /* NSNotification+Helper.swift */,
-				FB4C347BB9DF561FA573D16B /* NumberUtils.swift */,
-				AABB6F0AEE6635A0C08782D9 /* PathUtils.swift */,
-				ABE4FBBC41F1F5B1A5130720 /* SMBServiceBrowser.swift */,
+				25DC5FD84358D75D5DDD9BAB /* ../Share/CocoaShare/Utils/ANXColor+Utils.swift */,
+				214BD167848BBB5F1067C63D /* ../Share/CocoaShare/Utils/AppInfoHelper.swift */,
+				72F0A540A60ABAC1037AC92C /* ../Share/CocoaShare/Utils/DateFormatter+Helper.swift.swift */,
+				3EDEE3A4AE6AB0F241FE230E /* ../Share/CocoaShare/Utils/Decodable+Utils.swift */,
+				DC11DB3C19906F8B7F019AC6 /* ../Share/CocoaShare/Utils/Localize.swift */,
+				B3D3CF86966D7E706CF01FB5 /* ../Share/CocoaShare/Utils/NSNotification+Helper.swift */,
+				FB4C347BB9DF561FA573D16B /* ../Share/CocoaShare/Utils/NumberUtils.swift */,
+				AABB6F0AEE6635A0C08782D9 /* ../Share/CocoaShare/Utils/PathUtils.swift */,
+				ABE4FBBC41F1F5B1A5130720 /* ../Share/CocoaShare/Utils/SMBServiceBrowser.swift */,
 				FF6027326294FBCE3ACE5C18 /* CryptoHelper.swift */,
 				E6CD94929E0E0AE8FA6673F2 /* CryptoHelper.swift */,
+				FC687839B0EC6C2955D61F21 /* ../Share/CocoaShare/Utils/ANXColor+Utils.swift */,
+				2DD3138A1B5B0A4F7DC8A0AC /* ../Share/CocoaShare/Utils/AppInfoHelper.swift */,
+				5F1DC355143D1C4BA30AEA02 /* ../Share/CocoaShare/Utils/CryptoHelper.swift */,
+				5F31ED3AAFDA5352F32CE22A /* ../Share/CocoaShare/Utils/DateFormatter+Helper.swift.swift */,
+				C227346D92431B03AC4729DD /* ../Share/CocoaShare/Utils/Decodable+Utils.swift */,
+				7FD6349158CB81572A540317 /* ../Share/CocoaShare/Utils/Localize.swift */,
+				E6A3370717F5EEDC00741AAD /* ../Share/CocoaShare/Utils/NSNotification+Helper.swift */,
+				B61CBDFCF78F184936F21EA2 /* ../Share/CocoaShare/Utils/NumberUtils.swift */,
+				212631F066127976221EB692 /* ../Share/CocoaShare/Utils/PathUtils.swift */,
+				44A393D4B02C281DA9C45CF2 /* ../Share/CocoaShare/Utils/SMBServiceBrowser.swift */,
 			);
 			name = Utils;
 			path = ../Share/CocoaShare/Utils;
@@ -466,8 +646,10 @@
 		5D55A7E9ADF980CDB056369F /* User */ = {
 			isa = PBXGroup;
 			children = (
-				22A93908FFFB2AAD08A7C67C /* Login.swift */,
-				1521B3876BA6933F508C5C18 /* UserNetworkHandle.swift */,
+				22A93908FFFB2AAD08A7C67C /* ../Share/CocoaShare/Networking/User/Login.swift */,
+				1521B3876BA6933F508C5C18 /* ../Share/CocoaShare/Networking/User/UserNetworkHandle.swift */,
+				00556AD5557705A7745AF470 /* ../Share/CocoaShare/Networking/User/Login.swift */,
+				E1DD948E96017F32B0FC94DC /* ../Share/CocoaShare/Networking/User/UserNetworkHandle.swift */,
 			);
 			name = User;
 			path = ../Share/CocoaShare/Networking/User;
@@ -476,7 +658,7 @@
 		5E775116E75552E40EDEB948 /* Main */ = {
 			isa = PBXGroup;
 			children = (
-				ECDE9663F21E9DD3B0113AC2 /* MainViewController.swift */,
+				ECDE9663F21E9DD3B0113AC2 /* AniXPlayer/Main/MainViewController.swift */,
 			);
 			name = Main;
 			sourceTree = "<group>";
@@ -518,11 +700,11 @@
 				4B0C1AC4D4704135B2C202A9 /* Match */,
 				658237DE01A442FCEF9426BE /* Vendor */,
 				CC7EF380FD85ECCD1356F9FE /* Resource */,
-				6F41C7AF440EE894DDD4A3B0 /* Info.plist */,
-				36852569F13D3EDE3D31C23E /* AppDelegate.swift */,
+				6F41C7AF440EE894DDD4A3B0 /* AniXPlayer/Info.plist */,
+				36852569F13D3EDE3D31C23E /* AniXPlayer/AppDelegate.swift */,
 				80785D6060DA0CF75922264D /* BangumiDetail */,
 				4E3404B800EB2CAF2AC8DE7E /* FileBrowser */,
-				737FBF8BBDC96F287698E2DE /* Assets.xcassets */,
+				737FBF8BBDC96F287698E2DE /* AniXPlayer/Assets.xcassets */,
 			);
 			path = AniXPlayer;
 			sourceTree = SOURCE_ROOT;
@@ -531,9 +713,12 @@
 			isa = PBXGroup;
 			children = (
 				5A7069E87E927B18E40CF126 /* MediaPlayer */,
-				07316F2C1B289FB217F23E21 /* MediaPlayer.swift */,
-				4DA9B7A3498F2A9149218D98 /* MediaThumbnailer.swift */,
-				C9F279C90DC5442459575622 /* URL+Extension.swift */,
+				07316F2C1B289FB217F23E21 /* ../Share/CocoaShare/MediaPlayer/MediaPlayer.swift */,
+				4DA9B7A3498F2A9149218D98 /* ../Share/CocoaShare/MediaPlayer/MediaThumbnailer.swift */,
+				C9F279C90DC5442459575622 /* ../Share/CocoaShare/MediaPlayer/URL+Extension.swift */,
+				B4839F4FA1D6BE1CAAD0EA6E /* ../Share/CocoaShare/MediaPlayer/MediaPlayer.swift */,
+				2B01444DCB9999216D3B176A /* ../Share/CocoaShare/MediaPlayer/MediaThumbnailer.swift */,
+				DCD9708C2C0E99496D08BB33 /* ../Share/CocoaShare/MediaPlayer/URL+Extension.swift */,
 			);
 			name = MediaPlayer;
 			path = ../Share/CocoaShare/MediaPlayer;
@@ -551,7 +736,8 @@
 		75EF352469BE9E65DAC7B5D2 /* GlobalSetting */ = {
 			isa = PBXGroup;
 			children = (
-				CB942BFCFA5155903AF29E9A /* GlobalSettingModel.swift */,
+				CB942BFCFA5155903AF29E9A /* ../Share/CocoaShare/Model/GlobalSetting/GlobalSettingModel.swift */,
+				467CA7EA8B5DEECE5258C9CF /* ../Share/CocoaShare/Model/GlobalSetting/GlobalSettingModel.swift */,
 			);
 			name = GlobalSetting;
 			path = ../Share/CocoaShare/Model/GlobalSetting;
@@ -560,9 +746,12 @@
 		79B25F693E685071A1DDDBC6 /* Config */ = {
 			isa = PBXGroup;
 			children = (
-				9080095BCEF47A0B66B05CB7 /* ConfigNetworkHandle.swift */,
-				32FDF3E28D190E4BEEB04398 /* IPModel.swift */,
-				B316F0954C7DE0177A8D122D /* UpdateInfo.swift */,
+				9080095BCEF47A0B66B05CB7 /* ../Share/CocoaShare/Networking/Config/ConfigNetworkHandle.swift */,
+				32FDF3E28D190E4BEEB04398 /* ../Share/CocoaShare/Networking/Config/IPModel.swift */,
+				B316F0954C7DE0177A8D122D /* ../Share/CocoaShare/Networking/Config/UpdateInfo.swift */,
+				3C2C7640CFDFE81DEF4A635E /* ../Share/CocoaShare/Networking/Config/ConfigNetworkHandle.swift */,
+				B4768EC0A4F02C8B9EEAA995 /* ../Share/CocoaShare/Networking/Config/IPModel.swift */,
+				FB0D208C05D31EAABA77D58C /* ../Share/CocoaShare/Networking/Config/UpdateInfo.swift */,
 			);
 			name = Config;
 			path = ../Share/CocoaShare/Networking/Config;
@@ -588,8 +777,8 @@
 		80785D6060DA0CF75922264D /* BangumiDetail */ = {
 			isa = PBXGroup;
 			children = (
-				AB4D56E62C8BB2DF57A007EF /* BangumiDetailViewController.swift */,
-				8BA9109CBCE6AA6CC12C29BC /* EpisodeCell.swift */,
+				AB4D56E62C8BB2DF57A007EF /* AniXPlayer/BangumiDetail/BangumiDetailViewController.swift */,
+				8BA9109CBCE6AA6CC12C29BC /* AniXPlayer/BangumiDetail/EpisodeCell.swift */,
 			);
 			name = BangumiDetail;
 			sourceTree = "<group>";
@@ -605,7 +794,8 @@
 		8263C512AD5AB22AFAD2A986 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				DBD928CE902F5FF949CAA65C /* Response.swift */,
+				DBD928CE902F5FF949CAA65C /* ../Share/CocoaShare/Networking/Model/Response.swift */,
+				5F984905FF337E26D5D3F348 /* ../Share/CocoaShare/Networking/Model/Response.swift */,
 			);
 			name = Model;
 			path = ../Share/CocoaShare/Networking/Model;
@@ -622,9 +812,12 @@
 		8F70C5EDAF33CACFB735B85C /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
-				9080F288E79E23EAF59A030E /* Preferences.swift */,
-				FBDCD892DB2511C6A41752AA /* Store+Extension.swift */,
-				C3B4FB48D9A4DDA0D1F31EA2 /* Store.swift */,
+				9080F288E79E23EAF59A030E /* ../Share/CocoaShare/Preferences/Preferences.swift */,
+				FBDCD892DB2511C6A41752AA /* ../Share/CocoaShare/Preferences/Store+Extension.swift */,
+				C3B4FB48D9A4DDA0D1F31EA2 /* ../Share/CocoaShare/Preferences/Store.swift */,
+				4E6A009465DF0AEC71F74E73 /* ../Share/CocoaShare/Preferences/Preferences.swift */,
+				980873AD96FFF1EA2F1C14A3 /* ../Share/CocoaShare/Preferences/Store+Extension.swift */,
+				7EA11000472F7614371F3D5B /* ../Share/CocoaShare/Preferences/Store.swift */,
 			);
 			name = Preferences;
 			path = ../Share/CocoaShare/Preferences;
@@ -641,9 +834,12 @@
 		9415D6164AD3DBB73261B606 /* Danmaku */ = {
 			isa = PBXGroup;
 			children = (
-				E9415C24EE6D6B9F21DA2F8D /* PlayerDanmakuContext.swift */,
-				A8DD1C2486702DE5A905A1A7 /* PlayerDanmakuModel.swift */,
-				04029401CCF42DFBD2B9D28F /* PlayerDanmakuProducer.swift */,
+				E9415C24EE6D6B9F21DA2F8D /* ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuContext.swift */,
+				A8DD1C2486702DE5A905A1A7 /* ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuModel.swift */,
+				04029401CCF42DFBD2B9D28F /* ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuProducer.swift */,
+				55D836F86CCEFCB3CFD76F09 /* ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuContext.swift */,
+				8A0465C48C65C2931C0A2241 /* ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuModel.swift */,
+				520542F6007943A191ECDD83 /* ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuProducer.swift */,
 			);
 			name = Danmaku;
 			path = ../Share/CocoaShare/Model/Player/Danmaku;
@@ -652,9 +848,11 @@
 		977491057B80D3B82433A7CE /* Networking */ = {
 			isa = PBXGroup;
 			children = (
-				E65CFD56BBD5D0B5970A6355 /* AppKey.swift */,
+				E65CFD56BBD5D0B5970A6355 /* ../Share/CocoaShare/Networking/AppKey.swift */,
 				61E8557DEB4FACCD0E7F33E0 /* Networking */,
-				B41B5D7C9B76B9AFCB0B2EEB /* NetworkManager.swift */,
+				B41B5D7C9B76B9AFCB0B2EEB /* ../Share/CocoaShare/Networking/NetworkManager.swift */,
+				0A39F557A0A560993F05B23F /* ../Share/CocoaShare/Networking/AppKey.swift */,
+				349D96364CE15A6E12E4D7CD /* ../Share/CocoaShare/Networking/NetworkManager.swift */,
 			);
 			name = Networking;
 			path = ../Share/CocoaShare/Networking;
@@ -663,8 +861,10 @@
 		99489F1CB8C63ED2D8602E2C /* Search */ = {
 			isa = PBXGroup;
 			children = (
-				7026C59260AFAF3FDCBCBBC0 /* Search.swift */,
-				E5E92E14D174D29E90CEF177 /* SearchNetworkHandle.swift */,
+				7026C59260AFAF3FDCBCBBC0 /* ../Share/CocoaShare/Networking/Search/Search.swift */,
+				E5E92E14D174D29E90CEF177 /* ../Share/CocoaShare/Networking/Search/SearchNetworkHandle.swift */,
+				6640ACD0E2D698886EC64E68 /* ../Share/CocoaShare/Networking/Search/Search.swift */,
+				92695B9EAE76E3A3C1EF3011 /* ../Share/CocoaShare/Networking/Search/SearchNetworkHandle.swift */,
 			);
 			name = Search;
 			path = ../Share/CocoaShare/Networking/Search;
@@ -673,8 +873,10 @@
 		9A94C3D7BF486E7765AD39AB /* Comment */ = {
 			isa = PBXGroup;
 			children = (
-				E8A9DABE6AFBD7D2CB4E00F6 /* Comment.swift */,
-				13F1652A98524D50BF8CA144 /* CommentNetworkHandle.swift */,
+				E8A9DABE6AFBD7D2CB4E00F6 /* ../Share/CocoaShare/Networking/Comment/Comment.swift */,
+				13F1652A98524D50BF8CA144 /* ../Share/CocoaShare/Networking/Comment/CommentNetworkHandle.swift */,
+				423CB66297F144FC48761C09 /* ../Share/CocoaShare/Networking/Comment/Comment.swift */,
+				EE2A5FAAB0A80B3028FF95BB /* ../Share/CocoaShare/Networking/Comment/CommentNetworkHandle.swift */,
 			);
 			name = Comment;
 			path = ../Share/CocoaShare/Networking/Comment;
@@ -683,11 +885,15 @@
 		A09B486BB768D3A2AD0AC1AA /* FileManager */ = {
 			isa = PBXGroup;
 			children = (
-				94B95D6BD3CB827D9C056D4F /* FTPFileManager.swift */,
-				2C0854E5A88C8533AC102BB5 /* FileManagerProtocol.swift */,
-				4F61E87EF54EFF3B81CA985D /* LocalFileManager.swift */,
+				94B95D6BD3CB827D9C056D4F /* ../Share/CocoaShare/MediaPlayer/File/FileManager/FTPFileManager.swift */,
+				2C0854E5A88C8533AC102BB5 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/FileManagerProtocol.swift */,
+				4F61E87EF54EFF3B81CA985D /* ../Share/CocoaShare/MediaPlayer/File/FileManager/LocalFileManager.swift */,
 				05C7482FA1180727D4D6A864 /* MediaPlayer */,
-				1A466E3BD8F9C77F39CD15EC /* SMBFileManager.swift */,
+				1A466E3BD8F9C77F39CD15EC /* ../Share/CocoaShare/MediaPlayer/File/FileManager/SMBFileManager.swift */,
+				F1828CFA3AC01AB5CCE75D50 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/FTPFileManager.swift */,
+				F772A4F30A7B8277F2BA0DC6 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/FileManagerProtocol.swift */,
+				991402C0E18D14DD960897F1 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/LocalFileManager.swift */,
+				4CB36BBDFC6277A49068F96E /* ../Share/CocoaShare/MediaPlayer/File/FileManager/SMBFileManager.swift */,
 			);
 			name = FileManager;
 			path = ../Share/CocoaShare/MediaPlayer/File/FileManager;
@@ -703,9 +909,9 @@
 		A3377748E3B5C6AA944ABE17 /* Cell */ = {
 			isa = PBXGroup;
 			children = (
-				0CFDF16899236594EF42D8D4 /* HomePageContinueWatchingCell.swift */,
-				2B66EF694036F91C66067232 /* HomePageFunctionCell.swift */,
-				43DE7CD933254899A71D186A /* HomePageSectionHeaderView.swift */,
+				0CFDF16899236594EF42D8D4 /* AniXPlayer/HomePage/Cell/HomePageContinueWatchingCell.swift */,
+				2B66EF694036F91C66067232 /* AniXPlayer/HomePage/Cell/HomePageFunctionCell.swift */,
+				43DE7CD933254899A71D186A /* AniXPlayer/HomePage/Cell/HomePageSectionHeaderView.swift */,
 			);
 			name = Cell;
 			sourceTree = "<group>";
@@ -713,8 +919,8 @@
 		A46EFF59950C24E8896C43B0 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
-				3E6EC7AF5692A5C796F27E42 /* ViewController.swift */,
-				703816EB064AD50B141BE5AD /* NavigationController.swift */,
+				3E6EC7AF5692A5C796F27E42 /* AniXPlayer/Vendor/Base/ViewController/ViewController.swift */,
+				703816EB064AD50B141BE5AD /* AniXPlayer/Vendor/Base/ViewController/NavigationController.swift */,
 			);
 			name = ViewController;
 			sourceTree = "<group>";
@@ -722,8 +928,9 @@
 		A76E6AC26453CCDAA0EEA4C8 /* Player */ = {
 			isa = PBXGroup;
 			children = (
-				E183BA940905A07DA1E95960 /* PlayerViewController.swift */,
-				B4E0FAB1EFA4B1A9203285BF /* PlayerControlBar.swift */,
+				E183BA940905A07DA1E95960 /* AniXPlayer/Player/PlayerViewController.swift */,
+				B4E0FAB1EFA4B1A9203285BF /* AniXPlayer/Player/PlayerControlBar.swift */,
+				0EF23BEC2DB87C478D1B8FD8 /* AniXPlayer/Player/PlayerLoadingView.swift */,
 			);
 			name = Player;
 			sourceTree = "<group>";
@@ -748,9 +955,12 @@
 		B511A70C82C9A7B9572973A0 /* Media */ = {
 			isa = PBXGroup;
 			children = (
-				50122A748DE7B29E0BCF01A5 /* MediaSettingInfo.swift */,
-				E6FDF2688A684B3521153AB9 /* PlayerMediaContext.swift */,
-				97DC1AF6CD42CE2ACE295128 /* PlayerMediaModel.swift */,
+				50122A748DE7B29E0BCF01A5 /* ../Share/CocoaShare/Model/Player/Media/MediaSettingInfo.swift */,
+				E6FDF2688A684B3521153AB9 /* ../Share/CocoaShare/Model/Player/Media/PlayerMediaContext.swift */,
+				97DC1AF6CD42CE2ACE295128 /* ../Share/CocoaShare/Model/Player/Media/PlayerMediaModel.swift */,
+				F98303D054AF97CC103FAFB2 /* ../Share/CocoaShare/Model/Player/Media/MediaSettingInfo.swift */,
+				560624A82301587D4DE28CCC /* ../Share/CocoaShare/Model/Player/Media/PlayerMediaContext.swift */,
+				7CCEC6F8464DA6920DFF891F /* ../Share/CocoaShare/Model/Player/Media/PlayerMediaModel.swift */,
 			);
 			name = Media;
 			path = ../Share/CocoaShare/Model/Player/Media;
@@ -767,8 +977,8 @@
 		C7290F5E8A4A3CA2BB2E4E5A /* Timeline */ = {
 			isa = PBXGroup;
 			children = (
-				20B9187CE583C525B0AEA9CD /* TimelineViewController.swift */,
-				FDE63DE29A68F612484A59AF /* TimelineItemCell.swift */,
+				20B9187CE583C525B0AEA9CD /* AniXPlayer/HomePage/Timeline/TimelineViewController.swift */,
+				FDE63DE29A68F612484A59AF /* AniXPlayer/HomePage/Timeline/TimelineItemCell.swift */,
 			);
 			name = Timeline;
 			sourceTree = "<group>";
@@ -783,21 +993,30 @@
 		CCA5A76B7AD11E5B71E5DB78 /* CocoaShare */ = {
 			isa = PBXGroup;
 			children = (
-				C40F09F3A0BF21B4C27E3918 /* Atomic.swift */,
-				5BCE6BDE6DFFC8C5BEFBDDC8 /* CacheManager.swift */,
-				75EA25C22E9024C5525D96A6 /* Danmaku.swift */,
-				7840F68336293CFDD29A7202 /* DanmakuManager.swift */,
-				4B18D126724CEFF9FE23AECA /* Define.swift */,
-				1FEF62591D86B0A80F8E4D17 /* Enum.swift */,
-				D779837359A1A3B2851412D1 /* HistoryManager.swift */,
-				E24624592B5B20AB662DC268 /* Launcher.swift */,
+				C40F09F3A0BF21B4C27E3918 /* ../Share/CocoaShare/Atomic.swift */,
+				5BCE6BDE6DFFC8C5BEFBDDC8 /* ../Share/CocoaShare/CacheManager.swift */,
+				75EA25C22E9024C5525D96A6 /* ../Share/CocoaShare/Danmaku.swift */,
+				7840F68336293CFDD29A7202 /* ../Share/CocoaShare/DanmakuManager.swift */,
+				4B18D126724CEFF9FE23AECA /* ../Share/CocoaShare/Define.swift */,
+				1FEF62591D86B0A80F8E4D17 /* ../Share/CocoaShare/Enum.swift */,
+				D779837359A1A3B2851412D1 /* ../Share/CocoaShare/HistoryManager.swift */,
+				E24624592B5B20AB662DC268 /* ../Share/CocoaShare/Launcher.swift */,
 				6F624C2945CC7CEA628DDA81 /* MediaPlayer */,
 				5D3F91E3F5335B20EADEEBEC /* Model */,
 				977491057B80D3B82433A7CE /* Networking */,
 				8FC78D72E998FF5B632CE286 /* Objc */,
 				8F70C5EDAF33CACFB735B85C /* Preferences */,
-				BEA7C80EB660619AC05EB6B8 /* SubtitleManager.swift */,
+				BEA7C80EB660619AC05EB6B8 /* ../Share/CocoaShare/SubtitleManager.swift */,
 				5CEC3EDAD2C0020E9124D289 /* Utils */,
+				A9D6EA61840ED9C7EAA014ED /* ../Share/CocoaShare/Atomic.swift */,
+				3323045036E412069C67CD64 /* ../Share/CocoaShare/CacheManager.swift */,
+				9AB4861D1FD14DD0B66B22DC /* ../Share/CocoaShare/Danmaku.swift */,
+				F5DB67AD5B4A9322F95AF322 /* ../Share/CocoaShare/DanmakuManager.swift */,
+				737AA46F38556CF84FCD83E7 /* ../Share/CocoaShare/Define.swift */,
+				BAFC5494D698B375F72EAA6E /* ../Share/CocoaShare/Enum.swift */,
+				326AFF77235B3174DA3A1407 /* ../Share/CocoaShare/HistoryManager.swift */,
+				16AE8E5724059433520E3E9E /* ../Share/CocoaShare/Launcher.swift */,
+				6B2D4F3FAA601EA2E2AF85C1 /* ../Share/CocoaShare/SubtitleManager.swift */,
 			);
 			name = CocoaShare;
 			path = ../Share/CocoaShare;
@@ -806,8 +1025,8 @@
 		E225F2B31A11F1053930B106 /* Favorite */ = {
 			isa = PBXGroup;
 			children = (
-				DA164F7B7CD5D2791AAF2559 /* FavoriteViewController.swift */,
-				EA4E61102A1BF7640DD53C66 /* FavoriteItemCell.swift */,
+				DA164F7B7CD5D2791AAF2559 /* AniXPlayer/HomePage/Favorite/FavoriteViewController.swift */,
+				EA4E61102A1BF7640DD53C66 /* AniXPlayer/HomePage/Favorite/FavoriteItemCell.swift */,
 			);
 			name = Favorite;
 			sourceTree = "<group>";
@@ -815,8 +1034,10 @@
 		E2AC49D9BCDE558814C480BC /* Match */ = {
 			isa = PBXGroup;
 			children = (
-				022F6440342A705FE30B13DC /* Match.swift */,
-				E46A2DB3FDFC1AE90280B0D8 /* MatchNetworkHandle.swift */,
+				022F6440342A705FE30B13DC /* ../Share/CocoaShare/Networking/Match/Match.swift */,
+				E46A2DB3FDFC1AE90280B0D8 /* ../Share/CocoaShare/Networking/Match/MatchNetworkHandle.swift */,
+				BE6D8A5115714FE254742F02 /* ../Share/CocoaShare/Networking/Match/Match.swift */,
+				1787303D9B0C27024B51D20A /* ../Share/CocoaShare/Networking/Match/MatchNetworkHandle.swift */,
 			);
 			name = Match;
 			path = ../Share/CocoaShare/Networking/Match;
@@ -834,8 +1055,10 @@
 			isa = PBXGroup;
 			children = (
 				079B0953AFC208DD79B67AD9 /* Model */,
-				D064D80700042B07A0B26056 /* MatchInfo.swift */,
-				9A8DE8D49DE62BF22DC9E7FD /* PlayerModel.swift */,
+				D064D80700042B07A0B26056 /* ../Share/CocoaShare/Model/Player/MatchInfo.swift */,
+				9A8DE8D49DE62BF22DC9E7FD /* ../Share/CocoaShare/Model/Player/PlayerModel.swift */,
+				F47DA39B38544B148C19FB78 /* ../Share/CocoaShare/Model/Player/MatchInfo.swift */,
+				AF130D32B135A34A44178669 /* ../Share/CocoaShare/Model/Player/PlayerModel.swift */,
 			);
 			name = Player;
 			path = ../Share/CocoaShare/Model/Player;
@@ -844,12 +1067,12 @@
 		E9BAD216F7458D6DB8484B73 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				F0587677FE1FB7BC5C280C88 /* Button.swift */,
-				5E5EC74CA94CE53113481FDD /* Label.swift */,
-				8DA6E40F944AE2757019DB37 /* TableView.swift */,
-				635EA7ACA433E86728B1E3AE /* CollectionView.swift */,
-				F450ACDCBFB5A1B5A6221EFD /* TableViewCell.swift */,
-				D83083549271E0BC4E007EEF /* CollectionViewCell.swift */,
+				F0587677FE1FB7BC5C280C88 /* AniXPlayer/Vendor/Base/View/Button.swift */,
+				5E5EC74CA94CE53113481FDD /* AniXPlayer/Vendor/Base/View/Label.swift */,
+				8DA6E40F944AE2757019DB37 /* AniXPlayer/Vendor/Base/View/TableView.swift */,
+				635EA7ACA433E86728B1E3AE /* AniXPlayer/Vendor/Base/View/CollectionView.swift */,
+				F450ACDCBFB5A1B5A6221EFD /* AniXPlayer/Vendor/Base/View/TableViewCell.swift */,
+				D83083549271E0BC4E007EEF /* AniXPlayer/Vendor/Base/View/CollectionViewCell.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -857,8 +1080,10 @@
 		EE0023D99CFDBEBA8619C4D3 /* HomePage */ = {
 			isa = PBXGroup;
 			children = (
-				3E1376FE2A828F3B59814AAE /* HomePage.swift */,
-				5B7B5209CABA015769C672A3 /* HomePageNetworkHandle.swift */,
+				3E1376FE2A828F3B59814AAE /* ../Share/CocoaShare/Networking/HomePage/HomePage.swift */,
+				5B7B5209CABA015769C672A3 /* ../Share/CocoaShare/Networking/HomePage/HomePageNetworkHandle.swift */,
+				C8FF4746E79B0B097E057684 /* ../Share/CocoaShare/Networking/HomePage/HomePage.swift */,
+				01C6A5EAC3F1B6BBF8C3DFB1 /* ../Share/CocoaShare/Networking/HomePage/HomePageNetworkHandle.swift */,
 			);
 			name = HomePage;
 			path = ../Share/CocoaShare/Networking/HomePage;
@@ -875,8 +1100,8 @@
 		EF457D44FFCD5EF2AEBDCC5B /* Search */ = {
 			isa = PBXGroup;
 			children = (
-				14BBDEAFED21446BB5104D6C /* SearchViewController.swift */,
-				FE6298C43F589B8AE7F02D69 /* SearchResultCell.swift */,
+				14BBDEAFED21446BB5104D6C /* AniXPlayer/Search/SearchViewController.swift */,
+				FE6298C43F589B8AE7F02D69 /* AniXPlayer/Search/SearchResultCell.swift */,
 			);
 			name = Search;
 			sourceTree = "<group>";
@@ -930,8 +1155,8 @@
 			);
 			mainGroup = 20056B3E8B945A972430F90A;
 			packageReferences = (
-				8951524A2FBE023C00F75DB7 /* XCLocalSwiftPackageReference "DanmakuRender-Swift" */,
-				8951524D2FBE042500F75DB7 /* XCLocalSwiftPackageReference "TVVLCKit" */,
+				8951524A2FBE023C00F75DB7 /* XCLocalSwiftPackageReference "../../DanmakuRender-Swift" */,
+				8951524D2FBE042500F75DB7 /* XCLocalSwiftPackageReference "../Share/TVVLCKit" */,
 			);
 			productRefGroup = FA5A5EC89280747DB2E05635 /* Products */;
 			projectDirPath = "";
@@ -947,7 +1172,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DB69ED356F7A2AE218137850 /* Assets.xcassets in Resources */,
+				DB69ED356F7A2AE218137850 /* AniXPlayer/Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1019,91 +1244,166 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8E9F4AD39D5C8CDB5E49517D /* AppDelegate.swift in Sources */,
-				7A141C81B41749DDB61DFE5B /* MainViewController.swift in Sources */,
-				645E26195021F62000962446 /* Atomic.swift in Sources */,
-				AC79D5DA90B688BF5EF038CE /* CacheManager.swift in Sources */,
-				D3257CCA2887CD28093DFEB5 /* Danmaku.swift in Sources */,
-				42BFA05CEAE249EAF9A39E2E /* DanmakuManager.swift in Sources */,
-				1F95ACEB4A8D95439A1060A7 /* Define.swift in Sources */,
-				D803C182CBEED15249CB7DE7 /* Enum.swift in Sources */,
-				E6A62DD7B30FD26BD175AEEE /* HistoryManager.swift in Sources */,
-				B508F97A5F34CBCF385977DB /* Launcher.swift in Sources */,
-				5C43D918019706458A05EDAD /* File.swift in Sources */,
-				0948117A00BD5470F8424854 /* FileManagerProtocol.swift in Sources */,
-				48483911FAE6075A8C9FB5E8 /* LocalFileManager.swift in Sources */,
-				6E589D8F829ED93DA1917CF8 /* LocalFile.swift in Sources */,
-				B95A3C1CE736A385F9174D97 /* MediaPlayer.swift in Sources */,
-				DE520B05C638FA37F1D8A2D9 /* URL+Extension.swift in Sources */,
-				1643D4B7836733E526B03128 /* VLCPlayerWrapper.swift in Sources */,
-				2882C918EB62247F4C4FFC30 /* GlobalSettingModel.swift in Sources */,
-				2A9EDDA6DDDC0E72A98495D2 /* MatchInfo.swift in Sources */,
-				61C4C26C961AFC75B589E776 /* MediaSettingInfo.swift in Sources */,
-				848F881EF13844C9B65038E7 /* AppKey.swift in Sources */,
-				208B5A49877067AC67D5BE68 /* Bangumi.swift in Sources */,
-				F46D593D8A2865D981D077D0 /* BangumiNetworkHandle.swift in Sources */,
-				C9749F8CA47C3A99D78F279A /* Comment.swift in Sources */,
-				C0EF7DC25F19959B076DEB42 /* CommentNetworkHandle.swift in Sources */,
-				BD52D1C5D398BFDB008AC996 /* ConfigNetworkHandle.swift in Sources */,
-				7CC501E6AC06B4A8500FB5AE /* IPModel.swift in Sources */,
-				03B312068F03D73E0AA2ED2D /* UpdateInfo.swift in Sources */,
-				390F28067599CCAC406D0511 /* Favorite.swift in Sources */,
-				A11502CDE5AF04A4F6331A4A /* FavoriteNetworkHandle.swift in Sources */,
-				BEFBEC180566569A2BCE129D /* HomePage.swift in Sources */,
-				91AE9DDAC51F57738D8C33CB /* HomePageNetworkHandle.swift in Sources */,
-				6A27ED53EEF86C20FEF52BB7 /* Match.swift in Sources */,
-				10C682830DB282E8251A3699 /* MatchNetworkHandle.swift in Sources */,
-				069D7723B9DDD6508E10C738 /* Response.swift in Sources */,
-				077B09E39F1E38FF81DFC542 /* NetworkManager.swift in Sources */,
-				7B19318444F3187EC3480BCD /* Search.swift in Sources */,
-				030C0F048244568B1E6B66EC /* SearchNetworkHandle.swift in Sources */,
-				F73CBF69F33F7B03FD0EE6B4 /* Login.swift in Sources */,
-				C462D11A70D7BF74B568FF5A /* UserNetworkHandle.swift in Sources */,
-				ED3F3E878870BCF9C32D7D35 /* Preferences.swift in Sources */,
-				4900085E9E13F3FF738D4A5E /* Store+Extension.swift in Sources */,
-				B530445DEA3B7E033D9B6412 /* Store.swift in Sources */,
-				6F14A7069E2AB7789CD91E73 /* SubtitleManager.swift in Sources */,
-				A4AE3E87A4BC2170E9557768 /* ANXColor+Utils.swift in Sources */,
-				7119AF0DFDB7FBA508E3FCED /* AppInfoHelper.swift in Sources */,
-				B47A93460A3F6337CE74C44B /* DateFormatter+Helper.swift.swift in Sources */,
-				A5AEE31DD8E08D456194F385 /* Decodable+Utils.swift in Sources */,
-				3D14EDB21379FD7A50143F32 /* Localize.swift in Sources */,
-				3DA7C3AC18D1153B6ACFBA19 /* NSNotification+Helper.swift in Sources */,
-				7A64DAB125928AE70B3D2BF9 /* NumberUtils.swift in Sources */,
-				A0CD809454B01C96AD9C1F48 /* PathUtils.swift in Sources */,
+				8E9F4AD39D5C8CDB5E49517D /* AniXPlayer/AppDelegate.swift in Sources */,
+				7A141C81B41749DDB61DFE5B /* AniXPlayer/Main/MainViewController.swift in Sources */,
+				645E26195021F62000962446 /* ../Share/CocoaShare/Atomic.swift in Sources */,
+				AC79D5DA90B688BF5EF038CE /* ../Share/CocoaShare/CacheManager.swift in Sources */,
+				D3257CCA2887CD28093DFEB5 /* ../Share/CocoaShare/Danmaku.swift in Sources */,
+				42BFA05CEAE249EAF9A39E2E /* ../Share/CocoaShare/DanmakuManager.swift in Sources */,
+				1F95ACEB4A8D95439A1060A7 /* ../Share/CocoaShare/Define.swift in Sources */,
+				D803C182CBEED15249CB7DE7 /* ../Share/CocoaShare/Enum.swift in Sources */,
+				E6A62DD7B30FD26BD175AEEE /* ../Share/CocoaShare/HistoryManager.swift in Sources */,
+				B508F97A5F34CBCF385977DB /* ../Share/CocoaShare/Launcher.swift in Sources */,
+				5C43D918019706458A05EDAD /* ../Share/CocoaShare/MediaPlayer/File/File.swift in Sources */,
+				0948117A00BD5470F8424854 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/FileManagerProtocol.swift in Sources */,
+				48483911FAE6075A8C9FB5E8 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/LocalFileManager.swift in Sources */,
+				6E589D8F829ED93DA1917CF8 /* ../Share/CocoaShare/MediaPlayer/File/LocalFile.swift in Sources */,
+				B95A3C1CE736A385F9174D97 /* ../Share/CocoaShare/MediaPlayer/MediaPlayer.swift in Sources */,
+				DE520B05C638FA37F1D8A2D9 /* ../Share/CocoaShare/MediaPlayer/URL+Extension.swift in Sources */,
+				1643D4B7836733E526B03128 /* ../Share/CocoaShare/MediaPlayer/Wrapper/VLCPlayerWrapper.swift in Sources */,
+				2882C918EB62247F4C4FFC30 /* ../Share/CocoaShare/Model/GlobalSetting/GlobalSettingModel.swift in Sources */,
+				2A9EDDA6DDDC0E72A98495D2 /* ../Share/CocoaShare/Model/Player/MatchInfo.swift in Sources */,
+				61C4C26C961AFC75B589E776 /* ../Share/CocoaShare/Model/Player/Media/MediaSettingInfo.swift in Sources */,
+				848F881EF13844C9B65038E7 /* ../Share/CocoaShare/Networking/AppKey.swift in Sources */,
+				208B5A49877067AC67D5BE68 /* ../Share/CocoaShare/Networking/Bangumi/Bangumi.swift in Sources */,
+				F46D593D8A2865D981D077D0 /* ../Share/CocoaShare/Networking/Bangumi/BangumiNetworkHandle.swift in Sources */,
+				C9749F8CA47C3A99D78F279A /* ../Share/CocoaShare/Networking/Comment/Comment.swift in Sources */,
+				C0EF7DC25F19959B076DEB42 /* ../Share/CocoaShare/Networking/Comment/CommentNetworkHandle.swift in Sources */,
+				BD52D1C5D398BFDB008AC996 /* ../Share/CocoaShare/Networking/Config/ConfigNetworkHandle.swift in Sources */,
+				7CC501E6AC06B4A8500FB5AE /* ../Share/CocoaShare/Networking/Config/IPModel.swift in Sources */,
+				03B312068F03D73E0AA2ED2D /* ../Share/CocoaShare/Networking/Config/UpdateInfo.swift in Sources */,
+				390F28067599CCAC406D0511 /* ../Share/CocoaShare/Networking/Favorite/Favorite.swift in Sources */,
+				A11502CDE5AF04A4F6331A4A /* ../Share/CocoaShare/Networking/Favorite/FavoriteNetworkHandle.swift in Sources */,
+				BEFBEC180566569A2BCE129D /* ../Share/CocoaShare/Networking/HomePage/HomePage.swift in Sources */,
+				91AE9DDAC51F57738D8C33CB /* ../Share/CocoaShare/Networking/HomePage/HomePageNetworkHandle.swift in Sources */,
+				6A27ED53EEF86C20FEF52BB7 /* ../Share/CocoaShare/Networking/Match/Match.swift in Sources */,
+				10C682830DB282E8251A3699 /* ../Share/CocoaShare/Networking/Match/MatchNetworkHandle.swift in Sources */,
+				069D7723B9DDD6508E10C738 /* ../Share/CocoaShare/Networking/Model/Response.swift in Sources */,
+				077B09E39F1E38FF81DFC542 /* ../Share/CocoaShare/Networking/NetworkManager.swift in Sources */,
+				7B19318444F3187EC3480BCD /* ../Share/CocoaShare/Networking/Search/Search.swift in Sources */,
+				030C0F048244568B1E6B66EC /* ../Share/CocoaShare/Networking/Search/SearchNetworkHandle.swift in Sources */,
+				F73CBF69F33F7B03FD0EE6B4 /* ../Share/CocoaShare/Networking/User/Login.swift in Sources */,
+				C462D11A70D7BF74B568FF5A /* ../Share/CocoaShare/Networking/User/UserNetworkHandle.swift in Sources */,
+				ED3F3E878870BCF9C32D7D35 /* ../Share/CocoaShare/Preferences/Preferences.swift in Sources */,
+				4900085E9E13F3FF738D4A5E /* ../Share/CocoaShare/Preferences/Store+Extension.swift in Sources */,
+				B530445DEA3B7E033D9B6412 /* ../Share/CocoaShare/Preferences/Store.swift in Sources */,
+				6F14A7069E2AB7789CD91E73 /* ../Share/CocoaShare/SubtitleManager.swift in Sources */,
+				A4AE3E87A4BC2170E9557768 /* ../Share/CocoaShare/Utils/ANXColor+Utils.swift in Sources */,
+				7119AF0DFDB7FBA508E3FCED /* ../Share/CocoaShare/Utils/AppInfoHelper.swift in Sources */,
+				B47A93460A3F6337CE74C44B /* ../Share/CocoaShare/Utils/DateFormatter+Helper.swift.swift in Sources */,
+				A5AEE31DD8E08D456194F385 /* ../Share/CocoaShare/Utils/Decodable+Utils.swift in Sources */,
+				3D14EDB21379FD7A50143F32 /* ../Share/CocoaShare/Utils/Localize.swift in Sources */,
+				3DA7C3AC18D1153B6ACFBA19 /* ../Share/CocoaShare/Utils/NSNotification+Helper.swift in Sources */,
+				7A64DAB125928AE70B3D2BF9 /* ../Share/CocoaShare/Utils/NumberUtils.swift in Sources */,
+				A0CD809454B01C96AD9C1F48 /* ../Share/CocoaShare/Utils/PathUtils.swift in Sources */,
 				9997072C757E489DF2533311 /* CryptoHelper.swift in Sources */,
-				728D3F27008FB938A32623FB /* Button.swift in Sources */,
-				632B826A17231524B8F0CB0C /* Label.swift in Sources */,
-				FE62CA20A761B8B8C2CAE8D2 /* TableView.swift in Sources */,
-				FA91ECEEDDC39D59E2DB0F71 /* CollectionView.swift in Sources */,
-				4285A2A0454DF4D855D1858D /* TableViewCell.swift in Sources */,
-				4ED6C23110911F5DE389F843 /* CollectionViewCell.swift in Sources */,
-				D9AE3106F58D972D2BC2F347 /* ViewController.swift in Sources */,
-				ADFD2584673E361712955C3B /* NavigationController.swift in Sources */,
-				BCFF43CFCD2E2DBB693154C2 /* HomePageViewController.swift in Sources */,
-				A8C1FA6C39E0C2180AF758F3 /* HomePageContinueWatchingCell.swift in Sources */,
-				FFF17628AAF63C16006ECCFD /* HomePageFunctionCell.swift in Sources */,
-				6EB80C7279979EE788FA335E /* HomePageSectionHeaderView.swift in Sources */,
-				B47F3D3925BFC5342FA09DB5 /* TimelineViewController.swift in Sources */,
-				D4BD204182378FBBA944D961 /* TimelineItemCell.swift in Sources */,
-				45219BFA8604A20D848DC04A /* FavoriteViewController.swift in Sources */,
-				8D0C6085E1C02D0E22FC87C6 /* FavoriteItemCell.swift in Sources */,
-				3952CD81220FD9C95CAD9E65 /* BangumiDetailViewController.swift in Sources */,
-				EBAD987ED5C573A3AE405335 /* FileBrowserViewController.swift in Sources */,
-				78AE214A5C53D7B492802118 /* SearchViewController.swift in Sources */,
-				1FB4D7577A6199ED2AC4FE78 /* SettingViewController.swift in Sources */,
-				36042E66D19580680D2FABFC /* FileBrowserViewController.swift in Sources */,
-				539755556C6177F7C0C81669 /* FileListCell.swift in Sources */,
-				46E7BE8DA0AFF0E19508092E /* PlayerViewController.swift in Sources */,
-				A99D3DD5E6D989FF9411AA95 /* EpisodeCell.swift in Sources */,
-				AF86739D0B6E1C9E81503E53 /* MatchsViewController.swift in Sources */,
-				2BE97A948E2F20E51B9FE843 /* MatchCell.swift in Sources */,
-				DA9125D17DC7D86650376F27 /* SearchResultCell.swift in Sources */,
-				E1B2ADD2AEDCF8FD8CDCE29C /* SwitchSettingCell.swift in Sources */,
-				D95EC2CDE9593631C50A6110 /* NavigationSettingCell.swift in Sources */,
-				923ED09127CDDDF3B25775D2 /* SetMainColorViewController.swift in Sources */,
-				6382B3F594E1CD1B53C7479B /* MainColorCell.swift in Sources */,
-				D118C555FCD59EF335E3BF9B /* PlayerControlBar.swift in Sources */,
+				728D3F27008FB938A32623FB /* AniXPlayer/Vendor/Base/View/Button.swift in Sources */,
+				632B826A17231524B8F0CB0C /* AniXPlayer/Vendor/Base/View/Label.swift in Sources */,
+				FE62CA20A761B8B8C2CAE8D2 /* AniXPlayer/Vendor/Base/View/TableView.swift in Sources */,
+				FA91ECEEDDC39D59E2DB0F71 /* AniXPlayer/Vendor/Base/View/CollectionView.swift in Sources */,
+				4285A2A0454DF4D855D1858D /* AniXPlayer/Vendor/Base/View/TableViewCell.swift in Sources */,
+				4ED6C23110911F5DE389F843 /* AniXPlayer/Vendor/Base/View/CollectionViewCell.swift in Sources */,
+				D9AE3106F58D972D2BC2F347 /* AniXPlayer/Vendor/Base/ViewController/ViewController.swift in Sources */,
+				ADFD2584673E361712955C3B /* AniXPlayer/Vendor/Base/ViewController/NavigationController.swift in Sources */,
+				BCFF43CFCD2E2DBB693154C2 /* AniXPlayer/HomePage/HomePageViewController.swift in Sources */,
+				A8C1FA6C39E0C2180AF758F3 /* AniXPlayer/HomePage/Cell/HomePageContinueWatchingCell.swift in Sources */,
+				FFF17628AAF63C16006ECCFD /* AniXPlayer/HomePage/Cell/HomePageFunctionCell.swift in Sources */,
+				6EB80C7279979EE788FA335E /* AniXPlayer/HomePage/Cell/HomePageSectionHeaderView.swift in Sources */,
+				B47F3D3925BFC5342FA09DB5 /* AniXPlayer/HomePage/Timeline/TimelineViewController.swift in Sources */,
+				D4BD204182378FBBA944D961 /* AniXPlayer/HomePage/Timeline/TimelineItemCell.swift in Sources */,
+				45219BFA8604A20D848DC04A /* AniXPlayer/HomePage/Favorite/FavoriteViewController.swift in Sources */,
+				8D0C6085E1C02D0E22FC87C6 /* AniXPlayer/HomePage/Favorite/FavoriteItemCell.swift in Sources */,
+				3952CD81220FD9C95CAD9E65 /* AniXPlayer/BangumiDetail/BangumiDetailViewController.swift in Sources */,
+				EBAD987ED5C573A3AE405335 /* AniXPlayer/FileBrowser/FileBrowserViewController.swift in Sources */,
+				78AE214A5C53D7B492802118 /* AniXPlayer/Search/SearchViewController.swift in Sources */,
+				1FB4D7577A6199ED2AC4FE78 /* AniXPlayer/Setting/SettingViewController.swift in Sources */,
+				36042E66D19580680D2FABFC /* AniXPlayer/FileBrowser/FileBrowserViewController.swift in Sources */,
+				539755556C6177F7C0C81669 /* AniXPlayer/FileBrowser/FileListCell.swift in Sources */,
+				46E7BE8DA0AFF0E19508092E /* AniXPlayer/Player/PlayerViewController.swift in Sources */,
+				A99D3DD5E6D989FF9411AA95 /* AniXPlayer/BangumiDetail/EpisodeCell.swift in Sources */,
+				AF86739D0B6E1C9E81503E53 /* AniXPlayer/Match/MatchsViewController.swift in Sources */,
+				2BE97A948E2F20E51B9FE843 /* AniXPlayer/Match/MatchCell.swift in Sources */,
+				DA9125D17DC7D86650376F27 /* AniXPlayer/Search/SearchResultCell.swift in Sources */,
+				E1B2ADD2AEDCF8FD8CDCE29C /* AniXPlayer/Setting/SwitchSettingCell.swift in Sources */,
+				D95EC2CDE9593631C50A6110 /* AniXPlayer/Setting/NavigationSettingCell.swift in Sources */,
+				923ED09127CDDDF3B25775D2 /* AniXPlayer/Setting/SetMainColorViewController.swift in Sources */,
+				6382B3F594E1CD1B53C7479B /* AniXPlayer/Setting/MainColorCell.swift in Sources */,
+				D118C555FCD59EF335E3BF9B /* AniXPlayer/Player/PlayerControlBar.swift in Sources */,
+				0ABB902AD496AB89BE751832 /* AniXPlayer/Player/PlayerLoadingView.swift in Sources */,
+				05610B7D84052DFF74CD18DB /* ../Share/CocoaShare/Atomic.swift in Sources */,
+				C5E628FEC81C20318F0FEFED /* ../Share/CocoaShare/CacheManager.swift in Sources */,
+				618D2F038DBB8436A29A28B4 /* ../Share/CocoaShare/Danmaku.swift in Sources */,
+				86D359F7FB4374EDD201682B /* ../Share/CocoaShare/DanmakuManager.swift in Sources */,
+				8585CFF06996364427BB6F12 /* ../Share/CocoaShare/Define.swift in Sources */,
+				F17494B4F51855FB5DD92C17 /* ../Share/CocoaShare/Enum.swift in Sources */,
+				F28CBF8F465711E5222FC6E7 /* ../Share/CocoaShare/HistoryManager.swift in Sources */,
+				C77FD66923EAB0C8DFA6A721 /* ../Share/CocoaShare/Launcher.swift in Sources */,
+				9EBD159AB86162966F2008FF /* ../Share/CocoaShare/MediaPlayer/File/FTPFile.swift in Sources */,
+				D0D221C1597AC8586C3DC83A /* ../Share/CocoaShare/MediaPlayer/File/File.swift in Sources */,
+				13A65C01DD02C0753A403641 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/FTPFileManager.swift in Sources */,
+				9F2F56CC5194982051272215 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/FileManagerProtocol.swift in Sources */,
+				349CA0440847DAB3815692BC /* ../Share/CocoaShare/MediaPlayer/File/FileManager/LocalFileManager.swift in Sources */,
+				07997626354B6D50395F8FE4 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCLibraryModel.swift in Sources */,
+				884815B6DF722D60423B8615 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCQRModel.swift in Sources */,
+				D8BDBE0DFA045F20511D6DA5 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCSubtitleModel.swift in Sources */,
+				74B438CE0EC5EC28AA2D2825 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/Model/PCWelcomeModel.swift in Sources */,
+				C739C3BE67F105F02AC95902 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/PC/PCFileManager.swift in Sources */,
+				C5FE94BD0978EDFBB034E5D0 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/SMBFileManager.swift in Sources */,
+				55136BB7452840C431056700 /* ../Share/CocoaShare/MediaPlayer/File/FileManager/WebDav/WebDavFileManager.swift in Sources */,
+				8A826413D9B9C7C6CD574386 /* ../Share/CocoaShare/MediaPlayer/File/LocalFile.swift in Sources */,
+				38B8D6E16AD3383BFB17608B /* ../Share/CocoaShare/MediaPlayer/File/PCFile.swift in Sources */,
+				E2E151FDAC60A236114DF9E2 /* ../Share/CocoaShare/MediaPlayer/File/SMBFile.swift in Sources */,
+				D169C9CDA4856476E9625703 /* ../Share/CocoaShare/MediaPlayer/File/WebDAVInputStream.swift in Sources */,
+				DF8687792558E0530E00C0C0 /* ../Share/CocoaShare/MediaPlayer/File/WebDavFile.swift in Sources */,
+				F36FFF5ADE89B7B5E858B5E9 /* ../Share/CocoaShare/MediaPlayer/MediaPlayer.swift in Sources */,
+				D635EEA4CC262F2438CE8DD5 /* ../Share/CocoaShare/MediaPlayer/MediaThumbnailer.swift in Sources */,
+				53B879C877B14A069A25CB8F /* ../Share/CocoaShare/MediaPlayer/URL+Extension.swift in Sources */,
+				1B522470FC6CDC2CEE589398 /* ../Share/CocoaShare/MediaPlayer/Wrapper/MPV.swift in Sources */,
+				F48051913E35546FCF28BB6D /* ../Share/CocoaShare/MediaPlayer/Wrapper/MPVPlayerWrapper.swift in Sources */,
+				8AB177939C9D42A371BB73B1 /* ../Share/CocoaShare/MediaPlayer/Wrapper/VLCPlayerWrapper.swift in Sources */,
+				42F6C08A44BC7A61BA0D2136 /* ../Share/CocoaShare/Model/GlobalSetting/GlobalSettingModel.swift in Sources */,
+				C8BA80DF8E5991401074EBB7 /* ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuContext.swift in Sources */,
+				CE3786B8AEF3957FFBFB95B1 /* ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuModel.swift in Sources */,
+				26AAC167DEE92843B076B5FC /* ../Share/CocoaShare/Model/Player/Danmaku/PlayerDanmakuProducer.swift in Sources */,
+				0DE9422690259073FF7E0A98 /* ../Share/CocoaShare/Model/Player/MatchInfo.swift in Sources */,
+				0DEE93781A635EF53D268FA3 /* ../Share/CocoaShare/Model/Player/Media/MediaSettingInfo.swift in Sources */,
+				16793B1886213CD888BCC557 /* ../Share/CocoaShare/Model/Player/Media/PlayerMediaContext.swift in Sources */,
+				D2DA5771A26E6235EA87ECCC /* ../Share/CocoaShare/Model/Player/Media/PlayerMediaModel.swift in Sources */,
+				94576D1E33C9155241F1BC70 /* ../Share/CocoaShare/Model/Player/PlayerModel.swift in Sources */,
+				0C1F2C6F617D39DF73A6441D /* ../Share/CocoaShare/Networking/AppKey.swift in Sources */,
+				9A8450C2169EA5C3A66148A9 /* ../Share/CocoaShare/Networking/Bangumi/Bangumi.swift in Sources */,
+				BAB1C44DAB3626587699D179 /* ../Share/CocoaShare/Networking/Bangumi/BangumiNetworkHandle.swift in Sources */,
+				072C18F0B612F74FD2A79173 /* ../Share/CocoaShare/Networking/Comment/Comment.swift in Sources */,
+				DA8F59BF6FDA53A0396BD1D3 /* ../Share/CocoaShare/Networking/Comment/CommentNetworkHandle.swift in Sources */,
+				D73A90359DD48CAF23773AF8 /* ../Share/CocoaShare/Networking/Config/ConfigNetworkHandle.swift in Sources */,
+				01C33CBE33EB994C700C20F6 /* ../Share/CocoaShare/Networking/Config/IPModel.swift in Sources */,
+				2D9460A010F51121D2BF8EE5 /* ../Share/CocoaShare/Networking/Config/UpdateInfo.swift in Sources */,
+				ED71D7C7EB9271D57E345A0E /* ../Share/CocoaShare/Networking/Favorite/Favorite.swift in Sources */,
+				267713D4DEC2CD8AB04DE5E6 /* ../Share/CocoaShare/Networking/Favorite/FavoriteNetworkHandle.swift in Sources */,
+				A3564C48144F8179A7B5511A /* ../Share/CocoaShare/Networking/HomePage/HomePage.swift in Sources */,
+				043CAE3BB2E7F9D9B0F57616 /* ../Share/CocoaShare/Networking/HomePage/HomePageNetworkHandle.swift in Sources */,
+				A1B3629A0B9661020927E39B /* ../Share/CocoaShare/Networking/Match/Match.swift in Sources */,
+				C0714C57128DC2E5EFB7AD75 /* ../Share/CocoaShare/Networking/Match/MatchNetworkHandle.swift in Sources */,
+				4007525956FF0DF65AE91CF5 /* ../Share/CocoaShare/Networking/Model/Response.swift in Sources */,
+				ACFB437053D1041C0C881E8A /* ../Share/CocoaShare/Networking/NetworkManager.swift in Sources */,
+				50F75B492DB910DF939A4403 /* ../Share/CocoaShare/Networking/Search/Search.swift in Sources */,
+				A60FB99A34807DB77EC43AD5 /* ../Share/CocoaShare/Networking/Search/SearchNetworkHandle.swift in Sources */,
+				5D70F13D7FE33AF649E7C75D /* ../Share/CocoaShare/Networking/User/Login.swift in Sources */,
+				DAA36A28040523C9F251F5FE /* ../Share/CocoaShare/Networking/User/UserNetworkHandle.swift in Sources */,
+				2F092B1EE8925CCE649D8BE6 /* ../Share/CocoaShare/Preferences/Preferences.swift in Sources */,
+				2A523E09AB19EBE3E26F2D50 /* ../Share/CocoaShare/Preferences/Store+Extension.swift in Sources */,
+				0F3488447BD03DD8975DEAA4 /* ../Share/CocoaShare/Preferences/Store.swift in Sources */,
+				B942B4D62E02D76F416F1374 /* ../Share/CocoaShare/SubtitleManager.swift in Sources */,
+				A79B85A232EEB5A2E38BBA90 /* ../Share/CocoaShare/Utils/ANXColor+Utils.swift in Sources */,
+				8729C62BDB923887E0BAA338 /* ../Share/CocoaShare/Utils/AppInfoHelper.swift in Sources */,
+				E043E1C30CE4A9A96249190C /* ../Share/CocoaShare/Utils/CryptoHelper.swift in Sources */,
+				EF71A57A8F6E61305C19AFF4 /* ../Share/CocoaShare/Utils/DateFormatter+Helper.swift.swift in Sources */,
+				5D88B45AB7F3E9E0BD06AFA3 /* ../Share/CocoaShare/Utils/Decodable+Utils.swift in Sources */,
+				73B03466E8097B6224ED9CC1 /* ../Share/CocoaShare/Utils/Localize.swift in Sources */,
+				4CFE4AB934F761682B8CCD54 /* ../Share/CocoaShare/Utils/NSNotification+Helper.swift in Sources */,
+				45F5E1C0D0B0F9ED765DECF0 /* ../Share/CocoaShare/Utils/NumberUtils.swift in Sources */,
+				B89ACF28DACAB399E4887327 /* ../Share/CocoaShare/Utils/PathUtils.swift in Sources */,
+				0378A80DE8A60E12FE1DB4C3 /* ../Share/CocoaShare/Utils/SMBServiceBrowser.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1323,11 +1623,11 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		8951524A2FBE023C00F75DB7 /* XCLocalSwiftPackageReference "DanmakuRender-Swift" */ = {
+		8951524A2FBE023C00F75DB7 /* XCLocalSwiftPackageReference "../../DanmakuRender-Swift" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = "../../DanmakuRender-Swift";
 		};
-		8951524D2FBE042500F75DB7 /* XCLocalSwiftPackageReference "TVVLCKit" */ = {
+		8951524D2FBE042500F75DB7 /* XCLocalSwiftPackageReference "../Share/TVVLCKit" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Share/TVVLCKit;
 		};

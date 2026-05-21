@@ -6,7 +6,7 @@
 //
 
 import Foundation
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 import DanmakuRender
 #endif
 
@@ -246,7 +246,7 @@ enum GlobalSettingType: CaseIterable {
     }
 }
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 extension DanmakuEffectStyle {
     var title: String {
         switch self {

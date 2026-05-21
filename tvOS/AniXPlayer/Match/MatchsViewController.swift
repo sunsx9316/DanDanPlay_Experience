@@ -2,17 +2,21 @@
 //  MatchsViewController.swift
 //  AniXPlayer
 //
-//  tvOS 弹幕匹配页面
+//  tvOS 弹幕匹配页面 — 展示匹配列表，选择后通过 PlayerModel 加载弹幕并播放
 //
 
 import UIKit
 import SnapKit
+import RxSwift
 
 class MatchsViewController: ViewController {
 
-    var file: File?
+    private let collection: MatchCollection
+    private let media: File
+    private let playerModel: PlayerModel
 
     private var matches: [Match] = []
+    private let bag = DisposeBag()
 
     private lazy var tableView: TableView = {
         let tv = TableView(frame: .zero, style: .plain)
@@ -23,29 +27,27 @@ class MatchsViewController: ViewController {
         return tv
     }()
 
-    private let loadingIndicator: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .large)
-        indicator.hidesWhenStopped = true
-        indicator.color = .white
-        return indicator
-    }()
+    init(collection: MatchCollection, media: File, playerModel: PlayerModel) {
+        self.collection = collection
+        self.media = media
+        self.playerModel = playerModel
+        self.matches = collection.collection
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = NSLocalizedString("弹幕匹配", comment: "")
+        self.title = NSLocalizedString("选择弹幕匹配", comment: "")
 
         self.view.addSubview(tableView)
-        self.view.addSubview(loadingIndicator)
 
         tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-
-        loadingIndicator.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-        }
-
-        startMatching()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -53,26 +55,11 @@ class MatchsViewController: ViewController {
         self.defaultFocusView = tableView
     }
 
-    private func startMatching() {
-        guard let file = file else { return }
-
-        loadingIndicator.startAnimating()
-        MatchNetworkHandle.match(with: file) { [weak self] collection, error in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.loadingIndicator.stopAnimating()
-                if let collection = collection {
-                    self.matches = collection.collection
-                    self.tableView.reloadData()
-                }
-            }
-        }
-    }
-
     private func selectMatch(_ match: Match) {
-        // TODO: Phase 9 — 加载弹幕并开始播放
-        let playerVC = PlayerViewController()
-        self.present(playerVC, animated: true)
+        self.dismiss(animated: true) { [weak self] in
+            guard let self = self else { return }
+            _ = self.playerModel.didMatchMedia(self.media, matchInfo: match).subscribe()
+        }
     }
 }
 

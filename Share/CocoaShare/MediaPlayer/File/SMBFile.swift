@@ -5,7 +5,7 @@
 //  Created by jimhuang on 2021/4/29.
 //
 
-#if os(iOS) || os(tvOS)
+#if os(iOS)
 
 import Foundation
 import ANXLog

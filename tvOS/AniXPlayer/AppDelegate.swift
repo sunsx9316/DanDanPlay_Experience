@@ -10,6 +10,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         Launcher.launch()
 
+        ANX.logInfo(.player, "[App] Documents 路径: \(PathUtils.documentsURL.path)")
+
         setupUI()
 
         self.window = UIWindow(frame: UIScreen.main.bounds)

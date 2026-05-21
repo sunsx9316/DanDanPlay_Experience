@@ -2,12 +2,13 @@
 //  PlayerViewController.swift
 //  AniXPlayer
 //
-//  tvOS 播放器 — VLC 视频渲染 + Siri Remote 事件 + 控制栏
+//  tvOS 播放器 — PlayerModel 串联 match → danmaku → play 全流程 + Siri Remote 事件 + 控制栏
 //
 
 import UIKit
 import SnapKit
 import RxSwift
+import ANXLog
 
 class PlayerViewController: ViewController {
 
@@ -16,21 +17,32 @@ class PlayerViewController: ViewController {
     var file: File? {
         didSet {
             guard let file = file else { return }
-            mediaPlayer.play(file)
+            playerModel.tryParseMedia(file)
         }
     }
 
-    private let mediaPlayer = MediaPlayer(coreType: .vlc)
+    private lazy var playerModel = PlayerModel()
+    private var mediaModel: PlayerMediaModel { playerModel.mediaModel }
+    private var danmakuModel: PlayerDanmakuModel { playerModel.danmakuModel }
+
     private let bag = DisposeBag()
 
     private var isControlBarVisible = true
     private var autoHideTimer: Timer?
     private var seekStep: Double = 10
+    private var loadingView: PlayerLoadingView?
 
     // MARK: - UI
 
     private lazy var mediaView: UIView = {
-        return mediaPlayer.mediaView
+        return mediaModel.mediaView
+    }()
+
+    private lazy var danmakuCanvas: UIView = {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.clipsToBounds = true
+        return view
     }()
 
     private lazy var controlBar: PlayerControlBar = {
@@ -73,10 +85,20 @@ class PlayerViewController: ViewController {
         self.view.backgroundColor = .black
 
         view.addSubview(mediaView)
+        view.addSubview(danmakuCanvas)
+        danmakuCanvas.addSubview(danmakuModel.danmakuView)
         view.addSubview(controlBar)
         view.addSubview(seekHUDLabel)
 
         mediaView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+
+        danmakuCanvas.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+
+        danmakuModel.danmakuView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
 
@@ -89,7 +111,7 @@ class PlayerViewController: ViewController {
             make.center.equalToSuperview()
         }
 
-        setupPlayerCallbacks()
+        bindModel()
         showControlBar()
     }
 
@@ -99,7 +121,7 @@ class PlayerViewController: ViewController {
     }
 
     deinit {
-        mediaPlayer.stop()
+        playerModel.mediaModel.terminate()
     }
 
     // MARK: - Siri Remote / Press Events
@@ -115,7 +137,6 @@ class PlayerViewController: ViewController {
         switch press.type {
         case .select:
             selectPressBeganTime = Date().timeIntervalSince1970
-            // Don't consume — let focused button handle if control bar is visible
 
         case .menu:
             dismissPlayer()
@@ -139,10 +160,8 @@ class PlayerViewController: ViewController {
             let duration = Date().timeIntervalSince1970 - selectPressBeganTime
 
             if duration >= 1.0 {
-                // Long press → show speed menu
                 showSpeedMenu()
             } else if !controlBarHasFocus {
-                // Short press with no control focus → toggle control bar
                 if isControlBarVisible {
                     hideControlBar()
                 } else {
@@ -181,36 +200,36 @@ class PlayerViewController: ViewController {
     // MARK: - Playback Control
 
     private func togglePlayPause() {
-        if mediaPlayer.isPlaying {
-            mediaPlayer.pause()
-        } else {
-            mediaPlayer.play()
-        }
+        mediaModel.changePlayState()
     }
 
     private func seek(by seconds: Double) {
-        let currentTime = mediaPlayer.currentTime
-        let totalLength = mediaPlayer.length
+        let currentTime = mediaModel.currentTime
+        let totalLength = mediaModel.length
         let newTime = max(0, min(currentTime + seconds, totalLength))
         let position = totalLength > 0 ? newTime / totalLength : 0
-        mediaPlayer.setPosition(position)
+        playerModel.changePosition(CGFloat(position))
         showSeekHUD(seconds: seconds)
     }
 
     private func dismissPlayer() {
         autoHideTimer?.invalidate()
-        mediaPlayer.pause()
+        mediaModel.pause()
         self.dismiss(animated: true)
     }
 
     private func toggleDanmaku(_ isOn: Bool) {
-        // tvOS danmaku limited — skip for now
+        danmakuModel.onChangeIsShowDanmaku(isOn)
     }
 
     private func showSettings() {
         let vc = UIAlertController(title: NSLocalizedString("播放设置", comment: ""), message: nil, preferredStyle: .alert)
         vc.addAction(UIAlertAction(title: NSLocalizedString("倍速", comment: ""), style: .default) { [weak self] _ in
             self?.showSpeedMenu()
+        })
+        vc.addAction(UIAlertAction(title: NSLocalizedString("弹幕开关", comment: ""), style: .default) { [weak self] _ in
+            let isOn = self?.danmakuModel.isShowDanmaku ?? true
+            self?.toggleDanmaku(!isOn)
         })
         vc.addAction(UIAlertAction(title: NSLocalizedString("取消", comment: ""), style: .cancel))
         present(vc, animated: true)
@@ -220,7 +239,7 @@ class PlayerViewController: ViewController {
         let vc = UIAlertController(title: NSLocalizedString("播放倍速", comment: ""), message: nil, preferredStyle: .actionSheet)
         for speed in [0.5, 0.75, 1.0, 1.25, 1.5, 2.0] {
             vc.addAction(UIAlertAction(title: "\(speed)x", style: .default) { [weak self] _ in
-                self?.mediaPlayer.speed = speed
+                self?.playerModel.changeSpeed(speed)
             })
         }
         vc.addAction(UIAlertAction(title: NSLocalizedString("取消", comment: ""), style: .cancel))
@@ -264,30 +283,91 @@ class PlayerViewController: ViewController {
         })
     }
 
-    // MARK: - Player Callbacks
+    // MARK: - PlayerModel Bindings
 
-    private func setupPlayerCallbacks() {
-        mediaPlayer.delegate = self
+    private func bindModel() {
+        // 加载状态
+        playerModel.parseMediaState.subscribe(onNext: { [weak self] event in
+            guard let self = self else { return }
+            self.handleMediaLoadEvent(event)
+        }).disposed(by: bag)
+
+        // 播放状态 → 控制栏
+        mediaModel.context.isPlay.subscribe(onNext: { [weak self] isPlay in
+            self?.controlBar.updatePlayState(isPlaying: isPlay)
+        }).disposed(by: bag)
+
+        // 弹幕开关
+        danmakuModel.context.isShowDanmaku.subscribe(onNext: { [weak self] isShow in
+            ANX.logInfo(.player, "[PlayerVC] 弹幕开关: \(isShow)")
+            self?.danmakuCanvas.isHidden = !isShow
+        }).disposed(by: bag)
+
+        // 弹幕透明度
+//        danmakuModel.context.danmakuAlpha.subscribe(onNext: { [weak self] alpha in
+//            self?.danmakuCanvas.alpha = CGFloat(alpha)
+//        }).disposed(by: bag)
     }
-}
 
-// MARK: - MediaPlayerDelegate
+    private func handleMediaLoadEvent(_ event: RxSwift.Event<PlayerModel.MediaLoadState>) {
+        switch event {
+        case .next(let state):
+            if loadingView == nil {
+                let lv = PlayerLoadingView()
+                view.addSubview(lv)
+                lv.snp.makeConstraints { make in make.edges.equalToSuperview() }
+                loadingView = lv
+            }
 
-extension PlayerViewController: MediaPlayerDelegate {
+            switch state {
+            case .parse(let loadingState, let progress):
+                let text: String
+                switch loadingState {
+                case .parseMedia:
+                    text = NSLocalizedString("解析媒体中...", comment: "")
+                case .downloadLocalDanmaku:
+                    text = NSLocalizedString("加载本地弹幕中...", comment: "")
+                case .matchMedia:
+                    text = NSLocalizedString("匹配弹幕中...", comment: "")
+                case .downloadDanmaku:
+                    text = NSLocalizedString("下载弹幕中...", comment: "")
+                }
+                loadingView?.update(text: text)
+            case .filterDanmaku:
+                loadingView?.update(text: NSLocalizedString("解析弹幕中...", comment: ""))
+            case .subtitle:
+                loadingView?.update(text: NSLocalizedString("加载字幕中...", comment: ""))
+            case .lastWatchProgress:
+                loadingView?.dismiss()
+                loadingView = nil
+            }
 
-    func player(_ player: MediaPlayer, currentTime: TimeInterval, totalTime: TimeInterval) {}
+        case .error(let error):
+            loadingView?.dismiss()
+            loadingView = nil
+            handleParseError(error)
 
-    func player(_ player: MediaPlayer, stateDidChange state: PlayerState) {
-        DispatchQueue.main.async { [weak self] in
-            self?.controlBar.updatePlayState(isPlaying: state == .playing)
+        case .completed:
+            loadingView?.dismiss()
+            loadingView = nil
         }
     }
 
-    func player(_ player: MediaPlayer, shouldChangeMedia media: File) -> Bool {
-        return true
+    private func handleParseError(_ error: Error) {
+        if let parseError = error as? PlayerModel.ParseError {
+            switch parseError {
+            case .matched(let collection, let media):
+                let vc = MatchsViewController(collection: collection, media: media, playerModel: playerModel)
+                self.present(vc, animated: true)
+            case .notMatchedDanmaku:
+                let alert = UIAlertController(title: nil, message: error.localizedDescription, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: NSLocalizedString("确定", comment: ""), style: .default))
+                present(alert, animated: true)
+            }
+        } else {
+            let alert = UIAlertController(title: nil, message: error.localizedDescription, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: NSLocalizedString("确定", comment: ""), style: .default))
+            present(alert, animated: true)
+        }
     }
-
-    func player(_ player: MediaPlayer, file: File, bufferInfoDidChange bufferInfo: MediaBufferInfo) {}
-
-    func playerListDidChange(_ player: MediaPlayer) {}
 }

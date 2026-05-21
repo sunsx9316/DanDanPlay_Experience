@@ -5,7 +5,7 @@
 //  Created by jimhuang on 2021/3/2.
 //
 
-#if os(iOS) || os(tvOS)
+#if os(iOS)
 
 import UIKit
 #if os(iOS)

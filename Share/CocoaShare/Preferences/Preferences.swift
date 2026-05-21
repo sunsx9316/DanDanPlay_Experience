@@ -7,7 +7,7 @@
 //
 
 import Foundation
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 import DanmakuRender
 #endif
 
@@ -335,7 +335,7 @@ class Preferences {
     @StoreWrapper(defaultValue: 10, key: .danmakuDensity)
     var danmakuDensity: Float
     
-#if os(iOS)
+#if os(iOS) || os(tvOS)
     /// 弹幕边缘样式
     @StoreWrapper(defaultValue: DanmakuEffectStyle.stroke, key: .danmakuEffectStyle)
     var danmakuEffectStyle: DanmakuEffectStyle

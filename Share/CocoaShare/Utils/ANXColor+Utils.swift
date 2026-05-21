@@ -9,8 +9,16 @@ import Foundation
 
 #if os(tvOS)
 extension ANXColor {
+    convenience init(red: Int, green: Int, blue: Int, alpha: CGFloat = 1) {
+        self.init(red: CGFloat(red) / 255, green: CGFloat(green) / 255, blue: CGFloat(blue) / 255, alpha: alpha)
+    }
+
     static var defaultMainColor: ANXColor {
         return ANXColor(anxRgb: 0x14B409)
+    }
+
+    static var mainColor: ANXColor {
+        return Preferences.shared.mainColor
     }
 }
 #endif

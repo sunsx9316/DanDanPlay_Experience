@@ -7,12 +7,14 @@
 //
 
 import Foundation
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 import DanmakuRender
-import YYCategories
 
 typealias DanmakuEntity = (BaseDanmaku & DanmakuInfoProtocol)
 typealias DanmakuMapResult = [UInt : [DanmakuEntity]]
+#endif
+#if os(iOS)
+import YYCategories
 #endif
 import ANXLog
 typealias LoadingProgressAction = ((LoadingState) -> Void)
@@ -61,7 +63,7 @@ class DanmakuManager {
     ///   - progress: 进度
     ///   - matchCompletion: 当匹配多个视频时会进行回调
     ///   - danmakuCompletion: 弹幕加载回调
-#if os(iOS)
+#if os(iOS) || os(tvOS)
     func loadDanmaku(_ media: File,
                      progress: LoadingProgressAction?,
                      matchCompletion: @escaping((MatchCollection?, Error?) -> Void),
@@ -91,6 +93,7 @@ class DanmakuManager {
                                      progress: LoadingProgressAction?,
                                      matchCompletion: @escaping((MatchCollection?, Error?) -> Void),
                                      danmakuCompletion: @escaping((DanmakuMapResult?, _ matchInfo: Match?, Error?) -> Void)) {
+#if os(iOS)
         if Preferences.shared.autoLoadCustomDanmaku {
             progress?(.downloadLocalDanmaku)
 
@@ -129,6 +132,11 @@ class DanmakuManager {
                 danmakuCompletion(DanmakuManager.shared.conver(collection?.collection ?? []), episodeId, error)
             }
         }
+#else
+        MatchNetworkHandle.matchAndGetDanmakuWithFile(media, progress: progress, matchCompletion: matchCompletion) { collection, episodeId, error in
+            danmakuCompletion(DanmakuManager.shared.conver(collection?.collection ?? []), episodeId, error)
+        }
+#endif
     }
 #endif
 
@@ -167,7 +175,9 @@ class DanmakuManager {
             throw error
         }
     }
-    
+#endif
+
+#if os(iOS) || os(tvOS)
     /// 将弹幕数组转换为map
     /// - Parameter danmakus: 弹幕数组
     /// - Returns: map
@@ -181,13 +191,13 @@ class DanmakuManager {
             if dic[intTime] == nil {
                 dic[intTime] = [DanmakuEntity]()
             }
-            
+
             dic[intTime]?.append(self.conver(model))
         }
-        
+
         return dic
     }
-    
+
         /// 根据视频查找本地弹幕
         /// - Parameters:
         ///   - media: 视频
@@ -202,7 +212,7 @@ class DanmakuManager {
             }
         }
     }
-    
+
         /// 将弹幕数据转为可播放的弹幕模型
         /// - Parameter model: 弹幕数据
         /// - Returns: 弹幕模型

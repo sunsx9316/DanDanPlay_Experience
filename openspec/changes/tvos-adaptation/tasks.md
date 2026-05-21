@@ -1,15 +1,15 @@
 ## 1. 工程搭建
 
-- [ ] 1.1 创建 `tvOS/` 目录结构：`AniXPlayer/` 源码目录、`Podfile`、目录框架
-- [ ] 1.2 编写 tvOS `Podfile`（platform :tvos, '13.0'），配置 MMKV、AMSMB2、GCDWebServer、ANXLog
-- [ ] 1.3 运行 `pod install`，生成 `AniXPlayer.xcworkspace`
-- [ ] 1.4 创建 tvOS Xcode 工程：target 配置（SDKROOT=appletvos, deployment target=13.0, device family=3）
-- [ ] 1.5 创建 `Info.plist`：移除 iOS 专用 Key，保留 Bonjour、ATS 配置
-- [ ] 1.6 通过相对路径引用 `Share/CocoaShare/` 源文件到 tvOS target
-- [ ] 1.7 将 `Share/TVVLCKit/` 集成到工程（SPM 本地包或直接链接 xcframework）
-- [ ] 1.8 更新 `Share/ANXLog/Package.swift`，添加 `.tvOS(.v13)` 平台声明
-- [ ] 1.9 处理 ANXLog mars.framework 缺失问题（条件编译降级为 os_log）
-- [ ] 1.10 验证编译：`xcodebuild` tvOS 工程能成功编译
+- [x] 1.1 创建 `tvOS/` 目录结构：`AniXPlayer/` 源码目录、`Podfile`、目录框架
+- [x] 1.2 编写 tvOS `Podfile`（platform :tvos, '13.0'），配置 MMKV、AMSMB2、GCDWebServer、ANXLog
+- [x] 1.3 运行 `pod install`，生成 `AniXPlayer.xcworkspace`
+- [x] 1.4 创建 tvOS Xcode 工程：target 配置（SDKROOT=appletvos, deployment target=13.0, device family=3）
+- [x] 1.5 创建 `Info.plist`：移除 iOS 专用 Key，保留 Bonjour、ATS 配置
+- [x] 1.6 通过相对路径引用 `Share/CocoaShare/` 源文件到 tvOS target
+- [x] 1.7 将 `Share/TVVLCKit/` 集成到工程（SPM 本地包或直接链接 xcframework）
+- [x] 1.8 更新 `Share/ANXLog/Package.swift`，添加 `.tvOS(.v13)` 平台声明
+- [x] 1.9 处理 ANXLog mars.framework 缺失问题（条件编译降级为 os_log）
+- [x] 1.10 验证编译：`xcodebuild` tvOS 工程能成功编译
 
 ## 2. 基类和焦点引擎
 
@@ -87,8 +87,8 @@
 - [x] 9.11 创建播放器设置面板（alert-based 倍速选择）
 - [x] 9.12 实现长按 Click 弹出倍速选择菜单（1s 长按）
 - [x] 9.13 集成 VLCPlayerWrapper（仅 VLC 内核，不做 MPV）
-- [x] 9.14 弹幕渲染（DanmakuRender 为 iOS-only，tvOS 暂不支持）
-- [x] 9.15 弹幕显示限制（tvOS 暂无弹幕渲染）
+- [x] 9.14 弹幕渲染：集成 DanmakuRender-Swift（本地 SPM，已添加 `.tvOS(.v12)` 平台声明）
+- [x] 9.15 弹幕显示：PlayerModel 串联 match → danmaku → play 全流程，控制栏弹幕开关可用
 
 ## 10. 收尾
 

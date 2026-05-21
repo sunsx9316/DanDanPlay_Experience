@@ -129,7 +129,7 @@ class PlayerDanmakuProducer {
             guard let text = filterDanmaku.text, filterDanmaku.isEnable else { continue }
             
             if filterDanmaku.isRegularExp {
-                if danmaku.text.matchesRegex(text, options: []) {
+                if danmaku.text.range(of: text, options: .regularExpression) != nil {
                     return true
                 }
             } else {

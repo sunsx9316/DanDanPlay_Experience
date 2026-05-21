@@ -6,7 +6,7 @@
 //
 
 import Foundation
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 import RxSwift
 import DanmakuRender
 

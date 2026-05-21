@@ -42,7 +42,7 @@ class LocalFileManager: FileManagerProtocol {
     
     func contentsOfDirectory(at directory: File, filterType: URLFilterType?, completion: @escaping ((Result<[File], Error>) -> Void)) {
         do {
-            
+
             let url = directory.url
             let urls = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
             

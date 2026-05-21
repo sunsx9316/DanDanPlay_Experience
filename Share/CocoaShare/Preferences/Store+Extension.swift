@@ -6,10 +6,13 @@
 //
 
 import Foundation
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 import DanmakuRender
+#endif
+#if os(iOS)
 import YYCategories
-#elseif os(tvOS)
+#endif
+#if os(tvOS)
 import UIKit
 #endif
 
@@ -160,7 +163,7 @@ extension DanmakuAreaType: Storeable {
 }
 
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 extension DanmakuEffectStyle: Storeable {
     static func create(from: Int) -> DanmakuEffectStyle? {
         let rawValue = from

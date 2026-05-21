@@ -5,7 +5,7 @@
 //  Created by jimhuang on 2021/5/30.
 //
 
-#if os(iOS) || os(tvOS)
+#if os(iOS)
 
 import Foundation
 #if os(iOS)

@@ -5,6 +5,8 @@
 //  Created by jimhuang on 2024/9/27.
 //
 
+#if os(iOS)
+
 import Foundation
 import Network
 
@@ -104,3 +106,5 @@ extension SMBServiceBrowser: NetServiceBrowserDelegate {
     }
 
 }
+
+#endif
