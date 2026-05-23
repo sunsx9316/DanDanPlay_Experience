@@ -25,14 +25,14 @@ class StepperSettingCell: TableViewCell {
 
     private lazy var titleLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 17, weight: .medium)
+        label.font = .ddp_small(weight: .medium)
         label.textColor = .label
         return label
     }()
 
     private lazy var valueLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 15)
+        label.font = .ddp_small()
         label.textColor = .secondaryLabel
         label.textAlignment = .right
         return label
@@ -55,7 +55,7 @@ class StepperSettingCell: TableViewCell {
     private lazy var minusIndicator: UILabel = {
         let label = UILabel()
         label.text = "−"
-        label.font = .systemFont(ofSize: 28, weight: .medium)
+        label.font = .ddp_normal(weight: .medium)
         label.textColor = UIColor.mainColor
         label.textAlignment = .center
         label.alpha = 0
@@ -65,7 +65,7 @@ class StepperSettingCell: TableViewCell {
     private lazy var plusIndicator: UILabel = {
         let label = UILabel()
         label.text = "+"
-        label.font = .systemFont(ofSize: 28, weight: .medium)
+        label.font = .ddp_normal(weight: .medium)
         label.textColor = UIColor.mainColor
         label.textAlignment = .center
         label.alpha = 0

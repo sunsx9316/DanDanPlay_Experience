@@ -14,14 +14,14 @@ class EpisodeCell: TableViewCell {
 
     private lazy var episodeNumberLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 18, weight: .semibold)
+        label.font = .ddp_small(weight: .semibold)
         label.textColor = .secondaryLabel
         return label
     }()
 
     private lazy var episodeTitleLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 17)
+        label.font = .ddp_small()
         label.textColor = .label
         return label
     }()

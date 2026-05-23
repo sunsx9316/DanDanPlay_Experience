@@ -38,7 +38,7 @@ class PlayerToastView: UIView {
     private let label: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.font = .systemFont(ofSize: 40, weight: .medium)
+        label.font = .ddp_large(weight: .medium)
         label.textAlignment = .center
         return label
     }()

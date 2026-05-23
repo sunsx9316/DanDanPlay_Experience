@@ -14,23 +14,31 @@ class MatchCell: TableViewCell {
 
     private lazy var animeTitleLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 22, weight: .medium)
+        label.font = .ddp_small(weight: .medium)
         label.textColor = .label
         return label
     }()
 
     private lazy var episodeTitleLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 18)
+        label.font = .ddp_small()
         label.textColor = .secondaryLabel
         return label
     }()
 
     private lazy var typeLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 15)
+        label.font = .ddp_small()
         label.textColor = .tertiaryLabel
         return label
+    }()
+
+    private lazy var textStack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [animeTitleLabel, episodeTitleLabel, typeLabel])
+        stack.axis = .vertical
+        stack.alignment = .leading
+        stack.spacing = 8
+        return stack
     }()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -44,26 +52,13 @@ class MatchCell: TableViewCell {
     }
 
     private func setupUI() {
-        contentView.addSubview(animeTitleLabel)
-        contentView.addSubview(episodeTitleLabel)
-        contentView.addSubview(typeLabel)
+        contentView.addSubview(textStack)
 
-        animeTitleLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
-            make.top.equalToSuperview().offset(20)
-        }
-
-        episodeTitleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(animeTitleLabel)
-            make.trailing.equalTo(animeTitleLabel)
-            make.top.equalTo(animeTitleLabel.snp.bottom).offset(8)
-        }
-
-        typeLabel.snp.makeConstraints { make in
-            make.leading.equalTo(animeTitleLabel)
-            make.top.equalTo(episodeTitleLabel.snp.bottom).offset(8)
-            make.bottom.equalToSuperview().offset(-20)
+        textStack.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(60)
+            make.trailing.equalToSuperview().offset(-60)
+            make.top.equalToSuperview().offset(24)
+            make.bottom.equalToSuperview().offset(-24)
         }
     }
 

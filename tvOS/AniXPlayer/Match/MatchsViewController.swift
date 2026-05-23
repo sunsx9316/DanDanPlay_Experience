@@ -38,7 +38,7 @@ class MatchsViewController: ViewController {
         let btn = UIButton(type: .system)
         btn.setTitle(NSLocalizedString("搜索弹幕", comment: ""), for: .normal)
         btn.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
-        btn.titleLabel?.font = .systemFont(ofSize: 16)
+        btn.titleLabel?.font = .ddp_small()
         btn.tintColor = UIColor.mainColor
         btn.addTarget(self, action: #selector(onTouchSearchButton), for: .primaryActionTriggered)
         return btn
@@ -48,7 +48,7 @@ class MatchsViewController: ViewController {
         let btn = UIButton(type: .system)
         btn.setTitle(NSLocalizedString("直接播放", comment: ""), for: .normal)
         btn.setImage(UIImage(systemName: "play.fill"), for: .normal)
-        btn.titleLabel?.font = .systemFont(ofSize: 16)
+        btn.titleLabel?.font = .ddp_small()
         btn.tintColor = UIColor.mainColor
         btn.addTarget(self, action: #selector(onTouchPlayNowButton), for: .primaryActionTriggered)
         return btn
@@ -70,7 +70,7 @@ class MatchsViewController: ViewController {
         tv.dataSource = self
         tv.register(MatchCell.self, forCellReuseIdentifier: MatchCell.reuseIdentifier)
         tv.rowHeight = UITableView.automaticDimension
-        tv.estimatedRowHeight = 70
+        tv.estimatedRowHeight = 100
         return tv
     }()
 

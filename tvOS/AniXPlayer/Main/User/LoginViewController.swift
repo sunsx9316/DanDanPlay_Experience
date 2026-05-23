@@ -16,7 +16,7 @@ class LoginViewController: ViewController {
         let tf = UITextField()
         tf.placeholder = NSLocalizedString("用户名", comment: "")
         tf.borderStyle = .roundedRect
-        tf.font = .systemFont(ofSize: 22)
+        tf.font = .ddp_small()
         return tf
     }()
 
@@ -25,14 +25,14 @@ class LoginViewController: ViewController {
         tf.placeholder = NSLocalizedString("密码", comment: "")
         tf.borderStyle = .roundedRect
         tf.isSecureTextEntry = true
-        tf.font = .systemFont(ofSize: 22)
+        tf.font = .ddp_small()
         return tf
     }()
 
     private lazy var loginButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(NSLocalizedString("登录", comment: ""), for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 22, weight: .medium)
+        button.titleLabel?.font = .ddp_small(weight: .medium)
         button.setTitleColor(.white, for: .normal)
         button.setTitleColor(.black, for: .focused)
         button.addTarget(self, action: #selector(loginTapped), for: .primaryActionTriggered)

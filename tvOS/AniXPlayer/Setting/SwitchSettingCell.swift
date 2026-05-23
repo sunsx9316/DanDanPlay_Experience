@@ -20,7 +20,7 @@ class SwitchSettingCell: TableViewCell {
 
     private lazy var titleLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 17, weight: .medium)
+        label.font = .ddp_small(weight: .medium)
         label.textColor = .label
         return label
     }()
@@ -41,7 +41,7 @@ class SwitchSettingCell: TableViewCell {
 
     private lazy var stateLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 15)
+        label.font = .ddp_small()
         label.textColor = .secondaryLabel
         return label
     }()

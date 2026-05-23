@@ -31,7 +31,7 @@ class HomePageFunctionCell: TableViewCell {
     private lazy var timelineButton: UIButton = {
         let btn = UIButton(type: .system)
         btn.setTitle(NSLocalizedString("新番时间表", comment: ""), for: .normal)
-        btn.titleLabel?.font = .systemFont(ofSize: 22, weight: .medium)
+        btn.titleLabel?.font = .ddp_small(weight: .medium)
         btn.setTitleColor(.white, for: .normal)
         btn.setTitleColor(.black, for: .focused)
         btn.addTarget(self, action: #selector(timelineTapped), for: .primaryActionTriggered)
@@ -41,7 +41,7 @@ class HomePageFunctionCell: TableViewCell {
     private lazy var favoriteButton: UIButton = {
         let btn = UIButton(type: .system)
         btn.setTitle(NSLocalizedString("我的关注", comment: ""), for: .normal)
-        btn.titleLabel?.font = .systemFont(ofSize: 22, weight: .medium)
+        btn.titleLabel?.font = .ddp_small(weight: .medium)
         btn.setTitleColor(.white, for: .normal)
         btn.setTitleColor(.black, for: .focused)
         btn.addTarget(self, action: #selector(favoriteTapped), for: .primaryActionTriggered)

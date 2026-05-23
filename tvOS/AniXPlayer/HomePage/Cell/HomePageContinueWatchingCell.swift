@@ -24,7 +24,7 @@ class HomePageContinueWatchingCell: TableViewCell {
 
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 24, weight: .bold)
+        label.font = .ddp_small(weight: .bold)
         label.textColor = .white
         label.text = NSLocalizedString("继续播放", comment: "")
         return label
@@ -99,7 +99,7 @@ extension HomePageContinueWatchingCell {
 
         private lazy var nameLabel: UILabel = {
             let label = UILabel()
-            label.font = .systemFont(ofSize: 17, weight: .medium)
+            label.font = .ddp_small(weight: .medium)
             label.textColor = .white
             label.textAlignment = .center
             label.numberOfLines = 2

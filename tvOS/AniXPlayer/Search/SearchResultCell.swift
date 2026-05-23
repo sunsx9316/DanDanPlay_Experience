@@ -14,16 +14,24 @@ class SearchResultCell: TableViewCell {
 
     private lazy var episodeTitleLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 20, weight: .medium)
+        label.font = .ddp_small(weight: .medium)
         label.textColor = .label
         return label
     }()
 
     private lazy var episodeIdLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 15)
+        label.font = .ddp_small()
         label.textColor = .secondaryLabel
         return label
+    }()
+
+    private lazy var textStack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [episodeTitleLabel, episodeIdLabel])
+        stack.axis = .vertical
+        stack.alignment = .leading
+        stack.spacing = 8
+        return stack
     }()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -37,19 +45,13 @@ class SearchResultCell: TableViewCell {
     }
 
     private func setupUI() {
-        contentView.addSubview(episodeTitleLabel)
-        contentView.addSubview(episodeIdLabel)
+        contentView.addSubview(textStack)
 
-        episodeTitleLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.trailing.equalToSuperview().offset(-20)
-            make.top.equalToSuperview().offset(20)
-        }
-
-        episodeIdLabel.snp.makeConstraints { make in
-            make.leading.equalTo(episodeTitleLabel)
-            make.top.equalTo(episodeTitleLabel.snp.bottom).offset(8)
-            make.bottom.equalToSuperview().offset(-20)
+        textStack.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(60)
+            make.trailing.equalToSuperview().offset(-60)
+            make.top.equalToSuperview().offset(24)
+            make.bottom.equalToSuperview().offset(-24)
         }
     }
 

@@ -89,7 +89,7 @@ extension OptionListViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "OptionCell", for: indexPath)
         let option = options[indexPath.row]
         cell.textLabel?.text = option.title
-        cell.textLabel?.font = .systemFont(ofSize: 18)
+        cell.textLabel?.font = .ddp_small()
         cell.textLabel?.textColor = .label
         cell.accessoryType = indexPath.row == selectedIndex ? .checkmark : .none
         cell.selectionStyle = .none

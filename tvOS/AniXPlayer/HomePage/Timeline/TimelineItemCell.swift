@@ -25,7 +25,7 @@ class TimelineItemCell: CollectionViewCell {
 
     private lazy var titleLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 17, weight: .medium)
+        label.font = .ddp_small(weight: .medium)
         label.textColor = .label
         label.textAlignment = .center
         label.numberOfLines = 2
@@ -34,7 +34,7 @@ class TimelineItemCell: CollectionViewCell {
 
     private lazy var statusLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 13)
+        label.font = .ddp_small()
         label.textColor = .secondaryLabel
         label.textAlignment = .center
         return label

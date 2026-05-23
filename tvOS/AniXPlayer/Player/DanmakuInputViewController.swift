@@ -33,7 +33,7 @@ class DanmakuInputViewController: ViewController {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.text = NSLocalizedString("发送弹幕", comment: "")
-        label.font = .systemFont(ofSize: 28, weight: .bold)
+        label.font = .ddp_normal(weight: .bold)
         label.textColor = .white
         label.textAlignment = .center
         return label
@@ -42,7 +42,7 @@ class DanmakuInputViewController: ViewController {
     private lazy var textField: UITextField = {
         let tf = UITextField()
         tf.placeholder = NSLocalizedString("发个弹幕吧", comment: "")
-        tf.font = .systemFont(ofSize: 22)
+        tf.font = .ddp_small()
         tf.textColor = .white
         tf.returnKeyType = .send
         tf.delegate = self
@@ -52,7 +52,7 @@ class DanmakuInputViewController: ViewController {
     private let colorLabel: UILabel = {
         let label = UILabel()
         label.text = NSLocalizedString("弹幕颜色", comment: "")
-        label.font = .systemFont(ofSize: 20, weight: .medium)
+        label.font = .ddp_small(weight: .medium)
         label.textColor = .lightGray
         return label
     }()
@@ -72,7 +72,7 @@ class DanmakuInputViewController: ViewController {
     private let modeLabel: UILabel = {
         let label = UILabel()
         label.text = NSLocalizedString("弹幕模式", comment: "")
-        label.font = .systemFont(ofSize: 20, weight: .medium)
+        label.font = .ddp_small(weight: .medium)
         label.textColor = .lightGray
         return label
     }()
@@ -88,7 +88,7 @@ class DanmakuInputViewController: ViewController {
     private lazy var sendButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(NSLocalizedString("发送", comment: ""), for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 22, weight: .bold)
+        button.titleLabel?.font = .ddp_small(weight: .bold)
         button.setTitleColor(.white, for: .normal)
         button.setTitleColor(.black, for: .focused)
         button.backgroundColor = .systemGreen
@@ -100,7 +100,7 @@ class DanmakuInputViewController: ViewController {
     private lazy var cancelButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(NSLocalizedString("取消", comment: ""), for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 22, weight: .medium)
+        button.titleLabel?.font = .ddp_small(weight: .medium)
         button.setTitleColor(.white, for: .normal)
         button.setTitleColor(.black, for: .focused)
         button.addTarget(self, action: #selector(cancelPressed), for: .primaryActionTriggered)

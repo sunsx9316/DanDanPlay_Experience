@@ -103,7 +103,7 @@ class HttpServerViewController: ViewController {
 
     private lazy var urlLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 38, weight: .bold)
+        label.font = .ddp_large(weight: .bold)
         label.textColor = .mainColor
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -112,7 +112,7 @@ class HttpServerViewController: ViewController {
 
     private lazy var instructionLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 24, weight: .medium)
+        label.font = .ddp_small(weight: .medium)
         label.textColor = .secondaryLabel
         label.textAlignment = .center
         label.numberOfLines = 0
@@ -122,7 +122,7 @@ class HttpServerViewController: ViewController {
 
     private lazy var tipLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 18)
+        label.font = .ddp_small()
         label.textColor = .tertiaryLabel
         label.textAlignment = .center
         label.text = NSLocalizedString("上传过程中请勿离开此页面", comment: "")

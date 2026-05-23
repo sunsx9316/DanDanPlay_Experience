@@ -20,7 +20,7 @@ class HomePageSectionHeaderView: UICollectionReusableView {
 
     private let titleLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 24, weight: .bold)
+        label.font = .ddp_small(weight: .bold)
         label.textColor = .white
         return label
     }()

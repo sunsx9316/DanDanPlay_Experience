@@ -51,7 +51,6 @@ class SetMainColorViewController: ViewController {
         // 标记当前选中的颜色
         let currentColor = Preferences.shared.mainColor
         if let index = Self.presetColors.firstIndex(where: { $0.anxRgbValue == currentColor.anxRgbValue }) {
-            let indexPath = IndexPath(item: index, section: 0)
             DispatchQueue.main.async {
                 self.collectionView.reloadData()
             }

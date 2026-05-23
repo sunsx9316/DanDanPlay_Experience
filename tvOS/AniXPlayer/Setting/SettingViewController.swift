@@ -299,7 +299,7 @@ extension SettingViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         if let header = view as? UITableViewHeaderFooterView {
             header.textLabel?.textColor = .white
-            header.textLabel?.font = .systemFont(ofSize: 18, weight: .bold)
+            header.textLabel?.font = .ddp_normal(weight: .bold)
         }
     }
 }

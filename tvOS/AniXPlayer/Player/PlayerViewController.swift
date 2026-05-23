@@ -200,7 +200,7 @@ class PlayerViewController: ViewController {
 
     private func togglePlayPause() {
         let newState = mediaModel.changePlayState()
-        let text = newState == .playing ? NSLocalizedString("播放", comment: "") : NSLocalizedString("暂停", comment: "")
+        let text = newState == .playing ?  NSLocalizedString("暂停", comment: "") : NSLocalizedString("播放", comment: "")
         PlayerToastView.show(in: view, text: text)
     }
 

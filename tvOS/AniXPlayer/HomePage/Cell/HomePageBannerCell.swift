@@ -123,7 +123,7 @@ extension HomePageBannerCell {
 
         private lazy var titleLabel: UILabel = {
             let label = UILabel()
-            label.font = .systemFont(ofSize: 24, weight: .bold)
+            label.font = .ddp_small(weight: .bold)
             label.textColor = .white
             label.numberOfLines = 2
             label.textAlignment = .left
@@ -136,7 +136,7 @@ extension HomePageBannerCell {
 
         private lazy var descriptionLabel: UILabel = {
             let label = UILabel()
-            label.font = .systemFont(ofSize: 16)
+            label.font = .ddp_small()
             label.textColor = UIColor.white.withAlphaComponent(0.8)
             label.numberOfLines = 2
             label.textAlignment = .left

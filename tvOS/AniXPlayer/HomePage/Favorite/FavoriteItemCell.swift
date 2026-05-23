@@ -24,14 +24,14 @@ class FavoriteItemCell: CollectionViewCell {
 
     private lazy var titleLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 18, weight: .medium)
+        label.font = .ddp_small(weight: .medium)
         label.textColor = .label
         return label
     }()
 
     private lazy var progressLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 14)
+        label.font = .ddp_small()
         label.textColor = .secondaryLabel
         return label
     }()

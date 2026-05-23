@@ -7,6 +7,8 @@
 
 #import "VLCMediaPlayer+Private.h"
 
+#if TARGET_OS_OSX || (TARGET_OS_IOS && !TARGET_OS_TV)
+
 @implementation VLCMediaPlayer (Private)
 
 - (void)anx_setTextRendererFontSize:(NSNumber *)fontSize {
@@ -34,3 +36,5 @@
 }
 
 @end
+
+#endif

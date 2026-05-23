@@ -24,7 +24,7 @@ class PlayerUITopView: UIView {
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.font = .systemFont(ofSize: 28, weight: .medium)
+        label.font = .ddp_normal(weight: .medium)
         label.lineBreakMode = .byTruncatingTail
         return label
     }()

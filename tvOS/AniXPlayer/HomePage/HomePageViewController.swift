@@ -88,12 +88,6 @@ extension HomePageViewController: UITableViewDataSource {
         case .banner:
             let cell = tableView.dequeueReusableCell(withIdentifier: HomePageBannerCell.reuseIdentifier, for: indexPath) as! HomePageBannerCell
             cell.banners = dataSource?.banners ?? []
-            cell.onBannerSelected = { [weak self] banner in
-                guard let url = URL(string: banner.url) else { return }
-                #if !os(tvOS)
-                UIApplication.shared.open(url)
-                #endif
-            }
             return cell
 
         case .function:

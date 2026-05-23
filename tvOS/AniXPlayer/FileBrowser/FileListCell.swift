@@ -21,16 +21,24 @@ class FileListCell: TableViewCell {
 
     private lazy var titleLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 20, weight: .medium)
+        label.font = .ddp_normal(weight: .medium)
         label.textColor = .label
         return label
     }()
 
     private lazy var detailLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 14)
+        label.font = .ddp_small()
         label.textColor = .secondaryLabel
         return label
+    }()
+
+    private lazy var textStack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [titleLabel, detailLabel])
+        stack.axis = .vertical
+        stack.alignment = .leading
+        stack.spacing = 4
+        return stack
     }()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -45,30 +53,24 @@ class FileListCell: TableViewCell {
 
     private func setupUI() {
         contentView.addSubview(iconImageView)
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(detailLabel)
+        contentView.addSubview(textStack)
 
         iconImageView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.centerY.equalToSuperview()
-            make.size.equalTo(CGSize(width: 40, height: 40))
+            make.size.equalTo(CGSize(width: 48, height: 48))
         }
 
-        titleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(iconImageView.snp.trailing).offset(16)
+        textStack.snp.makeConstraints { make in
+            make.leading.equalTo(iconImageView.snp.trailing).offset(20)
             make.trailing.equalToSuperview().offset(-20)
-            make.top.equalToSuperview().offset(14)
-        }
-
-        detailLabel.snp.makeConstraints { make in
-            make.leading.equalTo(titleLabel)
-            make.top.equalTo(titleLabel.snp.bottom).offset(4)
+            make.centerY.equalToSuperview()
         }
     }
 
     func configureAsSource(title: String, iconName: String) {
         titleLabel.text = title
-        detailLabel.text = nil
+        detailLabel.isHidden = true
         iconImageView.image = UIImage(systemName: iconName)
     }
 
@@ -77,8 +79,9 @@ class FileListCell: TableViewCell {
         iconImageView.image = UIImage(systemName: file.type == .folder ? "folder" : "play.rectangle")
 
         if file.type == .folder {
-            detailLabel.text = nil
+            detailLabel.isHidden = true
         } else {
+            detailLabel.isHidden = false
             let sizeStr = ByteCountFormatter.string(fromByteCount: Int64(file.fileSize), countStyle: .file)
             detailLabel.text = "\(sizeStr)  \(file.pathExtension.uppercased())"
         }

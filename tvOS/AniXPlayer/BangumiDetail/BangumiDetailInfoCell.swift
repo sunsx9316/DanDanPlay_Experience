@@ -25,7 +25,7 @@ class BangumiDetailInfoCell: TableViewCell {
 
     private lazy var titleLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 28, weight: .bold)
+        label.font = .ddp_normal(weight: .bold)
         label.textColor = .label
         label.numberOfLines = 2
         return label
@@ -33,21 +33,21 @@ class BangumiDetailInfoCell: TableViewCell {
 
     private lazy var ratingLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 20, weight: .bold)
+        label.font = .ddp_small(weight: .bold)
         label.textColor = .systemOrange
         return label
     }()
 
     private lazy var onAirLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 16)
+        label.font = .ddp_small()
         label.textColor = .secondaryLabel
         return label
     }()
 
     private lazy var tagsLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 15)
+        label.font = .ddp_small()
         label.textColor = .secondaryLabel
         label.numberOfLines = 2
         return label
@@ -55,7 +55,7 @@ class BangumiDetailInfoCell: TableViewCell {
 
     private lazy var summaryLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 17)
+        label.font = .ddp_small()
         label.textColor = .secondaryLabel
         label.numberOfLines = 3
         return label

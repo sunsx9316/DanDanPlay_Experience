@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import Kingfisher
 
 class UserInfoViewController: ViewController {
 
@@ -44,7 +45,7 @@ class UserInfoViewController: ViewController {
 
     private lazy var usernameLabel: UILabel = {
         let label = UILabel()
-        label.font = .systemFont(ofSize: 28, weight: .bold)
+        label.font = .ddp_normal(weight: .bold)
         label.textColor = .white
         return label
     }()
@@ -80,22 +81,14 @@ class UserInfoViewController: ViewController {
         if let userInfo = Preferences.shared.loginInfo {
             usernameLabel.text = userInfo.screenName
             if let url = URL(string: userInfo.profileImage) {
-                loadAvatar(from: url)
+                avatarImageView.kf.setImage(with: url)
             }
         } else {
             usernameLabel.text = NSLocalizedString("点击登录", comment: "")
+            avatarImageView.kf.cancelDownloadTask()
             avatarImageView.image = nil
         }
         tableView.reloadData()
-    }
-
-    private func loadAvatar(from url: URL) {
-        URLSession.shared.dataTask(with: url) { [weak self] data, _, _ in
-            guard let data = data, let image = UIImage(data: data) else { return }
-            DispatchQueue.main.async {
-                self?.avatarImageView.image = image
-            }
-        }.resume()
     }
 
     private func showLogin() {
@@ -163,7 +156,7 @@ extension UserInfoViewController: UITableViewDataSource {
             let item = menuItems[indexPath.row]
             let cell = tableView.dequeueReusableCell(withIdentifier: "MenuCell", for: indexPath)
             cell.textLabel?.text = item.title
-            cell.textLabel?.font = .systemFont(ofSize: 22)
+            cell.textLabel?.font = .ddp_normal()
             cell.textLabel?.textColor = .label
             return cell
         }

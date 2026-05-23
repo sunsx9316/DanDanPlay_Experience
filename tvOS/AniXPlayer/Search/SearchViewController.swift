@@ -37,7 +37,7 @@ class SearchViewController: ViewController {
         tv.dataSource = self
         tv.register(SearchResultCell.self, forCellReuseIdentifier: SearchResultCell.reuseIdentifier)
         tv.rowHeight = UITableView.automaticDimension
-        tv.estimatedRowHeight = 60
+        tv.estimatedRowHeight = 100
         return tv
     }()
 
@@ -45,7 +45,7 @@ class SearchViewController: ViewController {
         let label = Label()
         label.text = NSLocalizedString("输入关键词搜索番剧", comment: "")
         label.textColor = .secondaryLabel
-        label.font = .systemFont(ofSize: 16)
+        label.font = .ddp_small()
         label.textAlignment = .center
         return label
     }()
@@ -136,7 +136,7 @@ extension SearchViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
         if let header = view as? UITableViewHeaderFooterView {
             header.textLabel?.textColor = .label
-            header.textLabel?.font = .systemFont(ofSize: 16, weight: .medium)
+            header.textLabel?.font = .ddp_normal(weight: .medium)
         }
     }
 }

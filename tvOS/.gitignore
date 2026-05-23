@@ -1,4 +1,5 @@
 Pods/
 xcuserdata/
 DerivedData/
+.build/
 *.rb

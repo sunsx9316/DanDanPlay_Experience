@@ -29,7 +29,7 @@ class PlayerUIBottomView: UIView {
     private(set) lazy var danmakuButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(NSLocalizedString("弹幕", comment: ""), for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 22, weight: .medium)
+        button.titleLabel?.font = .ddp_small(weight: .medium)
         button.setTitleColor(.white, for: .normal)
         button.setTitleColor(.black, for: .focused)
         return button
@@ -38,7 +38,7 @@ class PlayerUIBottomView: UIView {
     private(set) lazy var settingsButton: UIButton = {
         let button = UIButton(type: .system)
         button.setTitle(NSLocalizedString("设置", comment: ""), for: .normal)
-        button.titleLabel?.font = .systemFont(ofSize: 22, weight: .medium)
+        button.titleLabel?.font = .ddp_small(weight: .medium)
         button.setTitleColor(.white, for: .normal)
         button.setTitleColor(.black, for: .focused)
         return button
@@ -65,7 +65,7 @@ class PlayerUIBottomView: UIView {
     private let currentTimeLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.font = .monospacedDigitSystemFont(ofSize: 24, weight: .regular)
+        label.font = .ddp_small(monospaced: true)
         label.text = "00:00"
         return label
     }()
@@ -73,7 +73,7 @@ class PlayerUIBottomView: UIView {
     private let totalTimeLabel: UILabel = {
         let label = UILabel()
         label.textColor = .white
-        label.font = .monospacedDigitSystemFont(ofSize: 24, weight: .regular)
+        label.font = .ddp_small(monospaced: true)
         label.text = "00:00"
         return label
     }()
