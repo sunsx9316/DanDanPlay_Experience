@@ -12,17 +12,17 @@ class SearchResultCell: TableViewCell {
 
     static let reuseIdentifier = "SearchResultCell"
 
-    private let episodeTitleLabel: Label = {
+    private lazy var episodeTitleLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 18, weight: .medium)
-        label.textColor = .lightGray
+        label.font = .systemFont(ofSize: 20, weight: .medium)
+        label.textColor = .label
         return label
     }()
 
-    private let episodeIdLabel: Label = {
+    private lazy var episodeIdLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 14)
-        label.textColor = .lightGray
+        label.font = .systemFont(ofSize: 15)
+        label.textColor = .secondaryLabel
         return label
     }()
 
@@ -43,12 +43,13 @@ class SearchResultCell: TableViewCell {
         episodeTitleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.trailing.equalToSuperview().offset(-20)
-            make.top.equalToSuperview().offset(18)
+            make.top.equalToSuperview().offset(20)
         }
 
         episodeIdLabel.snp.makeConstraints { make in
             make.leading.equalTo(episodeTitleLabel)
-            make.top.equalTo(episodeTitleLabel.snp.bottom).offset(6)
+            make.top.equalTo(episodeTitleLabel.snp.bottom).offset(8)
+            make.bottom.equalToSuperview().offset(-20)
         }
     }
 

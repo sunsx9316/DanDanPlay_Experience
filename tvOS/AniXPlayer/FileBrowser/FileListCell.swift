@@ -12,24 +12,24 @@ class FileListCell: TableViewCell {
 
     static let reuseIdentifier = "FileListCell"
 
-    private let iconImageView: UIImageView = {
+    private lazy var iconImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFit
-        iv.tintColor = .white
+        iv.tintColor = .label
         return iv
     }()
 
-    private let titleLabel: Label = {
+    private lazy var titleLabel: Label = {
         let label = Label()
         label.font = .systemFont(ofSize: 20, weight: .medium)
-        label.textColor = .lightGray
+        label.textColor = .label
         return label
     }()
 
-    private let detailLabel: Label = {
+    private lazy var detailLabel: Label = {
         let label = Label()
         label.font = .systemFont(ofSize: 14)
-        label.textColor = .lightGray
+        label.textColor = .secondaryLabel
         return label
     }()
 

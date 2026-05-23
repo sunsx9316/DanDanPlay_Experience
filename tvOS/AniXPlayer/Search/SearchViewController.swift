@@ -2,62 +2,71 @@
 //  SearchViewController.swift
 //  AniXPlayer
 //
-//  tvOS 搜索 — TextField + TableView 焦点导航
-//  注：tvOS 无 UISearchController，使用自定义搜索 UI
+//  tvOS 搜索 — 自定义搜索栏 + TableView 展示结果
 //
 
 import UIKit
 import SnapKit
 
+protocol SearchViewControllerDelegate: AnyObject {
+    func searchViewController(_ searchViewController: SearchViewController, didMatched matchInfo: MatchInfo)
+}
+
 class SearchViewController: ViewController {
 
+    weak var delegate: SearchViewControllerDelegate?
+
     private var searchResults: [SearchCollection] = []
+
+    // MARK: - Search Bar
 
     private let searchTextField: UITextField = {
         let tf = UITextField()
         tf.placeholder = NSLocalizedString("输入关键词搜索番剧", comment: "")
         tf.borderStyle = .roundedRect
-        tf.backgroundColor = UIColor.white.withAlphaComponent(0.1)
-        tf.textColor = .white
-        tf.font = .systemFont(ofSize: 20)
         tf.returnKeyType = .search
+        tf.autocapitalizationType = .none
         return tf
     }()
 
+    // MARK: - Results
+
     private lazy var resultTableView: TableView = {
-        let tv = TableView(frame: .zero, style: .plain)
+        let tv = TableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self
         tv.register(SearchResultCell.self, forCellReuseIdentifier: SearchResultCell.reuseIdentifier)
-        tv.rowHeight = 90
+        tv.rowHeight = UITableView.automaticDimension
+        tv.estimatedRowHeight = 60
         return tv
     }()
 
     private let emptyLabel: Label = {
         let label = Label()
         label.text = NSLocalizedString("输入关键词搜索番剧", comment: "")
-        label.textColor = .lightGray
-        label.font = .systemFont(ofSize: 20)
+        label.textColor = .secondaryLabel
+        label.font = .systemFont(ofSize: 16)
         label.textAlignment = .center
         return label
     }()
+
+    // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = NSLocalizedString("搜索", comment: "")
 
-        self.view.addSubview(searchTextField)
-        self.view.addSubview(resultTableView)
-        self.view.addSubview(emptyLabel)
+        view.addSubview(searchTextField)
+        view.addSubview(resultTableView)
+        view.addSubview(emptyLabel)
 
         searchTextField.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(20)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(16)
             make.leading.trailing.equalToSuperview().inset(60)
-            make.height.equalTo(50)
         }
 
         resultTableView.snp.makeConstraints { make in
-            make.top.equalTo(searchTextField.snp.bottom).offset(20)
+            make.top.equalTo(searchTextField.snp.bottom).offset(16)
             make.leading.trailing.bottom.equalToSuperview()
         }
 
@@ -123,6 +132,13 @@ extension SearchViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return searchResults[section].animeTitle
     }
+
+    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
+        if let header = view as? UITableViewHeaderFooterView {
+            header.textLabel?.textColor = .label
+            header.textLabel?.font = .systemFont(ofSize: 16, weight: .medium)
+        }
+    }
 }
 
 // MARK: - UITableViewDelegate
@@ -132,14 +148,12 @@ extension SearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let anime = searchResults[indexPath.section]
         let episode = anime.collection[indexPath.row]
-        let detailVC = BangumiDetailViewController(animateId: anime.animeId)
-        self.navigationController?.pushViewController(detailVC, animated: true)
-    }
 
-    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        if let header = view as? UITableViewHeaderFooterView {
-            header.textLabel?.textColor = .white
-            header.textLabel?.font = .systemFont(ofSize: 18, weight: .bold)
+        if let delegate = self.delegate {
+            delegate.searchViewController(self, didMatched: episode)
+        } else {
+            let detailVC = BangumiDetailViewController(animateId: anime.animeId)
+            self.navigationController?.pushViewController(detailVC, animated: true)
         }
     }
 }

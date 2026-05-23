@@ -2,7 +2,7 @@
 //  TableViewCell.swift
 //  AniXPlayer
 //
-//  tvOS TableViewCell 基类 — 焦点时背景高亮 + 文字颜色变化
+//  tvOS TableViewCell 基类 — 焦点时主题色描边高亮
 //
 
 import UIKit
@@ -21,23 +21,25 @@ class TableViewCell: UITableViewCell {
 
     private func setup() {
         self.backgroundColor = .clear
-        self.textLabel?.textColor = .lightGray
-        self.detailTextLabel?.textColor = .lightGray
+        self.contentView.backgroundColor = .clear
+        self.layer.cornerRadius = 10
     }
 
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
-        super.didUpdateFocus(in: context, with: coordinator)
+        // 不调用 super，防止 UITableViewCell 施加 tvOS 系统白色焦点背景
 
         coordinator.addCoordinatedAnimations({
             if self.isFocused {
-                self.backgroundColor = UIColor.white.withAlphaComponent(0.15)
-                self.textLabel?.textColor = .white
-                self.detailTextLabel?.textColor = .white
+                self.backgroundColor = .clear
+                self.transform = CGAffineTransform(scaleX: 1.03, y: 1.03)
+                self.layer.borderWidth = 2
+                self.layer.borderColor = UIColor.mainColor.cgColor
             } else {
                 self.backgroundColor = .clear
-                self.textLabel?.textColor = .lightGray
-                self.detailTextLabel?.textColor = .lightGray
+                self.transform = .identity
+                self.layer.borderWidth = 0
+                self.layer.borderColor = UIColor.clear.cgColor
             }
-        })
+        }, completion: nil)
     }
 }

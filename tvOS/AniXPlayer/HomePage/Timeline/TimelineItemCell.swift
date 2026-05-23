@@ -2,7 +2,7 @@
 //  TimelineItemCell.swift
 //  AniXPlayer
 //
-//  tvOS 新番时间表 Cell
+//  tvOS 新番时间表 Cell — 网格海报卡片风格
 //
 
 import UIKit
@@ -13,26 +13,30 @@ class TimelineItemCell: CollectionViewCell {
 
     static let reuseIdentifier = "TimelineItemCell"
 
-    private let posterImageView: UIImageView = {
+    private lazy var posterImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
-        iv.layer.cornerRadius = 6
+        iv.layer.cornerRadius = 8
         iv.backgroundColor = UIColor.white.withAlphaComponent(0.1)
+        iv.adjustsImageWhenAncestorFocused = true
         return iv
     }()
 
-    private let titleLabel: Label = {
+    private lazy var titleLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 18, weight: .medium)
-        label.textColor = .lightGray
+        label.font = .systemFont(ofSize: 17, weight: .medium)
+        label.textColor = .label
+        label.textAlignment = .center
+        label.numberOfLines = 2
         return label
     }()
 
-    private let statusLabel: Label = {
+    private lazy var statusLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 14)
-        label.textColor = .lightGray
+        label.font = .systemFont(ofSize: 13)
+        label.textColor = .secondaryLabel
+        label.textAlignment = .center
         return label
     }()
 
@@ -47,29 +51,24 @@ class TimelineItemCell: CollectionViewCell {
     }
 
     private func setupUI() {
-        contentView.backgroundColor = UIColor.white.withAlphaComponent(0.06)
-        contentView.layer.cornerRadius = 8
-
         contentView.addSubview(posterImageView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(statusLabel)
 
         posterImageView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(12)
-            make.centerY.equalToSuperview()
-            make.width.equalTo(100)
-            make.height.equalTo(56)
+            make.top.centerX.equalToSuperview()
+            make.width.equalToSuperview()
+            make.height.equalTo(posterImageView.snp.width).multipliedBy(9.0 / 16.0)
         }
 
         titleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(posterImageView.snp.trailing).offset(16)
-            make.trailing.equalToSuperview().offset(-12)
-            make.top.equalTo(posterImageView).offset(4)
+            make.top.equalTo(posterImageView.snp.bottom).offset(10)
+            make.leading.trailing.equalToSuperview().inset(4)
         }
 
         statusLabel.snp.makeConstraints { make in
-            make.leading.equalTo(titleLabel)
-            make.top.equalTo(titleLabel.snp.bottom).offset(6)
+            make.top.equalTo(titleLabel.snp.bottom).offset(4)
+            make.leading.trailing.equalToSuperview()
         }
     }
 

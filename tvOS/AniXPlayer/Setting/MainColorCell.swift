@@ -12,7 +12,7 @@ class MainColorCell: CollectionViewCell {
 
     static let reuseIdentifier = "MainColorCell"
 
-    private let colorView: UIView = {
+    private lazy var colorView: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 12
         view.layer.borderWidth = 2
@@ -20,7 +20,7 @@ class MainColorCell: CollectionViewCell {
         return view
     }()
 
-    private let checkmarkImageView: UIImageView = {
+    private lazy var checkmarkImageView: UIImageView = {
         let iv = UIImageView(image: UIImage(systemName: "checkmark"))
         iv.tintColor = .white
         iv.isHidden = true

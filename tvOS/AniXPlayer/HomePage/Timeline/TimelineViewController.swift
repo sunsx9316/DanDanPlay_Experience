@@ -2,7 +2,7 @@
 //  TimelineViewController.swift
 //  AniXPlayer
 //
-//  tvOS 新番时间表 — 按星期分组显示
+//  tvOS 新番时间表 — 按星期分组，网格排版
 //
 
 import UIKit
@@ -14,7 +14,13 @@ class TimelineViewController: ViewController {
     private var dataSource: [BangumiIntro] = []
 
     private lazy var collectionView: CollectionView = {
-        let layout = Self.createLayout()
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .vertical
+        layout.minimumLineSpacing = 24
+        layout.minimumInteritemSpacing = 24
+        layout.sectionInset = UIEdgeInsets(top: 0, left: 60, bottom: 32, right: 60)
+        layout.headerReferenceSize = CGSize(width: 0, height: 50)
+
         let cv = CollectionView(frame: .zero, collectionViewLayout: layout)
         cv.delegate = self
         cv.dataSource = self
@@ -77,24 +83,6 @@ class TimelineViewController: ViewController {
         guard day >= 0, day < names.count else { return "" }
         return names[day]
     }
-
-    private static func createLayout() -> UICollectionViewLayout {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(100))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(100))
-        let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
-
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = 8
-        section.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 60, bottom: 20, trailing: 60)
-
-        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(50))
-        let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-        section.boundarySupplementaryItems = [header]
-
-        return UICollectionViewCompositionalLayout(section: section)
-    }
 }
 
 extension TimelineViewController: UICollectionViewDataSource {
@@ -125,7 +113,16 @@ extension TimelineViewController: UICollectionViewDataSource {
     }
 }
 
-extension TimelineViewController: UICollectionViewDelegate {
+extension TimelineViewController: UICollectionViewDelegateFlowLayout {
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let insets: CGFloat = 120 // 60 + 60
+        let spacing: CGFloat = 24 * 3 // 3 gaps between 4 columns
+        let availableWidth = collectionView.bounds.width - insets - spacing
+        let itemWidth = floor(availableWidth / 4)
+        let itemHeight = itemWidth * 9.0 / 16.0 + 56 // poster + title + status
+        return CGSize(width: itemWidth, height: itemHeight)
+    }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let key = weekdayKeys[indexPath.section]

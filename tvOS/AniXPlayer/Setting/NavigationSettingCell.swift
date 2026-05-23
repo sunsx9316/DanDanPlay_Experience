@@ -2,7 +2,7 @@
 //  NavigationSettingCell.swift
 //  AniXPlayer
 //
-//  tvOS 导航设置 Cell — 点击跳转子页面
+//  tvOS 导航设置 Cell — 点击跳转子页面，自动适配浅色/深色模式
 //
 
 import UIKit
@@ -18,30 +18,36 @@ class NavigationSettingCell: TableViewCell {
         }
     }
 
-    private let titleLabel: Label = {
+    var showDisclosure: Bool = true {
+        didSet {
+            disclosureImageView.isHidden = !showDisclosure
+        }
+    }
+
+    private lazy var titleLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 18)
-        label.textColor = .lightGray
+        label.font = .systemFont(ofSize: 17, weight: .medium)
+        label.textColor = .label
         return label
     }()
 
-    private let detailLabel: Label = {
+    private lazy var detailLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 17)
-        label.textColor = .lightGray
+        label.font = .systemFont(ofSize: 15)
+        label.textColor = .secondaryLabel
         return label
     }()
 
-    private let colorIndicator: UIView = {
+    private lazy var colorIndicator: UIView = {
         let view = UIView()
         view.layer.cornerRadius = 6
         view.isHidden = true
         return view
     }()
 
-    private let disclosureImageView: UIImageView = {
+    private lazy var disclosureImageView: UIImageView = {
         let iv = UIImageView(image: UIImage(systemName: "chevron.right"))
-        iv.tintColor = .lightGray
+        iv.tintColor = .secondaryLabel
         return iv
     }()
 
@@ -85,6 +91,13 @@ class NavigationSettingCell: TableViewCell {
             make.centerY.equalToSuperview()
             make.size.equalTo(CGSize(width: 20, height: 20))
         }
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        showDisclosure = true
+        colorIndicatorColor = nil
+        colorIndicator.isHidden = true
     }
 
     func configure(title: String, detail: String) {

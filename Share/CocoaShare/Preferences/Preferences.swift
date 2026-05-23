@@ -325,7 +325,11 @@ class Preferences {
     @StoreWrapper(defaultValue: 7, key: .danmakuCacheDay)
     var danmakuCacheDay: Int
     
+    #if os(tvOS)
+    @StoreWrapper(defaultValue: 30, key: .danmakuFontSize)
+    #else
     @StoreWrapper(defaultValue: 20, key: .danmakuFontSize)
+    #endif
     var danmakuFontSize: Double
     
     @StoreWrapper(defaultValue: 1, key: .danmakuSpeed)

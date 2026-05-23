@@ -77,3 +77,4 @@ Share/CocoaShare/Networking/AppKey.swift
 .vscode/launch.json
 buildServer.json
 .claude/settings.local.json
+tvOS/.build

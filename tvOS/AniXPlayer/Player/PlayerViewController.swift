@@ -2,7 +2,7 @@
 //  PlayerViewController.swift
 //  AniXPlayer
 //
-//  tvOS 播放器 — PlayerModel 串联 match → danmaku → play 全流程 + Siri Remote 事件 + 控制栏
+//  tvOS 播放器 — PlayerModel 串联 match → danmaku → play 全流程 + Siri Remote 事件
 //
 
 import UIKit
@@ -26,11 +26,11 @@ class PlayerViewController: ViewController {
     private var danmakuModel: PlayerDanmakuModel { playerModel.danmakuModel }
 
     private let bag = DisposeBag()
+    private let sidePanelAnimator = SidePanelAnimator()
 
-    private var isControlBarVisible = true
-    private var autoHideTimer: Timer?
     private var seekStep: Double = 10
     private var loadingView: PlayerLoadingView?
+    private var progressTimer: Timer?
 
     // MARK: - UI
 
@@ -45,38 +45,12 @@ class PlayerViewController: ViewController {
         return view
     }()
 
-    private lazy var controlBar: PlayerControlBar = {
-        let bar = PlayerControlBar()
-        bar.onPlayPause = { [weak self] in
-            self?.togglePlayPause()
-        }
-        bar.onSeekForward = { [weak self] in
-            self?.seek(by: self?.seekStep ?? 10)
-        }
-        bar.onSeekBackward = { [weak self] in
-            self?.seek(by: -(self?.seekStep ?? 10))
-        }
-        bar.onSettings = { [weak self] in
-            self?.showSettings()
-        }
-        bar.onDanmakuToggle = { [weak self] isOn in
-            self?.toggleDanmaku(isOn)
-        }
-        bar.onStepChange = { [weak self] step in
-            self?.seekStep = step
-        }
-        bar.alpha = 0
-        return bar
-    }()
+    private lazy var overlayView = PlayerOverlayView()
 
-    private let seekHUDLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.font = .systemFont(ofSize: 36, weight: .medium)
-        label.textAlignment = .center
-        label.alpha = 0
-        return label
-    }()
+    private let miniProgressBar = PlayerProgressBar(
+        trackColor: UIColor(white: 0.3, alpha: 0.6),
+        cornerRadius: 0
+    )
 
     // MARK: - Lifecycle
 
@@ -87,8 +61,7 @@ class PlayerViewController: ViewController {
         view.addSubview(mediaView)
         view.addSubview(danmakuCanvas)
         danmakuCanvas.addSubview(danmakuModel.danmakuView)
-        view.addSubview(controlBar)
-        view.addSubview(seekHUDLabel)
+        view.addSubview(overlayView)
 
         mediaView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -102,52 +75,99 @@ class PlayerViewController: ViewController {
             make.edges.equalToSuperview()
         }
 
-        controlBar.snp.makeConstraints { make in
-            make.leading.trailing.bottom.equalToSuperview()
-            make.height.equalTo(120)
+        overlayView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
         }
 
-        seekHUDLabel.snp.makeConstraints { make in
-            make.center.equalToSuperview()
+        view.addSubview(miniProgressBar)
+
+        miniProgressBar.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.height.equalTo(5)
         }
+
+        overlayView.onShow = { [weak self] in self?.miniProgressBar.isHidden = true }
+        overlayView.onHide = { [weak self] in self?.miniProgressBar.isHidden = false }
+
+        overlayView.onAutoHide = { [weak self] in
+            self?.overlayView.hide()
+        }
+
+        overlayView.bottomBar.onDanmakuTapped = { [weak self] in
+            self?.showDanmakuInput()
+            self?.overlayView.resetAutoHideTimer()
+        }
+
+        overlayView.bottomBar.onSettingsTapped = { [weak self] in
+            self?.showSettings()
+            self?.overlayView.resetAutoHideTimer()
+        }
+
+        let leftTap = UITapGestureRecognizer(target: self, action: #selector(handleLeftArrow))
+        leftTap.allowedPressTypes = [NSNumber(value: UIPress.PressType.leftArrow.rawValue)]
+        view.addGestureRecognizer(leftTap)
+
+        let rightTap = UITapGestureRecognizer(target: self, action: #selector(handleRightArrow))
+        rightTap.allowedPressTypes = [NSNumber(value: UIPress.PressType.rightArrow.rawValue)]
+        view.addGestureRecognizer(rightTap)
 
         bindModel()
-        showControlBar()
+        startProgressTimer()
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        self.defaultFocusView = controlBar
+    @objc private func handleLeftArrow() {
+        guard presentedViewController == nil, !overlayView.isVisible else { return }
+        seek(by: -seekStep)
+    }
+
+    @objc private func handleRightArrow() {
+        guard presentedViewController == nil, !overlayView.isVisible else { return }
+        seek(by: seekStep)
+    }
+
+    override var preferredFocusEnvironments: [UIFocusEnvironment] {
+        guard overlayView.isVisible else { return super.preferredFocusEnvironments }
+        return [overlayView.bottomBar.danmakuButton, overlayView.bottomBar.settingsButton]
     }
 
     deinit {
+        progressTimer?.invalidate()
         playerModel.mediaModel.terminate()
     }
 
-    // MARK: - Siri Remote / Press Events
+    // MARK: - Progress Timer
 
-    private var selectPressBeganTime: TimeInterval = 0
-
-    override func pressesBegan(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
-        guard let press = presses.first else {
-            super.pressesBegan(presses, with: event)
-            return
-        }
-
-        switch press.type {
-        case .select:
-            selectPressBeganTime = Date().timeIntervalSince1970
-
-        case .menu:
-            dismissPlayer()
-
-        case .playPause:
-            togglePlayPause()
-
-        default:
-            super.pressesBegan(presses, with: event)
+    private func startProgressTimer() {
+        progressTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
+            self?.updateProgress()
         }
     }
+
+    private func updateProgress() {
+        let current = mediaModel.currentTime
+        let total = mediaModel.length
+        overlayView.topBar.title = file?.fileName
+        overlayView.bottomBar.currentTimeText = formatTime(current)
+        overlayView.bottomBar.totalTimeText = formatTime(total)
+
+        let fraction = total > 0 ? CGFloat(current / total) : 0
+        overlayView.bottomBar.progressFraction = fraction
+        miniProgressBar.progressFraction = fraction
+    }
+
+    private func formatTime(_ seconds: Double) -> String {
+        guard seconds.isFinite else { return "00:00" }
+        let total = Int(seconds)
+        let h = total / 3600
+        let m = (total % 3600) / 60
+        let s = total % 60
+        if h > 0 {
+            return String(format: "%d:%02d:%02d", h, m, s)
+        }
+        return String(format: "%02d:%02d", m, s)
+    }
+
+    // MARK: - Siri Remote / Press Events
 
     override func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
         guard let press = presses.first else {
@@ -156,51 +176,32 @@ class PlayerViewController: ViewController {
         }
 
         switch press.type {
-        case .select:
-            let duration = Date().timeIntervalSince1970 - selectPressBeganTime
+        case .playPause:
+            togglePlayPause()
 
-            if duration >= 1.0 {
-                showSpeedMenu()
-            } else if !controlBarHasFocus {
-                if isControlBarVisible {
-                    hideControlBar()
-                } else {
-                    showControlBar()
-                }
-            }
-            selectPressBeganTime = 0
+        case .select:
+            handleSelectPress()
 
         default:
             super.pressesEnded(presses, with: event)
         }
     }
 
-    override func pressesChanged(_ presses: Set<UIPress>, with event: UIPressesEvent?) {
-        guard let press = presses.first else { return }
-
-        switch press.type {
-        case .leftArrow:
-            if !isControlBarVisible { showControlBar() }
-            seek(by: -seekStep)
-
-        case .rightArrow:
-            if !isControlBarVisible { showControlBar() }
-            seek(by: seekStep)
-
-        default:
-            break
+    private func handleSelectPress() {
+        if !overlayView.isVisible {
+            overlayView.show()
+            setNeedsFocusUpdate()
+            updateFocusIfNeeded()
         }
-    }
-
-    private var controlBarHasFocus: Bool {
-        guard let focusedView = UIScreen.main.focusedView else { return false }
-        return focusedView === controlBar || controlBar.subviews.contains(where: { $0 === focusedView })
+        overlayView.resetAutoHideTimer()
     }
 
     // MARK: - Playback Control
 
     private func togglePlayPause() {
-        mediaModel.changePlayState()
+        let newState = mediaModel.changePlayState()
+        let text = newState == .playing ? NSLocalizedString("播放", comment: "") : NSLocalizedString("暂停", comment: "")
+        PlayerToastView.show(in: view, text: text)
     }
 
     private func seek(by seconds: Double) {
@@ -209,104 +210,106 @@ class PlayerViewController: ViewController {
         let newTime = max(0, min(currentTime + seconds, totalLength))
         let position = totalLength > 0 ? newTime / totalLength : 0
         playerModel.changePosition(CGFloat(position))
-        showSeekHUD(seconds: seconds)
-    }
+        updateProgress()
 
-    private func dismissPlayer() {
-        autoHideTimer?.invalidate()
-        mediaModel.pause()
-        self.dismiss(animated: true)
-    }
-
-    private func toggleDanmaku(_ isOn: Bool) {
-        danmakuModel.onChangeIsShowDanmaku(isOn)
+        let direction = seconds > 0 ? ">>" : "<<"
+        PlayerToastView.show(in: view, text: "\(direction) \(abs(Int(seconds)))s")
     }
 
     private func showSettings() {
-        let vc = UIAlertController(title: NSLocalizedString("播放设置", comment: ""), message: nil, preferredStyle: .alert)
-        vc.addAction(UIAlertAction(title: NSLocalizedString("倍速", comment: ""), style: .default) { [weak self] _ in
-            self?.showSpeedMenu()
-        })
-        vc.addAction(UIAlertAction(title: NSLocalizedString("弹幕开关", comment: ""), style: .default) { [weak self] _ in
-            let isOn = self?.danmakuModel.isShowDanmaku ?? true
-            self?.toggleDanmaku(!isOn)
-        })
-        vc.addAction(UIAlertAction(title: NSLocalizedString("取消", comment: ""), style: .cancel))
+        let vc = PlayerSettingViewController(playerModel: playerModel)
+        let nav = UINavigationController(rootViewController: vc)
+        nav.modalPresentationStyle = .custom
+        nav.transitioningDelegate = sidePanelAnimator
+        present(nav, animated: true)
+    }
+
+    private func showDanmakuInput() {
+        mediaModel.changePlayState() // 暂停播放
+
+        let vc = DanmakuInputViewController()
+
+        vc.onSend = { [weak self] text, mode, color in
+            self?.sendDanmaku(text: text, mode: mode, color: color)
+        }
+
+        vc.onDismiss = { [weak self] in
+            self?.mediaModel.changePlayState() // 恢复播放
+        }
+
+        vc.modalPresentationStyle = .overCurrentContext
         present(vc, animated: true)
     }
 
-    private func showSpeedMenu() {
-        let vc = UIAlertController(title: NSLocalizedString("播放倍速", comment: ""), message: nil, preferredStyle: .actionSheet)
-        for speed in [0.5, 0.75, 1.0, 1.25, 1.5, 2.0] {
-            vc.addAction(UIAlertAction(title: "\(speed)x", style: .default) { [weak self] _ in
-                self?.playerModel.changeSpeed(speed)
-            })
+    private func sendDanmaku(text: String, mode: Comment.Mode, color: ANXColor) {
+        guard let item = mediaModel.media,
+              let matchInfo = mediaModel.matchInfo(media: item),
+              matchInfo.matchId > 0 else {
+            let alert = UIAlertController(
+                title: nil,
+                message: NSLocalizedString("需要指定视频弹幕列表，才能发弹幕哟~", comment: ""),
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: NSLocalizedString("确定", comment: ""), style: .default))
+            present(alert, animated: true)
+            return
         }
-        vc.addAction(UIAlertAction(title: NSLocalizedString("取消", comment: ""), style: .cancel))
-        present(vc, animated: true)
-    }
 
-    // MARK: - Control Bar
+        var comment = Comment()
+        comment.time = danmakuModel.currentTime
+        comment.mode = mode
+        comment.color = color
+        comment.message = text
 
-    private func showControlBar() {
-        isControlBarVisible = true
-        UIView.animate(withDuration: 0.3) {
-            self.controlBar.alpha = 1.0
+        danmakuModel.sendDanmaku(matchId: matchInfo.matchId, danmaku: comment) { [weak self] success, msg in
+            DispatchQueue.main.async {
+                if success {
+                    ANX.logInfo(.player, "[PlayerVC] 弹幕发送成功")
+                } else if let msg = msg {
+                    let alert = UIAlertController(title: nil, message: msg, preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: NSLocalizedString("确定", comment: ""), style: .default))
+                    self?.present(alert, animated: true)
+                }
+            }
         }
-        resetAutoHideTimer()
-    }
-
-    private func hideControlBar() {
-        isControlBarVisible = false
-        UIView.animate(withDuration: 0.3) {
-            self.controlBar.alpha = 0
-        }
-        autoHideTimer?.invalidate()
-    }
-
-    private func resetAutoHideTimer() {
-        autoHideTimer?.invalidate()
-        autoHideTimer = Timer.scheduledTimer(withTimeInterval: 5, repeats: false) { [weak self] _ in
-            self?.hideControlBar()
-        }
-    }
-
-    // MARK: - HUD
-
-    private func showSeekHUD(seconds: Double) {
-        let direction = seconds > 0 ? ">>" : "<<"
-        seekHUDLabel.text = "\(direction) \(abs(Int(seconds)))s"
-        seekHUDLabel.alpha = 1.0
-
-        UIView.animate(withDuration: 1.0, delay: 0.5, options: [], animations: {
-            self.seekHUDLabel.alpha = 0
-        })
     }
 
     // MARK: - PlayerModel Bindings
 
     private func bindModel() {
-        // 加载状态
         playerModel.parseMediaState.subscribe(onNext: { [weak self] event in
             guard let self = self else { return }
             self.handleMediaLoadEvent(event)
         }).disposed(by: bag)
 
-        // 播放状态 → 控制栏
-        mediaModel.context.isPlay.subscribe(onNext: { [weak self] isPlay in
-            self?.controlBar.updatePlayState(isPlaying: isPlay)
-        }).disposed(by: bag)
-
-        // 弹幕开关
         danmakuModel.context.isShowDanmaku.subscribe(onNext: { [weak self] isShow in
             ANX.logInfo(.player, "[PlayerVC] 弹幕开关: \(isShow)")
             self?.danmakuCanvas.isHidden = !isShow
         }).disposed(by: bag)
 
-        // 弹幕透明度
-//        danmakuModel.context.danmakuAlpha.subscribe(onNext: { [weak self] alpha in
-//            self?.danmakuCanvas.alpha = CGFloat(alpha)
-//        }).disposed(by: bag)
+        danmakuModel.context.danmakuAlpha.subscribe(onNext: { [weak self] danmakuAlpha in
+            guard let self = self else { return }
+            self.danmakuCanvas.alpha = CGFloat(danmakuAlpha)
+        }).disposed(by: bag)
+
+        danmakuModel.context.danmakuArea.subscribe(onNext: { [weak self] danmakuArea in
+            guard let self = self else { return }
+            self.danmakuModel.danmakuView.snp.remakeConstraints { make in
+                make.top.leading.trailing.equalToSuperview()
+                make.height.equalToSuperview().multipliedBy(danmakuArea.value)
+            }
+        }).disposed(by: bag)
+
+        danmakuModel.context.danmakuArea.skip(1).subscribe(onNext: { [weak self] _ in
+            guard let self = self else { return }
+            UIView.animate(withDuration: 0.2) {
+                self.danmakuModel.danmakuView.backgroundColor = UIColor.mainColor.withAlphaComponent(0.7)
+            } completion: { _ in
+                UIView.animate(withDuration: 0.1) {
+                    self.danmakuModel.danmakuView.backgroundColor = .clear
+                }
+            }
+        }).disposed(by: bag)
     }
 
     private func handleMediaLoadEvent(_ event: RxSwift.Event<PlayerModel.MediaLoadState>) {
@@ -332,12 +335,13 @@ class PlayerViewController: ViewController {
                 case .downloadDanmaku:
                     text = NSLocalizedString("下载弹幕中...", comment: "")
                 }
-                loadingView?.update(text: text)
-            case .filterDanmaku:
-                loadingView?.update(text: NSLocalizedString("解析弹幕中...", comment: ""))
+                loadingView?.update(text: text, progress: 0.8 * Float(progress))
+            case .filterDanmaku(let progress):
+                loadingView?.update(text: NSLocalizedString("解析弹幕中...", comment: ""), progress: 0.8 + 0.05 * Float(progress))
             case .subtitle:
-                loadingView?.update(text: NSLocalizedString("加载字幕中...", comment: ""))
+                loadingView?.update(text: NSLocalizedString("加载字幕中...", comment: ""), progress: 0.9)
             case .lastWatchProgress:
+                loadingView?.update(text: NSLocalizedString("即将开始播放...", comment: ""), progress: 1.0)
                 loadingView?.dismiss()
                 loadingView = nil
             }
@@ -357,8 +361,12 @@ class PlayerViewController: ViewController {
         if let parseError = error as? PlayerModel.ParseError {
             switch parseError {
             case .matched(let collection, let media):
-                let vc = MatchsViewController(collection: collection, media: media, playerModel: playerModel)
-                self.present(vc, animated: true)
+                let vc = MatchsViewController(collection: collection, media: media, playerModel: playerModel, style: .full)
+                vc.delegate = self
+                let nav = UINavigationController(rootViewController: vc)
+                nav.modalPresentationStyle = .custom
+                nav.transitioningDelegate = sidePanelAnimator
+                present(nav, animated: true)
             case .notMatchedDanmaku:
                 let alert = UIAlertController(title: nil, message: error.localizedDescription, preferredStyle: .alert)
                 alert.addAction(UIAlertAction(title: NSLocalizedString("确定", comment: ""), style: .default))
@@ -369,5 +377,33 @@ class PlayerViewController: ViewController {
             alert.addAction(UIAlertAction(title: NSLocalizedString("确定", comment: ""), style: .default))
             present(alert, animated: true)
         }
+    }
+}
+
+// MARK: - MatchsViewControllerDelegate
+
+extension PlayerViewController: MatchsViewControllerDelegate {
+    func matchsViewController(_ matchsViewController: MatchsViewController, didMatched matchInfo: any MatchInfo) {
+        if let presentedViewController = self.presentedViewController {
+            presentedViewController.dismiss(animated: true) { [weak self] in
+                guard let self = self else { return }
+                self.handleMatchResult(matchInfo)
+            }
+        }
+    }
+
+    func playNowInMatchsViewController(_ matchsViewController: MatchsViewController) {
+        if let presentedViewController = self.presentedViewController {
+            presentedViewController.dismiss(animated: true) { [weak self] in
+                guard let self = self else { return }
+                _ = self.playerModel.startPlay(self.playerModel.mediaModel.media!, matchInfo: nil, danmakus: [:]).subscribe()
+            }
+        }
+    }
+
+    private func handleMatchResult(_ matchInfo: any MatchInfo) {
+        guard let media = playerModel.mediaModel.media else { return }
+        ANX.logInfo(.player, "[PlayerVC] 弹幕匹配成功: \(matchInfo.matchDesc)")
+        _ = playerModel.didMatchMedia(media, matchInfo: matchInfo).subscribe()
     }
 }

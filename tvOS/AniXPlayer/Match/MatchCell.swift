@@ -12,24 +12,24 @@ class MatchCell: TableViewCell {
 
     static let reuseIdentifier = "MatchCell"
 
-    private let animeTitleLabel: Label = {
+    private lazy var animeTitleLabel: Label = {
         let label = Label()
-        label.font = .systemFont(ofSize: 18, weight: .medium)
-        label.textColor = .lightGray
+        label.font = .systemFont(ofSize: 22, weight: .medium)
+        label.textColor = .label
         return label
     }()
 
-    private let episodeTitleLabel: Label = {
+    private lazy var episodeTitleLabel: Label = {
+        let label = Label()
+        label.font = .systemFont(ofSize: 18)
+        label.textColor = .secondaryLabel
+        return label
+    }()
+
+    private lazy var typeLabel: Label = {
         let label = Label()
         label.font = .systemFont(ofSize: 15)
-        label.textColor = .lightGray
-        return label
-    }()
-
-    private let typeLabel: Label = {
-        let label = Label()
-        label.font = .systemFont(ofSize: 13)
-        label.textColor = .lightGray
+        label.textColor = .tertiaryLabel
         return label
     }()
 
@@ -50,18 +50,20 @@ class MatchCell: TableViewCell {
 
         animeTitleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
-            make.top.equalToSuperview().offset(14)
             make.trailing.equalToSuperview().offset(-20)
+            make.top.equalToSuperview().offset(20)
         }
 
         episodeTitleLabel.snp.makeConstraints { make in
             make.leading.equalTo(animeTitleLabel)
-            make.top.equalTo(animeTitleLabel.snp.bottom).offset(4)
+            make.trailing.equalTo(animeTitleLabel)
+            make.top.equalTo(animeTitleLabel.snp.bottom).offset(8)
         }
 
         typeLabel.snp.makeConstraints { make in
             make.leading.equalTo(animeTitleLabel)
-            make.top.equalTo(episodeTitleLabel.snp.bottom).offset(2)
+            make.top.equalTo(episodeTitleLabel.snp.bottom).offset(8)
+            make.bottom.equalToSuperview().offset(-20)
         }
     }
 

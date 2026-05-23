@@ -12,20 +12,20 @@ class MainViewController: UITabBarController {
             tag: 0
         )
 
-        let mediaLibVC = NavigationController(rootViewController: FileBrowserViewController())
+        let mediaLibVC = NavigationController(rootViewController: MediaLibraryViewController())
         mediaLibVC.tabBarItem = UITabBarItem(
             title: NSLocalizedString("媒体库", comment: ""),
             image: UIImage(systemName: "folder"),
             tag: 1
         )
 
-        let settingsVC = NavigationController(rootViewController: SettingViewController())
-        settingsVC.tabBarItem = UITabBarItem(
-            title: NSLocalizedString("设置", comment: ""),
-            image: UIImage(systemName: "gear"),
+        let userVC = NavigationController(rootViewController: UserInfoViewController())
+        userVC.tabBarItem = UITabBarItem(
+            title: NSLocalizedString("我的", comment: ""),
+            image: UIImage(systemName: "person"),
             tag: 2
         )
 
-        viewControllers = [homeVC, mediaLibVC, settingsVC]
+        viewControllers = [homeVC, mediaLibVC, userVC]
     }
 }

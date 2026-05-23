@@ -13,7 +13,7 @@ class FavoriteItemCell: CollectionViewCell {
 
     static let reuseIdentifier = "FavoriteItemCell"
 
-    private let posterImageView: UIImageView = {
+    private lazy var posterImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
@@ -22,17 +22,17 @@ class FavoriteItemCell: CollectionViewCell {
         return iv
     }()
 
-    private let titleLabel: Label = {
+    private lazy var titleLabel: Label = {
         let label = Label()
         label.font = .systemFont(ofSize: 18, weight: .medium)
-        label.textColor = .lightGray
+        label.textColor = .label
         return label
     }()
 
-    private let progressLabel: Label = {
+    private lazy var progressLabel: Label = {
         let label = Label()
         label.font = .systemFont(ofSize: 14)
-        label.textColor = .lightGray
+        label.textColor = .secondaryLabel
         return label
     }()
 

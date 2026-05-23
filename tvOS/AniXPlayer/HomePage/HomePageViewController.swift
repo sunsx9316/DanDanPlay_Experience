@@ -2,7 +2,7 @@
 //  HomePageViewController.swift
 //  AniXPlayer
 //
-//  tvOS 首页 — CollectionView 网格布局 + 焦点驱动
+//  tvOS 首页 — TableView 结构，参考 iOS 实现
 //
 
 import UIKit
@@ -10,61 +10,52 @@ import SnapKit
 
 class HomePageViewController: ViewController {
 
-    private enum Section: Int, CaseIterable {
+    private enum CellType: Int, CaseIterable {
+        case banner
+        case function
         case continueWatching
-        case functions
     }
 
-    private enum FunctionItem: Int, CaseIterable {
-        case bangumi
-        case fileBrowser
-        case search
-
-        var title: String {
-            switch self {
-            case .bangumi: return NSLocalizedString("番剧", comment: "")
-            case .fileBrowser: return NSLocalizedString("文件浏览", comment: "")
-            case .search: return NSLocalizedString("搜索", comment: "")
-            }
-        }
-
-        var iconName: String {
-            switch self {
-            case .bangumi: return "tv"
-            case .fileBrowser: return "folder"
-            case .search: return "magnifyingglass"
-            }
+    private var dataSource: Homepage? {
+        didSet {
+            tableView.reloadData()
         }
     }
-
-    private lazy var collectionView: CollectionView = {
-        let layout = Self.createLayout()
-        let cv = CollectionView(frame: .zero, collectionViewLayout: layout)
-        cv.delegate = self
-        cv.dataSource = self
-        cv.register(HomePageContinueWatchingCell.self, forCellWithReuseIdentifier: HomePageContinueWatchingCell.reuseIdentifier)
-        cv.register(HomePageFunctionCell.self, forCellWithReuseIdentifier: HomePageFunctionCell.reuseIdentifier)
-        cv.register(HomePageSectionHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HomePageSectionHeaderView.reuseIdentifier)
-        return cv
-    }()
 
     private var continueWatchingItems: [BangumiQueueIntro] = []
+
+    private lazy var tableView: TableView = {
+        let tv = TableView(frame: .zero, style: .plain)
+        tv.delegate = self
+        tv.dataSource = self
+        tv.register(HomePageBannerCell.self, forCellReuseIdentifier: HomePageBannerCell.reuseIdentifier)
+        tv.register(HomePageFunctionCell.self, forCellReuseIdentifier: HomePageFunctionCell.reuseIdentifier)
+        tv.register(HomePageContinueWatchingCell.self, forCellReuseIdentifier: HomePageContinueWatchingCell.reuseIdentifier)
+        tv.rowHeight = UITableView.automaticDimension
+        tv.estimatedRowHeight = 200
+        return tv
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = NSLocalizedString("主页", comment: "")
 
-        self.view.addSubview(collectionView)
-        collectionView.snp.makeConstraints { make in
+        view.addSubview(tableView)
+        tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
 
         loadData()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData()
+    }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.defaultFocusView = collectionView
+        defaultFocusView = tableView
     }
 
     // MARK: - Data
@@ -75,140 +66,76 @@ class HomePageViewController: ViewController {
             if let homepage = homepage {
                 self.continueWatchingItems = homepage.bangumiQueueIntroList
                 DispatchQueue.main.async {
-                    self.collectionView.reloadData()
+                    self.dataSource = homepage
                 }
             }
         }
     }
-
-    // MARK: - Layout
-
-    private static func createLayout() -> UICollectionViewLayout {
-        return UICollectionViewCompositionalLayout { sectionIndex, _ in
-            guard let section = Section(rawValue: sectionIndex) else { return nil }
-
-            switch section {
-            case .continueWatching:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(300), heightDimension: .fractionalHeight(1.0))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-                let groupSize = NSCollectionLayoutSize(widthDimension: .absolute(300), heightDimension: .absolute(200))
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-
-                let sectionLayout = NSCollectionLayoutSection(group: group)
-                sectionLayout.orthogonalScrollingBehavior = .continuous
-                sectionLayout.interGroupSpacing = 20
-                sectionLayout.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 60, bottom: 0, trailing: 60)
-
-                let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(60))
-                let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-                sectionLayout.boundarySupplementaryItems = [header]
-
-                return sectionLayout
-
-            case .functions:
-                let itemSize = NSCollectionLayoutSize(widthDimension: .absolute(200), heightDimension: .absolute(140))
-                let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-                let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(140))
-                let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
-                group.interItemSpacing = .fixed(20)
-
-                let sectionLayout = NSCollectionLayoutSection(group: group)
-                sectionLayout.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 60, bottom: 40, trailing: 60)
-                sectionLayout.interGroupSpacing = 20
-
-                let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(60))
-                let header = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: UICollectionView.elementKindSectionHeader, alignment: .top)
-                sectionLayout.boundarySupplementaryItems = [header]
-
-                return sectionLayout
-            }
-        }
-    }
 }
 
-// MARK: - UICollectionViewDataSource
+// MARK: - UITableViewDataSource
 
-extension HomePageViewController: UICollectionViewDataSource {
+extension HomePageViewController: UITableViewDataSource {
 
-    func numberOfSections(in collectionView: UICollectionView) -> Int {
-        return Section.allCases.count
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return dataSource != nil ? CellType.allCases.count : 0
     }
 
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let sectionType = Section(rawValue: section) else { return 0 }
-        switch sectionType {
-        case .continueWatching:
-            return continueWatchingItems.count
-        case .functions:
-            return FunctionItem.allCases.count
-        }
-    }
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let type = CellType(rawValue: indexPath.row) else { return UITableViewCell() }
 
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let sectionType = Section(rawValue: indexPath.section) else {
-            return UICollectionViewCell()
-        }
-
-        switch sectionType {
-        case .continueWatching:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomePageContinueWatchingCell.reuseIdentifier, for: indexPath) as! HomePageContinueWatchingCell
-            let item = continueWatchingItems[indexPath.item]
-            cell.configure(with: item)
+        switch type {
+        case .banner:
+            let cell = tableView.dequeueReusableCell(withIdentifier: HomePageBannerCell.reuseIdentifier, for: indexPath) as! HomePageBannerCell
+            cell.banners = dataSource?.banners ?? []
+            cell.onBannerSelected = { [weak self] banner in
+                guard let url = URL(string: banner.url) else { return }
+                #if !os(tvOS)
+                UIApplication.shared.open(url)
+                #endif
+            }
             return cell
 
-        case .functions:
-            let cell = collectionView.dequeueReusableCell(withReuseIdentifier: HomePageFunctionCell.reuseIdentifier, for: indexPath) as! HomePageFunctionCell
-            if let item = FunctionItem(rawValue: indexPath.item) {
-                cell.configure(title: item.title, iconName: item.iconName)
+        case .function:
+            let cell = tableView.dequeueReusableCell(withIdentifier: HomePageFunctionCell.reuseIdentifier, for: indexPath) as! HomePageFunctionCell
+            cell.onItemSelected = { [weak self] itemType in
+                switch itemType {
+                case .timeline:
+                    let vc = TimelineViewController()
+                    self?.navigationController?.pushViewController(vc, animated: true)
+                case .favorite:
+                    let vc = FavoriteViewController()
+                    self?.navigationController?.pushViewController(vc, animated: true)
+                }
+            }
+            return cell
+
+        case .continueWatching:
+            let cell = tableView.dequeueReusableCell(withIdentifier: HomePageContinueWatchingCell.reuseIdentifier, for: indexPath) as! HomePageContinueWatchingCell
+            cell.items = continueWatchingItems
+            cell.onItemSelected = { [weak self] item in
+                let detailVC = BangumiDetailViewController(animateId: item.animeId)
+                self?.navigationController?.pushViewController(detailVC, animated: true)
             }
             return cell
         }
     }
-
-    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HomePageSectionHeaderView.reuseIdentifier, for: indexPath) as! HomePageSectionHeaderView
-
-        guard let sectionType = Section(rawValue: indexPath.section) else { return header }
-
-        switch sectionType {
-        case .continueWatching:
-            header.title = continueWatchingItems.isEmpty ? "" : NSLocalizedString("继续播放", comment: "")
-        case .functions:
-            header.title = NSLocalizedString("功能入口", comment: "")
-        }
-
-        return header
-    }
 }
 
-// MARK: - UICollectionViewDelegate
+// MARK: - UITableViewDelegate
 
-extension HomePageViewController: UICollectionViewDelegate {
+extension HomePageViewController: UITableViewDelegate {
 
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let sectionType = Section(rawValue: indexPath.section) else { return }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        guard let type = CellType(rawValue: indexPath.row) else { return 0 }
 
-        switch sectionType {
+        switch type {
+        case .banner:
+            return dataSource?.banners.isEmpty == false ? 360 : 0
+        case .function:
+            return 100
         case .continueWatching:
-            let item = continueWatchingItems[indexPath.item]
-            let detailVC = BangumiDetailViewController(animateId: item.animeId)
-            self.navigationController?.pushViewController(detailVC, animated: true)
-
-        case .functions:
-            guard let item = FunctionItem(rawValue: indexPath.item) else { return }
-            switch item {
-            case .bangumi:
-                let timelineVC = TimelineViewController()
-                self.navigationController?.pushViewController(timelineVC, animated: true)
-            case .fileBrowser:
-                let fileBrowserVC = FileBrowserViewController()
-                self.navigationController?.pushViewController(fileBrowserVC, animated: true)
-            case .search:
-                let searchVC = SearchViewController()
-                self.navigationController?.pushViewController(searchVC, animated: true)
-            }
+            return continueWatchingItems.isEmpty ? 0 : 275
         }
     }
 }

@@ -1,0 +1,69 @@
+{
+  "originHash" : "e3bef561e04d56498d2a7dad819d02936abd7f275bc284bb12dcc7ee5f7252d1",
+  "pins" : [
+    {
+      "identity" : "alamofire",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Alamofire/Alamofire",
+      "state" : {
+        "revision" : "7595cbcf59809f9977c5f6378500de2ad73b7ddb",
+        "version" : "5.12.0"
+      }
+    },
+    {
+      "identity" : "danmakurender-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sunsx9316/DanmakuRender-Swift",
+      "state" : {
+        "revision" : "3b844aade9dfa849051cf4763ec38613f4dd7ca0",
+        "version" : "1.6.0"
+      }
+    },
+    {
+      "identity" : "gcdwebserver",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sunsx9316/GCDWebServer",
+      "state" : {
+        "revision" : "c893f69fde6d2ef411b665404e09a0de3d471715",
+        "version" : "3.6.0"
+      }
+    },
+    {
+      "identity" : "kingfisher",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/onevcat/Kingfisher",
+      "state" : {
+        "revision" : "2ef543ee21d63734e1c004ad6c870255e8716c50",
+        "version" : "7.12.0"
+      }
+    },
+    {
+      "identity" : "mmkv",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Tencent/MMKV",
+      "state" : {
+        "revision" : "23d652c17e8c2023bb50f1c92e862a2304eaa2a2",
+        "version" : "2.4.0"
+      }
+    },
+    {
+      "identity" : "rxswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/ReactiveX/RxSwift",
+      "state" : {
+        "revision" : "132aea4f236ccadc51590b38af0357a331d51fa2",
+        "version" : "6.10.2"
+      }
+    },
+    {
+      "identity" : "snapkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SnapKit/SnapKit",
+      "state" : {
+        "revision" : "2842e6e84e82eb9a8dac0100ca90d9444b0307f4",
+        "version" : "5.7.1"
+      }
+    }
+  ],
+  "version" : 3
+}

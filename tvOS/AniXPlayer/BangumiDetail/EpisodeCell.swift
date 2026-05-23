@@ -12,17 +12,17 @@ class EpisodeCell: TableViewCell {
 
     static let reuseIdentifier = "EpisodeCell"
 
-    private let episodeNumberLabel: Label = {
+    private lazy var episodeNumberLabel: Label = {
         let label = Label()
         label.font = .systemFont(ofSize: 18, weight: .semibold)
-        label.textColor = .lightGray
+        label.textColor = .secondaryLabel
         return label
     }()
 
-    private let episodeTitleLabel: Label = {
+    private lazy var episodeTitleLabel: Label = {
         let label = Label()
         label.font = .systemFont(ofSize: 17)
-        label.textColor = .lightGray
+        label.textColor = .label
         return label
     }()
 

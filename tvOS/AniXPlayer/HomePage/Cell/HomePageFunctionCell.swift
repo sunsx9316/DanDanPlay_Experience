@@ -2,34 +2,62 @@
 //  HomePageFunctionCell.swift
 //  AniXPlayer
 //
-//  tvOS 首页"功能入口"Cell
+//  tvOS 首页功能区 — 参考 iOS HomePageFunctionTableViewCell，Timeline + 登录后Favorites
 //
 
 import UIKit
 import SnapKit
 
-class HomePageFunctionCell: CollectionViewCell {
+class HomePageFunctionCell: TableViewCell {
+
+    enum ItemType {
+        case timeline
+        case favorite
+    }
 
     static let reuseIdentifier = "HomePageFunctionCell"
 
-    private let iconImageView: UIImageView = {
-        let iv = UIImageView()
-        iv.contentMode = .scaleAspectFit
-        iv.tintColor = .white
-        return iv
+    var onItemSelected: ((ItemType) -> Void)?
+
+    private var stackView: UIStackView = {
+        let sv = UIStackView()
+        sv.axis = .horizontal
+        sv.spacing = 30
+        sv.distribution = .fillEqually
+        sv.alignment = .center
+        return sv
     }()
 
-    private let nameLabel: Label = {
-        let label = Label()
-        label.font = .systemFont(ofSize: 17, weight: .medium)
-        label.textColor = .lightGray
-        label.textAlignment = .center
-        return label
+    private lazy var timelineButton: UIButton = {
+        let btn = UIButton(type: .system)
+        btn.setTitle(NSLocalizedString("新番时间表", comment: ""), for: .normal)
+        btn.titleLabel?.font = .systemFont(ofSize: 22, weight: .medium)
+        btn.setTitleColor(.white, for: .normal)
+        btn.setTitleColor(.black, for: .focused)
+        btn.addTarget(self, action: #selector(timelineTapped), for: .primaryActionTriggered)
+        return btn
     }()
 
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    private lazy var favoriteButton: UIButton = {
+        let btn = UIButton(type: .system)
+        btn.setTitle(NSLocalizedString("我的关注", comment: ""), for: .normal)
+        btn.titleLabel?.font = .systemFont(ofSize: 22, weight: .medium)
+        btn.setTitleColor(.white, for: .normal)
+        btn.setTitleColor(.black, for: .focused)
+        btn.addTarget(self, action: #selector(favoriteTapped), for: .primaryActionTriggered)
+        return btn
+    }()
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(reloadButtons),
+            name: .AnixUserLoginStateDidChange,
+            object: nil
+        )
     }
 
     required init?(coder: NSCoder) {
@@ -37,27 +65,46 @@ class HomePageFunctionCell: CollectionViewCell {
         setupUI()
     }
 
-    private func setupUI() {
-        contentView.backgroundColor = UIColor.white.withAlphaComponent(0.08)
-        contentView.layer.cornerRadius = 12
-
-        contentView.addSubview(iconImageView)
-        contentView.addSubview(nameLabel)
-
-        iconImageView.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.top.equalToSuperview().offset(20)
-            make.size.equalTo(CGSize(width: 48, height: 48))
-        }
-
-        nameLabel.snp.makeConstraints { make in
-            make.top.equalTo(iconImageView.snp.bottom).offset(12)
-            make.leading.trailing.equalToSuperview().inset(12)
-        }
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
 
-    func configure(title: String, iconName: String) {
-        nameLabel.text = title
-        iconImageView.image = UIImage(systemName: iconName)
+    override var canBecomeFocused: Bool { return false }
+
+    override var preferredFocusEnvironments: [UIFocusEnvironment] {
+        if Preferences.shared.loginInfo != nil {
+            return [timelineButton, favoriteButton]
+        }
+        return [timelineButton]
+    }
+
+    private func setupUI() {
+        selectionStyle = .none
+
+        contentView.addSubview(stackView)
+        stackView.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.height.equalTo(60)
+        }
+        reloadButtons()
+    }
+
+    @objc private func reloadButtons() {
+        stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        stackView.addArrangedSubview(timelineButton)
+
+        if Preferences.shared.loginInfo != nil {
+            stackView.addArrangedSubview(favoriteButton)
+        }
+        setNeedsFocusUpdate()
+        updateFocusIfNeeded()
+    }
+
+    @objc private func timelineTapped() {
+        onItemSelected?(.timeline)
+    }
+
+    @objc private func favoriteTapped() {
+        onItemSelected?(.favorite)
     }
 }
