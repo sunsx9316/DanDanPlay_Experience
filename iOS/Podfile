@@ -13,7 +13,7 @@ target 'AniXPlayer' do
   pod 'MMKV'
   pod 'MobileVLCKit'
   pod 'AMSMB2'
-  pod "GCDWebServer/WebUploader"
+  pod "GCDWebServer"
   pod 'FirebaseCrashlytics'
   pod 'FSPagerView'
   pod 'JXCategoryView'

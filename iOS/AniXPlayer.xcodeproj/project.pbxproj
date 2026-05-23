@@ -142,6 +142,8 @@
 		8944E87D263BD69800EF00B1 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8944E87C263BD69700EF00B1 /* Button.swift */; };
 		8949F8912662AA2100274520 /* WebDavLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8949F8902662AA2100274520 /* WebDavLoginHistoryViewController.swift */; };
 		8949F8932662AA8E00274520 /* FTPLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8949F8922662AA8E00274520 /* FTPLoginHistoryViewController.swift */; };
+		895152CF2FC1ADC000F75DB7 /* upload.html in Resources */ = {isa = PBXBuildFile; fileRef = 895152CC2FC1ADC000F75DB7 /* upload.html */; };
+		895152D02FC1ADC000F75DB7 /* upload.js in Resources */ = {isa = PBXBuildFile; fileRef = 895152CD2FC1ADC000F75DB7 /* upload.js */; };
 		8953CDA42C987FF1003EF386 /* FilterDanmakuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8953CDA22C987FF1003EF386 /* FilterDanmakuTableViewCell.swift */; };
 		8953CDA52C987FF1003EF386 /* FilterDanmakuTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8953CDA32C987FF1003EF386 /* FilterDanmakuTableViewCell.xib */; };
 		8953D0212C99E306003EF386 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D0202C99E306003EF386 /* Alamofire */; };
@@ -253,6 +255,7 @@
 		89FFD12B2D44EB2700428206 /* AppKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD12A2D44EB2700428206 /* AppKey.swift */; };
 		89FFD1312D4B838500428206 /* Launcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD1302D4B838500428206 /* Launcher.swift */; };
 		89FFD1352D4B904000428206 /* SelectedFontViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD1342D4B904000428206 /* SelectedFontViewController.swift */; };
+		8CC5E781D18C4C83A9F2A6BE /* FolderProgressCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE600170BF1445D9B00A4593 /* FolderProgressCell.swift */; };
 		9DE8B428CAFC3A5D26DE9E56 /* DanmakuInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54627AC0D74F1F7C3F2CB1D /* DanmakuInputView.swift */; };
 		9DE8B429CAFC3A5D26DE9E57 /* ColorManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54627AC0D74F1F7C3F2CB1E /* ColorManagementViewController.swift */; };
 /* End PBXBuildFile section */
@@ -423,6 +426,8 @@
 		8944E87C263BD69700EF00B1 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		8949F8902662AA2100274520 /* WebDavLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDavLoginHistoryViewController.swift; sourceTree = "<group>"; };
 		8949F8922662AA8E00274520 /* FTPLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FTPLoginHistoryViewController.swift; sourceTree = "<group>"; };
+		895152CC2FC1ADC000F75DB7 /* upload.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = upload.html; sourceTree = "<group>"; };
+		895152CD2FC1ADC000F75DB7 /* upload.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = upload.js; sourceTree = "<group>"; };
 		8953CDA22C987FF1003EF386 /* FilterDanmakuTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterDanmakuTableViewCell.swift; sourceTree = "<group>"; };
 		8953CDA32C987FF1003EF386 /* FilterDanmakuTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FilterDanmakuTableViewCell.xib; sourceTree = "<group>"; };
 		895B41512F7445A400B4DA4C /* MPVPlayerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVPlayerWrapper.swift; sourceTree = "<group>"; };
@@ -524,6 +529,7 @@
 		B54627AC0D74F1F7C3F2CB1D /* DanmakuInputView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DanmakuInputView.swift; sourceTree = "<group>"; };
 		B54627AC0D74F1F7C3F2CB1E /* ColorManagementViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorManagementViewController.swift; sourceTree = "<group>"; };
 		CF2D5334A2A53D20F8B80E22 /* Pods-AniXPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.release.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.release.xcconfig"; sourceTree = "<group>"; };
+		EE600170BF1445D9B00A4593 /* FolderProgressCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderProgressCell.swift; sourceTree = "<group>"; };
 		F410B8A741526DF765820021 /* Pods-AniXPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.debug.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -709,6 +715,7 @@
 			isa = PBXGroup;
 			children = (
 				890DF75B26160B3E002D8AE5 /* FileTableViewCell.swift */,
+				EE600170BF1445D9B00A4593 /* FolderProgressCell.swift */,
 				890DF75A26160B3E002D8AE5 /* FolderTableViewCell.swift */,
 				890DF75D26160B3E002D8AE5 /* FolderTableViewCell.xib */,
 				8944E874263AF48C00EF00B1 /* LinkHistoryTableViewCell.swift */,
@@ -1152,6 +1159,15 @@
 			path = WebDAV;
 			sourceTree = "<group>";
 		};
+		895152CE2FC1ADC000F75DB7 /* Web */ = {
+			isa = PBXGroup;
+			children = (
+				895152CC2FC1ADC000F75DB7 /* upload.html */,
+				895152CD2FC1ADC000F75DB7 /* upload.js */,
+			);
+			path = Web;
+			sourceTree = "<group>";
+		};
 		8953CDA62C988188003EF386 /* FilterDanmaku */ = {
 			isa = PBXGroup;
 			children = (
@@ -1196,6 +1212,7 @@
 		8994607428CC6CE1009AC640 /* HttpServer */ = {
 			isa = PBXGroup;
 			children = (
+				895152CE2FC1ADC000F75DB7 /* Web */,
 				8994607528CC6CE1009AC640 /* HttpServer.swift */,
 			);
 			path = HttpServer;
@@ -1532,6 +1549,8 @@
 				8931F0FA2677457100590569 /* EditableTableViewCell.xib in Resources */,
 				890DF6D926160827002D8AE5 /* LaunchScreen.storyboard in Resources */,
 				89A689682C42603A002B7CA3 /* User.svg in Resources */,
+				895152CF2FC1ADC000F75DB7 /* upload.html in Resources */,
+				895152D02FC1ADC000F75DB7 /* upload.js in Resources */,
 				89AF9BFF2631C1740037A133 /* SwitchTableViewCell.xib in Resources */,
 				89A6897B2C42E08D002B7CA3 /* Favorited.svg in Resources */,
 				89E0D6132669127B00E2337B /* SwitchDetailTableViewCell.xib in Resources */,
@@ -1726,6 +1745,7 @@
 				8944E876263AF48C00EF00B1 /* LinkHistoryTableViewCell.swift in Sources */,
 				8931A91B2F79737000125F69 /* FTPConnectSvrViewController.swift in Sources */,
 				890DF77026160B3E002D8AE5 /* FileTableViewCell.swift in Sources */,
+				8CC5E781D18C4C83A9F2A6BE /* FolderProgressCell.swift in Sources */,
 				890DF6FA26160A36002D8AE5 /* RefreshHeader.swift in Sources */,
 				8925B9632CAD4C12001A8388 /* SetMainColorViewController.swift in Sources */,
 				890DF75226160B1B002D8AE5 /* UIDevice+Helper.swift in Sources */,
