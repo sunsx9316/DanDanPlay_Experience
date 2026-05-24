@@ -28,7 +28,7 @@ class PlayerUIBottomView: UIView {
 
     private(set) lazy var danmakuButton: UIButton = {
         let button = UIButton(type: .system)
-        button.setTitle(NSLocalizedString("弹幕", comment: ""), for: .normal)
+        button.setTitle(NSLocalizedString("发弹幕", comment: ""), for: .normal)
         button.titleLabel?.font = .ddp_small(weight: .medium)
         button.setTitleColor(.white, for: .normal)
         button.setTitleColor(.black, for: .focused)
@@ -44,10 +44,20 @@ class PlayerUIBottomView: UIView {
         return button
     }()
 
+    private(set) lazy var playlistButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.setTitle(NSLocalizedString("播放列表", comment: ""), for: .normal)
+        button.titleLabel?.font = .ddp_small(weight: .medium)
+        button.setTitleColor(.white, for: .normal)
+        button.setTitleColor(.black, for: .focused)
+        return button
+    }()
+
     // MARK: - Callbacks
 
     var onDanmakuTapped: (() -> Void)?
     var onSettingsTapped: (() -> Void)?
+    var onPlaylistTapped: (() -> Void)?
 
     // MARK: - UI
 
@@ -96,21 +106,28 @@ class PlayerUIBottomView: UIView {
         addSubview(totalTimeLabel)
         addSubview(settingsButton)
         addSubview(danmakuButton)
+        addSubview(playlistButton)
 
         settingsButton.addTarget(self, action: #selector(settingsPressed), for: .primaryActionTriggered)
         danmakuButton.addTarget(self, action: #selector(danmakuPressed), for: .primaryActionTriggered)
+        playlistButton.addTarget(self, action: #selector(playlistPressed), for: .primaryActionTriggered)
 
         backgroundView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
 
+        playlistButton.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().offset(-20)
+            make.centerY.equalTo(progressBar)
+        }
+
         settingsButton.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().offset(-80)
+            make.trailing.equalTo(playlistButton.snp.leading).offset(-20)
             make.centerY.equalTo(progressBar)
         }
 
         danmakuButton.snp.makeConstraints { make in
-            make.trailing.equalTo(settingsButton.snp.leading).offset(-30)
+            make.trailing.equalTo(settingsButton.snp.leading).offset(-20)
             make.centerY.equalTo(progressBar)
         }
 
@@ -138,5 +155,9 @@ class PlayerUIBottomView: UIView {
 
     @objc private func settingsPressed() {
         onSettingsTapped?()
+    }
+
+    @objc private func playlistPressed() {
+        onPlaylistTapped?()
     }
 }

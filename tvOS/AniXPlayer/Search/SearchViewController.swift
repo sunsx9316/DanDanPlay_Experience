@@ -2,7 +2,7 @@
 //  SearchViewController.swift
 //  AniXPlayer
 //
-//  tvOS 搜索 — 自定义搜索栏 + TableView 展示结果
+//  tvOS 搜索 — 先展示搜索结果列表，点击进入番剧详情查看分集
 //
 
 import UIKit
@@ -16,7 +16,7 @@ class SearchViewController: ViewController {
 
     weak var delegate: SearchViewControllerDelegate?
 
-    private var searchResults: [SearchCollection] = []
+    private var dataSource: [MediaMatchItem] = []
 
     // MARK: - Search Bar
 
@@ -35,9 +35,10 @@ class SearchViewController: ViewController {
         let tv = TableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self
-        tv.register(SearchResultCell.self, forCellReuseIdentifier: SearchResultCell.reuseIdentifier)
+        tv.register(SearchAnimeCell.self, forCellReuseIdentifier: SearchAnimeCell.reuseIdentifier)
+        tv.register(SearchEpisodeCell.self, forCellReuseIdentifier: SearchEpisodeCell.reuseIdentifier)
         tv.rowHeight = UITableView.automaticDimension
-        tv.estimatedRowHeight = 100
+        tv.estimatedRowHeight = 80
         return tv
     }()
 
@@ -49,6 +50,21 @@ class SearchViewController: ViewController {
         label.textAlignment = .center
         return label
     }()
+
+    // MARK: - Init
+
+    private init(with items: [MediaMatchItem]) {
+        self.dataSource = items
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    convenience init() {
+        self.init(with: [])
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
 
     // MARK: - Lifecycle
 
@@ -67,7 +83,8 @@ class SearchViewController: ViewController {
 
         resultTableView.snp.makeConstraints { make in
             make.top.equalTo(searchTextField.snp.bottom).offset(16)
-            make.leading.trailing.bottom.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(40)
         }
 
         emptyLabel.snp.makeConstraints { make in
@@ -75,12 +92,16 @@ class SearchViewController: ViewController {
         }
 
         searchTextField.delegate = self
+
+        searchTextField.isHidden = !dataSource.isEmpty
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.defaultFocusView = searchTextField
+        self.defaultFocusView = searchTextField.isHidden ? resultTableView : searchTextField
     }
+
+    // MARK: - Private
 
     private func performSearch(keyword: String) {
         guard !keyword.isEmpty else { return }
@@ -89,9 +110,9 @@ class SearchViewController: ViewController {
             guard let self = self else { return }
             DispatchQueue.main.async {
                 if let result = result {
-                    self.searchResults = result.collection
+                    self.dataSource = result.collection
                     self.resultTableView.reloadData()
-                    self.emptyLabel.isHidden = !self.searchResults.isEmpty
+                    self.emptyLabel.isHidden = !self.dataSource.isEmpty
                 }
             }
         }
@@ -113,30 +134,22 @@ extension SearchViewController: UITextFieldDelegate {
 
 extension SearchViewController: UITableViewDataSource {
 
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return searchResults.count
-    }
-
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return searchResults[section].collection.count
+        return dataSource.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: SearchResultCell.reuseIdentifier, for: indexPath) as! SearchResultCell
-        let anime = searchResults[indexPath.section]
-        let episode = anime.collection[indexPath.row]
-        cell.configure(with: episode)
-        return cell
-    }
+        let item = dataSource[indexPath.row]
+        let hasSubItems = item.items?.isEmpty == false
 
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return searchResults[section].animeTitle
-    }
-
-    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        if let header = view as? UITableViewHeaderFooterView {
-            header.textLabel?.textColor = .label
-            header.textLabel?.font = .ddp_normal(weight: .medium)
+        if hasSubItems {
+            let cell = tableView.dequeueReusableCell(withIdentifier: SearchAnimeCell.reuseIdentifier, for: indexPath) as! SearchAnimeCell
+            cell.configure(with: item)
+            return cell
+        } else {
+            let cell = tableView.dequeueReusableCell(withIdentifier: SearchEpisodeCell.reuseIdentifier, for: indexPath) as! SearchEpisodeCell
+            cell.configure(with: item)
+            return cell
         }
     }
 }
@@ -146,14 +159,23 @@ extension SearchViewController: UITableViewDataSource {
 extension SearchViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let anime = searchResults[indexPath.section]
-        let episode = anime.collection[indexPath.row]
+        let item = dataSource[indexPath.row]
 
-        if let delegate = self.delegate {
-            delegate.searchViewController(self, didMatched: episode)
-        } else {
-            let detailVC = BangumiDetailViewController(animateId: anime.animeId)
-            self.navigationController?.pushViewController(detailVC, animated: true)
+        if let items = item.items, !items.isEmpty {
+            let vc = SearchViewController(with: items)
+            vc.title = item.title
+            vc.delegate = self.delegate
+            self.navigationController?.pushViewController(vc, animated: true)
+        } else if (item.episodeId ?? 0) > 0 {
+            self.delegate?.searchViewController(self, didMatched: item)
         }
+    }
+}
+
+// MARK: - SearchViewControllerDelegate
+
+extension SearchViewController: SearchViewControllerDelegate {
+    func searchViewController(_ searchViewController: SearchViewController, didMatched matchInfo: MatchInfo) {
+        self.delegate?.searchViewController(self, didMatched: matchInfo)
     }
 }

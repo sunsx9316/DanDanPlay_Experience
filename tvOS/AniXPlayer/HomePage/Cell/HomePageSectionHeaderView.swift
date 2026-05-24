@@ -20,7 +20,7 @@ class HomePageSectionHeaderView: UICollectionReusableView {
 
     private let titleLabel: Label = {
         let label = Label()
-        label.font = .ddp_small(weight: .bold)
+        label.font = .ddp_large(weight: .bold)
         label.textColor = .white
         return label
     }()
@@ -29,7 +29,7 @@ class HomePageSectionHeaderView: UICollectionReusableView {
         super.init(frame: frame)
         addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview()
+            make.centerX.equalToSuperview()
             make.centerY.equalToSuperview()
         }
     }

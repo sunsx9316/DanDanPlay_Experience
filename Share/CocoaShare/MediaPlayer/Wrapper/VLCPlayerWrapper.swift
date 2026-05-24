@@ -460,7 +460,10 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
                 case .fourToThree, .sixteenToNine, .sixteenToTen:
                     self.player?.scaleFactor = 0
                     self.player?.videoCropGeometry = nil
-                    self.player?.videoAspectRatio = UnsafeMutablePointer(mutating: (newValue.rawValue as NSString).utf8String)
+                    newValue.rawValue.withCString { ptr in
+                        self.player?.videoAspectRatio = UnsafeMutablePointer(mutating: ptr)
+                    }
+                    ANX.logInfo(.player, "[VLC] aspectRatio set: \(newValue.rawValue), player state: \(self.player?.state.rawValue ?? -1)")
                 }
             }
             

@@ -70,7 +70,7 @@ extension MediaLibraryViewController: UITableViewDelegate {
         let source = Source(rawValue: indexPath.row)!
         switch source {
         case .local:
-            let vc = FileBrowserViewController(directory: LocalFile.rootFile)
+            let vc = LocalFileBrowserViewController(directory: LocalFile.rootFile)
             navigationController?.pushViewController(vc, animated: true)
         }
     }

@@ -2,21 +2,30 @@
 //  FileBrowserViewController.swift
 //  AniXPlayer
 //
-//  tvOS 文件浏览 — TableView 文件列表 + 焦点导航
+//  tvOS 文件浏览基类 — 提供目录导航、文件列表、代理回调
 //
 
 import UIKit
 import SnapKit
 
-class FileBrowserViewController: ViewController {
+// MARK: - Delegate
 
-    /// 文件选择回调（非 nil 时为选择模式，点击文件会回调而不是播放）
-    var didSelectFile: ((File) -> Void)?
+protocol FileBrowserViewControllerDelegate: AnyObject {
+    func fileBrowserViewController(_ vc: FileBrowserViewController, didSelectFile: File, allFiles: [File])
+}
+
+// MARK: - FileBrowserViewController
+
+class FileBrowserViewController: ViewController, FileBrowserViewControllerDelegate {
+
+    weak var delegate: FileBrowserViewControllerDelegate?
 
     /// 文件过滤类型（nil = 不过滤）
     var filterType: URLFilterType? = .video
 
-    private lazy var tableView: TableView = {
+    // MARK: - UI
+
+    private(set) lazy var tableView: TableView = {
         let tv = TableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self
@@ -25,10 +34,14 @@ class FileBrowserViewController: ViewController {
         return tv
     }()
 
+    // MARK: - Data
+
     private let rootDirectory: File
     private var currentDirectory: File?
-    private var files: [File] = []
+    private(set) var files: [File] = []
     private var isLoading = false
+
+    // MARK: - Init
 
     init(directory: File) {
         self.rootDirectory = directory
@@ -39,33 +52,18 @@ class FileBrowserViewController: ViewController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - Lifecycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let wifiButton = Button(type: .system)
-        wifiButton.setImage(UIImage(systemName: "wifi"), for: .normal)
-        wifiButton.setTitle(NSLocalizedString("WiFi传文件", comment: ""), for: .normal)
-        wifiButton.addTarget(self, action: #selector(openWiFiTransfer), for: .primaryActionTriggered)
-
-        self.view.addSubview(wifiButton)
         self.view.addSubview(tableView)
-
-        wifiButton.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(8)
-            make.trailing.equalToSuperview().offset(-20)
-        }
-
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(wifiButton.snp.bottom).offset(8)
-            make.leading.trailing.bottom.equalToSuperview()
+            make.top.trailing.bottom.equalToSuperview()
+            make.leading.equalToSuperview().offset(40)
         }
 
         enterDirectory(rootDirectory)
-    }
-
-    @objc private func openWiFiTransfer() {
-        let httpVC = HttpServerViewController()
-        navigationController?.pushViewController(httpVC, animated: true)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -115,20 +113,20 @@ class FileBrowserViewController: ViewController {
         }
     }
 
-    private func selectFile(_ file: File) {
-        if let didSelectFile = didSelectFile {
-            didSelectFile(file)
-        } else {
-            let playerVC = PlayerViewController()
-            playerVC.file = file
-            self.present(playerVC, animated: true)
-        }
+    func selectFile(_ file: File) {
+        delegate?.fileBrowserViewController(self, didSelectFile: file, allFiles: files)
     }
 
     private func showError(_ error: Error) {
         let alert = UIAlertController(title: NSLocalizedString("错误", comment: ""), message: error.localizedDescription, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: NSLocalizedString("确定", comment: ""), style: .default))
         self.present(alert, animated: true)
+    }
+
+    // MARK: - FileBrowserViewControllerDelegate
+
+    func fileBrowserViewController(_ vc: FileBrowserViewController, didSelectFile: File, allFiles: [File]) {
+        delegate?.fileBrowserViewController(vc, didSelectFile: didSelectFile, allFiles: allFiles)
     }
 }
 
@@ -175,7 +173,10 @@ extension FileBrowserViewController: UITableViewDelegate {
         } else {
             let file = files[indexPath.row]
             if file.type == .folder {
-                enterDirectory(file)
+                let vc = FileBrowserViewController(directory: file)
+                vc.filterType = filterType
+                vc.delegate = self
+                navigationController?.pushViewController(vc, animated: true)
             } else {
                 selectFile(file)
             }

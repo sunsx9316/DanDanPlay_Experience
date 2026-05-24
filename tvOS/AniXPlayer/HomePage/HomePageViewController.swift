@@ -48,9 +48,26 @@ class HomePageViewController: ViewController {
         loadData()
     }
 
+    private var notificationObserver: NSObjectProtocol?
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tableView.reloadData()
+        loadData()
+
+        notificationObserver = NotificationCenter.default.addObserver(
+            forName: .AnixUserLoginStateDidChange,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            self?.loadData()
+        }
+    }
+
+    deinit {
+        if let observer = notificationObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -64,7 +81,10 @@ class HomePageViewController: ViewController {
         HomePageNetworkHandle.homePage() { [weak self] homepage, error in
             guard let self = self else { return }
             if let homepage = homepage {
-                self.continueWatchingItems = homepage.bangumiQueueIntroList
+                // 继续播放仅在登录后显示
+                if Preferences.shared.loginInfo != nil {
+                    self.continueWatchingItems = homepage.bangumiQueueIntroList
+                }
                 DispatchQueue.main.async {
                     self.dataSource = homepage
                 }

@@ -94,7 +94,7 @@ class StepperSettingCell: TableViewCell {
 
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
-            make.top.equalToSuperview().offset(10)
+            make.top.equalToSuperview().offset(14)
         }
 
         valueLabel.snp.makeConstraints { make in
@@ -119,7 +119,7 @@ class StepperSettingCell: TableViewCell {
             make.trailing.equalTo(contentView.snp.centerX).offset(-16)
             make.top.equalTo(trackView.snp.bottom).offset(4)
             make.width.height.equalTo(36)
-            make.bottom.equalToSuperview().offset(-6)
+            make.bottom.equalToSuperview().offset(-14)
         }
 
         plusIndicator.snp.makeConstraints { make in

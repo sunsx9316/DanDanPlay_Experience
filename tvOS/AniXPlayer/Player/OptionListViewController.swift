@@ -59,7 +59,8 @@ class OptionListViewController: ViewController {
         tableView.backgroundColor = .clear
         view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.trailing.bottom.equalToSuperview()
+            make.leading.equalToSuperview().offset(40)
         }
     }
 

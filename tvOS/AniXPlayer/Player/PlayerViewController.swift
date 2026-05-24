@@ -14,29 +14,27 @@ class PlayerViewController: ViewController {
 
     // MARK: - Properties
 
-    var file: File? {
-        didSet {
-            guard let file = file else { return }
-            playerModel.tryParseMedia(file)
-        }
-    }
-
     private lazy var playerModel = PlayerModel()
     private var mediaModel: PlayerMediaModel { playerModel.mediaModel }
     private var danmakuModel: PlayerDanmakuModel { playerModel.danmakuModel }
 
     private let bag = DisposeBag()
     private let sidePanelAnimator = SidePanelAnimator()
+    private let centerPopupAnimator = CenterPopupAnimator()
 
     private var seekStep: Double = 10
     private var loadingView: PlayerLoadingView?
-    private var progressTimer: Timer?
+    private var gotoLastWatchPointVC: GotoLastWatchPointViewController?
+    
+    private var seekTimer: Timer?
+    private var seekDirection: Double = 0
+    private var seekPreviewTime: Double?
 
     // MARK: - UI
 
-    private lazy var mediaView: UIView = {
+    private var mediaView: UIView {
         return mediaModel.mediaView
-    }()
+    }
 
     private lazy var danmakuCanvas: UIView = {
         let view = UIView()
@@ -52,7 +50,38 @@ class PlayerViewController: ViewController {
         cornerRadius: 0
     )
 
+    private var seekToast: PlayerToastView?
+    private weak var fastSeekToast: PlayerToastView?
+
+    // MARK: - Init
+
+    init(items: [File], selectedItem: File? = nil) {
+        super.init(nibName: nil, bundle: nil)
+
+        Helper.shared.playerViewController = self
+
+        self.mediaModel.loadMedias(items)
+
+        self.firstPlayMediaCallBack = {
+            if let selectedItem = selectedItem {
+                return selectedItem
+            }
+            return items.first
+        }
+    }
+
+    private var firstPlayMediaCallBack: (() -> File?)?
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     // MARK: - Lifecycle
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -103,6 +132,11 @@ class PlayerViewController: ViewController {
             self?.overlayView.resetAutoHideTimer()
         }
 
+        overlayView.bottomBar.onPlaylistTapped = { [weak self] in
+            self?.showPlaylist()
+            self?.overlayView.resetAutoHideTimer()
+        }
+
         let leftTap = UITapGestureRecognizer(target: self, action: #selector(handleLeftArrow))
         leftTap.allowedPressTypes = [NSNumber(value: UIPress.PressType.leftArrow.rawValue)]
         view.addGestureRecognizer(leftTap)
@@ -111,42 +145,108 @@ class PlayerViewController: ViewController {
         rightTap.allowedPressTypes = [NSNumber(value: UIPress.PressType.rightArrow.rawValue)]
         view.addGestureRecognizer(rightTap)
 
+        let leftLongPress = UILongPressGestureRecognizer(target: self, action: #selector(handleLeftLongPress(_:)))
+        leftLongPress.allowedPressTypes = [NSNumber(value: UIPress.PressType.leftArrow.rawValue)]
+        leftLongPress.minimumPressDuration = 0.8
+        view.addGestureRecognizer(leftLongPress)
+
+        let rightLongPress = UILongPressGestureRecognizer(target: self, action: #selector(handleRightLongPress(_:)))
+        rightLongPress.allowedPressTypes = [NSNumber(value: UIPress.PressType.rightArrow.rawValue)]
+        rightLongPress.minimumPressDuration = 0.8
+        view.addGestureRecognizer(rightLongPress)
+
         bindModel()
-        startProgressTimer()
+        overlayView.show()
+
+        if let firstPlayMedia = self.firstPlayMediaCallBack?() {
+            playerModel.tryParseMedia(firstPlayMedia)
+        }
     }
 
     @objc private func handleLeftArrow() {
-        guard presentedViewController == nil, !overlayView.isVisible else { return }
-        seek(by: -seekStep)
+        if overlayView.isVisible {
+            overlayView.resetAutoHideTimer()
+        } else {
+            seek(by: -seekStep)
+        }
     }
 
     @objc private func handleRightArrow() {
-        guard presentedViewController == nil, !overlayView.isVisible else { return }
-        seek(by: seekStep)
+        if overlayView.isVisible {
+            overlayView.resetAutoHideTimer()
+        } else {
+            seek(by: seekStep)
+        }
+    }
+
+    @objc private func handleLeftLongPress(_ gesture: UILongPressGestureRecognizer) {
+        handleLongPress(gesture, direction: -1)
+    }
+
+    @objc private func handleRightLongPress(_ gesture: UILongPressGestureRecognizer) {
+        handleLongPress(gesture, direction: 1)
+    }
+
+    private func handleLongPress(_ gesture: UILongPressGestureRecognizer, direction: Double) {
+        switch gesture.state {
+        case .began:
+            seekDirection = direction
+            seekPreviewTime = mediaModel.currentTime
+            if seekToast == nil {
+                seekToast = PlayerToastView.show(in: view, text: "", dismissAfter: nil)
+            }
+            startSeekTimer()
+        case .ended, .cancelled:
+            if let previewTime = seekPreviewTime {
+                seekToTime(previewTime)
+            }
+            stopSeekTimer()
+            seekPreviewTime = nil
+            seekToast?.dismiss()
+            seekToast = nil
+        default:
+            break
+        }
+    }
+
+    private func startSeekTimer() {
+        seekTimer?.invalidate()
+        seekTimer = Timer.scheduledTimer(withTimeInterval: 0.06, repeats: true) { [weak self] _ in
+            guard let self = self, let previewTime = self.seekPreviewTime else { return }
+            let totalLength = self.mediaModel.length
+            let newTime = max(0, min(previewTime + self.seekDirection * self.seekStep * 2, totalLength))
+            self.seekPreviewTime = newTime
+            self.updateSeekPreview(newTime, total: totalLength)
+        }
+    }
+
+    private func stopSeekTimer() {
+        seekTimer?.invalidate()
+        seekTimer = nil
+    }
+
+    private func updateSeekPreview(_ time: Double, total: Double) {
+        overlayView.bottomBar.currentTimeText = formatTime(time)
+        let fraction = total > 0 ? CGFloat(time / total) : 0
+        overlayView.bottomBar.progressFraction = fraction
+        miniProgressBar.progressFraction = fraction
+
+        seekToast?.updateText("\(formatTime(time)) / \(formatTime(total))")
     }
 
     override var preferredFocusEnvironments: [UIFocusEnvironment] {
         guard overlayView.isVisible else { return super.preferredFocusEnvironments }
-        return [overlayView.bottomBar.danmakuButton, overlayView.bottomBar.settingsButton]
+        return [overlayView.bottomBar.playlistButton, overlayView.bottomBar.danmakuButton, overlayView.bottomBar.settingsButton]
     }
 
     deinit {
-        progressTimer?.invalidate()
+        seekTimer?.invalidate()
         playerModel.mediaModel.terminate()
     }
 
     // MARK: - Progress Timer
 
-    private func startProgressTimer() {
-        progressTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
-            self?.updateProgress()
-        }
-    }
-
-    private func updateProgress() {
-        let current = mediaModel.currentTime
-        let total = mediaModel.length
-        overlayView.topBar.title = file?.fileName
+    private func updateProgress(_ current: TimeInterval, total: TimeInterval) {
         overlayView.bottomBar.currentTimeText = formatTime(current)
         overlayView.bottomBar.totalTimeText = formatTime(total)
 
@@ -204,16 +304,32 @@ class PlayerViewController: ViewController {
         PlayerToastView.show(in: view, text: text)
     }
 
-    private func seek(by seconds: Double) {
+    private func seek(by seconds: Double, showToast: Bool = true) {
         let currentTime = mediaModel.currentTime
         let totalLength = mediaModel.length
         let newTime = max(0, min(currentTime + seconds, totalLength))
         let position = totalLength > 0 ? newTime / totalLength : 0
         playerModel.changePosition(CGFloat(position))
-        updateProgress()
+        updateProgress(currentTime, total: totalLength)
 
-        let direction = seconds > 0 ? ">>" : "<<"
-        PlayerToastView.show(in: view, text: "\(direction) \(abs(Int(seconds)))s")
+        if showToast {
+            let direction = seconds > 0 ? ">>" : "<<"
+            let timeString = formatTime(newTime)
+            
+            if self.fastSeekToast == nil {
+                self.fastSeekToast = PlayerToastView.show(in: view, text: "", dismissAfter: nil)
+            }
+            
+            self.fastSeekToast?.updateText("\(direction) \(abs(Int(seconds)))s\n\(timeString)")
+            self.fastSeekToast?.dismiss(after: 1)
+        }
+    }
+
+    private func seekToTime(_ time: Double) {
+        let totalLength = mediaModel.length
+        let position = totalLength > 0 ? time / totalLength : 0
+        playerModel.changePosition(CGFloat(position))
+        updateProgress(time, total: totalLength)
     }
 
     private func showSettings() {
@@ -239,6 +355,18 @@ class PlayerViewController: ViewController {
 
         vc.modalPresentationStyle = .overCurrentContext
         present(vc, animated: true)
+    }
+
+    private func showPlaylist() {
+        let currentMedia = mediaModel.media
+        let directory = currentMedia?.parentFile ?? LocalFile.rootFile
+        let fileBrowserVC = FileBrowserViewController(directory: directory)
+        fileBrowserVC.filterType = .video
+        fileBrowserVC.delegate = self
+        let nav = UINavigationController(rootViewController: fileBrowserVC)
+        nav.modalPresentationStyle = .custom
+        nav.transitioningDelegate = sidePanelAnimator
+        present(nav, animated: true)
     }
 
     private func sendDanmaku(text: String, mode: Comment.Mode, color: ANXColor) {
@@ -280,6 +408,38 @@ class PlayerViewController: ViewController {
         playerModel.parseMediaState.subscribe(onNext: { [weak self] event in
             guard let self = self else { return }
             self.handleMediaLoadEvent(event)
+        }).disposed(by: bag)
+
+        mediaModel.context.media.subscribe(onNext: { [weak self] file in
+            guard let self = self else { return }
+            self.overlayView.topBar.title = file?.fileName
+        }).disposed(by: bag)
+
+        mediaModel.context.time.subscribe(onNext: { [weak self] timeInfo in
+            if self?.seekTimer == nil {
+                // 长按快进/快退 不更新进度
+                self?.updateProgress(timeInfo.currentTime, total: timeInfo.totalTime)
+            }
+        }).disposed(by: bag)
+
+        mediaModel.context.isPlay.subscribe(onNext: { isPlay in
+            UIApplication.shared.isIdleTimerDisabled = isPlay
+        }).disposed(by: bag)
+
+        mediaModel.context.buffer.subscribe(onNext: { _ in
+            // buffer 更新可扩展
+        }).disposed(by: bag)
+
+        mediaModel.context.subtitleSafeArea.subscribe(onNext: { [weak self] subtitleSafeArea in
+            guard let self = self else { return }
+            self.danmakuCanvas.snp.remakeConstraints { make in
+                make.top.leading.trailing.equalToSuperview()
+                if subtitleSafeArea {
+                    make.height.equalToSuperview().multipliedBy(0.85)
+                } else {
+                    make.height.equalToSuperview()
+                }
+            }
         }).disposed(by: bag)
 
         danmakuModel.context.isShowDanmaku.subscribe(onNext: { [weak self] isShow in
@@ -340,10 +500,11 @@ class PlayerViewController: ViewController {
                 loadingView?.update(text: NSLocalizedString("解析弹幕中...", comment: ""), progress: 0.8 + 0.05 * Float(progress))
             case .subtitle:
                 loadingView?.update(text: NSLocalizedString("加载字幕中...", comment: ""), progress: 0.9)
-            case .lastWatchProgress:
+            case .lastWatchProgress(let progress):
                 loadingView?.update(text: NSLocalizedString("即将开始播放...", comment: ""), progress: 1.0)
                 loadingView?.dismiss()
                 loadingView = nil
+                showGotoLastWatchTime(lastWatchProgress: progress)
             }
 
         case .error(let error):
@@ -378,6 +539,40 @@ class PlayerViewController: ViewController {
             present(alert, animated: true)
         }
     }
+
+    // MARK: - Last Watch Progress
+
+    private func showGotoLastWatchTime(lastWatchProgress: TimeInterval, retryTime: Int = 0) {
+        let totalTime = self.mediaModel.length
+
+        if totalTime == 0 && retryTime < 5 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+                self?.showGotoLastWatchTime(lastWatchProgress: lastWatchProgress, retryTime: retryTime + 1)
+            }
+        } else if totalTime > 0 {
+            func lastTimeString() -> String {
+                let timeFormatter = DateFormatter()
+                timeFormatter.dateFormat = "mm:ss"
+                return timeFormatter.string(from: Date(timeIntervalSince1970: totalTime * lastWatchProgress))
+            }
+
+            self.gotoLastWatchPointVC?.dismiss()
+
+            let vc = GotoLastWatchPointViewController()
+            vc.timeString = NSLocalizedString("上次观看时间：", comment: "") + lastTimeString()
+            vc.didClickGotoButton = { [weak self] in
+                guard let self = self else { return }
+
+                self.playerModel.changePosition(lastWatchProgress)
+                self.overlayView.show()
+            }
+
+            vc.modalPresentationStyle = .custom
+            vc.transitioningDelegate = centerPopupAnimator
+            present(vc, animated: true)
+            self.gotoLastWatchPointVC = vc
+        }
+    }
 }
 
 // MARK: - MatchsViewControllerDelegate
@@ -405,5 +600,17 @@ extension PlayerViewController: MatchsViewControllerDelegate {
         guard let media = playerModel.mediaModel.media else { return }
         ANX.logInfo(.player, "[PlayerVC] 弹幕匹配成功: \(matchInfo.matchDesc)")
         _ = playerModel.didMatchMedia(media, matchInfo: matchInfo).subscribe()
+    }
+}
+
+// MARK: - FileBrowserViewControllerDelegate
+
+extension PlayerViewController: FileBrowserViewControllerDelegate {
+    func fileBrowserViewController(_ vc: FileBrowserViewController, didSelectFile file: File, allFiles: [File]) {
+        presentedViewController?.dismiss(animated: true) { [weak self] in
+            guard let self = self else { return }
+            self.mediaModel.loadMedias(allFiles)
+            self.playerModel.tryParseMedia(file)
+        }
     }
 }

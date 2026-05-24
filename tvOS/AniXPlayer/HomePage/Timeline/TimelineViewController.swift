@@ -18,7 +18,7 @@ class TimelineViewController: ViewController {
         layout.minimumLineSpacing = 24
         layout.minimumInteritemSpacing = 24
         layout.sectionInset = UIEdgeInsets(top: 0, left: 60, bottom: 32, right: 60)
-        layout.headerReferenceSize = CGSize(width: 0, height: 50)
+        layout.headerReferenceSize = CGSize(width: 0, height: 80)
 
         let cv = CollectionView(frame: .zero, collectionViewLayout: layout)
         cv.delegate = self

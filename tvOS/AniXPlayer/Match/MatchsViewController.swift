@@ -111,7 +111,8 @@ class MatchsViewController: ViewController {
 
         tableView.snp.makeConstraints { make in
             make.top.equalTo(toolbarStack.snp.bottom).offset(12)
-            make.leading.trailing.bottom.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(40)
         }
 
         if style == .mini {

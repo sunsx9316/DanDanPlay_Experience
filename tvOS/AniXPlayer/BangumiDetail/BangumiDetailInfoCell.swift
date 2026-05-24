@@ -57,7 +57,7 @@ class BangumiDetailInfoCell: TableViewCell {
         let label = Label()
         label.font = .ddp_small()
         label.textColor = .secondaryLabel
-        label.numberOfLines = 3
+        label.numberOfLines = 0
         return label
     }()
 
@@ -113,6 +113,7 @@ class BangumiDetailInfoCell: TableViewCell {
             make.leading.equalTo(titleLabel)
             make.trailing.equalTo(titleLabel)
             make.top.equalTo(tagsLabel.snp.bottom).offset(8)
+            make.bottom.equalToSuperview().offset(-20)
         }
     }
 
