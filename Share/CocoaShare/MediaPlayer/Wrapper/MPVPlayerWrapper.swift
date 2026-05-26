@@ -301,9 +301,6 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
         ANX.logInfo(.player, "[MPV] 终止")
         stopPlaybackPolling()
         self.mpv?.quit()
-
-        let metalLayer = self._mediaView.metalLayer
-        metalLayer.device = nil
         stateChangedCallBack?(self, .stop)
     }
 
@@ -386,6 +383,7 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
             DispatchQueue.main.async {
                 guard let self = self else { return }
                 self.mpv?.video.windowId = 0
+                self._mediaView.metalLayer.device = nil
                 self.mpv?.stopEventLoop()
                 self.mpv = nil
             }
