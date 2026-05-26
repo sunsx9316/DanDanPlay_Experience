@@ -5,13 +5,12 @@
 //  Created by jimhuang on 2021/4/29.
 //
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 
 import Foundation
 import ANXLog
 #if os(iOS)
 import MobileVLCKit
-import YYCategories
 import MPVFramework
 #elseif os(tvOS)
 import TVVLCKit
@@ -76,7 +75,7 @@ class SMBFile: File {
         
         var urlComponents = URLComponents(string: "")
         urlComponents?.scheme = "smbshare"
-        urlComponents?.host = (shareName as NSString).byURLEncode()
+        urlComponents?.host = shareName.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? shareName
         if let url = urlComponents?.url {
             self.url = url
         } else {
@@ -99,7 +98,7 @@ class SMBFile: File {
             ANX.logError(.SMB, "loginfo初始化失败")
         }
         
-        if #available(iOS 16.0, *) {
+        if #available(iOS 16.0, tvOS 16.0, *) {
             svrURL.append(path: shareName)
             svrURL.append(path: self.path)
         } else {

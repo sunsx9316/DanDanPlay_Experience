@@ -5,12 +5,9 @@
 //  Created by jimhuang on 2021/3/2.
 //
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 
 import UIKit
-#if os(iOS)
-import YYCategories
-#endif
 
 protocol WebDAVInputStreamDelegate: AnyObject {
     func streamDidClose(_ stream: WebDAVInputStream)
@@ -110,7 +107,7 @@ class WebDAVInputStream: InputStream {
         self.file = file
         let url = file.url
         
-        var cacheURL = UIApplication.shared.cachesURL
+        var cacheURL = PathUtils.cacheURL
         cacheURL.appendPathComponent(url.lastPathComponent)
         
         if FileManager.default.fileExists(atPath: cacheURL.path) {

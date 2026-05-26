@@ -5,7 +5,7 @@
 //  Created by jimhuang on 2024/9/27.
 //
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 
 import Foundation
 import Network
@@ -25,15 +25,22 @@ class SMBService: NSObject, NetServiceDelegate {
     var addressDesc: String {
         let addressModels = self.addresses
         let str = addressModels.reduce("", { res, model in
-            return res + model.address + (model == addressModels.last ? "" : "\n")
+            return res + model + (model == addressModels.last ? "" : "\n")
         })
         return str
     }
     
-    var addresses: [AddressModel] {
+    var addresses: [String] {
         return self.svr.addresses?.compactMap({ data in
-            let model = AddressModel(data: data)
-            return model.type == .IPV4 ? model : nil
+            data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> String? in
+                let sockAddr = ptr.bindMemory(to: sockaddr_in.self)
+                let addr = sockAddr.baseAddress?.pointee.sin_addr
+                guard let addr = addr else { return nil }
+                var ipBuffer = [CChar](repeating: 0, count: Int(INET_ADDRSTRLEN))
+                var sinaddr = addr
+                guard let ipPtr = inet_ntop(AF_INET, &sinaddr, &ipBuffer, socklen_t(INET_ADDRSTRLEN)) else { return nil }
+                return String(cString: ipPtr)
+            }
         }) ?? []
     }
     

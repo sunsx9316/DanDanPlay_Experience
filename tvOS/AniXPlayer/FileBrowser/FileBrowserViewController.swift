@@ -57,6 +57,10 @@ class FileBrowserViewController: ViewController, FileBrowserViewControllerDelega
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        let backImage = UIImage(systemName: "chevron.backward", withConfiguration: UIImage.SymbolConfiguration(pointSize: 28, weight: .medium))
+        let backItem = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(goBack))
+        navigationItem.leftBarButtonItem = backItem
+
         self.view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
             make.top.trailing.bottom.equalToSuperview()
@@ -105,7 +109,7 @@ class FileBrowserViewController: ViewController, FileBrowserViewControllerDelega
         }
     }
 
-    private func goBack() {
+    @objc private func goBack() {
         if isAtRoot {
             navigationController?.popViewController(animated: true)
         } else if let parent = currentDirectory?.parentFile {
@@ -139,26 +143,17 @@ extension FileBrowserViewController: UITableViewDataSource {
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return 1
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == 0 ? 1 : files.count
+        return files.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: FileListCell.reuseIdentifier, for: indexPath) as! FileListCell
-
-        if indexPath.section == 0 {
-            let backTitle = isAtRoot
-                ? NSLocalizedString("媒体库", comment: "")
-                : NSLocalizedString("返回上一页", comment: "")
-            cell.configureAsSource(title: backTitle, iconName: "arrow.uturn.backward")
-        } else {
-            let file = files[indexPath.row]
-            cell.configure(with: file)
-        }
-
+        let file = files[indexPath.row]
+        cell.configure(with: file)
         return cell
     }
 }
@@ -168,18 +163,14 @@ extension FileBrowserViewController: UITableViewDataSource {
 extension FileBrowserViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.section == 0 {
-            goBack()
+        let file = files[indexPath.row]
+        if file.type == .folder {
+            let vc = FileBrowserViewController(directory: file)
+            vc.filterType = filterType
+            vc.delegate = self
+            navigationController?.pushViewController(vc, animated: true)
         } else {
-            let file = files[indexPath.row]
-            if file.type == .folder {
-                let vc = FileBrowserViewController(directory: file)
-                vc.filterType = filterType
-                vc.delegate = self
-                navigationController?.pushViewController(vc, animated: true)
-            } else {
-                selectFile(file)
-            }
+            selectFile(file)
         }
     }
 }

@@ -93,14 +93,6 @@ class HttpServerViewController: ViewController {
 
     private var uploadItems = [UploadItem]()
 
-    private lazy var backButton: Button = {
-        let btn = Button(type: .system)
-        btn.setImage(UIImage(systemName: "arrow.uturn.backward"), for: .normal)
-        btn.setTitle(NSLocalizedString("返回", comment: ""), for: .normal)
-        btn.addTarget(self, action: #selector(goBack), for: .primaryActionTriggered)
-        return btn
-    }()
-
     private lazy var urlLabel: Label = {
         let label = Label()
         label.font = .ddp_large(weight: .bold)
@@ -139,6 +131,15 @@ class HttpServerViewController: ViewController {
         return stack
     }()
 
+    private lazy var headerContainerView: UIView = {
+        let view = FocusableView()
+        view.addSubview(headerStack)
+        headerStack.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        return view
+    }()
+
     private lazy var tableView: TableView = {
         let tv = TableView(frame: .zero, style: .plain)
         tv.delegate = self
@@ -152,22 +153,16 @@ class HttpServerViewController: ViewController {
         super.viewDidLoad()
         self.title = NSLocalizedString("WiFi传文件", comment: "")
 
-        view.addSubview(backButton)
-        view.addSubview(headerStack)
+        view.addSubview(headerContainerView)
         view.addSubview(tableView)
 
-        backButton.snp.makeConstraints { make in
+        headerContainerView.snp.makeConstraints { make in
             make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(8)
-            make.leading.equalToSuperview().offset(20)
-        }
-
-        headerStack.snp.makeConstraints { make in
-            make.top.equalTo(backButton.snp.bottom).offset(8)
             make.leading.trailing.equalToSuperview()
         }
 
         tableView.snp.makeConstraints { make in
-            make.top.equalTo(headerStack.snp.bottom).offset(20)
+            make.top.equalTo(headerContainerView.snp.bottom).offset(20)
             make.leading.trailing.bottom.equalToSuperview()
         }
 
@@ -181,15 +176,17 @@ class HttpServerViewController: ViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.defaultFocusView = tableView
-    }
-
-    @objc private func goBack() {
-        navigationController?.popViewController(animated: true)
+        self.defaultFocusView = headerContainerView
     }
 
     private func updateAddress() {
         let urlString = httpServer.serverURL?.absoluteString ?? ""
         urlLabel.text = "\n\(urlString)\n"
     }
+}
+
+// MARK: - FocusableView
+
+private class FocusableView: UIView {
+    override var canBecomeFocused: Bool { true }
 }

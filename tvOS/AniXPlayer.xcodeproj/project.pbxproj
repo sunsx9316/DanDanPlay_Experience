@@ -132,6 +132,16 @@
 		8951575D2FC36B3D00F75DB7 /* PlayerProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895157482FC36B3D00F75DB7 /* PlayerProgressBar.swift */; };
 		8951575E2FC36B3D00F75DB7 /* TitleMoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8951574D2FC36B3D00F75DB7 /* TitleMoreTableViewCell.swift */; };
 		8951575F2FC36B3D00F75DB7 /* DanmakuListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8951573C2FC36B3D00F75DB7 /* DanmakuListCell.swift */; };
+		895A7EF02FC5D09C00A997B8 /* FilesProvider in Frameworks */ = {isa = PBXBuildFile; productRef = 895A7EEF2FC5D09C00A997B8 /* FilesProvider */; };
+		895A7EF32FC5D54E00A997B8 /* AMSMB2 in Frameworks */ = {isa = PBXBuildFile; productRef = 895A7EF22FC5D54E00A997B8 /* AMSMB2 */; };
+		895A7EFE2FC5D5BA00A997B8 /* RemoteConnectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7EF52FC5D5BA00A997B8 /* RemoteConnectViewController.swift */; };
+		895A7EFF2FC5D5BA00A997B8 /* SMBLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7EFB2FC5D5BA00A997B8 /* SMBLoginHistoryViewController.swift */; };
+		895A7F002FC5D5BA00A997B8 /* FTPConnectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7EF42FC5D5BA00A997B8 /* FTPConnectViewController.swift */; };
+		895A7F012FC5D5BA00A997B8 /* WebDavLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7EFC2FC5D5BA00A997B8 /* WebDavLoginHistoryViewController.swift */; };
+		895A7F022FC5D5BA00A997B8 /* SMBConnectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7EF62FC5D5BA00A997B8 /* SMBConnectViewController.swift */; };
+		895A7F032FC5D5BA00A997B8 /* FTPLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7EF92FC5D5BA00A997B8 /* FTPLoginHistoryViewController.swift */; };
+		895A7F042FC5D5BA00A997B8 /* RemoteLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7EFA2FC5D5BA00A997B8 /* RemoteLoginHistoryViewController.swift */; };
+		895A7F052FC5D5BA00A997B8 /* WebDavConnectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7EF72FC5D5BA00A997B8 /* WebDavConnectViewController.swift */; };
 		8D7C10EF8EC94BD12BAF8486 /* DanmakuRender in Frameworks */ = {isa = PBXBuildFile; productRef = CB0E65E26FE026738CA2965C /* DanmakuRender */; };
 		91B73DD0873844841D957360 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BC15B4CE13C5659472F037 /* MainViewController.swift */; };
 		943C56898F713204954A750B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96041B6E4AE79C25D2164B75 /* ViewController.swift */; };
@@ -297,6 +307,14 @@
 		8951574C2FC36B3D00F75DB7 /* StepperSettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepperSettingCell.swift; sourceTree = "<group>"; };
 		8951574D2FC36B3D00F75DB7 /* TitleMoreTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleMoreTableViewCell.swift; sourceTree = "<group>"; };
 		8951574E2FC36B3D00F75DB7 /* TitleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleTableViewCell.swift; sourceTree = "<group>"; };
+		895A7EF42FC5D5BA00A997B8 /* FTPConnectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FTPConnectViewController.swift; sourceTree = "<group>"; };
+		895A7EF52FC5D5BA00A997B8 /* RemoteConnectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConnectViewController.swift; sourceTree = "<group>"; };
+		895A7EF62FC5D5BA00A997B8 /* SMBConnectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMBConnectViewController.swift; sourceTree = "<group>"; };
+		895A7EF72FC5D5BA00A997B8 /* WebDavConnectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDavConnectViewController.swift; sourceTree = "<group>"; };
+		895A7EF92FC5D5BA00A997B8 /* FTPLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FTPLoginHistoryViewController.swift; sourceTree = "<group>"; };
+		895A7EFA2FC5D5BA00A997B8 /* RemoteLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteLoginHistoryViewController.swift; sourceTree = "<group>"; };
+		895A7EFB2FC5D5BA00A997B8 /* SMBLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMBLoginHistoryViewController.swift; sourceTree = "<group>"; };
+		895A7EFC2FC5D5BA00A997B8 /* WebDavLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDavLoginHistoryViewController.swift; sourceTree = "<group>"; };
 		96041B6E4AE79C25D2164B75 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		98A21E20596A3F605DAE1637 /* BangumiDetailInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiDetailInfoCell.swift; sourceTree = "<group>"; };
 		98CCDF56B9C77A041518912A /* HomePageSectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageSectionHeaderView.swift; sourceTree = "<group>"; };
@@ -340,6 +358,8 @@
 				895152FA2FC1DBD700F75DB7 /* ANXLog in Frameworks */,
 				A1C0BE5CDFACA58D6BE045B3 /* GCDWebServer in Frameworks */,
 				F6D04BDCB732B91EC584BE02 /* GCDWebDAVServer in Frameworks */,
+				895A7EF32FC5D54E00A997B8 /* AMSMB2 in Frameworks */,
+				895A7EF02FC5D09C00A997B8 /* FilesProvider in Frameworks */,
 				895152FD2FC1DBE200F75DB7 /* TVVLCKitSPM in Frameworks */,
 				092376397254D281D509C484 /* GCDWebUploader in Frameworks */,
 				0925E7191013E0084F5C39B8 /* SnapKit in Frameworks */,
@@ -364,6 +384,8 @@
 		210FAE529C0B46B7EC7BBAFD /* FileBrowser */ = {
 			isa = PBXGroup;
 			children = (
+				895A7EF82FC5D5BA00A997B8 /* Connect */,
+				895A7EFD2FC5D5BA00A997B8 /* History */,
 				AC90E930AEDDD1D5D5918388 /* FileBrowserViewController.swift */,
 				5E53A886C538EFE38B2041B7 /* FileListCell.swift */,
 				BF11507796BA9FC240A34443 /* HttpServerViewController.swift */,
@@ -856,6 +878,28 @@
 			path = View;
 			sourceTree = "<group>";
 		};
+		895A7EF82FC5D5BA00A997B8 /* Connect */ = {
+			isa = PBXGroup;
+			children = (
+				895A7EF42FC5D5BA00A997B8 /* FTPConnectViewController.swift */,
+				895A7EF52FC5D5BA00A997B8 /* RemoteConnectViewController.swift */,
+				895A7EF62FC5D5BA00A997B8 /* SMBConnectViewController.swift */,
+				895A7EF72FC5D5BA00A997B8 /* WebDavConnectViewController.swift */,
+			);
+			path = Connect;
+			sourceTree = "<group>";
+		};
+		895A7EFD2FC5D5BA00A997B8 /* History */ = {
+			isa = PBXGroup;
+			children = (
+				895A7EF92FC5D5BA00A997B8 /* FTPLoginHistoryViewController.swift */,
+				895A7EFA2FC5D5BA00A997B8 /* RemoteLoginHistoryViewController.swift */,
+				895A7EFB2FC5D5BA00A997B8 /* SMBLoginHistoryViewController.swift */,
+				895A7EFC2FC5D5BA00A997B8 /* WebDavLoginHistoryViewController.swift */,
+			);
+			path = History;
+			sourceTree = "<group>";
+		};
 		8E17DBDEADDF4370AB0E83E2 /* Resource */ = {
 			isa = PBXGroup;
 			children = (
@@ -961,6 +1005,8 @@
 				CB0E65E26FE026738CA2965C /* DanmakuRender */,
 				895152F92FC1DBD700F75DB7 /* ANXLog */,
 				895152FC2FC1DBE200F75DB7 /* TVVLCKitSPM */,
+				895A7EEF2FC5D09C00A997B8 /* FilesProvider */,
+				895A7EF22FC5D54E00A997B8 /* AMSMB2 */,
 			);
 			productName = AniXPlayer;
 			productReference = 36E50A45F15CE7B0252555F5 /* AniXPlayer.app */;
@@ -999,6 +1045,8 @@
 				EAA113346A46BACBFFD2D0DE /* XCRemoteSwiftPackageReference "SnapKit" */,
 				895152F82FC1DBD700F75DB7 /* XCLocalSwiftPackageReference "../Share/ANXLog" */,
 				895152FB2FC1DBE200F75DB7 /* XCLocalSwiftPackageReference "../Share/TVVLCKit" */,
+				895A7EEE2FC5D09C00A997B8 /* XCRemoteSwiftPackageReference "FileProvider" */,
+				895A7EF12FC5D54E00A997B8 /* XCRemoteSwiftPackageReference "AMSMB2" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2A5E88962AE499ECAFC960DB /* Products */;
@@ -1084,6 +1132,14 @@
 				895154552FC1DC2D00F75DB7 /* SMBServiceBrowser.swift in Sources */,
 				895154562FC1DC2D00F75DB7 /* FTPFile.swift in Sources */,
 				895154572FC1DC2D00F75DB7 /* URL+Extension.swift in Sources */,
+				895A7EFE2FC5D5BA00A997B8 /* RemoteConnectViewController.swift in Sources */,
+				895A7EFF2FC5D5BA00A997B8 /* SMBLoginHistoryViewController.swift in Sources */,
+				895A7F002FC5D5BA00A997B8 /* FTPConnectViewController.swift in Sources */,
+				895A7F012FC5D5BA00A997B8 /* WebDavLoginHistoryViewController.swift in Sources */,
+				895A7F022FC5D5BA00A997B8 /* SMBConnectViewController.swift in Sources */,
+				895A7F032FC5D5BA00A997B8 /* FTPLoginHistoryViewController.swift in Sources */,
+				895A7F042FC5D5BA00A997B8 /* RemoteLoginHistoryViewController.swift in Sources */,
+				895A7F052FC5D5BA00A997B8 /* WebDavConnectViewController.swift in Sources */,
 				895154582FC1DC2D00F75DB7 /* Store+Extension.swift in Sources */,
 				895154592FC1DC2D00F75DB7 /* HomePage.swift in Sources */,
 				8951545A2FC1DC2D00F75DB7 /* AppKey.swift in Sources */,
@@ -1215,6 +1271,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.dandanplay.AniXPlayer;
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 14.0;
 			};
 			name = Release;
 		};
@@ -1389,6 +1446,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.dandanplay.AniXPlayer;
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 14.0;
 			};
 			name = Debug;
 		};
@@ -1449,6 +1507,22 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 7.12.0;
+			};
+		};
+		895A7EEE2FC5D09C00A997B8 /* XCRemoteSwiftPackageReference "FileProvider" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/amosavian/FileProvider";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.26.0;
+			};
+		};
+		895A7EF12FC5D54E00A997B8 /* XCRemoteSwiftPackageReference "AMSMB2" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/amosavian/AMSMB2";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.3;
 			};
 		};
 		9091D7FA34D5FA65B39F5372 /* XCRemoteSwiftPackageReference "MMKV" */ = {
@@ -1513,6 +1587,16 @@
 		895152FC2FC1DBE200F75DB7 /* TVVLCKitSPM */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = TVVLCKitSPM;
+		};
+		895A7EEF2FC5D09C00A997B8 /* FilesProvider */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 895A7EEE2FC5D09C00A997B8 /* XCRemoteSwiftPackageReference "FileProvider" */;
+			productName = FilesProvider;
+		};
+		895A7EF22FC5D54E00A997B8 /* AMSMB2 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 895A7EF12FC5D54E00A997B8 /* XCRemoteSwiftPackageReference "AMSMB2" */;
+			productName = AMSMB2;
 		};
 		9E0B30951C7B9FF3ECC13707 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;

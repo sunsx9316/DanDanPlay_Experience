@@ -5,57 +5,64 @@
 //  Created by jimhuang on 2021/4/29.
 //
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 
 import Foundation
 import AMSMB2
 
 class SMBFileManager: FileManagerProtocol {
-    
+
     private enum SMBError: LocalizedError {
         case fileTypeError
         case listSharesError
-        
+        case initError
+
         var errorDescription: String? {
             switch self {
             case .fileTypeError:
                 return "文件类型错误"
             case .listSharesError:
                 return "获取服务器共享列表失败"
+            case .initError:
+                return "初始化 SMB 客户端失败"
             }
         }
     }
-    
+
     static let shared = SMBFileManager()
-    
+
     private init() {}
-    
-    private var client: AMSMB2?
-    
+
+    private var client: SMB2Manager?
+
     private(set) var loginInfo: LoginInfo?
-    
+
     var desc: String {
         return NSLocalizedString("SMB", comment: "")
     }
-    
+
     var addressExampleDesc: String {
         return "服务器地址：smb://example"
     }
-    
+
     func connectWithLoginInfo(_ loginInfo: LoginInfo, completionHandler: @escaping((Error?) -> Void)) {
         self.client?.disconnectShare()
-        
+
         var credential: URLCredential?
-        
+
         if let auth = loginInfo.auth {
             credential = .init(user: auth.userName ?? "", password: auth.password ?? "", persistence: .forSession)
         }
-        
-        self.client = .init(url: loginInfo.url, credential: credential)
-        self.client?.timeout = 5
-        self.client?.listShares(enumerateHidden: true, completionHandler: { [weak self] result in
+
+        guard let client = SMB2Manager(url: loginInfo.url, credential: credential) else {
+            completionHandler(SMBError.initError)
+            return
+        }
+        self.client = client
+        client.timeout = 5
+        client.listShares(enumerateHidden: true, completionHandler: { [weak self] result in
             guard let self = self else { return }
-            
+
             switch result {
             case .success(let shares):
                 debugPrint("smbshares: \(shares)")
@@ -70,14 +77,14 @@ class SMBFileManager: FileManagerProtocol {
             }
         })
     }
-    
+
     func contentsOfDirectory(at directory: File, filterType: URLFilterType?, completion: @escaping ((Result<[File], Error>) -> Void)) {
         guard let directory = directory as? SMBFile else {
             assert(false, "文件类型错误: \(directory)")
             completion(.failure(SMBError.fileTypeError))
             return
         }
-        
+
         switch directory.pathType {
         case .root:
             self.client?.listShares(completionHandler: { result in
@@ -93,7 +100,7 @@ class SMBFileManager: FileManagerProtocol {
             let path = directory.path
             self.client?.connectShare(name: path, completionHandler: { [weak self] error in
                 guard let self = self else { return }
-                
+
                 if let error = error {
                     completion(.failure(error))
                 } else {
@@ -108,7 +115,7 @@ class SMBFileManager: FileManagerProtocol {
                                 }
                                 return f
                             }).filter({ !$0.fileName.hasPrefix(".") })
-                            
+
                             completion(.success(files))
                         case .failure(let error):
                             completion(.failure(error))
@@ -121,7 +128,7 @@ class SMBFileManager: FileManagerProtocol {
             let shareName = directory.shareName
             self.client?.connectShare(name: shareName, completionHandler: { [weak self] error in
                 guard let self = self else { return }
-                
+
                 if let error = error {
                     completion(.failure(error))
                 } else {
@@ -136,7 +143,7 @@ class SMBFileManager: FileManagerProtocol {
                                 }
                                 return f
                             }).filter({ !$0.fileName.hasPrefix(".") })
-                            
+
                             completion(.success(files))
                         case .failure(let error):
                             completion(.failure(error))
@@ -148,15 +155,15 @@ class SMBFileManager: FileManagerProtocol {
     }
 
     func getDataWithFile(_ file: File, range: ClosedRange<Int>?, progress: FileProgressAction?, completion: @escaping ((Result<Data, Error>) -> Void)) {
-        
+
         guard let file = file as? SMBFile else {
             assert(false, "文件类型错误: \(file)")
             completion(.failure(SMBError.fileTypeError))
             return
         }
-        
+
         if let range = range {
-            let newRange: Range<Int> = range.lowerBound..<range.upperBound
+            let newRange: Range<Int64> = Int64(range.lowerBound)..<Int64(range.upperBound)
             self.client?.contents(atPath: file.path, range: newRange, progress: { (current, total) in
                 progress?(Double(current) / Double(total))
                 if current >= range.count {
@@ -166,7 +173,7 @@ class SMBFileManager: FileManagerProtocol {
             }, completionHandler: { result in
                 switch result {
                 case .success(let data):
-                    try? data.write(to: UIApplication.shared.documentsURL.appendingPathComponent("old.data"))
+                    try? data.write(to: PathUtils.documentsURL.appendingPathComponent("old.data"))
                 case .failure(_):
                     break
                 }
@@ -175,20 +182,24 @@ class SMBFileManager: FileManagerProtocol {
         } else {
             self.client?.contents(atPath: file.path, progress: { (_, _) in
                 return true
-            }, completionHandler: completion)
+            }, completionHandler: { result in
+                completion(result)
+            })
         }
     }
-    
+
     func deleteFile(_ file: File, completionHandler: @escaping ((Error?) -> Void)) {
         guard let file = file as? SMBFile, file.isCanDelete else {
             assert(false, "文件类型错误: \(file)")
             completionHandler(SMBError.fileTypeError)
             return
         }
-        
-        self.client?.removeItem(atPath: file.path, completionHandler: completionHandler)
+
+        self.client?.removeItem(atPath: file.path, completionHandler: { error in
+            completionHandler(error)
+        })
     }
-    
+
     func pickFiles(_ directory: File?, from viewController: ANXViewController, filterType: URLFilterType?, completion: @escaping ((Result<[File], Error>) -> Void)) {
         assert(false)
     }

@@ -5,7 +5,7 @@
 //  Created by jimhuang on 2021/2/14.
 //
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 
 import Foundation
 #if os(iOS)
@@ -14,6 +14,7 @@ import MPVFramework
 import FilesProvider
 #elseif os(tvOS)
 import TVVLCKit
+import FilesProvider
 #endif
 
 

@@ -10,33 +10,13 @@ import SnapKit
 
 class LocalFileBrowserViewController: FileBrowserViewController {
 
-    // MARK: - UI
-
-    private lazy var wifiButton: Button = {
-        let button = Button(type: .system)
-        button.setImage(UIImage(systemName: "wifi"), for: .normal)
-        button.setTitle(NSLocalizedString("WiFi传文件", comment: ""), for: .normal)
-        button.addTarget(self, action: #selector(openWiFiTransfer), for: .primaryActionTriggered)
-        return button
-    }()
-
     // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.addSubview(wifiButton)
-
-        wifiButton.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(8)
-            make.trailing.equalToSuperview().offset(-20)
-        }
-
-        tableView.snp.remakeConstraints { make in
-            make.top.equalTo(wifiButton.snp.bottom).offset(8)
-            make.trailing.bottom.equalToSuperview()
-            make.leading.equalToSuperview().offset(40)
-        }
+        let wifiItem = UIBarButtonItem(title: NSLocalizedString("WiFi传文件", comment: ""), style: .plain, target: self, action: #selector(openWiFiTransfer))
+        navigationItem.rightBarButtonItem = wifiItem
     }
 
     // MARK: - Actions

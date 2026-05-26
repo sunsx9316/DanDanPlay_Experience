@@ -11,16 +11,25 @@ class MediaLibraryViewController: ViewController {
 
     private enum Source: Int, CaseIterable {
         case local
+        case smb
+        case webdav
+        case ftp
 
         var title: String {
             switch self {
             case .local: return NSLocalizedString("本地文件", comment: "")
+            case .smb: return NSLocalizedString("SMB", comment: "")
+            case .webdav: return NSLocalizedString("WebDAV", comment: "")
+            case .ftp: return NSLocalizedString("FTP", comment: "")
             }
         }
 
         var iconName: String {
             switch self {
             case .local: return "internaldrive"
+            case .smb: return "network"
+            case .webdav: return "globe"
+            case .ftp: return "externaldrive.connected.to.line.below"
             }
         }
     }
@@ -71,6 +80,15 @@ extension MediaLibraryViewController: UITableViewDelegate {
         switch source {
         case .local:
             let vc = LocalFileBrowserViewController(directory: LocalFile.rootFile)
+            navigationController?.pushViewController(vc, animated: true)
+        case .smb:
+            let vc = SMBLoginHistoryViewController()
+            navigationController?.pushViewController(vc, animated: true)
+        case .webdav:
+            let vc = WebDavLoginHistoryViewController()
+            navigationController?.pushViewController(vc, animated: true)
+        case .ftp:
+            let vc = FTPLoginHistoryViewController()
             navigationController?.pushViewController(vc, animated: true)
         }
     }
