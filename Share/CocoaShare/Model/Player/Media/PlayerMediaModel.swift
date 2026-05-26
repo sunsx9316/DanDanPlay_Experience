@@ -183,7 +183,7 @@ extension PlayerMediaModel {
 
         var subtitleSettings: [MediaSettingType] = [.subtitleSafeArea, .subtitleDelay, .subtitleTrack, .loadSubtitle]
         
-#if os(iOS)
+#if os(iOS) || os(tvOS)
         if self.player.coreType == .mpv {
             subtitleSettings.append(.subtitleStyle)
             if Preferences.shared.subtitleStyle {

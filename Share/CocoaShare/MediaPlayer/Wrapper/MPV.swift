@@ -7,7 +7,7 @@
 //  参考 mpv 官方文档 (https://mpv.io/manual/stable/) 进行模块化设计
 //
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 
 import Foundation
 import Libmpv
@@ -20,7 +20,7 @@ import AppKit
 import Foundation
 #endif
 
-#if os(iOS) || os(macOS)
+#if os(iOS) || os(macOS) || os(tvOS)
 
 // MARK: - MPV 事件类型
 

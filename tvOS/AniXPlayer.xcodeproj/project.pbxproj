@@ -73,7 +73,6 @@
 		895154622FC1DC2D00F75DB7 /* Favorite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8951540B2FC1DC2D00F75DB7 /* Favorite.swift */; };
 		895154632FC1DC2D00F75DB7 /* NSNotification+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8951542E2FC1DC2D00F75DB7 /* NSNotification+Helper.swift */; };
 		895154642FC1DC2D00F75DB7 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895154042FC1DC2D00F75DB7 /* Comment.swift */; };
-		895154652FC1DC2D00F75DB7 /* MPV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895153EB2FC1DC2D00F75DB7 /* MPV.swift */; };
 		895154662FC1DC2D00F75DB7 /* Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895154382FC1DC2D00F75DB7 /* Enum.swift */; };
 		895154672FC1DC2D00F75DB7 /* WebDavFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895153E82FC1DC2D00F75DB7 /* WebDavFile.swift */; };
 		895154692FC1DC2D00F75DB7 /* PathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895154302FC1DC2D00F75DB7 /* PathUtils.swift */; };
@@ -144,6 +143,20 @@
 		895A7F112FC5EDE900A997B8 /* PCFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7F0B2FC5EDE900A997B8 /* PCFileManager.swift */; };
 		895A7F132FC5EE1800A997B8 /* PCConnectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7F122FC5EE1800A997B8 /* PCConnectViewController.swift */; };
 		895A7F152FC5EE2300A997B8 /* PCLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7F142FC5EE2300A997B8 /* PCLoginHistoryViewController.swift */; };
+		895A7F3C2FC5F21400A997B8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 895A7F3B2FC5F21400A997B8 /* CoreGraphics.framework */; };
+		895A7F3E2FC5F21A00A997B8 /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 895A7F3D2FC5F21A00A997B8 /* CoreText.framework */; };
+		895A7F402FC5F22000A997B8 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 895A7F3F2FC5F22000A997B8 /* IOSurface.framework */; };
+		895A7F422FC5F22800A997B8 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 895A7F412FC5F22800A997B8 /* OpenGLES.framework */; };
+		895A7F442FC5F22C00A997B8 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 895A7F432FC5F22C00A997B8 /* QuartzCore.framework */; };
+		895A7F462FC5F23800A997B8 /* TVUIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 895A7F452FC5F23800A997B8 /* TVUIKit.framework */; };
+		895A7F5E2FC5F82E00A997B8 /* MPVFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 895A7F2D2FC5F20200A997B8 /* MPVFramework.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		895A7F5F2FC5F82E00A997B8 /* MPVFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 895A7F2D2FC5F20200A997B8 /* MPVFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		895A7F632FC5F8CF00A997B8 /* MPV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895153EB2FC1DC2D00F75DB7 /* MPV.swift */; };
+		895A7F6E2FC5FBC300A997B8 /* SourceHanSansSC-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 895A7F6B2FC5FBC300A997B8 /* SourceHanSansSC-Regular.otf */; };
+		895A7F6F2FC5FBC300A997B8 /* SourceHanSansTC-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 895A7F6C2FC5FBC300A997B8 /* SourceHanSansTC-Regular.otf */; };
+		895A7F732FC602C900A997B8 /* SubtitleColorPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7F722FC602C900A997B8 /* SubtitleColorPickerViewController.swift */; };
+		895A7F752FC602D900A997B8 /* ColorPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7F742FC602D900A997B8 /* ColorPickerView.swift */; };
+		895A7F772FC6033100A997B8 /* MPVKit in Frameworks */ = {isa = PBXBuildFile; productRef = 895A7F762FC6033100A997B8 /* MPVKit */; };
 		8D7C10EF8EC94BD12BAF8486 /* DanmakuRender in Frameworks */ = {isa = PBXBuildFile; productRef = CB0E65E26FE026738CA2965C /* DanmakuRender */; };
 		91B73DD0873844841D957360 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BC15B4CE13C5659472F037 /* MainViewController.swift */; };
 		943C56898F713204954A750B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96041B6E4AE79C25D2164B75 /* ViewController.swift */; };
@@ -177,13 +190,24 @@
 		FB137A6D6810724193EE6862 /* NavigationSettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C043AD50B789ED0F83B57858 /* NavigationSettingCell.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		895A7F602FC5F82E00A997B8 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D8C591C05F43D2D2542BE763 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 895A7F2C2FC5F20200A997B8;
+			remoteInfo = MPVFramework;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
-		906DC642C0982D6265E3D1D3 /* Embed Frameworks */ = {
+		895A7F622FC5F82E00A997B8 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				895A7F5F2FC5F82E00A997B8 /* MPVFramework.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -319,6 +343,19 @@
 		895A7F0B2FC5EDE900A997B8 /* PCFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCFileManager.swift; sourceTree = "<group>"; };
 		895A7F122FC5EE1800A997B8 /* PCConnectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCConnectViewController.swift; sourceTree = "<group>"; };
 		895A7F142FC5EE2300A997B8 /* PCLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCLoginHistoryViewController.swift; sourceTree = "<group>"; };
+		895A7F2D2FC5F20200A997B8 /* MPVFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MPVFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		895A7F3B2FC5F21400A997B8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		895A7F3D2FC5F21A00A997B8 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		895A7F3F2FC5F22000A997B8 /* IOSurface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOSurface.framework; path = System/Library/Frameworks/IOSurface.framework; sourceTree = SDKROOT; };
+		895A7F412FC5F22800A997B8 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		895A7F432FC5F22C00A997B8 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		895A7F452FC5F23800A997B8 /* TVUIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = TVUIKit.framework; path = System/Library/Frameworks/TVUIKit.framework; sourceTree = SDKROOT; };
+		895A7F582FC5F77400A997B8 /* CoreAudioTypes.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudioTypes.framework; path = System/Library/Frameworks/CoreAudioTypes.framework; sourceTree = SDKROOT; };
+		895A7F5C2FC5F7F200A997B8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		895A7F6B2FC5FBC300A997B8 /* SourceHanSansSC-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceHanSansSC-Regular.otf"; sourceTree = "<group>"; };
+		895A7F6C2FC5FBC300A997B8 /* SourceHanSansTC-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceHanSansTC-Regular.otf"; sourceTree = "<group>"; };
+		895A7F722FC602C900A997B8 /* SubtitleColorPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtitleColorPickerViewController.swift; sourceTree = "<group>"; };
+		895A7F742FC602D900A997B8 /* ColorPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerView.swift; sourceTree = "<group>"; };
 		96041B6E4AE79C25D2164B75 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		98A21E20596A3F605DAE1637 /* BangumiDetailInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiDetailInfoCell.swift; sourceTree = "<group>"; };
 		98CCDF56B9C77A041518912A /* HomePageSectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageSectionHeaderView.swift; sourceTree = "<group>"; };
@@ -366,10 +403,25 @@
 				895A7EF02FC5D09C00A997B8 /* FilesProvider in Frameworks */,
 				895152FD2FC1DBE200F75DB7 /* TVVLCKitSPM in Frameworks */,
 				092376397254D281D509C484 /* GCDWebUploader in Frameworks */,
+				895A7F5E2FC5F82E00A997B8 /* MPVFramework.framework in Frameworks */,
 				0925E7191013E0084F5C39B8 /* SnapKit in Frameworks */,
 				7C905D4AA1123B12E415AB7B /* Kingfisher in Frameworks */,
 				6B60904E446F32A55C83BEC8 /* Alamofire in Frameworks */,
 				8D7C10EF8EC94BD12BAF8486 /* DanmakuRender in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		895A7F2A2FC5F20200A997B8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				895A7F442FC5F22C00A997B8 /* QuartzCore.framework in Frameworks */,
+				895A7F462FC5F23800A997B8 /* TVUIKit.framework in Frameworks */,
+				895A7F772FC6033100A997B8 /* MPVKit in Frameworks */,
+				895A7F402FC5F22000A997B8 /* IOSurface.framework in Frameworks */,
+				895A7F3E2FC5F21A00A997B8 /* CoreText.framework in Frameworks */,
+				895A7F3C2FC5F21400A997B8 /* CoreGraphics.framework in Frameworks */,
+				895A7F422FC5F22800A997B8 /* OpenGLES.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -427,6 +479,7 @@
 			isa = PBXGroup;
 			children = (
 				36E50A45F15CE7B0252555F5 /* AniXPlayer.app */,
+				895A7F2D2FC5F20200A997B8 /* MPVFramework.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -590,6 +643,7 @@
 		895153EE2FC1DC2D00F75DB7 /* Wrapper */ = {
 			isa = PBXGroup;
 			children = (
+				895A7F6D2FC5FBC300A997B8 /* Fonts */,
 				895153EB2FC1DC2D00F75DB7 /* MPV.swift */,
 				895153EC2FC1DC2D00F75DB7 /* MPVPlayerWrapper.swift */,
 				895153ED2FC1DC2D00F75DB7 /* VLCPlayerWrapper.swift */,
@@ -858,6 +912,7 @@
 				8951574C2FC36B3D00F75DB7 /* StepperSettingCell.swift */,
 				8951574D2FC36B3D00F75DB7 /* TitleMoreTableViewCell.swift */,
 				8951574E2FC36B3D00F75DB7 /* TitleTableViewCell.swift */,
+				895A7F742FC602D900A997B8 /* ColorPickerView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -904,6 +959,30 @@
 				895A7F0B2FC5EDE900A997B8 /* PCFileManager.swift */,
 			);
 			path = PC;
+			sourceTree = "<group>";
+		};
+		895A7F3A2FC5F21400A997B8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				895A7F5C2FC5F7F200A997B8 /* UIKit.framework */,
+				895A7F582FC5F77400A997B8 /* CoreAudioTypes.framework */,
+				895A7F452FC5F23800A997B8 /* TVUIKit.framework */,
+				895A7F432FC5F22C00A997B8 /* QuartzCore.framework */,
+				895A7F412FC5F22800A997B8 /* OpenGLES.framework */,
+				895A7F3F2FC5F22000A997B8 /* IOSurface.framework */,
+				895A7F3D2FC5F21A00A997B8 /* CoreText.framework */,
+				895A7F3B2FC5F21400A997B8 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		895A7F6D2FC5FBC300A997B8 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				895A7F6B2FC5FBC300A997B8 /* SourceHanSansSC-Regular.otf */,
+				895A7F6C2FC5FBC300A997B8 /* SourceHanSansTC-Regular.otf */,
+			);
+			path = Fonts;
 			sourceTree = "<group>";
 		};
 		8E17DBDEADDF4370AB0E83E2 /* Resource */ = {
@@ -959,6 +1038,7 @@
 				1BBD24D4AAE2D8C68FA85C91 /* DanmakuInputViewController.swift */,
 				A305ABC66B2B0EAD5EF7D337 /* OptionListViewController.swift */,
 				13DD13A96D484FC80C3CEE86 /* PlayerSettingViewController.swift */,
+				895A7F722FC602C900A997B8 /* SubtitleColorPickerViewController.swift */,
 				203787D67FAA77CE770A5D0E /* PlayerViewController.swift */,
 				7051C7C8FEE41D818FB28914 /* SidePanelAnimator.swift */,
 			);
@@ -977,11 +1057,22 @@
 			isa = PBXGroup;
 			children = (
 				3EC62D8071F5F2E030A4997B /* AniXPlayer */,
+				895A7F3A2FC5F21400A997B8 /* Frameworks */,
 				2A5E88962AE499ECAFC960DB /* Products */,
 			);
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		895A7F282FC5F20200A997B8 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		15E0E31D2605F8F391BF7331 /* AniXPlayer */ = {
@@ -991,11 +1082,12 @@
 				01D72DFC502C8ADEB56CD8F4 /* Sources */,
 				C09E36E3B164B14BC54B494E /* Resources */,
 				0A1CBCFEF5553BF3A7B4E878 /* Frameworks */,
-				906DC642C0982D6265E3D1D3 /* Embed Frameworks */,
+				895A7F622FC5F82E00A997B8 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				895A7F612FC5F82E00A997B8 /* PBXTargetDependency */,
 			);
 			name = AniXPlayer;
 			packageProductDependencies = (
@@ -1018,6 +1110,27 @@
 			productReference = 36E50A45F15CE7B0252555F5 /* AniXPlayer.app */;
 			productType = "com.apple.product-type.application";
 		};
+		895A7F2C2FC5F20200A997B8 /* MPVFramework */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 895A7F352FC5F20200A997B8 /* Build configuration list for PBXNativeTarget "MPVFramework" */;
+			buildPhases = (
+				895A7F282FC5F20200A997B8 /* Headers */,
+				895A7F292FC5F20200A997B8 /* Sources */,
+				895A7F2A2FC5F20200A997B8 /* Frameworks */,
+				895A7F2B2FC5F20200A997B8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MPVFramework;
+			packageProductDependencies = (
+				895A7F762FC6033100A997B8 /* MPVKit */,
+			);
+			productName = MPVFramework;
+			productReference = 895A7F2D2FC5F20200A997B8 /* MPVFramework.framework */;
+			productType = "com.apple.product-type.framework";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -1025,10 +1138,14 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
+				LastSwiftUpdateCheck = 2600;
 				LastUpgradeCheck = 1430;
 				TargetAttributes = {
 					15E0E31D2605F8F391BF7331 = {
 						ProvisioningStyle = Automatic;
+					};
+					895A7F2C2FC5F20200A997B8 = {
+						CreatedOnToolsVersion = 26.0.1;
 					};
 				};
 			};
@@ -1053,6 +1170,7 @@
 				895152FB2FC1DBE200F75DB7 /* XCLocalSwiftPackageReference "../Share/TVVLCKit" */,
 				895A7EEE2FC5D09C00A997B8 /* XCRemoteSwiftPackageReference "FileProvider" */,
 				895A7EF12FC5D54E00A997B8 /* XCRemoteSwiftPackageReference "AMSMB2" */,
+				895A7F4C2FC5F2FF00A997B8 /* XCRemoteSwiftPackageReference "MPVKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2A5E88962AE499ECAFC960DB /* Products */;
@@ -1060,16 +1178,26 @@
 			projectRoot = "";
 			targets = (
 				15E0E31D2605F8F391BF7331 /* AniXPlayer */,
+				895A7F2C2FC5F20200A997B8 /* MPVFramework */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		895A7F2B2FC5F20200A997B8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C09E36E3B164B14BC54B494E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				8951548A2FC1DC2D00F75DB7 /* upload.html in Resources */,
+				895A7F6E2FC5FBC300A997B8 /* SourceHanSansSC-Regular.otf in Resources */,
+				895A7F6F2FC5FBC300A997B8 /* SourceHanSansTC-Regular.otf in Resources */,
 				8951548B2FC1DC2D00F75DB7 /* upload.js in Resources */,
 				9DBC31F90415294937917F50 /* Assets.xcassets in Resources */,
 			);
@@ -1093,6 +1221,7 @@
 				9F5F65005AF521969F42A450 /* Button.swift in Sources */,
 				AB2B256AFB64AA3B2E0FEA87 /* CollectionView.swift in Sources */,
 				327C917E8D8C633109AF1DA9 /* CollectionViewCell.swift in Sources */,
+				895A7F732FC602C900A997B8 /* SubtitleColorPickerViewController.swift in Sources */,
 				B1EF5B597AD43B774405AAD2 /* DanmakuInputViewController.swift in Sources */,
 				D78E3043106F93A7D560C59C /* EpisodeCell.swift in Sources */,
 				E0189D8BC08208E7CFA43CCF /* FavoriteItemCell.swift in Sources */,
@@ -1129,6 +1258,7 @@
 				895154472FC1DC2D00F75DB7 /* SubtitleManager.swift in Sources */,
 				895154492FC1DC2D00F75DB7 /* Login.swift in Sources */,
 				8951544A2FC1DC2D00F75DB7 /* PlayerDanmakuProducer.swift in Sources */,
+				895A7F752FC602D900A997B8 /* ColorPickerView.swift in Sources */,
 				8951544C2FC1DC2D00F75DB7 /* LocalFile.swift in Sources */,
 				8951544D2FC1DC2D00F75DB7 /* MediaPlayer.swift in Sources */,
 				895154502FC1DC2D00F75DB7 /* MatchNetworkHandle.swift in Sources */,
@@ -1161,7 +1291,6 @@
 				895154622FC1DC2D00F75DB7 /* Favorite.swift in Sources */,
 				895154632FC1DC2D00F75DB7 /* NSNotification+Helper.swift in Sources */,
 				895154642FC1DC2D00F75DB7 /* Comment.swift in Sources */,
-				895154652FC1DC2D00F75DB7 /* MPV.swift in Sources */,
 				895154662FC1DC2D00F75DB7 /* Enum.swift in Sources */,
 				895154672FC1DC2D00F75DB7 /* WebDavFile.swift in Sources */,
 				895154692FC1DC2D00F75DB7 /* PathUtils.swift in Sources */,
@@ -1236,7 +1365,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		895A7F292FC5F20200A997B8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				895A7F632FC5F8CF00A997B8 /* MPV.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		895A7F612FC5F82E00A997B8 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 895A7F2C2FC5F20200A997B8 /* MPVFramework */;
+			targetProxy = 895A7F602FC5F82E00A997B8 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		2DE2A93334790D65C93DDB6F /* Release */ = {
@@ -1351,6 +1496,104 @@
 				TVOS_DEPLOYMENT_TARGET = 13.0;
 			};
 			name = Debug;
+		};
+		895A7F362FC5F20200A997B8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 94L7P6P9PY;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = com.anixplayer.mpv.MPVFramework.MPVFramework;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_INSTALL_MODULE = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 14.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		895A7F372FC5F20200A997B8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 94L7P6P9PY;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = com.anixplayer.mpv.MPVFramework.MPVFramework;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "appletvos appletvsimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_INSTALL_MODULE = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 3;
+				TVOS_DEPLOYMENT_TARGET = 14.0;
+				VALIDATE_PRODUCT = YES;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Release;
 		};
 		E3B813C434CB51B6A9249CEB /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -1470,6 +1713,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;
 		};
+		895A7F352FC5F20200A997B8 /* Build configuration list for PBXNativeTarget "MPVFramework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				895A7F362FC5F20200A997B8 /* Debug */,
+				895A7F372FC5F20200A997B8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
 		FA3E261FBFBCD7306F028865 /* Build configuration list for PBXProject "AniXPlayer" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -1531,6 +1783,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 4.0.3;
+			};
+		};
+		895A7F4C2FC5F2FF00A997B8 /* XCRemoteSwiftPackageReference "MPVKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mpvkit/MPVKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.41.0;
 			};
 		};
 		9091D7FA34D5FA65B39F5372 /* XCRemoteSwiftPackageReference "MMKV" */ = {
@@ -1605,6 +1865,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 895A7EF12FC5D54E00A997B8 /* XCRemoteSwiftPackageReference "AMSMB2" */;
 			productName = AMSMB2;
+		};
+		895A7F762FC6033100A997B8 /* MPVKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 895A7F4C2FC5F2FF00A997B8 /* XCRemoteSwiftPackageReference "MPVKit" */;
+			productName = MPVKit;
 		};
 		9E0B30951C7B9FF3ECC13707 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;

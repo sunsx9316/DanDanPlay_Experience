@@ -163,14 +163,12 @@ class Preferences {
     var aspectRatio: PlayerAspectRatio
 
     @StoreWrapper(defaultValueGetter: {
-#if os(iOS)
-        if #available(iOS 14, *) {
+#if os(iOS) || os(tvOS)
+        if #available(iOS 14, tvOS 14, *) {
             return .mpv
         } else {
             return .vlc
         }
-#elseif os(tvOS)
-        return .vlc
 #else
         return .vlc
 #endif
@@ -246,7 +244,13 @@ class Preferences {
     @StoreWrapper(defaultValue: 0, key: .subtitleYPosition)
     var subtitleYPosition: Float
     
-    @StoreWrapper(defaultValue: 20, key: .subtitleFontSize)
+    @StoreWrapper(defaultValue: {
+        #if os(tvOS)
+        return 35
+        #else
+        return 20
+        #endif
+    }(), key: .subtitleFontSize)
     var subtitleFontSize: Float
     
     @StoreWrapper(defaultValue: "", key: .subtitleFontName)

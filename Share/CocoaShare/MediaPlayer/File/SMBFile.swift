@@ -14,6 +14,7 @@ import MobileVLCKit
 import MPVFramework
 #elseif os(tvOS)
 import TVVLCKit
+import MPVFramework
 #else
 import VLCKit
 #endif
@@ -136,7 +137,7 @@ class SMBFile: File {
         return media
     }
     
-#if os(iOS)
+#if os(iOS) || os(tvOS)
     func createMPVMedia() -> MPVMedia? {
         if let auth = SMBFileManager.shared.loginInfo?.auth,
             var components = URLComponents(string: self.url.absoluteString) {

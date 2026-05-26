@@ -14,6 +14,7 @@ import MPVFramework
 import FilesProvider
 #elseif os(tvOS)
 import TVVLCKit
+import MPVFramework
 import FilesProvider
 #endif
 
@@ -93,7 +94,7 @@ class WebDavFile: File {
         return media
     }
     
-#if os(iOS)
+#if os(iOS) || os(tvOS)
     func createMPVMedia() -> MPVMedia? {
         if let auth = WebDavFileManager.shared.loginInfo?.auth,
             var components = URLComponents(string: self.url.absoluteString) {

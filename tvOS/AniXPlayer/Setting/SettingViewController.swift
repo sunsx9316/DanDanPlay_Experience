@@ -100,8 +100,8 @@ class SettingViewController: ViewController {
 
         case .playerCore:
             if let cell = cell as? NavigationSettingCell {
-                cell.configure(title: NSLocalizedString("播放器内核", comment: ""), detail: "VLC")
-                cell.showDisclosure = false
+                cell.configure(title: NSLocalizedString("播放器内核", comment: ""),
+                               detail: Preferences.shared.playerCore.displayName)
             }
 
         case .autoLoadCustomSubtitle:
@@ -176,6 +176,8 @@ class SettingViewController: ViewController {
         switch row {
         case .appLanguage:
             showAppLanguagePicker()
+        case .playerCore:
+            showPlayerCorePicker()
         case .mainColor:
             let colorVC = SetMainColorViewController()
             self.navigationController?.pushViewController(colorVC, animated: true)
@@ -229,6 +231,25 @@ class SettingViewController: ViewController {
             })
             alert.addAction(UIAlertAction(title: NSLocalizedString("取消", comment: ""), style: .cancel))
             self?.present(alert, animated: true)
+        }
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
+    private func showPlayerCorePicker() {
+        let allCases = MediaPlayer.CoreType.allCoreType
+        let options = allCases.map { OptionListViewController.Option(title: $0.displayName) }
+        let current = Preferences.shared.playerCore
+        let selectedIndex = allCases.firstIndex(of: current) ?? 0
+        let vc = OptionListViewController(
+            title: NSLocalizedString("播放器内核", comment: ""),
+            options: options,
+            selectedIndex: selectedIndex
+        )
+        vc.onSelect = { [weak self] index in
+            guard index < allCases.count else { return }
+            let coreType = allCases[index]
+            Preferences.shared.playerCore = coreType
+            self?.tableView.reloadData()
         }
         navigationController?.pushViewController(vc, animated: true)
     }

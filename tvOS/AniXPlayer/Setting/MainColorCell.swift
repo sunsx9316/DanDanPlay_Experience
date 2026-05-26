@@ -38,6 +38,7 @@ class MainColorCell: CollectionViewCell {
     }
 
     private func setupUI() {
+        contentView.clipsToBounds = false
         contentView.addSubview(colorView)
         colorView.addSubview(checkmarkImageView)
 
@@ -55,5 +56,19 @@ class MainColorCell: CollectionViewCell {
         colorView.backgroundColor = color
         colorView.layer.borderColor = isSelected ? UIColor.white.cgColor : UIColor.clear.cgColor
         checkmarkImageView.isHidden = !isSelected
+    }
+
+    // MARK: - Focus
+
+    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
+        super.didUpdateFocus(in: context, with: coordinator)
+
+        coordinator.addCoordinatedAnimations({
+            if self === context.nextFocusedView {
+                self.colorView.transform = CGAffineTransform(scaleX: 1.15, y: 1.15)
+            } else if self === context.previouslyFocusedView {
+                self.colorView.transform = .identity
+            }
+        }, completion: nil)
     }
 }

@@ -230,7 +230,8 @@ extension MediaSettingViewController: UITableViewDataSource {
 
         case .subtitleColor:
             let cell = tableView.dequeueReusableCell(withIdentifier: NavigationSettingCell.reuseIdentifier, for: indexPath) as! NavigationSettingCell
-            cell.configure(title: type.title, detail: "")
+            let colorName = Self.subtitleColorName(mediaModel.subtitleColor)
+            cell.configure(title: type.title, detail: colorName)
             return cell
 
         case .subtitleStyle:
@@ -273,6 +274,9 @@ extension MediaSettingViewController: UITableViewDelegate {
 
         case .aspectRatio:
             showAspectRatioPicker()
+
+        case .subtitleColor:
+            showSubtitleColorPicker()
 
         case .subtitleFont:
             delegate?.changeSubtitleFontInMediaSettingViewController(self)
@@ -357,6 +361,28 @@ extension MediaSettingViewController {
             guard index < ratioList.count else { return }
             let ratio = ratioList[index]
             self?.mediaModel.onChangeAspectRatio(ratio)
+            self?.reloadData()
+        }
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
+    private static let subtitleColorPresetColors: [ANXColor] = [
+        .white, .yellow, .green, .cyan, .blue, .magenta, .red, .orange,
+    ]
+
+    static func subtitleColorName(_ color: ANXColor?) -> String {
+        guard color != nil else { return NSLocalizedString("默认", comment: "") }
+        return NSLocalizedString("自定义", comment: "")
+    }
+
+    private func showSubtitleColorPicker() {
+        let vc = SubtitleColorPickerViewController()
+        vc.title = NSLocalizedString("字幕颜色", comment: "")
+        vc.colors = Self.subtitleColorPresetColors
+        vc.selectedColor = mediaModel.subtitleColor
+        vc.allowsNilSelection = true
+        vc.onSelect = { [weak self] color in
+            self?.mediaModel.onChangeSubtitleColor(color)
             self?.reloadData()
         }
         navigationController?.pushViewController(vc, animated: true)

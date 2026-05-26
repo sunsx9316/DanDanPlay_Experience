@@ -11,6 +11,7 @@ import MobileVLCKit
 import MPVFramework
 #elseif os(tvOS)
 import TVVLCKit
+import MPVFramework
 #else
 import VLCKit
 #endif
@@ -75,7 +76,7 @@ class LocalFile: File {
         return VLCMedia(url: self.url)
     }
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
     func createMPVMedia() -> MPVMedia? {
         return MPVMedia(url: self.url)
     }

@@ -14,6 +14,7 @@ import YYCategories
 import MPVFramework
 #elseif os(tvOS)
 import TVVLCKit
+import MPVFramework
 #endif
 
 class PCFile: File {
@@ -115,7 +116,7 @@ class PCFile: File {
         return .init(url: self.downloadURL)
     }
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
     func createMPVMedia() -> MPVMedia? {
         return MPVMedia(url: self.downloadURL)
     }

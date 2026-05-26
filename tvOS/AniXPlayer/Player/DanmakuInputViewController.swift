@@ -19,7 +19,6 @@ class DanmakuInputViewController: ViewController {
 
     private var selectedColor: ANXColor = Preferences.shared.sendDanmakuColor
     private var selectedMode: Comment.Mode = .normal
-    private var colors: [ANXColor] = Preferences.shared.sendDanmakuColors
 
     // MARK: - UI
 
@@ -57,16 +56,18 @@ class DanmakuInputViewController: ViewController {
         return label
     }()
 
-    private lazy var colorStackView: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .horizontal
-        stack.spacing = 16
-        stack.alignment = .center
-        for color in colors {
-            let btn = makeColorButton(color: color)
-            stack.addArrangedSubview(btn)
+    private lazy var colorPickerView: ColorPickerView = {
+        let view = ColorPickerView()
+        view.colors = Preferences.shared.sendDanmakuColors
+        view.selectedColor = selectedColor
+        view.itemSize = 40
+        view.spacing = 16
+        view.onSelect = { [weak self] color in
+            guard let self = self, let color = color else { return }
+            self.selectedColor = color
+            Preferences.shared.sendDanmakuColor = color
         }
-        return stack
+        return view
     }()
 
     private let modeLabel: UILabel = {
@@ -134,7 +135,7 @@ class DanmakuInputViewController: ViewController {
         containerView.addSubview(titleLabel)
         containerView.addSubview(textField)
         containerView.addSubview(colorLabel)
-        containerView.addSubview(colorStackView)
+        containerView.addSubview(colorPickerView)
         containerView.addSubview(modeLabel)
         containerView.addSubview(modeSegment)
         containerView.addSubview(sendButton)
@@ -161,13 +162,14 @@ class DanmakuInputViewController: ViewController {
             make.leading.equalToSuperview().offset(40)
         }
 
-        colorStackView.snp.makeConstraints { make in
+        colorPickerView.snp.makeConstraints { make in
             make.top.equalTo(colorLabel.snp.bottom).offset(12)
             make.leading.equalToSuperview().offset(40)
+            make.trailing.lessThanOrEqualToSuperview().offset(-40)
         }
 
         modeLabel.snp.makeConstraints { make in
-            make.top.equalTo(colorStackView.snp.bottom).offset(24)
+            make.top.equalTo(colorPickerView.snp.bottom).offset(24)
             make.leading.equalToSuperview().offset(40)
         }
 
@@ -189,55 +191,6 @@ class DanmakuInputViewController: ViewController {
             make.centerY.equalTo(sendButton)
             make.width.equalTo(120)
             make.height.equalTo(48)
-        }
-    }
-
-    // MARK: - Focus handling
-
-    override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
-        super.didUpdateFocus(in: context, with: coordinator)
-
-        coordinator.addCoordinatedAnimations({
-            for case let btn as UIButton in self.colorStackView.arrangedSubviews {
-                self.updateColorButtonAppearance(btn, focused: btn === context.nextFocusedView)
-            }
-        }, completion: nil)
-    }
-
-    private func updateColorButtonAppearance(_ btn: UIButton, focused: Bool) {
-        let isSelected = btn.backgroundColor == selectedColor
-        if isSelected {
-            btn.layer.borderWidth = 3
-            btn.layer.borderColor = UIColor.white.cgColor
-        } else if focused {
-            btn.layer.borderWidth = 2
-            btn.layer.borderColor = UIColor.white.cgColor
-        } else {
-            btn.layer.borderWidth = 0
-            btn.layer.borderColor = UIColor.clear.cgColor
-        }
-        btn.transform = focused ? CGAffineTransform(scaleX: 1.25, y: 1.25) : .identity
-    }
-
-    private func makeColorButton(color: ANXColor) -> UIButton {
-        let btn = UIButton(type: .custom)
-        btn.backgroundColor = color
-        btn.layer.cornerRadius = 8
-        btn.snp.makeConstraints { make in
-            make.width.height.equalTo(40)
-        }
-        btn.addTarget(self, action: #selector(colorButtonPressed(_:)), for: .primaryActionTriggered)
-        updateColorButtonAppearance(btn, focused: false)
-        return btn
-    }
-
-    @objc private func colorButtonPressed(_ sender: UIButton) {
-        guard let color = sender.backgroundColor else { return }
-        selectedColor = color
-        Preferences.shared.sendDanmakuColor = color
-
-        for case let btn as UIButton in colorStackView.arrangedSubviews {
-            updateColorButtonAppearance(btn, focused: btn === sender)
         }
     }
 

@@ -6,9 +6,12 @@
 //  使用类型安全的 MPV API
 //
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 
 import Foundation
+import UIKit
+import Metal
+import QuartzCore
 import MPVFramework
 import ANXLog
 
@@ -180,7 +183,7 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
         didSet {
             // 获取视图高度（考虑缩放比例）
             let scaleFactor: CGFloat
-#if os(iOS)
+#if os(iOS) || os(tvOS)
             scaleFactor = self.mediaView.window?.screen.scale ?? UIScreen.main.scale
 #else
             scaleFactor = self.mediaView.window?.backingScaleFactor ?? 1.0

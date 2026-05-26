@@ -1,5 +1,5 @@
 {
-  "originHash" : "628d8b7385b4c78078bf39ac9ea18d385f10dddd1983fecb16768dd3a8d1faad",
+  "originHash" : "68d78559507e4706061c41ca42d49e56ad160e0e6550da501c675f075eec4d7a",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -62,6 +62,15 @@
       "state" : {
         "revision" : "23d652c17e8c2023bb50f1c92e862a2304eaa2a2",
         "version" : "2.4.0"
+      }
+    },
+    {
+      "identity" : "mpvkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mpvkit/MPVKit.git",
+      "state" : {
+        "revision" : "613c0ccc3acf70e136aaff880a9b5fe8fdfaf5b8",
+        "version" : "0.41.0"
       }
     },
     {
