@@ -27,6 +27,7 @@ class StepperSettingCell: TableViewCell {
         let label = Label()
         label.font = .ddp_small(weight: .medium)
         label.textColor = .label
+        label.numberOfLines = 0
         return label
     }()
 

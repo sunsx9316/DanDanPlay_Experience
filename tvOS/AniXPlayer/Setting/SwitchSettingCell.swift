@@ -22,6 +22,7 @@ class SwitchSettingCell: TableViewCell {
         let label = Label()
         label.font = .ddp_small(weight: .medium)
         label.textColor = .label
+        label.numberOfLines = 0
         return label
     }()
 
@@ -66,7 +67,9 @@ class SwitchSettingCell: TableViewCell {
 
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
-            make.centerY.equalToSuperview()
+            make.top.equalToSuperview().offset(14)
+            make.bottom.equalToSuperview().offset(-14).priority(.high)
+            make.trailing.lessThanOrEqualTo(stateLabel.snp.leading).offset(-8)
         }
 
         togglePill.snp.makeConstraints { make in

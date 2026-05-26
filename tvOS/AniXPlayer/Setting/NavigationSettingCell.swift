@@ -28,6 +28,7 @@ class NavigationSettingCell: TableViewCell {
         let label = Label()
         label.font = .ddp_small(weight: .medium)
         label.textColor = .label
+        label.numberOfLines = 0
         return label
     }()
 
@@ -35,6 +36,7 @@ class NavigationSettingCell: TableViewCell {
         let label = Label()
         label.font = .ddp_small()
         label.textColor = .secondaryLabel
+        label.lineBreakMode = .byTruncatingTail
         return label
     }()
 
@@ -72,8 +74,11 @@ class NavigationSettingCell: TableViewCell {
 
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
-            make.centerY.equalToSuperview()
+            make.top.equalToSuperview().offset(14)
+            make.bottom.equalToSuperview().offset(-14).priority(.high)
+            make.trailing.lessThanOrEqualTo(detailLabel.snp.leading).offset(-8)
         }
+        titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
 
         disclosureImageView.snp.makeConstraints { make in
             make.trailing.equalToSuperview().offset(-20)
@@ -84,7 +89,9 @@ class NavigationSettingCell: TableViewCell {
         detailLabel.snp.makeConstraints { make in
             make.trailing.equalTo(disclosureImageView.snp.leading).offset(-8)
             make.centerY.equalToSuperview()
+            make.leading.greaterThanOrEqualTo(titleLabel.snp.trailing).offset(8)
         }
+        detailLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
         colorIndicator.snp.makeConstraints { make in
             make.trailing.equalTo(detailLabel.snp.leading).offset(-8)

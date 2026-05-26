@@ -23,6 +23,7 @@ class FileListCell: TableViewCell {
         let label = Label()
         label.font = .ddp_normal(weight: .medium)
         label.textColor = .label
+        label.numberOfLines = 0
         return label
     }()
 
@@ -57,14 +58,15 @@ class FileListCell: TableViewCell {
 
         iconImageView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
-            make.centerY.equalToSuperview()
+            make.top.equalToSuperview().offset(16)
             make.size.equalTo(CGSize(width: 48, height: 48))
         }
 
         textStack.snp.makeConstraints { make in
             make.leading.equalTo(iconImageView.snp.trailing).offset(20)
             make.trailing.equalToSuperview().offset(-20)
-            make.centerY.equalToSuperview()
+            make.top.equalToSuperview().offset(16)
+            make.bottom.equalToSuperview().offset(-16).priority(.high)
         }
     }
 
@@ -76,7 +78,9 @@ class FileListCell: TableViewCell {
 
     func configure(with file: File) {
         titleLabel.text = file.fileName
+        titleLabel.textColor = .label
         iconImageView.image = UIImage(systemName: file.type == .folder ? "folder" : "play.rectangle")
+        iconImageView.tintColor = .label
 
         if file.type == .folder {
             detailLabel.isHidden = true
@@ -85,5 +89,10 @@ class FileListCell: TableViewCell {
             let sizeStr = ByteCountFormatter.string(fromByteCount: Int64(file.fileSize), countStyle: .file)
             detailLabel.text = "\(sizeStr)  \(file.pathExtension.uppercased())"
         }
+    }
+
+    func configureAsHighlighted() {
+        iconImageView.tintColor = .systemBlue
+        titleLabel.textColor = .systemBlue
     }
 }

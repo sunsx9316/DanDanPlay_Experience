@@ -362,6 +362,7 @@ class PlayerViewController: ViewController {
         let directory = currentMedia?.parentFile ?? LocalFile.rootFile
         let fileBrowserVC = FileBrowserViewController(directory: directory)
         fileBrowserVC.filterType = .video
+        fileBrowserVC.highlightedFile = currentMedia
         fileBrowserVC.delegate = self
         let nav = UINavigationController(rootViewController: fileBrowserVC)
         nav.modalPresentationStyle = .custom

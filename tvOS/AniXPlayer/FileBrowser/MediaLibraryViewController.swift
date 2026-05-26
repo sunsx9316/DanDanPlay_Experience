@@ -14,6 +14,7 @@ class MediaLibraryViewController: ViewController {
         case smb
         case webdav
         case ftp
+        case pc
 
         var title: String {
             switch self {
@@ -21,6 +22,7 @@ class MediaLibraryViewController: ViewController {
             case .smb: return NSLocalizedString("SMB", comment: "")
             case .webdav: return NSLocalizedString("WebDAV", comment: "")
             case .ftp: return NSLocalizedString("FTP", comment: "")
+            case .pc: return NSLocalizedString("电脑端", comment: "")
             }
         }
 
@@ -30,6 +32,7 @@ class MediaLibraryViewController: ViewController {
             case .smb: return "network"
             case .webdav: return "globe"
             case .ftp: return "externaldrive.connected.to.line.below"
+            case .pc: return "desktopcomputer"
             }
         }
     }
@@ -89,6 +92,9 @@ extension MediaLibraryViewController: UITableViewDelegate {
             navigationController?.pushViewController(vc, animated: true)
         case .ftp:
             let vc = FTPLoginHistoryViewController()
+            navigationController?.pushViewController(vc, animated: true)
+        case .pc:
+            let vc = PCLoginHistoryViewController()
             navigationController?.pushViewController(vc, animated: true)
         }
     }

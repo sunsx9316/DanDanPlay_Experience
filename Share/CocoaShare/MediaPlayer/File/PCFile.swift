@@ -5,8 +5,9 @@
 //  Created by jimhuang on 2023/5/1.
 //
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 
+import Foundation
 #if os(iOS)
 import MobileVLCKit
 import YYCategories

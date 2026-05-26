@@ -23,6 +23,9 @@ class FileBrowserViewController: ViewController, FileBrowserViewControllerDelega
     /// 文件过滤类型（nil = 不过滤）
     var filterType: URLFilterType? = .video
 
+    /// 需要高亮的文件（用于播放列表自动定位当前播放视频）
+    var highlightedFile: File?
+
     // MARK: - UI
 
     private(set) lazy var tableView: TableView = {
@@ -30,7 +33,8 @@ class FileBrowserViewController: ViewController, FileBrowserViewControllerDelega
         tv.delegate = self
         tv.dataSource = self
         tv.register(FileListCell.self, forCellReuseIdentifier: FileListCell.reuseIdentifier)
-        tv.rowHeight = 80
+        tv.rowHeight = UITableView.automaticDimension
+        tv.estimatedRowHeight = 80
         return tv
     }()
 
@@ -96,10 +100,15 @@ class FileBrowserViewController: ViewController, FileBrowserViewControllerDelega
             switch result {
             case .success(let files):
                 self.currentDirectory = directory
-                self.files = files
+                self.files = files.sorted { f1, f2 in
+                    if f1.type == .folder && f2.type != .folder { return true }
+                    if f1.type != .folder && f2.type == .folder { return false }
+                    return f1.fileName.localizedStandardCompare(f2.fileName) == .orderedAscending
+                }
                 DispatchQueue.main.async {
                     self.title = directory.fileName
                     self.tableView.reloadData()
+                    self.scrollToHighlightedFile()
                 }
             case .failure(let error):
                 DispatchQueue.main.async {
@@ -119,6 +128,14 @@ class FileBrowserViewController: ViewController, FileBrowserViewControllerDelega
 
     func selectFile(_ file: File) {
         delegate?.fileBrowserViewController(self, didSelectFile: file, allFiles: files)
+    }
+
+    private func scrollToHighlightedFile() {
+        guard let highlightedFile = highlightedFile else { return }
+        if let index = files.firstIndex(where: { $0.url == highlightedFile.url }) {
+            let indexPath = IndexPath(row: index, section: 0)
+            tableView.scrollToRow(at: indexPath, at: .middle, animated: false)
+        }
     }
 
     private func showError(_ error: Error) {
@@ -154,6 +171,9 @@ extension FileBrowserViewController: UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: FileListCell.reuseIdentifier, for: indexPath) as! FileListCell
         let file = files[indexPath.row]
         cell.configure(with: file)
+        if let highlightedFile = highlightedFile, file.url == highlightedFile.url {
+            cell.configureAsHighlighted()
+        }
         return cell
     }
 }

@@ -16,6 +16,7 @@ class TitleTableViewCell: TableViewCell {
         let label = UILabel()
         label.textColor = .white
         label.font = .ddp_normal()
+        label.numberOfLines = 0
         return label
     }()
 
@@ -33,7 +34,8 @@ class TitleTableViewCell: TableViewCell {
         contentView.addSubview(label)
         label.snp.makeConstraints { make in
             make.leading.trailing.equalToSuperview().inset(20)
-            make.centerY.equalToSuperview()
+            make.top.equalToSuperview().offset(14)
+            make.bottom.equalToSuperview().offset(-14).priority(.high)
         }
     }
 }

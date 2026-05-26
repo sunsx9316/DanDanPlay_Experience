@@ -48,14 +48,10 @@
 		895154452FC1DC2D00F75DB7 /* PCFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895153E62FC1DC2D00F75DB7 /* PCFile.swift */; };
 		895154462FC1DC2D00F75DB7 /* AppInfoHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895154292FC1DC2D00F75DB7 /* AppInfoHelper.swift */; };
 		895154472FC1DC2D00F75DB7 /* SubtitleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8951543B2FC1DC2D00F75DB7 /* SubtitleManager.swift */; };
-		895154482FC1DC2D00F75DB7 /* PCSubtitleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895153D72FC1DC2D00F75DB7 /* PCSubtitleModel.swift */; };
 		895154492FC1DC2D00F75DB7 /* Login.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895154192FC1DC2D00F75DB7 /* Login.swift */; };
 		8951544A2FC1DC2D00F75DB7 /* PlayerDanmakuProducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895153F72FC1DC2D00F75DB7 /* PlayerDanmakuProducer.swift */; };
-		8951544B2FC1DC2D00F75DB7 /* PCWelcomeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895153D82FC1DC2D00F75DB7 /* PCWelcomeModel.swift */; };
 		8951544C2FC1DC2D00F75DB7 /* LocalFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895153E52FC1DC2D00F75DB7 /* LocalFile.swift */; };
 		8951544D2FC1DC2D00F75DB7 /* MediaPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895153EF2FC1DC2D00F75DB7 /* MediaPlayer.swift */; };
-		8951544E2FC1DC2D00F75DB7 /* PCLibraryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895153D52FC1DC2D00F75DB7 /* PCLibraryModel.swift */; };
-		8951544F2FC1DC2D00F75DB7 /* PCFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895153DA2FC1DC2D00F75DB7 /* PCFileManager.swift */; };
 		895154502FC1DC2D00F75DB7 /* MatchNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895154122FC1DC2D00F75DB7 /* MatchNetworkHandle.swift */; };
 		895154512FC1DC2D00F75DB7 /* FavoriteNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8951540C2FC1DC2D00F75DB7 /* FavoriteNetworkHandle.swift */; };
 		895154522FC1DC2D00F75DB7 /* WebDavFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895153DC2FC1DC2D00F75DB7 /* WebDavFileManager.swift */; };
@@ -80,7 +76,6 @@
 		895154652FC1DC2D00F75DB7 /* MPV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895153EB2FC1DC2D00F75DB7 /* MPV.swift */; };
 		895154662FC1DC2D00F75DB7 /* Enum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895154382FC1DC2D00F75DB7 /* Enum.swift */; };
 		895154672FC1DC2D00F75DB7 /* WebDavFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895153E82FC1DC2D00F75DB7 /* WebDavFile.swift */; };
-		895154682FC1DC2D00F75DB7 /* PCQRModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895153D62FC1DC2D00F75DB7 /* PCQRModel.swift */; };
 		895154692FC1DC2D00F75DB7 /* PathUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895154302FC1DC2D00F75DB7 /* PathUtils.swift */; };
 		8951546A2FC1DC2D00F75DB7 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895154112FC1DC2D00F75DB7 /* Match.swift */; };
 		8951546B2FC1DC2D00F75DB7 /* ConfigNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895154072FC1DC2D00F75DB7 /* ConfigNetworkHandle.swift */; };
@@ -142,6 +137,13 @@
 		895A7F032FC5D5BA00A997B8 /* FTPLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7EF92FC5D5BA00A997B8 /* FTPLoginHistoryViewController.swift */; };
 		895A7F042FC5D5BA00A997B8 /* RemoteLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7EFA2FC5D5BA00A997B8 /* RemoteLoginHistoryViewController.swift */; };
 		895A7F052FC5D5BA00A997B8 /* WebDavConnectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7EF72FC5D5BA00A997B8 /* WebDavConnectViewController.swift */; };
+		895A7F0D2FC5EDE900A997B8 /* PCQRModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7F072FC5EDE900A997B8 /* PCQRModel.swift */; };
+		895A7F0E2FC5EDE900A997B8 /* PCSubtitleModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7F082FC5EDE900A997B8 /* PCSubtitleModel.swift */; };
+		895A7F0F2FC5EDE900A997B8 /* PCWelcomeModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7F092FC5EDE900A997B8 /* PCWelcomeModel.swift */; };
+		895A7F102FC5EDE900A997B8 /* PCLibraryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7F062FC5EDE900A997B8 /* PCLibraryModel.swift */; };
+		895A7F112FC5EDE900A997B8 /* PCFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7F0B2FC5EDE900A997B8 /* PCFileManager.swift */; };
+		895A7F132FC5EE1800A997B8 /* PCConnectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7F122FC5EE1800A997B8 /* PCConnectViewController.swift */; };
+		895A7F152FC5EE2300A997B8 /* PCLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7F142FC5EE2300A997B8 /* PCLoginHistoryViewController.swift */; };
 		8D7C10EF8EC94BD12BAF8486 /* DanmakuRender in Frameworks */ = {isa = PBXBuildFile; productRef = CB0E65E26FE026738CA2965C /* DanmakuRender */; };
 		91B73DD0873844841D957360 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4BC15B4CE13C5659472F037 /* MainViewController.swift */; };
 		943C56898F713204954A750B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 96041B6E4AE79C25D2164B75 /* ViewController.swift */; };
@@ -213,11 +215,6 @@
 		895153D02FC1DC2D00F75DB7 /* upload.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = upload.html; sourceTree = "<group>"; };
 		895153D12FC1DC2D00F75DB7 /* upload.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = upload.js; sourceTree = "<group>"; };
 		895153D32FC1DC2D00F75DB7 /* HttpServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpServer.swift; sourceTree = "<group>"; };
-		895153D52FC1DC2D00F75DB7 /* PCLibraryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCLibraryModel.swift; sourceTree = "<group>"; };
-		895153D62FC1DC2D00F75DB7 /* PCQRModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCQRModel.swift; sourceTree = "<group>"; };
-		895153D72FC1DC2D00F75DB7 /* PCSubtitleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCSubtitleModel.swift; sourceTree = "<group>"; };
-		895153D82FC1DC2D00F75DB7 /* PCWelcomeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCWelcomeModel.swift; sourceTree = "<group>"; };
-		895153DA2FC1DC2D00F75DB7 /* PCFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCFileManager.swift; sourceTree = "<group>"; };
 		895153DC2FC1DC2D00F75DB7 /* WebDavFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDavFileManager.swift; sourceTree = "<group>"; };
 		895153DE2FC1DC2D00F75DB7 /* FileManagerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileManagerProtocol.swift; sourceTree = "<group>"; };
 		895153DF2FC1DC2D00F75DB7 /* FTPFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FTPFileManager.swift; sourceTree = "<group>"; };
@@ -315,6 +312,13 @@
 		895A7EFA2FC5D5BA00A997B8 /* RemoteLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteLoginHistoryViewController.swift; sourceTree = "<group>"; };
 		895A7EFB2FC5D5BA00A997B8 /* SMBLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMBLoginHistoryViewController.swift; sourceTree = "<group>"; };
 		895A7EFC2FC5D5BA00A997B8 /* WebDavLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDavLoginHistoryViewController.swift; sourceTree = "<group>"; };
+		895A7F062FC5EDE900A997B8 /* PCLibraryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCLibraryModel.swift; sourceTree = "<group>"; };
+		895A7F072FC5EDE900A997B8 /* PCQRModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCQRModel.swift; sourceTree = "<group>"; };
+		895A7F082FC5EDE900A997B8 /* PCSubtitleModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCSubtitleModel.swift; sourceTree = "<group>"; };
+		895A7F092FC5EDE900A997B8 /* PCWelcomeModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCWelcomeModel.swift; sourceTree = "<group>"; };
+		895A7F0B2FC5EDE900A997B8 /* PCFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCFileManager.swift; sourceTree = "<group>"; };
+		895A7F122FC5EE1800A997B8 /* PCConnectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCConnectViewController.swift; sourceTree = "<group>"; };
+		895A7F142FC5EE2300A997B8 /* PCLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCLoginHistoryViewController.swift; sourceTree = "<group>"; };
 		96041B6E4AE79C25D2164B75 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		98A21E20596A3F605DAE1637 /* BangumiDetailInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiDetailInfoCell.swift; sourceTree = "<group>"; };
 		98CCDF56B9C77A041518912A /* HomePageSectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageSectionHeaderView.swift; sourceTree = "<group>"; };
@@ -547,26 +551,6 @@
 			path = HttpServer;
 			sourceTree = "<group>";
 		};
-		895153D92FC1DC2D00F75DB7 /* Model */ = {
-			isa = PBXGroup;
-			children = (
-				895153D52FC1DC2D00F75DB7 /* PCLibraryModel.swift */,
-				895153D62FC1DC2D00F75DB7 /* PCQRModel.swift */,
-				895153D72FC1DC2D00F75DB7 /* PCSubtitleModel.swift */,
-				895153D82FC1DC2D00F75DB7 /* PCWelcomeModel.swift */,
-			);
-			path = Model;
-			sourceTree = "<group>";
-		};
-		895153DB2FC1DC2D00F75DB7 /* PC */ = {
-			isa = PBXGroup;
-			children = (
-				895153D92FC1DC2D00F75DB7 /* Model */,
-				895153DA2FC1DC2D00F75DB7 /* PCFileManager.swift */,
-			);
-			path = PC;
-			sourceTree = "<group>";
-		};
 		895153DD2FC1DC2D00F75DB7 /* WebDav */ = {
 			isa = PBXGroup;
 			children = (
@@ -578,7 +562,7 @@
 		895153E22FC1DC2D00F75DB7 /* FileManager */ = {
 			isa = PBXGroup;
 			children = (
-				895153DB2FC1DC2D00F75DB7 /* PC */,
+				895A7F0C2FC5EDE900A997B8 /* PC */,
 				895153DD2FC1DC2D00F75DB7 /* WebDav */,
 				895153DE2FC1DC2D00F75DB7 /* FileManagerProtocol.swift */,
 				895153DF2FC1DC2D00F75DB7 /* FTPFileManager.swift */,
@@ -885,6 +869,7 @@
 				895A7EF52FC5D5BA00A997B8 /* RemoteConnectViewController.swift */,
 				895A7EF62FC5D5BA00A997B8 /* SMBConnectViewController.swift */,
 				895A7EF72FC5D5BA00A997B8 /* WebDavConnectViewController.swift */,
+				895A7F122FC5EE1800A997B8 /* PCConnectViewController.swift */,
 			);
 			path = Connect;
 			sourceTree = "<group>";
@@ -896,8 +881,29 @@
 				895A7EFA2FC5D5BA00A997B8 /* RemoteLoginHistoryViewController.swift */,
 				895A7EFB2FC5D5BA00A997B8 /* SMBLoginHistoryViewController.swift */,
 				895A7EFC2FC5D5BA00A997B8 /* WebDavLoginHistoryViewController.swift */,
+				895A7F142FC5EE2300A997B8 /* PCLoginHistoryViewController.swift */,
 			);
 			path = History;
+			sourceTree = "<group>";
+		};
+		895A7F0A2FC5EDE900A997B8 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				895A7F062FC5EDE900A997B8 /* PCLibraryModel.swift */,
+				895A7F072FC5EDE900A997B8 /* PCQRModel.swift */,
+				895A7F082FC5EDE900A997B8 /* PCSubtitleModel.swift */,
+				895A7F092FC5EDE900A997B8 /* PCWelcomeModel.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		895A7F0C2FC5EDE900A997B8 /* PC */ = {
+			isa = PBXGroup;
+			children = (
+				895A7F0A2FC5EDE900A997B8 /* Model */,
+				895A7F0B2FC5EDE900A997B8 /* PCFileManager.swift */,
+			);
+			path = PC;
 			sourceTree = "<group>";
 		};
 		8E17DBDEADDF4370AB0E83E2 /* Resource */ = {
@@ -1076,6 +1082,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				895A7F0D2FC5EDE900A997B8 /* PCQRModel.swift in Sources */,
+				895A7F0E2FC5EDE900A997B8 /* PCSubtitleModel.swift in Sources */,
+				895A7F0F2FC5EDE900A997B8 /* PCWelcomeModel.swift in Sources */,
+				895A7F102FC5EDE900A997B8 /* PCLibraryModel.swift in Sources */,
+				895A7F112FC5EDE900A997B8 /* PCFileManager.swift in Sources */,
 				F75F5DC7360C8F982C90A6C7 /* AppDelegate.swift in Sources */,
 				9E4156485BB427383143D20A /* BangumiDetailInfoCell.swift in Sources */,
 				D0C6D82D25FF394DD2E87B6B /* BangumiDetailViewController.swift in Sources */,
@@ -1116,16 +1127,13 @@
 				895154452FC1DC2D00F75DB7 /* PCFile.swift in Sources */,
 				895154462FC1DC2D00F75DB7 /* AppInfoHelper.swift in Sources */,
 				895154472FC1DC2D00F75DB7 /* SubtitleManager.swift in Sources */,
-				895154482FC1DC2D00F75DB7 /* PCSubtitleModel.swift in Sources */,
 				895154492FC1DC2D00F75DB7 /* Login.swift in Sources */,
 				8951544A2FC1DC2D00F75DB7 /* PlayerDanmakuProducer.swift in Sources */,
-				8951544B2FC1DC2D00F75DB7 /* PCWelcomeModel.swift in Sources */,
 				8951544C2FC1DC2D00F75DB7 /* LocalFile.swift in Sources */,
 				8951544D2FC1DC2D00F75DB7 /* MediaPlayer.swift in Sources */,
-				8951544E2FC1DC2D00F75DB7 /* PCLibraryModel.swift in Sources */,
-				8951544F2FC1DC2D00F75DB7 /* PCFileManager.swift in Sources */,
 				895154502FC1DC2D00F75DB7 /* MatchNetworkHandle.swift in Sources */,
 				895154512FC1DC2D00F75DB7 /* FavoriteNetworkHandle.swift in Sources */,
+				895A7F132FC5EE1800A997B8 /* PCConnectViewController.swift in Sources */,
 				895154522FC1DC2D00F75DB7 /* WebDavFileManager.swift in Sources */,
 				895154532FC1DC2D00F75DB7 /* ANXAddressModel.m in Sources */,
 				895154542FC1DC2D00F75DB7 /* PlayerDanmakuContext.swift in Sources */,
@@ -1156,7 +1164,6 @@
 				895154652FC1DC2D00F75DB7 /* MPV.swift in Sources */,
 				895154662FC1DC2D00F75DB7 /* Enum.swift in Sources */,
 				895154672FC1DC2D00F75DB7 /* WebDavFile.swift in Sources */,
-				895154682FC1DC2D00F75DB7 /* PCQRModel.swift in Sources */,
 				895154692FC1DC2D00F75DB7 /* PathUtils.swift in Sources */,
 				8951546A2FC1DC2D00F75DB7 /* Match.swift in Sources */,
 				8951546B2FC1DC2D00F75DB7 /* ConfigNetworkHandle.swift in Sources */,
@@ -1194,6 +1201,7 @@
 				D6025411E3066FEDFFEBD87A /* PlayerSettingViewController.swift in Sources */,
 				895157502FC36B3D00F75DB7 /* StepperSettingCell.swift in Sources */,
 				895157512FC36B3D00F75DB7 /* CenterPopupAnimator.swift in Sources */,
+				895A7F152FC5EE2300A997B8 /* PCLoginHistoryViewController.swift in Sources */,
 				895157522FC36B3D00F75DB7 /* DanmakuListViewController.swift in Sources */,
 				895157532FC36B3D00F75DB7 /* GotoLastWatchPointViewController.swift in Sources */,
 				895157542FC36B3D00F75DB7 /* DanmakuSettingViewController.swift in Sources */,
