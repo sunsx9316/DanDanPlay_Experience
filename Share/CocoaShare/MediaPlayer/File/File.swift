@@ -9,6 +9,9 @@ import Foundation
 #if os(iOS)
 import MobileVLCKit
 import MPVFramework
+#elseif os(tvOS)
+import TVVLCKit
+import MPVFramework
 #else
 import VLCKit
 #endif
@@ -81,8 +84,10 @@ protocol File: HistoryManager.lastWatchDateStoreable {
     /// - Parameter delegate: 媒体代理
     /// - Returns: 媒体文件
     func createVLCMedia(delegate: FileDelegate) -> VLCMedia?
-    
+
+#if os(iOS) || os(tvOS)
     func createMPVMedia() -> MPVMedia?
+#endif
 }
 
 extension File {

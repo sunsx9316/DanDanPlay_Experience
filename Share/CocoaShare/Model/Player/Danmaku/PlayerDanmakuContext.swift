@@ -6,38 +6,40 @@
 //
 
 import Foundation
+#if os(iOS) || os(tvOS)
 import RxSwift
 import DanmakuRender
 
 class PlayerDanmakuContext {
-    
+
     lazy var danmakuAlpha = BehaviorSubject<Float>(value: Float(Preferences.shared.danmakuAlpha))
-    
+
     lazy var danmakuSpeed = BehaviorSubject<Double>(value: Preferences.shared.danmakuSpeed)
-    
+
     lazy var danmakuFont = BehaviorSubject<ANXFont>(value: ANXFont.systemFont(ofSize: CGFloat(Preferences.shared.danmakuFontSize)))
-    
+
     /// 弹幕和屏幕的占比
     lazy var danmakuArea = BehaviorSubject<DanmakuAreaType>(value: Preferences.shared.danmakuArea)
-    
+
     lazy var danmakuEffectStyle = BehaviorSubject<DanmakuEffectStyle>(value: Preferences.shared.danmakuEffectStyle)
-    
+
     lazy var isShowDanmaku = BehaviorSubject<Bool>(value: Preferences.shared.isShowDanmaku)
-    
+
     lazy var danmakuOffsetTime = BehaviorSubject<Int>(value: Preferences.shared.danmakuOffsetTime)
-    
+
     /// 弹幕密度
     lazy var danmakuDensity = BehaviorSubject<Float>(value: Preferences.shared.danmakuDensity)
-    
+
     /// 合并相同弹幕
     lazy var isMergeSameDanmaku = BehaviorSubject<Bool>(value: Preferences.shared.isMergeSameDanmaku)
-    
+
     /// 过滤弹幕
     lazy var filterDanmakus = BehaviorSubject<[FilterDanmaku]?>(value: Preferences.shared.filterDanmakus)
-    
+
     /// 弹幕随机颜色
     lazy var openDanmakuRandomColor = BehaviorSubject<Bool>(value: Preferences.shared.openDanmakuRandomColor)
-    
 
-    
+
+
 }
+#endif

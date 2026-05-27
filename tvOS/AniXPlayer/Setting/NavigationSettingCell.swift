@@ -1,0 +1,115 @@
+//
+//  NavigationSettingCell.swift
+//  AniXPlayer
+//
+//  tvOS 导航设置 Cell — 点击跳转子页面，自动适配浅色/深色模式
+//
+
+import UIKit
+import SnapKit
+
+class NavigationSettingCell: TableViewCell {
+
+    static let reuseIdentifier = "NavigationSettingCell"
+
+    var colorIndicatorColor: UIColor? {
+        didSet {
+            colorIndicator.backgroundColor = colorIndicatorColor
+        }
+    }
+
+    var showDisclosure: Bool = true {
+        didSet {
+            disclosureImageView.isHidden = !showDisclosure
+        }
+    }
+
+    private lazy var titleLabel: Label = {
+        let label = Label()
+        label.font = .ddp_small(weight: .medium)
+        label.textColor = .label
+        label.numberOfLines = 0
+        return label
+    }()
+
+    private lazy var detailLabel: Label = {
+        let label = Label()
+        label.font = .ddp_small()
+        label.textColor = .secondaryLabel
+        label.lineBreakMode = .byTruncatingTail
+        return label
+    }()
+
+    private lazy var colorIndicator: UIView = {
+        let view = UIView()
+        view.layer.cornerRadius = 6
+        view.isHidden = true
+        return view
+    }()
+
+    private lazy var disclosureImageView: UIImageView = {
+        let iv = UIImageView(image: UIImage(systemName: "chevron.right"))
+        iv.tintColor = .secondaryLabel
+        return iv
+    }()
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setupUI()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupUI()
+    }
+
+    private func setupUI() {
+        selectionStyle = .none
+        accessoryType = .none
+
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(colorIndicator)
+        contentView.addSubview(detailLabel)
+        contentView.addSubview(disclosureImageView)
+
+        titleLabel.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.top.equalToSuperview().offset(14)
+            make.bottom.equalToSuperview().offset(-14).priority(.high)
+            make.trailing.lessThanOrEqualTo(detailLabel.snp.leading).offset(-8)
+        }
+        titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+
+        disclosureImageView.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().offset(-20)
+            make.centerY.equalToSuperview()
+            make.size.equalTo(CGSize(width: 12, height: 20))
+        }
+
+        detailLabel.snp.makeConstraints { make in
+            make.trailing.equalTo(disclosureImageView.snp.leading).offset(-8)
+            make.centerY.equalToSuperview()
+            make.leading.greaterThanOrEqualTo(titleLabel.snp.trailing).offset(8)
+        }
+        detailLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+
+        colorIndicator.snp.makeConstraints { make in
+            make.trailing.equalTo(detailLabel.snp.leading).offset(-8)
+            make.centerY.equalToSuperview()
+            make.size.equalTo(CGSize(width: 20, height: 20))
+        }
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        showDisclosure = true
+        colorIndicatorColor = nil
+        colorIndicator.isHidden = true
+    }
+
+    func configure(title: String, detail: String) {
+        titleLabel.text = title
+        detailLabel.text = detail
+        colorIndicator.isHidden = (colorIndicatorColor == nil)
+    }
+}

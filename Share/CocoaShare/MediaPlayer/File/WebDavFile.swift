@@ -5,12 +5,18 @@
 //  Created by jimhuang on 2021/2/14.
 //
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 
 import Foundation
+#if os(iOS)
 import MobileVLCKit
 import MPVFramework
 import FilesProvider
+#elseif os(tvOS)
+import TVVLCKit
+import MPVFramework
+import FilesProvider
+#endif
 
 
 class WebDavFile: File {
@@ -22,11 +28,6 @@ class WebDavFile: File {
     var path: String
     
     var fileSize = 0
-    
-    fileprivate var inputStream: WebDAVInputStream?
-    
-    //应该是vlc的bug，需要强引用InputStream对象，否则会crash
-    private static var inputStream: WebDAVInputStream?
     
     static var rootFile: File = WebDavFile(url: URL(string: "/")!, fileSize: 0)
     
@@ -47,10 +48,6 @@ class WebDavFile: File {
     
     static var fileManager: FileManagerProtocol {
         return WebDavFileManager.shared
-    }
-    
-    var bufferInfos: [MediaBufferInfo] {
-        return inputStream?.taskInfos ?? []
     }
     
     private weak var fileDelegate: FileDelegate?
@@ -94,12 +91,12 @@ class WebDavFile: File {
             // 直接赋值新的凭据，它会自动替换掉旧的
             components.user = auth.userName
             components.password = auth.password
-            
+
             if let newURL = components.url {
                 return MPVMedia(url: newURL)
             }
         }
-        
+
         let media = MPVMedia(url: self.url)
         return media
     }
@@ -136,16 +133,6 @@ class WebDavFile: File {
         return self.fileSize
     }
    
-}
-
-extension WebDavFile: WebDAVInputStreamDelegate {
-    func streamDidClose(_ stream: WebDAVInputStream) {
-        self.inputStream = nil
-    }
-    
-    func streamTaskInfoDidChange(_ stream: WebDAVInputStream, taskInfo: WebDAVInputStream.TaskInfo) {
-        self.fileDelegate?.mediaBufferDidChange(file: self, bufferInfo: taskInfo)
-    }
 }
 
 #endif

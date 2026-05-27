@@ -5,11 +5,13 @@
 //  Created by jimhuang on 2021/2/17.
 //
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 
 import Foundation
 import FilesProvider
+#if os(iOS)
 import YYCategories
+#endif
 import ANXLog
 
 class WebDavFileManager: FileManagerProtocol {
@@ -138,7 +140,7 @@ class WebDavFileManager: FileManagerProtocol {
             if let error = error {
                 completion(.failure(error))
             } else if let contents = contents {
-                try? contents.write(to: UIApplication.shared.documentsURL.appendingPathComponent("new.data"))
+                try? contents.write(to: PathUtils.documentsURL.appendingPathComponent("new.data"))
                 completion(.success(contents))
             } else {
                 completion(.failure(WebDavError.reqError))

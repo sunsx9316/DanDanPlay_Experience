@@ -6,8 +6,11 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <TargetConditionals.h>
 
-#ifdef TARGET_OS_IPHONE
+#if TARGET_OS_OSX || (TARGET_OS_IOS && !TARGET_OS_TV)
+
+#if TARGET_OS_IOS
 #import <MobileVLCKit/MobileVLCKit.h>
 #else
 #import <VLCKit/VLCKit.h>
@@ -26,3 +29,5 @@ NS_ASSUME_NONNULL_BEGIN
 @end
 
 NS_ASSUME_NONNULL_END
+
+#endif

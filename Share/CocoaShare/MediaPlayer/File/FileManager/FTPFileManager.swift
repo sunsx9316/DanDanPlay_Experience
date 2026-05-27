@@ -5,7 +5,7 @@
 //  Created by jimhuang on 2021/5/30.
 //
 
-#if os(iOS)
+#if os(iOS) || os(tvOS)
 
 import Foundation
 import FilesProvider

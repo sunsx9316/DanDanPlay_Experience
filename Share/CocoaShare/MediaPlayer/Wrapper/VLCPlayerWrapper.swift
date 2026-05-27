@@ -11,6 +11,9 @@ import ANXLog
 #if os(iOS)
 import MobileVLCKit
 import UIKit
+#elseif os(tvOS)
+import TVVLCKit
+import UIKit
 #else
 import VLCKit
 import AppKit
@@ -76,8 +79,10 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     /// 当前选择的字幕文件
     private var currentSubTitleFile: SubtitleProtocol?
     
+#if os(iOS)
     private var mediaThumbnailer: MediaThumbnailer?
-    
+#endif
+
     lazy var mediaView: ANXView = {
         let view = ANXView()
         view.backgroundColor = .black
@@ -105,11 +110,13 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
 #if os(macOS)
             media?.synchronousParse()
 #endif
+#if os(iOS)
             if let media = media {
                 self.mediaThumbnailer = .init(media: media)
             } else {
                 self.mediaThumbnailer = nil
             }
+#endif
         }
     }
     
@@ -297,7 +304,9 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
                     let vlcFontSizeRange: (min: Float, max: Float) = (min: 0.1, max: 5) // vlc的区间为 0.1~5
 
                     let vlcFontSize = vlcFontSizeRange.min + ((fontSize - anxFontSizeRange.min) * (vlcFontSizeRange.max - vlcFontSizeRange.min) / (anxFontSizeRange.max - anxFontSizeRange.min))
+#if os(iOS)
                     self.player?.anx_setTextRendererFontSize(vlcFontSize as NSNumber)
+#endif
                 }
             }
 
@@ -316,7 +325,9 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
                 guard let self = self else { return }
 
                 if let fontName = self.fontName {
+#if os(iOS)
                     self.player?.anx_setTextRendererFont(fontName)
+#endif
                 }
             }
 
@@ -332,7 +343,9 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         didSet {
             if let fontColor = self.fontColor {
                 ANX.logDebug(.player, "[VLC] 字体颜色已更改")
+#if os(iOS)
                 self.player?.anx_setTextRendererFontColor(fontColor.rgbValue() as NSNumber)
+#endif
             }
         }
     }
@@ -431,7 +444,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
                         
                         let windowScale: CGFloat
                         
-                        #if os(iOS)
+                        #if os(iOS) || os(tvOS)
                         windowScale = window.screen.scale
                         #else
                         windowScale = window.backingScaleFactor
@@ -447,7 +460,10 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
                 case .fourToThree, .sixteenToNine, .sixteenToTen:
                     self.player?.scaleFactor = 0
                     self.player?.videoCropGeometry = nil
-                    self.player?.videoAspectRatio = UnsafeMutablePointer(mutating: (newValue.rawValue as NSString).utf8String)
+                    newValue.rawValue.withCString { ptr in
+                        self.player?.videoAspectRatio = UnsafeMutablePointer(mutating: ptr)
+                    }
+                    ANX.logInfo(.player, "[VLC] aspectRatio set: \(newValue.rawValue), player state: \(self.player?.state.rawValue ?? -1)")
                 }
             }
             
@@ -579,7 +595,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
             // subtitleYPosition 需要从百分比转换为像素值（考虑视图缩放比例）
             if option.key == .subtitleYPosition, let percentage = option.value as? Float {
                 let scaleFactor: CGFloat
-                #if os(iOS)
+                #if os(iOS) || os(tvOS)
                 scaleFactor = self.mediaView.window?.screen.scale ?? UIScreen.main.scale
                 #else
                 scaleFactor = self.mediaView.window?.backingScaleFactor ?? 1.0

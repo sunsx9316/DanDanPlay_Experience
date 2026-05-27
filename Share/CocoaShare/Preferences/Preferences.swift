@@ -7,7 +7,9 @@
 //
 
 import Foundation
+#if os(iOS) || os(tvOS)
 import DanmakuRender
+#endif
 
 class Preferences {
     
@@ -161,8 +163,8 @@ class Preferences {
     var aspectRatio: PlayerAspectRatio
 
     @StoreWrapper(defaultValueGetter: {
-#if os(iOS)
-        if #available(iOS 14, *) {
+#if os(iOS) || os(tvOS)
+        if #available(iOS 14, tvOS 14, *) {
             return .mpv
         } else {
             return .vlc
@@ -242,7 +244,13 @@ class Preferences {
     @StoreWrapper(defaultValue: 0, key: .subtitleYPosition)
     var subtitleYPosition: Float
     
-    @StoreWrapper(defaultValue: 20, key: .subtitleFontSize)
+    @StoreWrapper(defaultValue: {
+        #if os(tvOS)
+        return 35
+        #else
+        return 20
+        #endif
+    }(), key: .subtitleFontSize)
     var subtitleFontSize: Float
     
     @StoreWrapper(defaultValue: "", key: .subtitleFontName)
@@ -321,7 +329,11 @@ class Preferences {
     @StoreWrapper(defaultValue: 7, key: .danmakuCacheDay)
     var danmakuCacheDay: Int
     
+    #if os(tvOS)
+    @StoreWrapper(defaultValue: 30, key: .danmakuFontSize)
+    #else
     @StoreWrapper(defaultValue: 20, key: .danmakuFontSize)
+    #endif
     var danmakuFontSize: Double
     
     @StoreWrapper(defaultValue: 1, key: .danmakuSpeed)
@@ -331,9 +343,11 @@ class Preferences {
     @StoreWrapper(defaultValue: 10, key: .danmakuDensity)
     var danmakuDensity: Float
     
+#if os(iOS) || os(tvOS)
     /// 弹幕边缘样式
     @StoreWrapper(defaultValue: DanmakuEffectStyle.stroke, key: .danmakuEffectStyle)
     var danmakuEffectStyle: DanmakuEffectStyle
+#endif
     
     var pcLoginInfos: [LoginInfo]? {
         get {

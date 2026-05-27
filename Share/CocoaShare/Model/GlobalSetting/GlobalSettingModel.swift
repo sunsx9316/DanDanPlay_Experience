@@ -7,7 +7,9 @@
 
 import Foundation
 import RxSwift
+#if os(iOS)
 import YYCategories
+#endif
 
 class GlobalSettingContext {
     
@@ -74,7 +76,7 @@ class GlobalSettingModel {
     lazy var context = GlobalSettingContext()
     
     func allSettingType() -> [GlobalSettingType] {
-#if os(iOS)
+#if os(iOS) || os(tvOS)
         return GlobalSettingType.allCases
 #else
         // Mac 不支持 MPV

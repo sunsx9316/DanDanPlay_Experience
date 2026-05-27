@@ -8,7 +8,9 @@
 import Foundation
 import RxSwift
 import RxCocoa
+#if os(iOS) || os(tvOS)
 import DanmakuRender
+#endif
 
 // MARK: - 便捷接口
 extension PlayerDanmakuModel {
@@ -207,7 +209,7 @@ class PlayerDanmakuModel {
         let pasteboard = NSPasteboard.general
         pasteboard.clearContents()
         pasteboard.setString(container.danmaku.text, forType: .string)
-#else
+#elseif os(iOS)
         UIPasteboard.general.string = container.danmaku.text
 #endif
         
@@ -291,11 +293,12 @@ class PlayerDanmakuModel {
     /// - Returns: 加载状态
     func loadDanmakuByUser(_ file: File) -> Observable<LoadingState> {
         return Observable<LoadingState>.create { [weak self] (sub) in
-            
+
             DanmakuManager.shared.downCustomDanmaku(file) { [weak self] result1 in
-                
+
                 switch result1 {
                 case .success(let url):
+#if os(iOS)
                     do {
                         let converResult = try DanmakuManager.shared.conver(url)
                         DispatchQueue.main.async {
@@ -307,13 +310,16 @@ class PlayerDanmakuModel {
                             sub.onError(error)
                         }
                     }
+#else
+                    sub.onCompleted()
+#endif
                 case .failure(let error):
                     DispatchQueue.main.async {
                         sub.onError(error)
                     }
                 }
             }
-            
+
             return Disposables.create()
         }
     }

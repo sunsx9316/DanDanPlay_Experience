@@ -115,7 +115,7 @@ extension Preferences {
         
         private static let rootPath: String? = {
             var rootDir: String?
-#if os(iOS)
+#if os(iOS) || os(tvOS)
             if let path = NSSearchPathForDirectoriesInDomains(.libraryDirectory, .userDomainMask, true).first,
                var url = URL(string: path) {
                 url.appendPathComponent("Store")
