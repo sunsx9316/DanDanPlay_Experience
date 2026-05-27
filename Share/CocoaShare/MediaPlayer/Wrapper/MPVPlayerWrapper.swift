@@ -294,6 +294,7 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
         ANX.logInfo(.player, "[MPV] 停止")
         stopPlaybackPolling()
         mpv?.stop()
+        SMBFileManager.shared.stopStreaming()
         stateChangedCallBack?(self, .stop)
     }
 
@@ -301,6 +302,7 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
         ANX.logInfo(.player, "[MPV] 终止")
         stopPlaybackPolling()
         self.mpv?.quit()
+        SMBFileManager.shared.stopStreaming()
         stateChangedCallBack?(self, .stop)
     }
 

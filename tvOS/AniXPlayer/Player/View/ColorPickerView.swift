@@ -137,7 +137,7 @@ extension ColorPickerView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: MainColorCell.reuseIdentifier, for: indexPath) as! MainColorCell
         let color = colorValues[indexPath.item]
-        cell.configure(with: color ?? .white, isSelected: isSelectedColor(color))
+        cell.configure(with: color ?? .white, isSelected: isSelectedColor(color), isDefault: color == nil)
         return cell
     }
 }
@@ -150,5 +150,18 @@ extension ColorPickerView: UICollectionViewDelegate {
         let color = colorValues[indexPath.item]
         selectedColor = color
         onSelect?(color)
+    }
+}
+
+// MARK: - UICollectionViewDelegateFlowLayout
+
+extension ColorPickerView: UICollectionViewDelegateFlowLayout {
+
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let isDefaultCell = allowsNilSelection && indexPath.item == 0
+        if isDefaultCell {
+            return CGSize(width: 80, height: itemSize)
+        }
+        return CGSize(width: itemSize, height: itemSize)
     }
 }

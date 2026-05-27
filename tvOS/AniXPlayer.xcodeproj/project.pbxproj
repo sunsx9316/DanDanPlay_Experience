@@ -38,7 +38,6 @@
 		895152FA2FC1DBD700F75DB7 /* ANXLog in Frameworks */ = {isa = PBXBuildFile; productRef = 895152F92FC1DBD700F75DB7 /* ANXLog */; };
 		895152FD2FC1DBE200F75DB7 /* TVVLCKitSPM in Frameworks */ = {isa = PBXBuildFile; productRef = 895152FC2FC1DBE200F75DB7 /* TVVLCKitSPM */; };
 		8951543D2FC1DC2D00F75DB7 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895154242FC1DC2D00F75DB7 /* Preferences.swift */; };
-		8951543E2FC1DC2D00F75DB7 /* WebDAVInputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895153E92FC1DC2D00F75DB7 /* WebDAVInputStream.swift */; };
 		8951543F2FC1DC2D00F75DB7 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895154332FC1DC2D00F75DB7 /* Atomic.swift */; };
 		895154402FC1DC2D00F75DB7 /* SMBFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895153E12FC1DC2D00F75DB7 /* SMBFileManager.swift */; };
 		895154412FC1DC2D00F75DB7 /* BangumiNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895154022FC1DC2D00F75DB7 /* BangumiNetworkHandle.swift */; };
@@ -250,7 +249,6 @@
 		895153E62FC1DC2D00F75DB7 /* PCFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCFile.swift; sourceTree = "<group>"; };
 		895153E72FC1DC2D00F75DB7 /* SMBFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMBFile.swift; sourceTree = "<group>"; };
 		895153E82FC1DC2D00F75DB7 /* WebDavFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDavFile.swift; sourceTree = "<group>"; };
-		895153E92FC1DC2D00F75DB7 /* WebDAVInputStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDAVInputStream.swift; sourceTree = "<group>"; };
 		895153EB2FC1DC2D00F75DB7 /* MPV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPV.swift; sourceTree = "<group>"; };
 		895153EC2FC1DC2D00F75DB7 /* MPVPlayerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVPlayerWrapper.swift; sourceTree = "<group>"; };
 		895153ED2FC1DC2D00F75DB7 /* VLCPlayerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VLCPlayerWrapper.swift; sourceTree = "<group>"; };
@@ -635,7 +633,6 @@
 				895153E62FC1DC2D00F75DB7 /* PCFile.swift */,
 				895153E72FC1DC2D00F75DB7 /* SMBFile.swift */,
 				895153E82FC1DC2D00F75DB7 /* WebDavFile.swift */,
-				895153E92FC1DC2D00F75DB7 /* WebDAVInputStream.swift */,
 			);
 			path = File;
 			sourceTree = "<group>";
@@ -1246,7 +1243,6 @@
 				FB137A6D6810724193EE6862 /* NavigationSettingCell.swift in Sources */,
 				A6892C8FAB9E47471BE1C7BC /* OptionListViewController.swift in Sources */,
 				8951543D2FC1DC2D00F75DB7 /* Preferences.swift in Sources */,
-				8951543E2FC1DC2D00F75DB7 /* WebDAVInputStream.swift in Sources */,
 				8951543F2FC1DC2D00F75DB7 /* Atomic.swift in Sources */,
 				895154402FC1DC2D00F75DB7 /* SMBFileManager.swift in Sources */,
 				895154412FC1DC2D00F75DB7 /* BangumiNetworkHandle.swift in Sources */,

@@ -27,6 +27,16 @@ class MainColorCell: CollectionViewCell {
         return iv
     }()
 
+    private lazy var defaultLabel: Label = {
+        let label = Label()
+        label.text = NSLocalizedString("默认", comment: "")
+        label.font = .ddp_small()
+        label.textColor = .secondaryLabel
+        label.textAlignment = .center
+        label.isHidden = true
+        return label
+    }()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setupUI()
@@ -41,6 +51,7 @@ class MainColorCell: CollectionViewCell {
         contentView.clipsToBounds = false
         contentView.addSubview(colorView)
         colorView.addSubview(checkmarkImageView)
+        colorView.addSubview(defaultLabel)
 
         colorView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -50,12 +61,30 @@ class MainColorCell: CollectionViewCell {
             make.center.equalToSuperview()
             make.size.equalTo(CGSize(width: 30, height: 30))
         }
+
+        defaultLabel.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(4)
+        }
     }
 
-    func configure(with color: UIColor, isSelected: Bool) {
-        colorView.backgroundColor = color
-        colorView.layer.borderColor = isSelected ? UIColor.white.cgColor : UIColor.clear.cgColor
+    func configure(with color: UIColor, isSelected: Bool, isDefault: Bool = false) {
+        colorView.backgroundColor = isDefault ? .clear : color
+        colorView.layer.borderWidth = isDefault && !isSelected ? 1 : 2
+        colorView.layer.borderColor = {
+            if isSelected { return UIColor.white.cgColor }
+            if isDefault { return UIColor.secondaryLabel.cgColor }
+            return UIColor.clear.cgColor
+        }()
+        defaultLabel.isHidden = !(isDefault && !isSelected)
         checkmarkImageView.isHidden = !isSelected
+        if isDefault {
+            checkmarkImageView.image = UIImage(systemName: "arrow.counterclockwise")
+            checkmarkImageView.tintColor = isSelected ? .white : .secondaryLabel
+        } else {
+            checkmarkImageView.image = UIImage(systemName: "checkmark")
+            checkmarkImageView.tintColor = .white
+        }
     }
 
     // MARK: - Focus

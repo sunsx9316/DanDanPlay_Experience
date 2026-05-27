@@ -230,6 +230,8 @@ extension MediaSettingViewController: UITableViewDataSource {
 
         case .subtitleColor:
             let cell = tableView.dequeueReusableCell(withIdentifier: NavigationSettingCell.reuseIdentifier, for: indexPath) as! NavigationSettingCell
+            let color = mediaModel.subtitleColor ?? .white
+            cell.colorIndicatorColor = color
             let colorName = Self.subtitleColorName(mediaModel.subtitleColor)
             cell.configure(title: type.title, detail: colorName)
             return cell

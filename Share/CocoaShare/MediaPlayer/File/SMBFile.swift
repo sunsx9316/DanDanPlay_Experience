@@ -20,27 +20,27 @@ import VLCKit
 #endif
 
 class SMBFile: File {
-    
+
     enum PathType {
         case root
         case share
         case normal
     }
-    
+
     let url: URL
-    
+
     var fileSize: Int = 0
-    
+
     let type: FileType
-    
+
     let pathType: PathType
-    
+
     let shareName: String
-    
+
     static var fileManager: FileManagerProtocol {
         return SMBFileManager.shared
     }
-    
+
     var fileName: String {
         switch self.pathType {
         case .normal:
@@ -51,11 +51,11 @@ class SMBFile: File {
             return self.url.host ?? ""
         }
     }
-    
+
     let path: String
-    
+
     static var rootFile: File = SMBFile(rootPath: "/")
-    
+
     var parentFile: File? {
         //根目录
         if self.path == "" {
@@ -67,13 +67,13 @@ class SMBFile: File {
                            shareName: self.shareName)
         }
     }
-    
+
     init(shareName: String) {
         self.pathType = .share
         self.type = .folder
         self.path = shareName
         self.shareName = ""
-        
+
         var urlComponents = URLComponents(string: "")
         urlComponents?.scheme = "smbshare"
         urlComponents?.host = shareName.addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? shareName
@@ -84,12 +84,12 @@ class SMBFile: File {
             assert(false, "url初始化失败 shareName:\(shareName)")
         }
     }
-    
+
     init(file: [URLResourceKey: Any], shareName: String) {
         self.pathType = .normal
         self.shareName = shareName
         self.path = file[.pathKey] as? String ?? ""
-        
+
         var svrURL: URL
         if let loginInfo = SMBFileManager.shared.loginInfo {
             svrURL = loginInfo.url
@@ -98,7 +98,7 @@ class SMBFile: File {
             svrURL = URL(fileURLWithPath: "/")
             ANX.logError(.SMB, "loginfo初始化失败")
         }
-        
+
         if #available(iOS 16.0, tvOS 16.0, *) {
             svrURL.append(path: shareName)
             svrURL.append(path: self.path)
@@ -106,13 +106,13 @@ class SMBFile: File {
             svrURL.appendPathComponent(shareName)
             svrURL.appendPathComponent(self.path)
         }
-        
+
         self.url = svrURL
-        
+
         if let size = file[.fileSizeKey] as? NSNumber {
             self.fileSize = size.intValue
         }
-        
+
         if let type = file[.fileResourceTypeKey] as? URLFileResourceType {
             switch type {
             case .directory, .symbolicLink:
@@ -125,23 +125,30 @@ class SMBFile: File {
             assert(false, "type初始化失败 \(file)")
         }
     }
-    
+
     func createVLCMedia(delegate: FileDelegate) -> VLCMedia? {
         let media = VLCMedia(url: self.url)
         let auth = SMBFileManager.shared.loginInfo?.auth
-        
+
         var options = [AnyHashable : Any]()
         options["smb-user"] = auth?.userName
         options["smb-pwd"] = auth?.password
         media.addOptions(options)
         return media
     }
-    
+
 #if os(iOS) || os(tvOS)
     func createMPVMedia() -> MPVMedia? {
+        // mpv-lgpl 不支持 smb:// 协议，通过 AMSMB2 代理为本地 HTTP 流
+        if let proxyURL = SMBFileManager.shared.streamURL(for: self.path, fileSize: Int64(self.fileSize)) {
+            ANX.logInfo(.SMB, "[SMBFile] 使用流式代理: \(proxyURL.absoluteString)")
+            return MPVMedia(url: proxyURL)
+        }
+        // 代理不可用时，回退到直接 URL
+        ANX.logWarning(.SMB, "[SMBFile] 流式代理不可用，回退到直接 smb:// URL")
+
         if let auth = SMBFileManager.shared.loginInfo?.auth,
             var components = URLComponents(string: self.url.absoluteString) {
-            // 直接赋值新的凭据，它会自动替换掉旧的
             components.user = auth.userName
             components.password = auth.password
 
@@ -154,7 +161,7 @@ class SMBFile: File {
         return media
     }
 #endif
-    
+
     func getFileHashWithProgress(_ progress: FileProgressAction?,
                                  completion: @escaping((Result<String, Error>) -> Void)) {
         let length = parseFileLength + 1
@@ -168,14 +175,14 @@ class SMBFile: File {
             }
         }
     }
-    
+
     //MARK: Private Method
     private init(rootPath: String) {
         self.pathType = .root
         self.type = .folder
         self.path = rootPath
         self.shareName = ""
-        
+
         if let url = URL(string: self.path) {
             self.url = url
         } else {
@@ -183,7 +190,7 @@ class SMBFile: File {
             assert(false, "url初始化失败 rootPath:\(rootPath)")
         }
     }
-    
+
 }
 
 #endif
