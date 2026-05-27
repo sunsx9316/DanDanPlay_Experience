@@ -10,10 +10,10 @@ target 'AniXPlayer' do
 
   
   # pod 'NKOColorPickerView'
-  pod 'MMKV'
+  # pod 'MMKV'
   pod 'MobileVLCKit'
-  pod 'AMSMB2'
-  pod "GCDWebServer"
+  # pod 'AMSMB2'
+  # pod "GCDWebServer"
   pod 'FirebaseCrashlytics'
   pod 'FSPagerView'
   pod 'JXCategoryView'

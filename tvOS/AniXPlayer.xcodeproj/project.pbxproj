@@ -35,7 +35,6 @@
 		7C905D4AA1123B12E415AB7B /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = EAF9C9307AF39D2FE1A14272 /* Kingfisher */; };
 		7F0739FC5182AC6FF9795B39 /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC4CFE26680AB3E3419C009 /* UserInfoViewController.swift */; };
 		7F99B155655AB99289366058 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = CD55FFBBE18590F428239AF1 /* RxCocoa */; };
-		895152FA2FC1DBD700F75DB7 /* ANXLog in Frameworks */ = {isa = PBXBuildFile; productRef = 895152F92FC1DBD700F75DB7 /* ANXLog */; };
 		895152FD2FC1DBE200F75DB7 /* TVVLCKitSPM in Frameworks */ = {isa = PBXBuildFile; productRef = 895152FC2FC1DBE200F75DB7 /* TVVLCKitSPM */; };
 		8951543D2FC1DC2D00F75DB7 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895154242FC1DC2D00F75DB7 /* Preferences.swift */; };
 		8951543F2FC1DC2D00F75DB7 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895154332FC1DC2D00F75DB7 /* Atomic.swift */; };
@@ -182,6 +181,7 @@
 		D78E3043106F93A7D560C59C /* EpisodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E8AAC94DFFD3333729A4CD8 /* EpisodeCell.swift */; };
 		DF8FBE8D0C3453768EC72EE7 /* MainColorCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E63898ACED2373F3C3B4734A /* MainColorCell.swift */; };
 		E0189D8BC08208E7CFA43CCF /* FavoriteItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7B6ECED970606063936A823 /* FavoriteItemCell.swift */; };
+		E752BF63B6728DF5DDC56891 /* Pods_AniXPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5714F8E88446CDC4A3BE0FC /* Pods_AniXPlayer.framework */; };
 		EE846158C3C1893E43D87DD7 /* FileBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC90E930AEDDD1D5D5918388 /* FileBrowserViewController.swift */; };
 		F62B6119C1D6E4DC8623F93D /* FavoriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64917F522D34F28DFCAD4485 /* FavoriteViewController.swift */; };
 		F6D04BDCB732B91EC584BE02 /* GCDWebDAVServer in Frameworks */ = {isa = PBXBuildFile; productRef = 45E3F22DD157AD3C7F6963ED /* GCDWebDAVServer */; };
@@ -233,6 +233,7 @@
 		6BC4CFE26680AB3E3419C009 /* UserInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoViewController.swift; sourceTree = "<group>"; };
 		7051C7C8FEE41D818FB28914 /* SidePanelAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidePanelAnimator.swift; sourceTree = "<group>"; };
 		798EBE1B4EEB48958C016E7A /* LocalFileBrowserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFileBrowserViewController.swift; sourceTree = "<group>"; };
+		7C71B9C4EC7CEEC3F9781A53 /* Pods-AniXPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.debug.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 		7E6861E1EA504C7B855020FA /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		838AF3C49C536CD8B9CDE4A4 /* TimelineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewController.swift; sourceTree = "<group>"; };
 		895153D02FC1DC2D00F75DB7 /* upload.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = upload.html; sourceTree = "<group>"; };
@@ -354,6 +355,7 @@
 		895A7F6C2FC5FBC300A997B8 /* SourceHanSansTC-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceHanSansTC-Regular.otf"; sourceTree = "<group>"; };
 		895A7F722FC602C900A997B8 /* SubtitleColorPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtitleColorPickerViewController.swift; sourceTree = "<group>"; };
 		895A7F742FC602D900A997B8 /* ColorPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerView.swift; sourceTree = "<group>"; };
+		8FC49B9E2ED8389CE13EF6A6 /* Pods-AniXPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.release.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.release.xcconfig"; sourceTree = "<group>"; };
 		96041B6E4AE79C25D2164B75 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		98A21E20596A3F605DAE1637 /* BangumiDetailInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiDetailInfoCell.swift; sourceTree = "<group>"; };
 		98CCDF56B9C77A041518912A /* HomePageSectionHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageSectionHeaderView.swift; sourceTree = "<group>"; };
@@ -365,6 +367,7 @@
 		AC90E930AEDDD1D5D5918388 /* FileBrowserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBrowserViewController.swift; sourceTree = "<group>"; };
 		B028731CD4A13D93F299C6C4 /* SetMainColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetMainColorViewController.swift; sourceTree = "<group>"; };
 		B3045FAACAEE99BB1FD70D94 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
+		B5714F8E88446CDC4A3BE0FC /* Pods_AniXPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AniXPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF11507796BA9FC240A34443 /* HttpServerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpServerViewController.swift; sourceTree = "<group>"; };
 		C043AD50B789ED0F83B57858 /* NavigationSettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationSettingCell.swift; sourceTree = "<group>"; };
 		C1234567890ABCDEF123456 /* SearchAnimeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchAnimeCell.swift; sourceTree = "<group>"; };
@@ -394,7 +397,6 @@
 				9B6D6957EDF3C3D3C360F371 /* RxSwift in Frameworks */,
 				7F99B155655AB99289366058 /* RxCocoa in Frameworks */,
 				A3496C02A5AEA2326D11242D /* MMKV in Frameworks */,
-				895152FA2FC1DBD700F75DB7 /* ANXLog in Frameworks */,
 				A1C0BE5CDFACA58D6BE045B3 /* GCDWebServer in Frameworks */,
 				F6D04BDCB732B91EC584BE02 /* GCDWebDAVServer in Frameworks */,
 				895A7EF32FC5D54E00A997B8 /* AMSMB2 in Frameworks */,
@@ -406,6 +408,7 @@
 				7C905D4AA1123B12E415AB7B /* Kingfisher in Frameworks */,
 				6B60904E446F32A55C83BEC8 /* Alamofire in Frameworks */,
 				8D7C10EF8EC94BD12BAF8486 /* DanmakuRender in Frameworks */,
+				E752BF63B6728DF5DDC56891 /* Pods_AniXPlayer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -426,6 +429,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		08530EEC5867A53F46FCFADC /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				7C71B9C4EC7CEEC3F9781A53 /* Pods-AniXPlayer.debug.xcconfig */,
+				8FC49B9E2ED8389CE13EF6A6 /* Pods-AniXPlayer.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		102AFA13ECA55078A00B6A50 /* User */ = {
 			isa = PBXGroup;
 			children = (
@@ -969,6 +981,7 @@
 				895A7F3F2FC5F22000A997B8 /* IOSurface.framework */,
 				895A7F3D2FC5F21A00A997B8 /* CoreText.framework */,
 				895A7F3B2FC5F21400A997B8 /* CoreGraphics.framework */,
+				B5714F8E88446CDC4A3BE0FC /* Pods_AniXPlayer.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1056,6 +1069,7 @@
 				3EC62D8071F5F2E030A4997B /* AniXPlayer */,
 				895A7F3A2FC5F21400A997B8 /* Frameworks */,
 				2A5E88962AE499ECAFC960DB /* Products */,
+				08530EEC5867A53F46FCFADC /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1076,10 +1090,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 37B8271C122D62F6C718AA81 /* Build configuration list for PBXNativeTarget "AniXPlayer" */;
 			buildPhases = (
+				21242E2294D6BB0D163C4927 /* [CP] Check Pods Manifest.lock */,
 				01D72DFC502C8ADEB56CD8F4 /* Sources */,
 				C09E36E3B164B14BC54B494E /* Resources */,
 				0A1CBCFEF5553BF3A7B4E878 /* Frameworks */,
 				895A7F622FC5F82E00A997B8 /* Embed Frameworks */,
+				F9682C50A3B4863BB58EBCF0 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1098,7 +1114,6 @@
 				EAF9C9307AF39D2FE1A14272 /* Kingfisher */,
 				D2ACC2742F5F25C8A5E0B65B /* Alamofire */,
 				CB0E65E26FE026738CA2965C /* DanmakuRender */,
-				895152F92FC1DBD700F75DB7 /* ANXLog */,
 				895152FC2FC1DBE200F75DB7 /* TVVLCKitSPM */,
 				895A7EEF2FC5D09C00A997B8 /* FilesProvider */,
 				895A7EF22FC5D54E00A997B8 /* AMSMB2 */,
@@ -1163,7 +1178,6 @@
 				9091D7FA34D5FA65B39F5372 /* XCRemoteSwiftPackageReference "MMKV" */,
 				A2145EC080174EC1E3E62CC1 /* XCRemoteSwiftPackageReference "RxSwift" */,
 				EAA113346A46BACBFFD2D0DE /* XCRemoteSwiftPackageReference "SnapKit" */,
-				895152F82FC1DBD700F75DB7 /* XCLocalSwiftPackageReference "../Share/ANXLog" */,
 				895152FB2FC1DBE200F75DB7 /* XCLocalSwiftPackageReference "../Share/TVVLCKit" */,
 				895A7EEE2FC5D09C00A997B8 /* XCRemoteSwiftPackageReference "FileProvider" */,
 				895A7EF12FC5D54E00A997B8 /* XCRemoteSwiftPackageReference "AMSMB2" */,
@@ -1201,6 +1215,52 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		21242E2294D6BB0D163C4927 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-AniXPlayer-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		F9682C50A3B4863BB58EBCF0 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		01D72DFC502C8ADEB56CD8F4 /* Sources */ = {
@@ -1382,6 +1442,7 @@
 /* Begin XCBuildConfiguration section */
 		2DE2A93334790D65C93DDB6F /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 8FC49B9E2ED8389CE13EF6A6 /* Pods-AniXPlayer.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
@@ -1399,6 +1460,7 @@
 					"@executable_path/Frameworks",
 				);
 				OTHER_LDFLAGS = (
+					"$(inherited)",
 					"-framework",
 					CoreText,
 					"-framework",
@@ -1655,6 +1717,7 @@
 		};
 		E7ADE945B8221EECF6FF73EA /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7C71B9C4EC7CEEC3F9781A53 /* Pods-AniXPlayer.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
@@ -1672,6 +1735,7 @@
 					"@executable_path/Frameworks",
 				);
 				OTHER_LDFLAGS = (
+					"$(inherited)",
 					"-framework",
 					CoreText,
 					"-framework",
@@ -1730,10 +1794,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCLocalSwiftPackageReference section */
-		895152F82FC1DBD700F75DB7 /* XCLocalSwiftPackageReference "../Share/ANXLog" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../Share/ANXLog;
-		};
 		895152FB2FC1DBE200F75DB7 /* XCLocalSwiftPackageReference "../Share/TVVLCKit" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../Share/TVVLCKit;
@@ -1843,10 +1903,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 175895264910365F28FC3599 /* XCRemoteSwiftPackageReference "GCDWebServer" */;
 			productName = GCDWebServer;
-		};
-		895152F92FC1DBD700F75DB7 /* ANXLog */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = ANXLog;
 		};
 		895152FC2FC1DBE200F75DB7 /* TVVLCKitSPM */ = {
 			isa = XCSwiftPackageProductDependency;

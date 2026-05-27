@@ -46,17 +46,7 @@ class LocalFileManager: FileManagerProtocol {
             let url = directory.url
             let urls = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
             
-            var storePath: String? = nil
-            
-            if let path = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true).first {
-                storePath = path + "/mmkv/"
-            }
-            
             let files = urls.compactMap { (aURL) -> LocalFile? in
-                if let storePath = storePath, aURL.absoluteString.hasSuffix(storePath) {
-                    return nil
-                }
-                
                 let file = LocalFile(with: aURL)
                 if let filterType = filterType, file.type == .file {
                     return file.url.isThisType(filterType) ? file : nil

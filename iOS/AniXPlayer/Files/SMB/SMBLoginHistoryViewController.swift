@@ -7,15 +7,6 @@
 
 import UIKit
 
-private extension AddressModel {
-    var loginInfo: LoginInfo? {
-        if let url = URL(string: "smb://\(self.address)") {
-            return LoginInfo(url: url, auth: nil)
-        }
-        return nil
-    }
-}
-
 extension SMBLoginHistoryViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if section == 0 {
@@ -60,18 +51,18 @@ extension SMBLoginHistoryViewController: UITableViewDelegate, UITableViewDataSou
             if addressModels.count > 1 {
                 let vc = UIAlertController(title: NSLocalizedString("请选择地址", comment: ""), message: nil, preferredStyle: .alert)
                 for address in addressModels {
-                    vc.addAction(UIAlertAction(title: address.address, style: .default, handler: { [weak self] _ in
+                    vc.addAction(UIAlertAction(title: address, style: .default, handler: { [weak self] _ in
                         guard let self = self else { return }
-                        
-                        let loginInfo = address.loginInfo
+
+                        let loginInfo = LoginInfo(url: URL(string: "smb://\(address)")!, auth: nil)
                         self.jumpToConnectViewController(loginInfo)
                     }))
                 }
-                
+
                 vc.addAction(UIAlertAction(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: nil))
                 self.present(vc, atView: tableView.cellForRow(at: indexPath))
             } else if (addressModels.count == 1) {
-                let loginInfo = addressModels[0].loginInfo
+                let loginInfo = LoginInfo(url: URL(string: "smb://\(addressModels[0])")!, auth: nil)
                 self.jumpToConnectViewController(loginInfo)
             }
         } else {

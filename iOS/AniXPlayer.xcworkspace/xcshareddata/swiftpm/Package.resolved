@@ -1,5 +1,5 @@
 {
-  "originHash" : "4112447edd0656615eae5e08259770dcccf1bd77d5e2df3cc3f37d2f4dfb0f62",
+  "originHash" : "a41433d307822f745cd5317ee7542863ab45dbb19631bf36640989f2e67340a6",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "f455c2975872ccd2d9c81594c658af65716e9b9a",
         "version" : "5.9.1"
+      }
+    },
+    {
+      "identity" : "amsmb2",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/amosavian/AMSMB2",
+      "state" : {
+        "revision" : "1726aaaf7adf63d7d1d2a0c5d1b0e635028215c0",
+        "version" : "4.0.3"
       }
     },
     {
@@ -53,6 +62,15 @@
       "state" : {
         "revision" : "5d31778376af168ac917e0b1e8d2c4ee64cb246c",
         "version" : "0.26.0"
+      }
+    },
+    {
+      "identity" : "gcdwebserver",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sunsx9316/GCDWebServer",
+      "state" : {
+        "revision" : "c893f69fde6d2ef411b665404e09a0de3d471715",
+        "version" : "3.6.0"
       }
     },
     {

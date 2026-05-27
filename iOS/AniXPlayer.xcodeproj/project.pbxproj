@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0B5CD34C100D4654A1569260 /* AMSMB2 in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 895A7FC32FC75A7100A997B8 /* AMSMB2 */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6F969714544C3EBD7E920F21 /* Pods_AniXPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6620BF43605B5DDE3E8B15B6 /* Pods_AniXPlayer.framework */; };
 		89044759290186B40088886B /* UIViewController+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89044758290186B40088886B /* UIViewController+Helper.swift */; };
 		8904475B290189CD0088886B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8904475A290189CD0088886B /* GoogleService-Info.plist */; };
@@ -63,7 +64,6 @@
 		8925B87B2CA7E4C3001A8388 /* PlayerDanmakuContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8252CA7E4C3001A8388 /* PlayerDanmakuContext.swift */; };
 		8925B87C2CA7E4C3001A8388 /* WebDavFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B80E2CA7E4C3001A8388 /* WebDavFileManager.swift */; };
 		8925B87D2CA7E4C3001A8388 /* Store+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8582CA7E4C3001A8388 /* Store+Extension.swift */; };
-		8925B87E2CA7E4C3001A8388 /* WebDAVInputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B81B2CA7E4C3001A8388 /* WebDAVInputStream.swift */; };
 		8925B87F2CA7E4C3001A8388 /* HomePage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B83E2CA7E4C3001A8388 /* HomePage.swift */; };
 		8925B8802CA7E4C3001A8388 /* BangumiNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8322CA7E4C3001A8388 /* BangumiNetworkHandle.swift */; };
 		8925B8812CA7E4C3001A8388 /* PlayerDanmakuProducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8272CA7E4C3001A8388 /* PlayerDanmakuProducer.swift */; };
@@ -154,15 +154,19 @@
 		8953D0322C99E48A003EF386 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D0312C99E48A003EF386 /* SnapKit */; };
 		8953D0352C99E4C7003EF386 /* MBProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D0342C99E4C7003EF386 /* MBProgressHUD */; };
 		8953D0382C99E502003EF386 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D0372C99E502003EF386 /* IQKeyboardManagerSwift */; };
-		8953D03B2C99E55C003EF386 /* FilesProvider in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D03A2C99E55C003EF386 /* FilesProvider */; };
 		8953D0442C99E6F0003EF386 /* SVGKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D0432C99E6F0003EF386 /* SVGKit */; };
 		8953D0472C99E759003EF386 /* DynamicButton in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D0462C99E759003EF386 /* DynamicButton */; };
+		895A7F9E2FC74E8A00A997B8 /* MPVKit in Frameworks */ = {isa = PBXBuildFile; productRef = 895A7F9D2FC74E8A00A997B8 /* MPVKit */; };
+		895A7FA92FC7518500A997B8 /* GCDWebDAVServer in Frameworks */ = {isa = PBXBuildFile; productRef = 895A7FA82FC7518500A997B8 /* GCDWebDAVServer */; };
+		895A7FAB2FC7518500A997B8 /* GCDWebServer in Frameworks */ = {isa = PBXBuildFile; productRef = 895A7FAA2FC7518500A997B8 /* GCDWebServer */; };
+		895A7FAD2FC7518500A997B8 /* GCDWebUploader in Frameworks */ = {isa = PBXBuildFile; productRef = 895A7FAC2FC7518500A997B8 /* GCDWebUploader */; };
+		895A7FB02FC7519D00A997B8 /* FilesProvider in Frameworks */ = {isa = PBXBuildFile; productRef = 895A7FAF2FC7519D00A997B8 /* FilesProvider */; };
+		895A7FC42FC75A7100A997B8 /* AMSMB2 in Frameworks */ = {isa = PBXBuildFile; productRef = 895A7FC32FC75A7100A997B8 /* AMSMB2 */; };
 		895B41522F7445A400B4DA4C /* MPVPlayerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895B41512F7445A400B4DA4C /* MPVPlayerWrapper.swift */; };
 		895B41562F74468D00B4DA4C /* SourceHanSansSC-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 895B41542F74468D00B4DA4C /* SourceHanSansSC-Regular.otf */; };
 		895B41572F74468D00B4DA4C /* SourceHanSansTC-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 895B41552F74468D00B4DA4C /* SourceHanSansTC-Regular.otf */; };
 		895B41C42F759C8100B4DA4C /* MPVFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 895B41BC2F759C8100B4DA4C /* MPVFramework.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		895B41C52F759C8100B4DA4C /* MPVFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 895B41BC2F759C8100B4DA4C /* MPVFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		895B41CC2F759CFB00B4DA4C /* MPVKit-GPL in Frameworks */ = {isa = PBXBuildFile; productRef = 895B41CB2F759CFB00B4DA4C /* MPVKit-GPL */; };
 		895B41D52F75A2E200B4DA4C /* MPV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895B41D42F75A2E200B4DA4C /* MPV.swift */; };
 		895B41D72F75A43A00B4DA4C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 895B41D62F75A43A00B4DA4C /* CoreGraphics.framework */; };
 		895B41D92F75A47500B4DA4C /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 895B41D82F75A47500B4DA4C /* CoreText.framework */; };
@@ -278,6 +282,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				895B41C52F759C8100B4DA4C /* MPVFramework.framework in Embed Frameworks */,
+				0B5CD34C100D4654A1569260 /* AMSMB2 in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -345,7 +350,6 @@
 		8925B8182CA7E4C3001A8388 /* PCFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCFile.swift; sourceTree = "<group>"; };
 		8925B8192CA7E4C3001A8388 /* SMBFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMBFile.swift; sourceTree = "<group>"; };
 		8925B81A2CA7E4C3001A8388 /* WebDavFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDavFile.swift; sourceTree = "<group>"; };
-		8925B81B2CA7E4C3001A8388 /* WebDAVInputStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDAVInputStream.swift; sourceTree = "<group>"; };
 		8925B81D2CA7E4C3001A8388 /* VLCPlayerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VLCPlayerWrapper.swift; sourceTree = "<group>"; };
 		8925B81F2CA7E4C3001A8388 /* MediaPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPlayer.swift; sourceTree = "<group>"; };
 		8925B8202CA7E4C3001A8388 /* MediaThumbnailer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaThumbnailer.swift; sourceTree = "<group>"; };
@@ -545,17 +549,21 @@
 				89B7EA4C2C9B120100527B84 /* DanmakuRender in Frameworks */,
 				89D148722D44E2B000E7FDF5 /* YYCategories in Frameworks */,
 				8953D0292C99E3D8003EF386 /* RxSwift in Frameworks */,
+				895A7FAB2FC7518500A997B8 /* GCDWebServer in Frameworks */,
 				8953D0352C99E4C7003EF386 /* MBProgressHUD in Frameworks */,
-				8953D03B2C99E55C003EF386 /* FilesProvider in Frameworks */,
 				8953D0212C99E306003EF386 /* Alamofire in Frameworks */,
+				895A7FAD2FC7518500A997B8 /* GCDWebUploader in Frameworks */,
 				8953D02C2C99E430003EF386 /* SDWebImage in Frameworks */,
 				8953D0272C99E3D8003EF386 /* RxCocoa in Frameworks */,
 				8953D0322C99E48A003EF386 /* SnapKit in Frameworks */,
 				89FFD1292D44E65000428206 /* YYCategories in Frameworks */,
+				895A7FB02FC7519D00A997B8 /* FilesProvider in Frameworks */,
 				895B41C42F759C8100B4DA4C /* MPVFramework.framework in Frameworks */,
+				895A7FC42FC75A7100A997B8 /* AMSMB2 in Frameworks */,
 				89D148752D44E4A700E7FDF5 /* YYCategories in Frameworks */,
 				8953D0382C99E502003EF386 /* IQKeyboardManagerSwift in Frameworks */,
 				890A0B2E2CAD624200AE1F6B /* Colorful in Frameworks */,
+				895A7FA92FC7518500A997B8 /* GCDWebDAVServer in Frameworks */,
 				8953D0242C99E374003EF386 /* MJRefresh in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -565,9 +573,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				895B41DD2F75A4BE00B4DA4C /* QuartzCore.framework in Frameworks */,
+				895A7F9E2FC74E8A00A997B8 /* MPVKit in Frameworks */,
 				895B41DB2F75A49F00B4DA4C /* IOSurface.framework in Frameworks */,
 				895B41D72F75A43A00B4DA4C /* CoreGraphics.framework in Frameworks */,
-				895B41CC2F759CFB00B4DA4C /* MPVKit-GPL in Frameworks */,
 				895B41D92F75A47500B4DA4C /* CoreText.framework in Frameworks */,
 				895B41E12F75A4E500B4DA4C /* UIKit.framework in Frameworks */,
 				895B41DF2F75A4C500B4DA4C /* OpenGLES.framework in Frameworks */,
@@ -889,7 +897,6 @@
 				8925B8182CA7E4C3001A8388 /* PCFile.swift */,
 				8925B8192CA7E4C3001A8388 /* SMBFile.swift */,
 				8925B81A2CA7E4C3001A8388 /* WebDavFile.swift */,
-				8925B81B2CA7E4C3001A8388 /* WebDAVInputStream.swift */,
 			);
 			path = File;
 			sourceTree = "<group>";
@@ -1445,7 +1452,6 @@
 				8953D0312C99E48A003EF386 /* SnapKit */,
 				8953D0342C99E4C7003EF386 /* MBProgressHUD */,
 				8953D0372C99E502003EF386 /* IQKeyboardManagerSwift */,
-				8953D03A2C99E55C003EF386 /* FilesProvider */,
 				8953D0432C99E6F0003EF386 /* SVGKit */,
 				8953D0462C99E759003EF386 /* DynamicButton */,
 				89B7EA4B2C9B120100527B84 /* DanmakuRender */,
@@ -1454,6 +1460,11 @@
 				89D148712D44E2B000E7FDF5 /* YYCategories */,
 				89D148742D44E4A700E7FDF5 /* YYCategories */,
 				89FFD1282D44E65000428206 /* YYCategories */,
+				895A7FA82FC7518500A997B8 /* GCDWebDAVServer */,
+				895A7FAA2FC7518500A997B8 /* GCDWebServer */,
+				895A7FAC2FC7518500A997B8 /* GCDWebUploader */,
+				895A7FAF2FC7519D00A997B8 /* FilesProvider */,
+				895A7FC32FC75A7100A997B8 /* AMSMB2 */,
 			);
 			productName = AniXPlayer;
 			productReference = 890DF6C926160826002D8AE5 /* AniXPlayer.app */;
@@ -1474,7 +1485,7 @@
 			);
 			name = MPVFramework;
 			packageProductDependencies = (
-				895B41CB2F759CFB00B4DA4C /* MPVKit-GPL */,
+				895A7F9D2FC74E8A00A997B8 /* MPVKit */,
 			);
 			productName = MPVFramework;
 			productReference = 895B41BC2F759C8100B4DA4C /* MPVFramework.framework */;
@@ -1518,13 +1529,15 @@
 				8953D0302C99E48A003EF386 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				8953D0332C99E4C7003EF386 /* XCRemoteSwiftPackageReference "MBProgressHUD" */,
 				8953D0362C99E502003EF386 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
-				8953D0392C99E55C003EF386 /* XCRemoteSwiftPackageReference "FileProvider" */,
 				8953D0422C99E6F0003EF386 /* XCRemoteSwiftPackageReference "SVGKit" */,
 				8953D0452C99E758003EF386 /* XCRemoteSwiftPackageReference "DynamicButton" */,
 				89B7EA4D2C9B141100527B84 /* XCRemoteSwiftPackageReference "DanmakuRender-Swift" */,
 				890A0B2C2CAD624200AE1F6B /* XCRemoteSwiftPackageReference "Color-Picker-for-iOS" */,
 				89FFD1272D44E65000428206 /* XCRemoteSwiftPackageReference "YYCategories" */,
 				895B41CA2F759CFB00B4DA4C /* XCRemoteSwiftPackageReference "MPVKit" */,
+				895A7FA72FC7518400A997B8 /* XCRemoteSwiftPackageReference "GCDWebServer" */,
+				895A7FAE2FC7519D00A997B8 /* XCRemoteSwiftPackageReference "FileProvider" */,
+				895A7FC22FC75A7100A997B8 /* XCRemoteSwiftPackageReference "AMSMB2" */,
 			);
 			productRefGroup = 890DF6CA26160826002D8AE5 /* Products */;
 			projectDirPath = "";
@@ -1616,9 +1629,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1767,7 +1784,6 @@
 				8925B87B2CA7E4C3001A8388 /* PlayerDanmakuContext.swift in Sources */,
 				8925B87C2CA7E4C3001A8388 /* WebDavFileManager.swift in Sources */,
 				8925B87D2CA7E4C3001A8388 /* Store+Extension.swift in Sources */,
-				8925B87E2CA7E4C3001A8388 /* WebDAVInputStream.swift in Sources */,
 				8925B87F2CA7E4C3001A8388 /* HomePage.swift in Sources */,
 				8925B8802CA7E4C3001A8388 /* BangumiNetworkHandle.swift in Sources */,
 				8925B8812CA7E4C3001A8388 /* PlayerDanmakuProducer.swift in Sources */,
@@ -2193,88 +2209,104 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hayashi311/Color-Picker-for-iOS";
 			requirement = {
-				kind = exactVersion;
-				version = 3.0.2;
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.2;
 			};
 		};
 		8953D01F2C99E306003EF386 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Alamofire/Alamofire";
 			requirement = {
-				kind = exactVersion;
-				version = 5.9.1;
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.9.1;
 			};
 		};
 		8953D0222C99E374003EF386 /* XCRemoteSwiftPackageReference "MJRefresh" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/CoderMJLee/MJRefresh";
 			requirement = {
-				kind = exactVersion;
-				version = 3.7.9;
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.7.9;
 			};
 		};
 		8953D0252C99E3D8003EF386 /* XCRemoteSwiftPackageReference "RxSwift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ReactiveX/RxSwift";
 			requirement = {
-				kind = exactVersion;
-				version = 6.7.1;
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.7.1;
 			};
 		};
 		8953D02A2C99E430003EF386 /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SDWebImage/SDWebImage";
 			requirement = {
-				kind = exactVersion;
-				version = 5.19.7;
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.19.7;
 			};
 		};
 		8953D0302C99E48A003EF386 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit";
 			requirement = {
-				kind = exactVersion;
-				version = 5.7.1;
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
 			};
 		};
 		8953D0332C99E4C7003EF386 /* XCRemoteSwiftPackageReference "MBProgressHUD" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/jdg/MBProgressHUD";
 			requirement = {
-				kind = exactVersion;
-				version = 1.2.0;
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.0;
 			};
 		};
 		8953D0362C99E502003EF386 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hackiftekhar/IQKeyboardManager";
 			requirement = {
-				kind = exactVersion;
-				version = 7.1.1;
-			};
-		};
-		8953D0392C99E55C003EF386 /* XCRemoteSwiftPackageReference "FileProvider" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/amosavian/FileProvider";
-			requirement = {
-				kind = exactVersion;
-				version = 0.26.0;
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.1.1;
 			};
 		};
 		8953D0422C99E6F0003EF386 /* XCRemoteSwiftPackageReference "SVGKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SVGKit/SVGKit";
 			requirement = {
-				kind = exactVersion;
-				version = 3.0.0;
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
 			};
 		};
 		8953D0452C99E758003EF386 /* XCRemoteSwiftPackageReference "DynamicButton" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/yannickl/DynamicButton";
 			requirement = {
-				kind = exactVersion;
-				version = 6.2.1;
+				kind = upToNextMajorVersion;
+				minimumVersion = 6.2.1;
+			};
+		};
+		895A7FA72FC7518400A997B8 /* XCRemoteSwiftPackageReference "GCDWebServer" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sunsx9316/GCDWebServer";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.6.0;
+			};
+		};
+		895A7FAE2FC7519D00A997B8 /* XCRemoteSwiftPackageReference "FileProvider" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/amosavian/FileProvider";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.26.0;
+			};
+		};
+		895A7FC22FC75A7100A997B8 /* XCRemoteSwiftPackageReference "AMSMB2" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/amosavian/AMSMB2";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.3;
 			};
 		};
 		895B41CA2F759CFB00B4DA4C /* XCRemoteSwiftPackageReference "MPVKit" */ = {
@@ -2289,16 +2321,16 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sunsx9316/DanmakuRender-Swift";
 			requirement = {
-				kind = exactVersion;
-				version = 1.5.0;
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.5.0;
 			};
 		};
 		89FFD1272D44E65000428206 /* XCRemoteSwiftPackageReference "YYCategories" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sunsx9316/YYCategories";
 			requirement = {
-				kind = exactVersion;
-				version = 1.0.1;
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -2349,11 +2381,6 @@
 			package = 8953D0362C99E502003EF386 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
 			productName = IQKeyboardManagerSwift;
 		};
-		8953D03A2C99E55C003EF386 /* FilesProvider */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 8953D0392C99E55C003EF386 /* XCRemoteSwiftPackageReference "FileProvider" */;
-			productName = FilesProvider;
-		};
 		8953D0432C99E6F0003EF386 /* SVGKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 8953D0422C99E6F0003EF386 /* XCRemoteSwiftPackageReference "SVGKit" */;
@@ -2364,10 +2391,35 @@
 			package = 8953D0452C99E758003EF386 /* XCRemoteSwiftPackageReference "DynamicButton" */;
 			productName = DynamicButton;
 		};
-		895B41CB2F759CFB00B4DA4C /* MPVKit-GPL */ = {
+		895A7F9D2FC74E8A00A997B8 /* MPVKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 895B41CA2F759CFB00B4DA4C /* XCRemoteSwiftPackageReference "MPVKit" */;
-			productName = "MPVKit-GPL";
+			productName = MPVKit;
+		};
+		895A7FA82FC7518500A997B8 /* GCDWebDAVServer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 895A7FA72FC7518400A997B8 /* XCRemoteSwiftPackageReference "GCDWebServer" */;
+			productName = GCDWebDAVServer;
+		};
+		895A7FAA2FC7518500A997B8 /* GCDWebServer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 895A7FA72FC7518400A997B8 /* XCRemoteSwiftPackageReference "GCDWebServer" */;
+			productName = GCDWebServer;
+		};
+		895A7FAC2FC7518500A997B8 /* GCDWebUploader */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 895A7FA72FC7518400A997B8 /* XCRemoteSwiftPackageReference "GCDWebServer" */;
+			productName = GCDWebUploader;
+		};
+		895A7FAF2FC7519D00A997B8 /* FilesProvider */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 895A7FAE2FC7519D00A997B8 /* XCRemoteSwiftPackageReference "FileProvider" */;
+			productName = FilesProvider;
+		};
+		895A7FC32FC75A7100A997B8 /* AMSMB2 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 895A7FC22FC75A7100A997B8 /* XCRemoteSwiftPackageReference "AMSMB2" */;
+			productName = AMSMB2;
 		};
 		89B7EA4B2C9B120100527B84 /* DanmakuRender */ = {
 			isa = XCSwiftPackageProductDependency;

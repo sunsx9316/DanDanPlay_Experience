@@ -33,7 +33,10 @@ class SMBFileManager: FileManagerProtocol {
 
     static let shared = SMBFileManager()
 
-    private init() {}
+    private init() {
+        // Debug 模式下 GCDWebServer 默认 log level 为 DEBUG，会产生大量日志，设为 INFO 抑制
+        GCDWebServer.setLogLevel(2)
+    }
 
     private var client: SMB2Manager?
 
