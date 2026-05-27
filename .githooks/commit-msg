@@ -1,6 +1,12 @@
 #!/bin/sh
 
 COMMIT_MSG=$(cat "$1")
+
+# 合并提交跳过格式校验
+if echo "$COMMIT_MSG" | head -1 | grep -qE "^Merge"; then
+    exit 0
+fi
+
 PATTERN="^(feat|fix|docs|style|refactor|perf|test|chore|opt|update)(\([^)]+\))?: .{1,72}$"
 
 if ! echo "$COMMIT_MSG" | grep -qE "$PATTERN"; then
