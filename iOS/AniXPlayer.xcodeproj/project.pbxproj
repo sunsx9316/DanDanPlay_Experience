@@ -162,6 +162,9 @@
 		895A7FAD2FC7518500A997B8 /* GCDWebUploader in Frameworks */ = {isa = PBXBuildFile; productRef = 895A7FAC2FC7518500A997B8 /* GCDWebUploader */; };
 		895A7FB02FC7519D00A997B8 /* FilesProvider in Frameworks */ = {isa = PBXBuildFile; productRef = 895A7FAF2FC7519D00A997B8 /* FilesProvider */; };
 		895A7FC42FC75A7100A997B8 /* AMSMB2 in Frameworks */ = {isa = PBXBuildFile; productRef = 895A7FC32FC75A7100A997B8 /* AMSMB2 */; };
+		895A7FC62FC8A46A00A997B8 /* SeparatorTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FC52FC8A46A00A997B8 /* SeparatorTableViewCell.swift */; };
+		895A7FC82FC8A60C00A997B8 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FC72FC8A60C00A997B8 /* AboutViewController.swift */; };
+		895A7FCA2FC8A72800A997B8 /* OpenSourceListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FC92FC8A72800A997B8 /* OpenSourceListViewController.swift */; };
 		895B41522F7445A400B4DA4C /* MPVPlayerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895B41512F7445A400B4DA4C /* MPVPlayerWrapper.swift */; };
 		895B41562F74468D00B4DA4C /* SourceHanSansSC-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 895B41542F74468D00B4DA4C /* SourceHanSansSC-Regular.otf */; };
 		895B41572F74468D00B4DA4C /* SourceHanSansTC-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 895B41552F74468D00B4DA4C /* SourceHanSansTC-Regular.otf */; };
@@ -434,6 +437,9 @@
 		895152CD2FC1ADC000F75DB7 /* upload.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = upload.js; sourceTree = "<group>"; };
 		8953CDA22C987FF1003EF386 /* FilterDanmakuTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterDanmakuTableViewCell.swift; sourceTree = "<group>"; };
 		8953CDA32C987FF1003EF386 /* FilterDanmakuTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FilterDanmakuTableViewCell.xib; sourceTree = "<group>"; };
+		895A7FC52FC8A46A00A997B8 /* SeparatorTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorTableViewCell.swift; sourceTree = "<group>"; };
+		895A7FC72FC8A60C00A997B8 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
+		895A7FC92FC8A72800A997B8 /* OpenSourceListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSourceListViewController.swift; sourceTree = "<group>"; };
 		895B41512F7445A400B4DA4C /* MPVPlayerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVPlayerWrapper.swift; sourceTree = "<group>"; };
 		895B41542F74468D00B4DA4C /* SourceHanSansSC-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceHanSansSC-Regular.otf"; sourceTree = "<group>"; };
 		895B41552F74468D00B4DA4C /* SourceHanSansTC-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceHanSansTC-Regular.otf"; sourceTree = "<group>"; };
@@ -1348,6 +1354,9 @@
 			children = (
 				89A689652C425C70002B7CA3 /* LoginViewController.swift */,
 				89A689712C4271B5002B7CA3 /* UserInfoViewController.swift */,
+				895A7FC52FC8A46A00A997B8 /* SeparatorTableViewCell.swift */,
+				895A7FC72FC8A60C00A997B8 /* AboutViewController.swift */,
+				895A7FC92FC8A72800A997B8 /* OpenSourceListViewController.swift */,
 			);
 			path = User;
 			sourceTree = "<group>";
@@ -1682,6 +1691,7 @@
 				89B4B445272484FE00FB1BF5 /* SpeedUpView.swift in Sources */,
 				89AF9BFE2631C1740037A133 /* SwitchTableViewCell.swift in Sources */,
 				89E0D710266B44BE00E2337B /* TitleTableViewCell.swift in Sources */,
+				895A7FCA2FC8A72800A997B8 /* OpenSourceListViewController.swift in Sources */,
 				890DF6CD26160826002D8AE5 /* AppDelegate.swift in Sources */,
 				890DF85F26189CDF002D8AE5 /* MatchsViewController.swift in Sources */,
 				890DF76E26160B3E002D8AE5 /* FileBrowserViewController.swift in Sources */,
@@ -1704,6 +1714,7 @@
 				89C325B82C6FD91F002E2487 /* DanmakuOperationViewViewController.swift in Sources */,
 				89044759290186B40088886B /* UIViewController+Helper.swift in Sources */,
 				8949F8912662AA2100274520 /* WebDavLoginHistoryViewController.swift in Sources */,
+				895A7FC62FC8A46A00A997B8 /* SeparatorTableViewCell.swift in Sources */,
 				899E385D280B2F7A00285191 /* ProgressSlider.swift in Sources */,
 				89C325AF2C6FC01C002E2487 /* TitleTableViewHeaderFooterView.swift in Sources */,
 				89A688C52C39B395002B7CA3 /* TimelineItemViewController.swift in Sources */,
@@ -1815,6 +1826,7 @@
 				8925B89D2CA7E4C3001A8388 /* Response.swift in Sources */,
 				8925B89E2CA7E4C3001A8388 /* PlayerModel.swift in Sources */,
 				8925B89F2CA7E4C3001A8388 /* Search.swift in Sources */,
+				895A7FC82FC8A60C00A997B8 /* AboutViewController.swift in Sources */,
 				8925B8A02CA7E4C3001A8388 /* HomePageNetworkHandle.swift in Sources */,
 				8925B8A12CA7E4C3001A8388 /* FavoriteNetworkHandle.swift in Sources */,
 				8925B8A22CA7E4C3001A8388 /* PCFileManager.swift in Sources */,
@@ -2040,6 +2052,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.anixplayer.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/AniXPlayer/AniXPlayer-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
@@ -2072,6 +2087,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.anixplayer.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/AniXPlayer/AniXPlayer-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

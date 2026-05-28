@@ -128,13 +128,11 @@ class MediaLibViewController: ViewController {
             make.edges.equalToSuperview()
         }
         
-        self.setupNavigationItem()
     }
-    
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         self.tableView.reloadData()
-        self.setupNavigationItem()
     }
     
     override var shouldAutorotate: Bool {
@@ -153,14 +151,4 @@ class MediaLibViewController: ViewController {
         return .portrait
     }
     
-    @objc private func onTouchSettingButton() {
-        let vc = SettingViewController()
-        vc.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    private func setupNavigationItem() {
-        let commentItem = UIBarButtonItem(imageName: "Public/setting", target: self, action: #selector(onTouchSettingButton))
-        self.navigationItem.rightBarButtonItem = commentItem
-    }
 }

@@ -34,7 +34,7 @@ class MainViewController: UITabBarController {
         thirdViewController.navigationBar.prefersLargeTitles = true
         if let svgImage = SVGKImage(named: "User.svg") {
             svgImage.size = CGSize(width: 26, height: 26)
-            thirdViewController.tabBarItem = UITabBarItem(title: NSLocalizedString("用户", comment: ""), image: svgImage.uiImage, selectedImage: nil)
+            thirdViewController.tabBarItem = UITabBarItem(title: NSLocalizedString("我的", comment: ""), image: svgImage.uiImage, selectedImage: nil)
         }
         
         viewControllers = [firstViewController, secondViewController, thirdViewController]
