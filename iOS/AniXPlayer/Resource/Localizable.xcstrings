@@ -1256,7 +1256,11 @@
         }
       }
     },
+    "导入 %@ 成功，请在\"本地文件\"中查看。" : {
+
+    },
     "导入 %@ 成功，请在“本地文件”中查看。" : {
+      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

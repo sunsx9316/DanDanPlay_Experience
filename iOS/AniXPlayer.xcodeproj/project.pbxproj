@@ -170,6 +170,7 @@
 		895A7FD12FC8AD4300A997B8 /* EmbyFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FD02FC8AD4300A997B8 /* EmbyFile.swift */; };
 		895A7FD52FC8AD6400A997B8 /* EmbyConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FD22FC8AD6400A997B8 /* EmbyConnectSvrViewController.swift */; };
 		895A7FD62FC8AD6400A997B8 /* EmbyLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FD32FC8AD6400A997B8 /* EmbyLoginHistoryViewController.swift */; };
+		895A7FD82FC9F84100A997B8 /* TimelineSegmentBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FD72FC9F84100A997B8 /* TimelineSegmentBar.swift */; };
 		895B41522F7445A400B4DA4C /* MPVPlayerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895B41512F7445A400B4DA4C /* MPVPlayerWrapper.swift */; };
 		895B41562F74468D00B4DA4C /* SourceHanSansSC-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 895B41542F74468D00B4DA4C /* SourceHanSansSC-Regular.otf */; };
 		895B41572F74468D00B4DA4C /* SourceHanSansTC-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 895B41552F74468D00B4DA4C /* SourceHanSansTC-Regular.otf */; };
@@ -449,6 +450,7 @@
 		895A7FD02FC8AD4300A997B8 /* EmbyFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbyFile.swift; sourceTree = "<group>"; };
 		895A7FD22FC8AD6400A997B8 /* EmbyConnectSvrViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbyConnectSvrViewController.swift; sourceTree = "<group>"; };
 		895A7FD32FC8AD6400A997B8 /* EmbyLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbyLoginHistoryViewController.swift; sourceTree = "<group>"; };
+		895A7FD72FC9F84100A997B8 /* TimelineSegmentBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineSegmentBar.swift; sourceTree = "<group>"; };
 		895B41512F7445A400B4DA4C /* MPVPlayerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVPlayerWrapper.swift; sourceTree = "<group>"; };
 		895B41542F74468D00B4DA4C /* SourceHanSansSC-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceHanSansSC-Regular.otf"; sourceTree = "<group>"; };
 		895B41552F74468D00B4DA4C /* SourceHanSansTC-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceHanSansTC-Regular.otf"; sourceTree = "<group>"; };
@@ -1322,6 +1324,7 @@
 				89A688C42C39B395002B7CA3 /* TimelineItemViewController.swift */,
 				89A689852C42E443002B7CA3 /* TimelineItemCollectionViewCell.swift */,
 				89A689862C42E443002B7CA3 /* TimelineItemCollectionViewCell.xib */,
+				895A7FD72FC9F84100A997B8 /* TimelineSegmentBar.swift */,
 			);
 			path = Timeline;
 			sourceTree = "<group>";
@@ -1725,6 +1728,7 @@
 				89A688C32C39A251002B7CA3 /* TimelineViewController.swift in Sources */,
 				89A688A52C398339002B7CA3 /* HomePageFunctionTableViewCell.swift in Sources */,
 				89A688B62C39851E002B7CA3 /* UICollectionView+Helper.swift in Sources */,
+				895A7FD82FC9F84100A997B8 /* TimelineSegmentBar.swift in Sources */,
 				890DF75026160B1B002D8AE5 /* UIColor+Helper.swift in Sources */,
 				890DF6F926160A36002D8AE5 /* Label.swift in Sources */,
 				89AF9C072631D4B00037A133 /* MediaSettingViewController.swift in Sources */,

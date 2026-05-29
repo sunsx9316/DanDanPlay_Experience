@@ -7,7 +7,6 @@
 
 import UIKit
 import SnapKit
-import JXCategoryView
 
 extension TimelineItemViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -67,13 +66,6 @@ extension TimelineItemViewController: UICollectionViewDelegateFlowLayout {
         }
     }
 }
-
-extension TimelineItemViewController: JXCategoryListContentViewDelegate {
-    func listView() -> UIView! {
-        return self.view
-    }
-}
-
 class TimelineItemViewController: ViewController {
     
     private lazy var collectionView: CollectionView = {
