@@ -123,31 +123,33 @@ class BaseConnectSvrViewController: ViewController {
         self.addressLabel.text = loginInfo?.url.absoluteString
     }
     
+    func createAuth() -> Auth? {
+        return Auth(userName: self.userNameLabel.text, password: self.passwordLabel.text)
+    }
+
     //MARK: Private Method
 
     @objc private func onTouchLoginButton() {
-        
+
         defer {
             self.view.endEditing(true)
         }
-        
+
         var url: URL?
-        
+
         if let address = self.addressLabel.text, !address.isEmpty {
             let characterSet = CharacterSet.urlQueryAllowed.union(CharacterSet.urlPathAllowed)
             if let urlString = address.addingPercentEncoding(withAllowedCharacters: characterSet) {
                 url = URL(string: urlString)
             }
         }
-        
+
         guard let url = url else {
             self.view.showHUD(NSLocalizedString("服务器地址格式不正确！", comment: ""))
             return
         }
-        
-        let userName = self.userNameLabel.text
-        
-        let auth: Auth? = .init(userName: userName, password: self.passwordLabel.text)
+
+        let auth = self.createAuth()
         let loginInfo = LoginInfo(url: url, auth:auth)
         self.loginWithInfo(loginInfo)
     }

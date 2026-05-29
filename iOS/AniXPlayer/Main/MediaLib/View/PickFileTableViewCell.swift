@@ -18,6 +18,10 @@ class PickFileTableViewCell: TableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         self.setupUI()
+
+        self.iconImgView.snp.makeConstraints { make in
+            make.width.height.equalTo(30)
+        }
     }
     
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {

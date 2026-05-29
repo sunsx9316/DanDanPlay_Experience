@@ -27,12 +27,15 @@ typealias ANXFont = NSFont
 /// 认证信息
 struct Auth: Codable, Equatable {
     let userName: String?
-    
+
     let password: String?
-    
-    init(userName: String?, password: String?) {
+
+    let apiKey: String?
+
+    init(userName: String?, password: String?, apiKey: String? = nil) {
         self.userName = userName
         self.password = password
+        self.apiKey = apiKey
     }
 }
 

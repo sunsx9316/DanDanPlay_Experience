@@ -46,6 +46,8 @@ protocol File: HistoryManager.lastWatchDateStoreable {
     
     var fileName: String { get }
     
+    var pathExtension: String { get }
+    
     var subtitle: String { get }
     
     var type: FileType { get }
@@ -61,6 +63,9 @@ protocol File: HistoryManager.lastWatchDateStoreable {
     /// 文件是否允许删除
     var isCanDelete: Bool { get }
     
+    /// 封面图 URL
+    var coverImageURL: URL? { get }
+
     /// 缓存信息，某些需要自己从网络加载留的格式可以实现
     var bufferInfos: [MediaBufferInfo] { get }
     
@@ -107,6 +112,10 @@ extension File {
         return (self.url.absoluteString as NSString).md5() ?? ""
     }
     
+    var coverImageURL: URL? {
+        return nil
+    }
+
     var bufferInfos: [MediaBufferInfo] {
         return []
     }

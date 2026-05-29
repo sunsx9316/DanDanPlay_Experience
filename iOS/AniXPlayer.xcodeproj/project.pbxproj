@@ -165,6 +165,11 @@
 		895A7FC62FC8A46A00A997B8 /* SeparatorTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FC52FC8A46A00A997B8 /* SeparatorTableViewCell.swift */; };
 		895A7FC82FC8A60C00A997B8 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FC72FC8A60C00A997B8 /* AboutViewController.swift */; };
 		895A7FCA2FC8A72800A997B8 /* OpenSourceListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FC92FC8A72800A997B8 /* OpenSourceListViewController.swift */; };
+		895A7FCE2FC8AD3800A997B8 /* EmbyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FCC2FC8AD3800A997B8 /* EmbyModel.swift */; };
+		895A7FCF2FC8AD3800A997B8 /* EmbyFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FCB2FC8AD3800A997B8 /* EmbyFileManager.swift */; };
+		895A7FD12FC8AD4300A997B8 /* EmbyFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FD02FC8AD4300A997B8 /* EmbyFile.swift */; };
+		895A7FD52FC8AD6400A997B8 /* EmbyConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FD22FC8AD6400A997B8 /* EmbyConnectSvrViewController.swift */; };
+		895A7FD62FC8AD6400A997B8 /* EmbyLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FD32FC8AD6400A997B8 /* EmbyLoginHistoryViewController.swift */; };
 		895B41522F7445A400B4DA4C /* MPVPlayerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895B41512F7445A400B4DA4C /* MPVPlayerWrapper.swift */; };
 		895B41562F74468D00B4DA4C /* SourceHanSansSC-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 895B41542F74468D00B4DA4C /* SourceHanSansSC-Regular.otf */; };
 		895B41572F74468D00B4DA4C /* SourceHanSansTC-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 895B41552F74468D00B4DA4C /* SourceHanSansTC-Regular.otf */; };
@@ -440,6 +445,11 @@
 		895A7FC52FC8A46A00A997B8 /* SeparatorTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorTableViewCell.swift; sourceTree = "<group>"; };
 		895A7FC72FC8A60C00A997B8 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		895A7FC92FC8A72800A997B8 /* OpenSourceListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSourceListViewController.swift; sourceTree = "<group>"; };
+		895A7FCB2FC8AD3800A997B8 /* EmbyFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbyFileManager.swift; sourceTree = "<group>"; };
+		895A7FCC2FC8AD3800A997B8 /* EmbyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbyModel.swift; sourceTree = "<group>"; };
+		895A7FD02FC8AD4300A997B8 /* EmbyFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbyFile.swift; sourceTree = "<group>"; };
+		895A7FD22FC8AD6400A997B8 /* EmbyConnectSvrViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbyConnectSvrViewController.swift; sourceTree = "<group>"; };
+		895A7FD32FC8AD6400A997B8 /* EmbyLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbyLoginHistoryViewController.swift; sourceTree = "<group>"; };
 		895B41512F7445A400B4DA4C /* MPVPlayerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVPlayerWrapper.swift; sourceTree = "<group>"; };
 		895B41542F74468D00B4DA4C /* SourceHanSansSC-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceHanSansSC-Regular.otf"; sourceTree = "<group>"; };
 		895B41552F74468D00B4DA4C /* SourceHanSansTC-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceHanSansTC-Regular.otf"; sourceTree = "<group>"; };
@@ -713,6 +723,7 @@
 			isa = PBXGroup;
 			children = (
 				890DF75726160B3E002D8AE5 /* FileBrowserViewController.swift */,
+				895A7FD42FC8AD6400A997B8 /* Emby */,
 				890886C229FFE2E4005EDBD6 /* PC */,
 				8931F0E92674CCD800590569 /* WebDAV */,
 				8931F0E82674CCD100590569 /* SMB */,
@@ -883,6 +894,7 @@
 		8925B8142CA7E4C3001A8388 /* FileManager */ = {
 			isa = PBXGroup;
 			children = (
+				895A7FCD2FC8AD3800A997B8 /* Emby */,
 				8925B80D2CA7E4C3001A8388 /* PC */,
 				8925B80F2CA7E4C3001A8388 /* WebDav */,
 				8925B8102CA7E4C3001A8388 /* FileManagerProtocol.swift */,
@@ -901,6 +913,7 @@
 				8925B8162CA7E4C3001A8388 /* FTPFile.swift */,
 				8925B8172CA7E4C3001A8388 /* LocalFile.swift */,
 				8925B8182CA7E4C3001A8388 /* PCFile.swift */,
+				895A7FD02FC8AD4300A997B8 /* EmbyFile.swift */,
 				8925B8192CA7E4C3001A8388 /* SMBFile.swift */,
 				8925B81A2CA7E4C3001A8388 /* WebDavFile.swift */,
 			);
@@ -1189,6 +1202,24 @@
 				89C325B22C6FC70A002E2487 /* FilterDanmakuViewController.swift */,
 			);
 			path = FilterDanmaku;
+			sourceTree = "<group>";
+		};
+		895A7FCD2FC8AD3800A997B8 /* Emby */ = {
+			isa = PBXGroup;
+			children = (
+				895A7FCB2FC8AD3800A997B8 /* EmbyFileManager.swift */,
+				895A7FCC2FC8AD3800A997B8 /* EmbyModel.swift */,
+			);
+			path = Emby;
+			sourceTree = "<group>";
+		};
+		895A7FD42FC8AD6400A997B8 /* Emby */ = {
+			isa = PBXGroup;
+			children = (
+				895A7FD22FC8AD6400A997B8 /* EmbyConnectSvrViewController.swift */,
+				895A7FD32FC8AD6400A997B8 /* EmbyLoginHistoryViewController.swift */,
+			);
+			path = Emby;
 			sourceTree = "<group>";
 		};
 		895B41532F74468200B4DA4C /* Fonts */ = {
@@ -1791,6 +1822,7 @@
 				8925B8772CA7E4C3001A8388 /* Atomic.swift in Sources */,
 				8925B8782CA7E4C3001A8388 /* FTPFileManager.swift in Sources */,
 				8925B8792CA7E4C3001A8388 /* NetworkManager.swift in Sources */,
+				895A7FD12FC8AD4300A997B8 /* EmbyFile.swift in Sources */,
 				8925B87A2CA7E4C3001A8388 /* PathUtils.swift in Sources */,
 				8925B87B2CA7E4C3001A8388 /* PlayerDanmakuContext.swift in Sources */,
 				8925B87C2CA7E4C3001A8388 /* WebDavFileManager.swift in Sources */,
@@ -1816,6 +1848,8 @@
 				8925B8912CA7E4C3001A8388 /* MatchNetworkHandle.swift in Sources */,
 				8925B8922CA7E4C3001A8388 /* NumberUtils.swift in Sources */,
 				8925B8932CA7E4C3001A8388 /* Match.swift in Sources */,
+				895A7FCE2FC8AD3800A997B8 /* EmbyModel.swift in Sources */,
+				895A7FCF2FC8AD3800A997B8 /* EmbyFileManager.swift in Sources */,
 				8925B8942CA7E4C3001A8388 /* ANXAddressModel.m in Sources */,
 				8925B8962CA7E4C3001A8388 /* SMBFileManager.swift in Sources */,
 				8925B8972CA7E4C3001A8388 /* Favorite.swift in Sources */,
@@ -1833,6 +1867,8 @@
 				8925B8A32CA7E4C3001A8388 /* ANXColor+Utils.swift in Sources */,
 				8925B8A42CA7E4C3001A8388 /* PCWelcomeModel.swift in Sources */,
 				8925B8A52CA7E4C3001A8388 /* FTPFile.swift in Sources */,
+				895A7FD52FC8AD6400A997B8 /* EmbyConnectSvrViewController.swift in Sources */,
+				895A7FD62FC8AD6400A997B8 /* EmbyLoginHistoryViewController.swift in Sources */,
 				8925B8A62CA7E4C3001A8388 /* UpdateInfo.swift in Sources */,
 				8925B8A72CA7E4C3001A8388 /* MediaThumbnailer.swift in Sources */,
 				8925B8A82CA7E4C3001A8388 /* ConfigNetworkHandle.swift in Sources */,

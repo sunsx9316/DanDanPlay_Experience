@@ -51,6 +51,10 @@ extension MediaLibViewController: UITableViewDelegate, UITableViewDataSource {
             let vc = PCLoginHistoryViewController()
             vc.hidesBottomBarWhenPushed = true
             self.navigationController?.pushViewController(vc, animated: true)
+        case .emby:
+            let vc = EmbyLoginHistoryViewController()
+            vc.hidesBottomBarWhenPushed = true
+            self.navigationController?.pushViewController(vc, animated: true)
         }
     }
     
@@ -71,8 +75,9 @@ class MediaLibViewController: ViewController {
         case smb
         case webDav
         case ftp
+        case emby
         case pc
-        
+
         var name: String {
             switch self {
             case .localFile:
@@ -84,10 +89,12 @@ class MediaLibViewController: ViewController {
             case .ftp:
                 return NSLocalizedString("FTP", comment: "")
             case .pc:
-                return NSLocalizedString("电脑端", comment: "")
+                return NSLocalizedString("弹弹play远程访问", comment: "")
+            case .emby:
+                return NSLocalizedString("Emby", comment: "")
             }
         }
-        
+
         var iconName: String {
             switch self {
             case .localFile:
@@ -100,8 +107,10 @@ class MediaLibViewController: ViewController {
                 return "PickFile/ftp"
             case .pc:
                 return "PickFile/computer"
+            case .emby:
+                return "PickFile/emby"
             }
-            
+
         }
     }
     

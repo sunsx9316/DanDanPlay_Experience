@@ -78,6 +78,9 @@ class Preferences {
         
         /// 电脑端登录信息
         case pcLoginInfo
+
+        /// Emby 登录信息
+        case embyLoginInfo
         
         /// 字幕加载顺序关键字
         case subtitleLoadOrder
@@ -376,6 +379,33 @@ class Preferences {
         }
     }
     
+    var embyLoginInfos: [LoginInfo]? {
+        get {
+            if let jsonData: Data = Store.shared.value(forKey: KeyName.embyLoginInfo.storeKey) {
+                do {
+                    let loginInfo = try JSONDecoder().decode([LoginInfo].self, from: jsonData)
+                    return loginInfo
+                } catch let error {
+                    debugPrint("读取 embyLoginInfos 失败 error: \(error)")
+                }
+            }
+            return nil
+        }
+
+        set {
+            if let newValue = newValue {
+                do {
+                    let data = try JSONEncoder().encode(newValue)
+                    Store.shared.set(data, forKey: KeyName.embyLoginInfo.storeKey)
+                } catch let error {
+                    debugPrint("设置 embyLoginInfos 失败 error: \(error)")
+                }
+            } else {
+                Store.shared.remove(KeyName.embyLoginInfo.storeKey)
+            }
+        }
+    }
+
     var smbLoginInfos: [LoginInfo]? {
         get {
             if let jsonData: Data = Store.shared.value(forKey: KeyName.smbLoginInfo.storeKey) {
