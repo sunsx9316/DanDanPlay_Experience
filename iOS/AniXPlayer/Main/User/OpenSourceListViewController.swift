@@ -24,7 +24,7 @@ class OpenSourceListViewController: ViewController {
         .init(name: "DynamicButton", url: "https://github.com/yannickl/DynamicButton"),
         .init(name: "FileProvider", url: "https://github.com/amosavian/FileProvider"),
         .init(name: "FirebaseCrashlytics", url: "https://github.com/firebase/firebase-ios-sdk"),
-        .init(name: "FSPagerView", url: "https://github.com/WenchaoD/FSPagerView"),
+
         .init(name: "GCDWebServer", url: "https://github.com/sunsx9316/GCDWebServer"),
         .init(name: "IQKeyboardManager", url: "https://github.com/hackiftekhar/IQKeyboardManager"),
         .init(name: "JXCategoryView", url: "https://github.com/pujiaxin33/JXCategoryView"),

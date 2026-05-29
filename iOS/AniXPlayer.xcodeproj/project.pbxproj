@@ -201,7 +201,6 @@
 		89A688AA2C398347002B7CA3 /* HomePageBangumiQueueTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89A688A82C398347002B7CA3 /* HomePageBangumiQueueTableViewCell.xib */; };
 		89A688AC2C398392002B7CA3 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A688AB2C398392002B7CA3 /* CollectionViewCell.swift */; };
 		89A688AF2C3983ED002B7CA3 /* HomePageBannerItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A688AD2C3983ED002B7CA3 /* HomePageBannerItemCell.swift */; };
-		89A688B02C3983ED002B7CA3 /* HomePageBannerItemCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89A688AE2C3983ED002B7CA3 /* HomePageBannerItemCell.xib */; };
 		89A688B22C3984EB002B7CA3 /* Home.svg in Resources */ = {isa = PBXBuildFile; fileRef = 89A688B12C3984EB002B7CA3 /* Home.svg */; };
 		89A688B42C3984F5002B7CA3 /* Media.svg in Resources */ = {isa = PBXBuildFile; fileRef = 89A688B32C3984F5002B7CA3 /* Media.svg */; };
 		89A688B62C39851E002B7CA3 /* UICollectionView+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A688B52C39851E002B7CA3 /* UICollectionView+Helper.swift */; };
@@ -485,7 +484,6 @@
 		89A688A82C398347002B7CA3 /* HomePageBangumiQueueTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomePageBangumiQueueTableViewCell.xib; sourceTree = "<group>"; };
 		89A688AB2C398392002B7CA3 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		89A688AD2C3983ED002B7CA3 /* HomePageBannerItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageBannerItemCell.swift; sourceTree = "<group>"; };
-		89A688AE2C3983ED002B7CA3 /* HomePageBannerItemCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomePageBannerItemCell.xib; sourceTree = "<group>"; };
 		89A688B12C3984EB002B7CA3 /* Home.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Home.svg; sourceTree = "<group>"; };
 		89A688B32C3984F5002B7CA3 /* Media.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Media.svg; sourceTree = "<group>"; };
 		89A688B52C39851E002B7CA3 /* UICollectionView+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Helper.swift"; sourceTree = "<group>"; };
@@ -1303,7 +1301,6 @@
 			children = (
 				89A6889F2C3982FC002B7CA3 /* HomePageBannerTableViewCell.swift */,
 				89A688AD2C3983ED002B7CA3 /* HomePageBannerItemCell.swift */,
-				89A688AE2C3983ED002B7CA3 /* HomePageBannerItemCell.xib */,
 			);
 			path = Banner;
 			sourceTree = "<group>";
@@ -1618,7 +1615,6 @@
 				890DF6D626160827002D8AE5 /* Assets.xcassets in Resources */,
 				89A688D92C3A5947002B7CA3 /* BangumiDetailInfoViewCell.xib in Resources */,
 				8904475B290189CD0088886B /* GoogleService-Info.plist in Resources */,
-				89A688B02C3983ED002B7CA3 /* HomePageBannerItemCell.xib in Resources */,
 				89A688BD2C39931A002B7CA3 /* HomePageFunctionCollectionViewCell.xib in Resources */,
 				890DF824261617D0002D8AE5 /* PickFileTableViewCell.xib in Resources */,
 				899A11C12A18C0DC009B2953 /* TitleDetailOpertationTableViewCell.xib in Resources */,
@@ -1669,13 +1665,9 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
-			inputPaths = (
-			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;

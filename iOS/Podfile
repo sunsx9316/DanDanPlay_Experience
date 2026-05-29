@@ -15,7 +15,6 @@ target 'AniXPlayer' do
   # pod 'AMSMB2'
   # pod "GCDWebServer"
   pod 'FirebaseCrashlytics'
-  pod 'FSPagerView'
   pod 'JXCategoryView'
   pod 'ANXLog', :path => '../Share/ANXLog'
 

@@ -6,38 +6,73 @@
 //
 
 import UIKit
+import SnapKit
 import SDWebImage
 import YYCategories
-import FSPagerView
 
-class HomePageBannerItemCell: FSPagerViewCell {
+class HomePageBannerItemCell: CollectionViewCell {
 
-    @IBOutlet weak var bgImageView: UIImageView!
-    
-    @IBOutlet weak var titleLabel: Label!
-    
-    @IBOutlet weak var descLabel: Label!
-    
+    private lazy var bgImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFill
+        iv.clipsToBounds = true
+        return iv
+    }()
+
+    private lazy var titleLabel: Label = {
+        let label = Label()
+        label.font = .ddp_large
+        return label
+    }()
+
+    private lazy var descLabel: Label = {
+        let label = Label()
+        label.font = .ddp_small
+        return label
+    }()
+
     var item: BannerPageItem? {
         didSet {
-            if let imageUrl = self.item?.imageUrl {
-                self.bgImageView.sd_setImage(with: URL(string: imageUrl))
+            if let imageUrl = item?.imageUrl {
+                bgImageView.sd_setImage(with: URL(string: imageUrl))
             } else {
-                self.bgImageView.image = nil
+                bgImageView.image = nil
             }
-            self.titleLabel.text = self.item?.title
-            self.descLabel.text = self.item?.description
+            titleLabel.text = item?.title
+            descLabel.text = item?.description
         }
     }
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        
-        titleLabel.font = .ddp_large
-        descLabel.font = .ddp_small
-        
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        setupUI()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupUI()
+    }
+
+    private func setupUI() {
+        contentView.addSubview(bgImageView)
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(descLabel)
+
+        bgImageView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+
+        descLabel.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview().inset(10)
+            make.bottom.equalToSuperview().offset(-10)
+        }
+
+        titleLabel.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview().inset(10)
+            make.bottom.equalTo(descLabel.snp.top).offset(-10)
+        }
+
         titleLabel.setLayerShadow(.shadowColor, offset: CGSize(width: 0, height: 1), radius: 3)
         descLabel.setLayerShadow(.shadowColor, offset: CGSize(width: 0, height: 1), radius: 3)
     }
-
 }
