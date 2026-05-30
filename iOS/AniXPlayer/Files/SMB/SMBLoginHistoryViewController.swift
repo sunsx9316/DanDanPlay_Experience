@@ -138,7 +138,7 @@ class SMBLoginHistoryViewController: ViewController {
         let tableView = TableView(frame: .zero, style: .grouped)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.registerNibCell(class: LinkHistoryTableViewCell.self)
+        tableView.registerClassCell(class: LinkHistoryTableViewCell.self)
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
         tableView.tableHeaderView = UIView(frame: .init(x: 0, y: 0, width: 0, height: CGFloat.leastNormalMagnitude))

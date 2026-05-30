@@ -10,9 +10,17 @@ import Kingfisher
 
 class FolderTableViewCell: TableViewCell {
 
-    @IBOutlet weak var titleLabel: Label!
+    lazy var imgView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFit
+        return iv
+    }()
 
-    @IBOutlet weak var imgView: UIImageView!
+    lazy var titleLabel: Label = {
+        let label = Label()
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        return label
+    }()
 
     private lazy var coverBackgroundView: UIImageView = {
         let iv = UIImageView()
@@ -37,22 +45,45 @@ class FolderTableViewCell: TableViewCell {
             }
         }
     }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
-        
-        self.coverBackgroundView.frame = self.contentView.bounds
-    }
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        self.titleLabel.textColor = .textColor
-        self.titleLabel.font = .ddp_normal
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.backgroundView?.backgroundColor = .clear
+        self.backgroundColor = .clear
 
         self.contentView.clipsToBounds = true
         self.contentView.insertSubview(self.coverBackgroundView, at: 0)
+        contentView.addSubview(imgView)
+        contentView.addSubview(titleLabel)
+
+        imgView.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(10)
+            make.leading.equalToSuperview().offset(10)
+            make.bottom.lessThanOrEqualToSuperview().offset(-10)
+        }
+
+        titleLabel.snp.makeConstraints { make in
+            make.centerY.equalTo(imgView)
+            make.top.equalTo(imgView)
+            make.leading.equalTo(imgView.snp.trailing).offset(10)
+            make.trailing.lessThanOrEqualToSuperview().offset(-10)
+            make.bottom.lessThanOrEqualToSuperview().offset(-10)
+        }
+
+        self.titleLabel.textColor = .textColor
+        self.titleLabel.font = .ddp_normal
 
         self.setupUI()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func layoutSubviews() {
+        super.layoutSubviews()
+
+        self.coverBackgroundView.frame = self.contentView.bounds
     }
 
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
