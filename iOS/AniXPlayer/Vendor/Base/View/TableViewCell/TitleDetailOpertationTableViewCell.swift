@@ -6,19 +6,38 @@
 //
 
 import UIKit
+import SnapKit
 
 class TitleDetailOpertationTableViewCell: TableViewCell {
 
-    @IBOutlet weak var titleLabel: Label!
-    
-    @IBOutlet weak var subtitleLabel: Label!
-    
-    @IBOutlet weak var button: UIButton!
-    
-    @IBOutlet weak var indicatorView: UIActivityIndicatorView!
-    
+    lazy var titleLabel: Label = {
+        let label = Label()
+        label.font = .ddp_large
+        label.numberOfLines = 0
+        return label
+    }()
+
+    lazy var subtitleLabel: Label = {
+        let label = Label()
+        label.textColor = .subtitleTextColor
+        label.numberOfLines = 0
+        return label
+    }()
+
+    lazy var button: Button = {
+        let btn = Button()
+        btn.setTitleColor(.textColor, for: .normal)
+        return btn
+    }()
+
+    lazy var indicatorView: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .gray)
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+
     var touchButtonCallBack: ((TitleDetailOpertationTableViewCell) -> Void)?
-    
+
     var isShowLoading = false {
         didSet {
             if self.isShowLoading {
@@ -32,17 +51,52 @@ class TitleDetailOpertationTableViewCell: TableViewCell {
             }
         }
     }
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        self.titleLabel.font = .ddp_large
-        self.subtitleLabel.textColor = .subtitleTextColor
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        self.backgroundView?.backgroundColor = .clear
+        self.backgroundColor = .clear
+
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(subtitleLabel)
+        contentView.addSubview(button)
+        contentView.addSubview(indicatorView)
+
+        button.addTarget(self, action: #selector(onTouchButton(_:)), for: .touchUpInside)
+
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(10)
+            make.leading.equalToSuperview().offset(15)
+        }
+
+        subtitleLabel.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(10)
+            make.leading.equalTo(titleLabel)
+            make.bottom.greaterThanOrEqualToSuperview().offset(-10)
+        }
+
+        button.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().offset(-10)
+            make.top.equalToSuperview().offset(10)
+            make.bottom.equalToSuperview().offset(-10)
+            make.centerY.equalToSuperview()
+            make.leading.greaterThanOrEqualTo(titleLabel.snp.trailing).offset(10)
+            make.leading.greaterThanOrEqualTo(subtitleLabel.snp.trailing).offset(10)
+        }
+
+        indicatorView.snp.makeConstraints { make in
+            make.centerX.equalTo(button)
+            make.centerY.equalTo(button)
+        }
+
         self.isShowLoading = false
     }
 
-    
-    @IBAction func onTouchButton(_ sender: Button) {
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    @objc private func onTouchButton(_ sender: Button) {
         self.touchButtonCallBack?(self)
     }
-    
 }

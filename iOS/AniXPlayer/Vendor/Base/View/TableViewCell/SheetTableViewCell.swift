@@ -6,22 +6,59 @@
 //
 
 import UIKit
+import SnapKit
 
 class SheetTableViewCell: TableViewCell {
 
-    @IBOutlet weak var titleLabel: UILabel!
-    
-    @IBOutlet weak var arrowImgView: UIImageView!
-    
-    @IBOutlet weak var valueLabel: UILabel!
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        
+    lazy var titleLabel: Label = {
+        let label = Label()
+        return label
+    }()
+
+    lazy var arrowImgView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFit
+        iv.image = UIImage(named: "Public/right_arrow")?.byTintColor(.indicatorColor)
+        return iv
+    }()
+
+    lazy var valueLabel: Label = {
+        let label = Label()
+        label.textAlignment = .right
+        label.numberOfLines = 0
+        return label
+    }()
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
-//        self.titleLabel.textColor = .white
-//        self.valueLabel.textColor = .white
-        self.arrowImgView.image = UIImage(named: "Public/right_arrow")?.byTintColor(.indicatorColor)
+
+        contentView.addSubview(titleLabel)
+        contentView.addSubview(arrowImgView)
+        contentView.addSubview(valueLabel)
+
+        titleLabel.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(15)
+            make.centerY.equalToSuperview()
+        }
+
+        arrowImgView.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().offset(-10)
+            make.centerY.equalTo(titleLabel)
+            make.width.height.equalTo(10)
+        }
+
+        valueLabel.snp.makeConstraints { make in
+            make.leading.equalTo(titleLabel.snp.trailing).offset(10)
+            make.centerY.equalTo(titleLabel)
+            make.trailing.equalTo(arrowImgView.snp.leading).offset(-10)
+            make.top.equalToSuperview().offset(10)
+            make.bottom.equalToSuperview().offset(-10)
+        }
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 }

@@ -137,10 +137,10 @@ class BangumiDetailViewController: ViewController {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.separatorStyle = .none
         tableView.registerNibCell(class: BangumiDetailInfoViewCell.self)
-        tableView.registerNibCell(class: TitleDetailTableViewCell.self)
+        tableView.registerClassCell(class: TitleDetailTableViewCell.self)
         tableView.registerClassCell(class: TitleTableViewCell.self)
         tableView.registerClassCell(class: BangumiDetailRelatedTableViewCell.self)
-        tableView.registerNibCell(class: TitleDetailMoreTableViewCell.self)
+        tableView.registerClassCell(class: TitleDetailMoreTableViewCell.self)
         
         tableView.mj_header = RefreshHeader(refreshingTarget: self, refreshingAction: #selector(startRefresh))
         return tableView

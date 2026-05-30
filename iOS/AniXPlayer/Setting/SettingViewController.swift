@@ -212,10 +212,10 @@ class SettingViewController: ViewController {
         let tableView = TableView(frame: .zero, style: .plain)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.registerNibCell(class: SwitchDetailTableViewCell.self)
-        tableView.registerNibCell(class: TitleDetailTableViewCell.self)
-        tableView.registerNibCell(class: TitleDetailMoreTableViewCell.self)
-        tableView.registerNibCell(class: TitleDetailOpertationTableViewCell.self)
+        tableView.registerClassCell(class: SwitchDetailTableViewCell.self)
+        tableView.registerClassCell(class: TitleDetailTableViewCell.self)
+        tableView.registerClassCell(class: TitleDetailMoreTableViewCell.self)
+        tableView.registerClassCell(class: TitleDetailOpertationTableViewCell.self)
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
         return tableView

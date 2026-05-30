@@ -24,11 +24,11 @@ class MediaSettingViewController: ViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.registerClassCell(class: SliderTableViewCell.self)
-        tableView.registerNibCell(class: SwitchTableViewCell.self)
-        tableView.registerNibCell(class: SheetTableViewCell.self)
+        tableView.registerClassCell(class: SwitchTableViewCell.self)
+        tableView.registerClassCell(class: SheetTableViewCell.self)
         tableView.registerClassCell(class: TitleTableViewCell.self)
-        tableView.registerNibCell(class: StepTableViewCell.self)
-        tableView.registerNibCell(class: TitleDetailMoreTableViewCell.self)
+        tableView.registerClassCell(class: StepTableViewCell.self)
+        tableView.registerClassCell(class: TitleDetailMoreTableViewCell.self)
         tableView.registerClassHeaderFooterView(class: TitleTableViewHeaderFooterView.self)
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension

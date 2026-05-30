@@ -33,11 +33,11 @@ class DanmakuSettingViewController: ViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.registerClassCell(class: SliderTableViewCell.self)
-        tableView.registerNibCell(class: SwitchTableViewCell.self)
-        tableView.registerNibCell(class: StepTableViewCell.self)
+        tableView.registerClassCell(class: SwitchTableViewCell.self)
+        tableView.registerClassCell(class: StepTableViewCell.self)
         tableView.registerClassCell(class: TitleTableViewCell.self)
-        tableView.registerNibCell(class: SheetTableViewCell.self)
-        tableView.registerNibCell(class: TitleMoreTableViewCell.self)
+        tableView.registerClassCell(class: SheetTableViewCell.self)
+        tableView.registerClassCell(class: TitleMoreTableViewCell.self)
         tableView.registerClassHeaderFooterView(class: TitleTableViewHeaderFooterView.self)
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension

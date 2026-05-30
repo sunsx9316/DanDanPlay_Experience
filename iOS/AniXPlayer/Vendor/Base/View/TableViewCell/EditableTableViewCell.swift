@@ -6,19 +6,36 @@
 //
 
 import UIKit
+import SnapKit
 
 class EditableTableViewCell: TableViewCell {
 
-    @IBOutlet weak var titleLabel: UILabel!
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        
+    lazy var titleLabel: Label = {
+        let label = Label()
+        label.numberOfLines = 0
+        return label
+    }()
+
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
         self.titleLabel.textColor = .textColor
+
+        contentView.addSubview(titleLabel)
+
+        titleLabel.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(15)
+            make.leading.equalToSuperview().offset(15)
+            make.trailing.equalToSuperview().offset(-10)
+            make.bottom.equalToSuperview().offset(-15)
+        }
     }
-    
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
         super.traitCollectionDidChange(previousTraitCollection)
         self.setupUI()
@@ -26,10 +43,10 @@ class EditableTableViewCell: TableViewCell {
 
     override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
-        
+
         self.setupUI()
     }
-    
+
     private func findReorderView() -> UIView? {
         var subviews = self.subviews
         var index = 0
@@ -42,10 +59,10 @@ class EditableTableViewCell: TableViewCell {
             }
             index += 1
         }
-        
+
         return nil
     }
-    
+
     private func setupUI() {
         if let reorderView = self.findReorderView() {
             for view in reorderView.subviews {

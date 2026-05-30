@@ -52,7 +52,7 @@ class BangumiDetailEpisodeViewController: ViewController {
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
         tableView.separatorStyle = .none
-        tableView.registerNibCell(class: TitleDetailTableViewCell.self)
+        tableView.registerClassCell(class: TitleDetailTableViewCell.self)
         return tableView
     }()
     
