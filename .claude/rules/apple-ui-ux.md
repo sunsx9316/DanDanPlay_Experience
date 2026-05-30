@@ -63,6 +63,61 @@ class PlayerViewController: UIViewController {
 }
 ```
 
+## 约束/Auto Layout 规范
+
+### 使用 SnapKit
+
+所有约束必须使用 SnapKit，**禁止**使用原生 NSLayoutConstraint 写法：
+
+```swift
+// 推荐 - SnapKit
+iconImageView.snp.makeConstraints { make in
+    make.leading.equalToSuperview().offset(15)
+    make.centerY.equalToSuperview()
+    make.width.height.equalTo(24)
+}
+
+// 不推荐 - 原生 Auto Layout
+NSLayoutConstraint.activate([
+    iv.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 15),
+    iv.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+])
+```
+
+> **例外**：从 nib/storyboard 中已存在的约束（IBOutlet 引用），可用于修改 constant，不需要用 SnapKit 重建。
+
+### 禁止在懒加载中写约束
+
+懒加载（`lazy var`）只负责创建 view，**禁止**在其中调用 `addSubview` 或写约束。必须在外部（如 `awakeFromNib`、`init`、`setupUI` 等方法中）先 `addSubview` 后再加约束：
+
+```swift
+// 推荐 - 懒加载只创建 view
+private lazy var iconImageView: UIImageView = {
+    let iv = UIImageView()
+    iv.contentMode = .scaleAspectFit
+    iv.isHidden = true
+    return iv
+}()
+
+override func awakeFromNib() {
+    super.awakeFromNib()
+    contentView.addSubview(iconImageView)
+    iconImageView.snp.makeConstraints { make in
+        make.leading.equalToSuperview().offset(15)
+        make.centerY.equalToSuperview()
+        make.width.height.equalTo(24)
+    }
+}
+
+// 不推荐 - 懒加载中含 addSubview 和约束
+private lazy var iconImageView: UIImageView = {
+    let iv = UIImageView()
+    contentView.addSubview(iv)  // 禁止！
+    iv.snp.makeConstraints { ... }  // 禁止！
+    return iv
+}()
+```
+
 ## 命名规范
 
 - View 文件：`{Feature}View.swift`

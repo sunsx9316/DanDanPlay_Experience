@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 import SVGKit
-import SDWebImage
+import Kingfisher
 
 class UserInfoViewController: ViewController {
 
@@ -77,7 +77,7 @@ class UserInfoViewController: ViewController {
 
     private func reloadData() {
         if let userInfo = Preferences.shared.loginInfo {
-            avatarImageView.sd_setImage(with: URL(string: userInfo.profileImage), placeholderImage: defaultAvatar())
+            avatarImageView.kf.setImage(with: URL(string: userInfo.profileImage), placeholder: defaultAvatar())
             usernameLabel.text = userInfo.screenName
         } else {
             avatarImageView.image = defaultAvatar()

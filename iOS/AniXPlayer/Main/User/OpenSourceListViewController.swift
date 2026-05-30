@@ -31,7 +31,7 @@ class OpenSourceListViewController: ViewController {
         .init(name: "MobileVLCKit", url: "https://code.videolan.org/videolan/VLCKit"),
         .init(name: "MPVKit", url: "https://github.com/mpvkit/MPVKit"),
         .init(name: "RxSwift", url: "https://github.com/ReactiveX/RxSwift"),
-        .init(name: "SDWebImage", url: "https://github.com/SDWebImage/SDWebImage"),
+        .init(name: "Kingfisher", url: "https://github.com/onevcat/Kingfisher"),
         .init(name: "SnapKit", url: "https://github.com/SnapKit/SnapKit"),
         .init(name: "SVGKit", url: "https://github.com/SVGKit/SVGKit"),
         .init(name: "swift-log", url: "https://github.com/apple/swift-log"),

@@ -150,13 +150,13 @@
 		8953D0242C99E374003EF386 /* MJRefresh in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D0232C99E374003EF386 /* MJRefresh */; };
 		8953D0272C99E3D8003EF386 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D0262C99E3D8003EF386 /* RxCocoa */; };
 		8953D0292C99E3D8003EF386 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D0282C99E3D8003EF386 /* RxSwift */; };
-		8953D02C2C99E430003EF386 /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D02B2C99E430003EF386 /* SDWebImage */; };
 		8953D0322C99E48A003EF386 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D0312C99E48A003EF386 /* SnapKit */; };
 		8953D0352C99E4C7003EF386 /* MBProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D0342C99E4C7003EF386 /* MBProgressHUD */; };
 		8953D0382C99E502003EF386 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D0372C99E502003EF386 /* IQKeyboardManagerSwift */; };
 		8953D0442C99E6F0003EF386 /* SVGKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D0432C99E6F0003EF386 /* SVGKit */; };
 		8953D0472C99E759003EF386 /* DynamicButton in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D0462C99E759003EF386 /* DynamicButton */; };
 		895599682FCB597F007F52E0 /* MPVHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895599672FCB597F007F52E0 /* MPVHelper.swift */; };
+		8955996B2FCB645F007F52E0 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 8955996A2FCB645F007F52E0 /* Kingfisher */; };
 		895A7F9E2FC74E8A00A997B8 /* MPVKit in Frameworks */ = {isa = PBXBuildFile; productRef = 895A7F9D2FC74E8A00A997B8 /* MPVKit */; };
 		895A7FA92FC7518500A997B8 /* GCDWebDAVServer in Frameworks */ = {isa = PBXBuildFile; productRef = 895A7FA82FC7518500A997B8 /* GCDWebDAVServer */; };
 		895A7FAB2FC7518500A997B8 /* GCDWebServer in Frameworks */ = {isa = PBXBuildFile; productRef = 895A7FAA2FC7518500A997B8 /* GCDWebServer */; };
@@ -263,7 +263,6 @@
 		89E0D6162669143400E2337B /* TitleDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0D6142669143400E2337B /* TitleDetailTableViewCell.swift */; };
 		89E0D6172669143400E2337B /* TitleDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89E0D6152669143400E2337B /* TitleDetailTableViewCell.xib */; };
 		89E0D710266B44BE00E2337B /* TitleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0D70E266B44BE00E2337B /* TitleTableViewCell.swift */; };
-		89E0D711266B44BE00E2337B /* TitleTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89E0D70F266B44BE00E2337B /* TitleTableViewCell.xib */; };
 		89E0D827266BBA9400E2337B /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0D826266BBA9400E2337B /* SceneDelegate.swift */; };
 		89E0D82A266BD4FC00E2337B /* PlayerUITopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0D829266BD4FC00E2337B /* PlayerUITopView.swift */; };
 		89E0D82C266BDB8600E2337B /* PlayerUIBottomView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0D82B266BDB8600E2337B /* PlayerUIBottomView.swift */; };
@@ -549,7 +548,6 @@
 		89E0D6142669143400E2337B /* TitleDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleDetailTableViewCell.swift; sourceTree = "<group>"; };
 		89E0D6152669143400E2337B /* TitleDetailTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TitleDetailTableViewCell.xib; sourceTree = "<group>"; };
 		89E0D70E266B44BE00E2337B /* TitleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleTableViewCell.swift; sourceTree = "<group>"; };
-		89E0D70F266B44BE00E2337B /* TitleTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TitleTableViewCell.xib; sourceTree = "<group>"; };
 		89E0D826266BBA9400E2337B /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		89E0D829266BD4FC00E2337B /* PlayerUITopView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerUITopView.swift; sourceTree = "<group>"; };
 		89E0D82B266BDB8600E2337B /* PlayerUIBottomView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerUIBottomView.swift; sourceTree = "<group>"; };
@@ -582,7 +580,7 @@
 				8953D0352C99E4C7003EF386 /* MBProgressHUD in Frameworks */,
 				8953D0212C99E306003EF386 /* Alamofire in Frameworks */,
 				895A7FAD2FC7518500A997B8 /* GCDWebUploader in Frameworks */,
-				8953D02C2C99E430003EF386 /* SDWebImage in Frameworks */,
+				8955996B2FCB645F007F52E0 /* Kingfisher in Frameworks */,
 				8953D0272C99E3D8003EF386 /* RxCocoa in Frameworks */,
 				8953D0322C99E48A003EF386 /* SnapKit in Frameworks */,
 				89FFD1292D44E65000428206 /* YYCategories in Frameworks */,
@@ -1396,7 +1394,6 @@
 				89AF9C092631D7120037A133 /* SheetTableViewCell.swift */,
 				89AF9C0A2631D7120037A133 /* SheetTableViewCell.xib */,
 				89E0D70E266B44BE00E2337B /* TitleTableViewCell.swift */,
-				89E0D70F266B44BE00E2337B /* TitleTableViewCell.xib */,
 				89C325AA2C6FB767002E2487 /* TitleMoreTableViewCell.swift */,
 				89C325AB2C6FB768002E2487 /* TitleMoreTableViewCell.xib */,
 				89E0D6102669127A00E2337B /* SwitchDetailTableViewCell.swift */,
@@ -1522,7 +1519,6 @@
 				8953D0232C99E374003EF386 /* MJRefresh */,
 				8953D0262C99E3D8003EF386 /* RxCocoa */,
 				8953D0282C99E3D8003EF386 /* RxSwift */,
-				8953D02B2C99E430003EF386 /* SDWebImage */,
 				8953D0312C99E48A003EF386 /* SnapKit */,
 				8953D0342C99E4C7003EF386 /* MBProgressHUD */,
 				8953D0372C99E502003EF386 /* IQKeyboardManagerSwift */,
@@ -1539,6 +1535,7 @@
 				895A7FAC2FC7518500A997B8 /* GCDWebUploader */,
 				895A7FAF2FC7519D00A997B8 /* FilesProvider */,
 				895A7FC32FC75A7100A997B8 /* AMSMB2 */,
+				8955996A2FCB645F007F52E0 /* Kingfisher */,
 			);
 			productName = AniXPlayer;
 			productReference = 890DF6C926160826002D8AE5 /* AniXPlayer.app */;
@@ -1599,7 +1596,6 @@
 				8953D01F2C99E306003EF386 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				8953D0222C99E374003EF386 /* XCRemoteSwiftPackageReference "MJRefresh" */,
 				8953D0252C99E3D8003EF386 /* XCRemoteSwiftPackageReference "RxSwift" */,
-				8953D02A2C99E430003EF386 /* XCRemoteSwiftPackageReference "SDWebImage" */,
 				8953D0302C99E48A003EF386 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				8953D0332C99E4C7003EF386 /* XCRemoteSwiftPackageReference "MBProgressHUD" */,
 				8953D0362C99E502003EF386 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
@@ -1612,6 +1608,7 @@
 				895A7FA72FC7518400A997B8 /* XCRemoteSwiftPackageReference "GCDWebServer" */,
 				895A7FAE2FC7519D00A997B8 /* XCRemoteSwiftPackageReference "FileProvider" */,
 				895A7FC22FC75A7100A997B8 /* XCRemoteSwiftPackageReference "AMSMB2" */,
+				895599692FCB645F007F52E0 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 			);
 			productRefGroup = 890DF6CA26160826002D8AE5 /* Products */;
 			projectDirPath = "";
@@ -1662,7 +1659,6 @@
 				89A688B22C3984EB002B7CA3 /* Home.svg in Resources */,
 				89A688AA2C398347002B7CA3 /* HomePageBangumiQueueTableViewCell.xib in Resources */,
 				897CF533262F317B00CC297A /* SliderTableViewCell.xib in Resources */,
-				89E0D711266B44BE00E2337B /* TitleTableViewCell.xib in Resources */,
 				890DF6EE26160A25002D8AE5 /* RefreshText.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2331,14 +2327,6 @@
 				minimumVersion = 6.7.1;
 			};
 		};
-		8953D02A2C99E430003EF386 /* XCRemoteSwiftPackageReference "SDWebImage" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SDWebImage/SDWebImage";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.19.7;
-			};
-		};
 		8953D0302C99E48A003EF386 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit";
@@ -2377,6 +2365,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 6.2.1;
+			};
+		};
+		895599692FCB645F007F52E0 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.9.0;
 			};
 		};
 		895A7FA72FC7518400A997B8 /* XCRemoteSwiftPackageReference "GCDWebServer" */ = {
@@ -2455,11 +2451,6 @@
 			package = 8953D0252C99E3D8003EF386 /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxSwift;
 		};
-		8953D02B2C99E430003EF386 /* SDWebImage */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 8953D02A2C99E430003EF386 /* XCRemoteSwiftPackageReference "SDWebImage" */;
-			productName = SDWebImage;
-		};
 		8953D0312C99E48A003EF386 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 8953D0302C99E48A003EF386 /* XCRemoteSwiftPackageReference "SnapKit" */;
@@ -2484,6 +2475,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8953D0452C99E758003EF386 /* XCRemoteSwiftPackageReference "DynamicButton" */;
 			productName = DynamicButton;
+		};
+		8955996A2FCB645F007F52E0 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 895599692FCB645F007F52E0 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
 		};
 		895A7F9D2FC74E8A00A997B8 /* MPVKit */ = {
 			isa = XCSwiftPackageProductDependency;

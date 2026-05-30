@@ -7,7 +7,7 @@
 
 import UIKit
 import SnapKit
-import SDWebImage
+import Kingfisher
 import YYCategories
 
 class HomePageBannerItemCell: CollectionViewCell {
@@ -34,7 +34,7 @@ class HomePageBannerItemCell: CollectionViewCell {
     var item: BannerPageItem? {
         didSet {
             if let imageUrl = item?.imageUrl {
-                bgImageView.sd_setImage(with: URL(string: imageUrl))
+                bgImageView.kf.setImage(with: URL(string: imageUrl))
             } else {
                 bgImageView.image = nil
             }

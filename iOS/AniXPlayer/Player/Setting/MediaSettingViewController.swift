@@ -26,7 +26,7 @@ class MediaSettingViewController: ViewController {
         tableView.registerNibCell(class: SliderTableViewCell.self)
         tableView.registerNibCell(class: SwitchTableViewCell.self)
         tableView.registerNibCell(class: SheetTableViewCell.self)
-        tableView.registerNibCell(class: TitleTableViewCell.self)
+        tableView.registerClassCell(class: TitleTableViewCell.self)
         tableView.registerNibCell(class: StepTableViewCell.self)
         tableView.registerNibCell(class: TitleDetailMoreTableViewCell.self)
         tableView.registerClassHeaderFooterView(class: TitleTableViewHeaderFooterView.self)
@@ -412,6 +412,7 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
         case .playerPiP:
             let cell = tableView.dequeueCell(class: TitleTableViewCell.self, indexPath: indexPath)
             cell.label.text = type.title
+            cell.icon = UIImage(named: "Player/pip")
             return cell
         }
     }

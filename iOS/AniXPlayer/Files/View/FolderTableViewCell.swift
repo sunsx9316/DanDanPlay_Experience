@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import SDWebImage
+import Kingfisher
 
 class FolderTableViewCell: TableViewCell {
 
@@ -28,10 +28,10 @@ class FolderTableViewCell: TableViewCell {
         didSet {
             self.titleLabel.text = self.file?.fileName
             if let coverURL = self.file?.coverImageURL {
-                self.coverBackgroundView.sd_setImage(with: coverURL)
+                self.coverBackgroundView.kf.setImage(with: coverURL)
                 self.coverBackgroundView.isHidden = false
             } else {
-                self.coverBackgroundView.sd_cancelCurrentImageLoad()
+                self.coverBackgroundView.kf.cancelDownloadTask()
                 self.coverBackgroundView.isHidden = true
                 self.coverBackgroundView.image = nil
             }

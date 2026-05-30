@@ -22,7 +22,7 @@ class SelectedFontViewController: ViewController {
         let tableView = TableView(frame: .zero, style: .plain)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.registerNibCell(class: TitleTableViewCell.self)
+        tableView.registerClassCell(class: TitleTableViewCell.self)
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
         tableView.backgroundColor = .clear

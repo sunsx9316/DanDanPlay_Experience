@@ -181,12 +181,6 @@ class SMBFileManager: FileManagerProtocol {
                 }
                 return true
             }, completionHandler: { result in
-                switch result {
-                case .success(let data):
-                    try? data.write(to: PathUtils.documentsURL.appendingPathComponent("old.data"))
-                case .failure(_):
-                    break
-                }
                 completion(result)
             })
         } else {

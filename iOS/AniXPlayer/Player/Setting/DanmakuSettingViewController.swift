@@ -35,7 +35,7 @@ class DanmakuSettingViewController: ViewController {
         tableView.registerNibCell(class: SliderTableViewCell.self)
         tableView.registerNibCell(class: SwitchTableViewCell.self)
         tableView.registerNibCell(class: StepTableViewCell.self)
-        tableView.registerNibCell(class: TitleTableViewCell.self)
+        tableView.registerClassCell(class: TitleTableViewCell.self)
         tableView.registerNibCell(class: SheetTableViewCell.self)
         tableView.registerNibCell(class: TitleMoreTableViewCell.self)
         tableView.registerClassHeaderFooterView(class: TitleTableViewHeaderFooterView.self)

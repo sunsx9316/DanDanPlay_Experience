@@ -6,6 +6,9 @@
 //
 
 import Foundation
+#if os(iOS) || os(tvOS)
+import Kingfisher
+#endif
 
 class CacheManager {
     
@@ -131,5 +134,8 @@ class CacheManager {
         } catch {
             debugPrint("缓存删除失败 error:\(error)")
         }
+#if os(iOS) || os(tvOS)
+        KingfisherManager.shared.cache.clearCache()
+#endif
     }
 }

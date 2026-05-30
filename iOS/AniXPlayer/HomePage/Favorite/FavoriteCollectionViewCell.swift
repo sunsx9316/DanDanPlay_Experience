@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import SDWebImage
+import Kingfisher
 import SVGKit
 import YYCategories
 
@@ -30,7 +30,7 @@ class FavoriteCollectionViewCell: CollectionViewCell {
         self.item = item
         
         if let url = self.item?.imageUrl {
-            self.imgView.sd_setImage(with: URL(string: url))
+            self.imgView.kf.setImage(with: URL(string: url))
         } else {
             self.imgView.image = nil
         }

@@ -140,7 +140,6 @@ class WebDavFileManager: FileManagerProtocol {
             if let error = error {
                 completion(.failure(error))
             } else if let contents = contents {
-                try? contents.write(to: PathUtils.documentsURL.appendingPathComponent("new.data"))
                 completion(.success(contents))
             } else {
                 completion(.failure(WebDavError.reqError))

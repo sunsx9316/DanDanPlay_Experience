@@ -7,7 +7,7 @@
 
 import UIKit
 import SnapKit
-import SDWebImage
+import Kingfisher
 
 class FileTableViewCell: TableViewCell {
 
@@ -79,10 +79,10 @@ class FileTableViewCell: TableViewCell {
 
             if let coverURL = self.file?.coverImageURL {
                 self.coverImageView.isHidden = false
-                self.coverImageView.sd_setImage(with: coverURL)
+                self.coverImageView.kf.setImage(with: coverURL)
             } else {
                 self.coverImageView.isHidden = true
-                self.coverImageView.sd_cancelCurrentImageLoad()
+                self.coverImageView.kf.cancelDownloadTask()
             }
 
             self.typeLabel.isHidden = false
