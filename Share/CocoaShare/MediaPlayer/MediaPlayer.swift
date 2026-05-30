@@ -193,6 +193,9 @@ class MediaPlayer {
     }
 
     let coreType: CoreType
+
+    /// 底层播放器实例，用于 PiP 工厂等需要直接访问的场景
+    var underlyingPlayer: MediaPlayerProtocol { self.player }
     
     private(set) lazy var playList = [File]()
     

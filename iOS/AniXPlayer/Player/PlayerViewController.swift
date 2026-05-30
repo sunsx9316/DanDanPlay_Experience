@@ -12,6 +12,8 @@ import MBProgressHUD
 import DynamicButton
 import RxSwift
 import ANXLog
+import AVFoundation
+import AVKit
 
 class PlayerViewController: ViewController {
     
@@ -60,7 +62,12 @@ class PlayerViewController: ViewController {
     private var firstPlayMediaCallBack: (() -> File?)?
     
     private weak var gotoLastWatchPointView: GotoLastWatchPointView?
-    
+
+    // MARK: - PiP
+
+    private var pipController: AVPictureInPictureController?
+    private var pipOverlayView: PiPOverlayView?
+
     //MARK: - life cycle
     
     init(items: [File], selectedItem: File? = nil) {
@@ -110,7 +117,10 @@ class PlayerViewController: ViewController {
         self.containerView.addSubview(self.danmakuCanvas)
         self.view.addSubview(self.uiView)
         self.danmakuCanvas.addSubview(self.danmakuModel.danmakuView)
-        
+
+        // PiP 初始化
+        setupPiP()
+
         self.containerView.snp.makeConstraints { (make) in
             make.top.leading.trailing.bottom.equalTo(self.view)
         }
@@ -130,7 +140,124 @@ class PlayerViewController: ViewController {
             self.playerModel.tryParseMedia(firstPlayMedia)
         }
     }
-    
+
+    // MARK: - PiP Setup
+
+    private func setupPiP() {
+        mediaModel.onPiPToggleChanged = { [weak self] enabled in
+            guard let self = self else { return }
+            if enabled {
+                self.startPiP()
+            } else {
+                self.stopPiP()
+            }
+        }
+    }
+
+    // MARK: - PiP Actions
+
+    private func startPiP() {
+        guard #available(iOS 15.0, *) else {
+            ANX.logError(.player, "[PiP] PiP 需要 iOS 15.0+")
+            return
+        }
+        guard pipController == nil else { return }
+        guard let file = mediaModel.media,
+              let mpvMedia = file.createMPVMedia() else {
+            ANX.logError(.player, "[PiP] 无法获取当前播放文件")
+            return
+        }
+
+        let currentPosition = mediaModel.currentTime
+        ANX.logInfo(.player, "[PiP] 暂停主播放器 (position: \(currentPosition)s)")
+        mediaModel.pause()
+
+        guard let manager = mediaModel.createPiPManager(
+            startPosition: currentPosition,
+            filePath: mpvMedia.url.absoluteString
+        ) else { return }
+
+        // 回调
+        manager.onReadyForPiPStart = { [weak self] in
+            self?.pipController?.startPictureInPicture()
+        }
+        manager.onStateChanged = { [weak self] state in
+            ANX.logInfo(.player, "[PiP] 状态变更: \(state)")
+            if state == .inactive {
+                self?.handlePiPStopped()
+            }
+        }
+        manager.onRestoreUI = {
+            // PiP 窗口点"返回"
+        }
+
+        // AVPictureInPictureController
+        let source = AVPictureInPictureController.ContentSource(
+            sampleBufferDisplayLayer: manager.displayLayer,
+            playbackDelegate: self
+        )
+        let controller = AVPictureInPictureController(contentSource: source)
+        controller.delegate = self
+        self.pipController = controller
+
+        // Sample buffer 视图
+        view.insertSubview(manager.sampleBufferView, aboveSubview: containerView)
+        manager.sampleBufferView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        manager.sampleBufferView.alpha = 0.01
+
+        // AudioSession
+        let session = AVAudioSession.sharedInstance()
+        do {
+            try session.setCategory(.playback, mode: .moviePlayback)
+            try session.setActive(true)
+        } catch {
+            ANX.logError(.player, "[PiP] AudioSession error: \(error)")
+        }
+    }
+
+    private func stopPiP() {
+        ANX.logInfo(.player, "[PiP] 用户关闭画中画")
+        let wasPlaying = mediaModel.pipManager?.isPlaying ?? false
+        let finalPosition = mediaModel.pipManager?.currentPosition ?? 0
+        mediaModel.pipManager?.sampleBufferView.removeFromSuperview()
+        mediaModel.stopPiP()
+        pipController?.stopPictureInPicture()
+        pipController = nil
+        mediaModel.syncPlayerPosition(finalPosition, autoPlay: wasPlaying)
+    }
+
+    private func handlePiPStopped() {
+        let wasPlaying = mediaModel.pipManager?.isPlaying ?? false
+        let finalPosition = mediaModel.pipManager?.currentPosition ?? 0
+        mediaModel.pipManager?.sampleBufferView.removeFromSuperview()
+        mediaModel.stopPiP()
+        pipController = nil
+        hidePiPOverlay()
+        mediaModel.syncPlayerPosition(finalPosition, autoPlay: wasPlaying)
+    }
+
+    // MARK: - PiP Overlay
+
+    private func showPiPOverlay() {
+        guard pipOverlayView == nil else { return }
+        let overlay = PiPOverlayView()
+        overlay.onTap = { [weak self] in
+            self?.stopPiP()
+        }
+        view.addSubview(overlay)
+        overlay.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        pipOverlayView = overlay
+    }
+
+    private func hidePiPOverlay() {
+        pipOverlayView?.removeFromSuperview()
+        pipOverlayView = nil
+    }
+
     override var prefersStatusBarHidden: Bool {
         if self.isViewLoaded == false {
             return false
@@ -191,9 +318,10 @@ class PlayerViewController: ViewController {
         
         self.mediaModel.context.isPlay.subscribe(onNext: { [weak self] isPlay in
             guard let self = self else { return }
-            
+
             self.uiView.isPlay = isPlay
             UIApplication.shared.isIdleTimerDisabled = isPlay
+
         }).disposed(by: self.disposeBag)
         
         self.mediaModel.context.buffer.subscribe(onNext: { [weak self] bufferInfos in
@@ -774,5 +902,124 @@ extension PlayerViewController: MatchsViewControllerDelegate {
                 ANX.logError(.UI, "视频时长获取失败 \(path)")
             }
         }
+    }
+}
+
+// MARK: - AVPictureInPictureControllerDelegate
+
+extension PlayerViewController: AVPictureInPictureControllerDelegate {
+
+    func pictureInPictureControllerDidStartPictureInPicture(
+        _ controller: AVPictureInPictureController
+    ) {
+        ANX.logInfo(.player, "[PiP] PiP 窗口已显示")
+        mediaModel.pipManager?.handlePiPStarted()
+        showPiPOverlay()
+    }
+
+    func pictureInPictureControllerDidStopPictureInPicture(
+        _ controller: AVPictureInPictureController
+    ) {
+        ANX.logInfo(.player, "[PiP] PiP 窗口已关闭")
+        mediaModel.pipManager?.handlePiPStopped()
+    }
+
+    func pictureInPictureController(
+        _ controller: AVPictureInPictureController,
+        restoreUserInterfaceForPictureInPictureStopWithCompletionHandler
+        completion: @escaping (Bool) -> Void
+    ) {
+        ANX.logInfo(.player, "[PiP] 恢复用户界面")
+        mediaModel.pipManager?.handleRestoreUI(completion: completion)
+    }
+
+    func pictureInPictureController(
+        _ controller: AVPictureInPictureController,
+        failedToStartPictureInPictureWithError error: Error
+    ) {
+        ANX.logError(.player, "[PiP] 启动失败: \(error)")
+        mediaModel.pipManager?.handlePiPStopped()
+    }
+}
+
+// MARK: - AVPictureInPictureSampleBufferPlaybackDelegate
+
+@available(iOS 15.0, *)
+extension PlayerViewController: AVPictureInPictureSampleBufferPlaybackDelegate {
+
+    func pictureInPictureController(
+        _ controller: AVPictureInPictureController,
+        setPlaying playing: Bool
+    ) {
+        ANX.logInfo(.player, "[PiP] 用户\(playing ? "播放" : "暂停")")
+        mediaModel.pipManager?.handleSetPlaying(playing)
+    }
+
+    func pictureInPictureControllerIsPlaybackPaused(
+        _ controller: AVPictureInPictureController
+    ) -> Bool {
+        return mediaModel.pipManager?.isPlaying == false
+    }
+
+    func pictureInPictureController(
+        _ controller: AVPictureInPictureController,
+        skipByInterval interval: CMTime,
+        completion: @escaping () -> Void
+    ) {
+        mediaModel.pipManager?.handleSkip(by: interval.seconds, completion: completion)
+    }
+
+    func pictureInPictureControllerTimeRangeForPlayback(
+        _ controller: AVPictureInPictureController
+    ) -> CMTimeRange {
+        return mediaModel.pipManager?.handleTimeRangeRequest()
+            ?? CMTimeRange(start: .zero, duration: CMTime(seconds: pipFallbackDuration, preferredTimescale: pipTimescale))
+    }
+
+    func pictureInPictureControllerShouldProhibitBackgroundAudioPlayback(
+        _ controller: AVPictureInPictureController
+    ) -> Bool {
+        return false
+    }
+
+    func pictureInPictureController(
+        _ controller: AVPictureInPictureController,
+        didTransitionToRenderSize newRenderSize: CMVideoDimensions
+    ) {
+        // 渲染尺寸变化，PiPManager 内部处理 layer 布局即可，无需额外操作
+    }
+}
+
+// MARK: - PiPOverlayView
+
+private class PiPOverlayView: UIView {
+
+    var onTap: (() -> Void)?
+
+    private let label: UILabel = {
+        let label = UILabel()
+        label.text = NSLocalizedString("画中画模式", comment: "")
+        label.textColor = .white
+        label.font = .systemFont(ofSize: 18)
+        label.textAlignment = .center
+        return label
+    }()
+
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = .black
+        addSubview(label)
+        label.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+        }
+        addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(handleTap)))
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    @objc private func handleTap() {
+        onTap?()
     }
 }

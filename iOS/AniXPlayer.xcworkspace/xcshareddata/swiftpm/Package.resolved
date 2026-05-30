@@ -1,5 +1,5 @@
 {
-  "originHash" : "a41433d307822f745cd5317ee7542863ab45dbb19631bf36640989f2e67340a6",
+  "originHash" : "b8c343d10a66c6f0fecbd82b469d9babf4b1852eab0aa044d9db1480b11b9ff7",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -42,8 +42,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sunsx9316/DanmakuRender-Swift",
       "state" : {
-        "revision" : "5ce51ff0a53a98b07913a7ebbc29c8f9fddb3b68",
-        "version" : "1.5.0"
+        "revision" : "11dd5d3b288a840fa810282315871c21876aba73",
+        "version" : "1.6.1"
       }
     },
     {

@@ -6,6 +6,7 @@
 //  将 mpv_* C 函数封装为面向对象的 Swift 接口
 //  参考 mpv 官方文档 (https://mpv.io/manual/stable/) 进行模块化设计
 //
+// ⚠️ 此文件必须包含在 target membership 中（iOS + tvOS 都要勾选），漏勾会报 "Cannot find 'MPV' in scope"
 
 #if os(iOS) || os(tvOS)
 
@@ -520,6 +521,7 @@ public enum MPVProperty {
     case gpuContext
 
     case protocolList
+    case estimatedVFps
 
     public var rawValue: String {
         switch self {
@@ -566,6 +568,7 @@ public enum MPVProperty {
         case .gpuApi: return "gpu-api"
         case .gpuContext: return "gpu-context"
         case .protocolList: return "protocol-list"
+        case .estimatedVFps: return "estimated-vf-fps"
         case .endOfReached: return "eof-reached"
         }
     }
@@ -685,6 +688,11 @@ public class MPV {
     // MARK: - 私有属性
 
     private var mpv: OpaquePointer?
+
+    /// 原始 mpv handle，供 PiP 等高级功能使用
+    public var mpvHandle: OpaquePointer? {
+        return mpv
+    }
     private let eventQueue: DispatchQueue = DispatchQueue(label: "com.cocoashare.mpv.event")
     private var eventHandlers: [EventHandler] = []
     private var observedProperties: Set<String> = []
@@ -713,7 +721,6 @@ public class MPV {
     public lazy var video = VideoAPI(mpv: self)
     public lazy var subtitle = SubtitleAPI(mpv: self)
     public lazy var track = TrackAPI(mpv: self)
-    public lazy var screenshot = ScreenshotAPI(mpv: self)
 
     // MARK: - 初始化
 
@@ -759,7 +766,7 @@ public class MPV {
         mpv_set_property(mpv, property.rawValue, MPV_FORMAT_FLAG, &data)
     }
     
-    func setProperty(_ property: MPVProperty, _ value: String) {
+    public func setProperty(_ property: MPVProperty, _ value: String) {
         guard let mpv = mpv else { return }
         value.withCString { cString in
             var mutableCString: UnsafePointer<Int8>? = cString
@@ -770,7 +777,7 @@ public class MPV {
     // MARK: - 属性获取
 
     /// 获取整数属性
-    func getPropertyInt64(_ property: MPVProperty) -> Int64? {
+    public func getPropertyInt64(_ property: MPVProperty) -> Int64? {
         guard let mpv = mpv else { return nil }
         var data = Int64()
         let ret = mpv_get_property(mpv, property.rawValue, MPV_FORMAT_INT64, &data)
@@ -778,7 +785,7 @@ public class MPV {
     }
 
     /// 获取浮点数属性
-    func getPropertyDouble(_ property: MPVProperty) -> Double? {
+    public func getPropertyDouble(_ property: MPVProperty) -> Double? {
         guard let mpv = mpv else { return nil }
         var data = Double()
         let ret = mpv_get_property(mpv, property.rawValue, MPV_FORMAT_DOUBLE, &data)
@@ -786,7 +793,7 @@ public class MPV {
     }
 
     /// 获取布尔属性
-    func getPropertyFlag(_ property: MPVProperty) -> Bool? {
+    public func getPropertyFlag(_ property: MPVProperty) -> Bool? {
         guard let mpv = mpv else { return nil }
         var data = Int64()
         let ret = mpv_get_property(mpv, property.rawValue, MPV_FORMAT_FLAG, &data)
@@ -794,7 +801,7 @@ public class MPV {
     }
 
     /// 获取字符串属性
-    func getPropertyString(_ property: MPVProperty) -> String? {
+    public func getPropertyString(_ property: MPVProperty) -> String? {
         guard let mpv = mpv else { return nil }
         let cstr = mpv_get_property_string(mpv, property.rawValue)
         defer { mpv_free(cstr) }
@@ -922,9 +929,22 @@ public class MPV {
 
     // MARK: - 终止
 
-    /// 异步退出 mpv 
+    /// 异步退出 mpv
     public func quit() {
         execute(.quit)
+    }
+
+    // MARK: - 截图（供 PiP 捕获帧）
+
+    /// 视频宽度
+    /// 视频尺寸
+    public var videoSize: CGSize {
+        guard let handle = mpv else { return .zero }
+        var w = Int64(0), h = Int64(0)
+        guard mpv_get_property(handle, "video-params/w", MPV_FORMAT_INT64, &w) >= 0,
+              mpv_get_property(handle, "video-params/h", MPV_FORMAT_INT64, &h) >= 0,
+              w > 0, h > 0 else { return .zero }
+        return CGSize(width: Int(w), height: Int(h))
     }
 }
 
@@ -1392,36 +1412,6 @@ public class TrackAPI {
     /// 视频轨道
     public var videoTracks: [VideoTrack] {
         allTracks.compactMap { $0 as? VideoTrack }
-    }
-}
-
-// MARK: - Screenshot API
-
-public class ScreenshotAPI {
-    private weak var player: MPV?
-
-    init(mpv: MPV) {
-        self.player = mpv
-    }
-
-    /// 截图（包含字幕）
-    public func capture() {
-        player?.execute(.screenshot)
-    }
-
-    /// 截图（不包含字幕）
-    public func captureWithoutSubtitle() {
-        player?.execute(.screenshot, args: ["video"])
-    }
-
-    /// 截图（包含窗口元素，如 OSD）
-    public func captureWithOSD() {
-        player?.execute(.screenshot, args: ["window"])
-    }
-
-    /// 保存截图到指定文件
-    public func saveToFile(path: String, format: String = "png") {
-        player?.execute(.screenshotToFile, args: [path, format])
     }
 }
 

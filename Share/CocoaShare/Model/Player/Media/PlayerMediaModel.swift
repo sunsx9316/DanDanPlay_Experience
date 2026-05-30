@@ -87,6 +87,10 @@ extension PlayerMediaModel {
         return (try? self.context.subtitleColor.value())
     }
 
+    var playerPiP: Bool {
+        return (try? self.context.playerPiP.value()) ?? false
+    }
+
     var autoJumpTitleEnding: Bool {
         return (try? self.context.autoJumpTitleEnding.value()) ?? false
     }
@@ -150,7 +154,7 @@ extension PlayerMediaModel {
     var isPlaying: Bool {
         return self.player.isPlaying
     }
-    
+
     var volume: Int {
         return self.player.volume
     }
@@ -169,13 +173,24 @@ extension PlayerMediaModel {
         dataSource.append(MediaSettingInfo(title: NSLocalizedString("媒体信息", comment: ""),
                                            dataSource: [.matchInfo]))
         
-        var mediaSetting: [MediaSettingType] = [.autoJumpTitleEnding, .jumpTitleDuration, .jumpEndingDuration, .playerSpeed, .playerMode, .aspectRatio]
+        var mediaSetting: [MediaSettingType] = [.autoJumpTitleEnding, .jumpTitleDuration, .jumpEndingDuration, .playerSpeed, .playerMode, .aspectRatio, .playerPiP]
         mediaSetting = mediaSetting.filter ({ setting in
             if !self.autoJumpTitleEnding {
                 if setting == .jumpTitleDuration || setting == .jumpEndingDuration {
                     return false
                 }
             }
+            #if os(iOS)
+            if self.player.coreType != .mpv {
+                if setting == .playerPiP {
+                    return false
+                }
+            }
+            #else
+            if setting == .playerPiP {
+                return false
+            }
+            #endif
             return true
         })
         
@@ -207,7 +222,9 @@ extension PlayerMediaModel {
 }
 
 class PlayerMediaModel {
-    
+
+    var onPiPToggleChanged: ((Bool) -> Void)?
+
     lazy var context = PlayerMediaContext()
     
     private var playMediaInfo = [URL : PlayMediaInfo]()
@@ -215,7 +232,7 @@ class PlayerMediaModel {
     private lazy var disposeBag = DisposeBag()
     
     
-    private lazy var player: MediaPlayer = {
+    private(set) lazy var player: MediaPlayer = {
         let player = MediaPlayer(coreType: Preferences.shared.playerCore)
         player.delegate = self
         return player
@@ -296,6 +313,51 @@ class PlayerMediaModel {
         Preferences.shared.subtitleStyle = enabled
         self.context.subtitleStyle.onNext(enabled)
         ANX.logInfo(.UI, "更改字幕样式开关: \(enabled)")
+    }
+
+    func onChangePlayerPiP(_ enabled: Bool) {
+        Preferences.shared.playerPiP = enabled
+        self.context.playerPiP.onNext(enabled)
+        ANX.logInfo(.UI, "更改画中画开关: \(enabled)")
+    }
+
+    // MARK: - PiP
+
+    private(set) var pipManager: PiPManager?
+
+    func createPiPManager(startPosition: Double, filePath: String) -> PiPManager? {
+        guard let mpvWrapper = player.underlyingPlayer as? MPVPlayerWrapper else {
+            ANX.logError(.player, "[PiP] 主播放器不是 MPV，无法启动 PiP")
+            return nil
+        }
+        var config = PiPPlayerConfig.extract(from: player.underlyingPlayer)
+        config.extra["hwdec"] = "no"
+        guard let pipPlayer = mpvWrapper.createPiPPlayer(with: config) else {
+            ANX.logError(.player, "[PiP] 创建 PiP 播放器失败")
+            return nil
+        }
+        let manager = PiPManager()
+        self.pipManager = manager
+        manager.start(with: pipPlayer, filePath: filePath, startPosition: startPosition)
+        return manager
+    }
+
+    func stopPiP() {
+        pipManager?.stop()
+        pipManager = nil
+    }
+
+    func syncPlayerPosition(_ position: Double, autoPlay: Bool) {
+        guard length > 0 else {
+            if autoPlay { play() }
+            return
+        }
+        let progress = position / length
+        ANX.logInfo(.player, "[PiP] 同步主播放器位置: \(String(format: "%.1f", position))s, autoPlay: \(autoPlay)")
+        setPlayerProgress(CGFloat(progress))
+        if autoPlay {
+            play()
+        }
     }
 
     func onChangeAutoJumpTitleEnding(_ autoJumpTitleEnding: Bool) {
@@ -595,8 +657,14 @@ class PlayerMediaModel {
         self.context.subtitleStyle
             .subscribe(onNext: { [weak self] on in
             guard let self = self else { return }
-            
+
             self.player.subtitleStyle = on
+        }).disposed(by: self.disposeBag)
+
+        self.context.playerPiP
+            .subscribe(onNext: { [weak self] on in
+            guard let self = self else { return }
+            self.onPiPToggleChanged?(on)
         }).disposed(by: self.disposeBag)
         
         self.context.subtitleOffsetTime.subscribe(onNext: { [weak self] subtitleOffsetTime in
@@ -659,6 +727,11 @@ class PlayerMediaModel {
 // MARK: - 播放控制
 extension PlayerMediaModel {
     
+    /// 播放
+    func play() {
+        self.player.play()
+    }
+
     /// 暂停
     func pause() {
         self.player.pause()

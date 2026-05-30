@@ -34,6 +34,7 @@ enum MediaSettingType: CaseIterable {
     case audioDelay
     case loadSubtitle
     case aspectRatio
+    case playerPiP
 
 
     var title: String {
@@ -74,6 +75,8 @@ enum MediaSettingType: CaseIterable {
             return NSLocalizedString("字幕颜色", comment: "")
         case .subtitleStyle:
             return NSLocalizedString("字幕样式", comment: "")
+        case .playerPiP:
+            return NSLocalizedString("小窗播放", comment: "")
         }
     }
 }

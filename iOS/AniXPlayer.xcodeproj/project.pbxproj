@@ -156,6 +156,7 @@
 		8953D0382C99E502003EF386 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D0372C99E502003EF386 /* IQKeyboardManagerSwift */; };
 		8953D0442C99E6F0003EF386 /* SVGKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D0432C99E6F0003EF386 /* SVGKit */; };
 		8953D0472C99E759003EF386 /* DynamicButton in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D0462C99E759003EF386 /* DynamicButton */; };
+		895599682FCB597F007F52E0 /* MPVHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895599672FCB597F007F52E0 /* MPVHelper.swift */; };
 		895A7F9E2FC74E8A00A997B8 /* MPVKit in Frameworks */ = {isa = PBXBuildFile; productRef = 895A7F9D2FC74E8A00A997B8 /* MPVKit */; };
 		895A7FA92FC7518500A997B8 /* GCDWebDAVServer in Frameworks */ = {isa = PBXBuildFile; productRef = 895A7FA82FC7518500A997B8 /* GCDWebDAVServer */; };
 		895A7FAB2FC7518500A997B8 /* GCDWebServer in Frameworks */ = {isa = PBXBuildFile; productRef = 895A7FAA2FC7518500A997B8 /* GCDWebServer */; };
@@ -171,12 +172,17 @@
 		895A7FD52FC8AD6400A997B8 /* EmbyConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FD22FC8AD6400A997B8 /* EmbyConnectSvrViewController.swift */; };
 		895A7FD62FC8AD6400A997B8 /* EmbyLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FD32FC8AD6400A997B8 /* EmbyLoginHistoryViewController.swift */; };
 		895A7FD82FC9F84100A997B8 /* TimelineSegmentBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FD72FC9F84100A997B8 /* TimelineSegmentBar.swift */; };
-		895B41522F7445A400B4DA4C /* MPVPlayerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895B41512F7445A400B4DA4C /* MPVPlayerWrapper.swift */; };
+		895A7FE92FCB303900A997B8 /* MPVRenderContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FE62FCB303900A997B8 /* MPVRenderContext.swift */; };
+		895A7FEA2FCB303900A997B8 /* MPVPiPProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FE42FCB303900A997B8 /* MPVPiPProvider.swift */; };
+		895A7FEB2FCB303900A997B8 /* MPVPlayerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FE52FCB303900A997B8 /* MPVPlayerWrapper.swift */; };
+		895A7FF62FCB309000A997B8 /* PiPPlayerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FF42FCB309000A997B8 /* PiPPlayerProtocol.swift */; };
+		895A7FF72FCB309000A997B8 /* PiPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FF22FCB309000A997B8 /* PiPManager.swift */; };
+		895A7FF82FCB309000A997B8 /* PiPPlayerConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FF32FCB309000A997B8 /* PiPPlayerConfig.swift */; };
+		895A7FFB2FCB30C200A997B8 /* MPVFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 895B41BC2F759C8100B4DA4C /* MPVFramework.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		895A7FFC2FCB30C200A997B8 /* MPVFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 895B41BC2F759C8100B4DA4C /* MPVFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		895A7FFF2FCB30FA00A997B8 /* MPV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FE32FCB303900A997B8 /* MPV.swift */; };
 		895B41562F74468D00B4DA4C /* SourceHanSansSC-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 895B41542F74468D00B4DA4C /* SourceHanSansSC-Regular.otf */; };
 		895B41572F74468D00B4DA4C /* SourceHanSansTC-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 895B41552F74468D00B4DA4C /* SourceHanSansTC-Regular.otf */; };
-		895B41C42F759C8100B4DA4C /* MPVFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 895B41BC2F759C8100B4DA4C /* MPVFramework.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
-		895B41C52F759C8100B4DA4C /* MPVFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 895B41BC2F759C8100B4DA4C /* MPVFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		895B41D52F75A2E200B4DA4C /* MPV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895B41D42F75A2E200B4DA4C /* MPV.swift */; };
 		895B41D72F75A43A00B4DA4C /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 895B41D62F75A43A00B4DA4C /* CoreGraphics.framework */; };
 		895B41D92F75A47500B4DA4C /* CoreText.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 895B41D82F75A47500B4DA4C /* CoreText.framework */; };
 		895B41DB2F75A49F00B4DA4C /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 895B41DA2F75A49F00B4DA4C /* IOSurface.framework */; };
@@ -273,7 +279,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		895B41C22F759C8100B4DA4C /* PBXContainerItemProxy */ = {
+		895A7FFD2FCB30C200A997B8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 890DF6C126160826002D8AE5 /* Project object */;
 			proxyType = 1;
@@ -289,8 +295,8 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				895B41C52F759C8100B4DA4C /* MPVFramework.framework in Embed Frameworks */,
 				0B5CD34C100D4654A1569260 /* AMSMB2 in Embed Frameworks */,
+				895A7FFC2FCB30C200A997B8 /* MPVFramework.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -442,6 +448,7 @@
 		895152CD2FC1ADC000F75DB7 /* upload.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = upload.js; sourceTree = "<group>"; };
 		8953CDA22C987FF1003EF386 /* FilterDanmakuTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterDanmakuTableViewCell.swift; sourceTree = "<group>"; };
 		8953CDA32C987FF1003EF386 /* FilterDanmakuTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FilterDanmakuTableViewCell.xib; sourceTree = "<group>"; };
+		895599672FCB597F007F52E0 /* MPVHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVHelper.swift; sourceTree = "<group>"; };
 		895A7FC52FC8A46A00A997B8 /* SeparatorTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorTableViewCell.swift; sourceTree = "<group>"; };
 		895A7FC72FC8A60C00A997B8 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		895A7FC92FC8A72800A997B8 /* OpenSourceListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSourceListViewController.swift; sourceTree = "<group>"; };
@@ -451,11 +458,16 @@
 		895A7FD22FC8AD6400A997B8 /* EmbyConnectSvrViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbyConnectSvrViewController.swift; sourceTree = "<group>"; };
 		895A7FD32FC8AD6400A997B8 /* EmbyLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbyLoginHistoryViewController.swift; sourceTree = "<group>"; };
 		895A7FD72FC9F84100A997B8 /* TimelineSegmentBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineSegmentBar.swift; sourceTree = "<group>"; };
-		895B41512F7445A400B4DA4C /* MPVPlayerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVPlayerWrapper.swift; sourceTree = "<group>"; };
+		895A7FE32FCB303900A997B8 /* MPV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPV.swift; sourceTree = "<group>"; };
+		895A7FE42FCB303900A997B8 /* MPVPiPProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVPiPProvider.swift; sourceTree = "<group>"; };
+		895A7FE52FCB303900A997B8 /* MPVPlayerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVPlayerWrapper.swift; sourceTree = "<group>"; };
+		895A7FE62FCB303900A997B8 /* MPVRenderContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVRenderContext.swift; sourceTree = "<group>"; };
+		895A7FF22FCB309000A997B8 /* PiPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PiPManager.swift; sourceTree = "<group>"; };
+		895A7FF32FCB309000A997B8 /* PiPPlayerConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PiPPlayerConfig.swift; sourceTree = "<group>"; };
+		895A7FF42FCB309000A997B8 /* PiPPlayerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PiPPlayerProtocol.swift; sourceTree = "<group>"; };
 		895B41542F74468D00B4DA4C /* SourceHanSansSC-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceHanSansSC-Regular.otf"; sourceTree = "<group>"; };
 		895B41552F74468D00B4DA4C /* SourceHanSansTC-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceHanSansTC-Regular.otf"; sourceTree = "<group>"; };
 		895B41BC2F759C8100B4DA4C /* MPVFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MPVFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		895B41D42F75A2E200B4DA4C /* MPV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPV.swift; sourceTree = "<group>"; };
 		895B41D62F75A43A00B4DA4C /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
 		895B41D82F75A47500B4DA4C /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk/System/Library/Frameworks/CoreText.framework; sourceTree = DEVELOPER_DIR; };
 		895B41DA2F75A49F00B4DA4C /* IOSurface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOSurface.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk/System/Library/Frameworks/IOSurface.framework; sourceTree = DEVELOPER_DIR; };
@@ -558,6 +570,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				895A7FFB2FCB30C200A997B8 /* MPVFramework.framework in Frameworks */,
 				6F969714544C3EBD7E920F21 /* Pods_AniXPlayer.framework in Frameworks */,
 				89B7EA4F2C9B141100527B84 /* DanmakuRender in Frameworks */,
 				8953D0442C99E6F0003EF386 /* SVGKit in Frameworks */,
@@ -574,7 +587,6 @@
 				8953D0322C99E48A003EF386 /* SnapKit in Frameworks */,
 				89FFD1292D44E65000428206 /* YYCategories in Frameworks */,
 				895A7FB02FC7519D00A997B8 /* FilesProvider in Frameworks */,
-				895B41C42F759C8100B4DA4C /* MPVFramework.framework in Frameworks */,
 				895A7FC42FC75A7100A997B8 /* AMSMB2 in Frameworks */,
 				89D148752D44E4A700E7FDF5 /* YYCategories in Frameworks */,
 				8953D0382C99E502003EF386 /* IQKeyboardManagerSwift in Frameworks */,
@@ -923,8 +935,7 @@
 		8925B81E2CA7E4C3001A8388 /* Wrapper */ = {
 			isa = PBXGroup;
 			children = (
-				895B41D42F75A2E200B4DA4C /* MPV.swift */,
-				895B41512F7445A400B4DA4C /* MPVPlayerWrapper.swift */,
+				895A7FE72FCB303900A997B8 /* MPV */,
 				8925B81D2CA7E4C3001A8388 /* VLCPlayerWrapper.swift */,
 			);
 			path = Wrapper;
@@ -935,6 +946,7 @@
 			children = (
 				8925B81C2CA7E4C3001A8388 /* File */,
 				8925B81E2CA7E4C3001A8388 /* Wrapper */,
+				895A7FF52FCB309000A997B8 /* PiP */,
 				8925B81F2CA7E4C3001A8388 /* MediaPlayer.swift */,
 				8925B8202CA7E4C3001A8388 /* MediaThumbnailer.swift */,
 				8925B8212CA7E4C3001A8388 /* URL+Extension.swift */,
@@ -1222,6 +1234,28 @@
 			path = Emby;
 			sourceTree = "<group>";
 		};
+		895A7FE72FCB303900A997B8 /* MPV */ = {
+			isa = PBXGroup;
+			children = (
+				895A7FE32FCB303900A997B8 /* MPV.swift */,
+				895A7FE42FCB303900A997B8 /* MPVPiPProvider.swift */,
+				895599672FCB597F007F52E0 /* MPVHelper.swift */,
+				895A7FE52FCB303900A997B8 /* MPVPlayerWrapper.swift */,
+				895A7FE62FCB303900A997B8 /* MPVRenderContext.swift */,
+			);
+			path = MPV;
+			sourceTree = "<group>";
+		};
+		895A7FF52FCB309000A997B8 /* PiP */ = {
+			isa = PBXGroup;
+			children = (
+				895A7FF22FCB309000A997B8 /* PiPManager.swift */,
+				895A7FF32FCB309000A997B8 /* PiPPlayerConfig.swift */,
+				895A7FF42FCB309000A997B8 /* PiPPlayerProtocol.swift */,
+			);
+			path = PiP;
+			sourceTree = "<group>";
+		};
 		895B41532F74468200B4DA4C /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
@@ -1480,7 +1514,7 @@
 			buildRules = (
 			);
 			dependencies = (
-				895B41C32F759C8100B4DA4C /* PBXTargetDependency */,
+				895A7FFE2FCB30C200A997B8 /* PBXTargetDependency */,
 			);
 			name = AniXPlayer;
 			packageProductDependencies = (
@@ -1668,9 +1702,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1737,6 +1775,9 @@
 				890DF77D26160B3E002D8AE5 /* VolumeControlView.swift in Sources */,
 				890DF6FC26160A36002D8AE5 /* TableView.swift in Sources */,
 				89E109B62644424800825308 /* BaseConnectSvrViewController.swift in Sources */,
+				895A7FF62FCB309000A997B8 /* PiPPlayerProtocol.swift in Sources */,
+				895A7FF72FCB309000A997B8 /* PiPManager.swift in Sources */,
+				895A7FF82FCB309000A997B8 /* PiPPlayerConfig.swift in Sources */,
 				890886D92A011971005EDBD6 /* PCQRScannerViewController.swift in Sources */,
 				89C325B82C6FD91F002E2487 /* DanmakuOperationViewViewController.swift in Sources */,
 				89044759290186B40088886B /* UIViewController+Helper.swift in Sources */,
@@ -1808,7 +1849,6 @@
 				89A688A92C398347002B7CA3 /* HomePageBangumiQueueTableViewCell.swift in Sources */,
 				8925B8702CA7E4C3001A8388 /* Bangumi.swift in Sources */,
 				8931A9232F7D791000125F69 /* SetSubtitleColorViewController.swift in Sources */,
-				895B41522F7445A400B4DA4C /* MPVPlayerWrapper.swift in Sources */,
 				8925B8712CA7E4C3001A8388 /* CacheManager.swift in Sources */,
 				8925B8722CA7E4C3001A8388 /* File.swift in Sources */,
 				8925B8732CA7E4C3001A8388 /* PlayerMediaContext.swift in Sources */,
@@ -1817,6 +1857,9 @@
 				8925B8762CA7E4C3001A8388 /* AppInfoHelper.swift in Sources */,
 				8925B8772CA7E4C3001A8388 /* Atomic.swift in Sources */,
 				8925B8782CA7E4C3001A8388 /* FTPFileManager.swift in Sources */,
+				895A7FE92FCB303900A997B8 /* MPVRenderContext.swift in Sources */,
+				895A7FEA2FCB303900A997B8 /* MPVPiPProvider.swift in Sources */,
+				895A7FEB2FCB303900A997B8 /* MPVPlayerWrapper.swift in Sources */,
 				8925B8792CA7E4C3001A8388 /* NetworkManager.swift in Sources */,
 				895A7FD12FC8AD4300A997B8 /* EmbyFile.swift in Sources */,
 				8925B87A2CA7E4C3001A8388 /* PathUtils.swift in Sources */,
@@ -1826,6 +1869,7 @@
 				8925B87F2CA7E4C3001A8388 /* HomePage.swift in Sources */,
 				8925B8802CA7E4C3001A8388 /* BangumiNetworkHandle.swift in Sources */,
 				8925B8812CA7E4C3001A8388 /* PlayerDanmakuProducer.swift in Sources */,
+				895599682FCB597F007F52E0 /* MPVHelper.swift in Sources */,
 				8925B8822CA7E4C3001A8388 /* LocalFile.swift in Sources */,
 				8925B8832CA7E4C3001A8388 /* SearchNetworkHandle.swift in Sources */,
 				8925B8842CA7E4C3001A8388 /* SMBFile.swift in Sources */,
@@ -1907,17 +1951,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				895B41D52F75A2E200B4DA4C /* MPV.swift in Sources */,
+				895A7FFF2FCB30FA00A997B8 /* MPV.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		895B41C32F759C8100B4DA4C /* PBXTargetDependency */ = {
+		895A7FFE2FCB30C200A997B8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 895B41BB2F759C8100B4DA4C /* MPVFramework */;
-			targetProxy = 895B41C22F759C8100B4DA4C /* PBXContainerItemProxy */;
+			targetProxy = 895A7FFD2FCB30C200A997B8 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -2372,7 +2416,7 @@
 			repositoryURL = "https://github.com/sunsx9316/DanmakuRender-Swift";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.5.0;
+				minimumVersion = 1.6.1;
 			};
 		};
 		89FFD1272D44E65000428206 /* XCRemoteSwiftPackageReference "YYCategories" */ = {

@@ -12,6 +12,7 @@ import Foundation
 import UIKit
 import Metal
 import QuartzCore
+import AVFoundation
 import MPVFramework
 import ANXLog
 
@@ -33,7 +34,7 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
     // MARK: - 私有属性
 
     private lazy var mpv = MPV()
-    
+
     private let eventQueue = DispatchQueue(label: "com.anxplayer.mpvwrapper", qos: .userInitiated)
 
     /// 播放轮询定时器
@@ -315,25 +316,22 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
         }
         self.mpv = mpvHandle
 
-        // 渲染引擎配置
+        // vo=gpu-next + hwdec=videotoolbox: GPU 路径，渲染到 CAMetalLayer 上屏
+        // 主播放器走硬件加速以获得最佳性能/功耗，与 PiP (libmpv SW) 路线不同
         mpvHandle.setOptionString(.vo, "gpu-next")
-        mpvHandle.setOptionString(.gpuApi, "vulkan")
-        mpvHandle.setOptionString(.gpuContext, "moltenvk")
-        mpvHandle.video.hardwareDecoding = "videotoolbox"
+        mpvHandle.setOptionString(.hwdec, "videotoolbox")
+        // 嵌入到我们的 Metal layer
+        let metalLayerPtr = Unmanaged.passUnretained(_mediaView.metalLayer).toOpaque()
+        mpvHandle.video.windowId = Int64(Int(bitPattern: metalLayerPtr))
 
-        // 字幕配置 - 字体设置必须在初始化前完成
+        // 字幕配置
         setupSubtitleFonts(mpvHandle: mpvHandle)
-        mpvHandle.subtitle.autoLoad = .no // 不自动加载字幕
-        mpvHandle.subtitle.assOverride = .yes // 渲染ass特效
+        mpvHandle.subtitle.autoLoad = .no
+        mpvHandle.subtitle.assOverride = .yes
 
-        // 视频窗口
-        let opaque = Unmanaged.passUnretained(self._mediaView.metalLayer).toOpaque()
-        let rawPtr = Int(bitPattern: opaque)
-        mpvHandle.video.windowId = Int64(rawPtr)
+        let initRet = mpvHandle.initialize()
+        ANX.logInfo(.player, "[MPV] mpv_initialize() 返回值: \(initRet)")
 
-        mpvHandle.initialize()
-
-        // 使用新的事件处理 API
         setupEventHandlers(mpvHandle)
     }
 
@@ -393,35 +391,9 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
     }
 
     private func setupSubtitleFonts(mpvHandle: MPV) {
-        let fontCacheDir = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("Fonts")
-        let fontNames = [
-            "SourceHanSansSC-Regular",
-            "SourceHanSansTC-Regular"
-        ]
-
-        do {
-            try FileManager.default.createDirectory(at: fontCacheDir, withIntermediateDirectories: true)
-
-            for fontName in fontNames {
-                let ttfPath = Bundle.main.path(forResource: fontName, ofType: "ttf")
-                let otfPath = Bundle.main.path(forResource: fontName, ofType: "otf")
-                let sourcePath = ttfPath ?? otfPath
-                let ext = ttfPath != nil ? "ttf" : "otf"
-
-                if let bundlePath = sourcePath {
-                    let destPath = fontCacheDir.appendingPathComponent("\(fontName).\(ext)")
-                    if FileManager.default.fileExists(atPath: destPath.path) {
-                        try FileManager.default.removeItem(at: destPath)
-                    }
-                    try FileManager.default.copyItem(atPath: bundlePath, toPath: destPath.path)
-                }
-            }
-
-            mpvHandle.setOptionString(.subtitleFontsDir, fontCacheDir.path)
-            mpvHandle.setOptionString(.subtitleFont, "SourceHanSansSC-Regular")
-        } catch {
-            print("[MPVView] Failed to setup fonts: \(error)")
-        }
+        guard let fontDir = mpvPrepareFonts() else { return }
+        mpvHandle.setOptionString(.subtitleFontsDir, fontDir)
+        mpvHandle.setOptionString(.subtitleFont, mpvCustomFontNames.first ?? "")
     }
 
     // MARK: - 播放轮询
@@ -491,6 +463,23 @@ class MPVView: UIView {
         metalLayer.frame = self.bounds
         
         self.layer.addSublayer(metalLayer)
+    }
+}
+
+// MARK: - PiP 工厂
+
+extension MPVPlayerWrapper {
+
+    /// 创建一个 headless PiP 播放器实例，配置从主播放器同步
+    func createPiPPlayer(with config: PiPPlayerConfig) -> PiPPlayerProtocol? {
+        let cfg = config
+        if cfg.subtitleFontsDir == nil {
+            cfg.subtitleFontsDir = mpvPrepareFonts()
+        }
+        if cfg.subtitleFont == nil {
+            cfg.subtitleFont = mpvCustomFontNames.first
+        }
+        return MPVPiPProvider(config: cfg)
     }
 }
 #endif

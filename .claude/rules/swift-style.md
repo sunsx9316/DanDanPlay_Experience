@@ -158,6 +158,28 @@ return all.sorted { a, b in
 }
 ```
 
+## 禁止魔数
+
+**代码中不得硬编码数字字面量**，应定义为命名常量：
+
+```swift
+// 推荐
+let pipTimescale: CMTimeScale = 600
+let pipCaptureInterval: TimeInterval = 1.0 / 30.0
+let pipBufferAlignment = 64
+CMTime(seconds: position, preferredTimescale: pipTimescale)
+
+// 不推荐
+CMTime(seconds: position, preferredTimescale: 600)
+let alignedStride = ((pipStride + 63) / 64) * 64
+```
+
+**豁免**：`0`、`1`、`-1`、`nil` 等用于边界检查、数组索引、循环步进的基础值不需要定义为常量。
+
+**规则**：
+- 常量名需体现用途（如 `pipTimescale`、`maxRetryCount`），不要用泛化名称（如 `timeScale`、`number`）
+- 同一常量在多处使用时，应定义在共享模块或协议文件中，确保跨文件可见
+
 ## NSLocalizedString 使用规范
 
 **使用 `NSLocalizedString` 后必须同步更新 `Localizable.xcstrings`**：

@@ -409,6 +409,10 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
                 self.reloadData()
             }
             return cell
+        case .playerPiP:
+            let cell = tableView.dequeueCell(class: TitleTableViewCell.self, indexPath: indexPath)
+            cell.label.text = type.title
+            return cell
         }
     }
     
@@ -511,7 +515,7 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
             let vc = SetSubtitleColorViewController(mediaModel: self.mediaModel)
             vc.dismissCallBack = { [weak self] in
                 guard let self = self else { return }
-                
+
                 self.tableView.reloadData()
             }
             vc.modalPresentationStyle = .popover
@@ -523,6 +527,9 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
                 popover.delegate = self
             }
             self.present(vc, animated: true)
+        } else if type == .playerPiP {
+            self.mediaModel.onChangePlayerPiP(true)
+            self.dismiss(animated: true)
         }
     }
 

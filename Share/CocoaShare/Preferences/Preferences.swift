@@ -154,6 +154,9 @@ class Preferences {
         /// 备用域名缓存
         case backupHosts
 
+        /// 画中画
+        case playerPiP
+
         var storeKey: String {
             return self.rawValue
         }
@@ -201,6 +204,10 @@ class Preferences {
     /// 字幕样式开关
     @StoreWrapper(defaultValue: true, key: .subtitleStyle)
     var subtitleStyle: Bool
+
+    /// 画中画
+    @StoreWrapper(defaultValue: false, key: .playerPiP)
+    var playerPiP: Bool
 
     @StoreWrapper(defaultValue: ANXColor.defaultMainColor, key: .mainColor)
     var mainColor: ANXColor
