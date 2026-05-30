@@ -73,7 +73,7 @@ class FavoriteViewController: ViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.isPagingEnabled = false
-        collectionView.registerNibCell(class: FavoriteCollectionViewCell.self)
+        collectionView.registerClassCell(class: FavoriteCollectionViewCell.self)
         collectionView.mj_header = RefreshHeader(refreshingTarget: self, refreshingAction: #selector(startRefresh))
         return collectionView
     }()

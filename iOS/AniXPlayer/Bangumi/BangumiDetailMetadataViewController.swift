@@ -11,14 +11,20 @@ import SnapKit
 extension BangumiDetailMetadataViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
+
         switch dataSource[indexPath.section] {
         case .titles:
-            break
+            if let data = self.titles?[indexPath.row] {
+                UIPasteboard.general.string = data.title
+                self.view.showHUD(NSLocalizedString("复制成功", comment: ""))
+            }
         case .metaData:
-            break
+            if let data = self.metaData?[indexPath.row] {
+                UIPasteboard.general.string = data
+                self.view.showHUD(NSLocalizedString("复制成功", comment: ""))
+            }
         case .onlineDatabases:
-            if let data = self.onlineDatabases?[indexPath.row], 
+            if let data = self.onlineDatabases?[indexPath.row],
                 let url = URL(string: data.url) {
                 UIApplication.shared.open(url)
             }

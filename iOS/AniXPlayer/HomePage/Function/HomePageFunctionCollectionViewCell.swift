@@ -24,9 +24,28 @@ struct HomePageFunctionItem {
 
 class HomePageFunctionCollectionViewCell: CollectionViewCell {
 
-    @IBOutlet weak var imgView: UIImageView!
+    lazy var imgView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFit
+        return iv
+    }()
 
-    @IBOutlet weak var nameLabel: Label!
+    lazy var nameLabel: Label = {
+        let label = Label()
+        label.textAlignment = .center
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        return label
+    }()
+
+    lazy var stackView: UIStackView = {
+        let sv = UIStackView()
+        sv.axis = .vertical
+        sv.spacing = 5
+        sv.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        sv.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        return sv
+    }()
 
     var item: HomePageFunctionItem? {
         didSet {
@@ -35,10 +54,23 @@ class HomePageFunctionCollectionViewCell: CollectionViewCell {
         }
     }
 
-    override func awakeFromNib() {
-        super.awakeFromNib()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+
+        contentView.addSubview(stackView)
+        stackView.addArrangedSubview(imgView)
+        stackView.addArrangedSubview(nameLabel)
+
+        stackView.snp.makeConstraints { make in
+            make.centerX.equalToSuperview()
+            make.centerY.equalToSuperview()
+        }
 
         self.nameLabel.font = .ddp_small
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
 }

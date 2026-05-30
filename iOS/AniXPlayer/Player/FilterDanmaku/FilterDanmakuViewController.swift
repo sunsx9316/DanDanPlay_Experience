@@ -81,7 +81,7 @@ class FilterDanmakuViewController: ViewController {
         let tableView = TableView(frame: .zero, style: .plain)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.registerNibCell(class: FilterDanmakuTableViewCell.self)
+        tableView.registerClassCell(class: FilterDanmakuTableViewCell.self)
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
         return tableView

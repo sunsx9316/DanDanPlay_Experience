@@ -79,7 +79,7 @@ class TimelineItemViewController: ViewController {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.isPagingEnabled = false
-        collectionView.registerNibCell(class: TimelineItemCollectionViewCell.self)
+        collectionView.registerClassCell(class: TimelineItemCollectionViewCell.self)
         return collectionView
     }()
     

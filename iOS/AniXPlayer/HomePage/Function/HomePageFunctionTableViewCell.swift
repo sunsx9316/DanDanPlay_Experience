@@ -53,7 +53,7 @@ class HomePageFunctionTableViewCell: TableViewCell {
         collectionView.delegate = self
         collectionView.dataSource = self
         collectionView.isPagingEnabled = true
-        collectionView.registerNibCell(class: HomePageFunctionCollectionViewCell.self)
+        collectionView.registerClassCell(class: HomePageFunctionCollectionViewCell.self)
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false
         return collectionView

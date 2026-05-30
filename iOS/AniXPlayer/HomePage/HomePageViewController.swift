@@ -103,7 +103,7 @@ class HomePageViewController: ViewController {
         tableView.separatorStyle = .none
         tableView.registerClassCell(class: HomePageBannerTableViewCell.self)
         tableView.registerClassCell(class: HomePageFunctionTableViewCell.self)
-        tableView.registerNibCell(class: HomePageBangumiQueueTableViewCell.self)
+        tableView.registerClassCell(class: HomePageBangumiQueueTableViewCell.self)
         tableView.mj_header = RefreshHeader(refreshingTarget: self, refreshingAction: #selector(startRefresh))
         return tableView
     }()

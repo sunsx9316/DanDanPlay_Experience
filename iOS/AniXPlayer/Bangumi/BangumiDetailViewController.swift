@@ -136,7 +136,7 @@ class BangumiDetailViewController: ViewController {
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
         tableView.separatorStyle = .none
-        tableView.registerNibCell(class: BangumiDetailInfoViewCell.self)
+        tableView.registerClassCell(class: BangumiDetailInfoViewCell.self)
         tableView.registerClassCell(class: TitleDetailTableViewCell.self)
         tableView.registerClassCell(class: TitleTableViewCell.self)
         tableView.registerClassCell(class: BangumiDetailRelatedTableViewCell.self)

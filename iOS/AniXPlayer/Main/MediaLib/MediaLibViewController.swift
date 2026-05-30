@@ -118,7 +118,7 @@ class MediaLibViewController: ViewController {
         let tableView = TableView(frame: .zero, style: .plain)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.registerNibCell(class: PickFileTableViewCell.self)
+        tableView.registerClassCell(class: PickFileTableViewCell.self)
         tableView.rowHeight = 50
         return tableView
     }()
