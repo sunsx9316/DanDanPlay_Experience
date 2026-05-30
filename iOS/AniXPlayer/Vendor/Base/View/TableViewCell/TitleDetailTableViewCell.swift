@@ -21,6 +21,8 @@ class TitleDetailTableViewCell: TableViewCell {
         let label = Label()
         label.textColor = .subtitleTextColor
         label.numberOfLines = 0
+        label.setContentHuggingPriority(.init(249), for: .vertical)
+        label.setContentCompressionResistancePriority(.init(748), for: .vertical)
         return label
     }()
 
