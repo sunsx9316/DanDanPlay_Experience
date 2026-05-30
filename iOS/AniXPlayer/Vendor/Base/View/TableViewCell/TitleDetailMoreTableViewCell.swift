@@ -49,7 +49,7 @@ class TitleDetailMoreTableViewCell: TableViewCell {
         subtitleLabel.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(10)
             make.leading.equalTo(titleLabel)
-            make.bottom.greaterThanOrEqualToSuperview().offset(-10)
+            make.bottom.lessThanOrEqualToSuperview().offset(-10)
         }
 
         arrowImgView.snp.makeConstraints { make in
