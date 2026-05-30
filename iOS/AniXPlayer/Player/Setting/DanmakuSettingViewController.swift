@@ -32,7 +32,7 @@ class DanmakuSettingViewController: ViewController {
         let tableView = TableView(frame: .zero, style: .plain)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.registerNibCell(class: SliderTableViewCell.self)
+        tableView.registerClassCell(class: SliderTableViewCell.self)
         tableView.registerNibCell(class: SwitchTableViewCell.self)
         tableView.registerNibCell(class: StepTableViewCell.self)
         tableView.registerClassCell(class: TitleTableViewCell.self)
