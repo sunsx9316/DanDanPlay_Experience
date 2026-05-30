@@ -26,6 +26,8 @@ class SheetTableViewCell: TableViewCell {
         let label = Label()
         label.textAlignment = .right
         label.numberOfLines = 0
+        label.setContentCompressionResistancePriority(.init(749), for: .horizontal)
+        label.setContentCompressionResistancePriority(.init(749), for: .vertical)
         return label
     }()
 
