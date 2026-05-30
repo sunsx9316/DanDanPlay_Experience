@@ -89,8 +89,11 @@ extension BangumiDetailViewController: UITableViewDataSource {
             cell.bangumiIntros = self.detail?.relateds
             cell.didSelectedAnimateCallBack = { [weak self] animateId in
                 guard let self = self else { return }
-                
+
                 self.jumpToBangumiDetail(aniamteId: animateId)
+            }
+            cell.refreshDataCallBack = { [weak self] in
+                self?.startRefresh()
             }
             return cell
         case .similars:
@@ -99,8 +102,11 @@ extension BangumiDetailViewController: UITableViewDataSource {
             cell.bangumiIntros = self.detail?.similars
             cell.didSelectedAnimateCallBack = { [weak self] animateId in
                 guard let self = self else { return }
-                
+
                 self.jumpToBangumiDetail(aniamteId: animateId)
+            }
+            cell.refreshDataCallBack = { [weak self] in
+                self?.startRefresh()
             }
             return cell
         }

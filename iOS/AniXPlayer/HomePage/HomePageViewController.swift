@@ -33,6 +33,9 @@ extension HomePageViewController: UITableViewDataSource {
                 case .timeLine:
                     let vc = TimelineViewController()
                     vc.dataSource = self.dataSource?.shinBangumiList
+                    vc.refreshDataCallBack = { [weak self] in
+                        self?.startRefresh()
+                    }
                     vc.hidesBottomBarWhenPushed = true
                     self.navigationController?.pushViewController(vc, animated: true)
                 case .favorite:

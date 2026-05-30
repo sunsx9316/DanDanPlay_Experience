@@ -33,10 +33,7 @@ extension FavoriteViewController: UICollectionViewDataSource {
                     if let error = error {
                         self.view.showError(error)
                     } else {
-                        if let index = self.dataSources?.firstIndex(where: { $0.animeId == animeId }) {
-                            self.dataSources?[index].favoriteStatus = isLike ? .favorited : .unknow
-                        }
-                        aCell.item?.favoriteStatus = isLike ? .favorited : .unknow
+                        self.startRefresh()
                     }
                 }
             }

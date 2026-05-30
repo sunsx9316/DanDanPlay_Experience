@@ -36,6 +36,12 @@ class BangumiDetailRelatedTableViewCell: TableViewCell {
     }()
     
     var didSelectedAnimateCallBack: ((Int) -> Void)?
+
+    var refreshDataCallBack: (() -> Void)? {
+        didSet {
+            self.timelineVC.refreshDataCallBack = refreshDataCallBack
+        }
+    }
     
     var bangumiIntros: [BangumiIntro]? {
         didSet {

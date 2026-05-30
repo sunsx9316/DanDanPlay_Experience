@@ -59,6 +59,8 @@ class TimelineViewController: ViewController {
         return pvc
     }()
 
+    var refreshDataCallBack: (() -> Void)?
+
     var dataSource: [BangumiIntro]? {
         didSet {
             guard let dataSource = self.dataSource else { return }
@@ -87,6 +89,9 @@ class TimelineViewController: ViewController {
             // 重建子 VC 列表
             self.childVCs = self.pageDataSourceIndex.map { day in
                 let vc = TimelineItemViewController(scrollDirection: .vertical, dataSources: pageDataSource[day])
+                vc.refreshDataCallBack = { [weak self] in
+                    self?.refreshDataCallBack?()
+                }
                 return vc
             }
 
