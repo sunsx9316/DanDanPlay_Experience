@@ -7,7 +7,6 @@
 
 import UIKit
 import Kingfisher
-import SVGKit
 import YYCategories
 
 class BangumiDetailInfoViewCell: TableViewCell {
@@ -95,21 +94,8 @@ class BangumiDetailInfoViewCell: TableViewCell {
     }
     
     private func changeFavoritedStatus(isFavorited: Bool) {
-        if isFavorited {
-            if let svgImage = SVGKImage(named: "Like.svg", withCacheKey: "Like.svg") {
-                svgImage.size = CGSize(width: 20, height: 20)
-                self.favoritedButton.setImage(svgImage.uiImage.byTintColor(.mainColor), for: .normal)
-            } else {
-                self.favoritedButton.setImage(nil, for: .normal)
-            }
-        } else {
-            if let svgImage = SVGKImage(named: "Unlike.svg", withCacheKey: "Unlike.svg") {
-                svgImage.size = CGSize(width: 20, height: 20)
-                self.favoritedButton.setImage(svgImage.uiImage.byTintColor(.mainColor), for: .normal)
-            } else {
-                self.favoritedButton.setImage(nil, for: .normal)
-            }
-        }
+        let imageName = isFavorited ? "Like" : "Unlike"
+        self.favoritedButton.setImage(UIImage(named: imageName)?.byResize(to: CGSize(width: 20, height: 20))?.byTintColor(.mainColor), for: .normal)
     }
     
 }

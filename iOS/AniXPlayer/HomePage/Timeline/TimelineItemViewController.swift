@@ -32,6 +32,9 @@ extension TimelineItemViewController: UICollectionViewDataSource {
                     if let error = error {
                         self.view.showError(error)
                     } else {
+                        if let index = self.dataSources?.firstIndex(where: { $0.animeId == animeId }) {
+                            self.dataSources?[index].isFavorited = isLike
+                        }
                         aCell.item?.isFavorited = isLike
                     }
                 }

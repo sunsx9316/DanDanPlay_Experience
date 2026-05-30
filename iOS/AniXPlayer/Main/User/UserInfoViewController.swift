@@ -7,7 +7,6 @@
 
 import UIKit
 import SnapKit
-import SVGKit
 import Kingfisher
 
 class UserInfoViewController: ViewController {
@@ -87,11 +86,7 @@ class UserInfoViewController: ViewController {
     }
 
     private func defaultAvatar() -> UIImage? {
-        if let svgImage = SVGKImage(named: "User.svg", withCacheKey: "User.svg") {
-            svgImage.size = CGSize(width: 80, height: 80)
-            return svgImage.uiImage.byInsetEdge(UIEdgeInsets(top: -20, left: -20, bottom: -20, right: -20), with: nil)
-        }
-        return nil
+        return UIImage(named: "Home/User")?.byInsetEdge(UIEdgeInsets(top: -20, left: -20, bottom: -20, right: -20), with: nil)
     }
 
     private func showLogin() {

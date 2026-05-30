@@ -208,17 +208,12 @@
 		89A688AA2C398347002B7CA3 /* HomePageBangumiQueueTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89A688A82C398347002B7CA3 /* HomePageBangumiQueueTableViewCell.xib */; };
 		89A688AC2C398392002B7CA3 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A688AB2C398392002B7CA3 /* CollectionViewCell.swift */; };
 		89A688AF2C3983ED002B7CA3 /* HomePageBannerItemCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A688AD2C3983ED002B7CA3 /* HomePageBannerItemCell.swift */; };
-		89A688B22C3984EB002B7CA3 /* Home.svg in Resources */ = {isa = PBXBuildFile; fileRef = 89A688B12C3984EB002B7CA3 /* Home.svg */; };
-		89A688B42C3984F5002B7CA3 /* Media.svg in Resources */ = {isa = PBXBuildFile; fileRef = 89A688B32C3984F5002B7CA3 /* Media.svg */; };
 		89A688B62C39851E002B7CA3 /* UICollectionView+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A688B52C39851E002B7CA3 /* UICollectionView+Helper.swift */; };
 		89A688B92C39863D002B7CA3 /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A688B82C39863D002B7CA3 /* CollectionView.swift */; };
 		89A688BD2C39931A002B7CA3 /* HomePageFunctionCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89A688BC2C39931A002B7CA3 /* HomePageFunctionCollectionViewCell.xib */; };
 		89A688BE2C39931A002B7CA3 /* HomePageFunctionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A688BB2C39931A002B7CA3 /* HomePageFunctionCollectionViewCell.swift */; };
-		89A688C02C399FC2002B7CA3 /* Timeline.svg in Resources */ = {isa = PBXBuildFile; fileRef = 89A688BF2C399FC2002B7CA3 /* Timeline.svg */; };
 		89A688C32C39A251002B7CA3 /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A688C22C39A251002B7CA3 /* TimelineViewController.swift */; };
 		89A688C52C39B395002B7CA3 /* TimelineItemViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A688C42C39B395002B7CA3 /* TimelineItemViewController.swift */; };
-		89A688CC2C39B4F1002B7CA3 /* Like.svg in Resources */ = {isa = PBXBuildFile; fileRef = 89A688CA2C39B4F1002B7CA3 /* Like.svg */; };
-		89A688CD2C39B4F1002B7CA3 /* Unlike.svg in Resources */ = {isa = PBXBuildFile; fileRef = 89A688CB2C39B4F1002B7CA3 /* Unlike.svg */; };
 		89A688D52C3A5384002B7CA3 /* BangumiDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A688D42C3A5384002B7CA3 /* BangumiDetailViewController.swift */; };
 		89A688D92C3A5947002B7CA3 /* BangumiDetailInfoViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89A688D72C3A5946002B7CA3 /* BangumiDetailInfoViewCell.xib */; };
 		89A688DA2C3A5947002B7CA3 /* BangumiDetailInfoViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A688D82C3A5947002B7CA3 /* BangumiDetailInfoViewCell.swift */; };
@@ -226,9 +221,7 @@
 		89A688E32C3A6628002B7CA3 /* BangumiDetailMetadataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A688E22C3A6628002B7CA3 /* BangumiDetailMetadataViewController.swift */; };
 		89A688E52C3A70BF002B7CA3 /* BangumiDetailEpisodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A688E42C3A70BF002B7CA3 /* BangumiDetailEpisodeViewController.swift */; };
 		89A689662C425C70002B7CA3 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A689652C425C70002B7CA3 /* LoginViewController.swift */; };
-		89A689682C42603A002B7CA3 /* User.svg in Resources */ = {isa = PBXBuildFile; fileRef = 89A689672C42603A002B7CA3 /* User.svg */; };
 		89A689722C4271B5002B7CA3 /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A689712C4271B5002B7CA3 /* UserInfoViewController.swift */; };
-		89A6897B2C42E08D002B7CA3 /* Favorited.svg in Resources */ = {isa = PBXBuildFile; fileRef = 89A6897A2C42E08D002B7CA3 /* Favorited.svg */; };
 		89A689802C42E1D3002B7CA3 /* FavoriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A6897D2C42E1D3002B7CA3 /* FavoriteViewController.swift */; };
 		89A689812C42E1D3002B7CA3 /* FavoriteCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A6897E2C42E1D3002B7CA3 /* FavoriteCollectionViewCell.swift */; };
 		89A689872C42E443002B7CA3 /* TimelineItemCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89A689862C42E443002B7CA3 /* TimelineItemCollectionViewCell.xib */; };
@@ -497,17 +490,12 @@
 		89A688A82C398347002B7CA3 /* HomePageBangumiQueueTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomePageBangumiQueueTableViewCell.xib; sourceTree = "<group>"; };
 		89A688AB2C398392002B7CA3 /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		89A688AD2C3983ED002B7CA3 /* HomePageBannerItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageBannerItemCell.swift; sourceTree = "<group>"; };
-		89A688B12C3984EB002B7CA3 /* Home.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Home.svg; sourceTree = "<group>"; };
-		89A688B32C3984F5002B7CA3 /* Media.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Media.svg; sourceTree = "<group>"; };
 		89A688B52C39851E002B7CA3 /* UICollectionView+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Helper.swift"; sourceTree = "<group>"; };
 		89A688B82C39863D002B7CA3 /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
 		89A688BB2C39931A002B7CA3 /* HomePageFunctionCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageFunctionCollectionViewCell.swift; sourceTree = "<group>"; };
 		89A688BC2C39931A002B7CA3 /* HomePageFunctionCollectionViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = HomePageFunctionCollectionViewCell.xib; sourceTree = "<group>"; };
-		89A688BF2C399FC2002B7CA3 /* Timeline.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Timeline.svg; sourceTree = "<group>"; };
 		89A688C22C39A251002B7CA3 /* TimelineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewController.swift; sourceTree = "<group>"; };
 		89A688C42C39B395002B7CA3 /* TimelineItemViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineItemViewController.swift; sourceTree = "<group>"; };
-		89A688CA2C39B4F1002B7CA3 /* Like.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Like.svg; sourceTree = "<group>"; };
-		89A688CB2C39B4F1002B7CA3 /* Unlike.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Unlike.svg; sourceTree = "<group>"; };
 		89A688D42C3A5384002B7CA3 /* BangumiDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiDetailViewController.swift; sourceTree = "<group>"; };
 		89A688D72C3A5946002B7CA3 /* BangumiDetailInfoViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = BangumiDetailInfoViewCell.xib; sourceTree = "<group>"; };
 		89A688D82C3A5947002B7CA3 /* BangumiDetailInfoViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BangumiDetailInfoViewCell.swift; sourceTree = "<group>"; };
@@ -515,9 +503,7 @@
 		89A688E22C3A6628002B7CA3 /* BangumiDetailMetadataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiDetailMetadataViewController.swift; sourceTree = "<group>"; };
 		89A688E42C3A70BF002B7CA3 /* BangumiDetailEpisodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiDetailEpisodeViewController.swift; sourceTree = "<group>"; };
 		89A689652C425C70002B7CA3 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		89A689672C42603A002B7CA3 /* User.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = User.svg; sourceTree = "<group>"; };
 		89A689712C4271B5002B7CA3 /* UserInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserInfoViewController.swift; sourceTree = "<group>"; };
-		89A6897A2C42E08D002B7CA3 /* Favorited.svg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = Favorited.svg; sourceTree = "<group>"; };
 		89A6897D2C42E1D3002B7CA3 /* FavoriteViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteViewController.swift; sourceTree = "<group>"; };
 		89A6897E2C42E1D3002B7CA3 /* FavoriteCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteCollectionViewCell.swift; sourceTree = "<group>"; };
 		89A689852C42E443002B7CA3 /* TimelineItemCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineItemCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -687,7 +673,6 @@
 			isa = PBXGroup;
 			children = (
 				895B41532F74468200B4DA4C /* Fonts */,
-				89A688992C397E41002B7CA3 /* SVG */,
 				8904475A290189CD0088886B /* GoogleService-Info.plist */,
 				890DF6ED26160A25002D8AE5 /* RefreshText.plist */,
 				8931A91E2F7C0A8A00125F69 /* Localizable.xcstrings */,
@@ -1307,20 +1292,6 @@
 			path = HomePage;
 			sourceTree = "<group>";
 		};
-		89A688992C397E41002B7CA3 /* SVG */ = {
-			isa = PBXGroup;
-			children = (
-				89A6897A2C42E08D002B7CA3 /* Favorited.svg */,
-				89A688CA2C39B4F1002B7CA3 /* Like.svg */,
-				89A688CB2C39B4F1002B7CA3 /* Unlike.svg */,
-				89A688BF2C399FC2002B7CA3 /* Timeline.svg */,
-				89A688B12C3984EB002B7CA3 /* Home.svg */,
-				89A689672C42603A002B7CA3 /* User.svg */,
-				89A688B32C3984F5002B7CA3 /* Media.svg */,
-			);
-			path = SVG;
-			sourceTree = "<group>";
-		};
 		89A6889E2C3982D5002B7CA3 /* View */ = {
 			isa = PBXGroup;
 			children = (
@@ -1627,22 +1598,17 @@
 			files = (
 				89A689872C42E443002B7CA3 /* TimelineItemCollectionViewCell.xib in Resources */,
 				89E0D6172669143400E2337B /* TitleDetailTableViewCell.xib in Resources */,
-				89A688CC2C39B4F1002B7CA3 /* Like.svg in Resources */,
 				895B41562F74468D00B4DA4C /* SourceHanSansSC-Regular.otf in Resources */,
 				895B41572F74468D00B4DA4C /* SourceHanSansTC-Regular.otf in Resources */,
 				8931F0FA2677457100590569 /* EditableTableViewCell.xib in Resources */,
 				890DF6D926160827002D8AE5 /* LaunchScreen.storyboard in Resources */,
-				89A689682C42603A002B7CA3 /* User.svg in Resources */,
 				895152CF2FC1ADC000F75DB7 /* upload.html in Resources */,
 				895152D02FC1ADC000F75DB7 /* upload.js in Resources */,
 				89AF9BFF2631C1740037A133 /* SwitchTableViewCell.xib in Resources */,
-				89A6897B2C42E08D002B7CA3 /* Favorited.svg in Resources */,
 				89E0D6132669127B00E2337B /* SwitchDetailTableViewCell.xib in Resources */,
 				8953CDA52C987FF1003EF386 /* FilterDanmakuTableViewCell.xib in Resources */,
 				89C325AD2C6FB768002E2487 /* TitleMoreTableViewCell.xib in Resources */,
-				89A688B42C3984F5002B7CA3 /* Media.svg in Resources */,
 				890DF77226160B3E002D8AE5 /* FolderTableViewCell.xib in Resources */,
-				89A688CD2C39B4F1002B7CA3 /* Unlike.svg in Resources */,
 				89AF9C0C2631D7120037A133 /* SheetTableViewCell.xib in Resources */,
 				8944E877263AF48C00EF00B1 /* LinkHistoryTableViewCell.xib in Resources */,
 				8931F0F42677388600590569 /* TitleDetailMoreTableViewCell.xib in Resources */,
@@ -1655,8 +1621,6 @@
 				8931A91F2F7C0A8A00125F69 /* Localizable.xcstrings in Resources */,
 				89A6898A2C42E588002B7CA3 /* FavoriteCollectionViewCell.xib in Resources */,
 				89AF9C042631C2680037A133 /* StepTableViewCell.xib in Resources */,
-				89A688C02C399FC2002B7CA3 /* Timeline.svg in Resources */,
-				89A688B22C3984EB002B7CA3 /* Home.svg in Resources */,
 				89A688AA2C398347002B7CA3 /* HomePageBangumiQueueTableViewCell.xib in Resources */,
 				897CF533262F317B00CC297A /* SliderTableViewCell.xib in Resources */,
 				890DF6EE26160A25002D8AE5 /* RefreshText.plist in Resources */,

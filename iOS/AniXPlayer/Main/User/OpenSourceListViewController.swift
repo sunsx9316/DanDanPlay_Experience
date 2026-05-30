@@ -33,7 +33,6 @@ class OpenSourceListViewController: ViewController {
         .init(name: "RxSwift", url: "https://github.com/ReactiveX/RxSwift"),
         .init(name: "Kingfisher", url: "https://github.com/onevcat/Kingfisher"),
         .init(name: "SnapKit", url: "https://github.com/SnapKit/SnapKit"),
-        .init(name: "SVGKit", url: "https://github.com/SVGKit/SVGKit"),
         .init(name: "swift-log", url: "https://github.com/apple/swift-log"),
         .init(name: "YYCategories", url: "https://github.com/sunsx9316/YYCategories"),
     ]

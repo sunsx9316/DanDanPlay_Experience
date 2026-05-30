@@ -6,8 +6,8 @@
 //
 
 import UIKit
-import SVGKit
 import SnapKit
+import YYCategories
 
 extension HomePageFunctionTableViewCell: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
@@ -90,16 +90,14 @@ class HomePageFunctionTableViewCell: TableViewCell {
     
     @objc private func reloadData() {
         var dataSource = [HomePageFunctionItem]()
-        if let svgImage = SVGKImage(named: "Timeline.svg") {
-            svgImage.size = CGSize(width: 60, height: 60)
-            dataSource.append(.init(itemType: .timeLine, img: svgImage.uiImage, name: NSLocalizedString("新番时间表", comment: "")))
+        if let img = UIImage(named: "Timeline")?.byResize(to: CGSize(width: 60, height: 60)) {
+            dataSource.append(.init(itemType: .timeLine, img: img, name: NSLocalizedString("新番时间表", comment: "")))
         }
         
         /// 登录才展示关注
         if Preferences.shared.loginInfo != nil {
-            if let svgImage = SVGKImage(named: "Favorited.svg") {
-                svgImage.size = CGSize(width: 60, height: 60)
-                dataSource.append(.init(itemType: .favorite, img: svgImage.uiImage, name: NSLocalizedString("我的关注", comment: "")))
+            if let img = UIImage(named: "Favorited")?.byResize(to: CGSize(width: 60, height: 60)) {
+                dataSource.append(.init(itemType: .favorite, img: img, name: NSLocalizedString("我的关注", comment: "")))
             }
         }
         
