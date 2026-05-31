@@ -43,7 +43,8 @@ class RemoteLoginHistoryViewController: ViewController {
         tv.delegate = self
         tv.dataSource = self
         tv.register(FileListCell.self, forCellReuseIdentifier: FileListCell.reuseIdentifier)
-        tv.rowHeight = 80
+        tv.rowHeight = UITableView.automaticDimension
+        tv.estimatedRowHeight = 80
         return tv
     }()
 

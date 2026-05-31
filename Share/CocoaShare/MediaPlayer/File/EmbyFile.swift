@@ -44,16 +44,27 @@ class EmbyFile: File {
     var isCanDelete: Bool { return false }
 
     var pathExtension: String {
-        guard let type = embyItem?.type else { return "" }
-        switch type {
+        guard let item = embyItem else { return "" }
+        // 非文件夹优先使用源文件真实扩展名
+        if !item.isFolder, let path = item.path {
+            let ext = (path as NSString).pathExtension
+            if !ext.isEmpty { return ext }
+        }
+        // 文件夹或无路径时回退到类型标签
+        switch item.type {
         case "Movie": return "电影"
         case "Episode": return "剧集"
         case "Series": return "系列"
         case "Season": return "季"
         case "Video": return "视频"
         case "Audio": return "音频"
-        default: return String(type.prefix(4)).uppercased()
+        default: return String(item.type.prefix(4)).uppercased()
         }
+    }
+
+    var sourceFileName: String? {
+        guard let path = embyItem?.path else { return nil }
+        return (path as NSString).lastPathComponent
     }
 
     var fileId: String {

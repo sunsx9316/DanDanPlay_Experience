@@ -7,10 +7,19 @@
 
 import UIKit
 import SnapKit
+import Kingfisher
 
 class FileListCell: TableViewCell {
 
     static let reuseIdentifier = "FileListCell"
+
+    private lazy var coverImageView: UIImageView = {
+        let iv = UIImageView()
+        iv.contentMode = .scaleAspectFill
+        iv.alpha = 0.25
+        iv.clipsToBounds = true
+        return iv
+    }()
 
     private lazy var iconImageView: UIImageView = {
         let iv = UIImageView()
@@ -31,6 +40,7 @@ class FileListCell: TableViewCell {
         let label = Label()
         label.font = .ddp_small()
         label.textColor = .secondaryLabel
+        label.numberOfLines = 0
         return label
     }()
 
@@ -53,6 +63,7 @@ class FileListCell: TableViewCell {
     }
 
     private func setupUI() {
+        contentView.addSubview(coverImageView)
         contentView.addSubview(iconImageView)
         contentView.addSubview(textStack)
 
@@ -66,11 +77,23 @@ class FileListCell: TableViewCell {
             make.leading.equalTo(iconImageView.snp.trailing).offset(20)
             make.trailing.equalToSuperview().offset(-20)
             make.top.equalToSuperview().offset(16)
-            make.bottom.equalToSuperview().offset(-16).priority(.high)
+            make.bottom.equalToSuperview().offset(-16)
         }
     }
 
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        coverImageView.frame = contentView.bounds
+    }
+
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        coverImageView.kf.cancelDownloadTask()
+        coverImageView.image = nil
+    }
+
     func configureAsSource(title: String, iconName: String, detail: String? = nil) {
+        coverImageView.isHidden = true
         titleLabel.text = title
         if let detail = detail, !detail.isEmpty {
             detailLabel.text = detail
@@ -87,12 +110,25 @@ class FileListCell: TableViewCell {
         iconImageView.image = UIImage(systemName: file.type == .folder ? "folder" : "play.rectangle")
         iconImageView.tintColor = .label
 
+        if let coverURL = file.coverImageURL {
+            coverImageView.isHidden = false
+            coverImageView.kf.setImage(with: coverURL)
+        } else {
+            coverImageView.isHidden = true
+            coverImageView.kf.cancelDownloadTask()
+            coverImageView.image = nil
+        }
+
         if file.type == .folder {
             detailLabel.isHidden = true
         } else {
             detailLabel.isHidden = false
             let sizeStr = ByteCountFormatter.string(fromByteCount: Int64(file.fileSize), countStyle: .file)
-            detailLabel.text = "\(sizeStr)  \(file.pathExtension.uppercased())"
+            var detail = "\(sizeStr)  \(file.pathExtension.uppercased())"
+            if let sourceName = file.sourceFileName {
+                detail += "\n\(sourceName)"
+            }
+            detailLabel.text = detail
         }
     }
 

@@ -68,7 +68,11 @@ class FileTableViewCell: TableViewCell {
         didSet {
             self.typeLabel.text = self.file?.pathExtension.isEmpty == false ? self.file?.pathExtension : "?"
             self.titleLabel.text = self.file?.fileName
-            self.subtitleLabel.text = self.file?.subtitle
+            var subtitle = self.file?.subtitle ?? ""
+            if let sourceName = self.file?.sourceFileName {
+                subtitle = subtitle.isEmpty ? sourceName : "\(subtitle)\n\(sourceName)"
+            }
+            self.subtitleLabel.text = subtitle
             if let file = self.file, let lastWatchDate = HistoryManager.shared.lastWatchDate(media: file) {
                 let dateFormatter = DateFormatter.anix_YYYY_MM_dd_HH_mm_ssFormatter
                 self.lastWatchDateLabel.text = NSLocalizedString("上次播放时间:", comment: "") + dateFormatter.string(from: lastWatchDate)

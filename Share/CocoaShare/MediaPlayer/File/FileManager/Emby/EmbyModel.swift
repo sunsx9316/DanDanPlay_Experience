@@ -46,6 +46,7 @@ struct EmbyItem: Decodable {
     let id: String
     let name: String
     let type: String
+    let path: String?
 
     let imageTags: [String: String]?
 
@@ -61,6 +62,7 @@ struct EmbyItem: Decodable {
         case id = "Id"
         case name = "Name"
         case type = "Type"
+        case path = "Path"
         case imageTags = "ImageTags"
         case seriesName = "SeriesName"
         case seasonName = "SeasonName"

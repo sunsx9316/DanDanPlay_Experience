@@ -66,6 +66,9 @@ protocol File: AnyObject, HistoryManager.lastWatchDateStoreable {
     /// 封面图 URL
     var coverImageURL: URL? { get }
 
+    /// Emby/Jellyfin 等服务器上的源文件名
+    var sourceFileName: String? { get }
+
     /// 缓存信息，某些需要自己从网络加载留的格式可以实现
     var bufferInfos: [MediaBufferInfo] { get }
     
@@ -113,6 +116,10 @@ extension File {
     }
     
     var coverImageURL: URL? {
+        return nil
+    }
+
+    var sourceFileName: String? {
         return nil
     }
 

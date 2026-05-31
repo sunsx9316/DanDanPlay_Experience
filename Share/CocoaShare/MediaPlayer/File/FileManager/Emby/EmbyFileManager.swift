@@ -191,6 +191,7 @@ class EmbyFileManager: FileManagerProtocol {
         queryItems.append(contentsOf: [
             .init(name: "Recursive", value: "false"),
             .init(name: "IncludeItemTypes", value: "Movie,Series,Episode,Season,BoxSet,Folder"),
+            .init(name: "Fields", value: "MediaSources,Path"),
         ])
         if let parentId = parentId {
             queryItems.append(.init(name: "ParentId", value: parentId))
