@@ -8,15 +8,9 @@
 #if os(iOS) || os(tvOS)
 
 import Foundation
-#if os(iOS)
-import MobileVLCKit
+import VLCKit
 import MPVFramework
 import FilesProvider
-#elseif os(tvOS)
-import TVVLCKit
-import MPVFramework
-import FilesProvider
-#endif
 
 
 class FTPFile: File {
@@ -60,7 +54,7 @@ class FTPFile: File {
         var options = [AnyHashable : Any]()
         options["ftp-user"] = auth?.userName
         options["ftp-pwd"] = auth?.password
-        media.addOptions(options)
+        media?.addOptions(options)
         return media
     }
     

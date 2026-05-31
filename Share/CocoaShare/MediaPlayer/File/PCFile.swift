@@ -8,14 +8,11 @@
 #if os(iOS) || os(tvOS)
 
 import Foundation
+import VLCKit
 #if os(iOS)
-import MobileVLCKit
 import YYCategories
-import MPVFramework
-#elseif os(tvOS)
-import TVVLCKit
-import MPVFramework
 #endif
+import MPVFramework
 
 class PCFile: File {
     

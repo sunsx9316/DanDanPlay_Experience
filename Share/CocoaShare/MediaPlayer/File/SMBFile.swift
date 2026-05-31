@@ -9,15 +9,8 @@
 
 import Foundation
 import ANXLog
-#if os(iOS)
-import MobileVLCKit
-import MPVFramework
-#elseif os(tvOS)
-import TVVLCKit
-import MPVFramework
-#else
 import VLCKit
-#endif
+import MPVFramework
 
 class SMBFile: File {
 
@@ -133,7 +126,7 @@ class SMBFile: File {
         var options = [AnyHashable : Any]()
         options["smb-user"] = auth?.userName
         options["smb-pwd"] = auth?.password
-        media.addOptions(options)
+        media?.addOptions(options)
         return media
     }
 

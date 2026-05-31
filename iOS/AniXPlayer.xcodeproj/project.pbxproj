@@ -70,7 +70,6 @@
 		8925B8842CA7E4C3001A8388 /* SMBFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8192CA7E4C3001A8388 /* SMBFile.swift */; };
 		8925B8852CA7E4C3001A8388 /* Danmaku.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8662CA7E4C3001A8388 /* Danmaku.swift */; };
 		8925B8862CA7E4C3001A8388 /* CommentNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8352CA7E4C3001A8388 /* CommentNetworkHandle.swift */; };
-		8925B8872CA7E4C3001A8388 /* VLCMediaPlayer+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8542CA7E4C3001A8388 /* VLCMediaPlayer+Private.m */; };
 		8925B8882CA7E4C3001A8388 /* SMBServiceBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8612CA7E4C3001A8388 /* SMBServiceBrowser.swift */; };
 		8925B8892CA7E4C3001A8388 /* LocalFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8122CA7E4C3001A8388 /* LocalFileManager.swift */; };
 		8925B88A2CA7E4C3001A8388 /* PCFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8182CA7E4C3001A8388 /* PCFile.swift */; };
@@ -250,8 +249,6 @@
 		9DE8B429CAFC3A5D26DE9E57 /* ColorManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54627AC0D74F1F7C3F2CB1E /* ColorManagementViewController.swift */; };
 		A9C78F18D61BDDFCD265EA42 /* JellyfinConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07DC534D75469AC47B0F28D9 /* JellyfinConnectSvrViewController.swift */; };
 		AA72AB931D94179E273EEC53 /* JellyfinLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3DC22C756D2488DE35619F /* JellyfinLoginHistoryViewController.swift */; };
-		F9ED468BBD25D37E791D3758 /* jellyfin.svg in Resources */ = {isa = PBXBuildFile; fileRef = DD8E94B14AD64EC646EA821E /* jellyfin.svg */; };
-		FFDB39298F82BEBAD579BBC0 /* Contents.json in Resources */ = {isa = PBXBuildFile; fileRef = F78319BE1C8A942D41C47563 /* Contents.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -374,8 +371,6 @@
 		8925B84D2CA7E4C3001A8388 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		8925B8512CA7E4C3001A8388 /* ANXAddressModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ANXAddressModel.h; sourceTree = "<group>"; };
 		8925B8522CA7E4C3001A8388 /* ANXAddressModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ANXAddressModel.m; sourceTree = "<group>"; };
-		8925B8532CA7E4C3001A8388 /* VLCMediaPlayer+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "VLCMediaPlayer+Private.h"; sourceTree = "<group>"; };
-		8925B8542CA7E4C3001A8388 /* VLCMediaPlayer+Private.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "VLCMediaPlayer+Private.m"; sourceTree = "<group>"; };
 		8925B8562CA7E4C3001A8388 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		8925B8572CA7E4C3001A8388 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		8925B8582CA7E4C3001A8388 /* Store+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Store+Extension.swift"; sourceTree = "<group>"; };
@@ -513,10 +508,8 @@
 		B54627AC0D74F1F7C3F2CB1D /* DanmakuInputView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DanmakuInputView.swift; sourceTree = "<group>"; };
 		B54627AC0D74F1F7C3F2CB1E /* ColorManagementViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorManagementViewController.swift; sourceTree = "<group>"; };
 		CF2D5334A2A53D20F8B80E22 /* Pods-AniXPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.release.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.release.xcconfig"; sourceTree = "<group>"; };
-		DD8E94B14AD64EC646EA821E /* jellyfin.svg */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; path = jellyfin.svg; sourceTree = "<group>"; };
 		EE600170BF1445D9B00A4593 /* FolderProgressCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderProgressCell.swift; sourceTree = "<group>"; };
 		F410B8A741526DF765820021 /* Pods-AniXPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.debug.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.debug.xcconfig"; sourceTree = "<group>"; };
-		F78319BE1C8A942D41C47563 /* Contents.json */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.json; path = Contents.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -565,14 +558,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3E3840B8141A2B3FFCD6C942 /* PickFile */ = {
-			isa = PBXGroup;
-			children = (
-				DAAF5C13B5A359BCCE67F3E0 /* jellyfin.imageset */,
-			);
-			path = PickFile;
-			sourceTree = "<group>";
-		};
 		7E78693FEB4DDA048C2F9DDB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -641,7 +626,6 @@
 				890DF6D526160827002D8AE5 /* Assets.xcassets */,
 				890DF6D726160827002D8AE5 /* LaunchScreen.storyboard */,
 				890DF6DA26160827002D8AE5 /* Info.plist */,
-				9BFDFE53B3B0557BF4D3EBFE /* Assets.xcassets */,
 			);
 			path = AniXPlayer;
 			sourceTree = "<group>";
@@ -1065,8 +1049,6 @@
 			children = (
 				8925B8512CA7E4C3001A8388 /* ANXAddressModel.h */,
 				8925B8522CA7E4C3001A8388 /* ANXAddressModel.m */,
-				8925B8532CA7E4C3001A8388 /* VLCMediaPlayer+Private.h */,
-				8925B8542CA7E4C3001A8388 /* VLCMediaPlayer+Private.m */,
 			);
 			path = Objc;
 			sourceTree = "<group>";
@@ -1396,14 +1378,6 @@
 			path = PlayerUI;
 			sourceTree = "<group>";
 		};
-		9BFDFE53B3B0557BF4D3EBFE /* Assets.xcassets */ = {
-			isa = PBXGroup;
-			children = (
-				3E3840B8141A2B3FFCD6C942 /* PickFile */,
-			);
-			path = Assets.xcassets;
-			sourceTree = "<group>";
-		};
 		A36E3F8730C441A1F2AC3DAF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -1420,15 +1394,6 @@
 				6620BF43605B5DDE3E8B15B6 /* Pods_AniXPlayer.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		DAAF5C13B5A359BCCE67F3E0 /* jellyfin.imageset */ = {
-			isa = PBXGroup;
-			children = (
-				F78319BE1C8A942D41C47563 /* Contents.json */,
-				DD8E94B14AD64EC646EA821E /* jellyfin.svg */,
-			);
-			path = jellyfin.imageset;
 			sourceTree = "<group>";
 		};
 		E8A0D973CF7E2B5A95A5FBAE /* Jellyfin */ = {
@@ -1587,8 +1552,6 @@
 				8904475B290189CD0088886B /* GoogleService-Info.plist in Resources */,
 				8931A91F2F7C0A8A00125F69 /* Localizable.xcstrings in Resources */,
 				890DF6EE26160A25002D8AE5 /* RefreshText.plist in Resources */,
-				FFDB39298F82BEBAD579BBC0 /* Contents.json in Resources */,
-				F9ED468BBD25D37E791D3758 /* jellyfin.svg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1801,7 +1764,6 @@
 				8925B8842CA7E4C3001A8388 /* SMBFile.swift in Sources */,
 				8925B8852CA7E4C3001A8388 /* Danmaku.swift in Sources */,
 				8925B8862CA7E4C3001A8388 /* CommentNetworkHandle.swift in Sources */,
-				8925B8872CA7E4C3001A8388 /* VLCMediaPlayer+Private.m in Sources */,
 				8925B8882CA7E4C3001A8388 /* SMBServiceBrowser.swift in Sources */,
 				8925B8892CA7E4C3001A8388 /* LocalFileManager.swift in Sources */,
 				8925B88A2CA7E4C3001A8388 /* PCFile.swift in Sources */,

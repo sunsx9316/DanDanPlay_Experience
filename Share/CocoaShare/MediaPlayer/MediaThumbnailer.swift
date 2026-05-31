@@ -7,13 +7,7 @@
 
 import Foundation
 
-#if os(iOS)
-import MobileVLCKit
-#elseif os(tvOS)
-import TVVLCKit
-#else
 import VLCKit
-#endif
 
 #if os(iOS) || os(tvOS)
 import AVFoundation

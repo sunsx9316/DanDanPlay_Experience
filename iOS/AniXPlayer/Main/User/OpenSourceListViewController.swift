@@ -27,7 +27,7 @@ class OpenSourceListViewController: ViewController {
         .init(name: "IQKeyboardManager", url: "https://github.com/hackiftekhar/IQKeyboardManager"),
         .init(name: "MBProgressHUD", url: "https://github.com/jdg/MBProgressHUD"),
         .init(name: "MJRefresh", url: "https://github.com/CoderMJLee/MJRefresh"),
-        .init(name: "MobileVLCKit", url: "https://code.videolan.org/videolan/VLCKit"),
+        .init(name: "VLCKit", url: "https://code.videolan.org/videolan/VLCKit"),
         .init(name: "MPVKit", url: "https://github.com/mpvkit/MPVKit"),
         .init(name: "RxSwift", url: "https://github.com/ReactiveX/RxSwift"),
         .init(name: "Kingfisher", url: "https://github.com/onevcat/Kingfisher"),

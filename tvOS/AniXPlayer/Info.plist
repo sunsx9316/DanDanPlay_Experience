@@ -33,6 +33,11 @@
 	</array>
 	<key>NSLocalNetworkUsageDescription</key>
 	<string>请允许 AniXPlayer 访问本地网络</string>
+	<key>UIAppFonts</key>
+	<array>
+		<string>SourceHanSansSC-Regular.otf</string>
+		<string>SourceHanSansTC-Regular.otf</string>
+	</array>
 	<key>UIFileSharingEnabled</key>
 	<true/>
 	<key>UIRequiredDeviceCapabilities</key>

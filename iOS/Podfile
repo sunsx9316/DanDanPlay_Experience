@@ -9,13 +9,9 @@ target 'AniXPlayer' do
   use_modular_headers!
 
   
-  # pod 'NKOColorPickerView'
-  # pod 'MMKV'
-  pod 'MobileVLCKit'
-  # pod 'AMSMB2'
-  # pod "GCDWebServer"
   pod 'FirebaseCrashlytics'
   pod 'ANXLog', :path => '../Share/ANXLog'
+  pod 'VLCKit', :path => '../Share/VLCKit'
 
 end
 

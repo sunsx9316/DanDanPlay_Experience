@@ -8,15 +8,9 @@
 #if os(iOS) || os(tvOS)
 
 import Foundation
-#if os(iOS)
-import MobileVLCKit
+import VLCKit
 import MPVFramework
 import FilesProvider
-#elseif os(tvOS)
-import TVVLCKit
-import MPVFramework
-import FilesProvider
-#endif
 
 
 class WebDavFile: File {

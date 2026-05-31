@@ -295,6 +295,11 @@
 	<array>
 		<string>audio</string>
 	</array>
+	<key>UIAppFonts</key>
+	<array>
+		<string>SourceHanSansSC-Regular.otf</string>
+		<string>SourceHanSansTC-Regular.otf</string>
+	</array>
 	<key>UIFileSharingEnabled</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>

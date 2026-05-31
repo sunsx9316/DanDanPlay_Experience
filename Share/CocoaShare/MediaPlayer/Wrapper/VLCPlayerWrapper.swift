@@ -8,14 +8,10 @@
 import Foundation
 import ANXLog
 
-#if os(iOS)
-import MobileVLCKit
-import UIKit
-#elseif os(tvOS)
-import TVVLCKit
+import VLCKit
+#if os(iOS) || os(tvOS)
 import UIKit
 #else
-import VLCKit
 import AppKit
 #endif
 
@@ -46,15 +42,16 @@ private struct VLCAudioChannel: AudioChannelProtocol {
 }
 
 class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
-    
-    
+
+
     private enum Options: String {
         case subtitleYPosition = "--sub-margin"
-//        case subtitleTextScale = "--sub-text-scale"
-//        case subtitleColor = "--freetype-color"
-//        case subtitleName = "--freetype-font"
+        case subtitleFontsDir = "--ssa-fontsdir"
+        case subtitleFontFamily = "--ssa-fontfamily"
+        case subtitleScale = "--sub-text-scale"
+        case freetypeFontColor = "--freetype-color"
     }
-    
+
     private enum InitAction {
         case currentSubtitle
         case volume
@@ -63,22 +60,26 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         case currentAudioChannel
         case aspectRatio
         case audioOffsetTime
-        case subtitleFontName
-        case subtitleFontSize
     }
 
-    
+
     private var player: VLCMediaPlayer?
-    
+
     fileprivate var playerTimer: Timer?
-    
+
     fileprivate var timeIsUpdate = false
-    
+
     private let endFlagProgress = 0.99
-    
+
     /// 当前选择的字幕文件
     private var currentSubTitleFile: SubtitleProtocol?
-    
+
+    /// 当前选中的内嵌字幕 track id
+    private var currentTextTrackId: String?
+
+    /// 当前选中的音轨 track id
+    private var currentAudioTrackId: String?
+
 #if os(iOS)
     private var mediaThumbnailer: MediaThumbnailer?
 #endif
@@ -88,21 +89,21 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         view.backgroundColor = .black
         return view
     }();
-    
+
     private lazy var mediaOptionsDic = [Options: Any]()
-    
+
     private lazy var initActionDic = [InitAction: () -> Void]()
-    
+
     var currentPlayItem: File? {
         didSet {
-            
+
             if self.player == nil {
                 self.player = self.createPlayerInstance()
                 for (_, initAction) in self.initActionDic {
                     initAction()
                 }
             }
-            
+
             self.player?.stop()
             self.currentSubTitleFile = nil
             let media = self.currentPlayItem?.createVLCMedia(delegate: self)
@@ -119,57 +120,70 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
 #endif
         }
     }
-    
+
     var subtitleList: [SubtitleProtocol] {
-        return self.player?.videoSubTitlesIndexes.indices.compactMap({ subtitleWithIndexInPlayer($0) }) ?? []
+        guard let textTracks = self.player?.textTracks else { return [] }
+        return textTracks.enumerated().compactMap { index, track in
+            var name = track.trackName
+#if DEBUG
+            name = "\(name)(\(index))"
+#endif
+            return VLCSubtitle(subtitleName: name, index: index)
+        }
     }
-    
+
     var currentSubtitle: SubtitleProtocol? {
         get {
-            
             guard let player = self.player else { return nil }
-            
+
             if let currentSubTitleFile = self.currentSubTitleFile {
                 return currentSubTitleFile
             }
-            
-            let currentVideoSubTitleIndex = player.currentVideoSubTitleIndex
-            if let fristIndex = player.videoSubTitlesIndexes.firstIndex(where: { (value) -> Bool in
-                if let value = value as? Int, value == currentVideoSubTitleIndex {
-                    return true
-                }
-                return false
-            }) {
-                return subtitleWithIndexInPlayer(fristIndex)
+
+            // 从 textTracks 中找到匹配 trackId 的字幕
+            if let trackId = self.currentTextTrackId,
+               let index = player.textTracks.firstIndex(where: { $0.trackId == trackId }) {
+                var name = player.textTracks[index].trackName
+#if DEBUG
+                name = "\(name)(\(index))"
+#endif
+                return VLCSubtitle(subtitleName: name, index: index)
             }
             return nil
         }
-        
+
         set {
             self.currentSubTitleFile = newValue
-            
+
             let setup = { [weak self] in
                 guard let self = self else { return }
 
                 if let sub = newValue as? VLCSubtitle {
                     ANX.logInfo(.player, "[VLC] 选择字幕: \(sub.subtitleName) (index: \(sub.index))")
-                    self.player?.currentVideoSubTitleIndex = Int32(sub.index)
+                    self.player?.selectTrack(at: Int(sub.index), type: .text)
+                    if let tracks = self.player?.textTracks
+,
+                       sub.index < tracks.count {
+                        self.currentTextTrackId = tracks[sub.index].trackId
+                    }
                 } else if let sub = newValue as? ExternalSubtitle {
                     ANX.logInfo(.player, "[VLC] 添加外部字幕: \(sub.url.lastPathComponent)")
                     self.player?.addPlaybackSlave(sub.url, type: .subtitle, enforce: true)
                 } else {
                     ANX.logInfo(.player, "[VLC] 关闭字幕")
+                    self.currentTextTrackId = nil
+                    self.player?.deselectAllTextTracks()
                 }
             }
-            
+
             if self.player != nil {
                 setup()
             }
-            
+
             self.initActionDic[.currentSubtitle] = setup
         }
     }
-    
+
     var subtitleYPosition: Float {
         get {
             return self.mediaOptionsDic[.subtitleYPosition] as? Float ?? 0
@@ -183,7 +197,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
             }
         }
     }
-    
+
     var volume: Int {
         get {
             return Int(self.player?.audio?.volume ?? 0)
@@ -203,12 +217,12 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
             self.initActionDic[.volume] = setup
         }
     }
-    
+
     var subtitleOffsetTime: Double {
         get {
             return Double(self.player?.currentVideoSubTitleDelay ?? 0) / -1000000.0
         }
-        
+
         set {
             let setup = { [weak self] in
                 guard let self = self else { return }
@@ -270,218 +284,208 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
             self.initActionDic[.speed] = setup
         }
     }
-    
+
     var position: Double {
         if self.length == 0 {
             return 0
         }
         return self.currentTime / self.length
     }
-    
+
     var length: TimeInterval {
         let length = self.player?.media?.length.value?.doubleValue ?? 0
         return length / 1000
     }
-    
+
     var currentTime: TimeInterval {
         let time = self.player?.time.value?.doubleValue ?? 0
         return time / 1000
     }
-    
+
     var isPlaying: Bool {
         return self.player?.isPlaying ?? false
     }
-    
+
     /// 10 .. 120
     var fontSize: Float? {
         didSet {
-            let setup = { [weak self] in
-                guard let self = self else { return }
-
-                if let fontSize = self.fontSize {
-                    ANX.logDebug(.player, "[VLC] 字体大小: \(fontSize)")
-                    let anxFontSizeRange: (min: Float, max: Float) = (min: 10, max: 120)
-                    let vlcFontSizeRange: (min: Float, max: Float) = (min: 0.1, max: 5) // vlc的区间为 0.1~5
-
-                    let vlcFontSize = vlcFontSizeRange.min + ((fontSize - anxFontSizeRange.min) * (vlcFontSizeRange.max - vlcFontSizeRange.min) / (anxFontSizeRange.max - anxFontSizeRange.min))
-#if os(iOS)
-                    self.player?.anx_setTextRendererFontSize(vlcFontSize as NSNumber)
-#endif
-                }
+            if let fontSize = fontSize {
+                // 映射 app 范围 (10-120) 到 VLC 缩放比例 (0.2-2.0, 默认 1.0)
+                let vlcScale = 0.2 + (fontSize - 10) * (2.0 - 0.2) / (120.0 - 10.0)
+                ANX.logDebug(.player, "[VLC] 字体大小: \(fontSize) -> VLC scale: \(String(format: "%.2f", vlcScale))")
+                // 初始化选项（整数百分比）
+                self.mediaOptionsDic[.subtitleScale] = Int(vlcScale * 100)
+                // 运行时立即生效，无需重新播放
+                self.player?.currentSubTitleFontScale = vlcScale
+            } else {
+                self.mediaOptionsDic.removeValue(forKey: .subtitleScale)
             }
-
-            if self.player != nil {
-                setup()
-            }
-
-            self.initActionDic[.subtitleFontSize] = setup
         }
     }
 
     var fontName: String? {
         didSet {
-
-            let setup = { [weak self] in
-                guard let self = self else { return }
-
-                if let fontName = self.fontName {
-#if os(iOS)
-                    self.player?.anx_setTextRendererFont(fontName)
-#endif
-                }
+            if let fontName = fontName {
+                ANX.logDebug(.player, "[VLC] 字体名称: \(fontName)")
+                self.mediaOptionsDic[.subtitleFontFamily] = fontName
+            } else {
+                self.mediaOptionsDic.removeValue(forKey: .subtitleFontFamily)
             }
-
-            if self.player != nil {
-                setup()
-            }
-
-            self.initActionDic[.subtitleFontName] = setup
+            self.reloadOptionAndCreatePlayer()
         }
     }
 
     var fontColor: ANXColor? {
         didSet {
-            if let fontColor = self.fontColor {
+            if let fontColor = fontColor {
                 ANX.logDebug(.player, "[VLC] 字体颜色已更改")
-#if os(iOS)
-                self.player?.anx_setTextRendererFontColor(fontColor.rgbValue() as NSNumber)
-#endif
+                self.mediaOptionsDic[.freetypeFontColor] = fontColor.anxRgbValue
+            } else {
+                self.mediaOptionsDic.removeValue(forKey: .freetypeFontColor)
             }
+            self.reloadOptionAndCreatePlayer()
         }
     }
-    
+
     var audioChannelList: [AudioChannelProtocol] {
-        return self.player?.audioTrackIndexes.indices.compactMap({ audioChannelWithIndexInPlayer($0) }) ?? []
+        guard let audioTracks = self.player?.audioTracks else { return [] }
+        return audioTracks.enumerated().compactMap { index, track in
+            var name = track.trackName
+#if DEBUG
+            name = "\(name)(\(index))"
+#endif
+            return VLCAudioChannel(audioName: name, audioId: Int64(index))
+        }
     }
-    
+
     var currentAudioChannel: AudioChannelProtocol? {
         get {
             guard let player = self.player else { return nil }
-            
-            let currentAudioTrackIndex = player.currentAudioTrackIndex
-            if let fristIndex = player.audioTrackIndexes.firstIndex(where: { (value) -> Bool in
-                if let value = value as? Int, value == currentAudioTrackIndex {
-                    return true
-                }
-                return false
-            }) {
-                return audioChannelWithIndexInPlayer(fristIndex)
+
+            if let trackId = self.currentAudioTrackId,
+               let index = player.audioTracks.firstIndex(where: { $0.trackId == trackId }) {
+                var name = player.audioTracks[index].trackName
+#if DEBUG
+                name = "\(name)(\(index))"
+#endif
+                return VLCAudioChannel(audioName: name, audioId: Int64(index))
             }
             return nil
         }
-        
+
         set {
             let setup = { [weak self] in
                 guard let self = self else { return }
 
                 if let audioChannel = newValue {
-                    ANX.logInfo(.player, "[VLC] 选择音轨: \(audioChannel.audioName) (id: \(audioChannel.audioId))")
-                    self.player?.currentAudioTrackIndex = Int32(audioChannel.audioId)
+                    let index = Int(audioChannel.audioId)
+                    ANX.logInfo(.player, "[VLC] 选择音轨: \(audioChannel.audioName) (index: \(index))")
+                    self.player?.selectTrack(at: Int(index), type: .audio)
+                    if let tracks = self.player?.audioTracks
+,
+                       index < tracks.count {
+                        self.currentAudioTrackId = tracks[index].trackId
+                    }
                 } else {
-                    self.player?.currentAudioTrackIndex = -1
+                    self.currentAudioTrackId = nil
+                    self.player?.deselectAllAudioTracks()
                 }
                 return
             }
-            
+
             if self.player != nil {
                 setup()
             }
-            
+
             self.initActionDic[.currentAudioChannel] = setup
         }
     }
-    
+
     var timeChangedCallBack: ((MediaPlayerProtocol, Double) -> Void)?
-    
+
     var stateChangedCallBack: ((MediaPlayerProtocol, PlayerState) -> Void)?
-    
+
     var bufferInfoDidChangeCallBack: ((MediaPlayerProtocol, File, MediaBufferInfo) -> Void)?
-    
+
     var endOfFileCallBack: ((MediaPlayerProtocol) -> Void)?
-    
+
     var aspectRatio: PlayerAspectRatio {
         get {
             if let videoAspectRatio = self.player?.videoAspectRatio {
-                let str = String(cString: videoAspectRatio)
-                return PlayerAspectRatio(rawValue: str) ?? .default
+                return PlayerAspectRatio(rawValue: videoAspectRatio) ?? .default
             }
             return .default
         }
-        
+
         set {
             let setup = { [weak self] in
                 guard let self = self else { return }
-                
+
                 switch newValue {
                 case .default:
                     self.player?.scaleFactor = 0
                     self.player?.videoAspectRatio = nil
-                    self.player?.videoCropGeometry = nil
                 case .fillToScreen:
                     if let window = self.mediaView.window {
-                        
+
                         var windowSize = window.frame.size
                         var videoSize = self.player?.videoSize ?? .zero
-                        
+
                         if videoSize == .zero {
                             videoSize = .init(width: 1, height: 1)
                         }
-                        
+
                         if windowSize == .zero {
                             windowSize = .init(width: 1, height: 1)
                         }
-                        
+
                         let ar = videoSize.width / videoSize.height
                         let dar = windowSize.width / windowSize.height
-                        
+
                         let scale: CGFloat
-                        
+
                         if (dar >= ar) {
                             scale = windowSize.width / videoSize.width;
                         } else {
                             scale = windowSize.height / videoSize.height;
                         }
-                        
+
                         let windowScale: CGFloat
-                        
+
                         #if os(iOS) || os(tvOS)
                         windowScale = window.screen.scale
                         #else
                         windowScale = window.backingScaleFactor
                         #endif
-                        
+
                         let scaleFactor = Float(scale * windowScale)
                         print("scaleFactor:\(scaleFactor)")
                         self.player?.scaleFactor = scaleFactor
-                        self.player?.videoCropGeometry = nil
                         self.player?.videoAspectRatio = nil
                     }
-                
+
                 case .fourToThree, .sixteenToNine, .sixteenToTen:
                     self.player?.scaleFactor = 0
-                    self.player?.videoCropGeometry = nil
-                    newValue.rawValue.withCString { ptr in
-                        self.player?.videoAspectRatio = UnsafeMutablePointer(mutating: ptr)
-                    }
+                    self.player?.videoAspectRatio = newValue.rawValue
                     ANX.logInfo(.player, "[VLC] aspectRatio set: \(newValue.rawValue), player state: \(self.player?.state.rawValue ?? -1)")
                 }
             }
-            
+
             if self.player != nil {
                 setup()
             }
-            
+
             self.initActionDic[.aspectRatio] = setup
         }
     }
-    
+
     var state: PlayerState {
         switch self.player?.state {
         case .stopped:
             return .stop
         case .paused:
             return .pause
-        case .playing, .esAdded:
+        case .playing:
             return .playing
         case .buffering:
             if self.timeIsUpdate {
@@ -493,15 +497,15 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
             return .pause
         }
     }
-    
+
     func setPosition(_ position: Double) {
         let position = max(min(position, 1), 0)
         ANX.logInfo(.player, "[VLC] 跳转: 进度 \(position)")
-        self.player?.position = Float(position)
+        self.player?.position = position
 
         checkIsEndPosition(position: position)
     }
-    
+
     func play(_ media: File) {
         ANX.logInfo(.player, "[VLC] 播放文件: \(media.fileName)")
         self.currentPlayItem = media
@@ -527,61 +531,17 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         ANX.logInfo(.player, "[VLC] 终止")
         stop()
     }
-    
+
     deinit {
         self.playerTimer?.invalidate()
     }
-    
+
     //MARK: Private Method
-    private func subtitleWithIndexInPlayer(_ index: Int) -> VLCSubtitle? {
-        guard let player = self.player else { return nil }
-        
-        if index < player.videoSubTitlesIndexes.count,
-           let indexNumber = player.videoSubTitlesIndexes[index] as? Int {
-            
-            var name: String
-            if index < player.videoSubTitlesNames.count {
-                name = player.videoSubTitlesNames[index] as? String ?? "未知名称"
-                #if DEBUG
-                name = "\(name)(\(index))"
-                #endif
-            } else {
-                name = "未知名称"
-            }
-            
-            return VLCSubtitle(subtitleName: name, index: indexNumber)
-        } else {
-            return nil
-        }
-    }
-    
-    private func audioChannelWithIndexInPlayer(_ index: Int) -> AudioChannelProtocol? {
-        guard let player = self.player else { return nil }
-        
-        if index < player.audioTrackIndexes.count,
-           let indexNumber = player.audioTrackIndexes[index] as? Int64 {
-            
-            var name: String
-            if index < player.audioTrackNames.count {
-                name = player.audioTrackNames[index] as? String ?? "未知名称"
-                #if DEBUG
-                name = "\(name)(\(index))"
-                #endif
-            } else {
-                name = "未知名称"
-            }
-            
-            return VLCAudioChannel(audioName: name, audioId: indexNumber)
-        } else {
-            return nil
-        }
-    }
-    
     private func reloadOptionAndCreatePlayer() {
         guard let item = self.currentPlayItem else { return }
-        
+
         let position = self.position
-        
+
         self.player = self.createPlayerInstance()
         for (_, initAction) in self.initActionDic {
             initAction()
@@ -589,8 +549,20 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         self.play(item)
         self.setPosition(position)
     }
-    
+
+    private func setupFontsIfNeeded() {
+        guard mediaOptionsDic[.subtitleFontsDir] == nil else { return }
+
+        if let fontDir = playerPrepareFonts() {
+            ANX.logInfo(.player, "[VLC] 设置字幕字体目录: \(fontDir)")
+            mediaOptionsDic[.subtitleFontsDir] = fontDir
+            mediaOptionsDic[.subtitleFontFamily] = playerCustomFontFamilies.first ?? "Source Han Sans SC"
+        }
+    }
+
     private func createPlayerInstance() -> VLCMediaPlayer {
+        setupFontsIfNeeded()
+
         let options = self.mediaOptionsDic.compactMap { option -> String? in
             // subtitleYPosition 需要从百分比转换为像素值（考虑视图缩放比例）
             if option.key == .subtitleYPosition, let percentage = option.value as? Float {
@@ -612,61 +584,63 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
 
         return player
     }
-    
+
     private func checkIsEndPosition(position: Double) {
         if position >= self.endFlagProgress {
             self.endOfFileCallBack?(self)
         }
     }
-    
+
 }
 
 extension VLCPlayerWarrper: FileDelegate {
-    
+
     func mediaBufferDidChange(file: File, bufferInfo: MediaBufferInfo) {
         DispatchQueue.main.async {
             if file.url != self.currentPlayItem?.url {
                 return
             }
-            
+
             self.bufferInfoDidChangeCallBack?(self, file, bufferInfo)
         }
     }
 }
 
 extension VLCPlayerWarrper: VLCMediaPlayerDelegate {
-    
+
     func mediaPlayerTimeChanged(_ aNotification: Notification) {
-        
+
         DispatchQueue.main.async {
             let nowTime = self.currentTime
             let length = self.length
-            
+
             let position = length > 0 ? nowTime / length : 0
-            
+
             self.timeChangedCallBack?(self, position)
             self.playerTimer?.invalidate()
             self.playerTimer = Timer.mp_scheduledTimer(timeInterval: 1, repeats: false) { [weak self] (aTimer) in
                 guard let self = self else { return }
-                
+
                 self.timeIsUpdate = false
                 self.stateChangedCallBack?(self, self.state)
                 self.checkIsEndPosition(position: self.position)
             }
-            
+
             if self.timeIsUpdate == false {
                 self.timeIsUpdate = true
                 self.stateChangedCallBack?(self, self.state)
                 self.checkIsEndPosition(position: self.position)
             }
-            
+
             self.timeChangedCallBack?(self, self.position)
         }
-        
+
     }
-    
-    func mediaPlayerStateChanged(_ aNotification: Notification) {
-        self.stateChangedCallBack?(self, self.state)
-        self.checkIsEndPosition(position: self.position)
+
+    func mediaPlayerStateChanged(_ newState: VLCMediaPlayerState) {
+        DispatchQueue.main.async {
+            self.stateChangedCallBack?(self, self.state)
+            self.checkIsEndPosition(position: self.position)
+        }
     }
 }

@@ -6,15 +6,8 @@
 //
 
 import Foundation
-#if os(iOS)
-import MobileVLCKit
-import MPVFramework
-#elseif os(tvOS)
-import TVVLCKit
-import MPVFramework
-#else
 import VLCKit
-#endif
+import MPVFramework
 
 class LocalFile: File {
 

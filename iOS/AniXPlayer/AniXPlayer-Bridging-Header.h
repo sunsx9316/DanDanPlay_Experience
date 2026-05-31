@@ -5,4 +5,3 @@
 #import "ANXAddressModel.h"
 #import "UIView+HitTest.h"
 #import "JHQRCodeReader.h"
-#import "VLCMediaPlayer+Private.h"

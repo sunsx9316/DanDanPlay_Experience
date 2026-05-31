@@ -39,7 +39,6 @@
 		7C905D4AA1123B12E415AB7B /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = EAF9C9307AF39D2FE1A14272 /* Kingfisher */; };
 		7F0739FC5182AC6FF9795B39 /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC4CFE26680AB3E3419C009 /* UserInfoViewController.swift */; };
 		7F99B155655AB99289366058 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = CD55FFBBE18590F428239AF1 /* RxCocoa */; };
-		895152FD2FC1DBE200F75DB7 /* TVVLCKitSPM in Frameworks */ = {isa = PBXBuildFile; productRef = 895152FC2FC1DBE200F75DB7 /* TVVLCKitSPM */; };
 		8951543D2FC1DC2D00F75DB7 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895154242FC1DC2D00F75DB7 /* Preferences.swift */; };
 		8951543F2FC1DC2D00F75DB7 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895154332FC1DC2D00F75DB7 /* Atomic.swift */; };
 		895154402FC1DC2D00F75DB7 /* SMBFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895153E12FC1DC2D00F75DB7 /* SMBFileManager.swift */; };
@@ -108,7 +107,6 @@
 		895154862FC1DC2D00F75DB7 /* Launcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8951543A2FC1DC2D00F75DB7 /* Launcher.swift */; };
 		895154872FC1DC2D00F75DB7 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895154252FC1DC2D00F75DB7 /* Store.swift */; };
 		895154882FC1DC2D00F75DB7 /* MediaThumbnailer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895153F02FC1DC2D00F75DB7 /* MediaThumbnailer.swift */; };
-		895154892FC1DC2D00F75DB7 /* VLCMediaPlayer+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 895154222FC1DC2D00F75DB7 /* VLCMediaPlayer+Private.m */; };
 		8951548A2FC1DC2D00F75DB7 /* upload.html in Resources */ = {isa = PBXBuildFile; fileRef = 895153D02FC1DC2D00F75DB7 /* upload.html */; };
 		8951548B2FC1DC2D00F75DB7 /* upload.js in Resources */ = {isa = PBXBuildFile; fileRef = 895153D12FC1DC2D00F75DB7 /* upload.js */; };
 		895157502FC36B3D00F75DB7 /* StepperSettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8951574C2FC36B3D00F75DB7 /* StepperSettingCell.swift */; };
@@ -302,8 +300,6 @@
 		8951541D2FC1DC2D00F75DB7 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		8951541F2FC1DC2D00F75DB7 /* ANXAddressModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ANXAddressModel.h; sourceTree = "<group>"; };
 		895154202FC1DC2D00F75DB7 /* ANXAddressModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ANXAddressModel.m; sourceTree = "<group>"; };
-		895154212FC1DC2D00F75DB7 /* VLCMediaPlayer+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "VLCMediaPlayer+Private.h"; sourceTree = "<group>"; };
-		895154222FC1DC2D00F75DB7 /* VLCMediaPlayer+Private.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "VLCMediaPlayer+Private.m"; sourceTree = "<group>"; };
 		895154242FC1DC2D00F75DB7 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		895154252FC1DC2D00F75DB7 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		895154262FC1DC2D00F75DB7 /* Store+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Store+Extension.swift"; sourceTree = "<group>"; };
@@ -433,7 +429,6 @@
 				F6D04BDCB732B91EC584BE02 /* GCDWebDAVServer in Frameworks */,
 				895A7EF32FC5D54E00A997B8 /* AMSMB2 in Frameworks */,
 				895A7EF02FC5D09C00A997B8 /* FilesProvider in Frameworks */,
-				895152FD2FC1DBE200F75DB7 /* TVVLCKitSPM in Frameworks */,
 				092376397254D281D509C484 /* GCDWebUploader in Frameworks */,
 				895A7F5E2FC5F82E00A997B8 /* MPVFramework.framework in Frameworks */,
 				0925E7191013E0084F5C39B8 /* SnapKit in Frameworks */,
@@ -858,8 +853,6 @@
 			children = (
 				8951541F2FC1DC2D00F75DB7 /* ANXAddressModel.h */,
 				895154202FC1DC2D00F75DB7 /* ANXAddressModel.m */,
-				895154212FC1DC2D00F75DB7 /* VLCMediaPlayer+Private.h */,
-				895154222FC1DC2D00F75DB7 /* VLCMediaPlayer+Private.m */,
 			);
 			path = Objc;
 			sourceTree = "<group>";
@@ -1186,7 +1179,6 @@
 				EAF9C9307AF39D2FE1A14272 /* Kingfisher */,
 				D2ACC2742F5F25C8A5E0B65B /* Alamofire */,
 				CB0E65E26FE026738CA2965C /* DanmakuRender */,
-				895152FC2FC1DBE200F75DB7 /* TVVLCKitSPM */,
 				895A7EEF2FC5D09C00A997B8 /* FilesProvider */,
 				895A7EF22FC5D54E00A997B8 /* AMSMB2 */,
 			);
@@ -1251,7 +1243,6 @@
 				9091D7FA34D5FA65B39F5372 /* XCRemoteSwiftPackageReference "MMKV" */,
 				A2145EC080174EC1E3E62CC1 /* XCRemoteSwiftPackageReference "RxSwift" */,
 				EAA113346A46BACBFFD2D0DE /* XCRemoteSwiftPackageReference "SnapKit" */,
-				895152FB2FC1DBE200F75DB7 /* XCLocalSwiftPackageReference "../Share/TVVLCKit" */,
 				895A7EEE2FC5D09C00A997B8 /* XCRemoteSwiftPackageReference "FileProvider" */,
 				895A7EF12FC5D54E00A997B8 /* XCRemoteSwiftPackageReference "AMSMB2" */,
 				895A7F4C2FC5F2FF00A997B8 /* XCRemoteSwiftPackageReference "MPVKit" */,
@@ -1465,7 +1456,6 @@
 				895154862FC1DC2D00F75DB7 /* Launcher.swift in Sources */,
 				895154872FC1DC2D00F75DB7 /* Store.swift in Sources */,
 				895154882FC1DC2D00F75DB7 /* MediaThumbnailer.swift in Sources */,
-				895154892FC1DC2D00F75DB7 /* VLCMediaPlayer+Private.m in Sources */,
 				D6025411E3066FEDFFEBD87A /* PlayerSettingViewController.swift in Sources */,
 				895157502FC36B3D00F75DB7 /* StepperSettingCell.swift in Sources */,
 				895157512FC36B3D00F75DB7 /* CenterPopupAnimator.swift in Sources */,
@@ -1537,10 +1527,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				DEVELOPMENT_TEAM = 94L7P6P9PY;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"../Share/TVVLCKit/Sources/TVVLCKitSPM\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = AniXPlayer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = AniXPlayer;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
@@ -1812,10 +1799,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				DEVELOPMENT_TEAM = 94L7P6P9PY;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"../Share/TVVLCKit/Sources/TVVLCKitSPM\"",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = AniXPlayer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = AniXPlayer;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
@@ -1881,13 +1865,6 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCLocalSwiftPackageReference section */
-		895152FB2FC1DBE200F75DB7 /* XCLocalSwiftPackageReference "../Share/TVVLCKit" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../Share/TVVLCKit;
-		};
-/* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
 		175895264910365F28FC3599 /* XCRemoteSwiftPackageReference "GCDWebServer" */ = {
@@ -1992,10 +1969,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 175895264910365F28FC3599 /* XCRemoteSwiftPackageReference "GCDWebServer" */;
 			productName = GCDWebServer;
-		};
-		895152FC2FC1DBE200F75DB7 /* TVVLCKitSPM */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = TVVLCKitSPM;
 		};
 		895A7EEF2FC5D09C00A997B8 /* FilesProvider */ = {
 			isa = XCSwiftPackageProductDependency;

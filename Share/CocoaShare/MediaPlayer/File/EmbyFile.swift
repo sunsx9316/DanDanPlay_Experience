@@ -8,12 +8,8 @@
 #if os(iOS) || os(tvOS)
 
 import Foundation
+import VLCKit
 import MPVFramework
-#if os(iOS)
-import MobileVLCKit
-#elseif os(tvOS)
-import TVVLCKit
-#endif
 
 class EmbyFile: File {
 
