@@ -40,11 +40,11 @@ class WebDavFile: File {
         }
         
         set {
-            self._parentFile = newValue as? (File & AnyObject)
+            self._parentFile = newValue
         }
     }
-    
-    private weak var _parentFile: (File & AnyObject)?
+
+    private weak var _parentFile: File?
     
     static var fileManager: FileManagerProtocol {
         return WebDavFileManager.shared

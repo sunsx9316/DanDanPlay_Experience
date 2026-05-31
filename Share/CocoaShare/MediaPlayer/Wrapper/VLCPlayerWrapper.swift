@@ -35,12 +35,12 @@ fileprivate extension Timer {
 }
 
 /// 内嵌字幕
-private struct Subtitle: SubtitleProtocol {
+private struct VLCSubtitle: SubtitleProtocol {
     let subtitleName: String
     let index: Int
 }
 
-private struct AudioChannel: AudioChannelProtocol {
+private struct VLCAudioChannel: AudioChannelProtocol {
     let audioName: String
     let audioId: Int64
 }
@@ -151,7 +151,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
             let setup = { [weak self] in
                 guard let self = self else { return }
 
-                if let sub = newValue as? Subtitle {
+                if let sub = newValue as? VLCSubtitle {
                     ANX.logInfo(.player, "[VLC] 选择字幕: \(sub.subtitleName) (index: \(sub.index))")
                     self.player?.currentVideoSubTitleIndex = Int32(sub.index)
                 } else if let sub = newValue as? ExternalSubtitle {
@@ -533,7 +533,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     }
     
     //MARK: Private Method
-    private func subtitleWithIndexInPlayer(_ index: Int) -> Subtitle? {
+    private func subtitleWithIndexInPlayer(_ index: Int) -> VLCSubtitle? {
         guard let player = self.player else { return nil }
         
         if index < player.videoSubTitlesIndexes.count,
@@ -549,7 +549,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
                 name = "未知名称"
             }
             
-            return Subtitle(subtitleName: name, index: indexNumber)
+            return VLCSubtitle(subtitleName: name, index: indexNumber)
         } else {
             return nil
         }
@@ -571,7 +571,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
                 name = "未知名称"
             }
             
-            return AudioChannel(audioName: name, audioId: indexNumber)
+            return VLCAudioChannel(audioName: name, audioId: indexNumber)
         } else {
             return nil
         }

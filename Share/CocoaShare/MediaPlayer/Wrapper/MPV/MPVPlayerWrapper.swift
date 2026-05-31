@@ -17,12 +17,12 @@ import MPVFramework
 import ANXLog
 
 // MARK: - 内嵌字幕
-private struct Subtitle: SubtitleProtocol {
+struct MPVSubtitle: SubtitleProtocol {
     let subtitleName: String
     let trackId: Int64
 }
 
-private struct AudioChannel: AudioChannelProtocol {
+struct MPVAudioChannel: AudioChannelProtocol {
     let audioName: String
     let audioId: Int64
 }
@@ -44,6 +44,9 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
     
     private lazy var _mediaView = MPVView(frame: .zero)
 
+    /// windowId 是否已配置到 mpv（CAMetalLayer 尺寸就绪）
+    private var windowIdConfigured = false
+
     var mediaView: ANXView {
         return _mediaView
     }
@@ -53,7 +56,8 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
     var currentPlayItem: File? {
         didSet {
             if let item = currentPlayItem,
-                let media = item.createMPVMedia() {  
+                let media = item.createMPVMedia() {
+                configureWindowIdIfNeeded()
                 mpv?.loadFile(media.url.absoluteString)
             }
         }
@@ -62,7 +66,12 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
     var subtitleList: [SubtitleProtocol] {
         return _subtitleList
     }
-    private lazy var _subtitleList = [Subtitle]()
+    private lazy var _subtitleList = [MPVSubtitle]()
+
+    /// 当前字幕轨道 ID（nil = 无字幕）
+    var currentSubtitleTrackId: Int64? {
+        return mpv?.subtitle.subtitleId
+    }
 
     var currentSubtitle: SubtitleProtocol? {
         get {
@@ -74,7 +83,7 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
             return nil
         }
         set {
-            if let sub = newValue as? Subtitle {
+            if let sub = newValue as? MPVSubtitle {
                 ANX.logInfo(.player, "[MPV] 选择字幕: \(sub.subtitleName) (id: \(sub.trackId))")
                 self.mpv?.subtitle.subtitleId = Int64(sub.trackId)
             } else if let sub = newValue as? ExternalSubtitle {
@@ -90,7 +99,7 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
     var audioChannelList: [AudioChannelProtocol] {
         return _audioChannelList
     }
-    private lazy var _audioChannelList = [AudioChannel]()
+    private lazy var _audioChannelList = [MPVAudioChannel]()
 
     var currentAudioChannel: AudioChannelProtocol? {
         get {
@@ -309,6 +318,14 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
 
     // MARK: - 初始化
 
+    /// 确保 windowId 已配置（layoutSubviews 首次触发的 onReady 尚未回调时，作为 fallback）
+    private func configureWindowIdIfNeeded() {
+        guard !windowIdConfigured, let mpvHandle = mpv else { return }
+        let metalLayerPtr = Unmanaged.passUnretained(_mediaView.metalLayer).toOpaque()
+        mpvHandle.video.windowId = Int64(Int(bitPattern: metalLayerPtr))
+        windowIdConfigured = true
+    }
+
     private func initializeMpv() {
         guard let mpvHandle = MPV() else {
             ANX.logError(.player, "[MPV] 创建失败")
@@ -320,9 +337,14 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
         // 主播放器走硬件加速以获得最佳性能/功耗，与 PiP (libmpv SW) 路线不同
         mpvHandle.setOptionString(.vo, "gpu-next")
         mpvHandle.setOptionString(.hwdec, "videotoolbox")
-        // 嵌入到我们的 Metal layer
-        let metalLayerPtr = Unmanaged.passUnretained(_mediaView.metalLayer).toOpaque()
-        mpvHandle.video.windowId = Int64(Int(bitPattern: metalLayerPtr))
+        // 延迟到 MPVView 首次布局完成后再配置渲染目标 (windowId)，
+        // 避免 CAMetalLayer 尺寸为 1x1 时 mpv 就开始渲染导致 Metal validation 错误
+        _mediaView.onReady = { [weak self, weak mpvHandle] in
+            guard let self = self, let mpvHandle = mpvHandle else { return }
+            let metalLayerPtr = Unmanaged.passUnretained(self._mediaView.metalLayer).toOpaque()
+            mpvHandle.video.windowId = Int64(Int(bitPattern: metalLayerPtr))
+            self.windowIdConfigured = true
+        }
 
         // 字幕配置
         setupSubtitleFonts(mpvHandle: mpvHandle)
@@ -418,11 +440,11 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
         guard let mpv = mpv else { return }
 
         _subtitleList = mpv.track.subtitleTracks.map { track in
-            Subtitle(subtitleName: track.displayName, trackId: track.id)
+            MPVSubtitle(subtitleName: track.displayName, trackId: track.id)
         }
 
         _audioChannelList = mpv.track.audioTracks.map { track in
-            AudioChannel(audioName: track.displayName, audioId: track.id)
+            MPVAudioChannel(audioName: track.displayName, audioId: track.id)
         }
     }
 
@@ -434,9 +456,13 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
 // MARK: - MPVView
 
 class MPVView: UIView {
-    
+
     private(set) lazy var metalLayer = CAMetalLayer()
-    
+
+    /// 首次完成布局（bounds 非零）时的回调，用于通知播放器配置渲染目标
+    var onReady: (() -> Void)?
+    private var didLayoutOnce = false
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
@@ -446,22 +472,27 @@ class MPVView: UIView {
         super.init(coder: coder)
         setup()
     }
-    
+
     override func layoutSubviews() {
         super.layoutSubviews()
         self.metalLayer.frame = self.bounds
+        if !didLayoutOnce, !bounds.isEmpty {
+            didLayoutOnce = true
+            onReady?()
+            onReady = nil
+        }
     }
 
     private func setup() {
         backgroundColor = .black
-        
+
         metalLayer.device = MTLCreateSystemDefaultDevice()
         metalLayer.pixelFormat = .bgra8Unorm
         metalLayer.framebufferOnly = false
         metalLayer.backgroundColor = UIColor.black.cgColor
         metalLayer.contentsScale = UIScreen.main.scale
         metalLayer.frame = self.bounds
-        
+
         self.layer.addSublayer(metalLayer)
     }
 }
@@ -473,6 +504,8 @@ extension MPVPlayerWrapper {
     /// 创建一个 headless PiP 播放器实例，配置从主播放器同步
     func createPiPPlayer(with config: PiPPlayerConfig) -> PiPPlayerProtocol? {
         let cfg = config
+        // PiP 必须用软件渲染（iOS 后台禁 GPU）
+        cfg.extra["hwdec"] = "no"
         if cfg.subtitleFontsDir == nil {
             cfg.subtitleFontsDir = mpvPrepareFonts()
         }

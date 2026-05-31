@@ -25,8 +25,10 @@ protocol PiPPlayerProtocol: AnyObject {
     var currentPosition: Double { get }
     var duration: Double { get }
     var isPlaying: Bool { get }
+    var config: PiPPlayerConfig { get set }
 
-    func loadAndPlay(urlString: String, startPosition: Double)
+    /// 加载并播放，startPosition / startPaused 从 config 读取
+    func loadAndPlay(urlString: String)
     func play()
     func pause()
     func seek(to position: Double)

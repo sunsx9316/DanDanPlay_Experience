@@ -325,20 +325,22 @@ class PlayerMediaModel {
 
     private(set) var pipManager: PiPManager?
 
-    func createPiPManager(startPosition: Double, filePath: String) -> PiPManager? {
+    /// 创建 PiP 播放器实例（headless MPV），配置从主播放器提取（含当前播放状态快照）
+    func createPiPPlayer() -> (any PiPPlayerProtocol)? {
         guard let mpvWrapper = player.underlyingPlayer as? MPVPlayerWrapper else {
-            ANX.logError(.player, "[PiP] 主播放器不是 MPV，无法启动 PiP")
+            ANX.logError(.player, "[PiP] 主播放器不是 MPV，无法创建 PiP 播放器")
             return nil
         }
         var config = PiPPlayerConfig.extract(from: player.underlyingPlayer)
-        config.extra["hwdec"] = "no"
-        guard let pipPlayer = mpvWrapper.createPiPPlayer(with: config) else {
-            ANX.logError(.player, "[PiP] 创建 PiP 播放器失败")
-            return nil
-        }
+        config.currentSubtitle = player.underlyingPlayer.currentSubtitle
+        config.currentAudioChannel = player.underlyingPlayer.currentAudioChannel
+        return mpvWrapper.createPiPPlayer(with: config)
+    }
+
+    func createPiPManager(with player: any PiPPlayerProtocol, media: File) -> PiPManager {
         let manager = PiPManager()
         self.pipManager = manager
-        manager.start(with: pipPlayer, filePath: filePath, startPosition: startPosition)
+        manager.start(with: player, media: media)
         return manager
     }
 
@@ -358,6 +360,32 @@ class PlayerMediaModel {
         if autoPlay {
             play()
         }
+    }
+
+    /// PiP 已切到新集时，主播放器同步切换到该集
+    func switchToMedia(_ media: File, autoPlay: Bool) {
+        ANX.logInfo(.player, "[PiP] 主播放器切换到: \(media.fileName)")
+        player.play(media)
+        context.media.onNext(media)
+        if !autoPlay {
+            pause()
+        }
+        // 异步加载匹配信息，填充媒体信息 cell
+        loadMatchInfoForPiPSync(media)
+    }
+
+    /// PiP 切集后静默加载弹幕匹配信息（不显示 HUD）
+    private func loadMatchInfoForPiPSync(_ media: File) {
+        DanmakuManager.shared.loadDanmaku(media, progress: nil,
+            matchCompletion: { _, _ in },
+            danmakuCompletion: { [weak self] _, matchInfo, _ in
+                guard let self = self,
+                      let matchInfo = matchInfo,
+                      let playItem = self.findPlayItem(media) else { return }
+                playItem.matchInfo = matchInfo
+                ANX.logInfo(.player, "[PiP] 匹配信息已更新: \(matchInfo.matchDesc)")
+            }
+        )
     }
 
     func onChangeAutoJumpTitleEnding(_ autoJumpTitleEnding: Bool) {
@@ -476,7 +504,7 @@ class PlayerMediaModel {
     }
     
     
-    /// 获取下一个应该播放的视频
+    /// 获取下一个应该播放的视频（不考虑播放模式，纯线性下一项）
     /// - Returns: 下一个应该播放的视频
     func nextMedia() -> File? {
         if let index = self.player.playList.firstIndex(where: { $0 == self.media }) {
@@ -484,8 +512,13 @@ class PlayerMediaModel {
                 return self.player.playList[index + 1]
             }
         }
-        
+
         return nil
+    }
+
+    /// 根据当前播放模式获取下一集（复用 MediaPlayer 的 playMode 逻辑）
+    func nextMediaForPlayMode(from currentItem: File? = nil) -> File? {
+        return player.nextPlayItem(from: currentItem)
     }
     
     /// 开始播放

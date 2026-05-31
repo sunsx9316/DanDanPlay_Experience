@@ -38,7 +38,7 @@ protocol FileDelegate: AnyObject {
     func mediaBufferDidChange(file: File, bufferInfo: MediaBufferInfo)
 }
 
-protocol File: HistoryManager.lastWatchDateStoreable {
+protocol File: AnyObject, HistoryManager.lastWatchDateStoreable {
     
     var url: URL { get }
     

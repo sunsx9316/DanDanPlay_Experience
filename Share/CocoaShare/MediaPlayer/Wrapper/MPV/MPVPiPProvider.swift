@@ -39,7 +39,8 @@ class MPVPiPProvider: PiPPlayerProtocol {
     private var isCapturing = false
     private var frameCaptureCount = 0
     private var skipCount = 0
-    private var config: PiPPlayerConfig
+    private var pauseAfterFirstFrame = false
+    var config: PiPPlayerConfig
 
     // MARK: - 初始化
 
@@ -80,19 +81,24 @@ class MPVPiPProvider: PiPPlayerProtocol {
 
     // MARK: - 生命周期
 
-    func loadAndPlay(urlString: String, startPosition: Double) {
+    func loadAndPlay(urlString: String) {
         guard let mpv = mpv else { return }
+        let startPosition = config.startPosition
+        let startPaused = config.startPaused
 
-        ANX.logInfo(.player, "[MPVPiP] 加载, start=\(String(format: "%.1f", startPosition))s")
+        ANX.logInfo(.player, "[MPVPiP] 加载, start=\(String(format: "%.1f", startPosition))s, startPaused=\(startPaused)")
 
         mpv.on(.fileLoaded) { [weak self] _ in
             ANX.logInfo(.player, "[MPVPiP] 文件加载完成")
             DispatchQueue.main.async {
                 guard let self = self, let mpv = self.mpv else { return }
                 self.readVideoSize(from: mpv)
+                self.applyTrackConfig(to: mpv)
                 mpv.time.seek(to: startPosition)
+                // 始终先播放，让解码器产出首帧；如需暂停，首帧入队后再 pause
                 mpv.playback.isPaused = false
                 self.isPlaying = true
+                self.pauseAfterFirstFrame = startPaused
                 self.startFrameCapture()
                 self.delegate?.pipPlayer(self, didChangePlayPause: true)
             }
@@ -135,6 +141,7 @@ class MPVPiPProvider: PiPPlayerProtocol {
         self.config = config
         guard let mpv = mpv else { return }
         applyPostInitConfig(mpv: mpv, config: config)
+        applyTrackConfig(to: mpv)
     }
 
     // MARK: - 配置应用
@@ -162,6 +169,20 @@ class MPVPiPProvider: PiPPlayerProtocol {
     }
 
     // MARK: - 字体配置
+
+    /// 应用字幕 / 音频轨道选择
+    private func applyTrackConfig(to mpv: MPV) {
+        if let sub = config.currentSubtitle {
+            if let ext = sub as? ExternalSubtitle {
+                mpv.subtitle.addExternal(path: ext.url.path)
+            } else if let mpvSub = sub as? MPVSubtitle {
+                mpv.subtitle.subtitleId = Int64(mpvSub.trackId)
+            }
+        }
+        if let audio = config.currentAudioChannel as? MPVAudioChannel {
+            mpv.audio.audioId = Int64(audio.audioId)
+        }
+    }
 
     private func setupSubtitleFonts(mpv: MPV, config: PiPPlayerConfig) {
         guard let fontDir = mpvPrepareFonts() else { return }
@@ -365,9 +386,15 @@ class MPVPiPProvider: PiPPlayerProtocol {
                 return
             }
 
+            let isFirstFrame = self.frameCaptureCount == 0
+
             DispatchQueue.main.async { [weak self] in
                 guard let self = self else { return }
                 self.delegate?.pipPlayer(self, didOutputFrame: sampleBuffer)
+                if isFirstFrame, self.pauseAfterFirstFrame {
+                    self.pauseAfterFirstFrame = false
+                    self.pause()
+                }
             }
 
             self.frameCaptureCount += 1

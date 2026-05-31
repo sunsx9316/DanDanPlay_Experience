@@ -484,10 +484,13 @@ class MediaPlayer {
         return shouldChangeMedia
     }
     
-    private func tryPlayNextItem() {
+    /// 根据当前播放模式计算下一个播放项（纯计算，无副作用）
+    /// - Parameter currentItem: 显式指定当前项，nil 时使用主播放器的 currentPlayItem
+    func nextPlayItem(from currentItem: File? = nil) -> File? {
+        let current = currentItem ?? self.currentPlayItem
 
         func nextItemWithCycle(_ cycle: Bool) -> File? {
-            if let index = self.playList.firstIndex(where: { $0 == self.currentPlayItem }) {
+            if let index = self.playList.firstIndex(where: { $0 == current }) {
                 if index == self.playList.count - 1 {
                     return cycle ? self.playList.first : nil
                 }
@@ -498,29 +501,24 @@ class MediaPlayer {
 
         switch self.playMode {
         case .playOnce:
-            ANX.logInfo(.player, "[MediaPlayer] 播放模式: 单次播放")
-            break
+            return nil
         case .autoPlayNext:
-            if let nextItem = nextItemWithCycle(false) {
-                ANX.logInfo(.player, "[MediaPlayer] 自动播放下一集: \(nextItem.fileName)")
-                if self.changeCurrentItem(nextItem) {
-                    self.play(nextItem)
-                }
-            }
+            return nextItemWithCycle(false)
         case .repeatCurrentItem:
-            if let currentPlayItem = self.currentPlayItem {
-                ANX.logInfo(.player, "[MediaPlayer] 重复播放当前: \(currentPlayItem.fileName)")
-                if self.changeCurrentItem(currentPlayItem) {
-                    self.play(currentPlayItem)
-                }
-            }
+            return current
         case .repeatList:
-            if let nextItem = nextItemWithCycle(true) {
-                ANX.logInfo(.player, "[MediaPlayer] 列表循环播放下一集: \(nextItem.fileName)")
-                if self.changeCurrentItem(nextItem) {
-                    self.play(nextItem)
-                }
-            }
+            return nextItemWithCycle(true)
+        }
+    }
+
+    private func tryPlayNextItem() {
+        guard let nextItem = nextPlayItem() else {
+            ANX.logInfo(.player, "[MediaPlayer] 播放模式: 无下一集")
+            return
+        }
+        ANX.logInfo(.player, "[MediaPlayer] 自动播放下一集: \(nextItem.fileName)")
+        if self.changeCurrentItem(nextItem) {
+            self.play(nextItem)
         }
     }
 }

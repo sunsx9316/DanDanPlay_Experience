@@ -40,12 +40,24 @@ class PiPPlayerConfig {
 
     // MARK: - 后端特有参数
 
+    /// 起始播放位置（秒）
+    var startPosition: Double = 0
+
+    /// 是否以暂停状态启动
+    var startPaused: Bool = false
+
+    /// 当前字幕（内嵌轨道或外挂文件），nil = 无字幕
+    var currentSubtitle: (any SubtitleProtocol)?
+
+    /// 当前音频轨道，nil = 不改变
+    var currentAudioChannel: (any AudioChannelProtocol)?
+
     /// 额外配置（例如 mpv: ["hwdec": "no"], vlc: ["hw-decoder": "disable"]）
     var extra: [String: Any] = [:]
 
     // MARK: - 工厂方法
 
-    /// 从主播放器提取当前配置
+    /// 从主播放器提取当前配置（含播放状态快照）
     static func extract(from player: MediaPlayerProtocol) -> PiPPlayerConfig {
         let config = PiPPlayerConfig()
         config.speed = player.speed
@@ -55,6 +67,8 @@ class PiPPlayerConfig {
         config.subtitleYPosition = player.subtitleYPosition
         config.subtitleColor = player.fontColor
         config.volume = player.volume
+        config.startPosition = player.currentTime
+        config.startPaused = !player.isPlaying
         return config
     }
 }

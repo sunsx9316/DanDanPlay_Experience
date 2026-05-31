@@ -9,7 +9,6 @@ import UIKit
 import SnapKit
 import YYCategories
 import MBProgressHUD
-import DynamicButton
 import RxSwift
 import ANXLog
 import AVFoundation
@@ -163,19 +162,19 @@ class PlayerViewController: ViewController {
         }
         guard pipController == nil else { return }
         guard let file = mediaModel.media,
-              let mpvMedia = file.createMPVMedia() else {
+              file.createMPVMedia() != nil else {
             ANX.logError(.player, "[PiP] 无法获取当前播放文件")
             return
         }
 
-        let currentPosition = mediaModel.currentTime
-        ANX.logInfo(.player, "[PiP] 暂停主播放器 (position: \(currentPosition)s)")
+        // 先创建 PiP player（extract 会快照当前播放状态）
+        guard let pipPlayer = mediaModel.createPiPPlayer() else { return }
+
+        // 再暂停主播放器
+        ANX.logInfo(.player, "[PiP] 暂停主播放器")
         mediaModel.pause()
 
-        guard let manager = mediaModel.createPiPManager(
-            startPosition: currentPosition,
-            filePath: mpvMedia.url.absoluteString
-        ) else { return }
+        let manager = mediaModel.createPiPManager(with: pipPlayer, media: file)
 
         // 回调
         manager.onReadyForPiPStart = { [weak self] in
@@ -186,6 +185,22 @@ class PlayerViewController: ViewController {
             if state == .inactive {
                 self?.handlePiPStopped()
             }
+        }
+        manager.onEndOfFile = { [weak self] in
+            guard let self = self else { return false }
+            guard let manager = self.mediaModel.pipManager,
+                  let nextMedia = self.mediaModel.nextMediaForPlayMode(from: manager.currentMedia) else {
+                ANX.logInfo(.player, "[PiP] 无下一集，PiP 退出")
+                return false
+            }
+            ANX.logInfo(.player, "[PiP] 自动播放下一集: \(nextMedia.fileName)")
+            guard nextMedia.createMPVMedia() != nil,
+                  let pipPlayer = self.mediaModel.createPiPPlayer() else {
+                ANX.logError(.player, "[PiP] 创建下一集 PiP 播放器失败")
+                return false
+            }
+            manager.restart(with: pipPlayer, media: nextMedia)
+            return true
         }
         manager.onRestoreUI = {
             // PiP 窗口点"返回"
@@ -221,21 +236,33 @@ class PlayerViewController: ViewController {
         ANX.logInfo(.player, "[PiP] 用户关闭画中画")
         let wasPlaying = mediaModel.pipManager?.isPlaying ?? false
         let finalPosition = mediaModel.pipManager?.currentPosition ?? 0
+        let pipMedia = mediaModel.pipManager?.currentMedia
         mediaModel.pipManager?.sampleBufferView.removeFromSuperview()
         mediaModel.stopPiP()
         pipController?.stopPictureInPicture()
         pipController = nil
-        mediaModel.syncPlayerPosition(finalPosition, autoPlay: wasPlaying)
+        syncMainPlayerToPiP(pipMedia: pipMedia, position: finalPosition, autoPlay: wasPlaying)
     }
 
     private func handlePiPStopped() {
         let wasPlaying = mediaModel.pipManager?.isPlaying ?? false
         let finalPosition = mediaModel.pipManager?.currentPosition ?? 0
+        let pipMedia = mediaModel.pipManager?.currentMedia
         mediaModel.pipManager?.sampleBufferView.removeFromSuperview()
         mediaModel.stopPiP()
         pipController = nil
         hidePiPOverlay()
-        mediaModel.syncPlayerPosition(finalPosition, autoPlay: wasPlaying)
+        syncMainPlayerToPiP(pipMedia: pipMedia, position: finalPosition, autoPlay: wasPlaying)
+    }
+
+    /// PiP 退出时同步状态到主播放器：如果已自动切集，则切换主播放器到新集
+    private func syncMainPlayerToPiP(pipMedia: File?, position: Double, autoPlay: Bool) {
+        if let pipMedia = pipMedia, pipMedia.fileId != mediaModel.media?.fileId {
+            ANX.logInfo(.player, "[PiP] 同步主播放器到新集: \(pipMedia.fileName)")
+            mediaModel.switchToMedia(pipMedia, autoPlay: autoPlay)
+        } else {
+            mediaModel.syncPlayerPosition(position, autoPlay: autoPlay)
+        }
     }
 
     // MARK: - PiP Overlay
@@ -439,10 +466,11 @@ class PlayerViewController: ViewController {
         view.contentColor = .white
         view.isUserInteractionEnabled = true
         
-        let pauseIcon = DynamicButton(style: isPlay ? .play : .pause)
-        pauseIcon.lineWidth = 6
-        pauseIcon.strokeColor = .white
-        pauseIcon.highlightStokeColor = .lightGray
+        let pauseIcon = PlayPauseButton()
+        pauseIcon.iconStyle = isPlay ? .play : .pause
+        pauseIcon.iconLineWidth = 6
+        pauseIcon.iconStrokeColor = .white
+        pauseIcon.iconHighlightStrokeColor = .lightGray
         pauseIcon.frame = .init(x: 0, y: 0, width: 50, height: 50)
         view.customView = pauseIcon
         view.hide(animated: true, afterDelay: 0.8)

@@ -40,6 +40,9 @@ class PiPManager: NSObject {
     var currentPosition: Double {
         pipPlayer?.currentPosition ?? _latestPosition
     }
+
+    /// PiP 当前正在播放的媒体（独立追踪，播完切集时自动更新）
+    private(set) weak var currentMedia: File?
     
     var displayLayer: AVSampleBufferDisplayLayer {
         sampleBufferView.displayLayer
@@ -56,6 +59,9 @@ class PiPManager: NSObject {
     var onReadyForPiPStart: (() -> Void)?
     /// 播放位置更新
     var onPositionUpdate: ((Double) -> Void)?
+    /// 当前集播放完毕（EOF），通知上层获取下一集
+    /// 返回 true 表示上层已处理（如 restart），跳过 cleanup
+    var onEndOfFile: (() -> Bool)?
 
     // MARK: 私有
 
@@ -75,14 +81,14 @@ class PiPManager: NSObject {
 
     // MARK: 启动 / 停止
 
-    func start(with player: any PiPPlayerProtocol,
-               filePath: String,
-               startPosition: Double) {
+    func start(with player: any PiPPlayerProtocol, media: File) {
         guard state == .inactive else {
             ANX.logError(.player, "[PiPManager] start 跳过，当前 state=\(state)")
             return
         }
 
+        let startPosition = player.config.startPosition
+        currentMedia = media
         _latestPosition = startPosition
         self.pipPlayer = player
         player.delegate = self
@@ -106,12 +112,52 @@ class PiPManager: NSObject {
         frameCount = 0
         dropCount = 0
 
-        player.loadAndPlay(urlString: filePath, startPosition: startPosition)
+        let playableURL = media.createMPVMedia()?.url ?? media.url
+        player.loadAndPlay(urlString: playableURL.absoluteString)
     }
 
     func stop() {
         guard state != .inactive else { return }
         cleanup()
+    }
+
+    /// 无缝切换到下一集：复用 displayLayer 和 timebase，仅替换底层播放器
+    func restart(with player: any PiPPlayerProtocol, media: File) {
+        ANX.logInfo(.player, "[PiPManager] 重启播放下一集: \(media.fileName)")
+
+        let wasPlaying = pipPlayer?.isPlaying ?? false
+        player.config.startPosition = 0
+        player.config.startPaused = !wasPlaying
+        // 新集音视频轨道不同，清除主播放器残留的选择
+        player.config.currentSubtitle = nil
+        player.config.currentAudioChannel = nil
+        let startPosition = player.config.startPosition
+
+        currentMedia = media
+        _latestPosition = startPosition
+
+        // 清理旧播放器
+        pipPlayer?.terminate()
+
+        // 挂载新播放器
+        self.pipPlayer = player
+        player.delegate = self
+
+        // 重置 timebase
+        let startCMTime = CMTime(seconds: startPosition, preferredTimescale: pipTimescale)
+        if let tb = pipTimebase {
+            CMTimebaseSetTime(tb, time: startCMTime)
+            CMTimebaseSetRate(tb, rate: 0.0)
+        }
+
+        // 重置帧管线
+        displayLayer.flush()
+        didStartPiPController = false
+        frameCount = 0
+        dropCount = 0
+
+        let playableURL = media.createMPVMedia()?.url ?? media.url
+        player.loadAndPlay(urlString: playableURL.absoluteString)
     }
 
     private func cleanup() {
@@ -251,7 +297,10 @@ extension PiPManager: PiPPlayerDelegate {
 
     func pipPlayerDidEndFile(_ player: any PiPPlayerProtocol) {
         ANX.logInfo(.player, "[PiPManager] 播放结束")
-        cleanup()
+        let handled = onEndOfFile?() ?? false
+        if !handled {
+            cleanup()
+        }
     }
 }
 
