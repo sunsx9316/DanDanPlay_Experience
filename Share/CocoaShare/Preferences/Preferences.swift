@@ -81,6 +81,9 @@ class Preferences {
 
         /// Emby 登录信息
         case embyLoginInfo
+
+        /// Jellyfin 登录信息
+        case jellyfinLoginInfo
         
         /// 字幕加载顺序关键字
         case subtitleLoadOrder
@@ -409,6 +412,33 @@ class Preferences {
                 }
             } else {
                 Store.shared.remove(KeyName.embyLoginInfo.storeKey)
+            }
+        }
+    }
+
+    var jellyfinLoginInfos: [LoginInfo]? {
+        get {
+            if let jsonData: Data = Store.shared.value(forKey: KeyName.jellyfinLoginInfo.storeKey) {
+                do {
+                    let loginInfo = try JSONDecoder().decode([LoginInfo].self, from: jsonData)
+                    return loginInfo
+                } catch let error {
+                    debugPrint("读取 jellyfinLoginInfos 失败 error: \(error)")
+                }
+            }
+            return nil
+        }
+
+        set {
+            if let newValue = newValue {
+                do {
+                    let data = try JSONEncoder().encode(newValue)
+                    Store.shared.set(data, forKey: KeyName.jellyfinLoginInfo.storeKey)
+                } catch let error {
+                    debugPrint("设置 jellyfinLoginInfos 失败 error: \(error)")
+                }
+            } else {
+                Store.shared.remove(KeyName.jellyfinLoginInfo.storeKey)
             }
         }
     }
