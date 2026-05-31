@@ -1,5 +1,5 @@
 {
-  "originHash" : "195026bd23205c3144b8891cb453079bbe6afba7afbbd7791eb947ff6697bc0d",
+  "originHash" : "82d449382274cd7e1c548d694edf73e34f916e63f834f1ae8547a3039c5c1531",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -20,15 +20,6 @@
       }
     },
     {
-      "identity" : "cocoalumberjack",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/CocoaLumberjack/CocoaLumberjack.git",
-      "state" : {
-        "revision" : "4b8714a7fb84d42393314ce897127b3939885ec3",
-        "version" : "3.8.5"
-      }
-    },
-    {
       "identity" : "color-picker-for-ios",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/hayashi311/Color-Picker-for-iOS",
@@ -44,15 +35,6 @@
       "state" : {
         "revision" : "11dd5d3b288a840fa810282315871c21876aba73",
         "version" : "1.6.1"
-      }
-    },
-    {
-      "identity" : "dynamicbutton",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/yannickl/DynamicButton",
-      "state" : {
-        "revision" : "4fbd60e46a548e77fd118483bbb4e58d3c11c5ed",
-        "version" : "6.2.1"
       }
     },
     {
@@ -134,24 +116,6 @@
       "state" : {
         "revision" : "2842e6e84e82eb9a8dac0100ca90d9444b0307f4",
         "version" : "5.7.1"
-      }
-    },
-    {
-      "identity" : "svgkit",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SVGKit/SVGKit",
-      "state" : {
-        "revision" : "58152b9f7c85eab239160b36ffdfd364aa43d666",
-        "version" : "3.0.0"
-      }
-    },
-    {
-      "identity" : "swift-log",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/apple/swift-log",
-      "state" : {
-        "revision" : "9cb486020ebf03bfa5b5df985387a14a98744537",
-        "version" : "1.6.1"
       }
     },
     {

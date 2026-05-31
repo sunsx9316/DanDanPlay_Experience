@@ -147,9 +147,9 @@
 		8953D0322C99E48A003EF386 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D0312C99E48A003EF386 /* SnapKit */; };
 		8953D0352C99E4C7003EF386 /* MBProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D0342C99E4C7003EF386 /* MBProgressHUD */; };
 		8953D0382C99E502003EF386 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D0372C99E502003EF386 /* IQKeyboardManagerSwift */; };
-		8953D0472C99E759003EF386 /* DynamicButton in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D0462C99E759003EF386 /* DynamicButton */; };
 		895599682FCB597F007F52E0 /* MPVHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895599672FCB597F007F52E0 /* MPVHelper.swift */; };
 		8955996B2FCB645F007F52E0 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 8955996A2FCB645F007F52E0 /* Kingfisher */; };
+		8955996D2FCB81DE007F52E0 /* PlayPauseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8955996C2FCB81DE007F52E0 /* PlayPauseButton.swift */; };
 		895A7F9E2FC74E8A00A997B8 /* MPVKit in Frameworks */ = {isa = PBXBuildFile; productRef = 895A7F9D2FC74E8A00A997B8 /* MPVKit */; };
 		895A7FA92FC7518500A997B8 /* GCDWebDAVServer in Frameworks */ = {isa = PBXBuildFile; productRef = 895A7FA82FC7518500A997B8 /* GCDWebDAVServer */; };
 		895A7FAB2FC7518500A997B8 /* GCDWebServer in Frameworks */ = {isa = PBXBuildFile; productRef = 895A7FAA2FC7518500A997B8 /* GCDWebServer */; };
@@ -415,6 +415,7 @@
 		895152CD2FC1ADC000F75DB7 /* upload.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = upload.js; sourceTree = "<group>"; };
 		8953CDA22C987FF1003EF386 /* FilterDanmakuTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterDanmakuTableViewCell.swift; sourceTree = "<group>"; };
 		895599672FCB597F007F52E0 /* MPVHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVHelper.swift; sourceTree = "<group>"; };
+		8955996C2FCB81DE007F52E0 /* PlayPauseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayPauseButton.swift; sourceTree = "<group>"; };
 		895A7FC52FC8A46A00A997B8 /* SeparatorTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorTableViewCell.swift; sourceTree = "<group>"; };
 		895A7FC72FC8A60C00A997B8 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		895A7FC92FC8A72800A997B8 /* OpenSourceListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenSourceListViewController.swift; sourceTree = "<group>"; };
@@ -518,7 +519,6 @@
 				895A7FFB2FCB30C200A997B8 /* MPVFramework.framework in Frameworks */,
 				6F969714544C3EBD7E920F21 /* Pods_AniXPlayer.framework in Frameworks */,
 				89B7EA4F2C9B141100527B84 /* DanmakuRender in Frameworks */,
-				8953D0472C99E759003EF386 /* DynamicButton in Frameworks */,
 				89B7EA4C2C9B120100527B84 /* DanmakuRender in Frameworks */,
 				89D148722D44E2B000E7FDF5 /* YYCategories in Frameworks */,
 				8953D0292C99E3D8003EF386 /* RxSwift in Frameworks */,
@@ -727,6 +727,7 @@
 				890DF76A26160B3E002D8AE5 /* SevenSwitch.swift */,
 				890DF76C26160B3E002D8AE5 /* VolumeControlView.swift */,
 				89AF9C0E26343BE70037A133 /* AutoScrollLabel.swift */,
+				8955996C2FCB81DE007F52E0 /* PlayPauseButton.swift */,
 				89B4B444272484FE00FB1BF5 /* SpeedUpView.swift */,
 				89945FDC28C8E7C6009AC640 /* GotoLastWatchPointView.swift */,
 				B54627AC0D74F1F7C3F2CB1D /* DanmakuInputView.swift */,
@@ -1434,7 +1435,6 @@
 				8953D0312C99E48A003EF386 /* SnapKit */,
 				8953D0342C99E4C7003EF386 /* MBProgressHUD */,
 				8953D0372C99E502003EF386 /* IQKeyboardManagerSwift */,
-				8953D0462C99E759003EF386 /* DynamicButton */,
 				89B7EA4B2C9B120100527B84 /* DanmakuRender */,
 				89B7EA4E2C9B141100527B84 /* DanmakuRender */,
 				890A0B2D2CAD624200AE1F6B /* Colorful */,
@@ -1510,7 +1510,6 @@
 				8953D0302C99E48A003EF386 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				8953D0332C99E4C7003EF386 /* XCRemoteSwiftPackageReference "MBProgressHUD" */,
 				8953D0362C99E502003EF386 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */,
-				8953D0452C99E758003EF386 /* XCRemoteSwiftPackageReference "DynamicButton" */,
 				89B7EA4D2C9B141100527B84 /* XCRemoteSwiftPackageReference "DanmakuRender-Swift" */,
 				890A0B2C2CAD624200AE1F6B /* XCRemoteSwiftPackageReference "Color-Picker-for-iOS" */,
 				89FFD1272D44E65000428206 /* XCRemoteSwiftPackageReference "YYCategories" */,
@@ -1694,6 +1693,7 @@
 				890DF86526189D26002D8AE5 /* EpisodeTableViewCell.swift in Sources */,
 				89AF9C032631C2680037A133 /* StepTableViewCell.swift in Sources */,
 				8944E87B263AF72400EF00B1 /* TextField.swift in Sources */,
+				8955996D2FCB81DE007F52E0 /* PlayPauseButton.swift in Sources */,
 				8931F0F92677457100590569 /* EditableTableViewCell.swift in Sources */,
 				8931F0EB2674CD3300590569 /* HttpServerViewController.swift in Sources */,
 				89A689722C4271B5002B7CA3 /* UserInfoViewController.swift in Sources */,
@@ -2235,14 +2235,6 @@
 				minimumVersion = 7.1.1;
 			};
 		};
-		8953D0452C99E758003EF386 /* XCRemoteSwiftPackageReference "DynamicButton" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/yannickl/DynamicButton";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 6.2.1;
-			};
-		};
 		895599692FCB645F007F52E0 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher";
@@ -2341,11 +2333,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8953D0362C99E502003EF386 /* XCRemoteSwiftPackageReference "IQKeyboardManager" */;
 			productName = IQKeyboardManagerSwift;
-		};
-		8953D0462C99E759003EF386 /* DynamicButton */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 8953D0452C99E758003EF386 /* XCRemoteSwiftPackageReference "DynamicButton" */;
-			productName = DynamicButton;
 		};
 		8955996A2FCB645F007F52E0 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;

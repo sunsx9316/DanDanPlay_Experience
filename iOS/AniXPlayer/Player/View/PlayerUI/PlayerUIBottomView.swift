@@ -7,8 +7,6 @@
 
 import UIKit
 import SnapKit
-import DynamicButton
-
 class PlayerUIBottomView: UIView {
 
     lazy var progressSlider: ProgressSlider = {
@@ -21,11 +19,11 @@ class PlayerUIBottomView: UIView {
         return slider
     }()
 
-    lazy var playButton: DynamicButton = {
-        let button = DynamicButton(style: .pause)
-        button.lineWidth = 6
-        button.strokeColor = .white
-        button.highlightStokeColor = .lightGray
+    lazy var playButton: PlayPauseButton = {
+        let button = PlayPauseButton()
+        button.iconLineWidth = 6
+        button.iconStrokeColor = .white
+        button.iconHighlightStrokeColor = .lightGray
         button.adjustsImageWhenHighlighted = true
         button.adjustsImageWhenDisabled = true
         return button

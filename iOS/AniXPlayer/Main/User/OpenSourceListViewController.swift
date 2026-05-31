@@ -21,7 +21,6 @@ class OpenSourceListViewController: ViewController {
         .init(name: "CocoaLumberjack", url: "https://github.com/CocoaLumberjack/CocoaLumberjack"),
         .init(name: "Color-Picker-for-iOS", url: "https://github.com/hayashi311/Color-Picker-for-iOS"),
         .init(name: "DanmakuRender-Swift", url: "https://github.com/sunsx9316/DanmakuRender-Swift"),
-        .init(name: "DynamicButton", url: "https://github.com/yannickl/DynamicButton"),
         .init(name: "FileProvider", url: "https://github.com/amosavian/FileProvider"),
         .init(name: "FirebaseCrashlytics", url: "https://github.com/firebase/firebase-ios-sdk"),
         .init(name: "GCDWebServer", url: "https://github.com/sunsx9316/GCDWebServer"),
