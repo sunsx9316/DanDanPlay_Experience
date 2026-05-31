@@ -1243,7 +1243,22 @@
         }
       }
     },
-    "导入 %@ 成功，请在\"本地文件\"中查看。": {},
+    "导入 %@ 成功，请在\"本地文件\"中查看。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import %@ succeeded, view in \"Local Files\"."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "导入 %@ 成功，请在\"本地文件\"中查看。"
+          }
+        }
+      }
+    },
     "导入 %@ 成功，请在“本地文件”中查看。": {
       "extractionState": "stale",
       "localizations": {

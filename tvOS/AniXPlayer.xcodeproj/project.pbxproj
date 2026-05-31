@@ -124,6 +124,7 @@
 		8951575D2FC36B3D00F75DB7 /* PlayerProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895157482FC36B3D00F75DB7 /* PlayerProgressBar.swift */; };
 		8951575E2FC36B3D00F75DB7 /* TitleMoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8951574D2FC36B3D00F75DB7 /* TitleMoreTableViewCell.swift */; };
 		8951575F2FC36B3D00F75DB7 /* DanmakuListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8951573C2FC36B3D00F75DB7 /* DanmakuListCell.swift */; };
+		8955996F2FCC0C80007F52E0 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 8955996E2FCC0C80007F52E0 /* Localizable.xcstrings */; };
 		895A7EF02FC5D09C00A997B8 /* FilesProvider in Frameworks */ = {isa = PBXBuildFile; productRef = 895A7EEF2FC5D09C00A997B8 /* FilesProvider */; };
 		895A7EF32FC5D54E00A997B8 /* AMSMB2 in Frameworks */ = {isa = PBXBuildFile; productRef = 895A7EF22FC5D54E00A997B8 /* AMSMB2 */; };
 		895A7EFE2FC5D5BA00A997B8 /* RemoteConnectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7EF52FC5D5BA00A997B8 /* RemoteConnectViewController.swift */; };
@@ -327,6 +328,7 @@
 		8951574C2FC36B3D00F75DB7 /* StepperSettingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepperSettingCell.swift; sourceTree = "<group>"; };
 		8951574D2FC36B3D00F75DB7 /* TitleMoreTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleMoreTableViewCell.swift; sourceTree = "<group>"; };
 		8951574E2FC36B3D00F75DB7 /* TitleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleTableViewCell.swift; sourceTree = "<group>"; };
+		8955996E2FCC0C80007F52E0 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		895A7EF42FC5D5BA00A997B8 /* FTPConnectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FTPConnectViewController.swift; sourceTree = "<group>"; };
 		895A7EF52FC5D5BA00A997B8 /* RemoteConnectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteConnectViewController.swift; sourceTree = "<group>"; };
 		895A7EF62FC5D5BA00A997B8 /* SMBConnectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMBConnectViewController.swift; sourceTree = "<group>"; };
@@ -513,6 +515,7 @@
 				CCABE78F4458C5717BC3CCB9 /* AppDelegate.swift */,
 				6AC7274C747CA695D2231A01 /* Assets.xcassets */,
 				CE01DA07EC91885EC6E9BD0B /* Info.plist */,
+				CBDE4C275447361FD938FC1E /* Resource */,
 			);
 			path = AniXPlayer;
 			sourceTree = "<group>";
@@ -1029,6 +1032,14 @@
 			path = Match;
 			sourceTree = "<group>";
 		};
+		CBDE4C275447361FD938FC1E /* Resource */ = {
+			isa = PBXGroup;
+			children = (
+				8955996E2FCC0C80007F52E0 /* Localizable.xcstrings */,
+			);
+			name = Resource;
+			sourceTree = "<group>";
+		};
 		DAE9CA032230DC53D4A73609 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
@@ -1167,6 +1178,7 @@
 			knownRegions = (
 				Base,
 				en,
+				"zh-Hans",
 			);
 			mainGroup = E2D215997589E2DA8E9BC081;
 			minimizedProjectReferenceProxies = 1;
@@ -1211,6 +1223,7 @@
 				895A7F6F2FC5FBC300A997B8 /* SourceHanSansTC-Regular.otf in Resources */,
 				8951548B2FC1DC2D00F75DB7 /* upload.js in Resources */,
 				9DBC31F90415294937917F50 /* Assets.xcassets in Resources */,
+				8955996F2FCC0C80007F52E0 /* Localizable.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
