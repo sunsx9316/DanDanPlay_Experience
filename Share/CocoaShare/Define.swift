@@ -41,18 +41,26 @@ struct Auth: Codable, Equatable {
 
 
 /// 登录信息
-struct LoginInfo: Codable, Equatable {
-    
+struct LoginInfo: Codable {
+
     enum Key: String {
         case webDavRootPath = "webDavRootPath"
     }
-    
+
     var url: URL
-    
+
     var auth: Auth?
-    
+
     var parameter: [String: String]?
+
+    var remark: String?
+
+    static func == (lhs: LoginInfo, rhs: LoginInfo) -> Bool {
+        return lhs.url == rhs.url && lhs.auth == rhs.auth && lhs.parameter == rhs.parameter
+    }
 }
+
+extension LoginInfo: Equatable {}
 
 
 /// 文件筛选类型

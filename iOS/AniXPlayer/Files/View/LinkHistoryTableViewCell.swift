@@ -16,6 +16,14 @@ class LinkHistoryTableViewCell: TableViewCell {
         return label
     }()
 
+    lazy var remarkLabel: Label = {
+        let label = Label()
+        label.font = .ddp_small
+        label.textColor = .lightGray
+        label.numberOfLines = 0
+        return label
+    }()
+
     lazy var indicatorView: UIActivityIndicatorView = {
         let indicator = UIActivityIndicatorView(style: .gray)
         indicator.hidesWhenStopped = true
@@ -37,14 +45,20 @@ class LinkHistoryTableViewCell: TableViewCell {
         self.backgroundColor = .clear
 
         contentView.addSubview(titleLabel)
+        contentView.addSubview(remarkLabel)
         contentView.addSubview(indicatorView)
         contentView.addSubview(addressLabel)
 
         titleLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(10)
             make.leading.equalToSuperview().offset(10)
-            make.bottom.equalToSuperview().offset(-10)
             make.width.lessThanOrEqualTo(120)
+        }
+
+        remarkLabel.snp.makeConstraints { make in
+            make.top.equalTo(titleLabel.snp.bottom).offset(4)
+            make.leading.equalToSuperview().offset(10)
+            make.bottom.equalToSuperview().offset(-10)
         }
 
         indicatorView.snp.makeConstraints { make in
@@ -56,7 +70,6 @@ class LinkHistoryTableViewCell: TableViewCell {
         addressLabel.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(10)
             make.leading.equalTo(titleLabel.snp.trailing).offset(15)
-            make.bottom.equalToSuperview().offset(-10)
         }
 
         self.setupInit()
@@ -74,6 +87,7 @@ class LinkHistoryTableViewCell: TableViewCell {
     private func setupInit() {
         self.indicatorView.color = .darkGray
         self.titleLabel.text = nil
+        self.remarkLabel.text = nil
         self.addressLabel.text = nil
     }
 

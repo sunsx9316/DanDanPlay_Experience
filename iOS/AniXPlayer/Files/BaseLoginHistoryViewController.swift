@@ -103,6 +103,7 @@ class BaseLoginHistoryViewController<F: File>: ViewController, UITableViewDelega
         let info = self.historyLoginInfos[indexPath.row]
         cell.titleLabel.text = info.url.host
         cell.addressLabel.text = info.auth?.userName
+        cell.remarkLabel.text = info.remark
         cell.indicatorView.stopAnimating()
         return cell
     }
@@ -147,14 +148,16 @@ class BaseLoginHistoryViewController<F: File>: ViewController, UITableViewDelega
     
     // MARK: BaseConnectSvrViewControllerDelegate
     func viewControllerDidSuccessConnected(_ viewController: ViewController, loginInfo: LoginInfo) {
-        
+
         var loginInfos = self.dataSource
-        
-        if !loginInfos.contains(where: { $0 == loginInfo }) {
+
+        if let index = loginInfos.firstIndex(where: { $0 == loginInfo }) {
+            loginInfos[index] = loginInfo
+        } else {
             loginInfos.append(loginInfo)
-            self.dataSource = loginInfos
-            self.tableView.reloadData()
         }
+        self.dataSource = loginInfos
+        self.tableView.reloadData()
         
         let vc = FileBrowserViewController(with: self.rootFile, selectedFile: nil, filterType: .video)
         vc.delegate = self

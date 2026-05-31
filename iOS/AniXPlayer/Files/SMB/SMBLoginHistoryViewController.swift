@@ -37,6 +37,7 @@ extension SMBLoginHistoryViewController: UITableViewDelegate, UITableViewDataSou
             let info = self.historyLoginInfos[indexPath.row]
             cell.titleLabel.text = info.url.host
             cell.addressLabel.text = info.auth?.userName
+            cell.remarkLabel.text = info.remark
             cell.indicatorView.stopAnimating()
         }
         return cell
@@ -107,15 +108,17 @@ extension SMBLoginHistoryViewController: UITableViewDelegate, UITableViewDataSou
 
 extension SMBLoginHistoryViewController: BaseConnectSvrViewControllerDelegate {
     func viewControllerDidSuccessConnected(_ viewController: ViewController, loginInfo: LoginInfo) {
-        
+
         var loginInfos = Preferences.shared.smbLoginInfos ?? []
-        
-        if !loginInfos.contains(where: { $0 == loginInfo }) {
+
+        if let index = loginInfos.firstIndex(where: { $0 == loginInfo }) {
+            loginInfos[index] = loginInfo
+        } else {
             loginInfos.append(loginInfo)
-            Preferences.shared.smbLoginInfos = loginInfos
-            self.historyLoginInfos = loginInfos
-            self.tableView.reloadData()
         }
+        Preferences.shared.smbLoginInfos = loginInfos
+        self.historyLoginInfos = loginInfos
+        self.tableView.reloadData()
         
         let rootFile = SMBFile.rootFile
         let vc = FileBrowserViewController(with: rootFile, selectedFile: nil, filterType: .video)

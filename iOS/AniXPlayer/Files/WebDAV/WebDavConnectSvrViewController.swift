@@ -35,6 +35,15 @@ class WebDavConnectSvrViewController: ViewController {
                                                 attributes: [.foregroundColor : UIColor.lightGray])
         return textField
     }()
+
+    private lazy var remarkTextField: TextField = {
+        let textField = TextField()
+        textField.attributedPlaceholder = .init(
+            string: NSLocalizedString("备注", comment: ""),
+            attributes: [.foregroundColor: UIColor.lightGray]
+        )
+        return textField
+    }()
     
     private lazy var loginButton: Button = {
         let button = Button()
@@ -83,6 +92,7 @@ class WebDavConnectSvrViewController: ViewController {
         
         stackView.addArrangedSubview(self.passwordLabel)
         stackView.addArrangedSubview(self.rootPathLabel)
+        stackView.addArrangedSubview(self.remarkTextField)
         stackView.addArrangedSubview(self.loginButton)
         self.view.addSubview(stackView)
         
@@ -109,7 +119,11 @@ class WebDavConnectSvrViewController: ViewController {
         self.rootPathLabel.snp.makeConstraints { make in
             make.height.equalTo(self.addressLabel)
         }
-        
+
+        self.remarkTextField.snp.makeConstraints { make in
+            make.height.equalTo(self.addressLabel)
+        }
+
         self.loginButton.snp.makeConstraints { make in
             make.height.equalTo(self.addressLabel)
         }
@@ -138,6 +152,7 @@ class WebDavConnectSvrViewController: ViewController {
         self.passwordLabel.text = loginInfo?.auth?.password
         self.addressLabel.text = loginInfo?.url.absoluteString
         self.rootPathLabel.text = loginInfo?.parameter?[LoginInfo.Key.webDavRootPath.rawValue] ?? WebDavFile.rootFile.url.absoluteString
+        self.remarkTextField.text = loginInfo?.remark
     }
     
     //MARK: Private Method
@@ -173,7 +188,7 @@ class WebDavConnectSvrViewController: ViewController {
         var parameter = [String: String]()
         parameter[LoginInfo.Key.webDavRootPath.rawValue] = self.getRootPath()
         
-        let loginInfo = LoginInfo(url: url, auth:auth, parameter: parameter)
+        let loginInfo = LoginInfo(url: url, auth: auth, parameter: parameter, remark: self.remarkTextField.text)
         self.loginWithInfo(loginInfo)
     }
     

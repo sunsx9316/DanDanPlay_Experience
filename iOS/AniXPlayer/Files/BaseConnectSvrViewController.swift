@@ -32,6 +32,15 @@ class BaseConnectSvrViewController: ViewController {
         textField.isSecureTextEntry = true
         return textField
     }()
+
+    private(set) lazy var remarkTextField: TextField = {
+        let textField = TextField()
+        textField.attributedPlaceholder = .init(
+            string: NSLocalizedString("备注", comment: ""),
+            attributes: [.foregroundColor: UIColor.lightGray]
+        )
+        return textField
+    }()
     
     private(set) lazy var loginButton: Button = {
         let button = Button()
@@ -79,6 +88,7 @@ class BaseConnectSvrViewController: ViewController {
         }
         
         stackView.addArrangedSubview(self.passwordLabel)
+        stackView.addArrangedSubview(self.remarkTextField)
         stackView.addArrangedSubview(self.loginButton)
         self.view.addSubview(stackView)
         
@@ -101,7 +111,11 @@ class BaseConnectSvrViewController: ViewController {
         self.passwordLabel.snp.makeConstraints { make in
             make.height.equalTo(self.addressLabel)
         }
-        
+
+        self.remarkTextField.snp.makeConstraints { make in
+            make.height.equalTo(self.addressLabel)
+        }
+
         self.loginButton.snp.makeConstraints { make in
             make.height.equalTo(self.addressLabel)
         }
@@ -121,6 +135,7 @@ class BaseConnectSvrViewController: ViewController {
         self.userNameLabel.text = loginInfo?.auth?.userName
         self.passwordLabel.text = loginInfo?.auth?.password
         self.addressLabel.text = loginInfo?.url.absoluteString
+        self.remarkTextField.text = loginInfo?.remark
     }
     
     func createAuth() -> Auth? {
@@ -150,7 +165,7 @@ class BaseConnectSvrViewController: ViewController {
         }
 
         let auth = self.createAuth()
-        let loginInfo = LoginInfo(url: url, auth:auth)
+        let loginInfo = LoginInfo(url: url, auth: auth, remark: self.remarkTextField.text)
         self.loginWithInfo(loginInfo)
     }
     

@@ -28,6 +28,15 @@ class SMBConnectViewController: ViewController {
         textField.isSecureTextEntry = true
         return textField
     }()
+
+    private lazy var remarkTextField: TextField = {
+        let textField = TextField()
+        textField.attributedPlaceholder = .init(
+            string: NSLocalizedString("备注", comment: ""),
+            attributes: [.foregroundColor: UIColor.lightGray]
+        )
+        return textField
+    }()
     
     private lazy var loginButton: Button = {
         let button = Button()
@@ -98,6 +107,7 @@ class SMBConnectViewController: ViewController {
         stackView.addArrangedSubview(self.addressLabel)
         stackView.addArrangedSubview(self.userNameLabel)
         stackView.addArrangedSubview(self.passwordLabel)
+        stackView.addArrangedSubview(self.remarkTextField)
         stackView.addArrangedSubview(self.loginButton)
         self.view.addSubview(stackView)
         
@@ -124,7 +134,11 @@ class SMBConnectViewController: ViewController {
         self.passwordLabel.snp.makeConstraints { make in
             make.height.equalTo(self.addressLabel)
         }
-        
+
+        self.remarkTextField.snp.makeConstraints { make in
+            make.height.equalTo(self.addressLabel)
+        }
+
         self.loginButton.snp.makeConstraints { make in
             make.height.equalTo(self.addressLabel)
         }
@@ -132,6 +146,7 @@ class SMBConnectViewController: ViewController {
         self.userNameLabel.text = self.loginInfo?.auth?.userName
         self.passwordLabel.text = self.loginInfo?.auth?.password
         self.addressLabel.text = self.loginInfo?.url.absoluteString
+        self.remarkTextField.text = self.loginInfo?.remark
         self.addressLabel.attributedPlaceholder = .init(string: self.fileManager.addressExampleDesc,
                                                 attributes: [.foregroundColor : UIColor.lightGray])
         
@@ -190,20 +205,20 @@ class SMBConnectViewController: ViewController {
         
         if self.segmentedControl.selectedSegmentIndex == 0 {
 
-            let loginInfo = LoginInfo(url: url, auth: Auth(userName: guestName, password: nil))
+            let loginInfo = LoginInfo(url: url, auth: Auth(userName: guestName, password: nil), remark: self.remarkTextField.text)
             self.loginWithInfo(loginInfo)
         } else {
-            
+
             let userName = self.userNameLabel.text
-            
+
             guard let userName = userName,
                   !userName.isEmpty else {
                 self.view.showHUD(NSLocalizedString("请输入登录用户名！", comment: ""))
                 return
             }
-            
+
             let auth: Auth? = .init(userName: userName, password: self.passwordLabel.text)
-            let loginInfo = LoginInfo(url: url, auth:auth)
+            let loginInfo = LoginInfo(url: url, auth: auth, remark: self.remarkTextField.text)
             self.loginWithInfo(loginInfo)
         }
     }
