@@ -1,6 +1,6 @@
 ---
 name: add-to-project
-description: 将文件加入 Xcode 工程，group 与物理目录一致，reference 方式引入
+description: 将文件/目录加入 Xcode 工程，group 与物理目录一致，reference 方式引入
 ---
 
 # Xcode 工程文件管理
@@ -16,14 +16,22 @@ description: 将文件加入 Xcode 工程，group 与物理目录一致，refere
 
 使用 `scripts/add_to_project.rb` 操作。
 
-### 添加文件
+### 添加单个文件
 
 ```bash
 ruby scripts/add_to_project.rb <platform> <file_path>
 ```
 
+### 递归同步目录
+
+```bash
+ruby scripts/add_to_project.rb <platform> --sync <directory>
+# 或简写（传入目录路径自动识别）
+ruby scripts/add_to_project.rb <platform> <directory>
+```
+
 `platform`: `ios` | `tvos` | `mac`
-`file_path`: 项目根目录的相对路径 或 绝对路径
+`file_path` / `directory`: 项目根目录的相对路径 或 绝对路径
 
 ### 示例
 
@@ -31,18 +39,14 @@ ruby scripts/add_to_project.rb <platform> <file_path>
 # 加 Swift 文件 → 自动加入 Sources
 ruby scripts/add_to_project.rb ios iOS/AniXPlayer/Files/Test.swift
 
+# 递归同步整个目录（子目录自动创建匹配的 group）
+ruby scripts/add_to_project.rb tvos --sync tvOS/AniXPlayer/FileBrowser
+
 # 加 xcstrings → 自动加入 Resources
 ruby scripts/add_to_project.rb tvos tvOS/AniXPlayer/Localizable.xcstrings
 
-# 指定 group 路径
-ruby scripts/add_to_project.rb ios --group "AniXPlayer/Resource" iOS/.../file.plist
-```
-
-### 其他命令
-
-```bash
-ruby scripts/add_to_project.rb ios --list-targets
-ruby scripts/add_to_project.rb ios --dry-run path/to/file
+# 预览
+ruby scripts/add_to_project.rb ios --dry-run iOS/AniXPlayer/NewDir/
 ```
 
 ## 自动推断规则
@@ -55,6 +59,8 @@ ruby scripts/add_to_project.rb ios --dry-run path/to/file
 
 ## 行为
 
-- 自动按文件所在目录层级创建 group
+- 子目录自动创建匹配的 group，与物理目录层级一致
+- 递归遍历所有文件
 - 已存在则跳过（不重复添加）
-- 文件不存在则报错
+- 忽略 `.DS_Store`、`.git`、`Pods` 等
+- `--dry-run` 预览不修改
