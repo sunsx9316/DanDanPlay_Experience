@@ -51,8 +51,6 @@ TEMPLATE = {
     "version": "1.1"
 }
 
-GEM_HOME = os.path.expanduser("~/.gem/ruby/2.6.0")
-
 
 def _ensure_file(path):
     """目录或文件不存在时自动创建。返回 True 表示新创建。"""
@@ -83,43 +81,32 @@ def _resolve_platforms(platform):
 
 
 def _add_to_xcode_project(xcstrings_path, project_path):
-    """通过 Ruby xcodeproj gem 将文件加入 Xcode 工程。"""
-    target_name = os.path.basename(project_path).replace(".xcodeproj", "")
-    # 计算相对路径
-    relative_path = os.path.relpath(xcstrings_path, os.path.dirname(project_path))
-    ruby_script = f'''
-ENV['GEM_HOME'] = '{GEM_HOME}'
-require 'xcodeproj'
+    """通过 add_to_project.rb 将文件加入 Xcode 工程。"""
+    add_script = os.path.join(SCRIPT_DIR, "add_to_project.rb")
+    # 计算平台
+    platform_map = {
+        "iOS": "ios", "tvOS": "tvos", "Mac": "mac"
+    }
+    platform = None
+    for key, val in platform_map.items():
+        if key in xcstrings_path:
+            platform = val
+            break
+    if not platform:
+        print(f"  [!] 无法推断平台: {xcstrings_path}")
+        return
 
-project = Xcodeproj::Project.open("{project_path}")
-target = project.targets.find {{ |t| t.name == "{target_name}" }}
-unless target
-  puts "ERROR: target not found"
-  exit 1
-end
-
-main_group = project.main_group.find_subpath("{target_name}", false)
-resource_group = main_group.groups.find {{ |g| g.name == "Resource" }}
-unless resource_group
-  resource_group = main_group.new_group("Resource")
-end
-
-existing = resource_group.files.find {{ |f| f.path.end_with?("Localizable.xcstrings") }}
-if existing
-  puts "Already in project"
-  exit 0
-end
-
-file_ref = resource_group.new_file("{relative_path}")
-target.resources_build_phase.add_file_reference(file_ref)
-project.save
-puts "Added to project"
-'''
-    result = subprocess.run(["ruby", "-e", ruby_script], capture_output=True, text=True)
+    # 用相对于项目根目录的路径
+    relative_path = os.path.relpath(xcstrings_path, PROJECT_ROOT)
+    result = subprocess.run(
+        ["ruby", add_script, platform, relative_path],
+        capture_output=True, text=True
+    )
     if result.returncode != 0:
         print(f"  [!] 加入 Xcode 工程失败: {result.stderr.strip()}")
     else:
-        print(f"  [✓] 已加入 Xcode 工程")
+        # 脚本输出 "ADDED: ..." 或 "ALREADY_EXISTS: ..."
+        print(f"  [✓] {result.stdout.strip().splitlines()[-1]}")
 
 
 # ---- commands ----
