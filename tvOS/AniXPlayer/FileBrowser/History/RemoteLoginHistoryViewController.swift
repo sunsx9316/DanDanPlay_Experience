@@ -155,9 +155,9 @@ extension RemoteLoginHistoryViewController: UITableViewDataSource {
         let info = loginInfos[indexPath.row]
 
         let title = info.url.host ?? info.url.absoluteString
-        let detail = info.auth?.userName ?? ""
+        let detail = info.remark ?? info.auth?.userName ?? ""
 
-        cell.configureAsSource(title: title, iconName: "server.rack")
+        cell.configureAsSource(title: title, iconName: "server.rack", detail: detail)
         return cell
     }
 

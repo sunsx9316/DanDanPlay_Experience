@@ -20,7 +20,7 @@ class TextField: UITextField {
     }
 
     private func setupInit() {
-        self.font = .ddp_normal
+        self.font = .ddp_normal()
         self.textColor = .white
         self.backgroundColor = .adaptiveSecondaryBackground
     }

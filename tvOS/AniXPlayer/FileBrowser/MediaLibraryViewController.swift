@@ -2,40 +2,56 @@
 //  MediaLibraryViewController.swift
 //  AniXPlayer
 //
-//  tvOS 媒体库 — 文件来源列表
+//  tvOS 媒体库 — 文件来源列表（按分类分区展示）
 //
 
 import UIKit
 
 class MediaLibraryViewController: ViewController {
 
-    private enum Source: Int, CaseIterable {
-        case local
+    private enum CellType {
+        case localFile
         case smb
         case webdav
         case ftp
+        case emby
+        case jellyfin
         case pc
 
         var title: String {
             switch self {
-            case .local: return NSLocalizedString("本地文件", comment: "")
+            case .localFile: return NSLocalizedString("本地文件", comment: "")
             case .smb: return NSLocalizedString("SMB", comment: "")
             case .webdav: return NSLocalizedString("WebDAV", comment: "")
             case .ftp: return NSLocalizedString("FTP", comment: "")
-            case .pc: return NSLocalizedString("电脑端", comment: "")
+            case .emby: return NSLocalizedString("Emby", comment: "")
+            case .jellyfin: return NSLocalizedString("Jellyfin", comment: "")
+            case .pc: return NSLocalizedString("弹弹play远程访问", comment: "")
             }
         }
 
         var iconName: String {
             switch self {
-            case .local: return "internaldrive"
+            case .localFile: return "internaldrive"
             case .smb: return "network"
             case .webdav: return "globe"
             case .ftp: return "externaldrive.connected.to.line.below"
+            case .emby: return "play.rectangle.on.rectangle"
+            case .jellyfin: return "play.tv"
             case .pc: return "desktopcomputer"
             }
         }
     }
+
+    private struct Section {
+        let title: String
+        let items: [CellType]
+    }
+
+    private lazy var sections: [Section] = [
+        Section(title: NSLocalizedString("文件来源", comment: ""), items: [.localFile, .smb, .webdav, .ftp]),
+        Section(title: NSLocalizedString("媒体服务器", comment: ""), items: [.emby, .jellyfin, .pc]),
+    ]
 
     private lazy var tableView: TableView = {
         let tv = TableView(frame: .zero, style: .grouped)
@@ -64,24 +80,32 @@ class MediaLibraryViewController: ViewController {
 
 extension MediaLibraryViewController: UITableViewDataSource {
 
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return sections.count
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return Source.allCases.count
+        return sections[section].items.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: FileListCell.reuseIdentifier, for: indexPath) as! FileListCell
-        let source = Source(rawValue: indexPath.row)!
-        cell.configureAsSource(title: source.title, iconName: source.iconName)
+        let type = sections[indexPath.section].items[indexPath.row]
+        cell.configureAsSource(title: type.title, iconName: type.iconName)
         return cell
+    }
+
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return sections[section].title
     }
 }
 
 extension MediaLibraryViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let source = Source(rawValue: indexPath.row)!
-        switch source {
-        case .local:
+        let type = sections[indexPath.section].items[indexPath.row]
+        switch type {
+        case .localFile:
             let vc = LocalFileBrowserViewController(directory: LocalFile.rootFile)
             navigationController?.pushViewController(vc, animated: true)
         case .smb:
@@ -92,6 +116,12 @@ extension MediaLibraryViewController: UITableViewDelegate {
             navigationController?.pushViewController(vc, animated: true)
         case .ftp:
             let vc = FTPLoginHistoryViewController()
+            navigationController?.pushViewController(vc, animated: true)
+        case .emby:
+            let vc = EmbyLoginHistoryViewController()
+            navigationController?.pushViewController(vc, animated: true)
+        case .jellyfin:
+            let vc = JellyfinLoginHistoryViewController()
             navigationController?.pushViewController(vc, animated: true)
         case .pc:
             let vc = PCLoginHistoryViewController()

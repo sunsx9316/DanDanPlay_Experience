@@ -70,9 +70,14 @@ class FileListCell: TableViewCell {
         }
     }
 
-    func configureAsSource(title: String, iconName: String) {
+    func configureAsSource(title: String, iconName: String, detail: String? = nil) {
         titleLabel.text = title
-        detailLabel.isHidden = true
+        if let detail = detail, !detail.isEmpty {
+            detailLabel.text = detail
+            detailLabel.isHidden = false
+        } else {
+            detailLabel.isHidden = true
+        }
         iconImageView.image = UIImage(systemName: iconName)
     }
 

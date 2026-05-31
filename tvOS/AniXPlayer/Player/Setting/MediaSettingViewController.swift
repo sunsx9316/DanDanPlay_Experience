@@ -244,6 +244,9 @@ extension MediaSettingViewController: UITableViewDataSource {
                 self?.reloadData()
             }
             return cell
+
+        default:
+            return UITableViewCell()
         }
     }
 

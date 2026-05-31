@@ -1,50 +1,34 @@
 {
   "sourceLanguage": "en",
   "strings": {
-    "▶︎": {
+    "%d天": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "▶︎"
+            "value": "%dd"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "▶︎"
+            "value": "%d天"
           }
         }
       }
     },
-    "☑️正则表达式": {
+    "%d秒后自动关闭": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "☑️RegExp"
+            "value": "Auto close after %ds"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "☑️正则表达式"
-          }
-        }
-      }
-    },
-    "✅正则表达式": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "✅RegExp"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "✅正则表达式"
+            "value": "%d秒后自动关闭"
           }
         }
       }
@@ -273,6 +257,22 @@
         }
       }
     },
+    "WebDAV": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WebDAV"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "WebDAV"
+          }
+        }
+      }
+    },
     "WiFi 文件传输": {
       "localizations": {
         "en": {
@@ -305,50 +305,18 @@
         }
       }
     },
-    "上传过程中请勿离开此页或锁屏": {
+    "上传过程中请勿离开此页面": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Do not leave this page or lock screen during upload"
+            "value": "Do not leave this page during upload"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "上传过程中请勿离开此页或锁屏"
-          }
-        }
-      }
-    },
-    "上映时间: ": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Air Date: "
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "上映时间: "
-          }
-        }
-      }
-    },
-    "上次播放时间:": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Last Played:"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "上次播放时间:"
+            "value": "上传过程中请勿离开此页面"
           }
         }
       }
@@ -369,34 +337,18 @@
         }
       }
     },
-    "上次观看时间: ": {
+    "下载弹幕中...": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Last Watched: "
+            "value": "Downloading danmaku..."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "上次观看时间: "
-          }
-        }
-      }
-    },
-    "下载本地弹幕...": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Downloading Local Danmaku..."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "下载本地弹幕..."
+            "value": "下载弹幕中..."
           }
         }
       }
@@ -481,82 +433,18 @@
         }
       }
     },
-    "作品详情": {
+    "关": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Details"
+            "value": "Off"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "作品详情"
-          }
-        }
-      }
-    },
-    "使用备用地址": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Use Backup URL"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "使用备用地址"
-          }
-        }
-      }
-    },
-    "保存": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Save"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "保存"
-          }
-        }
-      }
-    },
-    "保存需要退出App，是否退出？": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Saving requires exiting the app. Quit?"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "保存需要退出App，是否退出？"
-          }
-        }
-      }
-    },
-    "倍速播放中": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Speed Playback"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "倍速播放中"
+            "value": "关"
           }
         }
       }
@@ -577,38 +465,6 @@
         }
       }
     },
-    "关联作品": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Related"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "关联作品"
-          }
-        }
-      }
-    },
-    "关闭": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Close"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "关闭"
-          }
-        }
-      }
-    },
     "关闭则手动关联": {
       "localizations": {
         "en": {
@@ -625,66 +481,34 @@
         }
       }
     },
-    "分集: ": {
+    "切换为普通文本": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Episode: "
+            "value": "Switch to plain text"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "分集: "
+            "value": "切换为普通文本"
           }
         }
       }
     },
-    "分集信息": {
+    "切换为正则表达式": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Episode Info"
+            "value": "Switch to regex"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "分集信息"
-          }
-        }
-      }
-    },
-    "分集信息、观看信息等": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Episode info, watch history, etc."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "分集信息、观看信息等"
-          }
-        }
-      }
-    },
-    "分集详情": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Episode Detail"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "分集详情"
+            "value": "切换为正则表达式"
           }
         }
       }
@@ -701,22 +525,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "删除"
-          }
-        }
-      }
-    },
-    "制作信息": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Production Info"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "制作信息"
           }
         }
       }
@@ -753,38 +561,6 @@
         }
       }
     },
-    "加载字幕成功！": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Subtitles Loaded!"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "加载字幕成功！"
-          }
-        }
-      }
-    },
-    "加载弹幕中...": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Loading Danmaku..."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "加载弹幕中..."
-          }
-        }
-      }
-    },
     "加载本地弹幕...": {
       "localizations": {
         "en": {
@@ -801,18 +577,18 @@
         }
       }
     },
-    "加载本地弹幕成功！": {
+    "加载本地弹幕中...": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Local Danmaku Loaded!"
+            "value": "Loading local danmaku..."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "加载本地弹幕成功！"
+            "value": "加载本地弹幕中..."
           }
         }
       }
@@ -829,6 +605,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "匹配到多个结果"
+          }
+        }
+      }
+    },
+    "匹配弹幕中...": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Matching danmaku..."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "匹配弹幕中..."
           }
         }
       }
@@ -881,6 +673,22 @@
         }
       }
     },
+    "发弹幕": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send Danmaku"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "发弹幕"
+          }
+        }
+      }
+    },
     "发送": {
       "localizations": {
         "en": {
@@ -909,6 +717,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "发送失败"
+          }
+        }
+      }
+    },
+    "发送弹幕": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Send Danmaku"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "发送弹幕"
           }
         }
       }
@@ -961,51 +785,146 @@
         }
       }
     },
-    "固定": {
-      "extractionState": "stale",
+    "启用": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Fixed"
+            "value": "Enable"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "固定"
+            "value": "启用"
           }
         }
       }
     },
-    "在电脑浏览器地址栏输入": {
+    "周一": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Enter in computer browser address bar"
+            "value": "Monday"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "在电脑浏览器地址栏输入"
+            "value": "周一"
           }
         }
       }
     },
-    "域名列表": {
+    "周三": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Domain List"
+            "value": "Wednesday"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "域名列表"
+            "value": "周三"
+          }
+        }
+      }
+    },
+    "周二": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tuesday"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "周二"
+          }
+        }
+      }
+    },
+    "周五": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Friday"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "周五"
+          }
+        }
+      }
+    },
+    "周六": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saturday"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "周六"
+          }
+        }
+      }
+    },
+    "周四": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Thursday"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "周四"
+          }
+        }
+      }
+    },
+    "周日": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sunday"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "周日"
+          }
+        }
+      }
+    },
+    "在电脑浏览器地址栏输入以下地址": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter the following address in your browser"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在电脑浏览器地址栏输入以下地址"
           }
         }
       }
@@ -1038,86 +957,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "备注"
-          }
-        }
-      }
-    },
-    "复制": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Copy"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "复制"
-          }
-        }
-      }
-    },
-    "复制成功": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Copied"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "复制成功"
-          }
-        }
-      }
-    },
-    "复制成功~": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Copied!"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "复制成功~"
-          }
-        }
-      }
-    },
-    "好的": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "OK"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "好的"
-          }
-        }
-      }
-    },
-    "如：简中": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e.g., zh-Hans"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "如：简中"
           }
         }
       }
@@ -1346,22 +1185,6 @@
         }
       }
     },
-    "官方域名": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Official Domain"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "官方域名"
-          }
-        }
-      }
-    },
     "客人": {
       "localizations": {
         "en": {
@@ -1411,39 +1234,6 @@
         }
       }
     },
-    "导入 %@ 成功，请在\"本地文件\"中查看。": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Import %@ succeeded, view in \"Local Files\"."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "导入 %@ 成功，请在\"本地文件\"中查看。"
-          }
-        }
-      }
-    },
-    "导入 %@ 成功，请在“本地文件”中查看。": {
-      "extractionState": "stale",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Imported %@, check in \"Local Files\"."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "导入 %@ 成功，请在“本地文件”中查看。"
-          }
-        }
-      }
-    },
     "将.xlog文件提供给开发者": {
       "localizations": {
         "en": {
@@ -1476,34 +1266,34 @@
         }
       }
     },
-    "屏蔽": {
+    "已完结": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Block"
+            "value": "Completed"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "屏蔽"
+            "value": "已完结"
           }
         }
       }
     },
-    "已复制": {
+    "已看": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Copied"
+            "value": "Watched"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "已复制"
+            "value": "已看"
           }
         }
       }
@@ -1524,34 +1314,18 @@
         }
       }
     },
-    "开始解析...": {
+    "开": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Parsing..."
+            "value": "On"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "开始解析..."
-          }
-        }
-      }
-    },
-    "开源组件": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Open Source Components"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "开源组件"
+            "value": "开"
           }
         }
       }
@@ -1652,22 +1426,6 @@
         }
       }
     },
-    "弹幕匹配结果": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Danmaku Match"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "弹幕匹配结果"
-          }
-        }
-      }
-    },
     "弹幕字体大小": {
       "localizations": {
         "en": {
@@ -1712,6 +1470,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "弹幕开关"
+          }
+        }
+      }
+    },
+    "弹幕模式": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Danmaku Mode"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "弹幕模式"
           }
         }
       }
@@ -1812,18 +1586,18 @@
         }
       }
     },
-    "弹幕颜色管理": {
+    "弹幕颜色": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Danmaku Colors"
+            "value": "Danmaku Color"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "弹幕颜色管理"
+            "value": "弹幕颜色"
           }
         }
       }
@@ -1860,38 +1634,6 @@
         }
       }
     },
-    "恢复视频大小": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Restore Size"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "恢复视频大小"
-          }
-        }
-      }
-    },
-    "恢复默认": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Restore Default"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "恢复默认"
-          }
-        }
-      }
-    },
     "我的": {
       "localizations": {
         "en": {
@@ -1920,23 +1662,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "我的关注"
-          }
-        }
-      }
-    },
-    "拖拽到窗口 或 点击“Upload Files…” 上传文件": {
-      "extractionState": "stale",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Drag to window or click \"Upload Files...\" to upload"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "拖拽到窗口 或 点击“Upload Files…” 上传文件"
           }
         }
       }
@@ -2005,6 +1730,22 @@
         }
       }
     },
+    "搜索": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜索"
+          }
+        }
+      }
+    },
     "搜索弹幕": {
       "localizations": {
         "en": {
@@ -2021,18 +1762,34 @@
         }
       }
     },
-    "播放器会优先选择关键字靠前的字幕加载": {
+    "播放": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Player prefers subtitles with earlier keywords"
+            "value": "Play"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "播放器会优先选择关键字靠前的字幕加载"
+            "value": "播放"
+          }
+        }
+      }
+    },
+    "播放列表": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Playlist"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "播放列表"
           }
         }
       }
@@ -2133,38 +1890,6 @@
         }
       }
     },
-    "文件？": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "File?"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "文件？"
-          }
-        }
-      }
-    },
-    "文件夹？": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Folder?"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "文件夹？"
-          }
-        }
-      }
-    },
     "文件来源": {
       "localizations": {
         "en": {
@@ -2245,22 +1970,6 @@
         }
       }
     },
-    "显示全部": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Show All"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "显示全部"
-          }
-        }
-      }
-    },
     "显示区域": {
       "localizations": {
         "en": {
@@ -2273,6 +1982,54 @@
           "stringUnit": {
             "state": "translated",
             "value": "显示区域"
+          }
+        }
+      }
+    },
+    "普通": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Normal"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "普通"
+          }
+        }
+      }
+    },
+    "暂停": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pause"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "暂停"
+          }
+        }
+      }
+    },
+    "暂无记录，点击右上角 ⊕ 添加": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No records. Tap ⊕ to add"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "暂无记录，点击右上角 ⊕ 添加"
           }
         }
       }
@@ -2357,34 +2114,34 @@
         }
       }
     },
-    "标题": {
+    "根路径（可选）": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Title"
+            "value": "Root path (optional)"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "标题"
+            "value": "根路径（可选）"
           }
         }
       }
     },
-    "根路径": {
+    "正则": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Root Path"
+            "value": "Regex"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "根路径"
+            "value": "正则"
           }
         }
       }
@@ -2405,22 +2162,6 @@
         }
       }
     },
-    "添加字幕关键字": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add Subtitle Keyword"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "添加字幕关键字"
-          }
-        }
-      }
-    },
     "添加屏蔽弹幕": {
       "localizations": {
         "en": {
@@ -2433,22 +2174,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "添加屏蔽弹幕"
-          }
-        }
-      }
-    },
-    "添加自定义域名": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Add Custom Domain"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "添加自定义域名"
           }
         }
       }
@@ -2581,19 +2306,18 @@
         }
       }
     },
-    "用户": {
-      "extractionState": "stale",
+    "版本": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "User"
+            "value": "Version"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "用户"
+            "value": "版本"
           }
         }
       }
@@ -2647,18 +2371,18 @@
         }
       }
     },
-    "画中画模式": {
+    "番剧详情": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "PiP Mode"
+            "value": "Bangumi Details"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "画中画模式"
+            "value": "番剧详情"
           }
         }
       }
@@ -2696,6 +2420,22 @@
         }
       }
     },
+    "登录历史": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Login History"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "登录历史"
+          }
+        }
+      }
+    },
     "登录密码": {
       "localizations": {
         "en": {
@@ -2708,54 +2448,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "登录密码"
-          }
-        }
-      }
-    },
-    "登录成功！": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Login Success!"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "登录成功！"
-          }
-        }
-      }
-    },
-    "登录用户名": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Username"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "登录用户名"
-          }
-        }
-      }
-    },
-    "登陆历史": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Login History"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "登陆历史"
           }
         }
       }
@@ -2776,22 +2468,6 @@
         }
       }
     },
-    "相似作品": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Similar"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "相似作品"
-          }
-        }
-      }
-    },
     "确定": {
       "localizations": {
         "en": {
@@ -2804,38 +2480,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "确定"
-          }
-        }
-      }
-    },
-    "确定删除%@吗？": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Delete %@?"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "确定删除%@吗？"
-          }
-        }
-      }
-    },
-    "确定删除此": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Confirm Delete"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "确定删除此"
           }
         }
       }
@@ -2872,34 +2516,34 @@
         }
       }
     },
-    "确定退出登录吗？": {
+    "禁用": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Are you sure you want to log out?"
+            "value": "Disable"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "确定退出登录吗？"
+            "value": "禁用"
           }
         }
       }
     },
-    "站外相关链接": {
+    "继续播放": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "External Links"
+            "value": "Continue Playing"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "站外相关链接"
+            "value": "继续播放"
           }
         }
       }
@@ -3064,18 +2708,18 @@
         }
       }
     },
-    "自定义域名": {
+    "自定义": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Custom Domain"
+            "value": "Custom"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "自定义域名"
+            "value": "自定义"
           }
         }
       }
@@ -3096,6 +2740,22 @@
         }
       }
     },
+    "解析媒体中...": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Analyzing media..."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "解析媒体中..."
+          }
+        }
+      }
+    },
     "解析弹幕中...": {
       "localizations": {
         "en": {
@@ -3108,22 +2768,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "解析弹幕中..."
-          }
-        }
-      }
-    },
-    "解析视频中...": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Parsing Video..."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "解析视频中..."
           }
         }
       }
@@ -3224,6 +2868,22 @@
         }
       }
     },
+    "请输入服务器地址": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Please enter server address"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请输入服务器地址"
+          }
+        }
+      }
+    },
     "请输入用户名": {
       "localizations": {
         "en": {
@@ -3236,38 +2896,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "请输入用户名"
-          }
-        }
-      }
-    },
-    "请输入登录用户名！": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Enter Username!"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "请输入登录用户名！"
-          }
-        }
-      }
-    },
-    "请选择地址": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Select Address"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "请选择地址"
           }
         }
       }
@@ -3320,18 +2948,50 @@
         }
       }
     },
-    "连接身份": {
+    "输入关键词搜索番剧": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Connection Identity"
+            "value": "Enter keywords to search bangumi"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "连接身份"
+            "value": "输入关键词搜索番剧"
+          }
+        }
+      }
+    },
+    "输入屏蔽关键词或正则": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter filter keyword or regex"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "输入屏蔽关键词或正则"
+          }
+        }
+      }
+    },
+    "连接中…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Connecting..."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "连接中…"
           }
         }
       }
@@ -3369,7 +3029,6 @@
       }
     },
     "退出登录": {
-      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
@@ -3381,6 +3040,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "退出登录"
+          }
+        }
+      }
+    },
+    "选择弹幕匹配": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select Danmaku Match"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择弹幕匹配"
           }
         }
       }
@@ -3417,18 +3092,18 @@
         }
       }
     },
-    "选集": {
+    "通用": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Episodes"
+            "value": "General"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "选集"
+            "value": "通用"
           }
         }
       }
@@ -3445,6 +3120,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "重复播放当前视频"
+          }
+        }
+      }
+    },
+    "错误": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Error"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "错误"
           }
         }
       }
@@ -3497,6 +3188,38 @@
         }
       }
     },
+    "需要指定视频弹幕列表，才能发弹幕哟~": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Please specify a video danmaku list to send danmaku"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要指定视频弹幕列表，才能发弹幕哟~"
+          }
+        }
+      }
+    },
+    "音轨": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Audio Track"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "音轨"
+          }
+        }
+      }
+    },
     "音频时间偏移": {
       "localizations": {
         "en": {
@@ -3541,38 +3264,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "音频轨道"
-          }
-        }
-      }
-    },
-    "项目开源地址": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Project Open Source URL"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "项目开源地址"
-          }
-        }
-      }
-    },
-    "颜色预览：": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Preview:"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "颜色预览："
           }
         }
       }

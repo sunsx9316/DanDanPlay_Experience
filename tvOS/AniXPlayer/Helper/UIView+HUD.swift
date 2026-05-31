@@ -39,7 +39,7 @@ extension UIView {
         if let message = message, !message.isEmpty {
             let label = UILabel()
             label.text = message
-            label.font = .ddp_small
+            label.font = .ddp_small()
             label.textColor = .white
             label.textAlignment = .center
             stack.addArrangedSubview(label)

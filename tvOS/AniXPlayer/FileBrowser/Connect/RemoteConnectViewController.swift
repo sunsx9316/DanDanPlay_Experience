@@ -73,6 +73,17 @@ class RemoteConnectViewController: ViewController {
         return tf
     }()
 
+    private(set) lazy var remarkTextField: UITextField = {
+        let tf = UITextField()
+        tf.font = .ddp_normal()
+        tf.textColor = .white
+        tf.attributedPlaceholder = NSAttributedString(
+            string: NSLocalizedString("备注", comment: ""),
+            attributes: [.foregroundColor: UIColor.lightGray]
+        )
+        return tf
+    }()
+
     private lazy var loginButton: Button = {
         let button = Button(type: .system)
         button.setTitle(NSLocalizedString("登录", comment: ""), for: .normal)
@@ -154,6 +165,11 @@ class RemoteConnectViewController: ViewController {
             make.height.equalTo(60)
         }
 
+        stackView.addArrangedSubview(remarkTextField)
+        remarkTextField.snp.makeConstraints { make in
+            make.height.equalTo(60)
+        }
+
         stackView.addArrangedSubview(loginButton)
         loginButton.snp.makeConstraints { make in
             make.height.equalTo(60)
@@ -169,6 +185,7 @@ class RemoteConnectViewController: ViewController {
         addressLabel.text = info.url.absoluteString
         userNameLabel.text = info.auth?.userName
         passwordLabel.text = info.auth?.password
+        remarkTextField.text = info.remark
     }
 
     // MARK: - Actions
@@ -196,7 +213,8 @@ class RemoteConnectViewController: ViewController {
         }
 
         let auth = Auth(userName: userNameLabel.text, password: passwordLabel.text)
-        let info = LoginInfo(url: url, auth: auth, parameter: loginParameter())
+        let remark = remarkTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let info = LoginInfo(url: url, auth: auth, parameter: loginParameter(), remark: remark?.isEmpty == false ? remark : nil)
 
         loginWithInfo(info)
     }
@@ -239,71 +257,3 @@ extension RemoteConnectViewController: UITextFieldDelegate {
     }
 }
 
-// MARK: - HUD Extension
-
-private var hudTag: UInt8 = 0
-
-extension UIView {
-
-    func anx_showLoading(_ message: String? = nil) {
-        anx_hideHUD()
-
-        let overlay = UIView()
-        overlay.backgroundColor = UIColor.black.withAlphaComponent(0.7)
-        overlay.layer.cornerRadius = 12
-        overlay.translatesAutoresizingMaskIntoConstraints = false
-
-        let stack = UIStackView()
-        stack.axis = .vertical
-        stack.alignment = .center
-        stack.spacing = 16
-        stack.translatesAutoresizingMaskIntoConstraints = false
-        overlay.addSubview(stack)
-
-        let spinner = UIActivityIndicatorView(style: .large)
-        spinner.color = .white
-        spinner.startAnimating()
-        stack.addArrangedSubview(spinner)
-
-        if let message = message, !message.isEmpty {
-            let label = UILabel()
-            label.text = message
-            label.font = .ddp_small()
-            label.textColor = .white
-            label.textAlignment = .center
-            stack.addArrangedSubview(label)
-        }
-
-        objc_setAssociatedObject(self, &hudTag, overlay, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        addSubview(overlay)
-
-        NSLayoutConstraint.activate([
-            overlay.centerXAnchor.constraint(equalTo: centerXAnchor),
-            overlay.centerYAnchor.constraint(equalTo: centerYAnchor),
-            stack.leadingAnchor.constraint(equalTo: overlay.leadingAnchor, constant: 32),
-            stack.trailingAnchor.constraint(equalTo: overlay.trailingAnchor, constant: -32),
-            stack.topAnchor.constraint(equalTo: overlay.topAnchor, constant: 24),
-            stack.bottomAnchor.constraint(equalTo: overlay.bottomAnchor, constant: -24)
-        ])
-    }
-
-    func anx_hideHUD() {
-        if let hud = objc_getAssociatedObject(self, &hudTag) as? UIView {
-            hud.removeFromSuperview()
-            objc_setAssociatedObject(self, &hudTag, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
-        }
-    }
-
-    func anx_showError(_ message: String) {
-        var responder: UIResponder? = self
-        while let r = responder {
-            if let vc = r as? UIViewController {
-                let alert = UIAlertController(title: NSLocalizedString("错误", comment: ""), message: message, preferredStyle: .alert)
-                alert.addAction(UIAlertAction(title: NSLocalizedString("确定", comment: ""), style: .default))
-                vc.present(alert, animated: true)
-                return
-            }
-            responder = r.next
-        }
-    }
-}

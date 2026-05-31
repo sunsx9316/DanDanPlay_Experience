@@ -86,7 +86,8 @@ class SMBLoginHistoryViewController: RemoteLoginHistoryViewController {
         } else {
             let info = loginInfos[indexPath.row]
             let title = info.url.host ?? info.url.absoluteString
-            cell.configureAsSource(title: title, iconName: "server.rack")
+            let detail = info.remark ?? info.auth?.userName ?? ""
+            cell.configureAsSource(title: title, iconName: "server.rack", detail: detail)
         }
 
         return cell
