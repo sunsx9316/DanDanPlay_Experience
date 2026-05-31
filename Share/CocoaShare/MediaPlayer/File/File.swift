@@ -89,6 +89,9 @@ protocol File: AnyObject, HistoryManager.lastWatchDateStoreable {
 #if os(iOS) || os(tvOS)
     func createMPVMedia() -> MPVMedia?
 #endif
+
+    /// 排序比较函数，文件夹优先
+    func sortCompare(to other: any File) -> Bool
 }
 
 extension File {
@@ -154,12 +157,18 @@ extension File {
               let comp2 = URLComponents(url: other.url, resolvingAgainstBaseURL: false) else {
             return self.url == other.url
         }
-        
+
         // 忽略 user 和 password 的逻辑
         return comp1.scheme == comp2.scheme &&
                comp1.host == comp2.host &&
                comp1.path == comp2.path &&
                comp1.query == comp2.query
+    }
+
+    func sortCompare(to other: any File) -> Bool {
+        if self.type == .folder && other.type != .folder { return true }
+        if self.type != .folder && other.type == .folder { return false }
+        return self.fileName.localizedStandardCompare(other.fileName) == .orderedAscending
     }
 }
 

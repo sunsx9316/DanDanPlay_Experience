@@ -136,7 +136,7 @@ class RemoteConnectViewController: ViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        self.defaultFocusView = addressLabel
+        self.defaultFocusView = loginInfo != nil ? loginButton : addressLabel
     }
 
     // MARK: - Subclass Override Point

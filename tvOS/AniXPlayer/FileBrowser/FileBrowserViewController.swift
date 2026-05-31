@@ -100,11 +100,7 @@ class FileBrowserViewController: ViewController, FileBrowserViewControllerDelega
             switch result {
             case .success(let files):
                 self.currentDirectory = directory
-                self.files = files.sorted { f1, f2 in
-                    if f1.type == .folder && f2.type != .folder { return true }
-                    if f1.type != .folder && f2.type == .folder { return false }
-                    return f1.fileName.localizedStandardCompare(f2.fileName) == .orderedAscending
-                }
+                self.files = files.sorted { $0.sortCompare(to: $1) }
                 DispatchQueue.main.async {
                     self.title = directory.fileName
                     self.tableView.reloadData()

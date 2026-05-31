@@ -272,19 +272,7 @@ class FileBrowserViewController: ViewController {
                     
                     if let sortArr = tmpIndexedCollation.sortedArray(from: dataSourceMap[key] ?? [], collationStringSelector: #selector(getter: _FileWrapper.name)) as? [_FileWrapper] {
                         
-                        let tmpArr = sortArr.sorted { f1, f2 in
-                            if f1.type == .folder && f2.type == .file {
-                                return true
-                            } else if f1.type == .file && f2.type == .folder {
-                                return false
-                            } else {
-                                if f1.pathExtension == f2.pathExtension {
-                                    return f1.name.compare(f2.name, options: .numeric) == .orderedDescending ? false : true
-                                } else {
-                                    return f1.pathExtension < f2.pathExtension
-                                }
-                            }
-                        }
+                        let tmpArr = sortArr.sorted { $0.file.sortCompare(to: $1.file) }
                         
                         dataSourceArr.append(tmpArr)
                     }

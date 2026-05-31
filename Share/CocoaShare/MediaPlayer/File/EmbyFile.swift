@@ -96,6 +96,19 @@ class EmbyFile: File {
         }
     }
 
+    // MARK: - Sort
+
+    func sortCompare(to other: any File) -> Bool {
+        if self.type == .folder && other.type != .folder { return true }
+        if self.type != .folder && other.type == .folder { return false }
+        let pathA = self.embyItem?.path ?? ""
+        let pathB = (other as? EmbyFile)?.embyItem?.path ?? ""
+        if !pathA.isEmpty || !pathB.isEmpty {
+            return pathA < pathB
+        }
+        return self.fileName < other.fileName
+    }
+
     // MARK: - Media
 
     func createVLCMedia(delegate: FileDelegate) -> VLCMedia? {
