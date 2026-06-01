@@ -134,6 +134,80 @@ class EmbyFile: File {
             }
         })
     }
+
+    // MARK: - Subtitle File
+
+    class EmbySubtitleFile: File {
+
+        var url: URL
+        var fileSize: Int = 0
+        var type: FileType = .file
+        var fileName: String
+        var subtitle: String = ""
+        var parentFile: File?
+        var isCanDelete: Bool { false }
+        var coverImageURL: URL? { nil }
+        var sourceFileName: String? { nil }
+
+        static var fileManager: FileManagerProtocol { EmbyFileManager.shared }
+        static var rootFile: File {
+            EmbyFile(rootFileURL: URL(fileURLWithPath: "/"))
+        }
+
+        var fileId: String {
+            return "emby_sub_\(itemId)_\(String(mediaSourceId.prefix(8)))_\(streamIndex)"
+        }
+
+        let streamIndex: Int
+        let itemId: String
+        let mediaSourceId: String
+        let deliveryUrl: String?
+        let codec: String
+
+        init(itemId: String, mediaSourceId: String, stream: EmbyMediaStream) {
+            self.itemId = itemId
+            self.mediaSourceId = mediaSourceId
+            self.streamIndex = stream.index
+            self.deliveryUrl = stream.deliveryUrl
+            self.codec = stream.codec ?? ""
+
+            let ext = stream.fileExtension
+            let safeName = stream.displayTitle ?? stream.path ?? "track_\(stream.index)"
+            let urlStr = "emby-sub://\(itemId)/\(mediaSourceId)/\(stream.index)/\(safeName).\(ext)"
+            self.url = URL(string: urlStr) ?? URL(fileURLWithPath: "/")
+
+            self.fileName = stream.displayTitle
+                ?? (stream.path.flatMap { ($0 as NSString).lastPathComponent })
+                ?? "\(stream.codec ?? "")_\(stream.index)"
+        }
+
+        func getDataWithRange(_ range: ClosedRange<Int>, progress: FileProgressAction?, completion: @escaping ((Result<Data, Error>) -> Void)) {
+            EmbyFileManager.shared.getSubtitleData(self, completion: completion)
+        }
+
+        func getFileHashWithProgress(_ progress: FileProgressAction?, completion: @escaping ((Result<String, Error>) -> Void)) {
+            EmbyFileManager.shared.getSubtitleData(self) { result in
+                switch result {
+                case .success(let data):
+                    let hash = (data as NSData).md5String()
+                    completion(.success(hash))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
+            }
+        }
+
+        func createVLCMedia(delegate: FileDelegate) -> VLCMedia? { nil }
+
+        #if os(iOS) || os(tvOS)
+        func createMPVMedia() -> MPVMedia? { nil }
+        #endif
+
+        func sortCompare(to other: any File) -> Bool {
+            return fileName < other.fileName
+        }
+    }
+
 }
 
 #endif

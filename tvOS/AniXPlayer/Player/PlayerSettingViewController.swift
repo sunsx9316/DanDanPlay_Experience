@@ -59,7 +59,12 @@ class PlayerSettingViewController: UITabBarController {
 extension PlayerSettingViewController: DanmakuSettingViewControllerDelegate {
     func loadDanmakuFileInDanmakuSettingViewController(vc: DanmakuSettingViewController) {
         ANX.logInfo(.player, "[PlayerSetting] 加载本地弹幕")
-        let fileBrowserVC = FileBrowserViewController(directory: LocalFile.rootFile)
+        let item = playerModel.mediaModel.media ?? playerModel.mediaModel.playList.first
+        guard let parentFile = item?.parentFile else {
+            ANX.logWarning(.player, "[PlayerSetting] 无法获取当前媒体的父目录")
+            return
+        }
+        let fileBrowserVC = FileBrowserViewController(directory: parentFile)
         fileBrowserVC.filterType = .danmaku
         fileBrowserVC.delegate = self
         navigationController?.pushViewController(fileBrowserVC, animated: true)
@@ -90,7 +95,12 @@ extension PlayerSettingViewController: DanmakuSettingViewControllerDelegate {
 extension PlayerSettingViewController: MediaSettingViewControllerDelegate {
     func loadSubtitleFileInMediaSettingViewController(_ vc: MediaSettingViewController) {
         ANX.logInfo(.player, "[PlayerSetting] 加载字幕")
-        let fileBrowserVC = FileBrowserViewController(directory: LocalFile.rootFile)
+        let item = playerModel.mediaModel.media ?? playerModel.mediaModel.playList.first
+        guard let parentFile = item?.parentFile else {
+            ANX.logWarning(.player, "[PlayerSetting] 无法获取当前媒体的父目录")
+            return
+        }
+        let fileBrowserVC = FileBrowserViewController(directory: parentFile)
         fileBrowserVC.filterType = .subtitle
         fileBrowserVC.delegate = self
         navigationController?.pushViewController(fileBrowserVC, animated: true)

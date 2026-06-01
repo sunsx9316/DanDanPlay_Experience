@@ -94,9 +94,47 @@ struct EmbyItem: Decodable {
 struct EmbyMediaSource: Decodable {
     let id: String
     let size: Int64?
+    let mediaStreams: [EmbyMediaStream]?
 
     private enum CodingKeys: String, CodingKey {
         case id = "Id"
         case size = "Size"
+        case mediaStreams = "MediaStreams"
+    }
+}
+
+struct EmbyMediaStream: Decodable {
+    let codec: String?
+    let displayTitle: String?
+    let index: Int
+    let isExternal: Bool
+    let type: String
+    let path: String?
+    let deliveryUrl: String?
+
+    private enum CodingKeys: String, CodingKey {
+        case codec = "Codec"
+        case displayTitle = "DisplayTitle"
+        case index = "Index"
+        case isExternal = "IsExternal"
+        case type = "Type"
+        case path = "Path"
+        case deliveryUrl = "DeliveryUrl"
+    }
+
+    var isSubtitle: Bool { type == "Subtitle" }
+    var fileExtension: String {
+        if let path = path { return (path as NSString).pathExtension }
+        return codec ?? ""
+    }
+}
+
+// MARK: - PlaybackInfo
+
+struct EmbyPlaybackInfoResponse: Decodable {
+    let mediaSources: [EmbyMediaSource]
+
+    private enum CodingKeys: String, CodingKey {
+        case mediaSources = "MediaSources"
     }
 }
