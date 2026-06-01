@@ -46,14 +46,14 @@ class RemoteConnectViewController: ViewController {
         tf.delegate = self
         tf.keyboardType = .URL
         tf.font = .ddp_normal()
-        tf.textColor = .white
+        tf.textColor = .label
         return tf
     }()
 
     private(set) lazy var userNameLabel: UITextField = {
         let tf = UITextField()
         tf.font = .ddp_normal()
-        tf.textColor = .white
+        tf.textColor = .label
         tf.attributedPlaceholder = NSAttributedString(
             string: NSLocalizedString("用户名", comment: ""),
             attributes: [.foregroundColor: UIColor.lightGray]
@@ -64,7 +64,7 @@ class RemoteConnectViewController: ViewController {
     private(set) lazy var passwordLabel: UITextField = {
         let tf = UITextField()
         tf.font = .ddp_normal()
-        tf.textColor = .white
+        tf.textColor = .label
         tf.isSecureTextEntry = true
         tf.attributedPlaceholder = NSAttributedString(
             string: NSLocalizedString("密码", comment: ""),
@@ -76,7 +76,7 @@ class RemoteConnectViewController: ViewController {
     private(set) lazy var remarkTextField: UITextField = {
         let tf = UITextField()
         tf.font = .ddp_normal()
-        tf.textColor = .white
+        tf.textColor = .label
         tf.attributedPlaceholder = NSAttributedString(
             string: NSLocalizedString("备注", comment: ""),
             attributes: [.foregroundColor: UIColor.lightGray]

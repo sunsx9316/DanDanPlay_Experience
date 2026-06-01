@@ -61,9 +61,14 @@ class FileBrowserViewController: ViewController, FileBrowserViewControllerDelega
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let backImage = UIImage(systemName: "chevron.backward", withConfiguration: UIImage.SymbolConfiguration(pointSize: 28, weight: .medium))
+        let symbolConfig = UIImage.SymbolConfiguration(pointSize: 28, weight: .medium)
+        let backImage = UIImage(systemName: "chevron.backward", withConfiguration: symbolConfig)
         let backItem = UIBarButtonItem(image: backImage, style: .plain, target: self, action: #selector(goBack))
         navigationItem.leftBarButtonItem = backItem
+
+        let sortImage = UIImage(systemName: "arrow.up.arrow.down", withConfiguration: symbolConfig)
+        let sortItem = UIBarButtonItem(image: sortImage, style: .plain, target: self, action: #selector(showSortOptions))
+        navigationItem.rightBarButtonItem = sortItem
 
         self.view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
@@ -100,7 +105,9 @@ class FileBrowserViewController: ViewController, FileBrowserViewControllerDelega
             switch result {
             case .success(let files):
                 self.currentDirectory = directory
-                self.files = files.sorted { $0.sortCompare(to: $1) }
+                let option = Preferences.shared.fileBrowserSortOption
+                let ascending = Preferences.shared.fileBrowserSortAscending
+                self.files = files.sorted { $0.sortCompare(to: $1, option: option, ascending: ascending) }
                 DispatchQueue.main.async {
                     self.title = directory.fileName
                     self.tableView.reloadData()
@@ -120,6 +127,33 @@ class FileBrowserViewController: ViewController, FileBrowserViewControllerDelega
         } else if let parent = currentDirectory?.parentFile {
             enterDirectory(parent)
         }
+    }
+
+    @objc private func showSortOptions() {
+        let alert = UIAlertController(title: NSLocalizedString("排序方式", comment: ""), message: nil, preferredStyle: .alert)
+
+        let isEmby = rootDirectory is EmbyFile
+        let options: [FileSortOption] = isEmby ? FileSortOption.allCases : [.default, .fileName, .fileType]
+        let currentOption = Preferences.shared.fileBrowserSortOption
+        let isAscending = Preferences.shared.fileBrowserSortAscending
+
+        for option in options {
+            let marker = option == currentOption ? (isAscending ? " ↑" : " ↓") : ""
+            alert.addAction(UIAlertAction(title: option.displayName + marker, style: .default) { [weak self] _ in
+                guard let self = self else { return }
+                if option == currentOption {
+                    Preferences.shared.fileBrowserSortAscending.toggle()
+                } else {
+                    Preferences.shared.fileBrowserSortOption = option
+                }
+                if let dir = self.currentDirectory {
+                    self.enterDirectory(dir)
+                }
+            })
+        }
+
+        alert.addAction(UIAlertAction(title: NSLocalizedString("取消", comment: ""), style: .cancel))
+        present(alert, animated: true)
     }
 
     func selectFile(_ file: File) {

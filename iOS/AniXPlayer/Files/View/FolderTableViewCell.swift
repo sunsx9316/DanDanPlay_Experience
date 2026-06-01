@@ -18,6 +18,7 @@ class FolderTableViewCell: TableViewCell {
 
     lazy var titleLabel: Label = {
         let label = Label()
+        label.numberOfLines = 0
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return label
     }()

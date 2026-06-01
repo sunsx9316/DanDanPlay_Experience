@@ -35,7 +35,7 @@ class EmbyConnectViewController: RemoteConnectViewController {
     private(set) lazy var apiKeyLabel: UITextField = {
         let tf = UITextField()
         tf.font = .ddp_normal()
-        tf.textColor = .white
+        tf.textColor = .label
         tf.attributedPlaceholder = NSAttributedString(
             string: NSLocalizedString("API Key", comment: ""),
             attributes: [.foregroundColor: UIColor.lightGray]

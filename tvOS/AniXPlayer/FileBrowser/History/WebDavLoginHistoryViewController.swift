@@ -9,6 +9,10 @@ import UIKit
 
 class WebDavLoginHistoryViewController: RemoteLoginHistoryViewController {
 
+    override var fileManager: FileManagerProtocol {
+        return WebDavFileManager.shared
+    }
+
     override var fileManagerDesc: String {
         return NSLocalizedString("WebDAV", comment: "")
     }

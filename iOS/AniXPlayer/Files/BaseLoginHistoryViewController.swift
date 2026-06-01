@@ -9,7 +9,7 @@ import UIKit
 
 class BaseLoginHistoryViewController<F: File>: ViewController, UITableViewDelegate, UITableViewDataSource, BaseConnectSvrViewControllerDelegate, FileBrowserViewControllerDelegate {
     
-    private lazy var tableView: TableView = {
+    lazy var tableView: TableView = {
         let tableView = TableView(frame: .zero, style: .grouped)
         tableView.delegate = self
         tableView.dataSource = self
@@ -65,15 +65,15 @@ class BaseLoginHistoryViewController<F: File>: ViewController, UITableViewDelega
     }
     
     //MARK: Private Method
-    @objc private func beginRefreshing() {
+    @objc func beginRefreshing() {
         self.tableView.mj_header?.endRefreshing()
     }
-    
+
     @objc private func onTouchAddButton() {
         self.jumpToConnectViewController()
     }
-    
-    private func deleteLoginInfo(_ info: LoginInfo, at view: UIView?) {
+
+    func deleteLoginInfo(_ info: LoginInfo, at view: UIView?) {
         let message = String(format: NSLocalizedString("确定删除%@吗？", comment: ""), info.url.host ?? "")
         let vc = UIAlertController(title: NSLocalizedString("提示", comment: ""), message: message, preferredStyle: .alert)
         vc.addAction(UIAlertAction(title: NSLocalizedString("确定", comment: ""), style: .destructive, handler: { action in
@@ -110,10 +110,31 @@ class BaseLoginHistoryViewController<F: File>: ViewController, UITableViewDelega
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
- 
+
         let loginInfo = self.historyLoginInfos[indexPath.row]
-        self.jumpToConnectViewController(loginInfo)
-        
+        let hud = self.view.showLoading()
+        F.fileManager.connectWithLoginInfo(loginInfo) { [weak self] error in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                hud.hide(animated: true)
+                if let error = error {
+                    self.view.showError(error)
+                } else {
+                    var loginInfos = self.dataSource
+                    if let index = loginInfos.firstIndex(of: loginInfo) {
+                        loginInfos.remove(at: index)
+                    }
+                    loginInfos.insert(loginInfo, at: 0)
+                    self.dataSource = loginInfos
+                    self.tableView.reloadData()
+
+                    let vc = FileBrowserViewController(with: self.rootFile, selectedFile: nil, filterType: .video)
+                    vc.delegate = self
+                    vc.hidesBottomBarWhenPushed = true
+                    self.navigationController?.pushViewController(vc, animated: true)
+                }
+            }
+        }
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -131,13 +152,21 @@ class BaseLoginHistoryViewController<F: File>: ViewController, UITableViewDelega
     }
     
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        
-        let config = UISwipeActionsConfiguration(actions: [UIContextualAction(style: .destructive, title: NSLocalizedString("删除", comment: ""), handler: { [weak self] (_, _, _) in
-            guard let self = self else { return }
-            
+
+        let deleteAction = UIContextualAction(style: .destructive, title: NSLocalizedString("删除", comment: "")) { [weak self] (_, _, completion) in
+            guard let self = self else { completion(false); return }
             self.deleteLoginInfo(self.historyLoginInfos[indexPath.row], at: tableView.cellForRow(at: indexPath))
-        })])
-        return config
+            completion(true)
+        }
+
+        let editAction = UIContextualAction(style: .normal, title: NSLocalizedString("编辑", comment: "")) { [weak self] (_, _, completion) in
+            guard let self = self else { completion(false); return }
+            self.jumpToConnectViewController(self.historyLoginInfos[indexPath.row])
+            completion(true)
+        }
+        editAction.backgroundColor = .systemBlue
+
+        return UISwipeActionsConfiguration(actions: [deleteAction, editAction])
     }
     
     // MARK: FileBrowserViewControllerDelegate

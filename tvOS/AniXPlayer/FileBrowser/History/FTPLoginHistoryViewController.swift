@@ -9,6 +9,10 @@ import UIKit
 
 class FTPLoginHistoryViewController: RemoteLoginHistoryViewController {
 
+    override var fileManager: FileManagerProtocol {
+        return FTPFileManager.shared
+    }
+
     override var fileManagerDesc: String {
         return NSLocalizedString("FTP", comment: "")
     }

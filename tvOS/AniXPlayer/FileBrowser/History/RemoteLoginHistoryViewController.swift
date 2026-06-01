@@ -34,10 +34,6 @@ class RemoteLoginHistoryViewController: ViewController {
         return UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addNewConnection))
     }()
 
-    private lazy var editBarItem: UIBarButtonItem = {
-        return UIBarButtonItem(title: NSLocalizedString("编辑", comment: ""), style: .plain, target: self, action: #selector(toggleEdit))
-    }()
-
     private(set) lazy var tableView: TableView = {
         let tv = TableView(frame: .zero, style: .grouped)
         tv.delegate = self
@@ -64,7 +60,7 @@ class RemoteLoginHistoryViewController: ViewController {
         super.viewDidLoad()
         self.title = fileManagerDesc
 
-        navigationItem.rightBarButtonItems = [addBarItem, editBarItem]
+        navigationItem.rightBarButtonItems = [addBarItem]
 
         view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
@@ -75,6 +71,9 @@ class RemoteLoginHistoryViewController: ViewController {
         emptyLabel.snp.makeConstraints { make in
             make.center.equalToSuperview()
         }
+
+        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPress(_:)))
+        tableView.addGestureRecognizer(longPress)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -111,16 +110,75 @@ class RemoteLoginHistoryViewController: ViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
 
-    @objc private func toggleEdit() {
-        let editing = !tableView.isEditing
-        tableView.setEditing(editing, animated: true)
-        editBarItem.title = editing ? NSLocalizedString("完成", comment: "") : NSLocalizedString("编辑", comment: "")
+    func loginInfoForRow(at indexPath: IndexPath) -> LoginInfo? {
+        guard indexPath.row < loginInfos.count else { return nil }
+        return loginInfos[indexPath.row]
+    }
+
+    @objc private func handleLongPress(_ gesture: UILongPressGestureRecognizer) {
+        guard gesture.state == .began else { return }
+
+        let point = gesture.location(in: tableView)
+        guard let indexPath = tableView.indexPathForRow(at: point) else { return }
+        guard let info = loginInfoForRow(at: indexPath) else { return }
+        let alert = UIAlertController(title: info.url.host ?? info.url.absoluteString, message: nil, preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: NSLocalizedString("编辑", comment: ""), style: .default) { [weak self] _ in
+            guard let self = self else { return }
+            let vc = self.connectViewController(loginInfo: info)
+            vc.delegate = self
+            self.navigationController?.pushViewController(vc, animated: true)
+        })
+
+        alert.addAction(UIAlertAction(title: NSLocalizedString("删除", comment: ""), style: .destructive) { [weak self] _ in
+            self?.confirmDelete(info: info, at: indexPath)
+        })
+
+        alert.addAction(UIAlertAction(title: NSLocalizedString("取消", comment: ""), style: .cancel))
+        present(alert, animated: true)
+    }
+
+    private func confirmDelete(info: LoginInfo, at indexPath: IndexPath) {
+        let alert = UIAlertController(
+            title: NSLocalizedString("确认删除", comment: ""),
+            message: NSLocalizedString("确定要删除该记录吗？", comment: ""),
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: NSLocalizedString("删除", comment: ""), style: .destructive) { [weak self] _ in
+            guard let self = self else { return }
+            self.deleteHistory(at: indexPath.row)
+            self.tableView.deleteRows(at: [indexPath], with: .automatic)
+        })
+        alert.addAction(UIAlertAction(title: NSLocalizedString("取消", comment: ""), style: .cancel))
+        present(alert, animated: true)
     }
 
     func connect(with loginInfo: LoginInfo) {
-        let vc = connectViewController(loginInfo: loginInfo)
-        vc.delegate = self
-        navigationController?.pushViewController(vc, animated: true)
+        view.anx_showLoading(NSLocalizedString("连接中…", comment: ""))
+        fileManager.connectWithLoginInfo(loginInfo) { [weak self] error in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.view.anx_hideHUD()
+                if let error = error {
+                    self.view.anx_showError(error.localizedDescription)
+                } else {
+                    if let index = self.loginInfos.firstIndex(of: loginInfo) {
+                        self.loginInfos.remove(at: index)
+                    }
+                    self.loginInfos.insert(loginInfo, at: 0)
+                    self.saveData()
+
+                    let rootFile = self.rootFile(for: loginInfo)
+                    let browserVC = FileBrowserViewController(directory: rootFile)
+                    browserVC.delegate = self
+                    self.navigationController?.pushViewController(browserVC, animated: true)
+                }
+            }
+        }
+    }
+
+    var fileManager: FileManagerProtocol {
+        fatalError("subclass must override fileManager")
     }
 
     private func deleteHistory(at index: Int) {
@@ -160,17 +218,6 @@ extension RemoteLoginHistoryViewController: UITableViewDataSource {
 
         cell.configureAsSource(title: title, iconName: "server.rack", detail: detail)
         return cell
-    }
-
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            deleteHistory(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-        }
     }
 }
 

@@ -198,6 +198,17 @@ extension MediaPlayer.CoreType: Storeable {
     }
 }
 
+extension FileSortOption: Storeable {
+    static func create(from: Int) -> FileSortOption? {
+        let rawValue = from
+        return FileSortOption(rawValue: rawValue)
+    }
+
+    func toValue() -> Int {
+        return self.rawValue
+    }
+}
+
 extension AppLanguage: Storeable {
     static func create(from: Int) -> AppLanguage? {
         let rawValue = from

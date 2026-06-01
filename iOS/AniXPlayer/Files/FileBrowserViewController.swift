@@ -223,8 +223,9 @@ class FileBrowserViewController: ViewController {
         }
         
         let showAllItem = UIBarButtonItem(title: NSLocalizedString("显示全部", comment: ""), target: self, action: #selector(showAllFile(_:)))
-        
-        self.navigationItem.rightBarButtonItem = showAllItem
+        let sortItem = UIBarButtonItem(image: UIImage(systemName: "arrow.up.arrow.down"), style: .plain, target: self, action: #selector(showSortOptions))
+
+        self.navigationItem.rightBarButtonItems = [showAllItem, sortItem]
         
         self.tableView.mj_header?.beginRefreshing()
     }
@@ -243,6 +244,36 @@ class FileBrowserViewController: ViewController {
         self.beginRefreshing()
     }
     
+    @objc private func showSortOptions() {
+        let alert = UIAlertController(title: NSLocalizedString("排序方式", comment: ""), message: nil, preferredStyle: .actionSheet)
+
+        let isEmby = rootFile is EmbyFile
+        let options: [FileSortOption] = isEmby ? FileSortOption.allCases : [.default, .fileName, .fileType]
+        let currentOption = Preferences.shared.fileBrowserSortOption
+        let isAscending = Preferences.shared.fileBrowserSortAscending
+
+        for option in options {
+            let marker = option == currentOption ? (isAscending ? " ↑" : " ↓") : ""
+            alert.addAction(UIAlertAction(title: option.displayName + marker, style: .default) { [weak self] _ in
+                guard let self = self else { return }
+                if option == currentOption {
+                    Preferences.shared.fileBrowserSortAscending.toggle()
+                } else {
+                    Preferences.shared.fileBrowserSortOption = option
+                }
+                self.beginRefreshing()
+            })
+        }
+
+        alert.addAction(UIAlertAction(title: NSLocalizedString("取消", comment: ""), style: .cancel))
+
+        if let popover = alert.popoverPresentationController {
+            popover.barButtonItem = navigationItem.rightBarButtonItems?.last
+        }
+
+        present(alert, animated: true)
+    }
+
     @objc private func beginRefreshing() {
         self.manager.contentsOfDirectory(at: self.rootFile, filterType: self.isShowAllFile ? nil : self.filterType) { [weak self] result in
             guard let self = self else { return }
@@ -272,7 +303,9 @@ class FileBrowserViewController: ViewController {
                     
                     if let sortArr = tmpIndexedCollation.sortedArray(from: dataSourceMap[key] ?? [], collationStringSelector: #selector(getter: _FileWrapper.name)) as? [_FileWrapper] {
                         
-                        let tmpArr = sortArr.sorted { $0.file.sortCompare(to: $1.file) }
+                        let option = Preferences.shared.fileBrowserSortOption
+                        let ascending = Preferences.shared.fileBrowserSortAscending
+                        let tmpArr = sortArr.sorted { $0.file.sortCompare(to: $1.file, option: option, ascending: ascending) }
                         
                         dataSourceArr.append(tmpArr)
                     }

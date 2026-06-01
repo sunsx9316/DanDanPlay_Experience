@@ -46,7 +46,7 @@ class UserInfoViewController: ViewController {
     private lazy var usernameLabel: UILabel = {
         let label = UILabel()
         label.font = .ddp_normal(weight: .bold)
-        label.textColor = .white
+        label.textColor = .label
         return label
     }()
 

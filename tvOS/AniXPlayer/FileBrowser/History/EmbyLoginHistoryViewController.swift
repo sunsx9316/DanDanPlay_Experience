@@ -9,6 +9,10 @@ import UIKit
 
 class EmbyLoginHistoryViewController: RemoteLoginHistoryViewController {
 
+    override var fileManager: FileManagerProtocol {
+        return EmbyFileManager.shared
+    }
+
     override var fileManagerDesc: String {
         return NSLocalizedString("Emby", comment: "")
     }

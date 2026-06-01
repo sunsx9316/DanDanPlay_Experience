@@ -19,6 +19,24 @@ enum FileType {
     case file
 }
 
+enum FileSortOption: Int, CaseIterable {
+    case `default`
+    case fileName
+    case fileType
+    case episodeNumber
+    case path
+
+    var displayName: String {
+        switch self {
+        case .default: return NSLocalizedString("默认排序", comment: "")
+        case .fileName: return NSLocalizedString("文件名", comment: "")
+        case .fileType: return NSLocalizedString("文件类型", comment: "")
+        case .episodeNumber: return NSLocalizedString("集数", comment: "")
+        case .path: return NSLocalizedString("路径", comment: "")
+        }
+    }
+}
+
 protocol MediaBufferInfo {
     
     var startPositin: CGFloat { get }
@@ -90,8 +108,8 @@ protocol File: AnyObject, HistoryManager.lastWatchDateStoreable {
     func createMPVMedia() -> MPVMedia?
 #endif
 
-    /// 排序比较函数，文件夹优先
-    func sortCompare(to other: any File) -> Bool
+    /// 排序比较函数（带排序选项），文件夹优先
+    func sortCompare(to other: any File, option: FileSortOption, ascending: Bool) -> Bool
 }
 
 extension File {
@@ -165,10 +183,18 @@ extension File {
                comp1.query == comp2.query
     }
 
-    func sortCompare(to other: any File) -> Bool {
-        if self.type == .folder && other.type != .folder { return true }
-        if self.type != .folder && other.type == .folder { return false }
-        return self.fileName.localizedStandardCompare(other.fileName) == .orderedAscending
+    func sortCompare(to other: any File, option: FileSortOption, ascending: Bool) -> Bool {
+        if option == .fileType {
+            if self.type == .folder && other.type != .folder { return ascending }
+            if self.type != .folder && other.type == .folder { return !ascending }
+            let result = self.fileName.localizedStandardCompare(other.fileName) == .orderedAscending
+            return ascending ? result : !result
+        } else {
+            if self.type == .folder && other.type != .folder { return true }
+            if self.type != .folder && other.type == .folder { return false }
+            let result = self.fileName.localizedStandardCompare(other.fileName) == .orderedAscending
+            return ascending ? result : !result
+        }
     }
 }
 

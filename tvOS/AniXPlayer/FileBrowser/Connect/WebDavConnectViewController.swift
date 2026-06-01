@@ -12,7 +12,7 @@ class WebDavConnectViewController: RemoteConnectViewController {
     private lazy var rootPathLabel: UITextField = {
         let tf = UITextField()
         tf.font = .ddp_normal()
-        tf.textColor = .white
+        tf.textColor = .label
         tf.attributedPlaceholder = NSAttributedString(
             string: NSLocalizedString("根路径（可选）", comment: ""),
             attributes: [.foregroundColor: UIColor.lightGray]

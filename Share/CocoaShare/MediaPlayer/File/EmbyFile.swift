@@ -98,15 +98,45 @@ class EmbyFile: File {
 
     // MARK: - Sort
 
-    func sortCompare(to other: any File) -> Bool {
-        if self.type == .folder && other.type != .folder { return true }
-        if self.type != .folder && other.type == .folder { return false }
-        let pathA = self.embyItem?.path ?? ""
-        let pathB = (other as? EmbyFile)?.embyItem?.path ?? ""
-        if !pathA.isEmpty || !pathB.isEmpty {
-            return pathA < pathB
+    func sortCompare(to other: any File, option: FileSortOption, ascending: Bool) -> Bool {
+        if option == .fileType {
+            if self.type == .folder && other.type != .folder { return ascending }
+            if self.type != .folder && other.type == .folder { return !ascending }
+        } else {
+            if self.type == .folder && other.type != .folder { return true }
+            if self.type != .folder && other.type == .folder { return false }
         }
-        return self.fileName < other.fileName
+
+        let result: Bool
+        switch option {
+        case .default, .episodeNumber:
+            let epA = self.embyItem?.indexNumber ?? Int.max
+            let epB = (other as? EmbyFile)?.embyItem?.indexNumber ?? Int.max
+            if epA != epB {
+                result = epA < epB
+            } else {
+                let pathA = self.embyItem?.path ?? ""
+                let pathB = (other as? EmbyFile)?.embyItem?.path ?? ""
+                if !pathA.isEmpty || !pathB.isEmpty {
+                    result = pathA < pathB
+                } else {
+                    result = self.fileName.localizedStandardCompare(other.fileName) == .orderedAscending
+                }
+            }
+        case .fileName:
+            result = self.fileName.localizedStandardCompare(other.fileName) == .orderedAscending
+        case .path:
+            let pathA = self.embyItem?.path ?? ""
+            let pathB = (other as? EmbyFile)?.embyItem?.path ?? ""
+            if !pathA.isEmpty || !pathB.isEmpty {
+                result = pathA < pathB
+            } else {
+                result = self.fileName.localizedStandardCompare(other.fileName) == .orderedAscending
+            }
+        case .fileType:
+            result = self.fileName.localizedStandardCompare(other.fileName) == .orderedAscending
+        }
+        return ascending ? result : !result
     }
 
     // MARK: - Media
@@ -147,7 +177,9 @@ class EmbyFile: File {
         var parentFile: File?
         var isCanDelete: Bool { false }
         var coverImageURL: URL? { nil }
-        var sourceFileName: String? { nil }
+        var sourceFileName: String? {
+            streamPath.flatMap { ($0 as NSString).lastPathComponent }
+        }
 
         static var fileManager: FileManagerProtocol { EmbyFileManager.shared }
         static var rootFile: File {
@@ -163,6 +195,7 @@ class EmbyFile: File {
         let mediaSourceId: String
         let deliveryUrl: String?
         let codec: String
+        let streamPath: String?
 
         init(itemId: String, mediaSourceId: String, stream: EmbyMediaStream) {
             self.itemId = itemId
@@ -170,6 +203,7 @@ class EmbyFile: File {
             self.streamIndex = stream.index
             self.deliveryUrl = stream.deliveryUrl
             self.codec = stream.codec ?? ""
+            self.streamPath = stream.path
 
             let ext = stream.fileExtension
             let safeName = stream.displayTitle ?? stream.path ?? "track_\(stream.index)"
@@ -202,10 +236,6 @@ class EmbyFile: File {
         #if os(iOS) || os(tvOS)
         func createMPVMedia() -> MPVMedia? { nil }
         #endif
-
-        func sortCompare(to other: any File) -> Bool {
-            return fileName < other.fileName
-        }
     }
 
 }

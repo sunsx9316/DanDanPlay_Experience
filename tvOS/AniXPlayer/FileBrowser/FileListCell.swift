@@ -39,7 +39,7 @@ class FileListCell: TableViewCell {
     private lazy var detailLabel: Label = {
         let label = Label()
         label.font = .ddp_small()
-        label.textColor = .secondaryLabel
+        label.textColor = .label
         label.numberOfLines = 0
         return label
     }()
@@ -123,12 +123,20 @@ class FileListCell: TableViewCell {
             detailLabel.isHidden = true
         } else {
             detailLabel.isHidden = false
-            let sizeStr = ByteCountFormatter.string(fromByteCount: Int64(file.fileSize), countStyle: .file)
-            var detail = "\(sizeStr)  \(file.pathExtension.uppercased())"
-            if let sourceName = file.sourceFileName {
-                detail += "\n\(sourceName)"
+            if file.fileSize > 0 {
+                let sizeStr = ByteCountFormatter.string(fromByteCount: Int64(file.fileSize), countStyle: .file)
+                var detail = "\(sizeStr)  \(file.pathExtension.uppercased())"
+                if let sourceName = file.sourceFileName {
+                    detail += "\n\(sourceName)"
+                }
+                detailLabel.text = detail
+            } else {
+                var detail = file.pathExtension.uppercased()
+                if let sourceName = file.sourceFileName {
+                    detail = sourceName
+                }
+                detailLabel.text = detail
             }
-            detailLabel.text = detail
         }
     }
 

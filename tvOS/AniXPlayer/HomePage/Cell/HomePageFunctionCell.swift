@@ -79,6 +79,9 @@ class HomePageFunctionCell: TableViewCell {
     }
 
     private func setupUI() {
+        backgroundColor = .clear
+        contentView.backgroundColor = .clear
+
         selectionStyle = .none
 
         contentView.addSubview(stackView)

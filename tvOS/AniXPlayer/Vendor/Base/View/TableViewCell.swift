@@ -20,9 +20,10 @@ class TableViewCell: UITableViewCell {
     }
 
     private func setup() {
-        self.backgroundColor = .clear
-        self.contentView.backgroundColor = .clear
-        self.layer.cornerRadius = 10
+        self.backgroundColor = .adaptiveBackground
+        self.contentView.backgroundColor = .adaptiveSecondaryBackground
+        self.layer.cornerRadius = 16
+        self.clipsToBounds = true
     }
 
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
@@ -31,12 +32,10 @@ class TableViewCell: UITableViewCell {
         coordinator.addCoordinatedAnimations({
             if self.isFocused {
                 self.backgroundColor = .clear
-                self.transform = CGAffineTransform(scaleX: 1.03, y: 1.03)
-                self.layer.borderWidth = 2
+                self.layer.borderWidth = 4
                 self.layer.borderColor = UIColor.mainColor.cgColor
             } else {
                 self.backgroundColor = .clear
-                self.transform = .identity
                 self.layer.borderWidth = 0
                 self.layer.borderColor = UIColor.clear.cgColor
             }

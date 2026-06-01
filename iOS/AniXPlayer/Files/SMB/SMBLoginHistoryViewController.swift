@@ -7,45 +7,79 @@
 
 import UIKit
 
-extension SMBLoginHistoryViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return self.browser?.discoveredServices.count ?? 0
-        }
-        return self.historyLoginInfos.count
+class SMBLoginHistoryViewController: BaseLoginHistoryViewController<SMBFile> {
+
+    private var browser: SMBServiceBrowser?
+
+    override var dataSource: [LoginInfo] {
+        get { return Preferences.shared.smbLoginInfos ?? [] }
+        set { Preferences.shared.smbLoginInfos = newValue }
     }
-    
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        startSearch()
+    }
+
+    @objc override func beginRefreshing() {
+        startSearch()
+        super.beginRefreshing()
+    }
+
+    override func jumpToConnectViewController(_ loginInfo: LoginInfo? = nil) {
+        let vc = SMBConnectViewController(loginInfo: loginInfo, fileManager: SMBFile.fileManager)
+        vc.delegate = self
+        vc.hidesBottomBarWhenPushed = true
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+
+    // MARK: - Network Search
+
+    private func startSearch() {
+        self.browser = .init()
+        self.browser?.startScanning({ [weak self] in
+            DispatchQueue.main.async {
+                self?.tableView.reloadData()
+            }
+        })
+
+        self.tableView.reloadData()
+    }
+
+    // MARK: - UITableViewDataSource
+
     func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueCell(class: LinkHistoryTableViewCell.self, indexPath: indexPath)
+
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 0 {
+            return self.browser?.discoveredServices.count ?? 0
+        }
+        return super.tableView(tableView, numberOfRowsInSection: section)
+    }
+
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
+            let cell = tableView.dequeueCell(class: LinkHistoryTableViewCell.self, indexPath: indexPath)
             let service = self.browser?.discoveredServices[indexPath.row]
-            
+
             cell.titleLabel.text = service?.name
             cell.addressLabel.text = service?.addressDesc
-            
+
             if service?.didResolve == true {
                 cell.indicatorView.stopAnimating()
             } else {
                 cell.indicatorView.startAnimating()
             }
-        } else {
-            let info = self.historyLoginInfos[indexPath.row]
-            cell.titleLabel.text = info.url.host
-            cell.addressLabel.text = info.auth?.userName
-            cell.remarkLabel.text = info.remark
-            cell.indicatorView.stopAnimating()
+            return cell
         }
-        return cell
+        return super.tableView(tableView, cellForRowAt: indexPath)
     }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
- 
+
         if indexPath.section == 0 {
             let service = self.browser?.discoveredServices[indexPath.row]
             let addressModels = service?.addresses ?? []
@@ -62,18 +96,16 @@ extension SMBLoginHistoryViewController: UITableViewDelegate, UITableViewDataSou
 
                 vc.addAction(UIAlertAction(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: nil))
                 self.present(vc, atView: tableView.cellForRow(at: indexPath))
-            } else if (addressModels.count == 1) {
+            } else if addressModels.count == 1 {
                 let loginInfo = LoginInfo(url: URL(string: "smb://\(addressModels[0])")!, auth: nil)
                 self.jumpToConnectViewController(loginInfo)
             }
         } else {
-            let loginInfo = self.historyLoginInfos[indexPath.row]
-            self.jumpToConnectViewController(loginInfo)
+            super.tableView(tableView, didSelectRowAt: indexPath)
         }
-        
     }
-    
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+
+    override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let view = tableView.dequeueHeaderFooterView(class: LinkHistoryHeaderView.self)
         if section == 0 {
             view.titleLabel.text = NSLocalizedString("网络邻居", comment: "")
@@ -82,145 +114,11 @@ extension SMBLoginHistoryViewController: UITableViewDelegate, UITableViewDataSou
         }
         return view
     }
-    
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return .leastNonzeroMagnitude
-    }
-    
-    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return 30
-    }
-    
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+
+    override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         if indexPath.section == 0 {
             return nil
         }
-        
-        let config = UISwipeActionsConfiguration(actions: [UIContextualAction(style: .destructive, title: NSLocalizedString("删除", comment: ""), handler: { [weak self] (_, _, _) in
-            guard let self = self else { return }
-            
-            self.deleteLoginInfo(self.historyLoginInfos[indexPath.row], at: tableView.cellForRow(at: indexPath))
-        })])
-        return config
+        return super.tableView(tableView, trailingSwipeActionsConfigurationForRowAt: indexPath)
     }
-    
-}
-
-extension SMBLoginHistoryViewController: BaseConnectSvrViewControllerDelegate {
-    func viewControllerDidSuccessConnected(_ viewController: ViewController, loginInfo: LoginInfo) {
-
-        var loginInfos = Preferences.shared.smbLoginInfos ?? []
-
-        if let index = loginInfos.firstIndex(where: { $0 == loginInfo }) {
-            loginInfos[index] = loginInfo
-        } else {
-            loginInfos.append(loginInfo)
-        }
-        Preferences.shared.smbLoginInfos = loginInfos
-        self.historyLoginInfos = loginInfos
-        self.tableView.reloadData()
-        
-        let rootFile = SMBFile.rootFile
-        let vc = FileBrowserViewController(with: rootFile, selectedFile: nil, filterType: .video)
-        vc.delegate = self
-        vc.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
-}
-
-extension SMBLoginHistoryViewController: FileBrowserViewControllerDelegate {
-    func fileBrowserViewController(_ vc: FileBrowserViewController, didSelectFile: File, allFiles: [File]) {
-        let nvc = PlayerNavigationController(items: allFiles, selectedItem: didSelectFile)
-        self.present(nvc, animated: true, completion: nil)
-    }
-}
-
-class SMBLoginHistoryViewController: ViewController {
-    
-    private lazy var tableView: TableView = {
-        let tableView = TableView(frame: .zero, style: .grouped)
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.registerClassCell(class: LinkHistoryTableViewCell.self)
-        tableView.estimatedRowHeight = 50
-        tableView.rowHeight = UITableView.automaticDimension
-        tableView.tableHeaderView = UIView(frame: .init(x: 0, y: 0, width: 0, height: CGFloat.leastNormalMagnitude))
-        tableView.registerClassHeaderFooterView(class: LinkHistoryHeaderView.self)
-        tableView.mj_header = RefreshHeader(refreshingTarget: self, refreshingAction: #selector(beginRefreshing))
-        return tableView
-    }()
-    
-    private lazy var historyLoginInfos: [LoginInfo] = {
-        return Preferences.shared.smbLoginInfos ?? []
-    }()
-    
-    private var browser: SMBServiceBrowser?
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        self.title = "SMB"
-        self.view.addSubview(self.tableView)
-        self.tableView.snp.makeConstraints { (make) in
-            make.edges.equalTo(self.view.safeAreaLayoutGuide.snp.edges)
-        }
-        
-        let rightBarButtonItem = UIBarButtonItem(imageName: "Public/add", target: self, action: #selector(onTouchAddButton))
-        
-        self.navigationItem.rightBarButtonItem = rightBarButtonItem
-        
-        self.beginRefreshing()
-    }
-    
-    @objc private func beginRefreshing() {
-        self.startSeach()
-        self.historyLoginInfos = Preferences.shared.smbLoginInfos ?? []
-        self.tableView.mj_header?.endRefreshing()
-    }
-    
-    @objc private func onTouchAddButton() {
-        self.jumpToConnectViewController()
-    }
-    
-    private func jumpToConnectViewController(_ loginInfo: LoginInfo? = nil) {
-        let vc = SMBConnectViewController(loginInfo: loginInfo, fileManager: SMBFile.fileManager)
-        vc.delegate = self
-        vc.hidesBottomBarWhenPushed = true
-        self.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    private func startSeach() {
-        self.browser = .init()
-        self.browser?.startScanning({ [weak self] in
-            DispatchQueue.main.async {
-                self?.tableView.reloadData()
-            }
-        })
-        
-        self.tableView.reloadData()
-    }
-    
-    private func stopSearch() {
-        self.browser = nil
-    }
-    
-    private func deleteLoginInfo(_ info: LoginInfo, at view: UIView?) {
-        let message = String(format: NSLocalizedString("确定删除%@吗？", comment: ""), info.url.host ?? "")
-        let vc = UIAlertController(title: NSLocalizedString("提示", comment: ""), message: message, preferredStyle: .alert)
-        vc.addAction(UIAlertAction(title: NSLocalizedString("确定", comment: ""), style: .destructive, handler: { action in
-            var smbLoginInfos = Preferences.shared.smbLoginInfos ?? []
-            if smbLoginInfos.contains(info) {
-                smbLoginInfos.removeAll(where: { $0 == info })
-                Preferences.shared.smbLoginInfos = smbLoginInfos
-                self.historyLoginInfos = smbLoginInfos
-                self.tableView.reloadData()
-            }
-        }))
-
-        vc.addAction(UIAlertAction(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: { action in
-            self.tableView.reloadData()
-        }))
-        self.present(vc, atView: view)
-    }
-    
 }

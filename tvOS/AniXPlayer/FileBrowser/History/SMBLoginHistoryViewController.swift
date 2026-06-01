@@ -13,6 +13,10 @@ class SMBLoginHistoryViewController: RemoteLoginHistoryViewController {
 
     private var discoveredServices: [SMBService] = []
 
+    override var fileManager: FileManagerProtocol {
+        return SMBFileManager.shared
+    }
+
     override var fileManagerDesc: String {
         return NSLocalizedString("SMB", comment: "")
     }
@@ -98,7 +102,9 @@ class SMBLoginHistoryViewController: RemoteLoginHistoryViewController {
             let service = discoveredServices[indexPath.row]
             let address = service.addresses.first ?? service.name
             let loginInfo = LoginInfo(url: URL(string: "smb://\(address)")!, auth: nil)
-            connect(with: loginInfo)
+            let vc = connectViewController(loginInfo: loginInfo)
+            vc.delegate = self
+            navigationController?.pushViewController(vc, animated: true)
         } else {
             super.tableView(tableView, didSelectRowAt: indexPath)
         }
@@ -113,11 +119,11 @@ class SMBLoginHistoryViewController: RemoteLoginHistoryViewController {
         return nil
     }
 
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // 网络邻居段不支持删除
+    override func loginInfoForRow(at indexPath: IndexPath) -> LoginInfo? {
+        // 网络邻居段不返回 loginInfo
         if indexPath.section == 0 && !discoveredServices.isEmpty {
-            return false
+            return nil
         }
-        return true
+        return super.loginInfoForRow(at: indexPath)
     }
 }

@@ -9,6 +9,10 @@ import UIKit
 
 class PCLoginHistoryViewController: RemoteLoginHistoryViewController {
 
+    override var fileManager: FileManagerProtocol {
+        return PCFileManager.shared
+    }
+
     override var fileManagerDesc: String {
         return NSLocalizedString("电脑端", comment: "")
     }

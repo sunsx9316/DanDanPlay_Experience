@@ -160,6 +160,12 @@ class Preferences {
         /// 画中画
         case playerPiP
 
+        /// 文件浏览器排序选项
+        case fileBrowserSortOption
+
+        /// 文件浏览器排序升降序
+        case fileBrowserSortAscending
+
         var storeKey: String {
             return self.rawValue
         }
@@ -211,6 +217,14 @@ class Preferences {
     /// 画中画
     @StoreWrapper(defaultValue: false, key: .playerPiP)
     var playerPiP: Bool
+
+    /// 文件浏览器排序选项
+    @StoreWrapper(defaultValue: FileSortOption.default, key: .fileBrowserSortOption)
+    var fileBrowserSortOption: FileSortOption
+
+    /// 文件浏览器排序升降序
+    @StoreWrapper(defaultValue: true, key: .fileBrowserSortAscending)
+    var fileBrowserSortAscending: Bool
 
     @StoreWrapper(defaultValue: ANXColor.defaultMainColor, key: .mainColor)
     var mainColor: ANXColor
