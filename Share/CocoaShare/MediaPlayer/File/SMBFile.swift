@@ -1,3 +1,4 @@
+import YYCategories
 //
 //  SMBFile.swift
 //  AniXPlayer
@@ -8,7 +9,9 @@
 #if os(iOS) || os(tvOS)
 
 import Foundation
+#if !os(tvOS)
 import ANXLog
+#endif
 import VLCKit
 import MPVFramework
 

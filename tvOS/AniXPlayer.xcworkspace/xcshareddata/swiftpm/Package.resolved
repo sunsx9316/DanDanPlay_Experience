@@ -1,5 +1,5 @@
 {
-  "originHash" : "68d78559507e4706061c41ca42d49e56ad160e0e6550da501c675f075eec4d7a",
+  "originHash" : "0c0a752c9bc8cb9759fc082603ff75fdecca6f134dde01ff8eba9c34cb250d49",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -89,6 +89,15 @@
       "state" : {
         "revision" : "2842e6e84e82eb9a8dac0100ca90d9444b0307f4",
         "version" : "5.7.1"
+      }
+    },
+    {
+      "identity" : "yycategories",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sunsx9316/YYCategories",
+      "state" : {
+        "revision" : "f2ed8cb5376ccadfb1dbd659b90edcae5bb21718",
+        "version" : "1.0.5"
       }
     }
   ],

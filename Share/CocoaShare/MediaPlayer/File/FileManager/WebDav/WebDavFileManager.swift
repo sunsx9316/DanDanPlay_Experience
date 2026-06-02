@@ -12,7 +12,9 @@ import FilesProvider
 #if os(iOS)
 import YYCategories
 #endif
+#if !os(tvOS)
 import ANXLog
+#endif
 
 class WebDavFileManager: FileManagerProtocol {
     

@@ -16,7 +16,9 @@ typealias DanmakuMapResult = [UInt : [DanmakuEntity]]
 #if os(iOS)
 import YYCategories
 #endif
+#if !os(tvOS)
 import ANXLog
+#endif
 typealias LoadingProgressAction = ((LoadingState) -> Void)
 
 enum LoadingState {

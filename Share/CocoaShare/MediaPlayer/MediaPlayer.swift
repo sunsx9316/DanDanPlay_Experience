@@ -6,7 +6,9 @@
 //
 
 import Foundation
+#if !os(tvOS)
 import ANXLog
+#endif
 #if os(iOS) || os(tvOS)
 import AVFoundation
 #endif

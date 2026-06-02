@@ -14,7 +14,9 @@ import Metal
 import QuartzCore
 import AVFoundation
 import MPVFramework
+#if !os(tvOS)
 import ANXLog
+#endif
 
 // MARK: - 内嵌字幕
 struct MPVSubtitle: SubtitleProtocol {

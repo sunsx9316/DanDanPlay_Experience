@@ -10,7 +10,9 @@ import Foundation
 import FirebaseCore
 import FirebaseCrashlytics
 #endif
+#if !os(tvOS)
 import ANXLog
+#endif
 
 /// 启动器，在app启动时会被调用
 class Launcher {

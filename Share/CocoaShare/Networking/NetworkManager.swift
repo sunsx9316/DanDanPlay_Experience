@@ -1,3 +1,4 @@
+import YYCategories
 //
 //  NetworkManager.swift
 //  AniXPlayer
@@ -7,7 +8,9 @@
 
 import Foundation
 import Alamofire
+#if !os(tvOS)
 import ANXLog
+#endif
 
 class NetworkManager {
     

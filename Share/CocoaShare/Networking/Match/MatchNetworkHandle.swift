@@ -6,7 +6,9 @@
 //
 
 import Foundation
+#if !os(tvOS)
 import ANXLog
+#endif
 
 
 /// 文件匹配模式

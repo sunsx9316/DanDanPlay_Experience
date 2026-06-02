@@ -6,8 +6,10 @@
 //
 
 import Foundation
+#if !os(tvOS)
 import ANXLog
-#if os(iOS)
+#endif
+#if os(iOS) || os(tvOS)
 import YYCategories
 #endif
 

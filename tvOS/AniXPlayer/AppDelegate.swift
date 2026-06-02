@@ -1,5 +1,7 @@
 import UIKit
+#if !os(tvOS)
 import ANXLog
+#endif
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {

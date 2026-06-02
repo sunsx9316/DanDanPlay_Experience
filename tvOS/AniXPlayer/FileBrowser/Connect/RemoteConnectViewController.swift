@@ -7,7 +7,9 @@
 
 import UIKit
 import SnapKit
+#if !os(tvOS)
 import ANXLog
+#endif
 
 protocol RemoteConnectViewControllerDelegate: AnyObject {
     func connectViewController(_ vc: RemoteConnectViewController, didSuccessConnect loginInfo: LoginInfo)

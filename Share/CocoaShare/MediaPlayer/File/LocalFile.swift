@@ -1,3 +1,4 @@
+import YYCategories
 //
 //  LocalFileMedia.swift
 //  DDPMediaPlayer

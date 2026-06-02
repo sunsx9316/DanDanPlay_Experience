@@ -7,7 +7,9 @@
 
 import Foundation
 import GCDWebServer
+#if !os(tvOS)
 import ANXLog
+#endif
 
 protocol HttpServerDelegate: AnyObject {
     func httpServer(_ httpServer: HttpServer, didReceiveFileAtPath path: String, folderName: String?, totalFiles: Int?)

@@ -6,7 +6,9 @@
 //
 
 import Foundation
+#if !os(tvOS)
 import ANXLog
+#endif
 
 private enum SubtitleLoadError: LocalizedError {
     case notMatch

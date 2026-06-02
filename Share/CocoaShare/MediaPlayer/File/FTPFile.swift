@@ -1,3 +1,4 @@
+import YYCategories
 //
 //  FTPFile.swift
 //  AniXPlayer

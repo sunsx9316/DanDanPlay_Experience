@@ -6,7 +6,9 @@
 //
 
 import Foundation
+#if !os(tvOS)
 import ANXLog
+#endif
 import CoreText
 
 /// 自定义字体文件名列表（不含扩展名）

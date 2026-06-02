@@ -6,7 +6,6 @@ target 'AniXPlayer' do
   use_frameworks!
   use_modular_headers!
 
-  pod 'ANXLog', :path => '../Share/ANXLog'
   pod 'VLCKit', :path => '../Share/VLCKit'
 end
 

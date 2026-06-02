@@ -8,7 +8,9 @@
 import UIKit
 import SnapKit
 import RxSwift
+#if !os(tvOS)
 import ANXLog
+#endif
 
 class PlayerViewController: ViewController {
 

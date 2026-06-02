@@ -6,7 +6,9 @@
 //
 
 import Foundation
+#if !os(tvOS)
 import ANXLog
+#endif
 
 class SearchNetworkHandle {
     /// 搜索

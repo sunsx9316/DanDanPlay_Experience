@@ -7,7 +7,9 @@
 //
 
 import AVFoundation
+#if !os(tvOS)
 import ANXLog
+#endif
 
 let pipTimescale: CMTimeScale = 600
 let pipFallbackDuration: Double = 3600
