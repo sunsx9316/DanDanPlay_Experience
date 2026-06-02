@@ -851,7 +851,7 @@ public class MPV {
         case .propertyChange(let name) where !name.isEmpty:
             // 特定属性名的处理
             wrapper = { event in
-                if case .property(let propName, let value) = event.data, propName == name {
+                if case .property(let propName, _) = event.data, propName == name {
                     handler(event)
                 }
             }

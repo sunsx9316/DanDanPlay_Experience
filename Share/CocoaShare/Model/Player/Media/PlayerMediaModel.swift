@@ -331,7 +331,7 @@ class PlayerMediaModel {
             ANX.logError(.player, "[PiP] 主播放器不是 MPV，无法创建 PiP 播放器")
             return nil
         }
-        var config = PiPPlayerConfig.extract(from: player.underlyingPlayer)
+        let config = PiPPlayerConfig.extract(from: player.underlyingPlayer)
         config.currentSubtitle = player.underlyingPlayer.currentSubtitle
         config.currentAudioChannel = player.underlyingPlayer.currentAudioChannel
         return mpvWrapper.createPiPPlayer(with: config)

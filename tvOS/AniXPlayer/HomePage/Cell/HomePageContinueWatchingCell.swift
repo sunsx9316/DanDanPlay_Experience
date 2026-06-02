@@ -78,7 +78,7 @@ class HomePageContinueWatchingCell: TableViewCell {
             make.top.equalTo(titleLabel.snp.bottom).offset(12)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(210)
-            make.bottom.equalToSuperview().offset(-10)
+            make.bottom.equalToSuperview().offset(-10).priority(999)
         }
     }
 }

@@ -320,7 +320,7 @@ extension MediaSettingViewController {
         let localSubtitleList = mediaModel.subtitleList
         guard !localSubtitleList.isEmpty else { return }
 
-        let options = localSubtitleList.map { OptionListViewController.Option(title: $0.subtitleName ?? "") }
+        let options = localSubtitleList.map { OptionListViewController.Option(title: $0.subtitleName) }
         let vc = OptionListViewController(
             title: NSLocalizedString("字幕轨道", comment: ""),
             options: options,
@@ -338,7 +338,7 @@ extension MediaSettingViewController {
         let audioChannelList = mediaModel.audioChannelList
         guard !audioChannelList.isEmpty else { return }
 
-        let options = audioChannelList.map { OptionListViewController.Option(title: $0.audioName ?? "") }
+        let options = audioChannelList.map { OptionListViewController.Option(title: $0.audioName) }
         let vc = OptionListViewController(
             title: NSLocalizedString("音轨", comment: ""),
             options: options,

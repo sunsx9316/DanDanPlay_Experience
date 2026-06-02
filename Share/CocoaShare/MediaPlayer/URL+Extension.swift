@@ -6,11 +6,7 @@
 //
 
 import Foundation
-#if os(iOS) || os(tvOS)
-import MobileCoreServices
-#else
-import CoreServices
-#endif
+import UniformTypeIdentifiers
 
 extension URL {
     
@@ -32,10 +28,10 @@ extension URL {
             return true
         }
         
-        let pathExtension = decodeStr.pathExtension as CFString
-        
-        if let fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, pathExtension, nil) {
-            if UTTypeConformsTo(fileUTI.takeRetainedValue(), kUTTypeMovie) {
+        let pathExtension = decodeStr.pathExtension
+
+        if let fileUTI = UTType(filenameExtension: pathExtension) {
+            if fileUTI.conforms(to: .movie) {
                 return true
             }
         }

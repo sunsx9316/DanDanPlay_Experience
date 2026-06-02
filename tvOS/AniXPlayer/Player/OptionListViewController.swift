@@ -62,12 +62,10 @@ class OptionListViewController: ViewController {
             make.top.trailing.bottom.equalToSuperview()
             make.leading.equalToSuperview().offset(40)
         }
-    }
 
-    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
-        super.traitCollectionDidChange(previousTraitCollection)
-        if traitCollection.hasDifferentColorAppearance(comparedTo: previousTraitCollection) {
-            blurView.effect = adaptiveBlurEffect()
+        registerForTraitChanges([UITraitUserInterfaceStyle.self]) { [weak self] (_: Self, _: UITraitCollection) in
+            guard let self = self else { return }
+            self.blurView.effect = self.adaptiveBlurEffect()
         }
     }
 

@@ -11,16 +11,10 @@ class Button: UIButton {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.setupFocus()
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        self.setupFocus()
-    }
-
-    private func setupFocus() {
-        self.adjustsImageWhenHighlighted = false
     }
 
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
@@ -28,7 +22,7 @@ class Button: UIButton {
 
         coordinator.addCoordinatedAnimations({
             if self.isFocused {
-                self.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+                self.transform = CGAffineTransform(scaleX: 1.0, y: 1.1)
                 self.layer.shadowColor = UIColor.white.cgColor
                 self.layer.shadowOpacity = 0.3
                 self.layer.shadowRadius = 10
