@@ -6,15 +6,7 @@
 //
 
 import Foundation
-#if os(iOS) || os(tvOS)
 import DanmakuRender
-#endif
-#if os(iOS)
-import YYCategories
-#endif
-#if os(tvOS)
-import UIKit
-#endif
 
 protocol Storeable {
     associatedtype F
@@ -95,27 +87,13 @@ extension Data: Storeable {
 }
 
 extension ANXColor: Storeable {
-#if os(iOS)
     static func create(from: UInt) -> Self? {
-        return Self(rgba: UInt32(from))
-    }
-
-    func toValue() -> UInt {
-        return UInt(self.rgbaValue())
-    }
-#else
-    static func create(from: UInt) -> Self? {
-        let rgb = Int(from)
-        let r = CGFloat((rgb & 0xFF0000) >> 16) / 255.0
-        let g = CGFloat((rgb & 0xFF00) >> 8) / 255.0
-        let b = CGFloat(rgb & 0xFF) / 255.0
-        return UIColor(red: r, green: g, blue: b, alpha: 1) as? Self
+        return ANXColor(anxRgb: Int(from)) as? Self
     }
 
     func toValue() -> UInt {
         return UInt(self.anxRgbValue)
     }
-#endif
 }
 
 extension Comment.Mode: Storeable {
@@ -163,7 +141,6 @@ extension DanmakuAreaType: Storeable {
 }
 
 
-#if os(iOS) || os(tvOS)
 extension DanmakuEffectStyle: Storeable {
     static func create(from: Int) -> DanmakuEffectStyle? {
         let rawValue = from
@@ -174,7 +151,6 @@ extension DanmakuEffectStyle: Storeable {
         return self.rawValue
     }
 }
-#endif
 
 extension PlayerAspectRatio: Storeable {
     static func create(from: String) -> PlayerAspectRatio? {

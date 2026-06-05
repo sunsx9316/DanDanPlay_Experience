@@ -19,7 +19,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     weak var playerMenu: NSMenu?
     
     private lazy var appVersionModel = AppVersionModel()
-    
+
+    private var mediaLibraryWindowController: MediaLibraryWindowController?
+
     private lazy var mainWindowController: WindowController = {
         let mainWindowController = WindowController()
         mainWindowController.contentViewController = PlayerViewController()
@@ -68,6 +70,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.mainWindowController.contentViewController?.presentAsModalWindow(vc)
     }
     
+    @objc private func onOpenNetworkFile(_ item: NSMenuItem) {
+        let wc = MediaLibraryWindowController()
+        wc.onSelectFile = { [weak self] file, allFiles in
+            guard let self = self,
+                  let playerVC = self.mainWindowController.contentViewController as? PlayerViewController else { return }
+            playerVC.openNetworkFiles(allFiles, startWith: file)
+            self.mainWindowController.window?.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+        }
+        wc.showWindow(nil)
+        self.mediaLibraryWindowController = wc
+    }
+
     @objc private func checkUpdate() {
         _ = self.appVersionModel.checkUpdate().subscribe(onNext: { [weak self] info in
             guard let self = self else { return }
@@ -85,7 +100,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let appMenu = NSMenu()
             appMenu.addItem(withTitle: NSLocalizedString("关于", comment: "") + InfoPlistUtils.appName, action: #selector(onAboutItemDidClick(_:)), keyEquivalent: "")
             appMenu.addItem(NSMenuItem.separator())
-            appMenu.addItem(withTitle: NSLocalizedString("偏好设置", comment: ""), action: #selector(onGlobalSettingItemDidClick(_:)), keyEquivalent: ",")
+            appMenu.addItem(withTitle: NSLocalizedString("全局设置", comment: ""), action: #selector(onGlobalSettingItemDidClick(_:)), keyEquivalent: ",")
             appMenu.addItem(NSMenuItem.separator())
             appMenu.addItem(withTitle: NSLocalizedString("隐藏", comment: ""), action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
             appMenu.addItem({ () -> NSMenuItem in
@@ -102,22 +117,42 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         func fileItem() -> NSMenuItem {
             let mainFileMenuItem = NSMenuItem(title: "", action: nil, keyEquivalent: "")
-            
+
             let fileMenu = NSMenu(title: NSLocalizedString("文件", comment: ""))
-           
+
             let fileItem = NSMenuItem(title: NSLocalizedString("打开...", comment: ""), action: nil, keyEquivalent: "n")
             fileItem.tag = MenuTag.fileOpen.rawValue
             fileMenu.addItem(fileItem)
-            
+
+            fileMenu.addItem(NSMenuItem.separator())
+
+            let networkFileItem = NSMenuItem(title: NSLocalizedString("打开网络文件...", comment: ""), action: #selector(onOpenNetworkFile(_:)), keyEquivalent: "")
+            fileMenu.addItem(networkFileItem)
+
             self.fileMenu = fileMenu
             mainFileMenuItem.submenu = fileMenu
-            
+
             return mainFileMenuItem
         }
         
+        func editItem() -> NSMenuItem {
+            let mainEditMenuItem = NSMenuItem(title: "", action: nil, keyEquivalent: "")
+            let editMenu = NSMenu(title: NSLocalizedString("编辑", comment: ""))
+            editMenu.addItem(withTitle: NSLocalizedString("撤销", comment: ""), action: Selector(("undo:")), keyEquivalent: "z")
+            editMenu.addItem(withTitle: NSLocalizedString("重做", comment: ""), action: Selector(("redo:")), keyEquivalent: "Z")
+            editMenu.addItem(NSMenuItem.separator())
+            editMenu.addItem(withTitle: NSLocalizedString("剪切", comment: ""), action: #selector(NSText.cut(_:)), keyEquivalent: "x")
+            editMenu.addItem(withTitle: NSLocalizedString("拷贝", comment: ""), action: #selector(NSText.copy(_:)), keyEquivalent: "c")
+            editMenu.addItem(withTitle: NSLocalizedString("粘贴", comment: ""), action: #selector(NSText.paste(_:)), keyEquivalent: "v")
+            editMenu.addItem(withTitle: NSLocalizedString("全选", comment: ""), action: #selector(NSText.selectAll(_:)), keyEquivalent: "a")
+            mainEditMenuItem.submenu = editMenu
+            return mainEditMenuItem
+        }
+
         let mainMenu = NSMenu()
         mainMenu.addItem(appItem())
         mainMenu.addItem(fileItem())
+        mainMenu.addItem(editItem())
 
         NSApp.mainMenu = mainMenu
     }

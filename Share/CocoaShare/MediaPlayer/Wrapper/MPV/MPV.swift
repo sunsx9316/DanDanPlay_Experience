@@ -21,8 +21,6 @@ import AppKit
 import Foundation
 #endif
 
-#if os(iOS) || os(macOS) || os(tvOS)
-
 // MARK: - MPV 事件类型
 
 /// MPV 事件 ID
@@ -1449,6 +1447,4 @@ extension NSColor {
         self.init(srgbRed: r, green: g, blue: b, alpha: 1.0)
     }
 }
-#endif
-
 #endif

@@ -6,9 +6,7 @@
 //
 
 import Foundation
-#if os(iOS) || os(tvOS)
 import DanmakuRender
-#endif
 
 /// 媒体设置项
 enum MediaSettingType: CaseIterable {
@@ -249,7 +247,6 @@ enum GlobalSettingType: CaseIterable {
     }
 }
 
-#if os(iOS) || os(tvOS)
 extension DanmakuEffectStyle {
     var title: String {
         switch self {
@@ -264,7 +261,6 @@ extension DanmakuEffectStyle {
         }
     }
 }
-#endif
 
 /// 应用语言
 enum AppLanguage: Int, CaseIterable {

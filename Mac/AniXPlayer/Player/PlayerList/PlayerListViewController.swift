@@ -27,8 +27,7 @@ class PlayerListViewController: ViewController {
         let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: ""))
         column.isEditable = false
         tableView.addTableColumn(column)
-        tableView.target = self
-        tableView.doubleAction = #selector(onDoubleClickTableRow(_:))
+        tableView.enableRowHoverTracking()
         tableView.registerNibCell(class: PlayerListTableViewCell.self)
         
         tableView.menu = .init()
@@ -63,10 +62,6 @@ class PlayerListViewController: ViewController {
     }
     
     //MARK: Private Method
-    
-    @objc private func onDoubleClickTableRow(_ sender: NSTableView) {
-        delegate?.playerListViewController(self, didSelectedRow: sender.selectedRow)
-    }
 }
 
 extension PlayerListViewController: NSMenuDelegate {
@@ -119,5 +114,18 @@ extension PlayerListViewController: NSTableViewDelegate, NSTableViewDataSource {
             return height
         }
         return 16
+    }
+
+    func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
+        return tableView.themedRowView(forRow: row)
+    }
+
+    func tableViewSelectionDidChange(_ notification: Notification) {
+        guard let tableView = notification.object as? NSTableView else { return }
+        let row = tableView.selectedRow
+        guard row >= 0 else { return }
+
+        tableView.deselectAll(nil)
+        delegate?.playerListViewController(self, didSelectedRow: row)
     }
 }

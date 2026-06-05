@@ -5,8 +5,6 @@
 //  Created by jimhuang on 2026/5/29.
 //
 
-#if os(iOS) || os(tvOS)
-
 import Foundation
 import Alamofire
 #if !os(tvOS)
@@ -40,6 +38,10 @@ class EmbyFileManager: FileManagerProtocol {
     }
 
     var passwordDesc: String {
+        return NSLocalizedString("密码", comment: "")
+    }
+
+    var apiKeyDesc: String {
         return NSLocalizedString("API Key", comment: "")
     }
 
@@ -106,11 +108,17 @@ class EmbyFileManager: FileManagerProtocol {
         }
 
         let authURL = serverURL.appendingPathComponent("Users/AuthenticateByName")
+        let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
         let body: [String: String] = [
             "Username": loginInfo.auth?.userName ?? "",
-            "Pw": password
+            "Pw": password,
+            "appVersion": appVersion
         ]
-        let headers: HTTPHeaders = ["X-Emby-Authorization": embyAuthorizationHeader()]
+        let authValue = embyAuthorizationHeader()
+        let headers: HTTPHeaders = [
+            "Authorization": authValue,
+            "X-Emby-Authorization": authValue
+        ]
 
         session.request(authURL, method: .post, parameters: body, encoder: JSONParameterEncoder.default, headers: headers)
             .responseData { [weak self] response in
@@ -496,8 +504,22 @@ class EmbyFileManager: FileManagerProtocol {
             ?? Bundle.main.infoDictionary?["CFBundleName"] as? String
             ?? "AniXPlayer"
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
-        let deviceName = UIDevice.current.name
+        #if os(macOS)
+        let rawName = Host.current().localizedName ?? "Unknown Mac"
+        let deviceName = rawName.asciiSanitized()
+        let deviceId: String = {
+            let key = "com.anixplayer.emby.deviceId"
+            if let existing = UserDefaults.standard.string(forKey: key), !existing.isEmpty {
+                return existing
+            }
+            let newId = UUID().uuidString
+            UserDefaults.standard.set(newId, forKey: key)
+            return newId
+        }()
+        #else
+        let deviceName = UIDevice.current.name.asciiSanitized()
         let deviceId = UIDevice.current.identifierForVendor?.uuidString ?? UUID().uuidString
+        #endif
         return "MediaBrowser Client=\"\(appName)\", Device=\"\(deviceName)\", DeviceId=\"\(deviceId)\", Version=\"\(version)\""
     }
 
@@ -578,7 +600,11 @@ class EmbyFileManager: FileManagerProtocol {
     }
 
     private func authHeader() -> HTTPHeaders {
-        var headers: HTTPHeaders = ["X-Emby-Authorization": embyAuthorizationHeader()]
+        let authValue = embyAuthorizationHeader()
+        var headers: HTTPHeaders = [
+            "Authorization": authValue,
+            "X-Emby-Authorization": authValue
+        ]
         if let token = accessToken {
             headers.add(name: "X-Emby-Token", value: token)
         } else if let apiKey = loginInfo?.auth?.apiKey {
@@ -603,4 +629,9 @@ class EmbyFileManager: FileManagerProtocol {
     }
 }
 
-#endif
+private extension String {
+    func asciiSanitized() -> String {
+        let ascii = self.filter { $0.isASCII }
+        return ascii.isEmpty ? "Unknown" : ascii
+    }
+}

@@ -6,8 +6,7 @@
 //
 
 import Foundation
-#if os(iOS) || os(tvOS)
-import UIKit
+import CoreGraphics
 import DanmakuRender
 
 /// 重复弹幕信息
@@ -171,7 +170,7 @@ class _ScrollDanmaku: ScrollDanmaku, DanmakuInfoProtocol {
         self.repeatDanmakuInfo?.draw(context, size: size, isCancelled: isCancelled)
 
         if let currentUserId = Preferences.shared.loginInfo?.userId, self.userId == String(currentUserId) {
-            context.setStrokeColor(UIColor.white.cgColor)
+            context.setStrokeColor(ANXColor.white.cgColor)
             context.setLineWidth(1.5)
             context.stroke(CGRect(origin: .zero, size: size))
         }
@@ -238,7 +237,7 @@ class _FloatDanmaku: FloatDanmaku, DanmakuInfoProtocol {
         self.repeatDanmakuInfo?.draw(context, size: size, isCancelled: isCancelled)
 
         if let currentUserId = Preferences.shared.loginInfo?.userId, self.userId == String(currentUserId) {
-            context.setStrokeColor(UIColor.white.cgColor)
+            context.setStrokeColor(ANXColor.white.cgColor)
             context.setLineWidth(1.5)
             context.stroke(CGRect(origin: .zero, size: size))
         }
@@ -252,5 +251,3 @@ class _FloatDanmaku: FloatDanmaku, DanmakuInfoProtocol {
         return size
     }
 }
-
-#endif

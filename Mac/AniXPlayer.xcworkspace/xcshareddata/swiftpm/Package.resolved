@@ -1,5 +1,5 @@
 {
-  "originHash" : "8e2e8dbac356c20bbca7b1449fbbcf7d8ca986428689eb07aa732f0f638b08b2",
+  "originHash" : "5287dd2c73fcd79b5e0cf4a463a0dfc15869b75387605edabc1b0eb17b96f9de",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -11,12 +11,57 @@
       }
     },
     {
+      "identity" : "amsmb2",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/amosavian/AMSMB2",
+      "state" : {
+        "revision" : "1726aaaf7adf63d7d1d2a0c5d1b0e635028215c0",
+        "version" : "4.0.3"
+      }
+    },
+    {
       "identity" : "danmakurender-swift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sunsx9316/DanmakuRender-Swift",
       "state" : {
-        "revision" : "5ce51ff0a53a98b07913a7ebbc29c8f9fddb3b68",
-        "version" : "1.5.0"
+        "revision" : "11dd5d3b288a840fa810282315871c21876aba73",
+        "version" : "1.6.1"
+      }
+    },
+    {
+      "identity" : "fileprovider",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/amosavian/FileProvider",
+      "state" : {
+        "revision" : "5d31778376af168ac917e0b1e8d2c4ee64cb246c",
+        "version" : "0.26.0"
+      }
+    },
+    {
+      "identity" : "gcdwebserver",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sunsx9316/GCDWebServer",
+      "state" : {
+        "revision" : "c893f69fde6d2ef411b665404e09a0de3d471715",
+        "version" : "3.6.0"
+      }
+    },
+    {
+      "identity" : "kingfisher",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/onevcat/Kingfisher",
+      "state" : {
+        "revision" : "cf8be20d07654570554c8a8a4952bc8a5766a8b0",
+        "version" : "8.9.0"
+      }
+    },
+    {
+      "identity" : "mpvkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mpvkit/MPVKit.git",
+      "state" : {
+        "revision" : "613c0ccc3acf70e136aaff880a9b5fe8fdfaf5b8",
+        "version" : "0.41.0"
       }
     },
     {
@@ -42,8 +87,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/sunsx9316/YYCategories",
       "state" : {
-        "revision" : "d71d40f7d0d4e1dc9893d81d8c7f3d1f86eddd80",
-        "version" : "1.0.2"
+        "revision" : "01cca8d2ec88b1727dd0c9a4d7e7269f637db25f",
+        "version" : "1.0.7"
       }
     }
   ],

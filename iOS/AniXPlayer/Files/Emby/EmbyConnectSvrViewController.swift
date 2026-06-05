@@ -9,6 +9,18 @@ import UIKit
 
 class EmbyConnectSvrViewController: BaseConnectSvrViewController {
 
+    private let customTitle: String?
+
+    init(loginInfo: LoginInfo?, fileManager: FileManagerProtocol = EmbyFileManager.shared, customTitle: String? = nil) {
+        self.customTitle = customTitle
+        super.init(loginInfo: loginInfo, fileManager: fileManager)
+    }
+
+    @available(*, unavailable)
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     private enum AuthMode: Int {
         case apiKey = 0
         case usernamePassword = 1
@@ -27,7 +39,7 @@ class EmbyConnectSvrViewController: BaseConnectSvrViewController {
     private lazy var apiKeyLabel: TextField = {
         let textField = TextField()
         textField.attributedPlaceholder = .init(
-            string: NSLocalizedString("API Key", comment: ""),
+            string: fileManager.apiKeyDesc,
             attributes: [.foregroundColor: UIColor.lightGray]
         )
         return textField
@@ -35,6 +47,10 @@ class EmbyConnectSvrViewController: BaseConnectSvrViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        if let customTitle = customTitle {
+            self.title = customTitle
+        }
 
         guard let stackView = self.addressLabel.superview as? UIStackView else { return }
 

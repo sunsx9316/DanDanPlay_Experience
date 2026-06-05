@@ -105,8 +105,7 @@ class MatchsViewController: ViewController {
         
         self.title = NSLocalizedString("弹幕匹配结果（右键搜索）", comment: "")
         
-        self.outlineView.target = self
-        self.outlineView.doubleAction = #selector(doubleAction(_:))
+        self.outlineView.enableRowHoverTracking()
         self.outlineView.registerClassCell(class: MatchsCell.self)
         
         let menu = NSMenu()
@@ -123,15 +122,6 @@ class MatchsViewController: ViewController {
     }
     
     // MARK: Private
-    @objc private func doubleAction(_ sender: NSOutlineView) {
-        if sender.selectedRow > -1,
-            let item = sender.item(atRow: sender.selectedRow) as? MediaMatchItem {
-            if let episodeId = item.episodeId {
-                self.delegate?.matchsViewController(self, didMatched: item)
-            }
-        }
-    }
-    
     private func closeSearchWindow() {
         self.searchWindowController?.close()
         self.searchWindowController = nil
@@ -256,6 +246,22 @@ extension MatchsViewController: NSOutlineViewDelegate {
             return cell
         }
         return nil
+    }
+
+    func outlineView(_ outlineView: NSOutlineView, rowViewForItem item: Any) -> NSTableRowView? {
+        return outlineView.themedRowView(forRow: outlineView.row(forItem: item))
+    }
+
+    func outlineViewSelectionDidChange(_ notification: Notification) {
+        guard let outlineView = notification.object as? NSOutlineView else { return }
+        let row = outlineView.selectedRow
+        guard row >= 0, let item = outlineView.item(atRow: row) as? MediaMatchItem else { return }
+
+        outlineView.deselectRow(row)
+
+        if item.episodeId != nil {
+            self.delegate?.matchsViewController(self, didMatched: item)
+        }
     }
 }
 

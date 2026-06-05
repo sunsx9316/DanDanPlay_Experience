@@ -247,7 +247,6 @@
 		8CC5E781D18C4C83A9F2A6BE /* FolderProgressCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE600170BF1445D9B00A4593 /* FolderProgressCell.swift */; };
 		9DE8B428CAFC3A5D26DE9E56 /* DanmakuInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54627AC0D74F1F7C3F2CB1D /* DanmakuInputView.swift */; };
 		9DE8B429CAFC3A5D26DE9E57 /* ColorManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54627AC0D74F1F7C3F2CB1E /* ColorManagementViewController.swift */; };
-		A9C78F18D61BDDFCD265EA42 /* JellyfinConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07DC534D75469AC47B0F28D9 /* JellyfinConnectSvrViewController.swift */; };
 		AA72AB931D94179E273EEC53 /* JellyfinLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3DC22C756D2488DE35619F /* JellyfinLoginHistoryViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -277,7 +276,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		07DC534D75469AC47B0F28D9 /* JellyfinConnectSvrViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = JellyfinConnectSvrViewController.swift; sourceTree = "<group>"; };
 		2F3DC22C756D2488DE35619F /* JellyfinLoginHistoryViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = JellyfinLoginHistoryViewController.swift; sourceTree = "<group>"; };
 		6620BF43605B5DDE3E8B15B6 /* Pods_AniXPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AniXPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		89044758290186B40088886B /* UIViewController+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Helper.swift"; sourceTree = "<group>"; };
@@ -1399,7 +1397,6 @@
 		E8A0D973CF7E2B5A95A5FBAE /* Jellyfin */ = {
 			isa = PBXGroup;
 			children = (
-				07DC534D75469AC47B0F28D9 /* JellyfinConnectSvrViewController.swift */,
 				2F3DC22C756D2488DE35619F /* JellyfinLoginHistoryViewController.swift */,
 			);
 			path = Jellyfin;
@@ -1832,7 +1829,6 @@
 				8949F8932662AA8E00274520 /* FTPLoginHistoryViewController.swift in Sources */,
 				9DE8B428CAFC3A5D26DE9E56 /* DanmakuInputView.swift in Sources */,
 				9DE8B429CAFC3A5D26DE9E57 /* ColorManagementViewController.swift in Sources */,
-				A9C78F18D61BDDFCD265EA42 /* JellyfinConnectSvrViewController.swift in Sources */,
 				AA72AB931D94179E273EEC53 /* JellyfinLoginHistoryViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

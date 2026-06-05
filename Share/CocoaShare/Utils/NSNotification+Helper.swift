@@ -9,5 +9,4 @@ import Foundation
 
 extension NSNotification.Name {
     static let AnixUserLoginStateDidChange = NSNotification.Name(rawValue: "userLoginStateDidChange")
-    static let appLanguageDidChange = NSNotification.Name(rawValue: "appLanguageDidChange")
 }

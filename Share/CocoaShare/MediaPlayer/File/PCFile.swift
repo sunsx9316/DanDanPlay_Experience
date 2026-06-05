@@ -5,13 +5,9 @@
 //  Created by jimhuang on 2023/5/1.
 //
 
-#if os(iOS) || os(tvOS)
-
 import Foundation
 import VLCKit
-#if os(iOS)
 import YYCategories
-#endif
 import MPVFramework
 
 class PCFile: File {
@@ -113,11 +109,9 @@ class PCFile: File {
         return .init(url: self.downloadURL)
     }
 
-#if os(iOS) || os(tvOS)
     func createMPVMedia() -> MPVMedia? {
         return MPVMedia(url: self.downloadURL)
     }
-#endif
 
     func getFileHashWithProgress(_ progress: FileProgressAction?,
                                  completion: @escaping((Result<String, Error>) -> Void)) {
@@ -139,5 +133,3 @@ class PCFile: File {
     }
     
 }
-
-#endif

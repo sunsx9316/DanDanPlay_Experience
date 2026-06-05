@@ -6,7 +6,6 @@
 //
 
 import Foundation
-#if os(iOS) || os(tvOS)
 import RxSwift
 import DanmakuRender
 
@@ -42,4 +41,3 @@ class PlayerDanmakuContext {
 
 
 }
-#endif

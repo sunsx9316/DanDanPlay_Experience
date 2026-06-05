@@ -198,7 +198,6 @@
 		E5C041C7C205232819A4BCAF /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63499CADF0AB6CCE09ABED8 /* TextField.swift */; };
 		E752BF63B6728DF5DDC56891 /* Pods_AniXPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5714F8E88446CDC4A3BE0FC /* Pods_AniXPlayer.framework */; };
 		EE846158C3C1893E43D87DD7 /* FileBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC90E930AEDDD1D5D5918388 /* FileBrowserViewController.swift */; };
-		EF8F7C2A23536A8C1F376B74 /* JellyfinConnectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DBC83FC3655FAE1449440018 /* JellyfinConnectViewController.swift */; };
 		F62B6119C1D6E4DC8623F93D /* FavoriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64917F522D34F28DFCAD4485 /* FavoriteViewController.swift */; };
 		F6D04BDCB732B91EC584BE02 /* GCDWebDAVServer in Frameworks */ = {isa = PBXBuildFile; productRef = 45E3F22DD157AD3C7F6963ED /* GCDWebDAVServer */; };
 		F75F5DC7360C8F982C90A6C7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCABE78F4458C5717BC3CCB9 /* AppDelegate.swift */; };
@@ -409,7 +408,6 @@
 		D4BC15B4CE13C5659472F037 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		D5700C810AFCDFDF5BB5B7C8 /* SearchResultCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultCell.swift; sourceTree = "<group>"; };
 		DABC0B6929E4BD86FC6A55DD /* TimelineItemCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineItemCell.swift; sourceTree = "<group>"; };
-		DBC83FC3655FAE1449440018 /* JellyfinConnectViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = JellyfinConnectViewController.swift; sourceTree = "<group>"; };
 		E31FEB1F554271CE0497AB53 /* HomePageBannerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageBannerCell.swift; sourceTree = "<group>"; };
 		E5FA5153ED9C529964806071 /* UIView+HUD.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIView+HUD.swift"; sourceTree = "<group>"; };
 		E63898ACED2373F3C3B4734A /* MainColorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainColorCell.swift; sourceTree = "<group>"; };
@@ -997,7 +995,6 @@
 				895A7EF72FC5D5BA00A997B8 /* WebDavConnectViewController.swift */,
 				895A7F122FC5EE1800A997B8 /* PCConnectViewController.swift */,
 				40EBDEA8AE5F90B083C90CA2 /* EmbyConnectViewController.swift */,
-				DBC83FC3655FAE1449440018 /* JellyfinConnectViewController.swift */,
 			);
 			path = Connect;
 			sourceTree = "<group>";
@@ -1497,7 +1494,6 @@
 				7F0739FC5182AC6FF9795B39 /* UserInfoViewController.swift in Sources */,
 				943C56898F713204954A750B /* ViewController.swift in Sources */,
 				48740B9714A20618AC52E7E8 /* EmbyConnectViewController.swift in Sources */,
-				EF8F7C2A23536A8C1F376B74 /* JellyfinConnectViewController.swift in Sources */,
 				3C2A91470F739628AC24E63C /* EmbyLoginHistoryViewController.swift in Sources */,
 				083555F8E46DA2ACB2770F9F /* JellyfinLoginHistoryViewController.swift in Sources */,
 				DEDF3BD370A38B31C23B7BA0 /* UIView+HUD.swift in Sources */,

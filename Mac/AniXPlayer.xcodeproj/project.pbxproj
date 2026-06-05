@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -19,7 +19,6 @@
 		8925B91B2CA7F901001A8388 /* BangumiNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8E32CA7F901001A8388 /* BangumiNetworkHandle.swift */; };
 		8925B91C2CA7F901001A8388 /* PCQRModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8B92CA7F901001A8388 /* PCQRModel.swift */; };
 		8925B91D2CA7F901001A8388 /* VLCPlayerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8CE2CA7F901001A8388 /* VLCPlayerWrapper.swift */; };
-		8925B91E2CA7F901001A8388 /* VLCMediaPlayer+Private.m in Sources */ = {isa = PBXBuildFile; fileRef = 8925B9032CA7F901001A8388 /* VLCMediaPlayer+Private.m */; };
 		8925B91F2CA7F901001A8388 /* DanmakuManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B9152CA7F901001A8388 /* DanmakuManager.swift */; };
 		8925B9202CA7F901001A8388 /* GlobalSettingModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8D42CA7F901001A8388 /* GlobalSettingModel.swift */; };
 		8925B9212CA7F901001A8388 /* FTPFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8C22CA7F901001A8388 /* FTPFileManager.swift */; };
@@ -38,7 +37,6 @@
 		8925B92E2CA7F901001A8388 /* SubtitleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B9192CA7F901001A8388 /* SubtitleManager.swift */; };
 		8925B92F2CA7F901001A8388 /* SMBServiceBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B9102CA7F901001A8388 /* SMBServiceBrowser.swift */; };
 		8925B9302CA7F901001A8388 /* FavoriteNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8ED2CA7F901001A8388 /* FavoriteNetworkHandle.swift */; };
-		8925B9312CA7F901001A8388 /* WebDAVInputStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8CC2CA7F901001A8388 /* WebDAVInputStream.swift */; };
 		8925B9322CA7F901001A8388 /* ANXColor+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B9092CA7F901001A8388 /* ANXColor+Utils.swift */; };
 		8925B9332CA7F901001A8388 /* NSNotification+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B90D2CA7F901001A8388 /* NSNotification+Helper.swift */; };
 		8925B9342CA7F901001A8388 /* DateFormatter+Helper.swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B90B2CA7F901001A8388 /* DateFormatter+Helper.swift.swift */; };
@@ -67,7 +65,6 @@
 		8925B94B2CA7F901001A8388 /* WebDavFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8BF2CA7F901001A8388 /* WebDavFileManager.swift */; };
 		8925B94C2CA7F901001A8388 /* MatchInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8DE2CA7F901001A8388 /* MatchInfo.swift */; };
 		8925B94E2CA7F901001A8388 /* NumberUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B90E2CA7F901001A8388 /* NumberUtils.swift */; };
-		8925B94F2CA7F901001A8388 /* ANXAddressModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 8925B9012CA7F901001A8388 /* ANXAddressModel.m */; };
 		8925B9502CA7F901001A8388 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8FE2CA7F901001A8388 /* NetworkManager.swift */; };
 		8925B9512CA7F901001A8388 /* WebDavFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8CB2CA7F901001A8388 /* WebDavFile.swift */; };
 		8925B9522CA7F901001A8388 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B9062CA7F901001A8388 /* Store.swift */; };
@@ -105,6 +102,8 @@
 		894415E728E34EEC00480172 /* TitleDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 894415E628E34EEC00480172 /* TitleDetailTableViewCell.xib */; };
 		894415E928E34FF100480172 /* NSSwitch+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894415E828E34FF100480172 /* NSSwitch+Utils.swift */; };
 		894415EB28E3569100480172 /* SubtitleOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894415EA28E3569100480172 /* SubtitleOrderViewController.swift */; };
+		1D44D17727674746ACA34E84 /* ServerHostListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F3AEACC0C2438C9D6162A6 /* ServerHostListViewController.swift */; };
+		B6BF5B7F28F54B4DB7CD684D /* SetMainColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCBE01C58043461C971F7664 /* SetMainColorViewController.swift */; };
 		894415F028E4821400480172 /* NSGestureRecognizer+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894415EF28E4821400480172 /* NSGestureRecognizer+Utils.swift */; };
 		894415F328E488CA00480172 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894415F228E488CA00480172 /* Constants.swift */; };
 		8953D00B2C9948A5003EF386 /* FilterDanmakuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8953D00A2C9948A5003EF386 /* FilterDanmakuViewController.swift */; };
@@ -115,8 +114,8 @@
 		89945FEB28CA3BAE009AC640 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89945FEA28CA3BAE009AC640 /* AppDelegate.swift */; };
 		89945FED28CA3BAE009AC640 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89945FEC28CA3BAE009AC640 /* PlayerViewController.swift */; };
 		89945FEF28CA3BAF009AC640 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 89945FEE28CA3BAF009AC640 /* Assets.xcassets */; };
-		8994617228CC7B06009AC640 /* DragView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994617128CC7B06009AC640 /* DragView.swift */; };
 		8994617528CC7B31009AC640 /* BaseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994617428CC7B31009AC640 /* BaseView.swift */; };
+		A546C2584CAC40A6BFD3AD77 /* ThemedTableRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D126C7B2C39D46C1AA1B4176 /* ThemedTableRowView.swift */; };
 		8994617928CC7B5E009AC640 /* NSTableView+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994617828CC7B5E009AC640 /* NSTableView+Utils.swift */; };
 		8994617B28CC7CFD009AC640 /* NSView+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994617A28CC7CFD009AC640 /* NSView+Utils.swift */; };
 		899461AF28CC852F009AC640 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899461AE28CC852F009AC640 /* ViewController.swift */; };
@@ -156,11 +155,88 @@
 		89C325A22C61229F002E2487 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C325A02C61229F002E2487 /* AboutViewController.swift */; };
 		89C325A32C61229F002E2487 /* AboutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89C325A12C61229F002E2487 /* AboutViewController.xib */; };
 		89C325A52C612923002E2487 /* AppVersionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C325A42C612923002E2487 /* AppVersionModel.swift */; };
+		89DAD9C92FD059F700C71A33 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 89DAD9C82FD059F700C71A33 /* Kingfisher */; };
+		89DAD9CC2FD05A9100C71A33 /* AMSMB2 in Frameworks */ = {isa = PBXBuildFile; productRef = 89DAD9CB2FD05A9100C71A33 /* AMSMB2 */; };
+		89DAD9CF2FD05AAE00C71A33 /* FilesProvider in Frameworks */ = {isa = PBXBuildFile; productRef = 89DAD9CE2FD05AAE00C71A33 /* FilesProvider */; };
+		89DAD9D22FD05ADE00C71A33 /* GCDWebDAVServer in Frameworks */ = {isa = PBXBuildFile; productRef = 89DAD9D12FD05ADE00C71A33 /* GCDWebDAVServer */; };
+		89DAD9D42FD05ADE00C71A33 /* GCDWebServer in Frameworks */ = {isa = PBXBuildFile; productRef = 89DAD9D32FD05ADE00C71A33 /* GCDWebServer */; };
+		89DAD9D62FD05ADE00C71A33 /* GCDWebUploader in Frameworks */ = {isa = PBXBuildFile; productRef = 89DAD9D52FD05ADE00C71A33 /* GCDWebUploader */; };
+		89DAD9E22FD05C3A00C71A33 /* MPVFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89DAD9DC2FD05C3A00C71A33 /* MPVFramework.framework */; };
+		89DAD9E32FD05C3A00C71A33 /* MPVFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 89DAD9DC2FD05C3A00C71A33 /* MPVFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		89DAD9EB2FD05C5900C71A33 /* EmbyFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DAD9E82FD05C5900C71A33 /* EmbyFileManager.swift */; };
+		89DAD9EC2FD05C5900C71A33 /* EmbyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DAD9E92FD05C5900C71A33 /* EmbyModel.swift */; };
+		89DAD9F12FD05C8000C71A33 /* PiPPlayerConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DAD9EE2FD05C8000C71A33 /* PiPPlayerConfig.swift */; };
+		89DAD9F22FD05C8000C71A33 /* PiPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DAD9ED2FD05C8000C71A33 /* PiPManager.swift */; };
+		89DAD9F32FD05C8000C71A33 /* PiPPlayerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DAD9EF2FD05C8000C71A33 /* PiPPlayerProtocol.swift */; };
+		89DAD9FD2FD05CC200C71A33 /* MPVRenderContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DAD9FB2FD05CC200C71A33 /* MPVRenderContext.swift */; };
+		89DAD9FF2FD05CC200C71A33 /* MPVPlayerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DAD9FA2FD05CC200C71A33 /* MPVPlayerWrapper.swift */; };
+		89DADA002FD05CC200C71A33 /* MPVPiPProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DAD9F92FD05CC200C71A33 /* MPVPiPProvider.swift */; };
+		89DADA012FD05CC200C71A33 /* MPVHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DAD9F82FD05CC200C71A33 /* MPVHelper.swift */; };
+		89DADA022FD05CC200C71A33 /* SourceHanSansSC-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 89DAD9F42FD05CC200C71A33 /* SourceHanSansSC-Regular.otf */; };
+		89DADA032FD05CC200C71A33 /* SourceHanSansTC-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 89DAD9F52FD05CC200C71A33 /* SourceHanSansTC-Regular.otf */; };
+		89DADA042FD05CCD00C71A33 /* MPV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DAD9F72FD05CC200C71A33 /* MPV.swift */; };
+		89DADA072FD05D0200C71A33 /* MPVKit in Frameworks */ = {isa = PBXBuildFile; productRef = 89DADA062FD05D0200C71A33 /* MPVKit */; };
+		89DADA082FD05D1100C71A33 /* MPVFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89DAD9DC2FD05C3A00C71A33 /* MPVFramework.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		89DADA0C2FD05DAB00C71A33 /* DragView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA0B2FD05DAB00C71A33 /* DragView.swift */; };
+		89DADA0E2FD05F2300C71A33 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 89DADA0D2FD05F2300C71A33 /* Localizable.xcstrings */; };
+		89DADA292FD0600200C71A33 /* JellyfinLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA162FD0600200C71A33 /* JellyfinLoginHistoryViewController.swift */; };
+		89DADA2A2FD0600200C71A33 /* BaseConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA222FD0600200C71A33 /* BaseConnectSvrViewController.swift */; };
+		89DADA2B2FD0600200C71A33 /* FTPLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA132FD0600200C71A33 /* FTPLoginHistoryViewController.swift */; };
+		89DADA2C2FD0600200C71A33 /* BaseLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA232FD0600200C71A33 /* BaseLoginHistoryViewController.swift */; };
+		89DADA2D2FD0600200C71A33 /* EmbyConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA0F2FD0600200C71A33 /* EmbyConnectSvrViewController.swift */; };
+		89DADA2E2FD0600200C71A33 /* SMBConnectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA1B2FD0600200C71A33 /* SMBConnectViewController.swift */; };
+		89DADA2F2FD0600200C71A33 /* PCLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA192FD0600200C71A33 /* PCLoginHistoryViewController.swift */; };
+		89DADA302FD0600200C71A33 /* SMBLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA1C2FD0600200C71A33 /* SMBLoginHistoryViewController.swift */; };
+		89DADA312FD0600200C71A33 /* WebDavLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA202FD0600200C71A33 /* WebDavLoginHistoryViewController.swift */; };
+		89DADA322FD0600200C71A33 /* PCConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA182FD0600200C71A33 /* PCConnectSvrViewController.swift */; };
+		89DADA332FD0600200C71A33 /* FileBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA242FD0600200C71A33 /* FileBrowserViewController.swift */; };
+		89DADA342FD0600200C71A33 /* MediaLibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA252FD0600200C71A33 /* MediaLibraryViewController.swift */; };
+		89DADA352FD0600200C71A33 /* MediaLibraryWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA262FD0600200C71A33 /* MediaLibraryWindowController.swift */; };
+		89DADA402FD0600200C71A33 /* MediaLibrarySectionCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA412FD0600200C71A33 /* MediaLibrarySectionCellView.swift */; };
+		89DADA422FD0600200C71A33 /* MediaLibraryItemCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA432FD0600200C71A33 /* MediaLibraryItemCellView.swift */; };
+		89DADA362FD0600200C71A33 /* WebDavConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA1F2FD0600200C71A33 /* WebDavConnectSvrViewController.swift */; };
+		89DADA372FD0600200C71A33 /* EmbyLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA102FD0600200C71A33 /* EmbyLoginHistoryViewController.swift */; };
+		89DADA382FD0600200C71A33 /* FTPConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA122FD0600200C71A33 /* FTPConnectSvrViewController.swift */; };
+		89DADA3C2FD0608D00C71A33 /* ANXAddressModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA3A2FD0608D00C71A33 /* ANXAddressModel.m */; };
+		89DADA3E2FD061A800C71A33 /* EmbyFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA3D2FD061A800C71A33 /* EmbyFile.swift */; };
+		89DADA3F2FD0755B00C71A33 /* AMSMB2 in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 89DAD9CB2FD05A9100C71A33 /* AMSMB2 */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		89FFD12D2D45131800428206 /* AppKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD12C2D45131800428206 /* AppKey.swift */; };
 		89FFD12F2D45137300428206 /* NSColor+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD12E2D45137300428206 /* NSColor+Helper.swift */; };
 		89FFD1332D4B83BD00428206 /* Launcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD1322D4B83BD00428206 /* Launcher.swift */; };
 		F7CC679A78A31AB0A704CFA9 /* Pods_AniXPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F82727D2DE868C53427D0F5 /* Pods_AniXPlayer.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		89DAD9E02FD05C3A00C71A33 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 89945FDF28CA3BAE009AC640 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 89DAD9DB2FD05C3A00C71A33;
+			remoteInfo = MPVFramework;
+		};
+		89DADA092FD05D1100C71A33 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 89945FDF28CA3BAE009AC640 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 89DAD9DB2FD05C3A00C71A33;
+			remoteInfo = MPVFramework;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		89DAD9E72FD05C3A00C71A33 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				89DADA3F2FD0755B00C71A33 /* AMSMB2 in Embed Frameworks */,
+				89DAD9E32FD05C3A00C71A33 /* MPVFramework.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2F82727D2DE868C53427D0F5 /* Pods_AniXPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AniXPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -191,7 +267,6 @@
 		8925B8C92CA7F901001A8388 /* PCFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCFile.swift; sourceTree = "<group>"; };
 		8925B8CA2CA7F901001A8388 /* SMBFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMBFile.swift; sourceTree = "<group>"; };
 		8925B8CB2CA7F901001A8388 /* WebDavFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDavFile.swift; sourceTree = "<group>"; };
-		8925B8CC2CA7F901001A8388 /* WebDAVInputStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDAVInputStream.swift; sourceTree = "<group>"; };
 		8925B8CE2CA7F901001A8388 /* VLCPlayerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VLCPlayerWrapper.swift; sourceTree = "<group>"; };
 		8925B8D02CA7F901001A8388 /* MediaPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPlayer.swift; sourceTree = "<group>"; };
 		8925B8D12CA7F901001A8388 /* MediaThumbnailer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaThumbnailer.swift; sourceTree = "<group>"; };
@@ -224,10 +299,6 @@
 		8925B8FB2CA7F901001A8388 /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
 		8925B8FC2CA7F901001A8388 /* UserNetworkHandle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNetworkHandle.swift; sourceTree = "<group>"; };
 		8925B8FE2CA7F901001A8388 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
-		8925B9002CA7F901001A8388 /* ANXAddressModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ANXAddressModel.h; sourceTree = "<group>"; };
-		8925B9012CA7F901001A8388 /* ANXAddressModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ANXAddressModel.m; sourceTree = "<group>"; };
-		8925B9022CA7F901001A8388 /* VLCMediaPlayer+Private.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "VLCMediaPlayer+Private.h"; sourceTree = "<group>"; };
-		8925B9032CA7F901001A8388 /* VLCMediaPlayer+Private.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "VLCMediaPlayer+Private.m"; sourceTree = "<group>"; };
 		8925B9052CA7F901001A8388 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		8925B9062CA7F901001A8388 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		8925B9072CA7F901001A8388 /* Store+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Store+Extension.swift"; sourceTree = "<group>"; };
@@ -266,6 +337,8 @@
 		894415E628E34EEC00480172 /* TitleDetailTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TitleDetailTableViewCell.xib; sourceTree = "<group>"; };
 		894415E828E34FF100480172 /* NSSwitch+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSSwitch+Utils.swift"; sourceTree = "<group>"; };
 		894415EA28E3569100480172 /* SubtitleOrderViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtitleOrderViewController.swift; sourceTree = "<group>"; };
+		A4F3AEACC0C2438C9D6162A6 /* ServerHostListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerHostListViewController.swift; sourceTree = "<group>"; };
+		FCBE01C58043461C971F7664 /* SetMainColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetMainColorViewController.swift; sourceTree = "<group>"; };
 		894415EF28E4821400480172 /* NSGestureRecognizer+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSGestureRecognizer+Utils.swift"; sourceTree = "<group>"; };
 		894415F228E488CA00480172 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		8953D00A2C9948A5003EF386 /* FilterDanmakuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterDanmakuViewController.swift; sourceTree = "<group>"; };
@@ -278,8 +351,8 @@
 		89945FEE28CA3BAF009AC640 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		89945FF328CA3BAF009AC640 /* AniXPlayer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AniXPlayer.entitlements; sourceTree = "<group>"; };
 		8994606F28CA3DC2009AC640 /* AniXPlayer-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AniXPlayer-Bridging-Header.h"; sourceTree = "<group>"; };
-		8994617128CC7B06009AC640 /* DragView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DragView.swift; path = AniXPlayer/DragView.swift; sourceTree = SOURCE_ROOT; };
 		8994617428CC7B31009AC640 /* BaseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseView.swift; sourceTree = "<group>"; };
+		D126C7B2C39D46C1AA1B4176 /* ThemedTableRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemedTableRowView.swift; sourceTree = "<group>"; };
 		8994617828CC7B5E009AC640 /* NSTableView+Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSTableView+Utils.swift"; sourceTree = "<group>"; };
 		8994617A28CC7CFD009AC640 /* NSView+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSView+Utils.swift"; sourceTree = "<group>"; };
 		899461AE28CC852F009AC640 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -314,24 +387,80 @@
 		89C325A02C61229F002E2487 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		89C325A12C61229F002E2487 /* AboutViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AboutViewController.xib; sourceTree = "<group>"; };
 		89C325A42C612923002E2487 /* AppVersionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersionModel.swift; sourceTree = "<group>"; };
+		89DAD9DC2FD05C3A00C71A33 /* MPVFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MPVFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		89DAD9E82FD05C5900C71A33 /* EmbyFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbyFileManager.swift; sourceTree = "<group>"; };
+		89DAD9E92FD05C5900C71A33 /* EmbyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbyModel.swift; sourceTree = "<group>"; };
+		89DAD9ED2FD05C8000C71A33 /* PiPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PiPManager.swift; sourceTree = "<group>"; };
+		89DAD9EE2FD05C8000C71A33 /* PiPPlayerConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PiPPlayerConfig.swift; sourceTree = "<group>"; };
+		89DAD9EF2FD05C8000C71A33 /* PiPPlayerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PiPPlayerProtocol.swift; sourceTree = "<group>"; };
+		89DAD9F42FD05CC200C71A33 /* SourceHanSansSC-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceHanSansSC-Regular.otf"; sourceTree = "<group>"; };
+		89DAD9F52FD05CC200C71A33 /* SourceHanSansTC-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceHanSansTC-Regular.otf"; sourceTree = "<group>"; };
+		89DAD9F72FD05CC200C71A33 /* MPV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPV.swift; sourceTree = "<group>"; };
+		89DAD9F82FD05CC200C71A33 /* MPVHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVHelper.swift; sourceTree = "<group>"; };
+		89DAD9F92FD05CC200C71A33 /* MPVPiPProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVPiPProvider.swift; sourceTree = "<group>"; };
+		89DAD9FA2FD05CC200C71A33 /* MPVPlayerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVPlayerWrapper.swift; sourceTree = "<group>"; };
+		89DAD9FB2FD05CC200C71A33 /* MPVRenderContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVRenderContext.swift; sourceTree = "<group>"; };
+		89DADA0B2FD05DAB00C71A33 /* DragView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DragView.swift; sourceTree = "<group>"; };
+		89DADA0D2FD05F2300C71A33 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		89DADA0F2FD0600200C71A33 /* EmbyConnectSvrViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbyConnectSvrViewController.swift; sourceTree = "<group>"; };
+		89DADA102FD0600200C71A33 /* EmbyLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbyLoginHistoryViewController.swift; sourceTree = "<group>"; };
+		89DADA122FD0600200C71A33 /* FTPConnectSvrViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FTPConnectSvrViewController.swift; sourceTree = "<group>"; };
+		89DADA132FD0600200C71A33 /* FTPLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FTPLoginHistoryViewController.swift; sourceTree = "<group>"; };
+		89DADA162FD0600200C71A33 /* JellyfinLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JellyfinLoginHistoryViewController.swift; sourceTree = "<group>"; };
+		89DADA182FD0600200C71A33 /* PCConnectSvrViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCConnectSvrViewController.swift; sourceTree = "<group>"; };
+		89DADA192FD0600200C71A33 /* PCLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCLoginHistoryViewController.swift; sourceTree = "<group>"; };
+		89DADA1B2FD0600200C71A33 /* SMBConnectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMBConnectViewController.swift; sourceTree = "<group>"; };
+		89DADA1C2FD0600200C71A33 /* SMBLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMBLoginHistoryViewController.swift; sourceTree = "<group>"; };
+		89DADA1F2FD0600200C71A33 /* WebDavConnectSvrViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDavConnectSvrViewController.swift; sourceTree = "<group>"; };
+		89DADA202FD0600200C71A33 /* WebDavLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDavLoginHistoryViewController.swift; sourceTree = "<group>"; };
+		89DADA222FD0600200C71A33 /* BaseConnectSvrViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseConnectSvrViewController.swift; sourceTree = "<group>"; };
+		89DADA232FD0600200C71A33 /* BaseLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseLoginHistoryViewController.swift; sourceTree = "<group>"; };
+		89DADA242FD0600200C71A33 /* FileBrowserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBrowserViewController.swift; sourceTree = "<group>"; };
+		89DADA252FD0600200C71A33 /* MediaLibraryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaLibraryViewController.swift; sourceTree = "<group>"; };
+		89DADA262FD0600200C71A33 /* MediaLibraryWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaLibraryWindowController.swift; sourceTree = "<group>"; };
+		89DADA412FD0600200C71A33 /* MediaLibrarySectionCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaLibrarySectionCellView.swift; sourceTree = "<group>"; };
+		89DADA432FD0600200C71A33 /* MediaLibraryItemCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaLibraryItemCellView.swift; sourceTree = "<group>"; };
+		89DADA392FD0608D00C71A33 /* ANXAddressModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ANXAddressModel.h; sourceTree = "<group>"; };
+		89DADA3A2FD0608D00C71A33 /* ANXAddressModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ANXAddressModel.m; sourceTree = "<group>"; };
+		89DADA3D2FD061A800C71A33 /* EmbyFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbyFile.swift; sourceTree = "<group>"; };
 		89FFD12C2D45131800428206 /* AppKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppKey.swift; sourceTree = "<group>"; };
 		89FFD12E2D45137300428206 /* NSColor+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSColor+Helper.swift"; sourceTree = "<group>"; };
 		89FFD1322D4B83BD00428206 /* Launcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Launcher.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		89DAD9DD2FD05C3A00C71A33 /* MPVFramework */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = MPVFramework; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		89945FE428CA3BAE009AC640 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				89DAD9CC2FD05A9100C71A33 /* AMSMB2 in Frameworks */,
+				89DAD9D22FD05ADE00C71A33 /* GCDWebDAVServer in Frameworks */,
+				89DAD9D42FD05ADE00C71A33 /* GCDWebServer in Frameworks */,
+				89DADA082FD05D1100C71A33 /* MPVFramework.framework in Frameworks */,
 				8994E2442DB69B1300765AF6 /* YYCategories in Frameworks */,
 				89B7EA5A2C9B14F500527B84 /* RxSwift in Frameworks */,
 				89B7EA522C9B14C700527B84 /* SnapKit in Frameworks */,
+				89DAD9CF2FD05AAE00C71A33 /* FilesProvider in Frameworks */,
+				89DAD9C92FD059F700C71A33 /* Kingfisher in Frameworks */,
 				89B7EA552C9B14DA00527B84 /* Alamofire in Frameworks */,
 				8994E2472DB69BB600765AF6 /* YYCategories in Frameworks */,
+				89DAD9E22FD05C3A00C71A33 /* MPVFramework.framework in Frameworks */,
+				89DAD9D62FD05ADE00C71A33 /* GCDWebUploader in Frameworks */,
 				89B7EA582C9B14F500527B84 /* RxCocoa in Frameworks */,
 				8953D0162C99E191003EF386 /* DanmakuRender in Frameworks */,
 				F7CC679A78A31AB0A704CFA9 /* Pods_AniXPlayer.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		89DAD9D92FD05C3A00C71A33 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				89DADA072FD05D0200C71A33 /* MPVKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -392,6 +521,7 @@
 		8925B8C52CA7F901001A8388 /* FileManager */ = {
 			isa = PBXGroup;
 			children = (
+				89DAD9EA2FD05C5900C71A33 /* Emby */,
 				8925B8BE2CA7F901001A8388 /* PC */,
 				8925B8C02CA7F901001A8388 /* WebDav */,
 				8925B8C12CA7F901001A8388 /* FileManagerProtocol.swift */,
@@ -411,8 +541,8 @@
 				8925B8C82CA7F901001A8388 /* LocalFile.swift */,
 				8925B8C92CA7F901001A8388 /* PCFile.swift */,
 				8925B8CA2CA7F901001A8388 /* SMBFile.swift */,
+				89DADA3D2FD061A800C71A33 /* EmbyFile.swift */,
 				8925B8CB2CA7F901001A8388 /* WebDavFile.swift */,
-				8925B8CC2CA7F901001A8388 /* WebDAVInputStream.swift */,
 			);
 			path = File;
 			sourceTree = "<group>";
@@ -420,6 +550,8 @@
 		8925B8CF2CA7F901001A8388 /* Wrapper */ = {
 			isa = PBXGroup;
 			children = (
+				89DAD9F62FD05CC200C71A33 /* Fonts */,
+				89DAD9FC2FD05CC200C71A33 /* MPV */,
 				8925B8CE2CA7F901001A8388 /* VLCPlayerWrapper.swift */,
 			);
 			path = Wrapper;
@@ -428,6 +560,7 @@
 		8925B8D32CA7F901001A8388 /* MediaPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				89DAD9F02FD05C8000C71A33 /* PiP */,
 				8925B8CD2CA7F901001A8388 /* File */,
 				8925B8CF2CA7F901001A8388 /* Wrapper */,
 				8925B8D02CA7F901001A8388 /* MediaPlayer.swift */,
@@ -584,17 +717,6 @@
 			path = Networking;
 			sourceTree = "<group>";
 		};
-		8925B9042CA7F901001A8388 /* Objc */ = {
-			isa = PBXGroup;
-			children = (
-				8925B9002CA7F901001A8388 /* ANXAddressModel.h */,
-				8925B9012CA7F901001A8388 /* ANXAddressModel.m */,
-				8925B9022CA7F901001A8388 /* VLCMediaPlayer+Private.h */,
-				8925B9032CA7F901001A8388 /* VLCMediaPlayer+Private.m */,
-			);
-			path = Objc;
-			sourceTree = "<group>";
-		};
 		8925B9082CA7F901001A8388 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
@@ -623,10 +745,10 @@
 		8925B91A2CA7F901001A8388 /* CocoaShare */ = {
 			isa = PBXGroup;
 			children = (
+				89DADA3B2FD0608D00C71A33 /* Objc */,
 				8925B8D32CA7F901001A8388 /* MediaPlayer */,
 				8925B8E12CA7F901001A8388 /* Model */,
 				8925B8FF2CA7F901001A8388 /* Networking */,
-				8925B9042CA7F901001A8388 /* Objc */,
 				8925B9082CA7F901001A8388 /* Preferences */,
 				8925B9112CA7F901001A8388 /* Utils */,
 				8925B9122CA7F901001A8388 /* Atomic.swift */,
@@ -658,6 +780,8 @@
 			children = (
 				894415DD28E34A1700480172 /* GlobalSettingViewController.swift */,
 				894415EA28E3569100480172 /* SubtitleOrderViewController.swift */,
+				A4F3AEACC0C2438C9D6162A6 /* ServerHostListViewController.swift */,
+				FCBE01C58043461C971F7664 /* SetMainColorViewController.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -685,6 +809,7 @@
 			isa = PBXGroup;
 			children = (
 				89945FE928CA3BAE009AC640 /* AniXPlayer */,
+				89DAD9DD2FD05C3A00C71A33 /* MPVFramework */,
 				89945FE828CA3BAE009AC640 /* Products */,
 				3C212790FE434105204253ED /* Pods */,
 				E8141592C1C6FA59A9A560BE /* Frameworks */,
@@ -695,6 +820,7 @@
 			isa = PBXGroup;
 			children = (
 				89945FE728CA3BAE009AC640 /* AniXPlayer.app */,
+				89DAD9DC2FD05C3A00C71A33 /* MPVFramework.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -717,8 +843,10 @@
 				8994617028CC7AFD009AC640 /* Player */,
 				899461E328CC8A17009AC640 /* Match */,
 				899461FB28CCD8A5009AC640 /* Search */,
+				89DADA272FD0600200C71A33 /* Files */,
 				89945FEE28CA3BAF009AC640 /* Assets.xcassets */,
 				89945FF328CA3BAF009AC640 /* AniXPlayer.entitlements */,
+				89DADA0D2FD05F2300C71A33 /* Localizable.xcstrings */,
 			);
 			path = AniXPlayer;
 			sourceTree = "<group>";
@@ -732,7 +860,7 @@
 				8994620C28CCE7EF009AC640 /* Send */,
 				8994620728CCE714009AC640 /* Setting */,
 				89945FEC28CA3BAE009AC640 /* PlayerViewController.swift */,
-				8994617128CC7B06009AC640 /* DragView.swift */,
+				89DADA0B2FD05DAB00C71A33 /* DragView.swift */,
 			);
 			path = Player;
 			sourceTree = "<group>";
@@ -752,6 +880,7 @@
 			children = (
 				89C3244C2C5F8FDE002E2487 /* TableViewCell */,
 				8994617428CC7B31009AC640 /* BaseView.swift */,
+				D126C7B2C39D46C1AA1B4176 /* ThemedTableRowView.swift */,
 				899461F528CCC322009AC640 /* TextField.swift */,
 				8917059828CF6F3E0075ECD9 /* Button.swift */,
 				8917059C28CF717A0075ECD9 /* ImageView.swift */,
@@ -883,6 +1012,136 @@
 			path = About;
 			sourceTree = "<group>";
 		};
+		89DAD9EA2FD05C5900C71A33 /* Emby */ = {
+			isa = PBXGroup;
+			children = (
+				89DAD9E82FD05C5900C71A33 /* EmbyFileManager.swift */,
+				89DAD9E92FD05C5900C71A33 /* EmbyModel.swift */,
+			);
+			path = Emby;
+			sourceTree = "<group>";
+		};
+		89DAD9F02FD05C8000C71A33 /* PiP */ = {
+			isa = PBXGroup;
+			children = (
+				89DAD9ED2FD05C8000C71A33 /* PiPManager.swift */,
+				89DAD9EE2FD05C8000C71A33 /* PiPPlayerConfig.swift */,
+				89DAD9EF2FD05C8000C71A33 /* PiPPlayerProtocol.swift */,
+			);
+			path = PiP;
+			sourceTree = "<group>";
+		};
+		89DAD9F62FD05CC200C71A33 /* Fonts */ = {
+			isa = PBXGroup;
+			children = (
+				89DAD9F42FD05CC200C71A33 /* SourceHanSansSC-Regular.otf */,
+				89DAD9F52FD05CC200C71A33 /* SourceHanSansTC-Regular.otf */,
+			);
+			path = Fonts;
+			sourceTree = "<group>";
+		};
+		89DAD9FC2FD05CC200C71A33 /* MPV */ = {
+			isa = PBXGroup;
+			children = (
+				89DAD9F72FD05CC200C71A33 /* MPV.swift */,
+				89DAD9F82FD05CC200C71A33 /* MPVHelper.swift */,
+				89DAD9F92FD05CC200C71A33 /* MPVPiPProvider.swift */,
+				89DAD9FA2FD05CC200C71A33 /* MPVPlayerWrapper.swift */,
+				89DAD9FB2FD05CC200C71A33 /* MPVRenderContext.swift */,
+			);
+			path = MPV;
+			sourceTree = "<group>";
+		};
+		89DADA112FD0600200C71A33 /* Emby */ = {
+			isa = PBXGroup;
+			children = (
+				89DADA0F2FD0600200C71A33 /* EmbyConnectSvrViewController.swift */,
+				89DADA102FD0600200C71A33 /* EmbyLoginHistoryViewController.swift */,
+			);
+			path = Emby;
+			sourceTree = "<group>";
+		};
+		89DADA142FD0600200C71A33 /* FTP */ = {
+			isa = PBXGroup;
+			children = (
+				89DADA122FD0600200C71A33 /* FTPConnectSvrViewController.swift */,
+				89DADA132FD0600200C71A33 /* FTPLoginHistoryViewController.swift */,
+			);
+			path = FTP;
+			sourceTree = "<group>";
+		};
+		89DADA172FD0600200C71A33 /* Jellyfin */ = {
+			isa = PBXGroup;
+			children = (
+				89DADA162FD0600200C71A33 /* JellyfinLoginHistoryViewController.swift */,
+			);
+			path = Jellyfin;
+			sourceTree = "<group>";
+		};
+		89DADA1A2FD0600200C71A33 /* PC */ = {
+			isa = PBXGroup;
+			children = (
+				89DADA182FD0600200C71A33 /* PCConnectSvrViewController.swift */,
+				89DADA192FD0600200C71A33 /* PCLoginHistoryViewController.swift */,
+			);
+			path = PC;
+			sourceTree = "<group>";
+		};
+		89DADA1D2FD0600200C71A33 /* SMB */ = {
+			isa = PBXGroup;
+			children = (
+				89DADA1B2FD0600200C71A33 /* SMBConnectViewController.swift */,
+				89DADA1C2FD0600200C71A33 /* SMBLoginHistoryViewController.swift */,
+			);
+			path = SMB;
+			sourceTree = "<group>";
+		};
+		89DADA1E2FD0600200C71A33 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		89DADA212FD0600200C71A33 /* WebDAV */ = {
+			isa = PBXGroup;
+			children = (
+				89DADA1F2FD0600200C71A33 /* WebDavConnectSvrViewController.swift */,
+				89DADA202FD0600200C71A33 /* WebDavLoginHistoryViewController.swift */,
+			);
+			path = WebDAV;
+			sourceTree = "<group>";
+		};
+		89DADA272FD0600200C71A33 /* Files */ = {
+			isa = PBXGroup;
+			children = (
+				89DADA112FD0600200C71A33 /* Emby */,
+				89DADA142FD0600200C71A33 /* FTP */,
+				89DADA172FD0600200C71A33 /* Jellyfin */,
+				89DADA1A2FD0600200C71A33 /* PC */,
+				89DADA1D2FD0600200C71A33 /* SMB */,
+				89DADA1E2FD0600200C71A33 /* View */,
+				89DADA212FD0600200C71A33 /* WebDAV */,
+				89DADA222FD0600200C71A33 /* BaseConnectSvrViewController.swift */,
+				89DADA232FD0600200C71A33 /* BaseLoginHistoryViewController.swift */,
+				89DADA242FD0600200C71A33 /* FileBrowserViewController.swift */,
+				89DADA252FD0600200C71A33 /* MediaLibraryViewController.swift */,
+					89DADA412FD0600200C71A33 /* MediaLibrarySectionCellView.swift */,
+					89DADA432FD0600200C71A33 /* MediaLibraryItemCellView.swift */,
+				89DADA262FD0600200C71A33 /* MediaLibraryWindowController.swift */,
+			);
+			path = Files;
+			sourceTree = "<group>";
+		};
+		89DADA3B2FD0608D00C71A33 /* Objc */ = {
+			isa = PBXGroup;
+			children = (
+				89DADA392FD0608D00C71A33 /* ANXAddressModel.h */,
+				89DADA3A2FD0608D00C71A33 /* ANXAddressModel.m */,
+			);
+			path = Objc;
+			sourceTree = "<group>";
+		};
 		E8141592C1C6FA59A9A560BE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -892,6 +1151,16 @@
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		89DAD9D72FD05C3A00C71A33 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		89945FE628CA3BAE009AC640 /* AniXPlayer */ = {
@@ -904,10 +1173,13 @@
 				89945FE528CA3BAE009AC640 /* Resources */,
 				50EEF590C9774F872E54B481 /* [CP] Embed Pods Frameworks */,
 				8904475F2901A7360088886B /* ShellScript */,
+				89DAD9E72FD05C3A00C71A33 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				89DAD9E12FD05C3A00C71A33 /* PBXTargetDependency */,
+				89DADA0A2FD05D1100C71A33 /* PBXTargetDependency */,
 			);
 			name = AniXPlayer;
 			packageProductDependencies = (
@@ -918,10 +1190,40 @@
 				89B7EA592C9B14F500527B84 /* RxSwift */,
 				8994E2432DB69B1300765AF6 /* YYCategories */,
 				8994E2462DB69BB600765AF6 /* YYCategories */,
+				89DAD9C82FD059F700C71A33 /* Kingfisher */,
+				89DAD9CB2FD05A9100C71A33 /* AMSMB2 */,
+				89DAD9CE2FD05AAE00C71A33 /* FilesProvider */,
+				89DAD9D12FD05ADE00C71A33 /* GCDWebDAVServer */,
+				89DAD9D32FD05ADE00C71A33 /* GCDWebServer */,
+				89DAD9D52FD05ADE00C71A33 /* GCDWebUploader */,
 			);
 			productName = AniXPlayer;
 			productReference = 89945FE728CA3BAE009AC640 /* AniXPlayer.app */;
 			productType = "com.apple.product-type.application";
+		};
+		89DAD9DB2FD05C3A00C71A33 /* MPVFramework */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 89DAD9E42FD05C3A00C71A33 /* Build configuration list for PBXNativeTarget "MPVFramework" */;
+			buildPhases = (
+				89DAD9D72FD05C3A00C71A33 /* Headers */,
+				89DAD9D82FD05C3A00C71A33 /* Sources */,
+				89DAD9D92FD05C3A00C71A33 /* Frameworks */,
+				89DAD9DA2FD05C3A00C71A33 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				89DAD9DD2FD05C3A00C71A33 /* MPVFramework */,
+			);
+			name = MPVFramework;
+			packageProductDependencies = (
+				89DADA062FD05D0200C71A33 /* MPVKit */,
+			);
+			productName = MPVFramework;
+			productReference = 89DAD9DC2FD05C3A00C71A33 /* MPVFramework.framework */;
+			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
@@ -930,11 +1232,14 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 1340;
-				LastUpgradeCheck = 1540;
+				LastSwiftUpdateCheck = 2600;
+				LastUpgradeCheck = 2600;
 				TargetAttributes = {
 					89945FE628CA3BAE009AC640 = {
 						CreatedOnToolsVersion = 13.4.1;
+					};
+					89DAD9DB2FD05C3A00C71A33 = {
+						CreatedOnToolsVersion = 26.0.1;
 					};
 				};
 			};
@@ -954,12 +1259,18 @@
 				89B7EA532C9B14DA00527B84 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				89B7EA562C9B14F500527B84 /* XCRemoteSwiftPackageReference "RxSwift" */,
 				8994E2452DB69BB600765AF6 /* XCRemoteSwiftPackageReference "YYCategories" */,
+				89DAD9C72FD059F700C71A33 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				89DAD9CA2FD05A9100C71A33 /* XCRemoteSwiftPackageReference "AMSMB2" */,
+				89DAD9CD2FD05AAE00C71A33 /* XCRemoteSwiftPackageReference "FileProvider" */,
+				89DAD9D02FD05ADE00C71A33 /* XCRemoteSwiftPackageReference "GCDWebServer" */,
+				89DADA052FD05D0200C71A33 /* XCRemoteSwiftPackageReference "MPVKit" */,
 			);
 			productRefGroup = 89945FE828CA3BAE009AC640 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				89945FE628CA3BAE009AC640 /* AniXPlayer */,
+				89DAD9DB2FD05C3A00C71A33 /* MPVFramework */,
 			);
 		};
 /* End PBXProject section */
@@ -972,6 +1283,8 @@
 				899461E728CC8A29009AC640 /* MatchsViewController.xib in Resources */,
 				8944159F28E0C6EC00480172 /* AppVersionViewController.xib in Resources */,
 				8943150E28D375AC0031619C /* SwitchTableViewCell.xib in Resources */,
+				89DADA022FD05CC200C71A33 /* SourceHanSansSC-Regular.otf in Resources */,
+				89DADA032FD05CC200C71A33 /* SourceHanSansTC-Regular.otf in Resources */,
 				89945FEF28CA3BAF009AC640 /* Assets.xcassets in Resources */,
 				89C325A32C61229F002E2487 /* AboutViewController.xib in Resources */,
 				89A1C5E928D377AD00DC514E /* SheetTableViewCell.xib in Resources */,
@@ -982,9 +1295,17 @@
 				89A1C5FE28D4C32300DC514E /* PlayerListTableViewCell.xib in Resources */,
 				8994620128CCD8FB009AC640 /* SearchViewController.xib in Resources */,
 				8943150628D3730D0031619C /* TitleTableViewCell.xib in Resources */,
+				89DADA0E2FD05F2300C71A33 /* Localizable.xcstrings in Resources */,
 				8943151228D3762C0031619C /* StepTableViewCell.xib in Resources */,
 				8943150A28D374020031619C /* SliderTableViewCell.xib in Resources */,
 				8904475E2901A6E20088886B /* GoogleService-Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		89DAD9DA2FD05C3A00C71A33 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -999,9 +1320,13 @@
 			inputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
+			inputPaths = (
+			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1061,7 +1386,6 @@
 				894415E928E34FF100480172 /* NSSwitch+Utils.swift in Sources */,
 				894415E528E34EDF00480172 /* TitleDetailTableViewCell.swift in Sources */,
 				89A1C5ED28D37CED00DC514E /* NSButton+Utils.swift in Sources */,
-				8994617228CC7B06009AC640 /* DragView.swift in Sources */,
 				8943150428D373010031619C /* TitleTableViewCell.swift in Sources */,
 				8953D00B2C9948A5003EF386 /* FilterDanmakuViewController.swift in Sources */,
 				89C325A22C61229F002E2487 /* AboutViewController.swift in Sources */,
@@ -1074,6 +1398,8 @@
 				89A1C60128D4C32300DC514E /* PlayerListTableViewCell.swift in Sources */,
 				894415F028E4821400480172 /* NSGestureRecognizer+Utils.swift in Sources */,
 				899461F828CCC353009AC640 /* NSColor+Utils.swift in Sources */,
+				89DAD9EB2FD05C5900C71A33 /* EmbyFileManager.swift in Sources */,
+				89DAD9EC2FD05C5900C71A33 /* EmbyModel.swift in Sources */,
 				8917059628CF6CF10075ECD9 /* SnapshotView.swift in Sources */,
 				899461F628CCC322009AC640 /* TextField.swift in Sources */,
 				8917059328CF6CF10075ECD9 /* PlayerUIView.swift in Sources */,
@@ -1081,7 +1407,6 @@
 				8925B91C2CA7F901001A8388 /* PCQRModel.swift in Sources */,
 				8925B91D2CA7F901001A8388 /* VLCPlayerWrapper.swift in Sources */,
 				89FFD12F2D45137300428206 /* NSColor+Helper.swift in Sources */,
-				8925B91E2CA7F901001A8388 /* VLCMediaPlayer+Private.m in Sources */,
 				8925B91F2CA7F901001A8388 /* DanmakuManager.swift in Sources */,
 				8925B9202CA7F901001A8388 /* GlobalSettingModel.swift in Sources */,
 				8925B9212CA7F901001A8388 /* FTPFileManager.swift in Sources */,
@@ -1095,12 +1420,15 @@
 				8925B9292CA7F901001A8388 /* URL+Extension.swift in Sources */,
 				8925B92A2CA7F901001A8388 /* HomePageNetworkHandle.swift in Sources */,
 				8925B92B2CA7F901001A8388 /* PlayerDanmakuModel.swift in Sources */,
+				89DAD9FD2FD05CC200C71A33 /* MPVRenderContext.swift in Sources */,
+				89DAD9FF2FD05CC200C71A33 /* MPVPlayerWrapper.swift in Sources */,
+				89DADA002FD05CC200C71A33 /* MPVPiPProvider.swift in Sources */,
+				89DADA012FD05CC200C71A33 /* MPVHelper.swift in Sources */,
 				8925B92C2CA7F901001A8388 /* Search.swift in Sources */,
 				8925B92D2CA7F901001A8388 /* Match.swift in Sources */,
 				8925B92E2CA7F901001A8388 /* SubtitleManager.swift in Sources */,
 				8925B92F2CA7F901001A8388 /* SMBServiceBrowser.swift in Sources */,
 				8925B9302CA7F901001A8388 /* FavoriteNetworkHandle.swift in Sources */,
-				8925B9312CA7F901001A8388 /* WebDAVInputStream.swift in Sources */,
 				8925B9322CA7F901001A8388 /* ANXColor+Utils.swift in Sources */,
 				8925B9332CA7F901001A8388 /* NSNotification+Helper.swift in Sources */,
 				8925B9342CA7F901001A8388 /* DateFormatter+Helper.swift.swift in Sources */,
@@ -1130,7 +1458,6 @@
 				8925B94B2CA7F901001A8388 /* WebDavFileManager.swift in Sources */,
 				8925B94C2CA7F901001A8388 /* MatchInfo.swift in Sources */,
 				8925B94E2CA7F901001A8388 /* NumberUtils.swift in Sources */,
-				8925B94F2CA7F901001A8388 /* ANXAddressModel.m in Sources */,
 				8925B9502CA7F901001A8388 /* NetworkManager.swift in Sources */,
 				8925B9512CA7F901001A8388 /* WebDavFile.swift in Sources */,
 				8925B9522CA7F901001A8388 /* Store.swift in Sources */,
@@ -1157,10 +1484,33 @@
 				8917059928CF6F3E0075ECD9 /* Button.swift in Sources */,
 				89A1C68F28D5E38500DC514E /* NSApp+Utils.swift in Sources */,
 				8953D00F2C994A91003EF386 /* FilterDanmakuTableViewCell.swift in Sources */,
+				89DADA292FD0600200C71A33 /* JellyfinLoginHistoryViewController.swift in Sources */,
+				89DADA2A2FD0600200C71A33 /* BaseConnectSvrViewController.swift in Sources */,
+				89DADA2B2FD0600200C71A33 /* FTPLoginHistoryViewController.swift in Sources */,
+				89DADA2C2FD0600200C71A33 /* BaseLoginHistoryViewController.swift in Sources */,
+				89DADA3E2FD061A800C71A33 /* EmbyFile.swift in Sources */,
+				89DADA2D2FD0600200C71A33 /* EmbyConnectSvrViewController.swift in Sources */,
+				89DADA2E2FD0600200C71A33 /* SMBConnectViewController.swift in Sources */,
+				89DADA2F2FD0600200C71A33 /* PCLoginHistoryViewController.swift in Sources */,
+				89DADA302FD0600200C71A33 /* SMBLoginHistoryViewController.swift in Sources */,
+				89DADA312FD0600200C71A33 /* WebDavLoginHistoryViewController.swift in Sources */,
+				89DADA322FD0600200C71A33 /* PCConnectSvrViewController.swift in Sources */,
+				89DADA332FD0600200C71A33 /* FileBrowserViewController.swift in Sources */,
+				89DADA342FD0600200C71A33 /* MediaLibraryViewController.swift in Sources */,
+				89DADA352FD0600200C71A33 /* MediaLibraryWindowController.swift in Sources */,
+				89DADA402FD0600200C71A33 /* MediaLibrarySectionCellView.swift in Sources */,
+				89DADA422FD0600200C71A33 /* MediaLibraryItemCellView.swift in Sources */,
+				89DADA362FD0600200C71A33 /* WebDavConnectSvrViewController.swift in Sources */,
+				89DADA372FD0600200C71A33 /* EmbyLoginHistoryViewController.swift in Sources */,
+				89DADA382FD0600200C71A33 /* FTPConnectSvrViewController.swift in Sources */,
 				8917059D28CF717A0075ECD9 /* ImageView.swift in Sources */,
 				8994617528CC7B31009AC640 /* BaseView.swift in Sources */,
+				A546C2584CAC40A6BFD3AD77 /* ThemedTableRowView.swift in Sources */,
 				899461FA28CCC40E009AC640 /* NSFont+Utils.swift in Sources */,
 				8943150128D370000031619C /* ScrollView.swift in Sources */,
+				89DAD9F12FD05C8000C71A33 /* PiPPlayerConfig.swift in Sources */,
+				89DAD9F22FD05C8000C71A33 /* PiPManager.swift in Sources */,
+				89DAD9F32FD05C8000C71A33 /* PiPPlayerProtocol.swift in Sources */,
 				8994620F28CCE7F9009AC640 /* SendDanmakuViewController.swift in Sources */,
 				89A1C60328D4CF6C00DC514E /* TimeTipsView.swift in Sources */,
 				8917059428CF6CF10075ECD9 /* PlayerUITopView.swift in Sources */,
@@ -1170,29 +1520,55 @@
 				8943150828D373FC0031619C /* SliderTableViewCell.swift in Sources */,
 				8943151028D376260031619C /* StepTableViewCell.swift in Sources */,
 				897292292C2FB1020016CA1F /* NSImage+Utils.swift in Sources */,
+				89DADA3C2FD0608D00C71A33 /* ANXAddressModel.m in Sources */,
 				894314FF28D36F590031619C /* TableView.swift in Sources */,
 				8943150C28D375A30031619C /* SwitchTableViewCell.swift in Sources */,
 				8917059F28CF85DF0075ECD9 /* PlayerSlider.swift in Sources */,
 				894415EB28E3569100480172 /* SubtitleOrderViewController.swift in Sources */,
+				1D44D17727674746ACA34E84 /* ServerHostListViewController.swift in Sources */,
+				B6BF5B7F28F54B4DB7CD684D /* SetMainColorViewController.swift in Sources */,
 				89A1C67028D5D3E100DC514E /* main.swift in Sources */,
 				8994621328CCE865009AC640 /* DanmakuSettingViewController.swift in Sources */,
 				894415F328E488CA00480172 /* Constants.swift in Sources */,
 				89A1C5FF28D4C32300DC514E /* PlayerListViewController.swift in Sources */,
 				894415E128E34BD200480172 /* SwitchDetailTableViewCell.swift in Sources */,
 				8994620028CCD8FB009AC640 /* SearchViewController.swift in Sources */,
+				89DADA0C2FD05DAB00C71A33 /* DragView.swift in Sources */,
 				89A1C5EF28D38B0300DC514E /* NSMenuItem+Utils.swift in Sources */,
 				899461F428CCC278009AC640 /* MatchsCell.swift in Sources */,
 				8994622428CCF088009AC640 /* GotoLastWatchPointView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		89DAD9D82FD05C3A00C71A33 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				89DADA042FD05CCD00C71A33 /* MPV.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		89DAD9E12FD05C3A00C71A33 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 89DAD9DB2FD05C3A00C71A33 /* MPVFramework */;
+			targetProxy = 89DAD9E02FD05C3A00C71A33 /* PBXContainerItemProxy */;
+		};
+		89DADA0A2FD05D1100C71A33 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 89DAD9DB2FD05C3A00C71A33 /* MPVFramework */;
+			targetProxy = 89DADA092FD05D1100C71A33 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		89945FF428CA3BAF009AC640 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1223,7 +1599,9 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1245,7 +1623,9 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -1254,6 +1634,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -1284,7 +1665,9 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
@@ -1299,7 +1682,9 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
 			name = Release;
@@ -1316,9 +1701,14 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 2025013002;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 94L7P6P9PY;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_FILE_ACCESS_DOWNLOADS_FOLDER = readwrite;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AniXPlayer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
@@ -1352,9 +1742,22 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 2025013002;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = 94L7P6P9PY;
+				ENABLE_APP_SANDBOX = YES;
+				ENABLE_FILE_ACCESS_DOWNLOADS_FOLDER = readwrite;
 				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_INCOMING_NETWORK_CONNECTIONS = YES;
+				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
+				ENABLE_RESOURCE_ACCESS_AUDIO_INPUT = NO;
+				ENABLE_RESOURCE_ACCESS_BLUETOOTH = NO;
+				ENABLE_RESOURCE_ACCESS_CALENDARS = NO;
+				ENABLE_RESOURCE_ACCESS_CAMERA = NO;
+				ENABLE_RESOURCE_ACCESS_CONTACTS = NO;
+				ENABLE_RESOURCE_ACCESS_LOCATION = NO;
+				ENABLE_RESOURCE_ACCESS_PRINTING = NO;
+				ENABLE_RESOURCE_ACCESS_USB = NO;
+				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = AniXPlayer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
@@ -1373,6 +1776,97 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "${SRCROOT}/AniXPlayer/AniXPlayer-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		89DAD9E52FD05C3A00C71A33 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = com.anixplayer.mpv.MPVFramework.MPVFramework;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_INSTALL_MODULE = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		89DAD9E62FD05C3A00C71A33 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CODE_SIGN_IDENTITY = "";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				ENABLE_MODULE_VERIFIER = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
+				MARKETING_VERSION = 1.0;
+				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
+				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
+				PRODUCT_BUNDLE_IDENTIFIER = com.anixplayer.mpv.MPVFramework.MPVFramework;
+				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_INSTALL_MODULE = YES;
+				SWIFT_INSTALL_OBJC_HEADER = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
 		};
@@ -1397,6 +1891,15 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		89DAD9E42FD05C3A00C71A33 /* Build configuration list for PBXNativeTarget "MPVFramework" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				89DAD9E52FD05C3A00C71A33 /* Debug */,
+				89DAD9E62FD05C3A00C71A33 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -1405,7 +1908,7 @@
 			repositoryURL = "https://github.com/sunsx9316/DanmakuRender-Swift";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.5.0;
+				minimumVersion = 1.6.1;
 			};
 		};
 		8994E2452DB69BB600765AF6 /* XCRemoteSwiftPackageReference "YYCategories" */ = {
@@ -1413,7 +1916,7 @@
 			repositoryURL = "https://github.com/sunsx9316/YYCategories";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 1.0.2;
+				minimumVersion = 1.0.7;
 			};
 		};
 		89B7EA502C9B14C700527B84 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
@@ -1438,6 +1941,46 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 6.7.1;
+			};
+		};
+		89DAD9C72FD059F700C71A33 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.9.0;
+			};
+		};
+		89DAD9CA2FD05A9100C71A33 /* XCRemoteSwiftPackageReference "AMSMB2" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/amosavian/AMSMB2";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.3;
+			};
+		};
+		89DAD9CD2FD05AAE00C71A33 /* XCRemoteSwiftPackageReference "FileProvider" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/amosavian/FileProvider";
+			requirement = {
+				kind = upToNextMinorVersion;
+				minimumVersion = 0.26.0;
+			};
+		};
+		89DAD9D02FD05ADE00C71A33 /* XCRemoteSwiftPackageReference "GCDWebServer" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sunsx9316/GCDWebServer";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.6.0;
+			};
+		};
+		89DADA052FD05D0200C71A33 /* XCRemoteSwiftPackageReference "MPVKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/mpvkit/MPVKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.41.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -1476,6 +2019,41 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 89B7EA562C9B14F500527B84 /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxSwift;
+		};
+		89DAD9C82FD059F700C71A33 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 89DAD9C72FD059F700C71A33 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+		89DAD9CB2FD05A9100C71A33 /* AMSMB2 */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 89DAD9CA2FD05A9100C71A33 /* XCRemoteSwiftPackageReference "AMSMB2" */;
+			productName = AMSMB2;
+		};
+		89DAD9CE2FD05AAE00C71A33 /* FilesProvider */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 89DAD9CD2FD05AAE00C71A33 /* XCRemoteSwiftPackageReference "FileProvider" */;
+			productName = FilesProvider;
+		};
+		89DAD9D12FD05ADE00C71A33 /* GCDWebDAVServer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 89DAD9D02FD05ADE00C71A33 /* XCRemoteSwiftPackageReference "GCDWebServer" */;
+			productName = GCDWebDAVServer;
+		};
+		89DAD9D32FD05ADE00C71A33 /* GCDWebServer */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 89DAD9D02FD05ADE00C71A33 /* XCRemoteSwiftPackageReference "GCDWebServer" */;
+			productName = GCDWebServer;
+		};
+		89DAD9D52FD05ADE00C71A33 /* GCDWebUploader */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 89DAD9D02FD05ADE00C71A33 /* XCRemoteSwiftPackageReference "GCDWebServer" */;
+			productName = GCDWebUploader;
+		};
+		89DADA062FD05D0200C71A33 /* MPVKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 89DADA052FD05D0200C71A33 /* XCRemoteSwiftPackageReference "MPVKit" */;
+			productName = MPVKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

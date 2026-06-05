@@ -70,11 +70,9 @@ class LocalFile: File {
         return VLCMedia(url: self.url)
     }
 
-#if os(iOS) || os(tvOS)
     func createMPVMedia() -> MPVMedia? {
         return MPVMedia(url: self.url)
     }
-#endif
 
 }
     

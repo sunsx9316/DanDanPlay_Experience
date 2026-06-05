@@ -76,12 +76,7 @@ class GlobalSettingModel {
     lazy var context = GlobalSettingContext()
     
     func allSettingType() -> [GlobalSettingType] {
-#if os(iOS) || os(tvOS)
         return GlobalSettingType.allCases
-#else
-        // Mac 不支持 MPV
-        return GlobalSettingType.allCases.filter({ $0 != .mainColor && $0 != .playerCore })
-#endif
     }
     
     func subtitle(settingType: GlobalSettingType) -> String {
@@ -174,7 +169,14 @@ class GlobalSettingModel {
     }
 
     func onChangeAppLanguage(_ language: AppLanguage) {
-        Localize.setLanguage(language)
+        switch language {
+        case .chinese:
+            UserDefaults.standard.set(["zh-Hans"], forKey: "AppleLanguages")
+        case .english:
+            UserDefaults.standard.set(["en"], forKey: "AppleLanguages")
+        }
+        UserDefaults.standard.synchronize()
+        Preferences.shared.appLanguage = language
         self.context.appLanguage.onNext(language)
     }
 

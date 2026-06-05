@@ -36,7 +36,7 @@ class JellyfinLoginHistoryViewController: RemoteLoginHistoryViewController {
     }
 
     override func connectViewController(loginInfo: LoginInfo?) -> RemoteConnectViewController {
-        return JellyfinConnectViewController(loginInfo: loginInfo)
+        return EmbyConnectViewController(loginInfo: loginInfo, customTitle: NSLocalizedString("Jellyfin", comment: ""))
     }
 
     override var isEmpty: Bool {

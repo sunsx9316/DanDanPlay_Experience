@@ -60,7 +60,7 @@ class BaseConnectSvrViewController: ViewController {
         }
     }
     
-    private let fileManager: FileManagerProtocol
+    let fileManager: FileManagerProtocol
     
     init(loginInfo: LoginInfo?, fileManager: FileManagerProtocol) {
         self.loginInfo = loginInfo

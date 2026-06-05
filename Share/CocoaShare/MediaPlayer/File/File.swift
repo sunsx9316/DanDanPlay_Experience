@@ -105,9 +105,7 @@ protocol File: AnyObject, HistoryManager.lastWatchDateStoreable {
     /// - Returns: 媒体文件
     func createVLCMedia(delegate: FileDelegate) -> VLCMedia?
 
-#if os(iOS) || os(tvOS)
     func createMPVMedia() -> MPVMedia?
-#endif
 
     /// 排序比较函数（带排序选项），文件夹优先
     func sortCompare(to other: any File, option: FileSortOption, ascending: Bool) -> Bool

@@ -20,10 +20,14 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
         return 70
     }
-    
+
+    func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
+        return tableView.themedRowView(forRow: row)
+    }
+
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         let type = self.dataSource[row]
-        
+
         switch type {
         case .fastMatch:
             let cell = tableView.dequeueReusableCell(class: SwitchDetailTableViewCell.self)
@@ -83,13 +87,15 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
         }
     }
     
-    @objc private func doubleClickTableView(_ tableView: NSTableView) {
-        
-        if tableView.selectedRow < 0 {
-            return
-        }
-        
-        let type = self.dataSource[tableView.selectedRow]
+    func tableViewSelectionDidChange(_ notification: Notification) {
+        guard let tableView = notification.object as? NSTableView else { return }
+
+        let selectedRow = tableView.selectedRow
+        guard selectedRow >= 0 else { return }
+
+        tableView.deselectAll(nil)
+
+        let type = self.dataSource[selectedRow]
         
         if type == .danmakuCacheDay {
             
@@ -117,24 +123,11 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
             }
 
         } else if type == .host {
-            let vc = NSAlert()
-            vc.messageText = type.title
-            vc.alertStyle = .informational
-            vc.addButton(withTitle: NSLocalizedString("确定", comment: ""))
-            vc.addButton(withTitle: NSLocalizedString("取消", comment: ""))
-            
-            let aTextField = TextField(frame: .init(x: 0, y: 0, width: 250, height: 25))
-            aTextField.placeholderString = NSLocalizedString("例：\(DefaultHost)", comment: "")
-            aTextField.text = self.model.host
-            vc.accessoryView = aTextField
-            
-            let response: NSApplication.ModalResponse = vc.runModal()
-            
-            if response == .alertFirstButtonReturn {
-                let host = aTextField.text ?? ""
-                
-                self.model.onChangeHost(host)
-            }
+            let vc = ServerHostListViewController(globalSettingModel: self.model)
+            self.presentAsModalWindow(vc)
+        } else if type == .mainColor {
+            let vc = SetMainColorViewController(globalSettingModel: self.model)
+            self.presentAsModalWindow(vc)
         } else if type == .subtitleLoadOrder {
             let vc = SubtitleOrderViewController(globalSettingModel: self.model)
             self.presentAsModalWindow(vc)
@@ -164,7 +157,30 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
             let response: NSApplication.ModalResponse = vc.runModal()
 
             if response == .alertFirstButtonReturn {
-                self.model.cleanupCache()
+                self.model.cleanupHistory()
+            }
+        } else if type == .playerCore {
+            let vc = NSAlert()
+            vc.messageText = type.title
+            vc.alertStyle = .informational
+            vc.addButton(withTitle: NSLocalizedString("确定", comment: ""))
+            vc.addButton(withTitle: NSLocalizedString("取消", comment: ""))
+
+            let popup = NSPopUpButton(frame: .init(x: 0, y: 0, width: 150, height: 25))
+            for coreType in MediaPlayer.CoreType.allCoreType {
+                popup.addItem(withTitle: coreType.displayName)
+                popup.lastItem?.tag = coreType.rawValue
+            }
+            popup.selectItem(withTag: Preferences.shared.playerCore.rawValue)
+            vc.accessoryView = popup
+
+            let response: NSApplication.ModalResponse = vc.runModal()
+
+            if response == .alertFirstButtonReturn {
+                if let selectedItem = popup.selectedItem,
+                   let coreType = MediaPlayer.CoreType(rawValue: selectedItem.tag) {
+                    self.model.onChangePlayerCore(coreType)
+                }
             }
         } else if type == .appLanguage {
             let vc = NSAlert()
@@ -219,14 +235,12 @@ class GlobalSettingViewController: ViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.headerView = nil
+        tableView.enableRowHoverTracking()
         let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: ""))
         column.isEditable = false
         tableView.addTableColumn(column)
         tableView.registerNibCell(class: SwitchDetailTableViewCell.self)
         tableView.registerNibCell(class: TitleDetailTableViewCell.self)
-        
-        tableView.target = self
-        tableView.doubleAction = #selector(doubleClickTableView(_:))
         
         var scrollView = ScrollView(containerView: tableView)
         return scrollView
@@ -241,7 +255,7 @@ class GlobalSettingViewController: ViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.title = NSLocalizedString("设置", comment: "")
+        self.title = NSLocalizedString("全局设置", comment: "")
         
         self.view.addSubview(self.scrollView)
         self.scrollView.snp.makeConstraints { (make) in
@@ -270,6 +284,10 @@ class GlobalSettingViewController: ViewController {
         }).disposed(by: self.bag)
 
         self.model.context.appLanguage.subscribe(onNext: { [weak self] _ in
+            self?.scrollView.containerView.reloadData()
+        }).disposed(by: self.bag)
+
+        self.model.context.playerCore.subscribe(onNext: { [weak self] _ in
             self?.scrollView.containerView.reloadData()
         }).disposed(by: self.bag)
     }

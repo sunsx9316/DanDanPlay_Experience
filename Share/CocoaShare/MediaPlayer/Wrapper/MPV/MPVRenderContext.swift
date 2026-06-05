@@ -5,8 +5,6 @@
 //  mpv SW render context 封装，mpv 直接渲染到调用方提供的内存 buffer
 //
 
-#if os(iOS) || os(tvOS)
-
 import Foundation
 import Libmpv
 
@@ -98,5 +96,3 @@ public class MPVRenderContext {
         }
     }
 }
-
-#endif

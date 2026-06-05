@@ -23,9 +23,8 @@ class MediaSettingViewController: ViewController {
         let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: ""))
         column.isEditable = false
         tableView.addTableColumn(column)
-        tableView.target = self
-        tableView.doubleAction = #selector(onClickOutlineView(_:))
-        
+        tableView.enableRowHoverTracking()
+
         tableView.registerNibCell(class: SwitchTableViewCell.self)
         tableView.registerNibCell(class: SliderTableViewCell.self)
         tableView.registerNibCell(class: SheetTableViewCell.self)
@@ -80,26 +79,6 @@ class MediaSettingViewController: ViewController {
     }
 
     // MARK: Private Method
-    @objc private func onClickOutlineView(_ outlineView: NSOutlineView) {
-        
-        let row = outlineView.selectedRow
-        if row < 0 {
-            return
-        }
-        
-        if let type = outlineView.item(atRow: row) as? MediaSettingType {
-            if type == .loadSubtitle {
-                self.delegate?.loadSubtitleFileInMediaSettingViewController(self)
-            } else if type == .subtitleFont {
-                
-                let font = NSFont(name: self.mediaModel.subtitleFontName, size: self.mediaModel.subtitleFontSize) ?? NSFont.systemFont(ofSize: self.mediaModel.subtitleFontSize)
-                
-                NSFontManager.shared.target = self
-                NSFontManager.shared.setSelectedFont(font, isMultiple: false)
-                NSFontManager.shared.orderFrontFontPanel(self)
-            }
-        }
-    }
     
     private func reloadDataSource() {
         self.dataSource = self.mediaModel.mediaSetting
@@ -133,9 +112,10 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
             switch type {
             case .playerSpeed, .jumpTitleDuration, .jumpEndingDuration, .subtitleYPosition, .subtitleFontSize, .subtitleFont:
                 return 80
-            case .subtitleSafeArea, .subtitleTrack, .audioTrack, 
+            case .subtitleSafeArea, .subtitleTrack, .audioTrack,
                     .playerMode, .loadSubtitle, .subtitleDelay,
-                    .matchInfo, .audioDelay, .autoJumpTitleEnding:
+                    .matchInfo, .audioDelay, .autoJumpTitleEnding,
+                    .subtitleColor, .subtitleStyle, .aspectRatio, .playerPiP:
                 return 40
             }
         }
@@ -432,12 +412,66 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
                 cell.titleLabel.text = type.title
                 cell.subtitleLabel.text = self.mediaModel.subtitleFontReadableName()
                 return cell
+            case .subtitleStyle:
+                let cell = outlineView.dequeueReusableCell(class: SwitchTableViewCell.self)
+                cell.aSwitch.isOn = Preferences.shared.subtitleStyle
+                cell.aSwitch.title = type.title
+                cell.onTouchSliderCallBack = { [weak self] (aCell) in
+                    guard let self = self else { return }
+                    self.mediaModel.onChangeSubtitleStyle(aCell.aSwitch.isOn)
+                }
+                return cell
+            case .subtitleColor:
+                let cell = outlineView.dequeueReusableCell(class: TitleDetailTableViewCell.self)
+                cell.titleLabel.text = type.title
+                return cell
+            case .aspectRatio:
+                let cell = outlineView.dequeueReusableCell(class: SheetTableViewCell.self)
+                cell.titleLabel.text = type.title
+                let allItems = self.mediaModel.aspectRatioList
+                let titles = allItems.compactMap { $0.name }
+                cell.setItems(titles, selectedItem: self.mediaModel.aspectRatio.name)
+                cell.onClickButtonCallBack = { [weak self] (idx) in
+                    guard let self = self else { return }
+                    self.mediaModel.onChangeAspectRatio(allItems[idx])
+                    self.scrollView.containerView.reloadData()
+                }
+                return cell
+            case .playerPiP:
+                let cell = outlineView.dequeueReusableCell(class: SwitchTableViewCell.self)
+                cell.aSwitch.isOn = self.mediaModel.playerPiP
+                cell.aSwitch.title = type.title
+                cell.onTouchSliderCallBack = { [weak self] (aCell) in
+                    guard let self = self else { return }
+                    self.mediaModel.onChangePlayerPiP(aCell.aSwitch.isOn)
+                }
+                return cell
             }
         }
         
         return nil
     }
-    
+
+    func outlineView(_ outlineView: NSOutlineView, rowViewForItem item: Any) -> NSTableRowView? {
+        return outlineView.themedRowView(forRow: outlineView.row(forItem: item))
+    }
+
+    func outlineViewSelectionDidChange(_ notification: Notification) {
+        guard let outlineView = notification.object as? NSOutlineView else { return }
+        let row = outlineView.selectedRow
+        guard row >= 0, let type = outlineView.item(atRow: row) as? MediaSettingType else { return }
+
+        outlineView.deselectRow(row)
+
+        if type == .loadSubtitle {
+            self.delegate?.loadSubtitleFileInMediaSettingViewController(self)
+        } else if type == .subtitleFont {
+            let font = NSFont(name: self.mediaModel.subtitleFontName, size: self.mediaModel.subtitleFontSize) ?? NSFont.systemFont(ofSize: self.mediaModel.subtitleFontSize)
+            NSFontManager.shared.target = self
+            NSFontManager.shared.setSelectedFont(font, isMultiple: false)
+            NSFontManager.shared.orderFrontFontPanel(self)
+        }
+    }
 }
 
 extension MediaSettingViewController: NSOutlineViewDataSource {

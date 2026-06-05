@@ -168,16 +168,12 @@ class MediaPlayer {
 
     enum CoreType: Int {
         case vlc = 0
-#if os(iOS) || os(tvOS)
         case mpv = 1
-#endif
 
         var displayName: String {
             switch self {
             case .vlc: return "VLC"
-#if os(iOS) || os(tvOS)
             case .mpv: return "MPV"
-#endif
             }
         }
 
@@ -189,7 +185,7 @@ class MediaPlayer {
                 return [.vlc]
             }
 #else
-            return [.vlc]
+            return [.mpv, .vlc]
 #endif
         }
     }
@@ -377,10 +373,8 @@ class MediaPlayer {
         switch coreType {
         case .vlc:
             self.player = VLCPlayerWarrper()
-#if os(iOS) || os(tvOS)
         case .mpv:
             self.player = MPVPlayerWrapper()
-#endif
         }
         self.setupInit()
     }

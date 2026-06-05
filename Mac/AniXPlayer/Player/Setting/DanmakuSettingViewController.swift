@@ -34,9 +34,7 @@ class DanmakuSettingViewController: ViewController {
         let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: ""))
         column.isEditable = false
         tableView.addTableColumn(column)
-        
-        tableView.target = self
-        tableView.doubleAction = #selector(doubleClickTableView(_:))
+        tableView.enableRowHoverTracking()
         tableView.registerNibCell(class: SliderTableViewCell.self)
         tableView.registerNibCell(class: SwitchTableViewCell.self)
         tableView.registerNibCell(class: StepTableViewCell.self)
@@ -76,25 +74,6 @@ class DanmakuSettingViewController: ViewController {
         self.view = .init(frame: .init(x: 0, y: 0, width: 400, height: 600))
     }
     
-    @objc private func doubleClickTableView(_ tableView: NSTableView) {
-        let row = tableView.selectedRow
-        if row < 0 {
-            return
-        }
-        
-        let type = self.dataSource[row]
-
-        if type == .loadDanmaku {
-            self.delegate?.loadDanmakuFileInDanmakuSettingViewController(vc: self)
-        } else if type == .searchDanmaku {
-            self.delegate?.searchDanmakuInDanmakuSettingViewController(vc: self)
-        } else if type == .filterDanmaku {
-            self.delegate?.filterDanmakuInDanmakuSettingViewController(vc: self)
-        } else if type == .danmakuInfo {
-            self.delegate?.showDanmakuListInDanmakuSettingViewController(vc: self)
-        }
-    }
-
 }
 
 extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSource {
@@ -286,5 +265,27 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
             return nil
         }
     }
-    
+
+    func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
+        return tableView.themedRowView(forRow: row)
+    }
+
+    func tableViewSelectionDidChange(_ notification: Notification) {
+        guard let tableView = notification.object as? NSTableView else { return }
+        let row = tableView.selectedRow
+        guard row >= 0 else { return }
+
+        tableView.deselectAll(nil)
+
+        let type = self.dataSource[row]
+        if type == .loadDanmaku {
+            self.delegate?.loadDanmakuFileInDanmakuSettingViewController(vc: self)
+        } else if type == .searchDanmaku {
+            self.delegate?.searchDanmakuInDanmakuSettingViewController(vc: self)
+        } else if type == .filterDanmaku {
+            self.delegate?.filterDanmakuInDanmakuSettingViewController(vc: self)
+        } else if type == .danmakuInfo {
+            self.delegate?.showDanmakuListInDanmakuSettingViewController(vc: self)
+        }
+    }
 }

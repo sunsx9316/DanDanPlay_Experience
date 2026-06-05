@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(find /Users/jimhuang/Dev/DanDanPlay_Experience/iOS -name File.swift -o -name LoginInfo.swift -o -name FileManagerProtocol.swift -o -name WebDavFile* -o -name SMBFile* -o -name EmbyFile* -o -name FTPFile* -o -name PCFile* -o -name Auth*)",
+      "Bash(find /Users/jimhuang/Dev/DanDanPlay_Experience/iOS -name WebDavFileManager* -o -name SMBFileManager* -o -name EmbyFileManager* -o -name FTPFileManager* -o -name PCFileManager*)",
+      "Bash(find /Users/jimhuang/Dev/DanDanPlay_Experience/Mac -name FileBrowser* -o -name *FileBrowser*)",
+      "Bash(for d:*)",
+      "Bash(do echo:*)",
+      "Read(//Users/jimhuang/Dev/DanDanPlay_Experience/iOS/**)",
+      "Bash(done)",
+      "Bash(xcodebuild -workspace Mac/AniXPlayer.xcworkspace -scheme AniXPlayer -configuration Debug -destination 'generic/platform=macOS' build)",
+      "Bash(xcodebuild -workspace Mac/AniXPlayer.xcworkspace -scheme AniXPlayer -configuration Debug -destination 'platform=macOS' build)",
+      "Bash(find /Users/jimhuang/Dev/DanDanPlay_Experience/Share/VLCKit -name *.h -exec grep -l \"synchronousParse\\\\|parseWithOptions\" {})",
+      "Bash(2)",
+      "Bash(xcodebuild -workspace iOS/AniXPlayer.xcworkspace -scheme AniXPlayer -configuration Debug -destination 'generic/platform=iOS' build)",
+      "Bash(cp:*)",
+      "Bash(xcodebuild -workspace AniXPlayer.xcworkspace -scheme AniXPlayer -configuration Debug -destination 'platform=macOS' build)",
+      "Bash(uuidgen)",
+      "Bash(xcodebuild -workspace AniXPlayer.xcworkspace -scheme AniXPlayer -configuration Debug)",
+      "Bash(python3:*)",
+      "Bash(grep -rn \"ANXView\\\\|ANXColor\\\\|ANXViewController\\\\|ANXImage\\\\|pipCaptureInterval\\\\|pipFallbackWidth\\\\|pipFallbackHeight\\\\|pipBufferAlignment\\\\|pipTimescale\\\\|pipFallbackDuration\" /Users/jimhuang/Dev/DanDanPlay_Experience/iOS/AniXPlayer/ --include=*.swift)",
+      "Bash(find /Users/jimhuang/Dev/DanDanPlay_Experience -name *.swift -exec grep -l \"ANXView\\\\|ANXColor\\\\|ANXViewController\" {})",
+      "Bash(xcodebuild -workspace Mac/AniXPlayer.xcworkspace -scheme AniXPlayer -configuration Debug build)",
+      "Bash(xcodebuild -workspace tvOS/AniXPlayer.xcworkspace -scheme AniXPlayer -configuration Debug -destination 'generic/platform=tvOS' build)",
+      "Bash(find /Users/jimhuang/Dev/DanDanPlay_Experience/Mac/AniXPlayer -name *.plist -o -name *.xcconfig)",
+      "Bash(xxd)"
+    ]
+  }
+}

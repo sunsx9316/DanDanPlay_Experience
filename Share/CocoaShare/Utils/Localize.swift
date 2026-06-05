@@ -20,12 +20,9 @@ class Localize {
         }
         
         UserDefaults.standard.synchronize()
-        
+
             // 2. 更新 Preferences
         Preferences.shared.appLanguage = language
-        
-            // 4. 发送通知让 UI 刷新
-        NotificationCenter.default.post(name: .appLanguageDidChange, object: nil)
     }
     
 }

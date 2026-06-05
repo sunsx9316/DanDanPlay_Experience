@@ -6,8 +6,6 @@ import YYCategories
 //  Created by jimhuang on 2021/2/14.
 //
 
-#if os(iOS) || os(tvOS)
-
 import Foundation
 import VLCKit
 import MPVFramework
@@ -129,5 +127,3 @@ class WebDavFile: File {
     }
    
 }
-
-#endif

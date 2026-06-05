@@ -28,22 +28,12 @@ class SearchViewController: ViewController {
         self.title = NSLocalizedString("搜索结果", comment: "")
         
         self.outlineView.registerClassCell(class: MatchsCell.self)
-        self.outlineView.target = self
-        self.outlineView.doubleAction = #selector(doubleAction(_:))
+        self.outlineView.enableRowHoverTracking()
         self.searchField.target = self
         self.searchField.action = #selector(searchAction(_:))
     }
     
     // MARK: Private
-    @objc private func doubleAction(_ sender: NSOutlineView) {
-        if sender.selectedRow > -1,
-            let item = sender.item(atRow: sender.selectedRow) as? MediaMatchItem {
-            if let episodeId = item.episodeId {
-                self.delegate?.searchViewController(self, didMatched: item)
-            }
-        }
-    }
-    
     @objc private func searchAction(_ sender: NSSearchField) {
         
         let text = sender.stringValue
@@ -112,6 +102,22 @@ extension SearchViewController: NSOutlineViewDelegate {
             return cell
         }
         return nil
+    }
+
+    func outlineView(_ outlineView: NSOutlineView, rowViewForItem item: Any) -> NSTableRowView? {
+        return outlineView.themedRowView(forRow: outlineView.row(forItem: item))
+    }
+
+    func outlineViewSelectionDidChange(_ notification: Notification) {
+        guard let outlineView = notification.object as? NSOutlineView else { return }
+        let row = outlineView.selectedRow
+        guard row >= 0, let item = outlineView.item(atRow: row) as? MediaMatchItem else { return }
+
+        outlineView.deselectRow(row)
+
+        if item.episodeId != nil {
+            self.delegate?.searchViewController(self, didMatched: item)
+        }
     }
 }
 

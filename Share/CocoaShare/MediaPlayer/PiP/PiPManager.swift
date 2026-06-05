@@ -314,17 +314,27 @@ class PiPSampleBufferView: ANXView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        #if os(iOS) || os(tvOS)
+#if os(macOS)
+        wantsLayer = true
+        layer?.addSublayer(displayLayer)
+#else
         layer.addSublayer(displayLayer)
-        #endif
+#endif
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
+#if os(iOS) || os(tvOS)
     override func layoutSubviews() {
         super.layoutSubviews()
         displayLayer.frame = bounds
     }
+#else
+    override func layout() {
+        super.layout()
+        displayLayer.frame = bounds
+    }
+#endif
 }

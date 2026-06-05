@@ -7,15 +7,10 @@
 //
 
 import Foundation
-#if os(iOS) || os(tvOS)
 import DanmakuRender
 
 typealias DanmakuEntity = (BaseDanmaku & DanmakuInfoProtocol)
 typealias DanmakuMapResult = [UInt : [DanmakuEntity]]
-#endif
-#if os(iOS)
-import YYCategories
-#endif
 #if !os(tvOS)
 import ANXLog
 #endif
@@ -65,7 +60,6 @@ class DanmakuManager {
     ///   - progress: 进度
     ///   - matchCompletion: 当匹配多个视频时会进行回调
     ///   - danmakuCompletion: 弹幕加载回调
-#if os(iOS) || os(tvOS)
     func loadDanmaku(_ media: File,
                      progress: LoadingProgressAction?,
                      matchCompletion: @escaping((MatchCollection?, Error?) -> Void),
@@ -95,7 +89,6 @@ class DanmakuManager {
                                      progress: LoadingProgressAction?,
                                      matchCompletion: @escaping((MatchCollection?, Error?) -> Void),
                                      danmakuCompletion: @escaping((DanmakuMapResult?, _ matchInfo: Match?, Error?) -> Void)) {
-#if os(iOS)
         if Preferences.shared.autoLoadCustomDanmaku {
             progress?(.downloadLocalDanmaku)
 
@@ -134,52 +127,20 @@ class DanmakuManager {
                 danmakuCompletion(DanmakuManager.shared.conver(collection?.collection ?? []), episodeId, error)
             }
         }
-#else
-        MatchNetworkHandle.matchAndGetDanmakuWithFile(media, progress: progress, matchCompletion: matchCompletion) { collection, episodeId, error in
-            danmakuCompletion(DanmakuManager.shared.conver(collection?.collection ?? []), episodeId, error)
-        }
-#endif
     }
-#endif
 
-#if os(iOS)
     /// 读取弹幕，转换为弹幕map
     /// - Parameter danmakuURL: 弹幕路径
     /// - Returns: 弹幕map
     func conver(_ danmakuURL: URL) throws -> DanmakuMapResult {
-        do {
-            let data = try Data(contentsOf: danmakuURL)
-            if let dic = NSDictionary(xml: data) {
-                if let arr = dic["d"] as? [[String : Any]] {
-                    var danmakuModels = [Comment]()
-                    for d in arr {
-                        if let p = d["p"] as? String {
-                            let strArr = p.components(separatedBy: ",")
-                            if strArr.count >= 4, let text = d["_text"] as? String {
-                                var model = Comment()
-                                model.time = TimeInterval(strArr[0]) ?? 0
-                                model.mode = Comment.Mode(rawValue: Int(strArr[1]) ?? 1) ?? .normal
-                                model.color = ANXColor(anxRgb: Int(strArr[3]) ?? 0)
-                                model.message = text
-                                danmakuModels.append(model)
-                            }
-                        }
-                    }
-                    
-                    return self.conver(danmakuModels)
-                }
-                
-                return [:]
-            } else {
-                throw DanmakuError.parseError
-            }
-        } catch let error {
-            throw error
+        let data = try Data(contentsOf: danmakuURL)
+        let parser = DanmakuXMLParser(data: data)
+        guard parser.parse(), let models = parser.comments, !models.isEmpty else {
+            throw DanmakuError.parseError
         }
+        return self.conver(models)
     }
-#endif
 
-#if os(iOS) || os(tvOS)
     /// 将弹幕数组转换为map
     /// - Parameter danmakus: 弹幕数组
     /// - Returns: map
@@ -238,7 +199,6 @@ class DanmakuManager {
             return aDanmaku
         }
     }
-#endif
 
     /// 下载本地弹幕
     /// - Parameters:
@@ -272,7 +232,6 @@ class DanmakuManager {
     // MARK: Private Method
     
     
-#if os(iOS)
     /// 加载本地弹幕
     /// - Parameters:
     ///   - media: 视频
@@ -317,5 +276,59 @@ class DanmakuManager {
                 }
             }
     }
-#endif
+}
+
+// MARK: - DanmakuXMLParser
+
+/// 跨平台弹幕 XML 解析器
+private class DanmakuXMLParser: NSObject, XMLParserDelegate {
+
+    private let parser: XMLParser
+
+    private(set) var comments: [Comment]?
+
+    private var currentPAttribute: String = ""
+    private var currentText: String = ""
+
+    init(data: Data) {
+        self.parser = XMLParser(data: data)
+        super.init()
+        self.parser.delegate = self
+    }
+
+    func parse() -> Bool {
+        return parser.parse()
+    }
+
+    // MARK: - XMLParserDelegate
+
+    func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
+        currentPAttribute = attributeDict["p"] ?? ""
+        currentText = ""
+    }
+
+    func parser(_ parser: XMLParser, foundCharacters string: String) {
+        currentText += string
+    }
+
+    func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
+        guard elementName == "d" else { return }
+
+        let p = currentPAttribute
+        let text = currentText.trimmingCharacters(in: .whitespacesAndNewlines)
+
+        let strArr = p.components(separatedBy: ",")
+        if strArr.count >= 4, !text.isEmpty {
+            var model = Comment()
+            model.time = TimeInterval(strArr[0]) ?? 0
+            model.mode = Comment.Mode(rawValue: Int(strArr[1]) ?? 1) ?? .normal
+            model.color = ANXColor(anxRgb: Int(strArr[3]) ?? 0)
+            model.message = text
+
+            if comments == nil {
+                comments = []
+            }
+            comments?.append(model)
+        }
+    }
 }

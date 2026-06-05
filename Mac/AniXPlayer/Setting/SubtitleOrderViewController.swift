@@ -39,7 +39,11 @@ extension SubtitleOrderViewController: NSTableViewDelegate, NSTableViewDataSourc
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
         return 35
     }
-    
+
+    func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
+        return tableView.themedRowView(forRow: row)
+    }
+
     func tableView(_ tableView: NSTableView, pasteboardWriterForRow row: Int) -> NSPasteboardWriting? {
             let item = NSPasteboardItem()
             item.setString(String(row), forType: self.dragDropType)
@@ -138,7 +142,8 @@ class SubtitleOrderViewController: ViewController {
         tableView.headerView = nil
         tableView.registerForDraggedTypes([dragDropType])
         tableView.registerNibCell(class: TitleTableViewCell.self)
-        
+        tableView.enableRowHoverTracking()
+
         let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: ""))
         column.isEditable = false
         tableView.addTableColumn(column)

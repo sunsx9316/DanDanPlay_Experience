@@ -88,7 +88,12 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
 
     lazy var mediaView: ANXView = {
         let view = ANXView()
-        view.backgroundColor = .black
+#if os(macOS)
+        view.wantsLayer = true
+        view.layer?.backgroundColor = ANXColor.black.cgColor
+#else
+        view.layer.backgroundColor = ANXColor.black.cgColor
+#endif
         return view
     }();
 
@@ -110,9 +115,6 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
             self.currentSubTitleFile = nil
             let media = self.currentPlayItem?.createVLCMedia(delegate: self)
             self.player?.media = media
-#if os(macOS)
-            media?.synchronousParse()
-#endif
 #if os(iOS)
             if let media = media {
                 self.mediaThumbnailer = .init(media: media)

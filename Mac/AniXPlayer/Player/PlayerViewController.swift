@@ -390,6 +390,14 @@ class PlayerViewController: ViewController {
             self.playerModel.tryParseMedia(files[0])
         }
     }
+
+    /// 从网络媒体库加载文件并播放
+    func openNetworkFiles(_ files: [File], startWith file: File) {
+        if !files.isEmpty {
+            self.mediaModel.loadMedias(files)
+            self.playerModel.tryParseMedia(file)
+        }
+    }
 }
 
 // MARK: - MatchsViewControllerDelegate

@@ -5,8 +5,6 @@
 //  Created by jimhuang on 2021/4/29.
 //
 
-#if os(iOS) || os(tvOS)
-
 import Foundation
 import AMSMB2
 import GCDWebServer
@@ -350,5 +348,3 @@ extension SMBFileManager {
         completion(response)
     }
 }
-
-#endif

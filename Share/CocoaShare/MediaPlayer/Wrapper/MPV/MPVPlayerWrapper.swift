@@ -6,10 +6,12 @@
 //  使用类型安全的 MPV API
 //
 
-#if os(iOS) || os(tvOS)
-
 import Foundation
+#if os(iOS) || os(tvOS)
 import UIKit
+#else
+import AppKit
+#endif
 import Metal
 import QuartzCore
 import AVFoundation
@@ -194,12 +196,7 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
     var subtitleYPosition: Float = 0 {
         didSet {
             // 获取视图高度（考虑缩放比例）
-            let scaleFactor: CGFloat
-#if os(iOS) || os(tvOS)
-            scaleFactor = self.mediaView.window?.screen.scale ?? UIScreen.main.scale
-#else
-            scaleFactor = self.mediaView.window?.backingScaleFactor ?? 1.0
-#endif
+            let scaleFactor = _mediaView.screenScale
             let screenHeight = Int64(self.mediaView.bounds.height * scaleFactor)
 
             // percent=0 时 margin 为 0（贴近底部）
@@ -457,9 +454,17 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
 
 // MARK: - MPVView
 
-class MPVView: UIView {
+class MPVView: ANXView {
 
     private(set) lazy var metalLayer = CAMetalLayer()
+
+    fileprivate var screenScale: CGFloat {
+#if os(macOS)
+        return NSScreen.main?.backingScaleFactor ?? 2.0
+#else
+        return UIScreen.main.scale
+#endif
+    }
 
     /// 首次完成布局（bounds 非零）时的回调，用于通知播放器配置渲染目标
     var onReady: (() -> Void)?
@@ -475,8 +480,19 @@ class MPVView: UIView {
         setup()
     }
 
+#if os(iOS) || os(tvOS)
     override func layoutSubviews() {
         super.layoutSubviews()
+        applyLayout()
+    }
+#else
+    override func layout() {
+        super.layout()
+        applyLayout()
+    }
+#endif
+
+    private func applyLayout() {
         self.metalLayer.frame = self.bounds
         if !didLayoutOnce, !bounds.isEmpty {
             didLayoutOnce = true
@@ -486,16 +502,21 @@ class MPVView: UIView {
     }
 
     private func setup() {
-        backgroundColor = .black
+        metalLayer.contentsScale = screenScale
+#if os(macOS)
+        wantsLayer = true
+        layer?.backgroundColor = ANXColor.black.cgColor
+        layer?.addSublayer(metalLayer)
+#else
+        backgroundColor = ANXColor.black
+        self.layer.addSublayer(metalLayer)
+#endif
 
         metalLayer.device = MTLCreateSystemDefaultDevice()
         metalLayer.pixelFormat = .bgra8Unorm
         metalLayer.framebufferOnly = false
-        metalLayer.backgroundColor = UIColor.black.cgColor
-        metalLayer.contentsScale = UIScreen.main.scale
+        metalLayer.backgroundColor = ANXColor.black.cgColor
         metalLayer.frame = self.bounds
-
-        self.layer.addSublayer(metalLayer)
     }
 }
 
@@ -517,4 +538,3 @@ extension MPVPlayerWrapper {
         return MPVPiPProvider(config: cfg)
     }
 }
-#endif

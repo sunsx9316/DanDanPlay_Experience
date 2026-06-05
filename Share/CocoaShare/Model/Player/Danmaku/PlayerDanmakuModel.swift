@@ -8,8 +8,9 @@
 import Foundation
 import RxSwift
 import RxCocoa
-#if os(iOS) || os(tvOS)
 import DanmakuRender
+#if os(macOS)
+import AppKit
 #endif
 
 // MARK: - 便捷接口
@@ -298,7 +299,6 @@ class PlayerDanmakuModel {
 
                 switch result1 {
                 case .success(let url):
-#if os(iOS)
                     do {
                         let converResult = try DanmakuManager.shared.conver(url)
                         DispatchQueue.main.async {
@@ -310,9 +310,6 @@ class PlayerDanmakuModel {
                             sub.onError(error)
                         }
                     }
-#else
-                    sub.onCompleted()
-#endif
                 case .failure(let error):
                     DispatchQueue.main.async {
                         sub.onError(error)

@@ -39,7 +39,7 @@ class EmbyConnectViewController: RemoteConnectViewController {
         tf.font = .ddp_normal()
         tf.textColor = .label
         tf.attributedPlaceholder = NSAttributedString(
-            string: NSLocalizedString("API Key", comment: ""),
+            string: fileManager.apiKeyDesc,
             attributes: [.foregroundColor: UIColor.lightGray]
         )
         return tf
@@ -47,7 +47,10 @@ class EmbyConnectViewController: RemoteConnectViewController {
 
     // MARK: - Init
 
-    init(loginInfo: LoginInfo? = nil) {
+    private let customTitle: String?
+
+    init(loginInfo: LoginInfo? = nil, customTitle: String? = nil) {
+        self.customTitle = customTitle
         super.init(loginInfo: loginInfo, fileManager: EmbyFileManager.shared)
     }
 
@@ -56,6 +59,13 @@ class EmbyConnectViewController: RemoteConnectViewController {
     }
 
     // MARK: - Lifecycle
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        if let customTitle = customTitle {
+            self.title = customTitle
+        }
+    }
 
     override func setupFields() {
         stackView.insertArrangedSubview(modeSegment, at: 0)

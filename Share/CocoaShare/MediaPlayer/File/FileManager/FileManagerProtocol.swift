@@ -17,6 +17,9 @@ protocol FileManagerProtocol {
     
     /// 密码描述
     var passwordDesc: String { get }
+
+    /// API Key 描述
+    var apiKeyDesc: String { get }
     
     /// 是否需要输入用户名
     var isRequiredUserName: Bool { get }
@@ -51,6 +54,10 @@ extension FileManagerProtocol {
     
     var passwordDesc: String {
         return NSLocalizedString("登录密码", comment: "")
+    }
+
+    var apiKeyDesc: String {
+        return NSLocalizedString("API Key", comment: "")
     }
     
     func subtitlesOfMedia(_ file: File, completion: @escaping ((Result<[File], Error>) -> Void)) {

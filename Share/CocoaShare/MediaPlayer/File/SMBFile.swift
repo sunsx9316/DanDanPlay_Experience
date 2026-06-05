@@ -6,8 +6,6 @@ import YYCategories
 //  Created by jimhuang on 2021/4/29.
 //
 
-#if os(iOS) || os(tvOS)
-
 import Foundation
 #if !os(tvOS)
 import ANXLog
@@ -95,7 +93,7 @@ class SMBFile: File {
             ANX.logError(.SMB, "loginfo初始化失败")
         }
 
-        if #available(iOS 16.0, tvOS 16.0, *) {
+        if #available(iOS 16.0, tvOS 16.0, macOS 13.0, *) {
             svrURL.append(path: shareName)
             svrURL.append(path: self.path)
         } else {
@@ -133,7 +131,6 @@ class SMBFile: File {
         return media
     }
 
-#if os(iOS) || os(tvOS)
     func createMPVMedia() -> MPVMedia? {
         // mpv-lgpl 不支持 smb:// 协议，通过 AMSMB2 代理为本地 HTTP 流
         if let proxyURL = SMBFileManager.shared.streamURL(for: self.path, fileSize: Int64(self.fileSize)) {
@@ -156,7 +153,6 @@ class SMBFile: File {
         let media = MPVMedia(url: self.url)
         return media
     }
-#endif
 
     func getFileHashWithProgress(_ progress: FileProgressAction?,
                                  completion: @escaping((Result<String, Error>) -> Void)) {
@@ -188,5 +184,3 @@ class SMBFile: File {
     }
 
 }
-
-#endif

@@ -6,8 +6,6 @@ import YYCategories
 //  Created by jimhuang on 2026/5/29.
 //
 
-#if os(iOS) || os(tvOS)
-
 import Foundation
 import VLCKit
 import MPVFramework
@@ -146,11 +144,9 @@ class EmbyFile: File {
         return VLCMedia(url: streamURL)
     }
 
-    #if os(iOS) || os(tvOS)
     func createMPVMedia() -> MPVMedia? {
         return MPVMedia(url: streamURL)
     }
-    #endif
 
     func getFileHashWithProgress(_ progress: FileProgressAction?,
                                  completion: @escaping ((Result<String, Error>) -> Void)) {
@@ -234,11 +230,7 @@ class EmbyFile: File {
 
         func createVLCMedia(delegate: FileDelegate) -> VLCMedia? { nil }
 
-        #if os(iOS) || os(tvOS)
         func createMPVMedia() -> MPVMedia? { nil }
-        #endif
     }
 
 }
-
-#endif

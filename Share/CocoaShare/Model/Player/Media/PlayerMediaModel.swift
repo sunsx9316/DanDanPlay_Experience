@@ -182,17 +182,13 @@ extension PlayerMediaModel {
                     return false
                 }
             }
-            #if os(iOS)
-            if self.player.coreType != .mpv {
-                if setting == .playerPiP {
-                    return false
-                }
-            }
-            #else
             if setting == .playerPiP {
+#if os(iOS)
+                return self.player.coreType == .mpv
+#else
                 return false
+#endif
             }
-            #endif
             return true
         })
         
@@ -234,11 +230,20 @@ class PlayerMediaModel {
     private lazy var disposeBag = DisposeBag()
     
     
-    private(set) lazy var player: MediaPlayer = {
-        let player = MediaPlayer(coreType: Preferences.shared.playerCore)
-        player.delegate = self
-        return player
-    }()
+    private var _player: MediaPlayer?
+    private var _playerCoreType: MediaPlayer.CoreType?
+
+    var player: MediaPlayer {
+        let currentCoreType = Preferences.shared.playerCore
+        if _player == nil || _playerCoreType != currentCoreType {
+            _player?.terminate()
+            let newPlayer = MediaPlayer(coreType: currentCoreType)
+            newPlayer.delegate = self
+            _player = newPlayer
+            _playerCoreType = currentCoreType
+        }
+        return _player!
+    }
     
     init() {
         bindContext()
@@ -328,6 +333,7 @@ class PlayerMediaModel {
     private(set) var pipManager: PiPManager?
 
     /// 创建 PiP 播放器实例（headless MPV），配置从主播放器提取（含当前播放状态快照）
+#if os(iOS) || os(tvOS)
     func createPiPPlayer() -> (any PiPPlayerProtocol)? {
         guard let mpvWrapper = player.underlyingPlayer as? MPVPlayerWrapper else {
             ANX.logError(.player, "[PiP] 主播放器不是 MPV，无法创建 PiP 播放器")
@@ -338,6 +344,7 @@ class PlayerMediaModel {
         config.currentAudioChannel = player.underlyingPlayer.currentAudioChannel
         return mpvWrapper.createPiPPlayer(with: config)
     }
+#endif
 
     func createPiPManager(with player: any PiPPlayerProtocol, media: File) -> PiPManager {
         let manager = PiPManager()

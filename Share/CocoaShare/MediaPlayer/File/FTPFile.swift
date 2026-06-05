@@ -6,8 +6,6 @@ import YYCategories
 //  Created by jimhuang on 2021/5/30.
 //
 
-#if os(iOS) || os(tvOS)
-
 import Foundation
 import VLCKit
 import MPVFramework
@@ -59,7 +57,6 @@ class FTPFile: File {
         return media
     }
     
-#if os(iOS) || os(tvOS)
     func createMPVMedia() -> MPVMedia? {
         if let auth = FTPFileManager.shared.loginInfo?.auth,
             var components = URLComponents(string: self.url.absoluteString) {
@@ -75,7 +72,6 @@ class FTPFile: File {
         let media = MPVMedia(url: self.url)
         return media
     }
-#endif
     
     func getFileHashWithProgress(_ progress: FileProgressAction?,
                                  completion: @escaping((Result<String, Error>) -> Void)) {
@@ -91,5 +87,3 @@ class FTPFile: File {
         }
     }
 }
-
-#endif

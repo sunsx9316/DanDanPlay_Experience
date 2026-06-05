@@ -55,6 +55,10 @@ extension FilterDanmakuViewController: NSTableViewDelegate, NSTableViewDataSourc
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
         return 38
     }
+
+    func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
+        return tableView.themedRowView(forRow: row)
+    }
 }
 
 class FilterDanmakuViewController: ViewController {
@@ -87,7 +91,8 @@ class FilterDanmakuViewController: ViewController {
         tableView.headerView = nil
         tableView.rowSizeStyle = .custom
         tableView.registerNibCell(class: FilterDanmakuTableViewCell.self)
-        
+        tableView.enableRowHoverTracking()
+
         let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: ""))
         column.isEditable = false
         tableView.addTableColumn(column)

@@ -27,7 +27,7 @@ extension NSColor {
     }
     
     static var mainColor: NSColor {
-        return NSColor(red: 20, green: 180, blue: 9)
+        return Preferences.shared.mainColor
     }
     
     static var backgroundColor: NSColor {

@@ -20,7 +20,7 @@ class JellyfinLoginHistoryViewController: BaseLoginHistoryViewController<EmbyFil
     }
 
     override func jumpToConnectViewController(_ loginInfo: LoginInfo? = nil) {
-        let vc = JellyfinConnectSvrViewController(loginInfo: loginInfo, fileManager: EmbyFileManager.shared)
+        let vc = EmbyConnectSvrViewController(loginInfo: loginInfo, customTitle: NSLocalizedString("Jellyfin", comment: ""))
         vc.delegate = self
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)

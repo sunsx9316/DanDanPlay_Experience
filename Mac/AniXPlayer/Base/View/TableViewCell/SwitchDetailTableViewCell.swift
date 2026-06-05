@@ -23,7 +23,7 @@ class SwitchDetailTableViewCell: NSView {
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        
+
         self.titleLabel.font = .ddp_large
         self.subtitleLabel.textColor = .subtitleTextColor
     }
