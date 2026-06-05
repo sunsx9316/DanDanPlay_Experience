@@ -21,6 +21,12 @@ import AppKit
 import Foundation
 #endif
 
+#if os(iOS) || os(tvOS)
+public typealias MPVColor = UIColor
+#elseif os(macOS)
+public typealias MPVColor = NSColor
+#endif
+
 // MARK: - MPV 事件类型
 
 /// MPV 事件 ID
@@ -661,22 +667,6 @@ extension MPV {
         }
     }
 
-    /// 转换颜色为十六进制字符串
-    #if os(iOS) || os(tvOS)
-    fileprivate static func colorToHex(_ color: UIColor) -> String {
-        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
-        color.getRed(&r, green: &g, blue: &b, alpha: &a)
-        return String(format: "#%02X%02X%02X", Int(r * 255), Int(g * 255), Int(b * 255))
-    }
-    #elseif os(macOS)
-    fileprivate static func colorToHex(_ color: NSColor) -> String {
-        guard let rgb = color.usingColorSpace(.sRGB) else { return "#FFFFFF" }
-        return String(format: "#%02X%02X%02X",
-                      Int(rgb.redComponent * 255),
-                      Int(rgb.greenComponent * 255),
-                      Int(rgb.blueComponent * 255))
-    }
-    #endif
 }
 
 // MARK: - MPV 主类
@@ -685,12 +675,7 @@ public class MPV {
 
     // MARK: - 私有属性
 
-    private var mpv: OpaquePointer?
-
-    /// 原始 mpv handle，供 PiP 等高级功能使用
-    public var mpvHandle: OpaquePointer? {
-        return mpv
-    }
+    public private(set) var mpv: OpaquePointer?
     private let eventQueue: DispatchQueue = DispatchQueue(label: "com.cocoashare.mpv.event")
     private var eventHandlers: [EventHandler] = []
     private var observedProperties: Set<String> = []
@@ -1238,46 +1223,15 @@ public class SubtitleAPI {
     
     
 
-    #if os(iOS) || os(tvOS)
     /// 字幕颜色
-    public var color: UIColor? {
+    public var color: MPVColor? {
         get {
             guard let hex = player?.getPropertyString(.subtitleColor) else { return nil }
-            return UIColor(hex: hex)
+            return MPVColor(hex: hex)
         }
         set {
             if let color = newValue {
-                player?.setOptionString(.subtitleColor, MPV.colorToHex(color))
-            } else {
-                player?.setOptionString(.subtitleColor, MPV.colorToHex(UIColor.white))
-            }
-        }
-    }
-
-    /// 字幕后景色
-    public var backColor: UIColor? {
-        get {
-            guard let hex = player?.getPropertyString(.subtitleBackColor) else { return nil }
-            return UIColor(hex: hex)
-        }
-        set {
-            if let color = newValue {
-                player?.setOptionString(.subtitleBackColor, MPV.colorToHex(color) + "80") // 50% alpha
-            } else {
-                player?.setOptionString(.subtitleBackColor, "")
-            }
-        }
-    }
-    #elseif os(macOS)
-    /// 字幕颜色
-    public var color: NSColor? {
-        get {
-            guard let hex = player?.getPropertyString(.subtitleColor) else { return nil }
-            return NSColor(hex: hex)
-        }
-        set {
-            if let color = newValue {
-                player?.setOptionString(.subtitleColor, MPV.colorToHex(color))
+                player?.setOptionString(.subtitleColor, color.hexString)
             } else {
                 player?.setOptionString(.subtitleColor, "")
             }
@@ -1285,20 +1239,19 @@ public class SubtitleAPI {
     }
 
     /// 字幕后景色
-    public var backColor: NSColor? {
+    public var backColor: MPVColor? {
         get {
             guard let hex = player?.getPropertyString(.subtitleBackColor) else { return nil }
-            return NSColor(hex: hex)
+            return MPVColor(hex: hex)
         }
         set {
             if let color = newValue {
-                player?.setOptionString(.subtitleBackColor, MPV.colorToHex(color) + "80")
-            }  else {
+                player?.setOptionString(.subtitleBackColor, color.hexString + "80")
+            } else {
                 player?.setOptionString(.subtitleBackColor, "")
             }
         }
     }
-    #endif
 
     /// 添加外部字幕文件
     public func addExternal(path: String, select: Bool = true) {
@@ -1415,8 +1368,7 @@ public class TrackAPI {
 
 // MARK: - 颜色扩展
 
-#if os(iOS) || os(tvOS)
-extension UIColor {
+extension MPVColor {
     convenience init(hex: String) {
         var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
         hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
@@ -1428,23 +1380,25 @@ extension UIColor {
         let g = CGFloat((rgb & 0x00FF00) >> 8) / 255.0
         let b = CGFloat(rgb & 0x0000FF) / 255.0
 
-        self.init(red: r, green: g, blue: b, alpha: 1.0)
-    }
-}
-#elseif os(macOS)
-extension NSColor {
-    convenience init(hex: String) {
-        var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
-        hexSanitized = hexSanitized.replacingOccurrences(of: "#", with: "")
-
-        var rgb: UInt64 = 0
-        Scanner(string: hexSanitized).scanHexInt64(&rgb)
-
-        let r = CGFloat((rgb & 0xFF0000) >> 16) / 255.0
-        let g = CGFloat((rgb & 0x00FF00) >> 8) / 255.0
-        let b = CGFloat(rgb & 0x0000FF) / 255.0
-
+#if os(macOS)
         self.init(srgbRed: r, green: g, blue: b, alpha: 1.0)
+#else
+        self.init(red: r, green: g, blue: b, alpha: 1.0)
+#endif
+    }
+
+    /// 转为 hex 字符串（如 "#FF8800"）
+    var hexString: String {
+#if os(macOS)
+        guard let rgb = usingColorSpace(.sRGB) else { return "#FFFFFF" }
+        return String(format: "#%02X%02X%02X",
+                      Int(rgb.redComponent * 255),
+                      Int(rgb.greenComponent * 255),
+                      Int(rgb.blueComponent * 255))
+#else
+        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+        getRed(&r, green: &g, blue: &b, alpha: &a)
+        return String(format: "#%02X%02X%02X", Int(r * 255), Int(g * 255), Int(b * 255))
+#endif
     }
 }
-#endif

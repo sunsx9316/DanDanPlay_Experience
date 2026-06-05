@@ -167,6 +167,7 @@
 		895A7FE92FCB303900A997B8 /* MPVRenderContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FE62FCB303900A997B8 /* MPVRenderContext.swift */; };
 		895A7FEA2FCB303900A997B8 /* MPVPiPProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FE42FCB303900A997B8 /* MPVPiPProvider.swift */; };
 		895A7FEB2FCB303900A997B8 /* MPVPlayerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FE52FCB303900A997B8 /* MPVPlayerWrapper.swift */; };
+		895A7FEC2FCB303900A997B9 /* MPVFrameRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FED2FCB303900A997B9 /* MPVFrameRenderer.swift */; };
 		895A7FF62FCB309000A997B8 /* PiPPlayerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FF42FCB309000A997B8 /* PiPPlayerProtocol.swift */; };
 		895A7FF72FCB309000A997B8 /* PiPManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FF22FCB309000A997B8 /* PiPManager.swift */; };
 		895A7FF82FCB309000A997B8 /* PiPPlayerConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7FF32FCB309000A997B8 /* PiPPlayerConfig.swift */; };
@@ -428,6 +429,7 @@
 		895A7FE42FCB303900A997B8 /* MPVPiPProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVPiPProvider.swift; sourceTree = "<group>"; };
 		895A7FE52FCB303900A997B8 /* MPVPlayerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVPlayerWrapper.swift; sourceTree = "<group>"; };
 		895A7FE62FCB303900A997B8 /* MPVRenderContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVRenderContext.swift; sourceTree = "<group>"; };
+		895A7FED2FCB303900A997B9 /* MPVFrameRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVFrameRenderer.swift; sourceTree = "<group>"; };
 		895A7FF22FCB309000A997B8 /* PiPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PiPManager.swift; sourceTree = "<group>"; };
 		895A7FF32FCB309000A997B8 /* PiPPlayerConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PiPPlayerConfig.swift; sourceTree = "<group>"; };
 		895A7FF42FCB309000A997B8 /* PiPPlayerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PiPPlayerProtocol.swift; sourceTree = "<group>"; };
@@ -1180,6 +1182,7 @@
 				895599672FCB597F007F52E0 /* MPVHelper.swift */,
 				895A7FE52FCB303900A997B8 /* MPVPlayerWrapper.swift */,
 				895A7FE62FCB303900A997B8 /* MPVRenderContext.swift */,
+				895A7FED2FCB303900A997B9 /* MPVFrameRenderer.swift */,
 			);
 			path = MPV;
 			sourceTree = "<group>";
@@ -1746,6 +1749,7 @@
 				895A7FE92FCB303900A997B8 /* MPVRenderContext.swift in Sources */,
 				895A7FEA2FCB303900A997B8 /* MPVPiPProvider.swift in Sources */,
 				895A7FEB2FCB303900A997B8 /* MPVPlayerWrapper.swift in Sources */,
+				895A7FEC2FCB303900A997B9 /* MPVFrameRenderer.swift in Sources */,
 				8925B8792CA7E4C3001A8388 /* NetworkManager.swift in Sources */,
 				895A7FD12FC8AD4300A997B8 /* EmbyFile.swift in Sources */,
 				8925B87A2CA7E4C3001A8388 /* PathUtils.swift in Sources */,

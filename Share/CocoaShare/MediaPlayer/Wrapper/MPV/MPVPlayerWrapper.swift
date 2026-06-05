@@ -12,8 +12,6 @@ import UIKit
 #else
 import AppKit
 #endif
-import Metal
-import QuartzCore
 import AVFoundation
 import MPVFramework
 #if !os(tvOS)
@@ -41,15 +39,16 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
 
     private let eventQueue = DispatchQueue(label: "com.anxplayer.mpvwrapper", qos: .userInitiated)
 
-    /// 播放轮询定时器
-    private var playbackTimer: Timer?
+    private var lastTimeNotifyTime: TimeInterval = 0
+
+    // MARK: - 渲染
+
+    private let renderer = MPVFrameRenderer()
+    private var didOutputFirstFrame = false
 
     // MARK: - 媒体视图
     
     private lazy var _mediaView = MPVView(frame: .zero)
-
-    /// windowId 是否已配置到 mpv（CAMetalLayer 尺寸就绪）
-    private var windowIdConfigured = false
 
     var mediaView: ANXView {
         return _mediaView
@@ -61,7 +60,6 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
         didSet {
             if let item = currentPlayItem,
                 let media = item.createMPVMedia() {
-                configureWindowIdIfNeeded()
                 mpv?.loadFile(media.url.absoluteString)
             }
         }
@@ -290,18 +288,18 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
     func play() {
         ANX.logInfo(.player, "[MPV] 播放")
         mpv?.playback.isPaused = false
-        startPlaybackPolling()
+        renderer.requestFrame()
     }
 
     func pause() {
         ANX.logInfo(.player, "[MPV] 暂停")
         mpv?.playback.isPaused = true
-        stopPlaybackPolling()
     }
 
     func stop() {
         ANX.logInfo(.player, "[MPV] 停止")
-        stopPlaybackPolling()
+        _mediaView.flush()
+        renderer.startRendering()
         mpv?.stop()
         SMBFileManager.shared.stopStreaming()
         stateChangedCallBack?(self, .stop)
@@ -309,21 +307,13 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
 
     func terminate() {
         ANX.logInfo(.player, "[MPV] 终止")
-        stopPlaybackPolling()
+        renderer.terminate()
         self.mpv?.quit()
         SMBFileManager.shared.stopStreaming()
         stateChangedCallBack?(self, .stop)
     }
 
     // MARK: - 初始化
-
-    /// 确保 windowId 已配置（layoutSubviews 首次触发的 onReady 尚未回调时，作为 fallback）
-    private func configureWindowIdIfNeeded() {
-        guard !windowIdConfigured, let mpvHandle = mpv else { return }
-        let metalLayerPtr = Unmanaged.passUnretained(_mediaView.metalLayer).toOpaque()
-        mpvHandle.video.windowId = Int64(Int(bitPattern: metalLayerPtr))
-        windowIdConfigured = true
-    }
 
     private func initializeMpv() {
         guard let mpvHandle = MPV() else {
@@ -332,26 +322,36 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
         }
         self.mpv = mpvHandle
 
-        // vo=gpu-next + hwdec=videotoolbox: GPU 路径，渲染到 CAMetalLayer 上屏
-        // 主播放器走硬件加速以获得最佳性能/功耗，与 PiP (libmpv SW) 路线不同
-        mpvHandle.setOptionString(.vo, "gpu-next")
+        // vo=libmpv + SW render context: 渲染到内存 buffer，不依赖 CAMetalLayer swapchain
+        mpvHandle.setOptionString(.vo, "libmpv")
         mpvHandle.setOptionString(.hwdec, "videotoolbox")
-        // 延迟到 MPVView 首次布局完成后再配置渲染目标 (windowId)，
-        // 避免 CAMetalLayer 尺寸为 1x1 时 mpv 就开始渲染导致 Metal validation 错误
-        _mediaView.onReady = { [weak self, weak mpvHandle] in
-            guard let self = self, let mpvHandle = mpvHandle else { return }
-            let metalLayerPtr = Unmanaged.passUnretained(self._mediaView.metalLayer).toOpaque()
-            mpvHandle.video.windowId = Int64(Int(bitPattern: metalLayerPtr))
-            self.windowIdConfigured = true
-        }
 
         // 字幕配置
         setupSubtitleFonts(mpvHandle: mpvHandle)
         mpvHandle.subtitle.autoLoad = .no
         mpvHandle.subtitle.assOverride = .yes
 
+        // MPVFrameRenderer 必须在 mpv_initialize 前创建（内部创建 MPVRenderContext）
+        if let handle = mpvHandle.mpv {
+            renderer.outputScale = 1.0
+            renderer.positionProvider = { [weak self] in self?.mpv?.time.position ?? 0 }
+            renderer.videoSizeProvider = { [weak self] in self?.mpv?.videoSize ?? .zero }
+            renderer.onFrame = { [weak self] sampleBuffer in
+                self?._mediaView.enqueue(sampleBuffer)
+            }
+            if !renderer.create(mpvHandle: handle) {
+                ANX.logError(.player, "[MPV] MPVFrameRenderer 创建失败")
+            }
+        }
+
         let initRet = mpvHandle.initialize()
         ANX.logInfo(.player, "[MPV] mpv_initialize() 返回值: \(initRet)")
+
+        // onReady 在首帧渲染后触发
+        _mediaView.onReady = { [weak self] in
+            guard let self = self else { return }
+            self.didOutputFirstFrame = true
+        }
 
         setupEventHandlers(mpvHandle)
     }
@@ -377,13 +377,22 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
             }
         }
 
+        // 观察 time-pos 变化，节流到 0.5 秒通知 UI
+        mpv.observe(.timePos) { [weak self] _ in
+            let now = CACurrentMediaTime()
+            guard let self = self, now - self.lastTimeNotifyTime >= 0.5 else { return }
+            self.lastTimeNotifyTime = now
+            DispatchQueue.main.async {
+                self.timeChangedCallBack?(self, self.position)
+            }
+        }
+
         // 文件播放结束（获取具体原因）
         mpv.on(.endFile) { [weak self] event in
             if case .endFile(let reason, let error, _, _, _) = event.data {
                 ANX.logInfo(.player, "[MPV] 文件结束: reason=\(reason), error=\(error)")
                 DispatchQueue.main.async {
                     guard let self = self, reason == .eof else { return }
-                    self.stopPlaybackPolling()
                     self.endOfFileCallBack?(self)
                 }
             }
@@ -394,7 +403,9 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
             ANX.logInfo(.player, "[MPV] 文件加载完成")
             DispatchQueue.main.async {
                 guard let self = self else { return }
+                self.renderer.startRendering()
                 self.updateTrackLists()
+                self.renderer.requestFrame()
             }
         }
 
@@ -403,8 +414,7 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
             ANX.logInfo(.player, "[MPV] 关机")
             DispatchQueue.main.async {
                 guard let self = self else { return }
-                self.mpv?.video.windowId = 0
-                self._mediaView.metalLayer.device = nil
+                self.renderer.terminate()
                 self.mpv?.stopEventLoop()
                 self.mpv = nil
             }
@@ -417,21 +427,7 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
         mpvHandle.setOptionString(.subtitleFont, mpvCustomFontNames.first ?? "")
     }
 
-    // MARK: - 播放轮询
-
-    private func startPlaybackPolling() {
-        playbackTimer?.invalidate()
-        playbackTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
-            guard let self = self else { return }
-
-            self.timeChangedCallBack?(self, self.position)
-        }
-    }
-
-    private func stopPlaybackPolling() {
-        playbackTimer?.invalidate()
-        playbackTimer = nil
-    }
+    // MARK: - 播放时间通知（通过 mpv time-pos 属性观察，节流到 0.5 秒）
 
     // MARK: - 轨道列表更新
 
@@ -448,7 +444,7 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
     }
 
     deinit {
-        stopPlaybackPolling()
+        renderer.terminate()
     }
 }
 
@@ -456,19 +452,15 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
 
 class MPVView: ANXView {
 
-    private(set) lazy var metalLayer = CAMetalLayer()
+    private lazy var displayLayer: AVSampleBufferDisplayLayer = {
+        let layer = AVSampleBufferDisplayLayer()
+        layer.videoGravity = .resizeAspect
+        return layer
+    }()
 
-    fileprivate var screenScale: CGFloat {
-#if os(macOS)
-        return NSScreen.main?.backingScaleFactor ?? 2.0
-#else
-        return UIScreen.main.scale
-#endif
-    }
-
-    /// 首次完成布局（bounds 非零）时的回调，用于通知播放器配置渲染目标
+    /// 首次收到帧时的回调，用于通知播放器渲染已就绪
     var onReady: (() -> Void)?
-    private var didLayoutOnce = false
+    private var didFireReady = false
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -483,40 +475,67 @@ class MPVView: ANXView {
 #if os(iOS) || os(tvOS)
     override func layoutSubviews() {
         super.layoutSubviews()
-        applyLayout()
+        displayLayer.frame = bounds
     }
 #else
     override func layout() {
         super.layout()
-        applyLayout()
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        displayLayer.frame = bounds
+        CATransaction.commit()
     }
 #endif
 
-    private func applyLayout() {
-        self.metalLayer.frame = self.bounds
-        if !didLayoutOnce, !bounds.isEmpty {
-            didLayoutOnce = true
+    private var enqueueCount = 0
+    private var dropCount = 0
+
+    func enqueue(_ sampleBuffer: CMSampleBuffer) {
+        if displayLayer.status == .failed {
+            ANX.logError(.player, "[MPVView] displayLayer 进入失败状态: \(displayLayer.error?.localizedDescription ?? "nil")")
+            displayLayer.flush()
+        }
+        if displayLayer.isReadyForMoreMediaData {
+            displayLayer.enqueue(sampleBuffer)
+            enqueueCount += 1
+            if displayLayer.status == .failed {
+                ANX.logError(.player, "[MPVView] enqueue 后 displayLayer 失败: \(displayLayer.error?.localizedDescription ?? "nil")")
+            }
+        } else {
+            dropCount += 1
+            if dropCount <= 3 || dropCount % 30 == 0 {
+                ANX.logInfo(.player, "[MPVView] displayLayer 未就绪，丢弃帧 (共丢弃 \(dropCount) 帧)")
+            }
+        }
+        if !didFireReady {
+            didFireReady = true
+            ANX.logInfo(.player, "[MPVView] 首帧到达 (enqueueCount=\(enqueueCount), dropCount=\(dropCount))")
             onReady?()
             onReady = nil
         }
     }
 
+    func flush() {
+        displayLayer.flush()
+    }
+
     private func setup() {
-        metalLayer.contentsScale = screenScale
 #if os(macOS)
         wantsLayer = true
         layer?.backgroundColor = ANXColor.black.cgColor
-        layer?.addSublayer(metalLayer)
+        layer?.addSublayer(displayLayer)
 #else
         backgroundColor = ANXColor.black
-        self.layer.addSublayer(metalLayer)
+        layer.addSublayer(displayLayer)
 #endif
+    }
 
-        metalLayer.device = MTLCreateSystemDefaultDevice()
-        metalLayer.pixelFormat = .bgra8Unorm
-        metalLayer.framebufferOnly = false
-        metalLayer.backgroundColor = ANXColor.black.cgColor
-        metalLayer.frame = self.bounds
+    var screenScale: CGFloat {
+#if os(iOS) || os(tvOS)
+        return UIScreen.main.scale
+#else
+        return NSScreen.main?.backingScaleFactor ?? 2.0
+#endif
     }
 }
 

@@ -20,14 +20,16 @@ private let kMPVRenderAPITypeSW = "sw"
 
 /// 封装 mpv_render_context，使用 SW (software) 后端
 /// mpv 直接渲染到调用方提供的内存 buffer，无 GPU 依赖
-public class MPVRenderContext {
+class MPVRenderContext {
     private var ctx: OpaquePointer?
 
     /// 创建 SW render context。必须在 mpv_initialize() 之前调用。
-    public init?(mpvHandle: OpaquePointer) {
+    init?(mpvHandle: OpaquePointer) {
         let ret = kMPVRenderAPITypeSW.withCString { apiTypePtr in
+            var advancedControl: Int32 = 1
             var params = [
                 mpv_render_param(type: MPV_RENDER_PARAM_API_TYPE, data: UnsafeMutableRawPointer(mutating: apiTypePtr)),
+                mpv_render_param(type: MPV_RENDER_PARAM_ADVANCED_CONTROL, data: &advancedControl),
                 mpv_render_param(type: MPV_RENDER_PARAM_INVALID, data: nil)
             ]
             var ctxPtr: OpaquePointer?
@@ -48,7 +50,7 @@ public class MPVRenderContext {
     ///   - stride: 每行字节数（width * 4，建议对齐到 64 字节）
     ///   - format: 像素格式，默认 "bgr0"
     ///   - blockForTarget: 是否等待到目标显示时间再返回
-    public func render(to data: UnsafeMutableRawPointer,
+    func render(to data: UnsafeMutableRawPointer,
                 width: Int, height: Int,
                 stride: Int, format: String = "bgr0",
                 blockForTarget: Bool = false) -> Bool {
@@ -77,7 +79,7 @@ public class MPVRenderContext {
     }
 
     /// 设置更新回调。mpv 有新帧可渲染时触发。回调在 mpv 内部线程执行，不要在回调中调用 mpv API。
-    public func setUpdateCallback(_ callback: @escaping () -> Void) {
+    func setUpdateCallback(_ callback: @escaping () -> Void) {
         guard let ctx = ctx else { return }
         self.storedUpdateCallback = callback
         let unmanaged = Unmanaged.passUnretained(self)
