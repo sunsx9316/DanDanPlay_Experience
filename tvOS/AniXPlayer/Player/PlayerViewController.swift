@@ -59,6 +59,7 @@ class PlayerViewController: ViewController {
 
     init(items: [File], selectedItem: File? = nil) {
         super.init(nibName: nil, bundle: nil)
+        modalPresentationStyle = .overFullScreen
 
         Helper.shared.playerViewController = self
 
@@ -157,8 +158,11 @@ class PlayerViewController: ViewController {
         rightLongPress.minimumPressDuration = 0.8
         view.addGestureRecognizer(rightLongPress)
 
+        let menuTap = UITapGestureRecognizer(target: self, action: #selector(handleMenuTap(_:)))
+        menuTap.allowedPressTypes = [NSNumber(value: UIPress.PressType.menu.rawValue)]
+        view.addGestureRecognizer(menuTap)
+
         bindModel()
-        overlayView.show()
 
         if let firstPlayMedia = self.firstPlayMediaCallBack?() {
             playerModel.tryParseMedia(firstPlayMedia)
@@ -289,7 +293,16 @@ class PlayerViewController: ViewController {
         }
     }
 
+    @objc private func handleMenuTap(_ recognizer: UITapGestureRecognizer) {
+        if overlayView.isVisible {
+            overlayView.hide()
+        } else {
+            showExitConfirmation()
+        }
+    }
+
     private func handleSelectPress() {
+        guard presentedViewController == nil else { return }
         if !overlayView.isVisible {
             overlayView.show()
             setNeedsFocusUpdate()
@@ -299,6 +312,19 @@ class PlayerViewController: ViewController {
     }
 
     // MARK: - Playback Control
+
+    private func showExitConfirmation() {
+        let alert = UIAlertController(
+            title: NSLocalizedString("退出播放", comment: ""),
+            message: NSLocalizedString("确定要退出播放吗？", comment: ""),
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: NSLocalizedString("取消", comment: ""), style: .cancel))
+        alert.addAction(UIAlertAction(title: NSLocalizedString("确定", comment: ""), style: .destructive) { [weak self] _ in
+            self?.dismiss(animated: true)
+        })
+        present(alert, animated: true)
+    }
 
     private func togglePlayPause() {
         let newState = mediaModel.changePlayState()
