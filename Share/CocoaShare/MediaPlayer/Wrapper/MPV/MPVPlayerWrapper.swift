@@ -326,6 +326,12 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
         mpvHandle.setOptionString(.vo, "libmpv")
         mpvHandle.setOptionString(.hwdec, "videotoolbox")
 
+        // tvOS: 兼容杜比全景声（系统设置中开启全景声时默认 coreaudio 输出）
+#if os(tvOS)
+        mpvHandle.setOptionString(.audioSpdif, "no")
+        mpvHandle.setOptionString(.audioChannels, "2")
+#endif
+
         // 字幕配置
         setupSubtitleFonts(mpvHandle: mpvHandle)
         mpvHandle.subtitle.autoLoad = .no

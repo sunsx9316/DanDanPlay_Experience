@@ -482,6 +482,9 @@ public enum MPVProperty {
     case audioId
     case audioDevice
     case audioDelay
+    case audioSpdif
+    case audioChannels
+    case audioExclusive
     case volume
     case mute
 
@@ -540,6 +543,9 @@ public enum MPVProperty {
         case .audioId: return "aid"
         case .audioDevice: return "audio-device"
         case .audioDelay: return "audio-delay"
+        case .audioSpdif: return "audio-spdif"
+        case .audioChannels: return "audio-channels"
+        case .audioExclusive: return "audio-exclusive"
         case .volume: return "volume"
         case .mute: return "mute"
         case .videoId: return "vid"

@@ -1,4 +1,5 @@
 import UIKit
+import AVFoundation
 #if !os(tvOS)
 import ANXLog
 #endif
@@ -13,6 +14,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         Launcher.launch()
 
         ANX.logInfo(.player, "[App] Documents 路径: \(PathUtils.documentsURL.path)")
+
+        // 配置音频会话，确保多声道/杜比全景声兼容
+        let audioSession = AVAudioSession.sharedInstance()
+        do {
+            try audioSession.setCategory(.playback, mode: .moviePlayback)
+            try audioSession.setActive(true)
+        } catch {
+            ANX.logError(.player, "[App] AVAudioSession 配置失败: \(error)")
+        }
 
         setupUI()
 
