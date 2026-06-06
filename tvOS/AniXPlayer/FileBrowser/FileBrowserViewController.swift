@@ -30,6 +30,7 @@ class FileBrowserViewController: ViewController, FileBrowserViewControllerDelega
 
     private(set) lazy var tableView: TableView = {
         let tv = TableView(frame: .zero, style: .grouped)
+        tv.remembersLastFocusedIndexPath = false
         tv.delegate = self
         tv.dataSource = self
         tv.registerClassCell(class: FileListCell.self)
@@ -91,6 +92,17 @@ class FileBrowserViewController: ViewController, FileBrowserViewControllerDelega
         self.defaultFocusView = tableView
     }
 
+    override var preferredFocusEnvironments: [UIFocusEnvironment] {
+        // 数据加载后，将焦点定位到第一个 cell，让按上能自然离开 tableView 到 nav bar
+        if !files.isEmpty, let firstCell = tableView.visibleCells.first {
+            return [firstCell]
+        }
+        if let view = defaultFocusView {
+            return [view]
+        }
+        return super.preferredFocusEnvironments
+    }
+
     // MARK: - Data
 
     private func enterDirectory(_ directory: File) {
@@ -112,6 +124,9 @@ class FileBrowserViewController: ViewController, FileBrowserViewControllerDelega
                     self.title = directory.fileName
                     self.tableView.reloadData()
                     self.scrollToHighlightedFile()
+                    // 数据加载完成后刷新焦点，让引擎从 tableView 定位到具体 cell
+                    self.setNeedsFocusUpdate()
+                    self.updateFocusIfNeeded()
                 }
             case .failure(let error):
                 DispatchQueue.main.async {

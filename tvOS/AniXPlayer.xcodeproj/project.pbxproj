@@ -207,6 +207,7 @@
 		F6D04BDCB732B91EC584BE02 /* GCDWebDAVServer in Frameworks */ = {isa = PBXBuildFile; productRef = 45E3F22DD157AD3C7F6963ED /* GCDWebDAVServer */; };
 		F75F5DC7360C8F982C90A6C7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCABE78F4458C5717BC3CCB9 /* AppDelegate.swift */; };
 		FB137A6D6810724193EE6862 /* NavigationSettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C043AD50B789ED0F83B57858 /* NavigationSettingCell.swift */; };
+		FE984EA049298734B1EFB124 /* SectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E78C4329EDF01A77D4DED5A6 /* SectionHeaderView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -420,6 +421,7 @@
 		E31FEB1F554271CE0497AB53 /* HomePageBannerCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageBannerCell.swift; sourceTree = "<group>"; };
 		E5FA5153ED9C529964806071 /* UIView+HUD.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIView+HUD.swift"; sourceTree = "<group>"; };
 		E63898ACED2373F3C3B4734A /* MainColorCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainColorCell.swift; sourceTree = "<group>"; };
+		E78C4329EDF01A77D4DED5A6 /* SectionHeaderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SectionHeaderView.swift; sourceTree = "<group>"; };
 		E8C4E0C2907511572960283F /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		ECEB188927C66B73452D4381 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		F24454E75EA8110FC21C5B7E /* LogCompat.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LogCompat.swift; sourceTree = "<group>"; };
@@ -511,6 +513,7 @@
 				3BD2EE63F353E4DD9B53D41D /* TableView.swift */,
 				B3045FAACAEE99BB1FD70D94 /* TableViewCell.swift */,
 				B63499CADF0AB6CCE09ABED8 /* TextField.swift */,
+				E78C4329EDF01A77D4DED5A6 /* SectionHeaderView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1509,6 +1512,7 @@
 				421E99CC2364E054F0F490C5 /* UITableView+Extension.swift in Sources */,
 				4F00774ACD6EB9BC5C9AFC5D /* UICollectionView+Helper.swift in Sources */,
 				4DDFE837812D53475E088AE3 /* UIImage+Helper.swift in Sources */,
+				FE984EA049298734B1EFB124 /* SectionHeaderView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

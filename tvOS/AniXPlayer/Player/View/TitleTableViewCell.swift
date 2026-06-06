@@ -14,7 +14,7 @@ class TitleTableViewCell: TableViewCell {
 
     lazy var label: UILabel = {
         let label = UILabel()
-        label.textColor = .white
+        label.textColor = .adaptiveText
         label.font = .ddp_normal()
         label.numberOfLines = 0
         return label

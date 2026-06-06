@@ -44,10 +44,10 @@ class SearchViewController: ViewController {
 
     private let emptyLabel: Label = {
         let label = Label()
-        label.text = NSLocalizedString("输入关键词搜索番剧", comment: "")
         label.textColor = .secondaryLabel
         label.font = .ddp_small()
         label.textAlignment = .center
+        label.isHidden = true
         return label
     }()
 
@@ -113,6 +113,12 @@ class SearchViewController: ViewController {
                     self.dataSource = result.collection
                     self.resultTableView.reloadData()
                     self.emptyLabel.isHidden = !self.dataSource.isEmpty
+                    if self.dataSource.isEmpty {
+                        self.emptyLabel.text = NSLocalizedString("未找到相关番剧", comment: "")
+                    }
+                } else {
+                    self.emptyLabel.text = NSLocalizedString("搜索失败，请重试", comment: "")
+                    self.emptyLabel.isHidden = false
                 }
             }
         }

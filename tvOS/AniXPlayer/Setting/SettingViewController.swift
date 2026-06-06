@@ -55,6 +55,7 @@ class SettingViewController: ViewController {
         tv.dataSource = self
         tv.registerClassCell(class: SwitchSettingCell.self)
         tv.registerClassCell(class: NavigationSettingCell.self)
+        tv.register(SectionHeaderView.self, forHeaderFooterViewReuseIdentifier: SectionHeaderView.reuseIdentifier)
         tv.rowHeight = 66
         return tv
     }()
@@ -313,21 +314,20 @@ extension SettingViewController: UITableViewDataSource {
         return cell
     }
 
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return Section(rawValue: section)?.title
-    }
-
-    func tableView(_ tableView: UITableView, willDisplayHeaderView view: UIView, forSection section: Int) {
-        if let header = view as? UITableViewHeaderFooterView {
-            header.textLabel?.textColor = .white
-            header.textLabel?.font = .ddp_normal(weight: .bold)
-        }
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: SectionHeaderView.reuseIdentifier) as? SectionHeaderView
+        header?.title = Section(rawValue: section)?.title
+        return header
     }
 }
 
 // MARK: - UITableViewDelegate
 
 extension SettingViewController: UITableViewDelegate {
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 55
+    }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)

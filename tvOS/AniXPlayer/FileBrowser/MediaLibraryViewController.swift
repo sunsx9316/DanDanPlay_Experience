@@ -58,6 +58,7 @@ class MediaLibraryViewController: ViewController {
         tv.delegate = self
         tv.dataSource = self
         tv.registerClassCell(class: FileListCell.self)
+        tv.register(SectionHeaderView.self, forHeaderFooterViewReuseIdentifier: SectionHeaderView.reuseIdentifier)
         tv.rowHeight = 80
         return tv
     }()
@@ -95,8 +96,14 @@ extension MediaLibraryViewController: UITableViewDataSource {
         return cell
     }
 
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sections[section].title
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: SectionHeaderView.reuseIdentifier) as? SectionHeaderView
+        header?.title = sections[section].title
+        return header
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 55
     }
 }
 

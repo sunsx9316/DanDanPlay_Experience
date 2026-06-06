@@ -23,6 +23,7 @@ class SMBLoginHistoryViewController: RemoteLoginHistoryViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.register(SectionHeaderView.self, forHeaderFooterViewReuseIdentifier: SectionHeaderView.reuseIdentifier)
         loadData()
     }
 
@@ -138,13 +139,22 @@ class SMBLoginHistoryViewController: RemoteLoginHistoryViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
 
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let title: String
         if section == 0 && !discoveredServices.isEmpty {
-            return NSLocalizedString("网络邻居", comment: "")
+            title = NSLocalizedString("网络邻居", comment: "")
         } else if (section == 0 && discoveredServices.isEmpty) || section == 1 {
-            return NSLocalizedString("登录历史", comment: "")
+            title = NSLocalizedString("登录历史", comment: "")
+        } else {
+            return nil
         }
-        return nil
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: SectionHeaderView.reuseIdentifier) as? SectionHeaderView
+        header?.title = title
+        return header
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 55
     }
 
     override func loginInfoForRow(at indexPath: IndexPath) -> LoginInfo? {

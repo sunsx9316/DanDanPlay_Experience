@@ -52,7 +52,7 @@ class GotoLastWatchPointViewController: ViewController {
 
     private lazy var countdownLabel: Label = {
         let label = Label()
-        label.textColor = .secondaryLabel
+        label.textColor = .lightGray
         label.font = .ddp_normal()
         label.textAlignment = .center
         return label

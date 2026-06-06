@@ -28,6 +28,7 @@ class MediaSettingViewController: ViewController {
         tv.registerClassCell(class: StepperSettingCell.self)
         tv.registerClassCell(class: NavigationSettingCell.self)
         tv.registerClassCell(class: TitleTableViewCell.self)
+        tv.register(SectionHeaderView.self, forHeaderFooterViewReuseIdentifier: SectionHeaderView.reuseIdentifier)
         tv.estimatedRowHeight = 76
         tv.rowHeight = UITableView.automaticDimension
         return tv
@@ -203,7 +204,6 @@ extension MediaSettingViewController: UITableViewDataSource {
 
         case .matchInfo:
             let cell = tableView.dequeueCell(class: TitleTableViewCell.self, indexPath: indexPath)
-            cell.label.textColor = .white
             if let media = self.mediaModel.media {
                 let matchInfo = self.mediaModel.matchInfo(media: media)
                 cell.label.text = matchInfo?.matchDesc ?? NSLocalizedString("无", comment: "")
@@ -250,8 +250,14 @@ extension MediaSettingViewController: UITableViewDataSource {
         }
     }
 
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return self.dataSource[section].title
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: SectionHeaderView.reuseIdentifier) as? SectionHeaderView
+        header?.title = self.dataSource[section].title
+        return header
+    }
+
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 55
     }
 }
 

@@ -18,6 +18,15 @@ extension UIColor {
         })
     }()
 
+    /// 自适应文字颜色（深色模式白色，浅色模式黑色）
+    static let adaptiveText: UIColor = {
+        return UIColor(dynamicProvider: { tc in
+            tc.userInterfaceStyle == .dark
+                ? UIColor.white
+                : UIColor.black
+        })
+    }()
+
     /// 自适应次级背景色（Cell 聚焦高亮，浅色模式用更深的灰保证文字可读）
     static let adaptiveSecondaryBackground: UIColor = {
         return UIColor(dynamicProvider: { tc in
