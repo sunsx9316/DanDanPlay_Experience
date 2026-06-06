@@ -183,32 +183,22 @@ def cmd_sync(path, code_dir, project_path=None):
     )
     code_keys = set(re.findall(r'NSLocalizedString\("([^"]*)"', result.stdout))
 
-    # 尝试从 iOS xcstrings 获取参考翻译
-    ios_path = PLATFORM_CONFIG["ios"]["xcstrings"]
-    ios_strings = {}
-    if os.path.exists(ios_path) and path != ios_path:
-        ios_strings = _load(ios_path).get("strings", {})
-
-    def _is_empty(entry):
-        return not entry or not entry.get("localizations")
+    def _has_translations(entry):
+        return bool(entry and entry.get("localizations"))
 
     added = 0
     filled = 0
     for key in sorted(code_keys):
         entry = strings.get(key)
-        if entry and not _is_empty(entry):
+        if _has_translations(entry):
             continue
 
-        ref = ios_strings.get(key) if _is_empty(entry) else None
-        if ref:
-            strings[key] = ref
-        else:
-            strings[key] = {
-                "localizations": {
-                    "en": {"stringUnit": {"state": "translated", "value": key}},
-                    "zh-Hans": {"stringUnit": {"state": "translated", "value": key}},
-                }
+        strings[key] = {
+            "localizations": {
+                "en": {"stringUnit": {"state": "translated", "value": key}},
+                "zh-Hans": {"stringUnit": {"state": "translated", "value": key}},
             }
+        }
         if entry is None:
             added += 1
         else:
