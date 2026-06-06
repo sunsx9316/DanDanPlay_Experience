@@ -72,7 +72,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
 
     fileprivate var timeIsUpdate = false
 
-    private let endFlagProgress = 0.99
+    private var endCheckTimer: Timer?
 
     /// 当前选择的字幕文件
     private var currentSubTitleFile: SubtitleProtocol?
@@ -509,29 +509,31 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         let position = max(min(position, 1), 0)
         ANX.logInfo(.player, "[VLC] 跳转: 进度 \(position)")
         self.player?.position = position
-
-        checkIsEndPosition(position: position)
     }
 
     func play(_ media: File) {
         ANX.logInfo(.player, "[VLC] 播放文件: \(media.fileName)")
         self.currentPlayItem = media
         self.player?.play()
+        startEndCheckTimer()
     }
 
     func play() {
         ANX.logInfo(.player, "[VLC] 播放")
         self.player?.play()
+        startEndCheckTimer()
     }
 
     func pause() {
         ANX.logInfo(.player, "[VLC] 暂停")
         self.player?.pause()
+        stopEndCheckTimer()
     }
 
     func stop() {
         ANX.logInfo(.player, "[VLC] 停止")
         self.player?.stop()
+        stopEndCheckTimer()
     }
 
     func terminate() {
@@ -541,6 +543,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
 
     deinit {
         self.playerTimer?.invalidate()
+        self.endCheckTimer?.invalidate()
     }
 
     //MARK: Private Method
@@ -594,10 +597,24 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         return player
     }
 
-    private func checkIsEndPosition(position: Double) {
-        if position >= self.endFlagProgress {
-            self.endOfFileCallBack?(self)
+    private func startEndCheckTimer() {
+        endCheckTimer?.invalidate()
+        endCheckTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
+            let length = self.length
+            guard length > 0 else { return }
+            let remaining = length - self.currentTime
+            if remaining <= 1.0 {
+                self.endCheckTimer?.invalidate()
+                self.endCheckTimer = nil
+                self.endOfFileCallBack?(self)
+            }
         }
+    }
+
+    private func stopEndCheckTimer() {
+        endCheckTimer?.invalidate()
+        endCheckTimer = nil
     }
 
 }
@@ -632,13 +649,11 @@ extension VLCPlayerWarrper: VLCMediaPlayerDelegate {
 
                 self.timeIsUpdate = false
                 self.stateChangedCallBack?(self, self.state)
-                self.checkIsEndPosition(position: self.position)
             }
 
             if self.timeIsUpdate == false {
                 self.timeIsUpdate = true
                 self.stateChangedCallBack?(self, self.state)
-                self.checkIsEndPosition(position: self.position)
             }
 
             self.timeChangedCallBack?(self, self.position)
@@ -649,7 +664,6 @@ extension VLCPlayerWarrper: VLCMediaPlayerDelegate {
     func mediaPlayerStateChanged(_ newState: VLCMediaPlayerState) {
         DispatchQueue.main.async {
             self.stateChangedCallBack?(self, self.state)
-            self.checkIsEndPosition(position: self.position)
         }
     }
 }
