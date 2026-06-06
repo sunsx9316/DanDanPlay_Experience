@@ -208,11 +208,10 @@ def cmd_sync(path, code_dir, project_path=None):
     if filled:
         parts.append(f"{filled} filled")
     parts.append(f"{len(code_keys)} total")
-    print(", ".join(parts))
 
     data["strings"] = strings
     _save(path, data)
-    print(f"SYNCED: {added} new keys, {len(code_keys)} total")
+    print(", ".join(parts))
 
     if is_new and project_path and os.path.exists(project_path):
         _add_to_xcode_project(path, project_path)
