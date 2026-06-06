@@ -189,12 +189,19 @@ def cmd_sync(path, code_dir, project_path=None):
     if os.path.exists(ios_path) and path != ios_path:
         ios_strings = _load(ios_path).get("strings", {})
 
+    def _is_empty(entry):
+        return not entry or not entry.get("localizations")
+
     added = 0
+    filled = 0
     for key in sorted(code_keys):
-        if key in strings:
+        entry = strings.get(key)
+        if entry and not _is_empty(entry):
             continue
-        if key in ios_strings:
-            strings[key] = ios_strings[key]
+
+        ref = ios_strings.get(key) if _is_empty(entry) else None
+        if ref:
+            strings[key] = ref
         else:
             strings[key] = {
                 "localizations": {
@@ -202,7 +209,16 @@ def cmd_sync(path, code_dir, project_path=None):
                     "zh-Hans": {"stringUnit": {"state": "translated", "value": key}},
                 }
             }
-        added += 1
+        if entry is None:
+            added += 1
+        else:
+            filled += 1
+
+    parts = [f"SYNCED: {added} new keys"]
+    if filled:
+        parts.append(f"{filled} filled")
+    parts.append(f"{len(code_keys)} total")
+    print(", ".join(parts))
 
     data["strings"] = strings
     _save(path, data)
