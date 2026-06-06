@@ -80,3 +80,4 @@ Share/CocoaShare/Networking/AppKey.swift
 buildServer.json
 .claude/settings.local.json
 tvOS/.build
+iOS/.claude/settings.local.json
