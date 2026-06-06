@@ -1,13 +1,20 @@
 ---
 name: localization
-description: 管理 iOS / tvOS / Mac Localizable.xcstrings 多语言字符串
+description: 补全 iOS / tvOS / Mac Localizable.xcstrings 中缺失的翻译
 ---
 
-# 多语言字符串管理
+# 多语言翻译补全
 
-## 规则
+## 重要：Xcode 自动管理 key
 
-每次在代码中使用 `NSLocalizedString` 或 `LocalizedString()` 引入新 key 时，**必须**同步更新 `Localizable.xcstrings`。
+Xcode 在每次 build **自动扫描代码**中的 `NSLocalizedString` / `LocalizedString()` 调用，自动向 `Localizable.xcstrings` 添加或删除 key。
+
+**不要手动添加或删除 key**，Xcode 会处理。本工具只负责补全**已有 key 的缺失翻译**。
+
+## 翻译规则
+
+- `zh-Hans`：使用 key 自身（key 是中文原文）
+- `en`：提供准确的英文翻译
 
 ## 工具脚本
 
@@ -19,28 +26,34 @@ description: 管理 iOS / tvOS / Mac Localizable.xcstrings 多语言字符串
 python3 scripts/add_localization.py <platform> <command> [args...]
 ```
 
-`platform`: `ios` | `tvos` | `mac` | `all`（`all` = 对所有已有文件的平台操作）
+`platform`: `ios` | `tvos` | `mac` | `all`
 
-### 检查 key 是否存在
+### 批量补全缺翻译
+
+扫描代码中的 key，将 xcstrings 文件里已有但缺翻译的条目自动填充：
 
 ```bash
-python3 scripts/add_localization.py ios --check "备注"
+python3 scripts/add_localization.py ios --sync
 ```
 
-- 输出 `EXISTS: 备注` → 已存在，无需添加
-- 输出 `NOT_FOUND: 备注` → 需要添加
-- 输出 `NO_FILE: ...` → 该平台尚无 xcstrings 文件
+- 已存在的 key 且有翻译 → 跳过
+- 已存在的 key 但缺翻译 → 用 key 填充，zh-Hans=key，en=key（占位待翻）
+- 代码里有但 xcstrings 里没有 → 新增并用 key 填充
 
-### 添加新 key
+### 手动添加翻译
 
 ```bash
 python3 scripts/add_localization.py ios --add "备注" "Remark"
 ```
 
-- 参数1: 中文原文（同时作为 key 和 zh-Hans 的值）
+- 参数1: key（也作为 zh-Hans）
 - 参数2: 英文翻译
-- 如果 key 已存在，不会重复添加
-- 如果 xcstrings 文件/目录不存在，会自动创建
+
+### 检查 key
+
+```bash
+python3 scripts/add_localization.py ios --check "备注"
+```
 
 ### 列出所有 key
 
@@ -54,11 +67,10 @@ python3 scripts/add_localization.py ios --list
 |------|------|
 | iOS | `iOS/AniXPlayer/Resource/Localizable.xcstrings` |
 | tvOS | `tvOS/AniXPlayer/Resource/Localizable.xcstrings` |
-| Mac | `Mac/AniXPlayer/Resource/Localizable.xcstrings` |
+| Mac | `Mac/AniXPlayer/Localizable.xcstrings` |
 
 ## 格式说明
 
-JSON 结构：
 ```json
 {
   "sourceLanguage": "en",
@@ -68,7 +80,7 @@ JSON 结构：
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "English"
+            "value": "English Translation"
           }
         },
         "zh-Hans": {
@@ -86,7 +98,6 @@ JSON 结构：
 
 ## 工作流
 
-1. 代码中写了 `NSLocalizedString("新字符串", comment: "")`
-2. 运行 `python3 scripts/add_localization.py <platform> --check "新字符串"`
-3. 若 `NOT_FOUND`，运行 `python3 scripts/add_localization.py <platform> --add "新字符串" "English Translation"`
-4. 若 `EXISTS`，跳过
+1. 代码中写 `NSLocalizedString("新字符串", comment: "")`
+2. 下次 build 时 Xcode 自动将 key 加入 xcstrings
+3. 运行 `--sync` 补全缺翻译，或用 `--add` 手动添加翻译

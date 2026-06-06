@@ -1,13 +1,18 @@
 #!/usr/bin/env python3
 """
-多语言字符串管理 — 支持 iOS / tvOS / Mac，不加载文件到上下文。
-新增文件时自动加入 Xcode 工程。
+多语言翻译填充工具 — 支持 iOS / tvOS / Mac。
+
+注意：Xcode 在 build 时自动管理 Localizable.xcstrings 文件的 key 增删，
+本工具只负责补全缺失的翻译，不会添加/删除 key。
+
+zh-Hans 翻译使用 key 自身（key 是中文）。
+en 翻译需要手动提供准确的英文翻译。
 
 用法:
   python3 scripts/add_localization.py <platform> --check "备注"
   python3 scripts/add_localization.py <platform> --add "备注" "Remark"
   python3 scripts/add_localization.py <platform> --list
-  python3 scripts/add_localization.py <platform> --sync          # 扫描代码批量同步
+  python3 scripts/add_localization.py <platform> --sync   # 扫描代码，补全缺翻译
 
 platform: ios | tvos | mac | all
   all = 对所有已有文件的平台操作
@@ -15,7 +20,7 @@ platform: ios | tvos | mac | all
 文件路径:
   iOS:  iOS/AniXPlayer/Resource/Localizable.xcstrings
   tvOS: tvOS/AniXPlayer/Resource/Localizable.xcstrings
-  Mac:  Mac/AniXPlayer/Resource/Localizable.xcstrings
+  Mac:  Mac/AniXPlayer/Localizable.xcstrings
 """
 
 import json

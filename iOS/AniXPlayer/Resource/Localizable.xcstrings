@@ -1957,7 +1957,22 @@
         }
       }
     },
-    "排序方式": {},
+    "排序方式": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "排序方式"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "排序方式"
+          }
+        }
+      }
+    },
     "描边": {
       "localizations": {
         "en": {
@@ -2150,7 +2165,22 @@
         }
       }
     },
-    "文件名": {},
+    "文件名": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File Name"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文件名"
+          }
+        }
+      }
+    },
     "文件夹？": {
       "localizations": {
         "en": {
@@ -2183,7 +2213,22 @@
         }
       }
     },
-    "文件类型": {},
+    "文件类型": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File Type"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文件类型"
+          }
+        }
+      }
+    },
     "新番时间表": {
       "localizations": {
         "en": {
@@ -3275,7 +3320,22 @@
         }
       }
     },
-    "路径": {},
+    "路径": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Path"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "路径"
+          }
+        }
+      }
+    },
     "跳转": {
       "localizations": {
         "en": {
@@ -3501,7 +3561,22 @@
         }
       }
     },
-    "集数": {},
+    "集数": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Episode"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "集数"
+          }
+        }
+      }
+    },
     "音频时间偏移": {
       "localizations": {
         "en": {
@@ -3598,7 +3673,22 @@
         }
       }
     },
-    "默认排序": {},
+    "默认排序": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Default Order"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "默认排序"
+          }
+        }
+      }
+    },
     "导入 %@ 成功，请在\\": {
       "localizations": {
         "en": {

@@ -1682,7 +1682,22 @@
         }
       }
     },
-    "排序方式": {},
+    "排序方式": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "排序方式"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "排序方式"
+          }
+        }
+      }
+    },
     "描边": {
       "localizations": {
         "en": {
@@ -1747,7 +1762,22 @@
         }
       }
     },
-    "搜索失败，请重试": {},
+    "搜索失败，请重试": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜索失败，请重试"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜索失败，请重试"
+          }
+        }
+      }
+    },
     "搜索弹幕": {
       "localizations": {
         "en": {
@@ -1892,7 +1922,22 @@
         }
       }
     },
-    "文件名": {},
+    "文件名": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File Name"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文件名"
+          }
+        }
+      }
+    },
     "文件来源": {
       "localizations": {
         "en": {
@@ -1909,7 +1954,22 @@
         }
       }
     },
-    "文件类型": {},
+    "文件类型": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File Type"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文件类型"
+          }
+        }
+      }
+    },
     "新番时间表": {
       "localizations": {
         "en": {
@@ -2086,7 +2146,22 @@
         }
       }
     },
-    "未找到相关番剧": {},
+    "未找到相关番剧": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未找到相关番剧"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未找到相关番剧"
+          }
+        }
+      }
+    },
     "未指定": {
       "localizations": {
         "en": {
@@ -2521,7 +2596,22 @@
         }
       }
     },
-    "确定要删除该记录吗？": {},
+    "确定要删除该记录吗？": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "确定要删除该记录吗？"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "确定要删除该记录吗？"
+          }
+        }
+      }
+    },
     "确定要退出播放吗？": {
       "localizations": {
         "en": {
@@ -2538,7 +2628,22 @@
         }
       }
     },
-    "确认删除": {},
+    "确认删除": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "确认删除"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "确认删除"
+          }
+        }
+      }
+    },
     "禁用": {
       "localizations": {
         "en": {
@@ -2923,7 +3028,22 @@
         }
       }
     },
-    "路径": {},
+    "路径": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Path"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "路径"
+          }
+        }
+      }
+    },
     "跳转": {
       "localizations": {
         "en": {
@@ -3084,7 +3204,22 @@
         }
       }
     },
-    "选择一个 IP 地址连接": {},
+    "选择一个 IP 地址连接": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择一个 IP 地址连接"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择一个 IP 地址连接"
+          }
+        }
+      }
+    },
     "选择弹幕匹配": {
       "localizations": {
         "en": {
@@ -3229,7 +3364,22 @@
         }
       }
     },
-    "集数": {},
+    "集数": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Episode"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "集数"
+          }
+        }
+      }
+    },
     "需要指定视频弹幕列表，才能发弹幕哟~": {
       "localizations": {
         "en": {
@@ -3326,7 +3476,22 @@
         }
       }
     },
-    "默认排序": {}
+    "默认排序": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Default Order"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "默认排序"
+          }
+        }
+      }
+    }
   },
   "version": "1.1"
 }
