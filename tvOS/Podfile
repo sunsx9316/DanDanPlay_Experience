@@ -6,7 +6,7 @@ target 'AniXPlayer' do
   use_frameworks!
   use_modular_headers!
 
-  pod 'VLCKit', :path => '../Share/VLCKit'
+  # pod 'VLCKit', :path => '../Share/VLCKit'
 end
 
 post_install do |installer|

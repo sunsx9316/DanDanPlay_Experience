@@ -184,6 +184,8 @@
 		897CF529262F309D00CC297A /* PlayerSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897CF528262F309D00CC297A /* PlayerSettingViewController.swift */; };
 		897CF52D262F30D200CC297A /* DanmakuSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897CF52C262F30D200CC297A /* DanmakuSettingViewController.swift */; };
 		897F9B602822B2EA00130613 /* SnapshotView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897F9B5F2822B2EA00130613 /* SnapshotView.swift */; };
+		898DF7C22FD493AA00675377 /* ANXLog in Frameworks */ = {isa = PBXBuildFile; productRef = 898DF7C12FD493AA00675377 /* ANXLog */; };
+		898DF7C52FD4945400675377 /* ANXLog in Frameworks */ = {isa = PBXBuildFile; productRef = 898DF7C42FD4945400675377 /* ANXLog */; };
 		89945FDD28C8E7C6009AC640 /* GotoLastWatchPointView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89945FDC28C8E7C6009AC640 /* GotoLastWatchPointView.swift */; };
 		8994607628CC6CE1009AC640 /* HttpServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8994607528CC6CE1009AC640 /* HttpServer.swift */; };
 		899A11BE2A18C0A5009B2953 /* TitleDetailOpertationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 899A11BC2A18C0A5009B2953 /* TitleDetailOpertationTableViewCell.swift */; };
@@ -212,6 +214,9 @@
 		89A689802C42E1D3002B7CA3 /* FavoriteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A6897D2C42E1D3002B7CA3 /* FavoriteViewController.swift */; };
 		89A689812C42E1D3002B7CA3 /* FavoriteCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A6897E2C42E1D3002B7CA3 /* FavoriteCollectionViewCell.swift */; };
 		89A689882C42E443002B7CA3 /* TimelineItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A689852C42E443002B7CA3 /* TimelineItemCollectionViewCell.swift */; };
+		89A9E74E2FD49FEC0019D4C4 /* ANXLog in Frameworks */ = {isa = PBXBuildFile; productRef = 89A9E74D2FD49FEC0019D4C4 /* ANXLog */; };
+		89A9E7542FD4A5860019D4C4 /* VLCKit in Frameworks */ = {isa = PBXBuildFile; productRef = 89A9E7532FD4A5860019D4C4 /* VLCKit */; };
+		89A9E75D2FD4ACAA0019D4C4 /* ANXLog in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 89C0D1822FD485CF008DFE68 /* ANXLog */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		89ABCDEF2677A1B000000002 /* ServerHostListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89ABCDEF2677A1B000000001 /* ServerHostListViewController.swift */; };
 		89AF9BFE2631C1740037A133 /* SwitchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AF9BFC2631C1740037A133 /* SwitchTableViewCell.swift */; };
 		89AF9C032631C2680037A133 /* StepTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89AF9C012631C2680037A133 /* StepTableViewCell.swift */; };
@@ -221,6 +226,8 @@
 		89B4B445272484FE00FB1BF5 /* SpeedUpView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B4B444272484FE00FB1BF5 /* SpeedUpView.swift */; };
 		89B7EA4C2C9B120100527B84 /* DanmakuRender in Frameworks */ = {isa = PBXBuildFile; productRef = 89B7EA4B2C9B120100527B84 /* DanmakuRender */; };
 		89B7EA4F2C9B141100527B84 /* DanmakuRender in Frameworks */ = {isa = PBXBuildFile; productRef = 89B7EA4E2C9B141100527B84 /* DanmakuRender */; };
+		89C0D1832FD485CF008DFE68 /* ANXLog in Frameworks */ = {isa = PBXBuildFile; productRef = 89C0D1822FD485CF008DFE68 /* ANXLog */; };
+		89C0D1882FD49030008DFE68 /* ANXLogHelper+Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C0D1872FD49030008DFE68 /* ANXLogHelper+Swift.swift */; };
 		89C325A72C6A4F16002E2487 /* WebDavConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C325A62C6A4F16002E2487 /* WebDavConnectSvrViewController.swift */; };
 		89C325AC2C6FB768002E2487 /* TitleMoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C325AA2C6FB767002E2487 /* TitleMoreTableViewCell.swift */; };
 		89C325AF2C6FC01C002E2487 /* TitleTableViewHeaderFooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C325AE2C6FC01C002E2487 /* TitleTableViewHeaderFooterView.swift */; };
@@ -270,6 +277,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				0B5CD34C100D4654A1569260 /* AMSMB2 in Embed Frameworks */,
+				89A9E75D2FD4ACAA0019D4C4 /* ANXLog in Embed Frameworks */,
 				895A7FFC2FCB30C200A997B8 /* MPVFramework.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -484,6 +492,7 @@
 		89AF9C092631D7120037A133 /* SheetTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SheetTableViewCell.swift; sourceTree = "<group>"; };
 		89AF9C0E26343BE70037A133 /* AutoScrollLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoScrollLabel.swift; sourceTree = "<group>"; };
 		89B4B444272484FE00FB1BF5 /* SpeedUpView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeedUpView.swift; sourceTree = "<group>"; };
+		89C0D1872FD49030008DFE68 /* ANXLogHelper+Swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ANXLogHelper+Swift.swift"; sourceTree = "<group>"; };
 		89C325A62C6A4F16002E2487 /* WebDavConnectSvrViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebDavConnectSvrViewController.swift; sourceTree = "<group>"; };
 		89C325AA2C6FB767002E2487 /* TitleMoreTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TitleMoreTableViewCell.swift; sourceTree = "<group>"; };
 		89C325AE2C6FC01C002E2487 /* TitleTableViewHeaderFooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleTableViewHeaderFooterView.swift; sourceTree = "<group>"; };
@@ -521,15 +530,20 @@
 				895A7FFB2FCB30C200A997B8 /* MPVFramework.framework in Frameworks */,
 				6F969714544C3EBD7E920F21 /* Pods_AniXPlayer.framework in Frameworks */,
 				89B7EA4F2C9B141100527B84 /* DanmakuRender in Frameworks */,
+				89C0D1832FD485CF008DFE68 /* ANXLog in Frameworks */,
 				89B7EA4C2C9B120100527B84 /* DanmakuRender in Frameworks */,
 				89D148722D44E2B000E7FDF5 /* YYCategories in Frameworks */,
 				8953D0292C99E3D8003EF386 /* RxSwift in Frameworks */,
+				898DF7C22FD493AA00675377 /* ANXLog in Frameworks */,
 				895A7FAB2FC7518500A997B8 /* GCDWebServer in Frameworks */,
 				8953D0352C99E4C7003EF386 /* MBProgressHUD in Frameworks */,
 				8953D0212C99E306003EF386 /* Alamofire in Frameworks */,
 				895A7FAD2FC7518500A997B8 /* GCDWebUploader in Frameworks */,
+				89A9E74E2FD49FEC0019D4C4 /* ANXLog in Frameworks */,
+				89A9E7542FD4A5860019D4C4 /* VLCKit in Frameworks */,
 				8955996B2FCB645F007F52E0 /* Kingfisher in Frameworks */,
 				8953D0272C99E3D8003EF386 /* RxCocoa in Frameworks */,
+				898DF7C52FD4945400675377 /* ANXLog in Frameworks */,
 				8953D0322C99E48A003EF386 /* SnapKit in Frameworks */,
 				89FFD1292D44E65000428206 /* YYCategories in Frameworks */,
 				895A7FB02FC7519D00A997B8 /* FilesProvider in Frameworks */,
@@ -1092,6 +1106,7 @@
 		8925B8622CA7E4C3001A8388 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				89C0D1872FD49030008DFE68 /* ANXLogHelper+Swift.swift */,
 				8931A9202F7C297B00125F69 /* Localize.swift */,
 				8925B85A2CA7E4C3001A8388 /* ANXColor+Utils.swift */,
 				8925B85B2CA7E4C3001A8388 /* AppInfoHelper.swift */,
@@ -1481,6 +1496,11 @@
 				895A7FAF2FC7519D00A997B8 /* FilesProvider */,
 				895A7FC32FC75A7100A997B8 /* AMSMB2 */,
 				8955996A2FCB645F007F52E0 /* Kingfisher */,
+				89C0D1822FD485CF008DFE68 /* ANXLog */,
+				898DF7C12FD493AA00675377 /* ANXLog */,
+				898DF7C42FD4945400675377 /* ANXLog */,
+				89A9E74D2FD49FEC0019D4C4 /* ANXLog */,
+				89A9E7532FD4A5860019D4C4 /* VLCKit */,
 			);
 			productName = AniXPlayer;
 			productReference = 890DF6C926160826002D8AE5 /* AniXPlayer.app */;
@@ -1552,6 +1572,8 @@
 				895A7FAE2FC7519D00A997B8 /* XCRemoteSwiftPackageReference "FileProvider" */,
 				895A7FC22FC75A7100A997B8 /* XCRemoteSwiftPackageReference "AMSMB2" */,
 				895599692FCB645F007F52E0 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				89A9E74C2FD49FEC0019D4C4 /* XCRemoteSwiftPackageReference "ANXLog" */,
+				89A9E7522FD4A5860019D4C4 /* XCRemoteSwiftPackageReference "VLCKit" */,
 			);
 			productRefGroup = 890DF6CA26160826002D8AE5 /* Products */;
 			projectDirPath = "";
@@ -1753,6 +1775,7 @@
 				890DF77026160B3E002D8AE5 /* FileTableViewCell.swift in Sources */,
 				8CC5E781D18C4C83A9F2A6BE /* FolderProgressCell.swift in Sources */,
 				890DF6FA26160A36002D8AE5 /* RefreshHeader.swift in Sources */,
+				89C0D1882FD49030008DFE68 /* ANXLogHelper+Swift.swift in Sources */,
 				8925B9632CAD4C12001A8388 /* SetMainColorViewController.swift in Sources */,
 				890DF75226160B1B002D8AE5 /* UIDevice+Helper.swift in Sources */,
 				89A689662C425C70002B7CA3 /* LoginViewController.swift in Sources */,
@@ -2311,6 +2334,22 @@
 				minimumVersion = 0.41.0;
 			};
 		};
+		89A9E74C2FD49FEC0019D4C4 /* XCRemoteSwiftPackageReference "ANXLog" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sunsx9316/ANXLog";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.3;
+			};
+		};
+		89A9E7522FD4A5860019D4C4 /* XCRemoteSwiftPackageReference "VLCKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sunsx9316/VLCKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		89B7EA4D2C9B141100527B84 /* XCRemoteSwiftPackageReference "DanmakuRender-Swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sunsx9316/DanmakuRender-Swift";
@@ -2405,6 +2444,24 @@
 			package = 895A7FC22FC75A7100A997B8 /* XCRemoteSwiftPackageReference "AMSMB2" */;
 			productName = AMSMB2;
 		};
+		898DF7C12FD493AA00675377 /* ANXLog */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ANXLog;
+		};
+		898DF7C42FD4945400675377 /* ANXLog */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ANXLog;
+		};
+		89A9E74D2FD49FEC0019D4C4 /* ANXLog */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 89A9E74C2FD49FEC0019D4C4 /* XCRemoteSwiftPackageReference "ANXLog" */;
+			productName = ANXLog;
+		};
+		89A9E7532FD4A5860019D4C4 /* VLCKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 89A9E7522FD4A5860019D4C4 /* XCRemoteSwiftPackageReference "VLCKit" */;
+			productName = VLCKit;
+		};
 		89B7EA4B2C9B120100527B84 /* DanmakuRender */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = DanmakuRender;
@@ -2413,6 +2470,10 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 89B7EA4D2C9B141100527B84 /* XCRemoteSwiftPackageReference "DanmakuRender-Swift" */;
 			productName = DanmakuRender;
+		};
+		89C0D1822FD485CF008DFE68 /* ANXLog */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ANXLog;
 		};
 		89D148712D44E2B000E7FDF5 /* YYCategories */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -3,12 +3,11 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		1D44D17727674746ACA34E84 /* ServerHostListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F3AEACC0C2438C9D6162A6 /* ServerHostListViewController.swift */; };
-		6E5BA0B875CD3F8D87095865 /* FontHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1725A1F0682EB4BD1FF6D457 /* FontHelper.swift */; };
 		8904475E2901A6E20088886B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8904475D2901A6E20088886B /* GoogleService-Info.plist */; };
 		8917059328CF6CF10075ECD9 /* PlayerUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8917058E28CF6CF10075ECD9 /* PlayerUIView.swift */; };
 		8917059428CF6CF10075ECD9 /* PlayerUITopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8917058F28CF6CF10075ECD9 /* PlayerUITopView.swift */; };
@@ -109,7 +108,6 @@
 		8953D00B2C9948A5003EF386 /* FilterDanmakuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8953D00A2C9948A5003EF386 /* FilterDanmakuViewController.swift */; };
 		8953D00F2C994A91003EF386 /* FilterDanmakuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8953D00D2C994A91003EF386 /* FilterDanmakuTableViewCell.swift */; };
 		8953D0132C99DF08003EF386 /* FilterDanmakuTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8953D0122C99DF08003EF386 /* FilterDanmakuTableViewCell.xib */; };
-		8953D0162C99E191003EF386 /* DanmakuRender in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D0152C99E191003EF386 /* DanmakuRender */; };
 		897292292C2FB1020016CA1F /* NSImage+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 897291EA2C2FB1020016CA1F /* NSImage+Utils.swift */; };
 		89945FEB28CA3BAE009AC640 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89945FEA28CA3BAE009AC640 /* AppDelegate.swift */; };
 		89945FED28CA3BAE009AC640 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89945FEC28CA3BAE009AC640 /* PlayerViewController.swift */; };
@@ -147,10 +145,18 @@
 		89A1C67028D5D3E100DC514E /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A1C66F28D5D3E100DC514E /* main.swift */; };
 		89A1C67228D5DA8F00DC514E /* InfoPlistUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A1C67128D5DA8F00DC514E /* InfoPlistUtils.swift */; };
 		89A1C68F28D5E38500DC514E /* NSApp+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A1C68E28D5E38500DC514E /* NSApp+Utils.swift */; };
+		89A9E7632FD4AF0A0019D4C4 /* VLCKit in Frameworks */ = {isa = PBXBuildFile; productRef = 89A9E7622FD4AF0A0019D4C4 /* VLCKit */; };
+		89A9E7662FD4AF200019D4C4 /* ANXLog in Frameworks */ = {isa = PBXBuildFile; productRef = 89A9E7652FD4AF200019D4C4 /* ANXLog */; };
+		89A9E7682FD4AFDE0019D4C4 /* ANXLogHelper+Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A9E7672FD4AFDE0019D4C4 /* ANXLogHelper+Swift.swift */; };
+		89A9E76F2FD4B05B0019D4C4 /* ANXLog in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 89A9E7652FD4AF200019D4C4 /* ANXLog */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		89A9E7752FD4B25E0019D4C4 /* NSView+HUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A9E7712FD4B25E0019D4C4 /* NSView+HUD.swift */; };
+		89A9E7762FD4B25E0019D4C4 /* YRKSpinningProgressIndicatorLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A9E7732FD4B25E0019D4C4 /* YRKSpinningProgressIndicatorLayer.swift */; };
+		89A9E7772FD4B25E0019D4C4 /* ProgressHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A9E7722FD4B25E0019D4C4 /* ProgressHUD.swift */; };
 		89B7EA522C9B14C700527B84 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 89B7EA512C9B14C700527B84 /* SnapKit */; };
 		89B7EA552C9B14DA00527B84 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = 89B7EA542C9B14DA00527B84 /* Alamofire */; };
 		89B7EA582C9B14F500527B84 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = 89B7EA572C9B14F500527B84 /* RxCocoa */; };
 		89B7EA5A2C9B14F500527B84 /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 89B7EA592C9B14F500527B84 /* RxSwift */; };
+		89C0D1802FD46072008DFE68 /* DanmakuRender in Frameworks */ = {isa = PBXBuildFile; productRef = 89C0D17F2FD46072008DFE68 /* DanmakuRender */; };
 		89C325A22C61229F002E2487 /* AboutViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C325A02C61229F002E2487 /* AboutViewController.swift */; };
 		89C325A32C61229F002E2487 /* AboutViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 89C325A12C61229F002E2487 /* AboutViewController.xib */; };
 		89C325A52C612923002E2487 /* AppVersionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89C325A42C612923002E2487 /* AppVersionModel.swift */; };
@@ -232,6 +238,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				89DADA3F2FD0755B00C71A33 /* AMSMB2 in Embed Frameworks */,
+				89A9E76F2FD4B05B0019D4C4 /* ANXLog in Embed Frameworks */,
 				89DAD9E32FD05C3A00C71A33 /* MPVFramework.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -240,7 +247,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1725A1F0682EB4BD1FF6D457 /* FontHelper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FontHelper.swift; sourceTree = "<group>"; };
 		2F82727D2DE868C53427D0F5 /* Pods_AniXPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AniXPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B0EEE5086C5A5898ED1ED6D /* Pods-AniXPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.release.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.release.xcconfig"; sourceTree = "<group>"; };
 		5B03693BC2791417EF80AE28 /* Pods-AniXPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.debug.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.debug.xcconfig"; sourceTree = "<group>"; };
@@ -383,6 +389,10 @@
 		89A1C66F28D5D3E100DC514E /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		89A1C67128D5DA8F00DC514E /* InfoPlistUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoPlistUtils.swift; sourceTree = "<group>"; };
 		89A1C68E28D5E38500DC514E /* NSApp+Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSApp+Utils.swift"; sourceTree = "<group>"; };
+		89A9E7672FD4AFDE0019D4C4 /* ANXLogHelper+Swift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ANXLogHelper+Swift.swift"; sourceTree = "<group>"; };
+		89A9E7712FD4B25E0019D4C4 /* NSView+HUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSView+HUD.swift"; sourceTree = "<group>"; };
+		89A9E7722FD4B25E0019D4C4 /* ProgressHUD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressHUD.swift; sourceTree = "<group>"; };
+		89A9E7732FD4B25E0019D4C4 /* YRKSpinningProgressIndicatorLayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YRKSpinningProgressIndicatorLayer.swift; sourceTree = "<group>"; };
 		89C325A02C61229F002E2487 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		89C325A12C61229F002E2487 /* AboutViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AboutViewController.xib; sourceTree = "<group>"; };
 		89C325A42C612923002E2487 /* AppVersionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersionModel.swift; sourceTree = "<group>"; };
@@ -429,18 +439,16 @@
 		FCBE01C58043461C971F7664 /* SetMainColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetMainColorViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		89DAD9DD2FD05C3A00C71A33 /* MPVFramework */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = MPVFramework; sourceTree = "<group>"; };
-/* End PBXFileSystemSynchronizedRootGroup section */
-
 /* Begin PBXFrameworksBuildPhase section */
 		89945FE428CA3BAE009AC640 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 				89DAD9CC2FD05A9100C71A33 /* AMSMB2 in Frameworks */,
+				89A9E7662FD4AF200019D4C4 /* ANXLog in Frameworks */,
 				89DAD9D22FD05ADE00C71A33 /* GCDWebDAVServer in Frameworks */,
 				89DAD9D42FD05ADE00C71A33 /* GCDWebServer in Frameworks */,
+				89A9E7632FD4AF0A0019D4C4 /* VLCKit in Frameworks */,
 				89DADA082FD05D1100C71A33 /* MPVFramework.framework in Frameworks */,
 				8994E2442DB69B1300765AF6 /* YYCategories in Frameworks */,
 				89B7EA5A2C9B14F500527B84 /* RxSwift in Frameworks */,
@@ -452,7 +460,7 @@
 				89DAD9E22FD05C3A00C71A33 /* MPVFramework.framework in Frameworks */,
 				89DAD9D62FD05ADE00C71A33 /* GCDWebUploader in Frameworks */,
 				89B7EA582C9B14F500527B84 /* RxCocoa in Frameworks */,
-				8953D0162C99E191003EF386 /* DanmakuRender in Frameworks */,
+				89C0D1802FD46072008DFE68 /* DanmakuRender in Frameworks */,
 				F7CC679A78A31AB0A704CFA9 /* Pods_AniXPlayer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -468,14 +476,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		15A37EF85D790408C85F56C4 /* Share */ = {
-			isa = PBXGroup;
-			children = (
-				B44CB296A095F9C2DDDB9C3A /* CocoaShare */,
-			);
-			path = Share;
-			sourceTree = "<group>";
-		};
 		3C212790FE434105204253ED /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -483,14 +483,6 @@
 				3B0EEE5086C5A5898ED1ED6D /* Pods-AniXPlayer.release.xcconfig */,
 			);
 			path = Pods;
-			sourceTree = "<group>";
-		};
-		4428FAC6B1290F58EACC721E /* Utils */ = {
-			isa = PBXGroup;
-			children = (
-				1725A1F0682EB4BD1FF6D457 /* FontHelper.swift */,
-			);
-			path = Utils;
 			sourceTree = "<group>";
 		};
 		8917058D28CF6CF10075ECD9 /* PlayerUI */ = {
@@ -749,6 +741,7 @@
 			children = (
 				8925B9092CA7F901001A8388 /* ANXColor+Utils.swift */,
 				8925B90A2CA7F901001A8388 /* AppInfoHelper.swift */,
+				89A9E7672FD4AFDE0019D4C4 /* ANXLogHelper+Swift.swift */,
 				8925B90B2CA7F901001A8388 /* DateFormatter+Helper.swift.swift */,
 				8925B90C2CA7F901001A8388 /* Decodable+Utils.swift */,
 				89DADA6D2FD4424200C71A33 /* FontHelper.swift */,
@@ -826,11 +819,9 @@
 			isa = PBXGroup;
 			children = (
 				89945FE928CA3BAE009AC640 /* AniXPlayer */,
-				89DAD9DD2FD05C3A00C71A33 /* MPVFramework */,
 				89945FE828CA3BAE009AC640 /* Products */,
 				3C212790FE434105204253ED /* Pods */,
 				E8141592C1C6FA59A9A560BE /* Frameworks */,
-				F7D51242805C76A056D590B6 /* .. */,
 			);
 			sourceTree = "<group>";
 		};
@@ -862,8 +853,9 @@
 				899461E328CC8A17009AC640 /* Match */,
 				899461FB28CCD8A5009AC640 /* Search */,
 				89DADA272FD0600200C71A33 /* Files */,
-				89945FEE28CA3BAF009AC640 /* Assets.xcassets */,
+				89A9E7702FD4B2390019D4C4 /* Vendor */,
 				89945FF328CA3BAF009AC640 /* AniXPlayer.entitlements */,
+				89945FEE28CA3BAF009AC640 /* Assets.xcassets */,
 				89DADA0D2FD05F2300C71A33 /* Localizable.xcstrings */,
 			);
 			path = AniXPlayer;
@@ -998,6 +990,24 @@
 				89A1C5FD28D4C32300DC514E /* PlayerListTableViewCell.swift */,
 			);
 			path = PlayerList;
+			sourceTree = "<group>";
+		};
+		89A9E7702FD4B2390019D4C4 /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+				89A9E7742FD4B25E0019D4C4 /* ProgressHUD */,
+			);
+			path = Vendor;
+			sourceTree = "<group>";
+		};
+		89A9E7742FD4B25E0019D4C4 /* ProgressHUD */ = {
+			isa = PBXGroup;
+			children = (
+				89A9E7712FD4B25E0019D4C4 /* NSView+HUD.swift */,
+				89A9E7722FD4B25E0019D4C4 /* ProgressHUD.swift */,
+				89A9E7732FD4B25E0019D4C4 /* YRKSpinningProgressIndicatorLayer.swift */,
+			);
+			path = ProgressHUD;
 			sourceTree = "<group>";
 		};
 		89C3244C2C5F8FDE002E2487 /* TableViewCell */ = {
@@ -1151,28 +1161,12 @@
 			path = Files;
 			sourceTree = "<group>";
 		};
-		B44CB296A095F9C2DDDB9C3A /* CocoaShare */ = {
-			isa = PBXGroup;
-			children = (
-				4428FAC6B1290F58EACC721E /* Utils */,
-			);
-			path = CocoaShare;
-			sourceTree = "<group>";
-		};
 		E8141592C1C6FA59A9A560BE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				2F82727D2DE868C53427D0F5 /* Pods_AniXPlayer.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		F7D51242805C76A056D590B6 /* .. */ = {
-			isa = PBXGroup;
-			children = (
-				15A37EF85D790408C85F56C4 /* Share */,
-			);
-			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1208,7 +1202,6 @@
 			);
 			name = AniXPlayer;
 			packageProductDependencies = (
-				8953D0152C99E191003EF386 /* DanmakuRender */,
 				89B7EA512C9B14C700527B84 /* SnapKit */,
 				89B7EA542C9B14DA00527B84 /* Alamofire */,
 				89B7EA572C9B14F500527B84 /* RxCocoa */,
@@ -1221,6 +1214,9 @@
 				89DAD9D12FD05ADE00C71A33 /* GCDWebDAVServer */,
 				89DAD9D32FD05ADE00C71A33 /* GCDWebServer */,
 				89DAD9D52FD05ADE00C71A33 /* GCDWebUploader */,
+				89C0D17F2FD46072008DFE68 /* DanmakuRender */,
+				89A9E7622FD4AF0A0019D4C4 /* VLCKit */,
+				89A9E7652FD4AF200019D4C4 /* ANXLog */,
 			);
 			productName = AniXPlayer;
 			productReference = 89945FE728CA3BAE009AC640 /* AniXPlayer.app */;
@@ -1238,9 +1234,6 @@
 			buildRules = (
 			);
 			dependencies = (
-			);
-			fileSystemSynchronizedGroups = (
-				89DAD9DD2FD05C3A00C71A33 /* MPVFramework */,
 			);
 			name = MPVFramework;
 			packageProductDependencies = (
@@ -1279,7 +1272,6 @@
 			);
 			mainGroup = 89945FDE28CA3BAE009AC640;
 			packageReferences = (
-				8953D0142C99E191003EF386 /* XCRemoteSwiftPackageReference "DanmakuRender-Swift" */,
 				89B7EA502C9B14C700527B84 /* XCRemoteSwiftPackageReference "SnapKit" */,
 				89B7EA532C9B14DA00527B84 /* XCRemoteSwiftPackageReference "Alamofire" */,
 				89B7EA562C9B14F500527B84 /* XCRemoteSwiftPackageReference "RxSwift" */,
@@ -1289,6 +1281,9 @@
 				89DAD9CD2FD05AAE00C71A33 /* XCRemoteSwiftPackageReference "FileProvider" */,
 				89DAD9D02FD05ADE00C71A33 /* XCRemoteSwiftPackageReference "GCDWebServer" */,
 				89DADA052FD05D0200C71A33 /* XCRemoteSwiftPackageReference "MPVKit" */,
+				89C0D17E2FD46072008DFE68 /* XCRemoteSwiftPackageReference "DanmakuRender-Swift" */,
+				89A9E7612FD4AF0A0019D4C4 /* XCRemoteSwiftPackageReference "VLCKit" */,
+				89A9E7642FD4AF200019D4C4 /* XCRemoteSwiftPackageReference "ANXLog" */,
 			);
 			productRefGroup = 89945FE828CA3BAE009AC640 /* Products */;
 			projectDirPath = "";
@@ -1438,6 +1433,9 @@
 				8925B9222CA7F901001A8388 /* Comment.swift in Sources */,
 				8925B9232CA7F901001A8388 /* Danmaku.swift in Sources */,
 				8925B9242CA7F901001A8388 /* Favorite.swift in Sources */,
+				89A9E7752FD4B25E0019D4C4 /* NSView+HUD.swift in Sources */,
+				89A9E7762FD4B25E0019D4C4 /* YRKSpinningProgressIndicatorLayer.swift in Sources */,
+				89A9E7772FD4B25E0019D4C4 /* ProgressHUD.swift in Sources */,
 				8925B9252CA7F901001A8388 /* IPModel.swift in Sources */,
 				8925B9262CA7F901001A8388 /* MediaThumbnailer.swift in Sources */,
 				8925B9272CA7F901001A8388 /* PlayerDanmakuProducer.swift in Sources */,
@@ -1455,6 +1453,7 @@
 				8925B92F2CA7F901001A8388 /* SMBServiceBrowser.swift in Sources */,
 				8925B9302CA7F901001A8388 /* FavoriteNetworkHandle.swift in Sources */,
 				8925B9322CA7F901001A8388 /* ANXColor+Utils.swift in Sources */,
+				89A9E7682FD4AFDE0019D4C4 /* ANXLogHelper+Swift.swift in Sources */,
 				8925B9332CA7F901001A8388 /* NSNotification+Helper.swift in Sources */,
 				8925B9342CA7F901001A8388 /* DateFormatter+Helper.swift.swift in Sources */,
 				8925B9352CA7F901001A8388 /* FTPFile.swift in Sources */,
@@ -1562,7 +1561,6 @@
 				89A1C5EF28D38B0300DC514E /* NSMenuItem+Utils.swift in Sources */,
 				899461F428CCC278009AC640 /* MatchsCell.swift in Sources */,
 				8994622428CCF088009AC640 /* GotoLastWatchPointView.swift in Sources */,
-				6E5BA0B875CD3F8D87095865 /* FontHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1929,20 +1927,28 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		8953D0142C99E191003EF386 /* XCRemoteSwiftPackageReference "DanmakuRender-Swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sunsx9316/DanmakuRender-Swift";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.6.1;
-			};
-		};
 		8994E2452DB69BB600765AF6 /* XCRemoteSwiftPackageReference "YYCategories" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sunsx9316/YYCategories";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.0.7;
+			};
+		};
+		89A9E7612FD4AF0A0019D4C4 /* XCRemoteSwiftPackageReference "VLCKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sunsx9316/VLCKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
+		89A9E7642FD4AF200019D4C4 /* XCRemoteSwiftPackageReference "ANXLog" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sunsx9316/ANXLog.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.3;
 			};
 		};
 		89B7EA502C9B14C700527B84 /* XCRemoteSwiftPackageReference "SnapKit" */ = {
@@ -1967,6 +1973,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 6.7.1;
+			};
+		};
+		89C0D17E2FD46072008DFE68 /* XCRemoteSwiftPackageReference "DanmakuRender-Swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sunsx9316/DanmakuRender-Swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.6.1;
 			};
 		};
 		89DAD9C72FD059F700C71A33 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
@@ -2012,11 +2026,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		8953D0152C99E191003EF386 /* DanmakuRender */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 8953D0142C99E191003EF386 /* XCRemoteSwiftPackageReference "DanmakuRender-Swift" */;
-			productName = DanmakuRender;
-		};
 		8994E2432DB69B1300765AF6 /* YYCategories */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = YYCategories;
@@ -2025,6 +2034,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8994E2452DB69BB600765AF6 /* XCRemoteSwiftPackageReference "YYCategories" */;
 			productName = YYCategories;
+		};
+		89A9E7622FD4AF0A0019D4C4 /* VLCKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 89A9E7612FD4AF0A0019D4C4 /* XCRemoteSwiftPackageReference "VLCKit" */;
+			productName = VLCKit;
+		};
+		89A9E7652FD4AF200019D4C4 /* ANXLog */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 89A9E7642FD4AF200019D4C4 /* XCRemoteSwiftPackageReference "ANXLog" */;
+			productName = ANXLog;
 		};
 		89B7EA512C9B14C700527B84 /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -2045,6 +2064,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 89B7EA562C9B14F500527B84 /* XCRemoteSwiftPackageReference "RxSwift" */;
 			productName = RxSwift;
+		};
+		89C0D17F2FD46072008DFE68 /* DanmakuRender */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 89C0D17E2FD46072008DFE68 /* XCRemoteSwiftPackageReference "DanmakuRender-Swift" */;
+			productName = DanmakuRender;
 		};
 		89DAD9C82FD059F700C71A33 /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;

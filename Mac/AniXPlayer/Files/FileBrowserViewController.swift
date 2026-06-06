@@ -7,7 +7,7 @@
 
 import Cocoa
 import SnapKit
-import ProgressHUD
+
 import RxSwift
 
 class FileBrowserViewController: ViewController, NSTableViewDelegate, NSTableViewDataSource {

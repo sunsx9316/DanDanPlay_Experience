@@ -9,12 +9,11 @@ target 'AniXPlayer' do
   use_modular_headers!
 
   
-  pod 'MMKV'
-  pod 'ProgressHUD', :path => 'LocalPods/ProgressHUD'
+  #pod 'ProgressHUD', :path => 'LocalPods/ProgressHUD'
   pod 'FirebaseCrashlytics'
-  pod 'VLCKit', :path => '../Share/VLCKit'
-  pod 'ANXLog', :path => '../Share/ANXLog'
-  
+  # pod 'MMKV'
+  # pod 'VLCKit', :path => '../Share/VLCKit'
+  # pod 'ANXLog', :path => '../Share/ANXLog'
   # pod 'SnapKit'
   # pod 'DanmakuRender-Swift'
   # pod 'Alamofire'

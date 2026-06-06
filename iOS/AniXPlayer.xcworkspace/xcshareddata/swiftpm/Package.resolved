@@ -1,5 +1,5 @@
 {
-  "originHash" : "82d449382274cd7e1c548d694edf73e34f916e63f834f1ae8547a3039c5c1531",
+  "originHash" : "63101d8302deacdff57c9b93ad79419e5766b0f83f2bde8131ebe5208e8dca51",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -17,6 +17,15 @@
       "state" : {
         "revision" : "1726aaaf7adf63d7d1d2a0c5d1b0e635028215c0",
         "version" : "4.0.3"
+      }
+    },
+    {
+      "identity" : "anxlog",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sunsx9316/ANXLog",
+      "state" : {
+        "revision" : "d1dc7238b124938eec41eb199598cd2cceb4e3c9",
+        "version" : "1.0.3"
       }
     },
     {
@@ -116,6 +125,15 @@
       "state" : {
         "revision" : "2842e6e84e82eb9a8dac0100ca90d9444b0307f4",
         "version" : "5.7.1"
+      }
+    },
+    {
+      "identity" : "vlckit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sunsx9316/VLCKit.git",
+      "state" : {
+        "revision" : "1ab54a2da3ab4da17f2a080d7aafefdc9013cd1e",
+        "version" : "1.0.0"
       }
     },
     {

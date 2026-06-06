@@ -6,7 +6,7 @@
 //
 
 import Cocoa
-import ProgressHUD
+
 
 protocol SearchViewControllerDelegate: AnyObject {
     func searchViewController(_ searchViewController: SearchViewController, didMatched matchInfo: MatchInfo)

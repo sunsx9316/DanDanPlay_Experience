@@ -171,6 +171,10 @@
 		895A7F732FC602C900A997B8 /* SubtitleColorPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7F722FC602C900A997B8 /* SubtitleColorPickerViewController.swift */; };
 		895A7F752FC602D900A997B8 /* ColorPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7F742FC602D900A997B8 /* ColorPickerView.swift */; };
 		895A7F772FC6033100A997B8 /* MPVKit in Frameworks */ = {isa = PBXBuildFile; productRef = 895A7F762FC6033100A997B8 /* MPVKit */; };
+		89A9E7562FD4A6380019D4C4 /* FontHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A9E7552FD4A6380019D4C4 /* FontHelper.swift */; };
+		89A9E7592FD4A65F0019D4C4 /* ANXLog in Frameworks */ = {isa = PBXBuildFile; productRef = 89A9E7582FD4A65F0019D4C4 /* ANXLog */; };
+		89A9E75C2FD4A8D80019D4C4 /* VLCKit in Frameworks */ = {isa = PBXBuildFile; productRef = 89A9E75B2FD4A8D80019D4C4 /* VLCKit */; };
+		89A9E75E2FD4AE9E0019D4C4 /* ANXLog in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 89A9E7582FD4A65F0019D4C4 /* ANXLog */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		89DADA602FD3E92100C71A33 /* MPVFrameRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA5F2FD3E92100C71A33 /* MPVFrameRenderer.swift */; };
 		89DADA682FD43F3300C71A33 /* FontHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA672FD43F3300C71A33 /* FontHelper.swift */; };
 		89FA76D82FCF261A00A65DAC /* AMSMB2 in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 895A7EF22FC5D54E00A997B8 /* AMSMB2 */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -231,6 +235,7 @@
 			dstSubfolderSpec = 10;
 			files = (
 				89FA76D82FCF261A00A65DAC /* AMSMB2 in Embed Frameworks */,
+				89A9E75E2FD4AE9E0019D4C4 /* ANXLog in Embed Frameworks */,
 				895A7F5F2FC5F82E00A997B8 /* MPVFramework.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -390,6 +395,7 @@
 		895A7F6C2FC5FBC300A997B8 /* SourceHanSansTC-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceHanSansTC-Regular.otf"; sourceTree = "<group>"; };
 		895A7F722FC602C900A997B8 /* SubtitleColorPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtitleColorPickerViewController.swift; sourceTree = "<group>"; };
 		895A7F742FC602D900A997B8 /* ColorPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerView.swift; sourceTree = "<group>"; };
+		89A9E7552FD4A6380019D4C4 /* FontHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontHelper.swift; sourceTree = "<group>"; };
 		89DADA5F2FD3E92100C71A33 /* MPVFrameRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVFrameRenderer.swift; sourceTree = "<group>"; };
 		89DADA672FD43F3300C71A33 /* FontHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontHelper.swift; sourceTree = "<group>"; };
 		8D4AF521DBEFBEC5CE876848 /* UITableView+Extension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UITableView+Extension.swift"; sourceTree = "<group>"; };
@@ -443,6 +449,7 @@
 				9B6D6957EDF3C3D3C360F371 /* RxSwift in Frameworks */,
 				7F99B155655AB99289366058 /* RxCocoa in Frameworks */,
 				A3496C02A5AEA2326D11242D /* MMKV in Frameworks */,
+				89A9E75C2FD4A8D80019D4C4 /* VLCKit in Frameworks */,
 				A1C0BE5CDFACA58D6BE045B3 /* GCDWebServer in Frameworks */,
 				F6D04BDCB732B91EC584BE02 /* GCDWebDAVServer in Frameworks */,
 				895A7EF32FC5D54E00A997B8 /* AMSMB2 in Frameworks */,
@@ -455,6 +462,7 @@
 				6B60904E446F32A55C83BEC8 /* Alamofire in Frameworks */,
 				8D7C10EF8EC94BD12BAF8486 /* DanmakuRender in Frameworks */,
 				E752BF63B6728DF5DDC56891 /* Pods_AniXPlayer.framework in Frameworks */,
+				89A9E7592FD4A65F0019D4C4 /* ANXLog in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -901,6 +909,7 @@
 			isa = PBXGroup;
 			children = (
 				895154282FC1DC2D00F75DB7 /* ANXColor+Utils.swift */,
+				89A9E7552FD4A6380019D4C4 /* FontHelper.swift */,
 				895154292FC1DC2D00F75DB7 /* AppInfoHelper.swift */,
 				8951542B2FC1DC2D00F75DB7 /* DateFormatter+Helper.swift.swift */,
 				8951542C2FC1DC2D00F75DB7 /* Decodable+Utils.swift */,
@@ -1210,7 +1219,6 @@
 				C09E36E3B164B14BC54B494E /* Resources */,
 				0A1CBCFEF5553BF3A7B4E878 /* Frameworks */,
 				895A7F622FC5F82E00A997B8 /* Embed Frameworks */,
-				F9682C50A3B4863BB58EBCF0 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -1232,6 +1240,8 @@
 				895A7EEF2FC5D09C00A997B8 /* FilesProvider */,
 				895A7EF22FC5D54E00A997B8 /* AMSMB2 */,
 				89FA76DA2FCF408300A65DAC /* YYCategories */,
+				89A9E7582FD4A65F0019D4C4 /* ANXLog */,
+				89A9E75B2FD4A8D80019D4C4 /* VLCKit */,
 			);
 			productName = AniXPlayer;
 			productReference = 36E50A45F15CE7B0252555F5 /* AniXPlayer.app */;
@@ -1298,6 +1308,8 @@
 				895A7EF12FC5D54E00A997B8 /* XCRemoteSwiftPackageReference "AMSMB2" */,
 				895A7F4C2FC5F2FF00A997B8 /* XCRemoteSwiftPackageReference "MPVKit" */,
 				89FA76D92FCF408300A65DAC /* XCRemoteSwiftPackageReference "YYCategories" */,
+				89A9E7572FD4A65F0019D4C4 /* XCRemoteSwiftPackageReference "ANXLog" */,
+				89A9E75A2FD4A8D80019D4C4 /* XCRemoteSwiftPackageReference "VLCKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2A5E88962AE499ECAFC960DB /* Products */;
@@ -1354,27 +1366,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F9682C50A3B4863BB58EBCF0 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1450,6 +1441,7 @@
 				895154572FC1DC2D00F75DB7 /* URL+Extension.swift in Sources */,
 				895A7EFE2FC5D5BA00A997B8 /* RemoteConnectViewController.swift in Sources */,
 				895A7EFF2FC5D5BA00A997B8 /* SMBLoginHistoryViewController.swift in Sources */,
+				89A9E7562FD4A6380019D4C4 /* FontHelper.swift in Sources */,
 				895A7F002FC5D5BA00A997B8 /* FTPConnectViewController.swift in Sources */,
 				895A7F012FC5D5BA00A997B8 /* WebDavLoginHistoryViewController.swift in Sources */,
 				895A7F022FC5D5BA00A997B8 /* SMBConnectViewController.swift in Sources */,
@@ -1984,6 +1976,22 @@
 				minimumVersion = 0.41.0;
 			};
 		};
+		89A9E7572FD4A65F0019D4C4 /* XCRemoteSwiftPackageReference "ANXLog" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sunsx9316/ANXLog.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.3;
+			};
+		};
+		89A9E75A2FD4A8D80019D4C4 /* XCRemoteSwiftPackageReference "VLCKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sunsx9316/VLCKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.0;
+			};
+		};
 		89FA76D92FCF408300A65DAC /* XCRemoteSwiftPackageReference "YYCategories" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sunsx9316/YYCategories";
@@ -2061,6 +2069,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 895A7F4C2FC5F2FF00A997B8 /* XCRemoteSwiftPackageReference "MPVKit" */;
 			productName = MPVKit;
+		};
+		89A9E7582FD4A65F0019D4C4 /* ANXLog */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 89A9E7572FD4A65F0019D4C4 /* XCRemoteSwiftPackageReference "ANXLog" */;
+			productName = ANXLog;
+		};
+		89A9E75B2FD4A8D80019D4C4 /* VLCKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 89A9E75A2FD4A8D80019D4C4 /* XCRemoteSwiftPackageReference "VLCKit" */;
+			productName = VLCKit;
 		};
 		89FA76DA2FCF408300A65DAC /* YYCategories */ = {
 			isa = XCSwiftPackageProductDependency;

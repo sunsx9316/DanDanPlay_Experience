@@ -7,7 +7,7 @@
 
 import Cocoa
 import SnapKit
-import ProgressHUD
+
 
 class BaseLoginHistoryViewController<F: File>: ViewController, NSTableViewDelegate, NSTableViewDataSource, NSMenuDelegate {
 
