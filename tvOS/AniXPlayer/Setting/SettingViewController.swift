@@ -53,8 +53,8 @@ class SettingViewController: ViewController {
         let tv = TableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self
-        tv.register(SwitchSettingCell.self, forCellReuseIdentifier: SwitchSettingCell.reuseIdentifier)
-        tv.register(NavigationSettingCell.self, forCellReuseIdentifier: NavigationSettingCell.reuseIdentifier)
+        tv.registerClassCell(class: SwitchSettingCell.self)
+        tv.registerClassCell(class: NavigationSettingCell.self)
         tv.rowHeight = 66
         return tv
     }()

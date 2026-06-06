@@ -40,7 +40,7 @@ class HomePageContinueWatchingCell: TableViewCell {
         cv.showsHorizontalScrollIndicator = false
         cv.delegate = self
         cv.dataSource = self
-        cv.register(PosterItemCell.self, forCellWithReuseIdentifier: PosterItemCell.reuseIdentifier)
+        cv.registerClassCell(class: PosterItemCell.self)
         return cv
     }()
 
@@ -133,7 +133,7 @@ extension HomePageContinueWatchingCell {
         func configure(with item: BangumiQueueIntro) {
             nameLabel.text = item.animeTitle
             if let url = URL(string: item.imageUrl) {
-                posterImageView.kf.setImage(with: url)
+                posterImageView.kf.setImage(with: url, placeholder: UIImage.placeholder)
             }
         }
     }
@@ -148,7 +148,7 @@ extension HomePageContinueWatchingCell: UICollectionViewDataSource, UICollection
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PosterItemCell.reuseIdentifier, for: indexPath) as! PosterItemCell
+        let cell = collectionView.dequeueCell(class: PosterItemCell.self, indexPath: indexPath)
         cell.configure(with: items[indexPath.item])
         return cell
     }

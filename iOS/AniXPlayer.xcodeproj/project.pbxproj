@@ -246,6 +246,7 @@
 		89FFD1312D4B838500428206 /* Launcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD1302D4B838500428206 /* Launcher.swift */; };
 		89FFD1352D4B904000428206 /* SelectedFontViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD1342D4B904000428206 /* SelectedFontViewController.swift */; };
 		8CC5E781D18C4C83A9F2A6BE /* FolderProgressCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE600170BF1445D9B00A4593 /* FolderProgressCell.swift */; };
+		951494A4B490C1DDB3FEBA28 /* UIImage+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D7E33D6F9F7EB2F69A64FD /* UIImage+Helper.swift */; };
 		9DE8B428CAFC3A5D26DE9E56 /* DanmakuInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54627AC0D74F1F7C3F2CB1D /* DanmakuInputView.swift */; };
 		9DE8B429CAFC3A5D26DE9E57 /* ColorManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54627AC0D74F1F7C3F2CB1E /* ColorManagementViewController.swift */; };
 		AA72AB931D94179E273EEC53 /* JellyfinLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3DC22C756D2488DE35619F /* JellyfinLoginHistoryViewController.swift */; };
@@ -505,6 +506,7 @@
 		89FFD12A2D44EB2700428206 /* AppKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppKey.swift; sourceTree = "<group>"; };
 		89FFD1302D4B838500428206 /* Launcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Launcher.swift; sourceTree = "<group>"; };
 		89FFD1342D4B904000428206 /* SelectedFontViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectedFontViewController.swift; sourceTree = "<group>"; };
+		B1D7E33D6F9F7EB2F69A64FD /* UIImage+Helper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIImage+Helper.swift"; sourceTree = "<group>"; };
 		B54627AC0D74F1F7C3F2CB1D /* DanmakuInputView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DanmakuInputView.swift; sourceTree = "<group>"; };
 		B54627AC0D74F1F7C3F2CB1E /* ColorManagementViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorManagementViewController.swift; sourceTree = "<group>"; };
 		CF2D5334A2A53D20F8B80E22 /* Pods-AniXPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.release.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.release.xcconfig"; sourceTree = "<group>"; };
@@ -780,6 +782,7 @@
 				8931F0EC26750D6500590569 /* UIView+HitTest.h */,
 				8931F0ED26750D6500590569 /* UIView+HitTest.m */,
 				89044758290186B40088886B /* UIViewController+Helper.swift */,
+				B1D7E33D6F9F7EB2F69A64FD /* UIImage+Helper.swift */,
 			);
 			path = Helper;
 			sourceTree = "<group>";
@@ -1834,6 +1837,7 @@
 				9DE8B428CAFC3A5D26DE9E56 /* DanmakuInputView.swift in Sources */,
 				9DE8B429CAFC3A5D26DE9E57 /* ColorManagementViewController.swift in Sources */,
 				AA72AB931D94179E273EEC53 /* JellyfinLoginHistoryViewController.swift in Sources */,
+				951494A4B490C1DDB3FEBA28 /* UIImage+Helper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

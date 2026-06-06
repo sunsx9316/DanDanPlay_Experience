@@ -17,7 +17,7 @@ class FavoriteViewController: ViewController {
         let cv = CollectionView(frame: .zero, collectionViewLayout: layout)
         cv.delegate = self
         cv.dataSource = self
-        cv.register(FavoriteItemCell.self, forCellWithReuseIdentifier: FavoriteItemCell.reuseIdentifier)
+        cv.registerClassCell(class: FavoriteItemCell.self)
         return cv
     }()
 
@@ -72,7 +72,7 @@ extension FavoriteViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FavoriteItemCell.reuseIdentifier, for: indexPath) as! FavoriteItemCell
+        let cell = collectionView.dequeueCell(class: FavoriteItemCell.self, indexPath: indexPath)
         cell.configure(with: dataSource[indexPath.item])
         return cell
     }

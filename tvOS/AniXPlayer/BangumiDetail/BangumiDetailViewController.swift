@@ -28,8 +28,8 @@ class BangumiDetailViewController: ViewController {
         let tv = TableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self
-        tv.register(BangumiDetailInfoCell.self, forCellReuseIdentifier: BangumiDetailInfoCell.reuseIdentifier)
-        tv.register(EpisodeCell.self, forCellReuseIdentifier: EpisodeCell.reuseIdentifier)
+        tv.registerClassCell(class: BangumiDetailInfoCell.self)
+        tv.registerClassCell(class: EpisodeCell.self)
         tv.rowHeight = UITableView.automaticDimension
         tv.estimatedRowHeight = 80
         return tv
@@ -91,14 +91,14 @@ extension BangumiDetailViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch Section(rawValue: indexPath.section)! {
         case .info:
-            let cell = tableView.dequeueReusableCell(withIdentifier: BangumiDetailInfoCell.reuseIdentifier, for: indexPath) as! BangumiDetailInfoCell
+            let cell = tableView.dequeueCell(class: BangumiDetailInfoCell.self, indexPath: indexPath)
             if let detail = detail {
                 cell.configure(with: detail)
             }
             return cell
 
         case .episodes:
-            let cell = tableView.dequeueReusableCell(withIdentifier: EpisodeCell.reuseIdentifier, for: indexPath) as! EpisodeCell
+            let cell = tableView.dequeueCell(class: EpisodeCell.self, indexPath: indexPath)
             if let episode = detail?.episodes[indexPath.row] {
                 cell.configure(with: episode)
             }

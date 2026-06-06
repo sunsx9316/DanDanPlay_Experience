@@ -76,17 +76,13 @@ class UserInfoViewController: ViewController {
 
     private func reloadData() {
         if let userInfo = Preferences.shared.loginInfo {
-            avatarImageView.kf.setImage(with: URL(string: userInfo.profileImage), placeholder: defaultAvatar())
+            avatarImageView.kf.setImage(with: URL(string: userInfo.profileImage), placeholder: UIImage.placeholder)
             usernameLabel.text = userInfo.screenName
         } else {
-            avatarImageView.image = defaultAvatar()
+            avatarImageView.image = UIImage.placeholder
             usernameLabel.text = NSLocalizedString("点击登录", comment: "")
         }
         tableView.reloadData()
-    }
-
-    private func defaultAvatar() -> UIImage? {
-        return UIImage(named: "Home/User")?.byInsetEdge(UIEdgeInsets(top: -20, left: -20, bottom: -20, right: -20), with: nil)
     }
 
     private func showLogin() {

@@ -34,7 +34,7 @@ class HomePageBannerItemCell: CollectionViewCell {
     var item: BannerPageItem? {
         didSet {
             if let imageUrl = item?.imageUrl {
-                bgImageView.kf.setImage(with: URL(string: imageUrl))
+                bgImageView.kf.setImage(with: URL(string: imageUrl), placeholder: UIImage.placeholder)
             } else {
                 bgImageView.image = nil
             }

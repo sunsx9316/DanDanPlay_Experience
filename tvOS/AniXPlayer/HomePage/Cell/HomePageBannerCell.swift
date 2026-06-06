@@ -43,7 +43,7 @@ class HomePageBannerCell: TableViewCell {
         cv.showsHorizontalScrollIndicator = false
         cv.delegate = self
         cv.dataSource = self
-        cv.register(BannerItemCell.self, forCellWithReuseIdentifier: BannerItemCell.reuseIdentifier)
+        cv.registerClassCell(class: BannerItemCell.self)
         return cv
     }()
 
@@ -182,7 +182,7 @@ extension HomePageBannerCell {
             descriptionLabel.text = banner.description
             descriptionLabel.isHidden = banner.description.isEmpty
             if let url = URL(string: banner.imageUrl) {
-                imageView.kf.setImage(with: url)
+                imageView.kf.setImage(with: url, placeholder: UIImage.placeholder)
             }
         }
     }
@@ -197,7 +197,7 @@ extension HomePageBannerCell: UICollectionViewDataSource, UICollectionViewDelega
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: BannerItemCell.reuseIdentifier, for: indexPath) as! BannerItemCell
+        let cell = collectionView.dequeueCell(class: BannerItemCell.self, indexPath: indexPath)
         cell.configure(with: banners[indexPath.item])
         return cell
     }

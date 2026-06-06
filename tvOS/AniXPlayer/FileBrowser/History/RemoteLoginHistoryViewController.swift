@@ -38,7 +38,7 @@ class RemoteLoginHistoryViewController: ViewController {
         let tv = TableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self
-        tv.register(FileListCell.self, forCellReuseIdentifier: FileListCell.reuseIdentifier)
+        tv.registerClassCell(class: FileListCell.self)
         tv.rowHeight = UITableView.automaticDimension
         tv.estimatedRowHeight = 80
         return tv
@@ -210,7 +210,7 @@ extension RemoteLoginHistoryViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: FileListCell.reuseIdentifier, for: indexPath) as! FileListCell
+        let cell = tableView.dequeueCell(class: FileListCell.self, indexPath: indexPath)
         let info = loginInfos[indexPath.row]
 
         let title = info.url.host ?? info.url.absoluteString

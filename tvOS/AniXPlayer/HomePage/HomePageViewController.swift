@@ -28,9 +28,9 @@ class HomePageViewController: ViewController {
         let tv = TableView(frame: .zero, style: .plain)
         tv.delegate = self
         tv.dataSource = self
-        tv.register(HomePageBannerCell.self, forCellReuseIdentifier: HomePageBannerCell.reuseIdentifier)
-        tv.register(HomePageFunctionCell.self, forCellReuseIdentifier: HomePageFunctionCell.reuseIdentifier)
-        tv.register(HomePageContinueWatchingCell.self, forCellReuseIdentifier: HomePageContinueWatchingCell.reuseIdentifier)
+        tv.registerClassCell(class: HomePageBannerCell.self)
+        tv.registerClassCell(class: HomePageFunctionCell.self)
+        tv.registerClassCell(class: HomePageContinueWatchingCell.self)
         tv.rowHeight = UITableView.automaticDimension
         tv.estimatedRowHeight = 200
         return tv
@@ -106,12 +106,12 @@ extension HomePageViewController: UITableViewDataSource {
 
         switch type {
         case .banner:
-            let cell = tableView.dequeueReusableCell(withIdentifier: HomePageBannerCell.reuseIdentifier, for: indexPath) as! HomePageBannerCell
+            let cell = tableView.dequeueCell(class: HomePageBannerCell.self, indexPath: indexPath)
             cell.banners = dataSource?.banners ?? []
             return cell
 
         case .function:
-            let cell = tableView.dequeueReusableCell(withIdentifier: HomePageFunctionCell.reuseIdentifier, for: indexPath) as! HomePageFunctionCell
+            let cell = tableView.dequeueCell(class: HomePageFunctionCell.self, indexPath: indexPath)
             cell.onItemSelected = { [weak self] itemType in
                 switch itemType {
                 case .timeline:
@@ -125,7 +125,7 @@ extension HomePageViewController: UITableViewDataSource {
             return cell
 
         case .continueWatching:
-            let cell = tableView.dequeueReusableCell(withIdentifier: HomePageContinueWatchingCell.reuseIdentifier, for: indexPath) as! HomePageContinueWatchingCell
+            let cell = tableView.dequeueCell(class: HomePageContinueWatchingCell.self, indexPath: indexPath)
             cell.items = continueWatchingItems
             cell.onItemSelected = { [weak self] item in
                 let detailVC = BangumiDetailViewController(animateId: item.animeId)

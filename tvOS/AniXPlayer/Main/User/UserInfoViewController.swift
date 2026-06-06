@@ -7,7 +7,6 @@
 
 import UIKit
 import SnapKit
-import Kingfisher
 
 class UserInfoViewController: ViewController {
 
@@ -26,6 +25,13 @@ class UserInfoViewController: ViewController {
             case .logout: return NSLocalizedString("退出登录", comment: "")
             }
         }
+
+        var icon: UIImage? {
+            switch self {
+            case .settings: return UIImage(systemName: "gearshape.fill")
+            case .logout: return UIImage(systemName: "rectangle.portrait.and.arrow.right")
+            }
+        }
     }
 
     private var menuItems: [MenuItem] {
@@ -33,29 +39,12 @@ class UserInfoViewController: ViewController {
         return isLogin ? [.settings, .logout] : [.settings]
     }
 
-    private lazy var avatarImageView: UIImageView = {
-        let iv = UIImageView()
-        iv.contentMode = .scaleAspectFill
-        iv.layer.cornerRadius = 40
-        iv.clipsToBounds = true
-        iv.backgroundColor = UIColor.white.withAlphaComponent(0.1)
-        iv.snp.makeConstraints { make in make.width.height.equalTo(80) }
-        return iv
-    }()
-
-    private lazy var usernameLabel: UILabel = {
-        let label = UILabel()
-        label.font = .ddp_normal(weight: .bold)
-        label.textColor = .label
-        return label
-    }()
-
     private lazy var tableView: TableView = {
         let tv = TableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self
-        tv.register(TableViewCell.self, forCellReuseIdentifier: "UserInfoCell")
-        tv.register(TableViewCell.self, forCellReuseIdentifier: "MenuCell")
+        tv.registerClassCell(class: UserInfoCell.self)
+        tv.registerClassCell(class: MenuCell.self)
         tv.rowHeight = 66
         return tv
     }()
@@ -78,16 +67,6 @@ class UserInfoViewController: ViewController {
     }
 
     private func reloadData() {
-        if let userInfo = Preferences.shared.loginInfo {
-            usernameLabel.text = userInfo.screenName
-            if let url = URL(string: userInfo.profileImage) {
-                avatarImageView.kf.setImage(with: url)
-            }
-        } else {
-            usernameLabel.text = NSLocalizedString("点击登录", comment: "")
-            avatarImageView.kf.cancelDownloadTask()
-            avatarImageView.image = nil
-        }
         tableView.reloadData()
     }
 
@@ -109,25 +88,6 @@ class UserInfoViewController: ViewController {
         Preferences.shared.loginInfo = nil
         reloadData()
     }
-
-    private var configuredUserInfoCell: UITableViewCell?
-
-    private func configureUserInfoCell(_ cell: UITableViewCell) {
-        guard configuredUserInfoCell !== cell else { return }
-        configuredUserInfoCell = cell
-        avatarImageView.removeFromSuperview()
-        usernameLabel.removeFromSuperview()
-        cell.contentView.addSubview(avatarImageView)
-        cell.contentView.addSubview(usernameLabel)
-        avatarImageView.snp.remakeConstraints { make in
-            make.leading.equalToSuperview().offset(40)
-            make.centerY.equalToSuperview()
-        }
-        usernameLabel.snp.remakeConstraints { make in
-            make.leading.equalTo(avatarImageView.snp.trailing).offset(20)
-            make.centerY.equalToSuperview()
-        }
-    }
 }
 
 // MARK: - UITableViewDataSource
@@ -148,16 +108,18 @@ extension UserInfoViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch Section(rawValue: indexPath.section)! {
         case .userInfo:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "UserInfoCell", for: indexPath)
-            configureUserInfoCell(cell)
+            let cell = tableView.dequeueCell(class: UserInfoCell.self, indexPath: indexPath)
+            if let userInfo = Preferences.shared.loginInfo {
+                cell.configure(avatarURL: URL(string: userInfo.profileImage), username: userInfo.screenName)
+            } else {
+                cell.configure(avatarURL: nil, username: NSLocalizedString("点击登录", comment: ""))
+            }
             return cell
 
         case .menu:
             let item = menuItems[indexPath.row]
-            let cell = tableView.dequeueReusableCell(withIdentifier: "MenuCell", for: indexPath)
-            cell.textLabel?.text = item.title
-            cell.textLabel?.font = .ddp_normal()
-            cell.textLabel?.textColor = .label
+            let cell = tableView.dequeueCell(class: MenuCell.self, indexPath: indexPath)
+            cell.configure(icon: item.icon, title: item.title)
             return cell
         }
     }

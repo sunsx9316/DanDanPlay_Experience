@@ -83,7 +83,7 @@ class FileTableViewCell: TableViewCell {
 
             if let coverURL = self.file?.coverImageURL {
                 self.coverImageView.isHidden = false
-                self.coverImageView.kf.setImage(with: coverURL)
+                self.coverImageView.kf.setImage(with: coverURL, placeholder: UIImage.placeholder)
             } else {
                 self.coverImageView.isHidden = true
                 self.coverImageView.kf.cancelDownloadTask()

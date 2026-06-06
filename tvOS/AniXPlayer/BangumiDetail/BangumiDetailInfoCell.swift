@@ -141,7 +141,7 @@ class BangumiDetailInfoCell: TableViewCell {
         summaryLabel.isHidden = detail.summary.isEmpty
 
         if let url = URL(string: detail.imageUrl) {
-            posterImageView.kf.setImage(with: url)
+            posterImageView.kf.setImage(with: url, placeholder: UIImage.placeholder)
         }
     }
 }

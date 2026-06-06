@@ -37,7 +37,7 @@ class FolderTableViewCell: TableViewCell {
         didSet {
             self.titleLabel.text = self.file?.fileName
             if let coverURL = self.file?.coverImageURL {
-                self.coverBackgroundView.kf.setImage(with: coverURL)
+                self.coverBackgroundView.kf.setImage(with: coverURL, placeholder: UIImage.placeholder)
                 self.coverBackgroundView.isHidden = false
             } else {
                 self.coverBackgroundView.kf.cancelDownloadTask()

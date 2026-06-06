@@ -17,7 +17,7 @@ class DanmakuListViewController: ViewController {
         let tableView = TableView(frame: .zero, style: .plain)
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.register(DanmakuListCell.self, forCellReuseIdentifier: DanmakuListCell.reuseIdentifier)
+        tableView.registerClassCell(class: DanmakuListCell.self)
         tableView.estimatedRowHeight = 50
         tableView.rowHeight = UITableView.automaticDimension
         tableView.backgroundColor = .clear
@@ -57,7 +57,7 @@ extension DanmakuListViewController: UITableViewDelegate, UITableViewDataSource 
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: DanmakuListCell.reuseIdentifier, for: indexPath) as! DanmakuListCell
+        let cell = tableView.dequeueCell(class: DanmakuListCell.self, indexPath: indexPath)
         cell.configure(danmaku: self.danmakuList[indexPath.row])
         return cell
     }

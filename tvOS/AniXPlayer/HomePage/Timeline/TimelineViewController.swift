@@ -23,7 +23,7 @@ class TimelineViewController: ViewController {
         let cv = CollectionView(frame: .zero, collectionViewLayout: layout)
         cv.delegate = self
         cv.dataSource = self
-        cv.register(TimelineItemCell.self, forCellWithReuseIdentifier: TimelineItemCell.reuseIdentifier)
+        cv.registerClassCell(class: TimelineItemCell.self)
         cv.register(HomePageSectionHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HomePageSectionHeaderView.reuseIdentifier)
         return cv
     }()
@@ -96,7 +96,7 @@ extension TimelineViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: TimelineItemCell.reuseIdentifier, for: indexPath) as! TimelineItemCell
+        let cell = collectionView.dequeueCell(class: TimelineItemCell.self, indexPath: indexPath)
         let key = weekdayKeys[indexPath.section]
         if let item = groupedData[key]?[indexPath.item] {
             cell.configure(with: item)

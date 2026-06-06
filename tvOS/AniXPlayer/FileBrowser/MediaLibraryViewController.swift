@@ -57,7 +57,7 @@ class MediaLibraryViewController: ViewController {
         let tv = TableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self
-        tv.register(FileListCell.self, forCellReuseIdentifier: FileListCell.reuseIdentifier)
+        tv.registerClassCell(class: FileListCell.self)
         tv.rowHeight = 80
         return tv
     }()
@@ -89,7 +89,7 @@ extension MediaLibraryViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: FileListCell.reuseIdentifier, for: indexPath) as! FileListCell
+        let cell = tableView.dequeueCell(class: FileListCell.self, indexPath: indexPath)
         let type = sections[indexPath.section].items[indexPath.row]
         cell.configureAsSource(title: type.title, iconName: type.iconName)
         return cell

@@ -77,7 +77,7 @@ class FavoriteItemCell: CollectionViewCell {
         titleLabel.text = item.animeTitle
         progressLabel.text = "\(NSLocalizedString("已看", comment: "")) \(item.episodeWatched)/\(item.episodeTotal)"
         if let url = URL(string: item.imageUrl) {
-            posterImageView.kf.setImage(with: url)
+            posterImageView.kf.setImage(with: url, placeholder: UIImage.placeholder)
         }
     }
 }

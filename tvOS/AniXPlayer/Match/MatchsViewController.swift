@@ -70,7 +70,7 @@ class MatchsViewController: ViewController {
         let tv = TableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self
-        tv.register(MatchCell.self, forCellReuseIdentifier: MatchCell.reuseIdentifier)
+        tv.registerClassCell(class: MatchCell.self)
         tv.rowHeight = UITableView.automaticDimension
         tv.estimatedRowHeight = 100
         return tv
@@ -192,7 +192,7 @@ extension MatchsViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: MatchCell.reuseIdentifier, for: indexPath) as! MatchCell
+        let cell = tableView.dequeueCell(class: MatchCell.self, indexPath: indexPath)
         cell.configure(with: matches[indexPath.row])
         return cell
     }

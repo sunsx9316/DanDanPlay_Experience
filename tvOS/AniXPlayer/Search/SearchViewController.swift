@@ -35,8 +35,8 @@ class SearchViewController: ViewController {
         let tv = TableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self
-        tv.register(SearchAnimeCell.self, forCellReuseIdentifier: SearchAnimeCell.reuseIdentifier)
-        tv.register(SearchEpisodeCell.self, forCellReuseIdentifier: SearchEpisodeCell.reuseIdentifier)
+        tv.registerClassCell(class: SearchAnimeCell.self)
+        tv.registerClassCell(class: SearchEpisodeCell.self)
         tv.rowHeight = UITableView.automaticDimension
         tv.estimatedRowHeight = 80
         return tv
@@ -143,11 +143,11 @@ extension SearchViewController: UITableViewDataSource {
         let hasSubItems = item.items?.isEmpty == false
 
         if hasSubItems {
-            let cell = tableView.dequeueReusableCell(withIdentifier: SearchAnimeCell.reuseIdentifier, for: indexPath) as! SearchAnimeCell
+            let cell = tableView.dequeueCell(class: SearchAnimeCell.self, indexPath: indexPath)
             cell.configure(with: item)
             return cell
         } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: SearchEpisodeCell.reuseIdentifier, for: indexPath) as! SearchEpisodeCell
+            let cell = tableView.dequeueCell(class: SearchEpisodeCell.self, indexPath: indexPath)
             cell.configure(with: item)
             return cell
         }

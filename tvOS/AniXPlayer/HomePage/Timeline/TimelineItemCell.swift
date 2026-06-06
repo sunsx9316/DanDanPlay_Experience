@@ -76,7 +76,7 @@ class TimelineItemCell: CollectionViewCell {
         titleLabel.text = item.animeTitle
         statusLabel.text = item.isOnAir ? NSLocalizedString("连载中", comment: "") : NSLocalizedString("已完结", comment: "")
         if let url = URL(string: item.imageUrl) {
-            posterImageView.kf.setImage(with: url)
+            posterImageView.kf.setImage(with: url, placeholder: UIImage.placeholder)
         }
     }
 }

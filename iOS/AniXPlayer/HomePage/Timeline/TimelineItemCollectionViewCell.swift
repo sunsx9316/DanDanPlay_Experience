@@ -50,7 +50,7 @@ class TimelineItemCollectionViewCell: CollectionViewCell {
         self.item = item
 
         if let url = self.item?.imageUrl {
-            self.imgView.kf.setImage(with: URL(string: url))
+            self.imgView.kf.setImage(with: URL(string: url), placeholder: UIImage.placeholder)
         } else {
             self.imgView.image = nil
         }
