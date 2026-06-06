@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1D44D17727674746ACA34E84 /* ServerHostListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F3AEACC0C2438C9D6162A6 /* ServerHostListViewController.swift */; };
+		6E5BA0B875CD3F8D87095865 /* FontHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1725A1F0682EB4BD1FF6D457 /* FontHelper.swift */; };
 		8904475E2901A6E20088886B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8904475D2901A6E20088886B /* GoogleService-Info.plist */; };
 		8917059328CF6CF10075ECD9 /* PlayerUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8917058E28CF6CF10075ECD9 /* PlayerUIView.swift */; };
 		8917059428CF6CF10075ECD9 /* PlayerUITopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8917058F28CF6CF10075ECD9 /* PlayerUITopView.swift */; };
@@ -169,7 +170,6 @@
 		89DAD9FD2FD05CC200C71A33 /* MPVRenderContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DAD9FB2FD05CC200C71A33 /* MPVRenderContext.swift */; };
 		89DAD9FF2FD05CC200C71A33 /* MPVPlayerWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DAD9FA2FD05CC200C71A33 /* MPVPlayerWrapper.swift */; };
 		89DADA002FD05CC200C71A33 /* MPVPiPProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DAD9F92FD05CC200C71A33 /* MPVPiPProvider.swift */; };
-		89DADA012FD05CC200C71A33 /* MPVHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DAD9F82FD05CC200C71A33 /* MPVHelper.swift */; };
 		89DADA022FD05CC200C71A33 /* SourceHanSansSC-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 89DAD9F42FD05CC200C71A33 /* SourceHanSansSC-Regular.otf */; };
 		89DADA032FD05CC200C71A33 /* SourceHanSansTC-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 89DAD9F52FD05CC200C71A33 /* SourceHanSansTC-Regular.otf */; };
 		89DADA042FD05CCD00C71A33 /* MPV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DAD9F72FD05CC200C71A33 /* MPV.swift */; };
@@ -198,6 +198,7 @@
 		89DADA402FD0600200C71A33 /* MediaLibrarySectionCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA412FD0600200C71A33 /* MediaLibrarySectionCellView.swift */; };
 		89DADA422FD0600200C71A33 /* MediaLibraryItemCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA432FD0600200C71A33 /* MediaLibraryItemCellView.swift */; };
 		89DADA552FD31A0A00C71A33 /* MPVFrameRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA542FD31A0A00C71A33 /* MPVFrameRenderer.swift */; };
+		89DADA6E2FD4424200C71A33 /* FontHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA6D2FD4424200C71A33 /* FontHelper.swift */; };
 		89FFD12D2D45131800428206 /* AppKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD12C2D45131800428206 /* AppKey.swift */; };
 		89FFD12F2D45137300428206 /* NSColor+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD12E2D45137300428206 /* NSColor+Helper.swift */; };
 		89FFD1332D4B83BD00428206 /* Launcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD1322D4B83BD00428206 /* Launcher.swift */; };
@@ -239,6 +240,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1725A1F0682EB4BD1FF6D457 /* FontHelper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FontHelper.swift; sourceTree = "<group>"; };
 		2F82727D2DE868C53427D0F5 /* Pods_AniXPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AniXPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B0EEE5086C5A5898ED1ED6D /* Pods-AniXPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.release.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.release.xcconfig"; sourceTree = "<group>"; };
 		5B03693BC2791417EF80AE28 /* Pods-AniXPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.debug.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.debug.xcconfig"; sourceTree = "<group>"; };
@@ -393,7 +395,6 @@
 		89DAD9F42FD05CC200C71A33 /* SourceHanSansSC-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceHanSansSC-Regular.otf"; sourceTree = "<group>"; };
 		89DAD9F52FD05CC200C71A33 /* SourceHanSansTC-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceHanSansTC-Regular.otf"; sourceTree = "<group>"; };
 		89DAD9F72FD05CC200C71A33 /* MPV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPV.swift; sourceTree = "<group>"; };
-		89DAD9F82FD05CC200C71A33 /* MPVHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVHelper.swift; sourceTree = "<group>"; };
 		89DAD9F92FD05CC200C71A33 /* MPVPiPProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVPiPProvider.swift; sourceTree = "<group>"; };
 		89DAD9FA2FD05CC200C71A33 /* MPVPlayerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVPlayerWrapper.swift; sourceTree = "<group>"; };
 		89DAD9FB2FD05CC200C71A33 /* MPVRenderContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVRenderContext.swift; sourceTree = "<group>"; };
@@ -419,6 +420,7 @@
 		89DADA412FD0600200C71A33 /* MediaLibrarySectionCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaLibrarySectionCellView.swift; sourceTree = "<group>"; };
 		89DADA432FD0600200C71A33 /* MediaLibraryItemCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaLibraryItemCellView.swift; sourceTree = "<group>"; };
 		89DADA542FD31A0A00C71A33 /* MPVFrameRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVFrameRenderer.swift; sourceTree = "<group>"; };
+		89DADA6D2FD4424200C71A33 /* FontHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontHelper.swift; sourceTree = "<group>"; };
 		89FFD12C2D45131800428206 /* AppKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppKey.swift; sourceTree = "<group>"; };
 		89FFD12E2D45137300428206 /* NSColor+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSColor+Helper.swift"; sourceTree = "<group>"; };
 		89FFD1322D4B83BD00428206 /* Launcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Launcher.swift; sourceTree = "<group>"; };
@@ -466,6 +468,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		15A37EF85D790408C85F56C4 /* Share */ = {
+			isa = PBXGroup;
+			children = (
+				B44CB296A095F9C2DDDB9C3A /* CocoaShare */,
+			);
+			path = Share;
+			sourceTree = "<group>";
+		};
 		3C212790FE434105204253ED /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -473,6 +483,14 @@
 				3B0EEE5086C5A5898ED1ED6D /* Pods-AniXPlayer.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		4428FAC6B1290F58EACC721E /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				1725A1F0682EB4BD1FF6D457 /* FontHelper.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 		8917058D28CF6CF10075ECD9 /* PlayerUI */ = {
@@ -733,6 +751,7 @@
 				8925B90A2CA7F901001A8388 /* AppInfoHelper.swift */,
 				8925B90B2CA7F901001A8388 /* DateFormatter+Helper.swift.swift */,
 				8925B90C2CA7F901001A8388 /* Decodable+Utils.swift */,
+				89DADA6D2FD4424200C71A33 /* FontHelper.swift */,
 				8925B90D2CA7F901001A8388 /* NSNotification+Helper.swift */,
 				8925B90E2CA7F901001A8388 /* NumberUtils.swift */,
 				8925B90F2CA7F901001A8388 /* PathUtils.swift */,
@@ -811,6 +830,7 @@
 				89945FE828CA3BAE009AC640 /* Products */,
 				3C212790FE434105204253ED /* Pods */,
 				E8141592C1C6FA59A9A560BE /* Frameworks */,
+				F7D51242805C76A056D590B6 /* .. */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1043,7 +1063,6 @@
 			children = (
 				89DAD9F72FD05CC200C71A33 /* MPV.swift */,
 				89DADA542FD31A0A00C71A33 /* MPVFrameRenderer.swift */,
-				89DAD9F82FD05CC200C71A33 /* MPVHelper.swift */,
 				89DAD9F92FD05CC200C71A33 /* MPVPiPProvider.swift */,
 				89DAD9FA2FD05CC200C71A33 /* MPVPlayerWrapper.swift */,
 				89DAD9FB2FD05CC200C71A33 /* MPVRenderContext.swift */,
@@ -1132,12 +1151,28 @@
 			path = Files;
 			sourceTree = "<group>";
 		};
+		B44CB296A095F9C2DDDB9C3A /* CocoaShare */ = {
+			isa = PBXGroup;
+			children = (
+				4428FAC6B1290F58EACC721E /* Utils */,
+			);
+			path = CocoaShare;
+			sourceTree = "<group>";
+		};
 		E8141592C1C6FA59A9A560BE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
 				2F82727D2DE868C53427D0F5 /* Pods_AniXPlayer.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F7D51242805C76A056D590B6 /* .. */ = {
+			isa = PBXGroup;
+			children = (
+				15A37EF85D790408C85F56C4 /* Share */,
+			);
+			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1413,7 +1448,6 @@
 				89DAD9FD2FD05CC200C71A33 /* MPVRenderContext.swift in Sources */,
 				89DAD9FF2FD05CC200C71A33 /* MPVPlayerWrapper.swift in Sources */,
 				89DADA002FD05CC200C71A33 /* MPVPiPProvider.swift in Sources */,
-				89DADA012FD05CC200C71A33 /* MPVHelper.swift in Sources */,
 				8925B92C2CA7F901001A8388 /* Search.swift in Sources */,
 				8925B92D2CA7F901001A8388 /* Match.swift in Sources */,
 				8925B92E2CA7F901001A8388 /* SubtitleManager.swift in Sources */,
@@ -1523,10 +1557,12 @@
 				89A1C5FF28D4C32300DC514E /* PlayerListViewController.swift in Sources */,
 				894415E128E34BD200480172 /* SwitchDetailTableViewCell.swift in Sources */,
 				8994620028CCD8FB009AC640 /* SearchViewController.swift in Sources */,
+				89DADA6E2FD4424200C71A33 /* FontHelper.swift in Sources */,
 				89DADA0C2FD05DAB00C71A33 /* DragView.swift in Sources */,
 				89A1C5EF28D38B0300DC514E /* NSMenuItem+Utils.swift in Sources */,
 				899461F428CCC278009AC640 /* MatchsCell.swift in Sources */,
 				8994622428CCF088009AC640 /* GotoLastWatchPointView.swift in Sources */,
+				6E5BA0B875CD3F8D87095865 /* FontHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

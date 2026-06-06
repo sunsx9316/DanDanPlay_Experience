@@ -428,9 +428,9 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
     }
 
     private func setupSubtitleFonts(mpvHandle: MPV) {
-        guard let fontDir = mpvPrepareFonts() else { return }
+        guard let fontDir = playerPrepareFonts() else { return }
         mpvHandle.setOptionString(.subtitleFontsDir, fontDir)
-        mpvHandle.setOptionString(.subtitleFont, mpvCustomFontNames.first ?? "")
+        mpvHandle.setOptionString(.subtitleFont, playerCustomFontNames.first ?? "")
     }
 
     // MARK: - 播放时间通知（通过 mpv time-pos 属性观察，节流到 0.5 秒）
@@ -555,10 +555,10 @@ extension MPVPlayerWrapper {
         // PiP 必须用软件渲染（iOS 后台禁 GPU）
         cfg.extra["hwdec"] = "no"
         if cfg.subtitleFontsDir == nil {
-            cfg.subtitleFontsDir = mpvPrepareFonts()
+            cfg.subtitleFontsDir = playerPrepareFonts()
         }
         if cfg.subtitleFont == nil {
-            cfg.subtitleFont = mpvCustomFontNames.first
+            cfg.subtitleFont = playerCustomFontNames.first
         }
         return MPVPiPProvider(config: cfg)
     }

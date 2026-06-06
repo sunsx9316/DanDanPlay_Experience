@@ -52,6 +52,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         case subtitleFontFamily = "--ssa-fontfamily"
         case subtitleScale = "--sub-text-scale"
         case freetypeFontColor = "--freetype-color"
+        case freetypeFont = "--freetype-font"
     }
 
     private enum InitAction {
@@ -332,8 +333,10 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
             if let fontName = fontName {
                 ANX.logDebug(.player, "[VLC] 字体名称: \(fontName)")
                 self.mediaOptionsDic[.subtitleFontFamily] = fontName
+                self.mediaOptionsDic[.freetypeFont] = fontName
             } else {
                 self.mediaOptionsDic.removeValue(forKey: .subtitleFontFamily)
+                self.mediaOptionsDic.removeValue(forKey: .freetypeFont)
             }
             self.reloadOptionAndCreatePlayer()
         }
@@ -560,7 +563,9 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
         if let fontDir = playerPrepareFonts() {
             ANX.logInfo(.player, "[VLC] 设置字幕字体目录: \(fontDir)")
             mediaOptionsDic[.subtitleFontsDir] = fontDir
-            mediaOptionsDic[.subtitleFontFamily] = playerCustomFontFamilies.first ?? "Source Han Sans SC"
+            let fontFamily = playerCustomFontFamilies.first ?? "Source Han Sans SC"
+            mediaOptionsDic[.subtitleFontFamily] = fontFamily
+            mediaOptionsDic[.freetypeFont] = fontFamily
         }
     }
 

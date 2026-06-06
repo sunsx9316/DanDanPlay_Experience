@@ -1,5 +1,5 @@
 //
-//  MPVFontHelper.swift
+//  FontHelper.swift
 //  CocoaShare
 //
 //  共享字体准备工具：将自定义字体从 Bundle 复制到缓存目录，供播放器渲染字幕使用
@@ -17,14 +17,11 @@ let playerCustomFontNames = [
     "SourceHanSansTC-Regular"
 ]
 
-/// 自定义字体族名列表（与 playerCustomFontNames 一一对应，用于 libass 的 fontfamily 参数）
+/// 自定义字体族名列表（与 playerCustomFontNames 一一对应，用于 libass/freetype 的 fontfamily 参数）
 let playerCustomFontFamilies = [
     "Source Han Sans SC",
     "Source Han Sans TC"
 ]
-
-/// MPV 兼容别名
-let mpvCustomFontNames = playerCustomFontNames
 
 /// 将自定义字体从 Bundle 复制到缓存目录，注册到 CoreText，返回字体目录路径
 func playerPrepareFonts() -> String? {
@@ -58,9 +55,4 @@ func playerPrepareFonts() -> String? {
         ANX.logError(.player, "[FontHelper] 字体准备失败: \(error)")
         return nil
     }
-}
-
-/// MPV 兼容别名
-func mpvPrepareFonts() -> String? {
-    return playerPrepareFonts()
 }

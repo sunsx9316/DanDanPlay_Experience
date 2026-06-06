@@ -198,9 +198,9 @@ class MPVPiPProvider: PiPPlayerProtocol {
     }
 
     private func setupSubtitleFonts(mpv: MPV, config: PiPPlayerConfig) {
-        guard let fontDir = mpvPrepareFonts() else { return }
+        guard let fontDir = playerPrepareFonts() else { return }
         mpv.setOptionString(.subtitleFontsDir, fontDir)
-        mpv.setOptionString(.subtitleFont, config.subtitleFont ?? mpvCustomFontNames.first ?? "")
+        mpv.setOptionString(.subtitleFont, config.subtitleFont ?? playerCustomFontNames.first ?? "")
     }
 
     // MARK: - 事件监听

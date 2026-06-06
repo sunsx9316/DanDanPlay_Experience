@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0B5CD34C100D4654A1569260 /* AMSMB2 in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 895A7FC32FC75A7100A997B8 /* AMSMB2 */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		1B3860005D8D7B0F4D7C6CC2 /* FontHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74E32A94F10B0295F44B4B16 /* FontHelper.swift */; };
 		6F969714544C3EBD7E920F21 /* Pods_AniXPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6620BF43605B5DDE3E8B15B6 /* Pods_AniXPlayer.framework */; };
 		89044759290186B40088886B /* UIViewController+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89044758290186B40088886B /* UIViewController+Helper.swift */; };
 		8904475B290189CD0088886B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8904475A290189CD0088886B /* GoogleService-Info.plist */; };
@@ -145,7 +146,6 @@
 		8953D0322C99E48A003EF386 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D0312C99E48A003EF386 /* SnapKit */; };
 		8953D0352C99E4C7003EF386 /* MBProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D0342C99E4C7003EF386 /* MBProgressHUD */; };
 		8953D0382C99E502003EF386 /* IQKeyboardManagerSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 8953D0372C99E502003EF386 /* IQKeyboardManagerSwift */; };
-		895599682FCB597F007F52E0 /* MPVHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895599672FCB597F007F52E0 /* MPVHelper.swift */; };
 		8955996B2FCB645F007F52E0 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 8955996A2FCB645F007F52E0 /* Kingfisher */; };
 		8955996D2FCB81DE007F52E0 /* PlayPauseButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8955996C2FCB81DE007F52E0 /* PlayPauseButton.swift */; };
 		895A7F9E2FC74E8A00A997B8 /* MPVKit in Frameworks */ = {isa = PBXBuildFile; productRef = 895A7F9D2FC74E8A00A997B8 /* MPVKit */; };
@@ -231,6 +231,7 @@
 		89D100022D00000100000002 /* DanmakuListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89D100042D00000100000004 /* DanmakuListViewController.swift */; };
 		89D148722D44E2B000E7FDF5 /* YYCategories in Frameworks */ = {isa = PBXBuildFile; productRef = 89D148712D44E2B000E7FDF5 /* YYCategories */; };
 		89D148752D44E4A700E7FDF5 /* YYCategories in Frameworks */ = {isa = PBXBuildFile; productRef = 89D148742D44E4A700E7FDF5 /* YYCategories */; };
+		89DADA6A2FD4421C00C71A33 /* FontHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA692FD4421C00C71A33 /* FontHelper.swift */; };
 		89E0D60E2669113400E2337B /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0D60D2669113400E2337B /* SettingViewController.swift */; };
 		89E0D6122669127B00E2337B /* SwitchDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0D6102669127A00E2337B /* SwitchDetailTableViewCell.swift */; };
 		89E0D6162669143400E2337B /* TitleDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89E0D6142669143400E2337B /* TitleDetailTableViewCell.swift */; };
@@ -279,6 +280,7 @@
 /* Begin PBXFileReference section */
 		2F3DC22C756D2488DE35619F /* JellyfinLoginHistoryViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = JellyfinLoginHistoryViewController.swift; sourceTree = "<group>"; };
 		6620BF43605B5DDE3E8B15B6 /* Pods_AniXPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AniXPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		74E32A94F10B0295F44B4B16 /* FontHelper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FontHelper.swift; sourceTree = "<group>"; };
 		89044758290186B40088886B /* UIViewController+Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Helper.swift"; sourceTree = "<group>"; };
 		8904475A290189CD0088886B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		890886CF2A0117CA005EDBD6 /* PCLoginHistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PCLoginHistoryViewController.swift; sourceTree = "<group>"; };
@@ -412,7 +414,6 @@
 		895152CC2FC1ADC000F75DB7 /* upload.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = upload.html; sourceTree = "<group>"; };
 		895152CD2FC1ADC000F75DB7 /* upload.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = upload.js; sourceTree = "<group>"; };
 		8953CDA22C987FF1003EF386 /* FilterDanmakuTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilterDanmakuTableViewCell.swift; sourceTree = "<group>"; };
-		895599672FCB597F007F52E0 /* MPVHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVHelper.swift; sourceTree = "<group>"; };
 		8955996C2FCB81DE007F52E0 /* PlayPauseButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayPauseButton.swift; sourceTree = "<group>"; };
 		895A7FC52FC8A46A00A997B8 /* SeparatorTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorTableViewCell.swift; sourceTree = "<group>"; };
 		895A7FC72FC8A60C00A997B8 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
@@ -491,6 +492,7 @@
 		89C79B932A881B200040FEDA /* DanmakuLoadUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuLoadUtil.swift; sourceTree = "<group>"; };
 		89D100032D00000100000003 /* DanmakuListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuListCell.swift; sourceTree = "<group>"; };
 		89D100042D00000100000004 /* DanmakuListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuListViewController.swift; sourceTree = "<group>"; };
+		89DADA692FD4421C00C71A33 /* FontHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontHelper.swift; sourceTree = "<group>"; };
 		89E0D60D2669113400E2337B /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		89E0D6102669127A00E2337B /* SwitchDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchDetailTableViewCell.swift; sourceTree = "<group>"; };
 		89E0D6142669143400E2337B /* TitleDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleDetailTableViewCell.swift; sourceTree = "<group>"; };
@@ -557,6 +559,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		23AE32727D4B2102AC7ECCE9 /* Share */ = {
+			isa = PBXGroup;
+			children = (
+				2A3D05A76820573DADBF57B9 /* CocoaShare */,
+			);
+			path = Share;
+			sourceTree = "<group>";
+		};
+		2A3D05A76820573DADBF57B9 /* CocoaShare */ = {
+			isa = PBXGroup;
+			children = (
+				347BC3505386AECF56C803E7 /* Utils */,
+			);
+			path = CocoaShare;
+			sourceTree = "<group>";
+		};
+		347BC3505386AECF56C803E7 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				74E32A94F10B0295F44B4B16 /* FontHelper.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		7E78693FEB4DDA048C2F9DDB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -564,6 +590,14 @@
 				CF2D5334A2A53D20F8B80E22 /* Pods-AniXPlayer.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		83073E09FA80E71F68EA5840 /* .. */ = {
+			isa = PBXGroup;
+			children = (
+				23AE32727D4B2102AC7ECCE9 /* Share */,
+			);
+			path = ..;
 			sourceTree = "<group>";
 		};
 		890886C229FFE2E4005EDBD6 /* PC */ = {
@@ -592,6 +626,7 @@
 				890DF6CA26160826002D8AE5 /* Products */,
 				7E78693FEB4DDA048C2F9DDB /* Pods */,
 				A36E3F8730C441A1F2AC3DAF /* Frameworks */,
+				83073E09FA80E71F68EA5840 /* .. */,
 			);
 			sourceTree = "<group>";
 		};
@@ -1064,6 +1099,7 @@
 				8925B85D2CA7E4C3001A8388 /* Decodable+Utils.swift */,
 				8925B85E2CA7E4C3001A8388 /* NSNotification+Helper.swift */,
 				8925B85F2CA7E4C3001A8388 /* NumberUtils.swift */,
+				89DADA692FD4421C00C71A33 /* FontHelper.swift */,
 				8925B8602CA7E4C3001A8388 /* PathUtils.swift */,
 				8925B8612CA7E4C3001A8388 /* SMBServiceBrowser.swift */,
 			);
@@ -1169,7 +1205,6 @@
 			children = (
 				895A7FE32FCB303900A997B8 /* MPV.swift */,
 				895A7FE42FCB303900A997B8 /* MPVPiPProvider.swift */,
-				895599672FCB597F007F52E0 /* MPVHelper.swift */,
 				895A7FE52FCB303900A997B8 /* MPVPlayerWrapper.swift */,
 				895A7FE62FCB303900A997B8 /* MPVRenderContext.swift */,
 				895A7FED2FCB303900A997B9 /* MPVFrameRenderer.swift */,
@@ -1746,10 +1781,10 @@
 				8925B87B2CA7E4C3001A8388 /* PlayerDanmakuContext.swift in Sources */,
 				8925B87C2CA7E4C3001A8388 /* WebDavFileManager.swift in Sources */,
 				8925B87D2CA7E4C3001A8388 /* Store+Extension.swift in Sources */,
+				89DADA6A2FD4421C00C71A33 /* FontHelper.swift in Sources */,
 				8925B87F2CA7E4C3001A8388 /* HomePage.swift in Sources */,
 				8925B8802CA7E4C3001A8388 /* BangumiNetworkHandle.swift in Sources */,
 				8925B8812CA7E4C3001A8388 /* PlayerDanmakuProducer.swift in Sources */,
-				895599682FCB597F007F52E0 /* MPVHelper.swift in Sources */,
 				8925B8822CA7E4C3001A8388 /* LocalFile.swift in Sources */,
 				8925B8832CA7E4C3001A8388 /* SearchNetworkHandle.swift in Sources */,
 				8925B8842CA7E4C3001A8388 /* SMBFile.swift in Sources */,
@@ -1824,6 +1859,7 @@
 				9DE8B429CAFC3A5D26DE9E57 /* ColorManagementViewController.swift in Sources */,
 				AA72AB931D94179E273EEC53 /* JellyfinLoginHistoryViewController.swift in Sources */,
 				951494A4B490C1DDB3FEBA28 /* UIImage+Helper.swift in Sources */,
+				1B3860005D8D7B0F4D7C6CC2 /* FontHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
