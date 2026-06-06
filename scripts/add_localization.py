@@ -39,7 +39,7 @@ PLATFORM_CONFIG = {
         "code_dir": os.path.join(PROJECT_ROOT, "tvOS"),
     },
     "mac": {
-        "xcstrings": os.path.join(PROJECT_ROOT, "Mac", "AniXPlayer", "Resource", "Localizable.xcstrings"),
+        "xcstrings": os.path.join(PROJECT_ROOT, "Mac", "AniXPlayer", "Localizable.xcstrings"),
         "project": os.path.join(PROJECT_ROOT, "Mac", "AniXPlayer.xcodeproj"),
         "code_dir": os.path.join(PROJECT_ROOT, "Mac"),
     },
