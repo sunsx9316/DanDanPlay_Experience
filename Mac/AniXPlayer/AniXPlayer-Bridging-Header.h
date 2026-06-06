@@ -8,6 +8,4 @@
 #ifndef AniXPlayer_Bridging_Header_h
 #define AniXPlayer_Bridging_Header_h
 
-#import "ANXAddressModel.h"
-
 #endif /* AniXPlayer_Bridging_Header_h */

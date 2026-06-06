@@ -82,7 +82,6 @@
 		8925B8912CA7E4C3001A8388 /* MatchNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8422CA7E4C3001A8388 /* MatchNetworkHandle.swift */; };
 		8925B8922CA7E4C3001A8388 /* NumberUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B85F2CA7E4C3001A8388 /* NumberUtils.swift */; };
 		8925B8932CA7E4C3001A8388 /* Match.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8412CA7E4C3001A8388 /* Match.swift */; };
-		8925B8942CA7E4C3001A8388 /* ANXAddressModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8522CA7E4C3001A8388 /* ANXAddressModel.m */; };
 		8925B8962CA7E4C3001A8388 /* SMBFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8132CA7E4C3001A8388 /* SMBFileManager.swift */; };
 		8925B8972CA7E4C3001A8388 /* Favorite.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B83B2CA7E4C3001A8388 /* Favorite.swift */; };
 		8925B8982CA7E4C3001A8388 /* URL+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8925B8212CA7E4C3001A8388 /* URL+Extension.swift */; };
@@ -369,8 +368,6 @@
 		8925B84A2CA7E4C3001A8388 /* Login.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Login.swift; sourceTree = "<group>"; };
 		8925B84B2CA7E4C3001A8388 /* UserNetworkHandle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNetworkHandle.swift; sourceTree = "<group>"; };
 		8925B84D2CA7E4C3001A8388 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
-		8925B8512CA7E4C3001A8388 /* ANXAddressModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ANXAddressModel.h; sourceTree = "<group>"; };
-		8925B8522CA7E4C3001A8388 /* ANXAddressModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ANXAddressModel.m; sourceTree = "<group>"; };
 		8925B8562CA7E4C3001A8388 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		8925B8572CA7E4C3001A8388 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		8925B8582CA7E4C3001A8388 /* Store+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Store+Extension.swift"; sourceTree = "<group>"; };
@@ -1047,15 +1044,6 @@
 			path = Networking;
 			sourceTree = "<group>";
 		};
-		8925B8552CA7E4C3001A8388 /* Objc */ = {
-			isa = PBXGroup;
-			children = (
-				8925B8512CA7E4C3001A8388 /* ANXAddressModel.h */,
-				8925B8522CA7E4C3001A8388 /* ANXAddressModel.m */,
-			);
-			path = Objc;
-			sourceTree = "<group>";
-		};
 		8925B8592CA7E4C3001A8388 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
@@ -1088,7 +1076,6 @@
 				8925B8222CA7E4C3001A8388 /* MediaPlayer */,
 				8925B8302CA7E4C3001A8388 /* Model */,
 				8925B84E2CA7E4C3001A8388 /* Networking */,
-				8925B8552CA7E4C3001A8388 /* Objc */,
 				8925B8592CA7E4C3001A8388 /* Preferences */,
 				8925B8622CA7E4C3001A8388 /* Utils */,
 				8925B8642CA7E4C3001A8388 /* Atomic.swift */,
@@ -1782,7 +1769,6 @@
 				8925B8932CA7E4C3001A8388 /* Match.swift in Sources */,
 				895A7FCE2FC8AD3800A997B8 /* EmbyModel.swift in Sources */,
 				895A7FCF2FC8AD3800A997B8 /* EmbyFileManager.swift in Sources */,
-				8925B8942CA7E4C3001A8388 /* ANXAddressModel.m in Sources */,
 				8925B8962CA7E4C3001A8388 /* SMBFileManager.swift in Sources */,
 				8925B8972CA7E4C3001A8388 /* Favorite.swift in Sources */,
 				8925B8982CA7E4C3001A8388 /* URL+Extension.swift in Sources */,

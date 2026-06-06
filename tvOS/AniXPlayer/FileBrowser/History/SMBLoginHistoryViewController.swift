@@ -86,7 +86,7 @@ class SMBLoginHistoryViewController: RemoteLoginHistoryViewController {
 
         if indexPath.section == 0 && !discoveredServices.isEmpty {
             let service = discoveredServices[indexPath.row]
-            cell.configureAsSource(title: service.name, iconName: "network")
+            cell.configureAsSource(title: service.name, iconName: "network", detail: service.addressDesc)
         } else {
             let info = loginInfos[indexPath.row]
             let title = info.url.host ?? info.url.absoluteString
@@ -100,14 +100,42 @@ class SMBLoginHistoryViewController: RemoteLoginHistoryViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath.section == 0 && !discoveredServices.isEmpty {
             let service = discoveredServices[indexPath.row]
-            let address = service.addresses.first ?? service.name
-            let loginInfo = LoginInfo(url: URL(string: "smb://\(address)")!, auth: nil)
-            let vc = connectViewController(loginInfo: loginInfo)
-            vc.delegate = self
-            navigationController?.pushViewController(vc, animated: true)
+
+            if service.addresses.isEmpty {
+                connectTo(address: service.name)
+                return
+            }
+
+            if service.addresses.count == 1 {
+                connectTo(address: service.addresses[0].ip)
+                return
+            }
+
+            let alert = UIAlertController(title: service.name, message: NSLocalizedString("选择一个 IP 地址连接", comment: ""), preferredStyle: .actionSheet)
+
+            for address in service.addresses {
+                alert.addAction(.init(title: address.ip, style: .default, handler: { [weak self] _ in
+                    self?.connectTo(address: address.ip)
+                }))
+            }
+            alert.addAction(.init(title: NSLocalizedString("取消", comment: ""), style: .cancel))
+
+            if let popover = alert.popoverPresentationController {
+                popover.sourceView = tableView
+                popover.sourceRect = tableView.rectForRow(at: indexPath)
+            }
+            present(alert, animated: true)
         } else {
             super.tableView(tableView, didSelectRowAt: indexPath)
         }
+    }
+
+    private func connectTo(address: String) {
+        let urlStr = "smb://\(address)"
+        let loginInfo = LoginInfo(url: URL(string: urlStr)!, auth: nil)
+        let vc = connectViewController(loginInfo: loginInfo)
+        vc.delegate = self
+        navigationController?.pushViewController(vc, animated: true)
     }
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {

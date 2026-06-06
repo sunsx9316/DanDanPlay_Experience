@@ -193,7 +193,6 @@
 		89DADA362FD0600200C71A33 /* WebDavConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA1F2FD0600200C71A33 /* WebDavConnectSvrViewController.swift */; };
 		89DADA372FD0600200C71A33 /* EmbyLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA102FD0600200C71A33 /* EmbyLoginHistoryViewController.swift */; };
 		89DADA382FD0600200C71A33 /* FTPConnectSvrViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA122FD0600200C71A33 /* FTPConnectSvrViewController.swift */; };
-		89DADA3C2FD0608D00C71A33 /* ANXAddressModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA3A2FD0608D00C71A33 /* ANXAddressModel.m */; };
 		89DADA3E2FD061A800C71A33 /* EmbyFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA3D2FD061A800C71A33 /* EmbyFile.swift */; };
 		89DADA3F2FD0755B00C71A33 /* AMSMB2 in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 89DAD9CB2FD05A9100C71A33 /* AMSMB2 */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		89DADA402FD0600200C71A33 /* MediaLibrarySectionCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA412FD0600200C71A33 /* MediaLibrarySectionCellView.swift */; };
@@ -416,8 +415,6 @@
 		89DADA242FD0600200C71A33 /* FileBrowserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBrowserViewController.swift; sourceTree = "<group>"; };
 		89DADA252FD0600200C71A33 /* MediaLibraryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaLibraryViewController.swift; sourceTree = "<group>"; };
 		89DADA262FD0600200C71A33 /* MediaLibraryWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaLibraryWindowController.swift; sourceTree = "<group>"; };
-		89DADA392FD0608D00C71A33 /* ANXAddressModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ANXAddressModel.h; sourceTree = "<group>"; };
-		89DADA3A2FD0608D00C71A33 /* ANXAddressModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ANXAddressModel.m; sourceTree = "<group>"; };
 		89DADA3D2FD061A800C71A33 /* EmbyFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbyFile.swift; sourceTree = "<group>"; };
 		89DADA412FD0600200C71A33 /* MediaLibrarySectionCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaLibrarySectionCellView.swift; sourceTree = "<group>"; };
 		89DADA432FD0600200C71A33 /* MediaLibraryItemCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaLibraryItemCellView.swift; sourceTree = "<group>"; };
@@ -747,7 +744,6 @@
 		8925B91A2CA7F901001A8388 /* CocoaShare */ = {
 			isa = PBXGroup;
 			children = (
-				89DADA3B2FD0608D00C71A33 /* Objc */,
 				8925B8D32CA7F901001A8388 /* MediaPlayer */,
 				8925B8E12CA7F901001A8388 /* Model */,
 				8925B8FF2CA7F901001A8388 /* Networking */,
@@ -1136,15 +1132,6 @@
 			path = Files;
 			sourceTree = "<group>";
 		};
-		89DADA3B2FD0608D00C71A33 /* Objc */ = {
-			isa = PBXGroup;
-			children = (
-				89DADA392FD0608D00C71A33 /* ANXAddressModel.h */,
-				89DADA3A2FD0608D00C71A33 /* ANXAddressModel.m */,
-			);
-			path = Objc;
-			sourceTree = "<group>";
-		};
 		E8141592C1C6FA59A9A560BE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -1524,7 +1511,6 @@
 				8943150828D373FC0031619C /* SliderTableViewCell.swift in Sources */,
 				8943151028D376260031619C /* StepTableViewCell.swift in Sources */,
 				897292292C2FB1020016CA1F /* NSImage+Utils.swift in Sources */,
-				89DADA3C2FD0608D00C71A33 /* ANXAddressModel.m in Sources */,
 				894314FF28D36F590031619C /* TableView.swift in Sources */,
 				8943150C28D375A30031619C /* SwitchTableViewCell.swift in Sources */,
 				8917059F28CF85DF0075ECD9 /* PlayerSlider.swift in Sources */,

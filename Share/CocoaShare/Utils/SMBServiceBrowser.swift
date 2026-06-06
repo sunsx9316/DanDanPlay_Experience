@@ -10,6 +10,27 @@
 import Foundation
 import Network
 
+struct SMBAddress {
+    let ip: String
+
+    init?(rawValue: Data) {
+        let result: String? = rawValue.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> String? in
+            let sockAddr = ptr.bindMemory(to: sockaddr.self)
+            guard let baseAddress = sockAddr.baseAddress?.pointee,
+                  baseAddress.sa_family == sa_family_t(AF_INET) else { return nil }
+
+            let addrPtr = ptr.bindMemory(to: sockaddr_in.self)
+            guard let addr = addrPtr.baseAddress?.pointee.sin_addr else { return nil }
+            var ipBuffer = [CChar](repeating: 0, count: Int(INET_ADDRSTRLEN))
+            var sinaddr = addr
+            guard let ipPtr = inet_ntop(AF_INET, &sinaddr, &ipBuffer, socklen_t(INET_ADDRSTRLEN)) else { return nil }
+            return String(cString: ipPtr)
+        }
+        guard let ip = result else { return nil }
+        self.ip = ip
+    }
+}
+
 class SMBService: NSObject, NetServiceDelegate {
     
     var scanningCallBack: (() -> Void)?
@@ -23,27 +44,13 @@ class SMBService: NSObject, NetServiceDelegate {
     }
     
     var addressDesc: String {
-        let addressModels = self.addresses
-        let str = addressModels.reduce("", { res, model in
-            return res + model + (model == addressModels.last ? "" : "\n")
-        })
-        return str
+        self.addresses.map(\.ip).joined(separator: "\n")
     }
     
-    var addresses: [String] {
-        return self.svr.addresses?.compactMap({ data in
-            data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) -> String? in
-                let sockAddr = ptr.bindMemory(to: sockaddr_in.self)
-                let addr = sockAddr.baseAddress?.pointee.sin_addr
-                guard let addr = addr else { return nil }
-                var ipBuffer = [CChar](repeating: 0, count: Int(INET_ADDRSTRLEN))
-                var sinaddr = addr
-                guard let ipPtr = inet_ntop(AF_INET, &sinaddr, &ipBuffer, socklen_t(INET_ADDRSTRLEN)) else { return nil }
-                return String(cString: ipPtr)
-            }
-        }) ?? []
+    var addresses: [SMBAddress] {
+        return self.svr.addresses?.compactMap { SMBAddress(rawValue: $0) } ?? []
     }
-    
+
     init(svr: NetService) {
         self.svr = svr
         super.init()

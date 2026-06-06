@@ -84,13 +84,15 @@ class MPVFrameRenderer {
     /// 停止渲染
     func stopRendering() {}
 
-    /// 清理所有资源
+    /// 清理所有资源，与渲染队列同步
     func terminate() {
-        renderBuffer?.deallocate()
-        renderBuffer = nil
-        renderBufferSize = 0
-        renderContext = nil
-        videoSize = .zero
+        queue.sync {
+            renderBuffer?.deallocate()
+            renderBuffer = nil
+            renderBufferSize = 0
+            renderContext = nil
+            videoSize = .zero
+        }
     }
 
     // MARK: - 帧捕获管线

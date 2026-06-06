@@ -61,7 +61,6 @@
 		895154502FC1DC2D00F75DB7 /* MatchNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895154122FC1DC2D00F75DB7 /* MatchNetworkHandle.swift */; };
 		895154512FC1DC2D00F75DB7 /* FavoriteNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8951540C2FC1DC2D00F75DB7 /* FavoriteNetworkHandle.swift */; };
 		895154522FC1DC2D00F75DB7 /* WebDavFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895153DC2FC1DC2D00F75DB7 /* WebDavFileManager.swift */; };
-		895154532FC1DC2D00F75DB7 /* ANXAddressModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 895154202FC1DC2D00F75DB7 /* ANXAddressModel.m */; };
 		895154542FC1DC2D00F75DB7 /* PlayerDanmakuContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895153F52FC1DC2D00F75DB7 /* PlayerDanmakuContext.swift */; };
 		895154552FC1DC2D00F75DB7 /* SMBServiceBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895154312FC1DC2D00F75DB7 /* SMBServiceBrowser.swift */; };
 		895154562FC1DC2D00F75DB7 /* FTPFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895153E42FC1DC2D00F75DB7 /* FTPFile.swift */; };
@@ -309,8 +308,6 @@
 		8951541A2FC1DC2D00F75DB7 /* UserNetworkHandle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserNetworkHandle.swift; sourceTree = "<group>"; };
 		8951541C2FC1DC2D00F75DB7 /* AppKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppKey.swift; sourceTree = "<group>"; };
 		8951541D2FC1DC2D00F75DB7 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
-		8951541F2FC1DC2D00F75DB7 /* ANXAddressModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ANXAddressModel.h; sourceTree = "<group>"; };
-		895154202FC1DC2D00F75DB7 /* ANXAddressModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ANXAddressModel.m; sourceTree = "<group>"; };
 		895154242FC1DC2D00F75DB7 /* Preferences.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Preferences.swift; sourceTree = "<group>"; };
 		895154252FC1DC2D00F75DB7 /* Store.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Store.swift; sourceTree = "<group>"; };
 		895154262FC1DC2D00F75DB7 /* Store+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Store+Extension.swift"; sourceTree = "<group>"; };
@@ -865,15 +862,6 @@
 			path = Networking;
 			sourceTree = "<group>";
 		};
-		895154232FC1DC2D00F75DB7 /* Objc */ = {
-			isa = PBXGroup;
-			children = (
-				8951541F2FC1DC2D00F75DB7 /* ANXAddressModel.h */,
-				895154202FC1DC2D00F75DB7 /* ANXAddressModel.m */,
-			);
-			path = Objc;
-			sourceTree = "<group>";
-		};
 		895154272FC1DC2D00F75DB7 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
@@ -907,7 +895,6 @@
 				895153F22FC1DC2D00F75DB7 /* MediaPlayer */,
 				895154002FC1DC2D00F75DB7 /* Model */,
 				8951541E2FC1DC2D00F75DB7 /* Networking */,
-				895154232FC1DC2D00F75DB7 /* Objc */,
 				895154272FC1DC2D00F75DB7 /* Preferences */,
 				895154322FC1DC2D00F75DB7 /* Utils */,
 				895154332FC1DC2D00F75DB7 /* Atomic.swift */,
@@ -1413,7 +1400,6 @@
 				895154512FC1DC2D00F75DB7 /* FavoriteNetworkHandle.swift in Sources */,
 				895A7F132FC5EE1800A997B8 /* PCConnectViewController.swift in Sources */,
 				895154522FC1DC2D00F75DB7 /* WebDavFileManager.swift in Sources */,
-				895154532FC1DC2D00F75DB7 /* ANXAddressModel.m in Sources */,
 				895154542FC1DC2D00F75DB7 /* PlayerDanmakuContext.swift in Sources */,
 				895154552FC1DC2D00F75DB7 /* SMBServiceBrowser.swift in Sources */,
 				895154562FC1DC2D00F75DB7 /* FTPFile.swift in Sources */,
