@@ -103,6 +103,14 @@ extension MediaSettingViewController: UITableViewDataSource {
             }
             return cell
 
+        case .miniProgressBar:
+            let cell = tableView.dequeueCell(class: SwitchSettingCell.self, indexPath: indexPath)
+            cell.configure(title: type.title, isOn: Preferences.shared.miniProgressBar)
+            cell.onSwitchChanged = { [weak self] isOn in
+                self?.mediaModel.onChangeMiniProgressBar(isOn)
+            }
+            return cell
+
         case .playerSpeed:
             let cell = tableView.dequeueCell(class: StepperSettingCell.self, indexPath: indexPath)
             let range = mediaModel.playerSpeedRange()

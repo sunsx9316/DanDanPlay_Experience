@@ -165,11 +165,30 @@ class PlayerUIView: BaseView {
     private(set) var hiddenControlView = false {
         didSet {
             self.delegate?.playerUIView(self, didChangeControlViewState: !self.hiddenControlView)
+            updateMiniProgressVisibility()
         }
     }
-    
+
+    var miniProgressEnabled = true {
+        didSet {
+            updateMiniProgressVisibility()
+        }
+    }
+
+    private func updateMiniProgressVisibility() {
+        miniProgressSlider.isHidden = !(miniProgressEnabled && hiddenControlView)
+    }
+
     private var hiddenTime: TimeInterval = 4
-    
+
+    lazy var miniProgressSlider: PlayerSlider = {
+        let slider = PlayerSlider()
+        slider.progressHeight = 3
+        slider.bgColor = NSColor(white: 0.3, alpha: 0.6)
+        slider.trackFillColor = NSColor.mainColor
+        return slider
+    }()
+
     var showOpenButton: Bool = true {
         didSet {
             self.openButton.isHidden = !showOpenButton
@@ -203,10 +222,12 @@ class PlayerUIView: BaseView {
         let totalTime = dataSource?.playerTotalTime(playerUIView: self) ?? 0
         let current = Date(timeIntervalSince1970: currentTime)
         let total = Date(timeIntervalSince1970: totalTime)
-        
+
         self.bottomView.timeLabel.stringValue = timeFormatter.string(from: current) + "/" + timeFormatter.string(from: total)
         if !self.bottomView.progressSlider.isTracking {
-            self.bottomView.progressSlider.progress = Double(dataSource?.playerProgress(playerUIView: self) ?? 0)
+            let progress = Double(dataSource?.playerProgress(playerUIView: self) ?? 0)
+            self.bottomView.progressSlider.progress = progress
+            self.miniProgressSlider.progress = progress
         }
     }
     
@@ -252,7 +273,7 @@ class PlayerUIView: BaseView {
                     ctx.timingFunction = .init(name: .easeInEaseOut)
                     
                     self.topView.animator().transform = CGAffineTransform(translationX: 0, y: -self.topView.frame.height)
-                    self.bottomView.animator().transform = CGAffineTransform(translationX: 0, y: self.bottomView.frame.height - 5)
+                    self.bottomView.animator().transform = CGAffineTransform(translationX: 0, y: self.bottomView.frame.height)
                 } completionHandler: {
                     self.timeTipsView?.dismiss()
                 }
@@ -354,7 +375,8 @@ class PlayerUIView: BaseView {
         self.addSubview(self.topView)
         self.addSubview(self.bottomView)
         self.addSubview(openButton)
-        
+        self.addSubview(miniProgressSlider)
+
         self.openButton.snp.makeConstraints { make in
             make.center.equalToSuperview()
             make.size.equalTo(CGSize(width: 150, height: 60))
@@ -370,6 +392,11 @@ class PlayerUIView: BaseView {
         
         self.bottomView.snp.makeConstraints { make in
             make.bottom.leading.trailing.equalToSuperview()
+        }
+
+        miniProgressSlider.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.height.equalTo(3)
         }
     }
     

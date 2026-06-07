@@ -57,6 +57,8 @@ class PlayerMediaContext {
 
     lazy var playerPiP = BehaviorSubject<Bool>(value: Preferences.shared.playerPiP)
 
+    lazy var miniProgressBar = BehaviorSubject<Bool>(value: Preferences.shared.miniProgressBar)
+
     lazy var volume = PublishSubject<Int>()
     
     /// 播放文件事件

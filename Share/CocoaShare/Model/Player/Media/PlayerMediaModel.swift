@@ -169,13 +169,17 @@ extension PlayerMediaModel {
         return [PlayerAspectRatio.default, PlayerAspectRatio.fourToThree, PlayerAspectRatio.sixteenToNine, PlayerAspectRatio.sixteenToTen]
     }
     
+    var miniProgressBar: Bool {
+        return (try? self.context.miniProgressBar.value()) ?? true
+    }
+    
     var mediaSetting: [MediaSettingInfo] {
         var dataSource = [MediaSettingInfo]()
         
         dataSource.append(MediaSettingInfo(title: NSLocalizedString("媒体信息", comment: ""),
                                            dataSource: [.matchInfo]))
         
-        var mediaSetting: [MediaSettingType] = [.autoJumpTitleEnding, .jumpTitleDuration, .jumpEndingDuration, .playerSpeed, .playerMode, .aspectRatio, .playerPiP]
+        var mediaSetting: [MediaSettingType] = [.autoJumpTitleEnding, .jumpTitleDuration, .jumpEndingDuration, .playerSpeed, .playerMode, .aspectRatio, .miniProgressBar, .playerPiP]
         mediaSetting = mediaSetting.filter ({ setting in
             if !self.autoJumpTitleEnding {
                 if setting == .jumpTitleDuration || setting == .jumpEndingDuration {
@@ -186,6 +190,11 @@ extension PlayerMediaModel {
 #if os(iOS)
                 return self.player.coreType == .mpv
 #else
+                return false
+#endif
+            }
+            if setting == .miniProgressBar {
+#if os(iOS)
                 return false
 #endif
             }
@@ -326,6 +335,12 @@ class PlayerMediaModel {
         Preferences.shared.playerPiP = enabled
         self.context.playerPiP.onNext(enabled)
         ANX.logInfo(.UI, "更改画中画开关: \(enabled)")
+    }
+
+    func onChangeMiniProgressBar(_ enabled: Bool) {
+        Preferences.shared.miniProgressBar = enabled
+        self.context.miniProgressBar.onNext(enabled)
+        ANX.logInfo(.UI, "更改迷你进度条开关: \(enabled)")
     }
 
     // MARK: - PiP

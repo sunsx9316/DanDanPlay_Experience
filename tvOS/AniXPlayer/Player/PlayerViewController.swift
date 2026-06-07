@@ -119,7 +119,12 @@ class PlayerViewController: ViewController {
         }
 
         overlayView.onShow = { [weak self] in self?.miniProgressBar.isHidden = true }
-        overlayView.onHide = { [weak self] in self?.miniProgressBar.isHidden = false }
+        overlayView.onHide = { [weak self] in
+            guard let self = self else { return }
+            
+            let isOn = Preferences.shared.miniProgressBar
+            self.showMiniProgressBar(isOn, isOverlayViewVisible: self.overlayView.isVisible)
+        }
 
         overlayView.onAutoHide = { [weak self] in
             self?.overlayView.hide()
@@ -312,6 +317,10 @@ class PlayerViewController: ViewController {
     }
 
     // MARK: - Playback Control
+    
+    private func showMiniProgressBar(_ isShowMiniProgressBar: Bool, isOverlayViewVisible: Bool) {
+        self.miniProgressBar.isHidden = !(isShowMiniProgressBar && !isOverlayViewVisible)
+    }
 
     private func showExitConfirmation() {
         let alert = UIAlertController(
@@ -434,6 +443,12 @@ class PlayerViewController: ViewController {
     // MARK: - PlayerModel Bindings
 
     private func bindModel() {
+        
+        mediaModel.context.miniProgressBar.subscribe(onNext: { [weak self] isOn in
+            guard let self = self else { return }
+            self.showMiniProgressBar(isOn, isOverlayViewVisible: self.overlayView.isVisible)
+        }).disposed(by: bag)
+
         playerModel.parseMediaState.subscribe(onNext: { [weak self] event in
             guard let self = self else { return }
             self.handleMediaLoadEvent(event)

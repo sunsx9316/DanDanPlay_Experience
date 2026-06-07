@@ -65,12 +65,12 @@ class PlayerViewController: ViewController {
     }()
     
     private var matchWindowController: WindowController?
-    
+
     private weak var danmakuMenu: NSMenu?
-    
+
     // 开始活动以防止系统休眠
     private var activityToken: NSObjectProtocol?
-    
+
     //MARK: - life cycle
     
     deinit {
@@ -115,7 +115,7 @@ class PlayerViewController: ViewController {
         self.uiView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
-        
+
         self.bindModel()
         self.uiView.autoShowControlView()
         self.setupMenu()
@@ -170,6 +170,10 @@ class PlayerViewController: ViewController {
     }
     
     private func bindMediaModel() {
+        self.mediaModel.context.miniProgressBar.subscribe(onNext: { [weak self] isOn in
+            self?.uiView.miniProgressEnabled = isOn
+        }).disposed(by: self.disposeBag)
+
         self.mediaModel.context.media.subscribe(onNext: { [weak self] file in
             guard let self = self else { return }
             
@@ -568,7 +572,7 @@ extension PlayerViewController: PlayerUIViewDelegate, NSMenuDelegate {
     }
     
     func playerUIView(_ playerUIView: PlayerUIView, didChangeControlViewState show: Bool) {
-        
+
     }
     
     func onTouchPlayerList(playerUIView: PlayerUIView, button: NSButton) {

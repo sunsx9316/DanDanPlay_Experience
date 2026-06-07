@@ -115,7 +115,8 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
             case .subtitleSafeArea, .subtitleTrack, .audioTrack,
                     .playerMode, .loadSubtitle, .subtitleDelay,
                     .matchInfo, .audioDelay, .autoJumpTitleEnding,
-                    .subtitleColor, .subtitleStyle, .aspectRatio, .playerPiP:
+                    .subtitleColor, .subtitleStyle, .aspectRatio, .playerPiP,
+                    .miniProgressBar:
                 return 40
             }
         }
@@ -435,6 +436,15 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
                     guard let self = self else { return }
                     self.mediaModel.onChangeAspectRatio(allItems[idx])
                     self.scrollView.containerView.reloadData()
+                }
+                return cell
+            case .miniProgressBar:
+                let cell = outlineView.dequeueReusableCell(class: SwitchTableViewCell.self)
+                cell.aSwitch.isOn = Preferences.shared.miniProgressBar
+                cell.aSwitch.title = type.title
+                cell.onTouchSliderCallBack = { [weak self] (aCell) in
+                    guard let self = self else { return }
+                    self.mediaModel.onChangeMiniProgressBar(aCell.aSwitch.isOn)
                 }
                 return cell
             case .playerPiP:

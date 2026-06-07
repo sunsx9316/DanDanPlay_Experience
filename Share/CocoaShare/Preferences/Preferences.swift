@@ -161,6 +161,9 @@ class Preferences {
         /// 文件浏览器排序选项
         case fileBrowserSortOption
 
+        /// 迷你进度条显示
+        case miniProgressBar
+
         /// 文件浏览器排序升降序
         case fileBrowserSortAscending
 
@@ -215,6 +218,10 @@ class Preferences {
     /// 画中画
     @StoreWrapper(defaultValue: false, key: .playerPiP)
     var playerPiP: Bool
+
+    /// 迷你进度条显示
+    @StoreWrapper(defaultValue: true, key: .miniProgressBar)
+    var miniProgressBar: Bool
 
     /// 文件浏览器排序选项
     @StoreWrapper(defaultValue: FileSortOption.default, key: .fileBrowserSortOption)
