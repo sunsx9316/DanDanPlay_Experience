@@ -27,10 +27,6 @@ DerivedData/
 
 ## App packaging
 *.ipa
-*.dSYM.zip
-*.dSYM
-!Share/TVVLCKit/Sources/TVVLCKitSPM/TVVLCKit.xcframework/tvos-arm64/dSYMs/TVVLCKit.framework.dSYM/
-!Share/TVVLCKit/Sources/TVVLCKitSPM/TVVLCKit.xcframework/tvos-arm64_x86_64-simulator/dSYMs/TVVLCKit.framework.dSYM/
 
 # CocoaPods
 #

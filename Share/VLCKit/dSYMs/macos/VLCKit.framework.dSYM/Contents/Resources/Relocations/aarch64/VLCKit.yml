@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/jimhuang/Dev/DanDanPlay_Experience/Share/VLCKit/Sources/VLCKitSPM/VLCKit.xcframework/macos-arm64_x86_64/VLCKit.framework/VLCKit'
+relocations:     []
+...
