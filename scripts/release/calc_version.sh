@@ -15,9 +15,9 @@ fi
 # 解析 last tag: v1.6.2 → major=1, month=6, minor=2
 LAST_SHORT="${LAST_TAG#v}"
 IFS='.' read -r MAJOR LAST_MONTH LAST_MINOR <<< "$LAST_SHORT"
+LAST_MINOR="${LAST_MINOR:-0}"
 
 CURRENT_MONTH=$(date +%-m)
-CURRENT_YEAR=$(date +%Y)
 TODAY=$(date +%Y%m%d)
 
 # 计算 shortVersion
@@ -29,7 +29,7 @@ fi
 NEW_SHORT_VERSION="${MAJOR}.${CURRENT_MONTH}.${NEW_MINOR}"
 
 # 检查当前 pbxproj 中的 build 号是否以今天日期开头，决定 XX
-CURRENT_BUILD=$(grep -m1 "CURRENT_PROJECT_VERSION" Mac/AniXPlayer.xcodeproj/project.pbxproj | head -1 | sed 's/.*= //;s/;//')
+CURRENT_BUILD=$(grep -m1 "CURRENT_PROJECT_VERSION" Mac/AniXPlayer.xcodeproj/project.pbxproj | sed 's/.*= //;s/;//')
 if [[ "$CURRENT_BUILD" == "$TODAY"* ]]; then
     TODAY_SEQ=$((10#${CURRENT_BUILD:8:2} + 1))
 else
