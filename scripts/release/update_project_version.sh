@@ -32,6 +32,12 @@ echo "已备份 project.pbxproj → project.pbxproj.bak"
 echo "更新 MARKETING_VERSION → $SHORT_VERSION"
 agvtool new-marketing-version "$SHORT_VERSION"
 
+# agvtool new-marketing-version 可能不会更新 pbxproj 中的 MARKETING_VERSION
+# 这里用 sed 直接更新，确保两个位置都正确
+sed -i '' "s/MARKETING_VERSION = [0-9.]*;/MARKETING_VERSION = $SHORT_VERSION;/g" \
+    "AniXPlayer.xcodeproj/project.pbxproj"
+echo "已同步 pbxproj MARKETING_VERSION"
+
 echo "更新 CURRENT_PROJECT_VERSION → $BUILD"
 agvtool new-version -all "$BUILD"
 
