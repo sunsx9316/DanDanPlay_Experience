@@ -1,7 +1,7 @@
 #!/bin/bash
 set -euo pipefail
 
-# 使用 agvtool 更新 Xcode 工程版本号
+# 更新 Xcode 工程版本号（直接改 pbxproj，不动 Info.plist）
 # 用法: update_project_version.sh <platform> <short_version> <build>
 
 PLATFORM="$1"
@@ -22,23 +22,20 @@ case "$PLATFORM" in
 esac
 
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-cd "$REPO_ROOT/$PLATFORM_DIR"
+PBXPROJ="$REPO_ROOT/$PLATFORM_DIR/AniXPlayer.xcodeproj/project.pbxproj"
 
 # 备份 pbxproj
-cp "AniXPlayer.xcodeproj/project.pbxproj" "AniXPlayer.xcodeproj/project.pbxproj.bak"
+cp "$PBXPROJ" "$PBXPROJ.bak"
 echo "已备份 project.pbxproj → project.pbxproj.bak"
 
-# 更新版本号
+# 更新 MARKETING_VERSION
 echo "更新 MARKETING_VERSION → $SHORT_VERSION"
-agvtool new-marketing-version "$SHORT_VERSION"
+sed -i '' "s/MARKETING_VERSION = [0-9.]*;/MARKETING_VERSION = $SHORT_VERSION;/g" "$PBXPROJ"
 
-# agvtool new-marketing-version 可能不会更新 pbxproj 中的 MARKETING_VERSION
-# 这里用 sed 直接更新，确保两个位置都正确
-sed -i '' "s/MARKETING_VERSION = [0-9.]*;/MARKETING_VERSION = $SHORT_VERSION;/g" \
-    "AniXPlayer.xcodeproj/project.pbxproj"
-echo "已同步 pbxproj MARKETING_VERSION"
-
+# 更新 CURRENT_PROJECT_VERSION
 echo "更新 CURRENT_PROJECT_VERSION → $BUILD"
-agvtool new-version -all "$BUILD"
+sed -i '' "s/CURRENT_PROJECT_VERSION = [0-9]*;/CURRENT_PROJECT_VERSION = $BUILD;/g" "$PBXPROJ"
 
-echo "版本号更新完成"
+echo ""
+echo "版本号更新完成: $SHORT_VERSION ($BUILD)"
+echo "Info.plist 使用 \$(MARKETING_VERSION) / \$(CURRENT_PROJECT_VERSION) 构建变量，无需修改。"
