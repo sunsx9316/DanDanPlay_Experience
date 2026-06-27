@@ -116,25 +116,36 @@ bash scripts/release/archive_and_export.sh <platform>
 
 如果构建失败，展示错误信息，**终止**。
 
-### Step 5: 公证（仅 macOS，后台执行）
+### Step 5: 创建 DMG（仅 macOS）
+
+```bash
+cd /Users/jimhuang/Dev/DanDanPlay_Experience
+bash scripts/release/create_dmg.sh /tmp/export/AniXPlayer.app
+```
+
+产物：`/tmp/export/AniXPlayer.dmg`
+
+DMG 包含：App、Applications 快捷方式、弹弹Play 官网 .webloc，使用列表模式。
+
+### Step 6: 公证 DMG（仅 macOS，后台执行）
 
 公证耗时 5-15 分钟，用 `run_in_background` 执行：
 
 ```bash
 cd /Users/jimhuang/Dev/DanDanPlay_Experience
-bash scripts/release/notarize.sh /tmp/export/AniXPlayer.app
+bash scripts/release/notarize.sh /tmp/export/AniXPlayer.dmg
 ```
 
-脚本内部会自动将 `.app` 打包为 `.zip` 再提交公证（notarytool 不接受 `.app` 目录），公证成功后自动清理 zip 并钉入票据。
+`notarize.sh` 支持 `.app`（自动打包为 zip 提交）和 `.dmg`（直接提交），公证成功后自动钉入票据。
 
 等待完成后检查结果。如果公证失败，展示错误信息，**终止**。
 
-### Step 6: 最终确认 + 发布
+### Step 7: 最终确认 + 发布
 
 展示汇总信息：
 - 平台、版本号、Build、产物路径、产物大小
 - 更新日志摘要
-- 接下来将执行的操作（DMG、GitHub Release、git tag、更新仓库）
+- 接下来将执行的操作（GitHub Release、git tag、更新仓库）
 
 用 **AskUserQuestion** 最终确认：
 - “确认发布” (Recommended)
@@ -144,7 +155,7 @@ bash scripts/release/notarize.sh /tmp/export/AniXPlayer.app
 
 ```bash
 cd /Users/jimhuang/Dev/DanDanPlay_Experience
-bash scripts/release/publish.sh <platform> /tmp/export/AniXPlayer.app <shortVersion> <build> /tmp/release_changelog.txt
+bash scripts/release/publish.sh <platform> /tmp/export/AniXPlayer.dmg <shortVersion> <build> /tmp/release_changelog.txt
 ```
 
 ## 注意事项

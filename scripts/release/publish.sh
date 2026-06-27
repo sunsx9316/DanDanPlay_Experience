@@ -20,12 +20,17 @@ REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 VERSION_TAG="v${SHORT_VERSION}"
 
 if [ "$PLATFORM" = "mac" ]; then
-    # 1. 创建 DMG
-    echo "=== 创建 DMG ==="
+    # 1. 创建/使用 DMG
     DMG_NAME="AniXPlayer-${SHORT_VERSION}-build${BUILD}.dmg"
-    "$SCRIPT_DIR/create_dmg.sh" "$APP_PATH" "$DMG_NAME"
-    DMG_PATH="$(dirname "$APP_PATH")/$DMG_NAME"
-    echo "DMG: $DMG_PATH"
+    if [[ "$APP_PATH" == *.dmg ]]; then
+        DMG_PATH="$APP_PATH"
+        echo "使用已有 DMG: $DMG_PATH"
+    else
+        echo "=== 创建 DMG ==="
+        "$SCRIPT_DIR/create_dmg.sh" "$APP_PATH" "$DMG_NAME"
+        DMG_PATH="$(dirname "$APP_PATH")/$DMG_NAME"
+        echo "DMG: $DMG_PATH"
+    fi
 
     # 2. GitHub Release
     echo "=== 创建 GitHub Release ==="
