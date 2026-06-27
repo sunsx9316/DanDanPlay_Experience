@@ -172,7 +172,7 @@ extension PlayerMediaModel {
     var miniProgressBar: Bool {
         return (try? self.context.miniProgressBar.value()) ?? true
     }
-    
+
     var mediaSetting: [MediaSettingInfo] {
         var dataSource = [MediaSettingInfo]()
         
@@ -723,7 +723,7 @@ class PlayerMediaModel {
             guard let self = self else { return }
             self.onPiPToggleChanged?(on)
         }).disposed(by: self.disposeBag)
-        
+
         self.context.subtitleOffsetTime.subscribe(onNext: { [weak self] subtitleOffsetTime in
             guard let self = self else { return }
             

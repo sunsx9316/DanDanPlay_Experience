@@ -409,6 +409,9 @@ extension MediaSettingViewController: UITableViewDelegate, UITableViewDataSource
                 self.reloadData()
             }
             return cell
+        case .miniProgressBar:
+            // iOS 不展示 miniProgressBar（由 mediaSetting 过滤），编译器仍需穷举
+            return UITableViewCell()
         case .playerPiP:
             let cell = tableView.dequeueCell(class: TitleTableViewCell.self, indexPath: indexPath)
             cell.label.text = type.title

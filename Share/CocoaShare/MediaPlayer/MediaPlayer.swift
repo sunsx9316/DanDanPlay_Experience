@@ -49,7 +49,7 @@ protocol MediaPlayerProtocol: AnyObject {
     var subtitleOffsetTime: Double { set get }
     
     var subtitleStyle: Bool { set get }
-    
+
     var audioOffsetTime: Double { set get }
     
     var speed: Double { set get }
@@ -274,12 +274,12 @@ class MediaPlayer {
         get {
             return self.player.subtitleStyle
         }
-        
+
         set {
             self.player.subtitleStyle = newValue
         }
     }
-    
+
     /// 音频偏移，单位秒
     var audioOffsetTime: Double {
         get {
