@@ -18,6 +18,7 @@ class SMBLoginHistoryViewController: BaseLoginHistoryViewController<SMBFile> {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.registerClassCell(class: TitleDetailTableViewCell.self)
         startSearch()
     }
 
@@ -31,6 +32,30 @@ class SMBLoginHistoryViewController: BaseLoginHistoryViewController<SMBFile> {
         vc.delegate = self
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
+    }
+
+    override func displayAddress(for loginInfo: LoginInfo) -> String? {
+        guard let subPath = loginInfo.parameter?[LoginInfo.Key.smbSubPath.rawValue], !subPath.isEmpty else {
+            return loginInfo.url.absoluteString
+        }
+        var url = loginInfo.url
+        url.appendPathComponent(subPath)
+        return url.absoluteString
+    }
+
+    override func rootFile(for loginInfo: LoginInfo) -> any File {
+        // 取得到子路径就拼接，取不到就返回根目录
+        guard let subPath = loginInfo.parameter?[LoginInfo.Key.smbSubPath.rawValue],
+              !subPath.isEmpty else {
+            return SMBFile.rootFile
+        }
+
+        let parts = subPath.split(separator: "/", maxSplits: 1).map(String.init)
+        let shareName = parts[0]
+        if parts.count > 1 {
+            return SMBFile(shareName: shareName, path: parts[1])
+        }
+        return SMBFile(shareName: shareName)
     }
 
     // MARK: - Network Search
@@ -48,7 +73,7 @@ class SMBLoginHistoryViewController: BaseLoginHistoryViewController<SMBFile> {
 
     // MARK: - UITableViewDataSource
 
-    func numberOfSections(in tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 2
     }
 
@@ -61,17 +86,10 @@ class SMBLoginHistoryViewController: BaseLoginHistoryViewController<SMBFile> {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
-            let cell = tableView.dequeueCell(class: LinkHistoryTableViewCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: TitleDetailTableViewCell.self, indexPath: indexPath)
             let service = self.browser?.discoveredServices[indexPath.row]
-
             cell.titleLabel.text = service?.name
-            cell.addressLabel.text = service?.addressDesc
-
-            if service?.didResolve == true {
-                cell.indicatorView.stopAnimating()
-            } else {
-                cell.indicatorView.startAnimating()
-            }
+            cell.subtitleLabel.text = service?.addressDesc
             return cell
         }
         return super.tableView(tableView, cellForRowAt: indexPath)
@@ -109,8 +127,15 @@ class SMBLoginHistoryViewController: BaseLoginHistoryViewController<SMBFile> {
         let view = tableView.dequeueHeaderFooterView(class: LinkHistoryHeaderView.self)
         if section == 0 {
             view.titleLabel.text = NSLocalizedString("网络邻居", comment: "")
+            let hasUnresolved = self.browser?.discoveredServices.contains(where: { !$0.didResolve }) == true
+            if hasUnresolved {
+                view.indicatorView.startAnimating()
+            } else {
+                view.indicatorView.stopAnimating()
+            }
         } else {
             view.titleLabel.text = NSLocalizedString("登陆历史", comment: "")
+            view.indicatorView.stopAnimating()
         }
         return view
     }

@@ -63,6 +63,18 @@ class BaseLoginHistoryViewController<F: File>: ViewController, UITableViewDelega
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
+
+    func rootFile(for loginInfo: LoginInfo) -> File {
+        return self.rootFile
+    }
+
+    func displayName(for loginInfo: LoginInfo) -> String? {
+        return loginInfo.auth?.userName
+    }
+
+    func displayAddress(for loginInfo: LoginInfo) -> String? {
+        return loginInfo.url.absoluteString
+    }
     
     //MARK: Private Method
     @objc func beginRefreshing() {
@@ -93,6 +105,10 @@ class BaseLoginHistoryViewController<F: File>: ViewController, UITableViewDelega
     }
     
     //MARK: UITableViewDelegate, UITableViewDataSource
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return self.historyLoginInfos.count
     }
@@ -101,10 +117,11 @@ class BaseLoginHistoryViewController<F: File>: ViewController, UITableViewDelega
         
         let cell = tableView.dequeueCell(class: LinkHistoryTableViewCell.self, indexPath: indexPath)
         let info = self.historyLoginInfos[indexPath.row]
-        cell.titleLabel.text = info.url.host
-        cell.addressLabel.text = info.auth?.userName
+        let name = displayName(for: info)
+        cell.nameLabel.text = name
+        cell.nameLabel.isHidden = (name == nil)
+        cell.addressLabel.text = displayAddress(for: info)
         cell.remarkLabel.text = info.remark
-        cell.indicatorView.stopAnimating()
         return cell
     }
     
@@ -128,7 +145,7 @@ class BaseLoginHistoryViewController<F: File>: ViewController, UITableViewDelega
                     self.dataSource = loginInfos
                     self.tableView.reloadData()
 
-                    let vc = FileBrowserViewController(with: self.rootFile, selectedFile: nil, filterType: .video)
+                    let vc = FileBrowserViewController(with: self.rootFile(for: loginInfo), selectedFile: nil, filterType: .video)
                     vc.delegate = self
                     vc.hidesBottomBarWhenPushed = true
                     self.navigationController?.pushViewController(vc, animated: true)
@@ -187,11 +204,11 @@ class BaseLoginHistoryViewController<F: File>: ViewController, UITableViewDelega
         }
         self.dataSource = loginInfos
         self.tableView.reloadData()
-        
-        let vc = FileBrowserViewController(with: self.rootFile, selectedFile: nil, filterType: .video)
+
+        let vc = FileBrowserViewController(with: self.rootFile(for: loginInfo), selectedFile: nil, filterType: .video)
         vc.delegate = self
         vc.hidesBottomBarWhenPushed = true
         self.navigationController?.pushViewController(vc, animated: true)
     }
-    
+
 }

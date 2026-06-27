@@ -79,6 +79,33 @@ class SMBFile: File {
         }
     }
 
+    /// 直接指定 share 名和子路径（用于 URL 路径跳转）
+    init(shareName: String, path: String) {
+        self.pathType = .normal
+        self.shareName = shareName
+        self.path = path
+        self.type = .folder
+        self.fileSize = 0
+
+        var svrURL: URL
+        if let loginInfo = SMBFileManager.shared.loginInfo {
+            svrURL = loginInfo.url
+        } else {
+            svrURL = URL(fileURLWithPath: "/")
+            ANX.logError(.SMB, "loginfo初始化失败")
+        }
+
+        if #available(iOS 16.0, tvOS 16.0, macOS 13.0, *) {
+            svrURL.append(path: shareName)
+            svrURL.append(path: path)
+        } else {
+            svrURL.appendPathComponent(shareName)
+            svrURL.appendPathComponent(path)
+        }
+
+        self.url = svrURL
+    }
+
     init(file: [URLResourceKey: Any], shareName: String) {
         self.pathType = .normal
         self.shareName = shareName

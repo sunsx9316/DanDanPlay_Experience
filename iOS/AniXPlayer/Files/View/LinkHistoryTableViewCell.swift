@@ -6,12 +6,24 @@
 //
 
 import UIKit
+import SnapKit
 
 class LinkHistoryTableViewCell: TableViewCell {
 
-    lazy var titleLabel: Label = {
+    lazy var nameLabel: Label = {
         let label = Label()
         label.numberOfLines = 0
+        label.setContentHuggingPriority(.required, for: .horizontal)
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
+        return label
+    }()
+
+    lazy var addressLabel: Label = {
+        let label = Label()
+        label.font = .ddp_small
+        label.textColor = .lightGray
+        label.numberOfLines = 0
+        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return label
     }()
@@ -24,19 +36,20 @@ class LinkHistoryTableViewCell: TableViewCell {
         return label
     }()
 
-    lazy var indicatorView: UIActivityIndicatorView = {
-        let indicator = UIActivityIndicatorView(style: .gray)
-        indicator.hidesWhenStopped = true
-        indicator.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        indicator.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
-        return indicator
+    private lazy var topRow: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [nameLabel, addressLabel])
+        stack.axis = .horizontal
+        stack.alignment = .firstBaseline
+        stack.spacing = 8
+        return stack
     }()
 
-    lazy var addressLabel: Label = {
-        let label = Label()
-        label.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        return label
+    private lazy var rootStack: UIStackView = {
+        let stack = UIStackView(arrangedSubviews: [topRow, remarkLabel])
+        stack.axis = .vertical
+        stack.alignment = .fill
+        stack.spacing = 4
+        return stack
     }()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
@@ -44,35 +57,13 @@ class LinkHistoryTableViewCell: TableViewCell {
         self.backgroundView?.backgroundColor = .clear
         self.backgroundColor = .clear
 
-        contentView.addSubview(titleLabel)
-        contentView.addSubview(remarkLabel)
-        contentView.addSubview(indicatorView)
-        contentView.addSubview(addressLabel)
-
-        titleLabel.snp.makeConstraints { make in
+        contentView.addSubview(rootStack)
+        rootStack.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(10)
             make.leading.equalToSuperview().offset(10)
-            make.width.lessThanOrEqualTo(120)
-        }
-
-        remarkLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleLabel.snp.bottom).offset(4)
-            make.leading.equalToSuperview().offset(10)
+            make.trailing.equalToSuperview().offset(-10)
             make.bottom.equalToSuperview().offset(-10)
         }
-
-        indicatorView.snp.makeConstraints { make in
-            make.centerY.equalTo(titleLabel)
-            make.trailing.equalToSuperview().offset(-10)
-            make.leading.equalTo(addressLabel.snp.trailing).offset(10)
-        }
-
-        addressLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(10)
-            make.leading.equalTo(titleLabel.snp.trailing).offset(15)
-        }
-
-        self.setupInit()
     }
 
     required init?(coder: NSCoder) {
@@ -81,14 +72,10 @@ class LinkHistoryTableViewCell: TableViewCell {
 
     override func prepareForReuse() {
         super.prepareForReuse()
-        self.setupInit()
-    }
-
-    private func setupInit() {
-        self.indicatorView.color = .darkGray
-        self.titleLabel.text = nil
-        self.remarkLabel.text = nil
+        self.nameLabel.text = nil
         self.addressLabel.text = nil
+        self.remarkLabel.text = nil
+        self.nameLabel.isHidden = false
     }
 
 }

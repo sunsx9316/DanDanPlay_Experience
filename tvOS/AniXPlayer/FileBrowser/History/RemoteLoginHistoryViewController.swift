@@ -23,6 +23,14 @@ class RemoteLoginHistoryViewController: ViewController {
         fatalError("subclass must override rootFile(for:)")
     }
 
+    func displayName(for loginInfo: LoginInfo) -> String? {
+        return loginInfo.auth?.userName
+    }
+
+    func displayAddress(for loginInfo: LoginInfo) -> String? {
+        return loginInfo.url.absoluteString
+    }
+
     /// 跳转到连接页（子类覆盖）
     func connectViewController(loginInfo: LoginInfo?) -> RemoteConnectViewController {
         fatalError("subclass must override connectViewController(loginInfo:)")
@@ -213,8 +221,8 @@ extension RemoteLoginHistoryViewController: UITableViewDataSource {
         let cell = tableView.dequeueCell(class: FileListCell.self, indexPath: indexPath)
         let info = loginInfos[indexPath.row]
 
-        let title = info.url.host ?? info.url.absoluteString
-        let detail = info.remark ?? info.auth?.userName ?? ""
+        let title = displayAddress(for: info) ?? ""
+        let detail = displayName(for: info) ?? info.remark ?? ""
 
         cell.configureAsSource(title: title, iconName: "server.rack", detail: detail)
         return cell

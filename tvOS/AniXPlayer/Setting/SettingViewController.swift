@@ -84,7 +84,11 @@ class SettingViewController: ViewController {
     private func rows(for section: Section) -> [SettingRow] {
         switch section {
         case .general:
-            return [.appLanguage, .playerCore, .hardwareDecoding, .autoLoadCustomSubtitle, .mainColor]
+            var rows: [SettingRow] = [.appLanguage, .playerCore, .autoLoadCustomSubtitle, .mainColor]
+            if Preferences.shared.playerCore == .mpv {
+                rows.insert(.hardwareDecoding, at: 2)
+            }
+            return rows
         case .danmaku:
             return [.fastMatch, .autoLoadDanmaku, .danmakuCacheDay]
         case .about:

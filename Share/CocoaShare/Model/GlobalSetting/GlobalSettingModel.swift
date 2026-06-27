@@ -82,7 +82,11 @@ class GlobalSettingModel {
     lazy var context = GlobalSettingContext()
     
     func allSettingType() -> [GlobalSettingType] {
-        return GlobalSettingType.allCases
+        var types = GlobalSettingType.allCases
+        if playerCore != .mpv {
+            types.removeAll { $0 == .hardwareDecoding }
+        }
+        return types
     }
     
     func subtitle(settingType: GlobalSettingType) -> String {

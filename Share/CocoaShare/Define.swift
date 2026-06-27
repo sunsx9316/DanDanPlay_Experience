@@ -45,6 +45,7 @@ struct LoginInfo: Codable {
 
     enum Key: String {
         case webDavRootPath = "webDavRootPath"
+        case smbSubPath = "smbSubPath"
     }
 
     var url: URL

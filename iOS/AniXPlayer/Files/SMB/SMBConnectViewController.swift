@@ -29,6 +29,13 @@ class SMBConnectViewController: ViewController {
         return textField
     }()
 
+    private lazy var pathLabel: TextField = {
+        let textField = TextField()
+        textField.attributedPlaceholder = .init(string: NSLocalizedString("可选子路径，如 video/", comment: ""),
+                                                attributes: [.foregroundColor : UIColor.lightGray])
+        return textField
+    }()
+
     private lazy var remarkTextField: TextField = {
         let textField = TextField()
         textField.attributedPlaceholder = .init(
@@ -107,6 +114,7 @@ class SMBConnectViewController: ViewController {
         stackView.addArrangedSubview(self.addressLabel)
         stackView.addArrangedSubview(self.userNameLabel)
         stackView.addArrangedSubview(self.passwordLabel)
+        stackView.addArrangedSubview(self.pathLabel)
         stackView.addArrangedSubview(self.remarkTextField)
         stackView.addArrangedSubview(self.loginButton)
         self.view.addSubview(stackView)
@@ -135,6 +143,10 @@ class SMBConnectViewController: ViewController {
             make.height.equalTo(self.addressLabel)
         }
 
+        self.pathLabel.snp.makeConstraints { make in
+            make.height.equalTo(self.addressLabel)
+        }
+
         self.remarkTextField.snp.makeConstraints { make in
             make.height.equalTo(self.addressLabel)
         }
@@ -147,6 +159,7 @@ class SMBConnectViewController: ViewController {
         self.passwordLabel.text = self.loginInfo?.auth?.password
         self.addressLabel.text = self.loginInfo?.url.absoluteString
         self.remarkTextField.text = self.loginInfo?.remark
+        self.pathLabel.text = self.loginInfo?.parameter?[LoginInfo.Key.smbSubPath.rawValue]
         self.addressLabel.attributedPlaceholder = .init(string: self.fileManager.addressExampleDesc,
                                                 attributes: [.foregroundColor : UIColor.lightGray])
         
@@ -169,6 +182,12 @@ class SMBConnectViewController: ViewController {
     }
     
     //MARK: Private Method
+
+    private func getSmbSubPath() -> String? {
+        let path = self.pathLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        return path.isEmpty ? nil : path
+    }
+
     @objc private func onTouchSegmented(_ segmented: UISegmentedControl) {
         self.selectedIndex(segmented.selectedSegmentIndex)
     }
@@ -203,9 +222,14 @@ class SMBConnectViewController: ViewController {
             return
         }
         
+        var parameter: [String: String]?
+        if let subPath = getSmbSubPath() {
+            parameter = [LoginInfo.Key.smbSubPath.rawValue: subPath]
+        }
+
         if self.segmentedControl.selectedSegmentIndex == 0 {
 
-            let loginInfo = LoginInfo(url: url, auth: Auth(userName: guestName, password: nil), remark: self.remarkTextField.text)
+            let loginInfo = LoginInfo(url: url, auth: Auth(userName: guestName, password: nil), parameter: parameter, remark: self.remarkTextField.text)
             self.loginWithInfo(loginInfo)
         } else {
 
@@ -218,7 +242,7 @@ class SMBConnectViewController: ViewController {
             }
 
             let auth: Auth? = .init(userName: userName, password: self.passwordLabel.text)
-            let loginInfo = LoginInfo(url: url, auth: auth, remark: self.remarkTextField.text)
+            let loginInfo = LoginInfo(url: url, auth: auth, parameter: parameter, remark: self.remarkTextField.text)
             self.loginWithInfo(loginInfo)
         }
     }

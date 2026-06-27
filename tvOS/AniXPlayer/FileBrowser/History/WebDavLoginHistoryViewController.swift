@@ -31,6 +31,15 @@ class WebDavLoginHistoryViewController: RemoteLoginHistoryViewController {
         Preferences.shared.webDavLoginInfos = loginInfos
     }
 
+    override func displayAddress(for loginInfo: LoginInfo) -> String? {
+        guard let rootPath = loginInfo.parameter?[LoginInfo.Key.webDavRootPath.rawValue], !rootPath.isEmpty else {
+            return loginInfo.url.absoluteString
+        }
+        var url = loginInfo.url
+        url.appendPathComponent(rootPath)
+        return url.absoluteString
+    }
+
     override func rootFile(for loginInfo: LoginInfo) -> File {
         if let rootPath = loginInfo.parameter?[LoginInfo.Key.webDavRootPath.rawValue],
            !rootPath.isEmpty,

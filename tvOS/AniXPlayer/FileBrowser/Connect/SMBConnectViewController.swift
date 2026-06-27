@@ -20,6 +20,17 @@ class SMBConnectViewController: RemoteConnectViewController {
         }
     }
 
+    private lazy var pathLabel: UITextField = {
+        let tf = UITextField()
+        tf.font = .ddp_normal()
+        tf.textColor = .label
+        tf.attributedPlaceholder = NSAttributedString(
+            string: NSLocalizedString("可选子路径，如 video/", comment: ""),
+            attributes: [.foregroundColor: UIColor.lightGray]
+        )
+        return tf
+    }()
+
     private lazy var segmentedControl: UISegmentedControl = {
         let sc = UISegmentedControl(items: [
             NSLocalizedString("客人", comment: ""),
@@ -48,6 +59,17 @@ class SMBConnectViewController: RemoteConnectViewController {
 
         super.setupFields()
 
+        // 在备注之前插入路径输入框
+        stackView.insertArrangedSubview(pathLabel, at: stackView.arrangedSubviews.count - 2)
+        pathLabel.snp.makeConstraints { make in
+            make.height.equalTo(60)
+        }
+
+        // 恢复已保存的子路径
+        if let subPath = loginInfo?.parameter?[LoginInfo.Key.smbSubPath.rawValue], !subPath.isEmpty {
+            pathLabel.text = subPath
+        }
+
         // 恢复模式
         if let info = loginInfo, let userName = info.auth?.userName, userName != "guest" {
             authMode = .registered
@@ -75,7 +97,8 @@ class SMBConnectViewController: RemoteConnectViewController {
     }
 
     override func loginParameter() -> [String: String]? {
-        return nil
+        let path = pathLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        return path.isEmpty ? nil : [LoginInfo.Key.smbSubPath.rawValue: path]
     }
 
     override func onTouchLoginButton() {

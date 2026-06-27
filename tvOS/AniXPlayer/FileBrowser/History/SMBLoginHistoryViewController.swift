@@ -61,8 +61,27 @@ class SMBLoginHistoryViewController: RemoteLoginHistoryViewController {
         return discoveredServices.isEmpty && loginInfos.isEmpty
     }
 
+    override func displayAddress(for loginInfo: LoginInfo) -> String? {
+        guard let subPath = loginInfo.parameter?[LoginInfo.Key.smbSubPath.rawValue], !subPath.isEmpty else {
+            return loginInfo.url.absoluteString
+        }
+        var url = loginInfo.url
+        url.appendPathComponent(subPath)
+        return url.absoluteString
+    }
+
     override func rootFile(for loginInfo: LoginInfo) -> File {
-        return SMBFile.rootFile
+        guard let subPath = loginInfo.parameter?[LoginInfo.Key.smbSubPath.rawValue],
+              !subPath.isEmpty else {
+            return SMBFile.rootFile
+        }
+
+        let parts = subPath.split(separator: "/", maxSplits: 1).map(String.init)
+        let shareName = parts[0]
+        if parts.count > 1 {
+            return SMBFile(shareName: shareName, path: parts[1])
+        }
+        return SMBFile(shareName: shareName)
     }
 
     override func connectViewController(loginInfo: LoginInfo?) -> RemoteConnectViewController {
@@ -90,8 +109,8 @@ class SMBLoginHistoryViewController: RemoteLoginHistoryViewController {
             cell.configureAsSource(title: service.name, iconName: "network", detail: service.addressDesc)
         } else {
             let info = loginInfos[indexPath.row]
-            let title = info.url.host ?? info.url.absoluteString
-            let detail = info.remark ?? info.auth?.userName ?? ""
+            let title = displayAddress(for: info) ?? ""
+            let detail = displayName(for: info) ?? info.remark ?? ""
             cell.configureAsSource(title: title, iconName: "server.rack", detail: detail)
         }
 
