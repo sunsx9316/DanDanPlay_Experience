@@ -153,14 +153,22 @@ bash scripts/release/notarize.sh /tmp/export/AniXPlayer.dmg
 
 确认后执行发布：
 
+**macOS:**
 ```bash
 cd /Users/jimhuang/Dev/DanDanPlay_Experience
-bash scripts/release/publish.sh <platform> /tmp/export/AniXPlayer.dmg <shortVersion> <build> /tmp/release_changelog.txt
+bash scripts/release/publish.sh mac /tmp/export/AniXPlayer.dmg <shortVersion> <build> /tmp/release_changelog.txt
+```
+
+**iOS / tvOS:**
+```bash
+cd /Users/jimhuang/Dev/DanDanPlay_Experience
+bash scripts/release/publish.sh <ios|tvos> /tmp/export/AniXPlayer.ipa <shortVersion> <build> /tmp/release_changelog.txt
 ```
 
 ## 注意事项
 
-- 环境前提：`brew install create-dmg` 已完成，notarytool `AC_PASSWORD` 已配置
-- macOS 发布会推送到 GitHub Release + Gitee 更新仓库
-- iOS / tvOS 发布目前仅完成 Archive + Export 部分，App Store Connect 上传待后续实现
+- macOS 环境前提：notarytool `AC_PASSWORD`、`gh` CLI 已配置，`UPDATE_REPO_PATH`（Gitee 更新仓库）
+- iOS / tvOS 环境前提：`APPLE_ID` 环境变量 + Keychain profile（默认 `AC_PASSWORD`，与 Mac 公证共用）
+- macOS 发布会推送到 GitHub Release + Gitee 更新仓库 + git tag
+- iOS / tvOS 发布会上传 `.ipa` 到 App Store Connect + git tag（后续需在 App Store Connect 中完成提审）
 - 如果某步失败，用户可以从失败的那步重来（子脚本可独立运行）
