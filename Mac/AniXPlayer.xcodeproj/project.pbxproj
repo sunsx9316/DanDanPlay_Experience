@@ -108,8 +108,6 @@
 		894F10882FEFA9F8007B7BF7 /* MPVFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 894F10872FEFA9F8007B7BF7 /* MPVFramework */; };
 		894F10892FEFAA89007B7BF7 /* MPVFramework in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 894F10872FEFA9F8007B7BF7 /* MPVFramework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		894F108F2FEFAEC1007B7BF7 /* MPVFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 894F108E2FEFAEC1007B7BF7 /* MPVFramework */; };
-		894F10922FEFB127007B7BF7 /* VLCFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 894F10912FEFB127007B7BF7 /* VLCFramework */; };
-		894F10952FEFB485007B7BF7 /* VLCFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 894F10942FEFB485007B7BF7 /* VLCFramework */; };
 		8953D00B2C9948A5003EF386 /* FilterDanmakuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8953D00A2C9948A5003EF386 /* FilterDanmakuViewController.swift */; };
 		8953D00F2C994A91003EF386 /* FilterDanmakuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8953D00D2C994A91003EF386 /* FilterDanmakuTableViewCell.swift */; };
 		8953D0132C99DF08003EF386 /* FilterDanmakuTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8953D0122C99DF08003EF386 /* FilterDanmakuTableViewCell.xib */; };
@@ -204,6 +202,8 @@
 		89DADA422FD0600200C71A33 /* MediaLibraryItemCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA432FD0600200C71A33 /* MediaLibraryItemCellView.swift */; };
 		89DADA552FD31A0A00C71A33 /* MPVFrameRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA542FD31A0A00C71A33 /* MPVFrameRenderer.swift */; };
 		89DADA6E2FD4424200C71A33 /* FontHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA6D2FD4424200C71A33 /* FontHelper.swift */; };
+		89FDC30C2FF005FF00451309 /* VLCFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 89FDC30B2FF005FF00451309 /* VLCFramework */; };
+		89FDC30F2FF0086D00451309 /* VLCFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 89FDC30E2FF0086D00451309 /* VLCFramework */; };
 		89FFD12D2D45131800428206 /* AppKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD12C2D45131800428206 /* AppKey.swift */; };
 		89FFD12F2D45137300428206 /* NSColor+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD12E2D45137300428206 /* NSColor+Helper.swift */; };
 		89FFD1332D4B83BD00428206 /* Launcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD1322D4B83BD00428206 /* Launcher.swift */; };
@@ -437,7 +437,7 @@
 				89DAD9CC2FD05A9100C71A33 /* AMSMB2 in Frameworks */,
 				894F108F2FEFAEC1007B7BF7 /* MPVFramework in Frameworks */,
 				89A9E7662FD4AF200019D4C4 /* ANXLog in Frameworks */,
-				894F10922FEFB127007B7BF7 /* VLCFramework in Frameworks */,
+				89FDC30C2FF005FF00451309 /* VLCFramework in Frameworks */,
 				89DAD9D22FD05ADE00C71A33 /* GCDWebDAVServer in Frameworks */,
 				89DAD9D42FD05ADE00C71A33 /* GCDWebServer in Frameworks */,
 				8994E2442DB69B1300765AF6 /* YYCategories in Frameworks */,
@@ -447,7 +447,7 @@
 				89DAD9CF2FD05AAE00C71A33 /* FilesProvider in Frameworks */,
 				89DAD9C92FD059F700C71A33 /* Kingfisher in Frameworks */,
 				89B7EA552C9B14DA00527B84 /* Alamofire in Frameworks */,
-				894F10952FEFB485007B7BF7 /* VLCFramework in Frameworks */,
+				89FDC30F2FF0086D00451309 /* VLCFramework in Frameworks */,
 				8994E2472DB69BB600765AF6 /* YYCategories in Frameworks */,
 				89DAD9D62FD05ADE00C71A33 /* GCDWebUploader in Frameworks */,
 				89B7EA582C9B14F500527B84 /* RxCocoa in Frameworks */,
@@ -1189,8 +1189,8 @@
 				89A9E7652FD4AF200019D4C4 /* ANXLog */,
 				894F10872FEFA9F8007B7BF7 /* MPVFramework */,
 				894F108E2FEFAEC1007B7BF7 /* MPVFramework */,
-				894F10912FEFB127007B7BF7 /* VLCFramework */,
-				894F10942FEFB485007B7BF7 /* VLCFramework */,
+				89FDC30B2FF005FF00451309 /* VLCFramework */,
+				89FDC30E2FF0086D00451309 /* VLCFramework */,
 			);
 			productName = AniXPlayer;
 			productReference = 89945FE728CA3BAE009AC640 /* AniXPlayer.app */;
@@ -1233,7 +1233,7 @@
 				89C0D17E2FD46072008DFE68 /* XCRemoteSwiftPackageReference "DanmakuRender-Swift" */,
 				89A9E7642FD4AF200019D4C4 /* XCRemoteSwiftPackageReference "ANXLog" */,
 				894F108D2FEFAEC1007B7BF7 /* XCRemoteSwiftPackageReference "MPVFramework" */,
-				894F10932FEFB485007B7BF7 /* XCRemoteSwiftPackageReference "VLCFramework" */,
+				89FDC30D2FF0086D00451309 /* XCRemoteSwiftPackageReference "VLCFramework" */,
 			);
 			productRefGroup = 89945FE828CA3BAE009AC640 /* Products */;
 			projectDirPath = "";
@@ -1782,14 +1782,6 @@
 				minimumVersion = 0.1.0;
 			};
 		};
-		894F10932FEFB485007B7BF7 /* XCRemoteSwiftPackageReference "VLCFramework" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sunsx9316/VLCFramework";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.1;
-			};
-		};
 		8994E2452DB69BB600765AF6 /* XCRemoteSwiftPackageReference "YYCategories" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sunsx9316/YYCategories";
@@ -1870,6 +1862,14 @@
 				minimumVersion = 3.6.0;
 			};
 		};
+		89FDC30D2FF0086D00451309 /* XCRemoteSwiftPackageReference "VLCFramework" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sunsx9316/VLCFramework";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.3;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1881,15 +1881,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 894F108D2FEFAEC1007B7BF7 /* XCRemoteSwiftPackageReference "MPVFramework" */;
 			productName = MPVFramework;
-		};
-		894F10912FEFB127007B7BF7 /* VLCFramework */ = {
-			isa = XCSwiftPackageProductDependency;
-			productName = VLCFramework;
-		};
-		894F10942FEFB485007B7BF7 /* VLCFramework */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 894F10932FEFB485007B7BF7 /* XCRemoteSwiftPackageReference "VLCFramework" */;
-			productName = VLCFramework;
 		};
 		8994E2432DB69B1300765AF6 /* YYCategories */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1959,6 +1950,15 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 89DAD9D02FD05ADE00C71A33 /* XCRemoteSwiftPackageReference "GCDWebServer" */;
 			productName = GCDWebUploader;
+		};
+		89FDC30B2FF005FF00451309 /* VLCFramework */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = VLCFramework;
+		};
+		89FDC30E2FF0086D00451309 /* VLCFramework */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 89FDC30D2FF0086D00451309 /* XCRemoteSwiftPackageReference "VLCFramework" */;
+			productName = VLCFramework;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
