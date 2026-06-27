@@ -52,11 +52,29 @@ diff Mac/Podfile.lock Mac/Pods/Manifest.lock &>/dev/null || echo "NEED_POD_INSTA
 
 如需 pod install，自动执行 `cd Mac && pod install`。
 
-### Step 1: 计算版本号
+### Step 1: 选择发布模式（仅 iOS / tvOS）
+
+iOS / tvOS 有两种发布模式：
+
+| 模式 | 版本号 | Build | 说明 |
+|------|--------|-------|------|
+| TestFlight | 不变 | 只增 build | 内部测试，同一版本可多次上传 |
+| App Store | 更新 | 更新 | 正式发布 |
+
+macOS 跳过此步骤，直接到 Step 2。
+
+用 **AskUserQuestion** 询问：
+- "TestFlight（只改 build 号，不改版本号）" (Recommended)
+- "App Store 正式发布"
+
+### Step 2: 计算版本号
 
 ```bash
 cd /Users/jimhuang/Dev/DanDanPlay_Experience
+# App Store / macOS 模式
 bash scripts/release/calc_version.sh
+# TestFlight 模式
+bash scripts/release/calc_version.sh --testflight <platform>
 ```
 
 输出示例：
@@ -71,14 +89,17 @@ NEW_BUILD=2026062701
 
 如果用户选择手动指定，再问他要什么版本号。
 
-### Step 2: 更新工程版本号
+### Step 3: 更新工程版本号
 
 ```bash
 cd /Users/jimhuang/Dev/DanDanPlay_Experience
+# App Store / macOS 模式
 bash scripts/release/update_project_version.sh <platform> <shortVersion> <build>
+# TestFlight 模式
+bash scripts/release/update_project_version.sh <platform> --testflight <build>
 ```
 
-### Step 3: 生成更新日志
+### Step 4: 生成更新日志
 
 **Tag 规则**: 格式 `v{version}-{platform}`（如 `v1.6.3-mac`），查找上一版本 tag 时用平台前缀。
 
@@ -103,7 +124,7 @@ LAST_TAG=$(git tag --sort=-creatordate | grep "^v.*-<platform>" | head -1)
 
 如果用户要编辑，等他修改完 `/tmp/release_changelog.txt` 再确认。
 
-### Step 4: Archive + Export（后台执行）
+### Step 5: Archive + Export（后台执行）
 
 这一步耗时较长（几分钟到十几分钟），用 `run_in_background` 执行：
 
@@ -116,7 +137,7 @@ bash scripts/release/archive_and_export.sh <platform>
 
 如果构建失败，展示错误信息，**终止**。
 
-### Step 5: 创建 DMG（仅 macOS）
+### Step 6: 创建 DMG（仅 macOS）
 
 ```bash
 cd /Users/jimhuang/Dev/DanDanPlay_Experience
@@ -127,7 +148,7 @@ bash scripts/release/create_dmg.sh /tmp/export/AniXPlayer.app
 
 DMG 包含：App、Applications 快捷方式、弹弹Play 官网 .webloc，使用列表模式。
 
-### Step 6: 公证 DMG（仅 macOS，后台执行）
+### Step 7: 公证 DMG（仅 macOS，后台执行）
 
 公证耗时 5-15 分钟，用 `run_in_background` 执行：
 
@@ -140,7 +161,7 @@ bash scripts/release/notarize.sh /tmp/export/AniXPlayer.dmg
 
 等待完成后检查结果。如果公证失败，展示错误信息，**终止**。
 
-### Step 7: 最终确认 + 发布
+### Step 8: 最终确认 + 发布
 
 展示汇总信息：
 - 平台、版本号、Build、产物路径、产物大小
