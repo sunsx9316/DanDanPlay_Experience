@@ -4,6 +4,7 @@ set -euo pipefail
 # 发布：DMG + GitHub Release + git tag + 更新仓库
 # 用法: publish.sh <platform> <app_path> <short_version> <build> <changelog_file>
 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PLATFORM="$1"
 APP_PATH="$2"
 SHORT_VERSION="$3"
@@ -22,7 +23,7 @@ if [ "$PLATFORM" = "mac" ]; then
     # 1. 创建 DMG
     echo "=== 创建 DMG ==="
     DMG_NAME="AniXPlayer-${SHORT_VERSION}-build${BUILD}.dmg"
-    "$REPO_ROOT/Mac/create-dmg.sh" "$APP_PATH" "$DMG_NAME"
+    "$SCRIPT_DIR/create_dmg.sh" "$APP_PATH" "$DMG_NAME"
     DMG_PATH="$(dirname "$APP_PATH")/$DMG_NAME"
     echo "DMG: $DMG_PATH"
 
