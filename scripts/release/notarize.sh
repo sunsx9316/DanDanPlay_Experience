@@ -26,11 +26,19 @@ if ! xcrun notarytool history --keychain-profile "$KEYCHAIN_PROFILE" &>/dev/null
 fi
 echo "凭证 OK"
 
+# 打包为 zip（notarytool 只接受 .zip/.pkg/.dmg）
+ZIP_PATH="${APP_PATH%.app}_for_notarize.zip"
+echo "=== 打包 zip ==="
+ditto -c -k --keepParent "$APP_PATH" "$ZIP_PATH"
+
 # 提交公证
 echo "=== 提交公证（可能需要 5-15 分钟）==="
-xcrun notarytool submit "$APP_PATH" \
+xcrun notarytool submit "$ZIP_PATH" \
     --keychain-profile "$KEYCHAIN_PROFILE" \
     --wait
+
+# 清理 zip
+rm -f "$ZIP_PATH"
 
 # 钉入票据
 echo "=== 钉入票据 ==="
