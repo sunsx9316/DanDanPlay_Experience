@@ -81,7 +81,34 @@ EOF
     echo "Release: $(gh release view "$VERSION_TAG" --json url -q '.url')"
 
 elif [ "$PLATFORM" = "ios" ] || [ "$PLATFORM" = "tvos" ]; then
-    echo "=== App Store Connect 上传 ==="
-    echo "iOS/tvOS 自动上传将在后续版本实现，当前请手动上传: $APP_PATH"
-    exit 0
+    if [[ "$APP_PATH" != *.ipa ]]; then
+        echo "错误: iOS/tvOS 需要 .ipa 文件，收到: $APP_PATH" >&2
+        exit 1
+    fi
+
+    # App Store Connect 上传凭证
+    APPLE_ID="${APPLE_ID:-}"
+    ASC_PROFILE="${ASC_PROFILE:-ASC_PASSWORD}"
+
+    if [ -z "$APPLE_ID" ]; then
+        echo "错误: 请设置 APPLE_ID 环境变量（Apple ID 邮箱）" >&2
+        exit 1
+    fi
+
+    if ! xcrun altool --validate-app -f "$APP_PATH" -t "$PLATFORM" -u "$APPLE_ID" -p "@keychain:${ASC_PROFILE}" --output-format xml &>/dev/null; then
+        echo "错误: 验证 .ipa 失败，请检查 ASC_PASSWORD keychain profile 是否正确配置" >&2
+        echo "配置方法: xcrun notarytool store-credentials '${ASC_PROFILE}' --apple-id <your-apple-id> --password <app-specific-password> --team-id 94L7P6P9PY" >&2
+        exit 1
+    fi
+
+    echo "=== 上传 App Store Connect ==="
+    xcrun altool --upload-app -f "$APP_PATH" -t "$PLATFORM" -u "$APPLE_ID" -p "@keychain:${ASC_PROFILE}" --output-format xml
+
+    # Tag + push 主仓库
+    echo "=== Tag 主仓库 ==="
+    git tag "$VERSION_TAG"
+    git push origin "$VERSION_TAG"
+
+    echo "=== 发布完成 ==="
+    echo "App 已上传至 App Store Connect，请在 App Store Connect 中完成提审"
 fi
