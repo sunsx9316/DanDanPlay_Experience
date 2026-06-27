@@ -24,10 +24,6 @@ esac
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 PBXPROJ="$REPO_ROOT/$PLATFORM_DIR/AniXPlayer.xcodeproj/project.pbxproj"
 
-# 备份 pbxproj
-cp "$PBXPROJ" "$PBXPROJ.bak"
-echo "已备份 project.pbxproj → project.pbxproj.bak"
-
 # 更新 MARKETING_VERSION
 echo "更新 MARKETING_VERSION → $SHORT_VERSION"
 sed -i '' "s/MARKETING_VERSION = [0-9.]*;/MARKETING_VERSION = $SHORT_VERSION;/g" "$PBXPROJ"
