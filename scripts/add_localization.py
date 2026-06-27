@@ -161,6 +161,29 @@ def cmd_add(path, key, en_value, zh_value=None, project_path=None):
         _add_to_xcode_project(path, project_path)
 
 
+def cmd_update(path, key, en_value, zh_value=None):
+    """更新已存在的 key 的翻译，force 覆盖。"""
+    if zh_value is None:
+        zh_value = key
+
+    data = _load(path)
+    strings = data.get("strings", {})
+
+    if key not in strings:
+        print(f"NOT_FOUND: {key} — 使用 --add 添加")
+        return
+
+    strings[key] = {
+        "localizations": {
+            "en": {"stringUnit": {"state": "translated", "value": en_value}},
+            "zh-Hans": {"stringUnit": {"state": "translated", "value": zh_value}},
+        }
+    }
+    data["strings"] = strings
+    _save(path, data)
+    print(f"UPDATED: {key} → en={en_value}, zh-Hans={zh_value}")
+
+
 def cmd_list(path):
     if not os.path.exists(path):
         print(f"NO_FILE: {path}")
@@ -254,6 +277,14 @@ if __name__ == "__main__":
             if not cmd_check(cfg["xcstrings"], flags[1]):
                 exit_code = 1
         sys.exit(exit_code)
+
+    elif cmd == "--update" and len(flags) >= 3:
+        en_val = flags[2]
+        zh_val = flags[3] if len(flags) >= 4 else None
+        for p in platform_keys:
+            cfg = PLATFORM_CONFIG[p]
+            print(f"[{p}] ", end="")
+            cmd_update(cfg["xcstrings"], flags[1], en_val, zh_val)
 
     elif cmd == "--add" and len(flags) >= 3:
         en_val = flags[2]

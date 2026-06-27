@@ -770,6 +770,22 @@
         }
       }
     },
+    "可选子路径，如 video/": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Optional sub-path, e.g. video/"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "可选子路径，如 video/"
+          }
+        }
+      }
+    },
     "合并重复弹幕": {
       "localizations": {
         "en": {
@@ -1348,7 +1364,22 @@
         }
       }
     },
-    "开启": {},
+    "开启": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "On"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "开启"
+          }
+        }
+      }
+    },
     "弹幕": {
       "localizations": {
         "en": {
@@ -3191,7 +3222,22 @@
         }
       }
     },
-    "迷你进度条": {},
+    "迷你进度条": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mini Progress Bar"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "迷你进度条"
+          }
+        }
+      }
+    },
     "退出": {
       "localizations": {
         "en": {
@@ -3524,6 +3570,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "默认排序"
+          }
+        }
+      }
+    },
+    "根路径": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Root Path"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "根路径"
           }
         }
       }
