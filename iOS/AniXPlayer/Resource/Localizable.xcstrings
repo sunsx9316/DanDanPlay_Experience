@@ -1477,6 +1477,23 @@
         }
       }
     },
+    "将在下次播放时生效" : {
+      "extractionState" : "stale",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Will take effect on next playback"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将在下次播放时生效"
+          }
+        }
+      }
+    },
     "小窗播放" : {
       "localizations" : {
         "en" : {
@@ -1540,6 +1557,9 @@
           }
         }
       }
+    },
+    "开启" : {
+
     },
     "开始解析..." : {
       "localizations" : {
@@ -2857,6 +2877,22 @@
         }
       }
     },
+    "硬件解码" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hardware Decoding"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "硬件解码"
+          }
+        }
+      }
+    },
     "确定" : {
       "localizations" : {
         "en" : {
@@ -3432,6 +3468,9 @@
           }
         }
       }
+    },
+    "迷你进度条" : {
+
     },
     "退出" : {
       "localizations" : {

@@ -50,8 +50,8 @@ class MPVPiPProvider: PiPPlayerProtocol {
 
         // vo=libmpv + hwdec=no: 纯 CPU 路径，渲染到内存 buffer 用于 PiP CMSampleBuffer 输出
         // iOS 后台不允许访问 GPU，必须用软件渲染确保 PiP 在后台正常播放
-        mpv.setOptionString(.vo, "libmpv")
-        mpv.setOptionString(.hwdec, (config.extra["hwdec"] as? String) ?? "no")
+        mpv.setProperty(.vo, "libmpv")
+        mpv.setProperty(.hwdec, (config.extra["hwdec"] as? String) ?? "no")
         setupSubtitleFonts(mpv: mpv, config: config)
 
         guard let handle = mpv.mpv else {
@@ -199,8 +199,8 @@ class MPVPiPProvider: PiPPlayerProtocol {
 
     private func setupSubtitleFonts(mpv: MPV, config: PiPPlayerConfig) {
         guard let fontDir = playerPrepareFonts() else { return }
-        mpv.setOptionString(.subtitleFontsDir, fontDir)
-        mpv.setOptionString(.subtitleFont, config.subtitleFont ?? playerCustomFontNames.first ?? "")
+        mpv.setProperty(.subtitleFontsDir, fontDir)
+        mpv.setProperty(.subtitleFont, config.subtitleFont ?? playerCustomFontNames.first ?? "")
     }
 
     // MARK: - 事件监听

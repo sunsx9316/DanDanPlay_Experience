@@ -7,7 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0D940143A9EA749C32FB72CE /* MPVColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5CD1471298E585ECF60B50 /* MPVColor+Hex.swift */; };
+		11383C45132A728ADA7D1160 /* MPV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DAD9F72FD05CC200C71A33 /* MPV.swift */; };
 		1D44D17727674746ACA34E84 /* ServerHostListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F3AEACC0C2438C9D6162A6 /* ServerHostListViewController.swift */; };
+		58162927BF3D7DF992AFDD35 /* MPVProperty+Values.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F3C79DC102B9D27BFC8D360 /* MPVProperty+Values.swift */; };
 		8904475E2901A6E20088886B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8904475D2901A6E20088886B /* GoogleService-Info.plist */; };
 		8917059328CF6CF10075ECD9 /* PlayerUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8917058E28CF6CF10075ECD9 /* PlayerUIView.swift */; };
 		8917059428CF6CF10075ECD9 /* PlayerUITopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8917058F28CF6CF10075ECD9 /* PlayerUITopView.swift */; };
@@ -178,7 +181,6 @@
 		89DADA002FD05CC200C71A33 /* MPVPiPProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DAD9F92FD05CC200C71A33 /* MPVPiPProvider.swift */; };
 		89DADA022FD05CC200C71A33 /* SourceHanSansSC-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 89DAD9F42FD05CC200C71A33 /* SourceHanSansSC-Regular.otf */; };
 		89DADA032FD05CC200C71A33 /* SourceHanSansTC-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 89DAD9F52FD05CC200C71A33 /* SourceHanSansTC-Regular.otf */; };
-		89DADA042FD05CCD00C71A33 /* MPV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DAD9F72FD05CC200C71A33 /* MPV.swift */; };
 		89DADA072FD05D0200C71A33 /* MPVKit in Frameworks */ = {isa = PBXBuildFile; productRef = 89DADA062FD05D0200C71A33 /* MPVKit */; };
 		89DADA082FD05D1100C71A33 /* MPVFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89DAD9DC2FD05C3A00C71A33 /* MPVFramework.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		89DADA0C2FD05DAB00C71A33 /* DragView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA0B2FD05DAB00C71A33 /* DragView.swift */; };
@@ -210,6 +212,7 @@
 		89FFD1332D4B83BD00428206 /* Launcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD1322D4B83BD00428206 /* Launcher.swift */; };
 		A546C2584CAC40A6BFD3AD77 /* ThemedTableRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D126C7B2C39D46C1AA1B4176 /* ThemedTableRowView.swift */; };
 		B6BF5B7F28F54B4DB7CD684D /* SetMainColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCBE01C58043461C971F7664 /* SetMainColorViewController.swift */; };
+		DFED7E65204920970FBB7100 /* MPV+APIs.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD9DD52D13CFD47C4C29CE3B /* MPV+APIs.swift */; };
 		F7CC679A78A31AB0A704CFA9 /* Pods_AniXPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F82727D2DE868C53427D0F5 /* Pods_AniXPlayer.framework */; };
 /* End PBXBuildFile section */
 
@@ -250,6 +253,7 @@
 		2F82727D2DE868C53427D0F5 /* Pods_AniXPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AniXPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B0EEE5086C5A5898ED1ED6D /* Pods-AniXPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.release.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.release.xcconfig"; sourceTree = "<group>"; };
 		5B03693BC2791417EF80AE28 /* Pods-AniXPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.debug.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.debug.xcconfig"; sourceTree = "<group>"; };
+		7F3C79DC102B9D27BFC8D360 /* MPVProperty+Values.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "MPVProperty+Values.swift"; sourceTree = "<group>"; };
 		8904475D2901A6E20088886B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8917058E28CF6CF10075ECD9 /* PlayerUIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerUIView.swift; sourceTree = "<group>"; };
 		8917058F28CF6CF10075ECD9 /* PlayerUITopView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerUITopView.swift; sourceTree = "<group>"; };
@@ -436,7 +440,9 @@
 		89FFD1322D4B83BD00428206 /* Launcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Launcher.swift; sourceTree = "<group>"; };
 		A4F3AEACC0C2438C9D6162A6 /* ServerHostListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerHostListViewController.swift; sourceTree = "<group>"; };
 		D126C7B2C39D46C1AA1B4176 /* ThemedTableRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemedTableRowView.swift; sourceTree = "<group>"; };
+		DB5CD1471298E585ECF60B50 /* MPVColor+Hex.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "MPVColor+Hex.swift"; sourceTree = "<group>"; };
 		FCBE01C58043461C971F7664 /* SetMainColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetMainColorViewController.swift; sourceTree = "<group>"; };
+		FD9DD52D13CFD47C4C29CE3B /* MPV+APIs.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "MPV+APIs.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1071,11 +1077,11 @@
 		89DAD9FC2FD05CC200C71A33 /* MPV */ = {
 			isa = PBXGroup;
 			children = (
-				89DAD9F72FD05CC200C71A33 /* MPV.swift */,
 				89DADA542FD31A0A00C71A33 /* MPVFrameRenderer.swift */,
 				89DAD9F92FD05CC200C71A33 /* MPVPiPProvider.swift */,
 				89DAD9FA2FD05CC200C71A33 /* MPVPlayerWrapper.swift */,
 				89DAD9FB2FD05CC200C71A33 /* MPVRenderContext.swift */,
+				F936CB9772CFB9A4513C6998 /* Core */,
 			);
 			path = MPV;
 			sourceTree = "<group>";
@@ -1167,6 +1173,18 @@
 				2F82727D2DE868C53427D0F5 /* Pods_AniXPlayer.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F936CB9772CFB9A4513C6998 /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				89DAD9F72FD05CC200C71A33 /* MPV.swift */,
+				7F3C79DC102B9D27BFC8D360 /* MPVProperty+Values.swift */,
+				FD9DD52D13CFD47C4C29CE3B /* MPV+APIs.swift */,
+				DB5CD1471298E585ECF60B50 /* MPVColor+Hex.swift */,
+			);
+			name = Core;
+			path = Core;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1354,6 +1372,25 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		774311DCF2BF4935B4ABE6EA /* Copy VLCKit dSYM */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Copy VLCKit dSYM";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PROJECT_DIR}/../scripts/copy_vlckit_dsym.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		8904475F2901A7360088886B /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 8;
@@ -1391,25 +1428,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		774311DCF2BF4935B4ABE6EA /* Copy VLCKit dSYM */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Copy VLCKit dSYM";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PROJECT_DIR}/../scripts/copy_vlckit_dsym.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1588,7 +1606,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				89DADA042FD05CCD00C71A33 /* MPV.swift in Sources */,
+				11383C45132A728ADA7D1160 /* MPV.swift in Sources */,
+				58162927BF3D7DF992AFDD35 /* MPVProperty+Values.swift in Sources */,
+				DFED7E65204920970FBB7100 /* MPV+APIs.swift in Sources */,
+				0D940143A9EA749C32FB72CE /* MPVColor+Hex.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

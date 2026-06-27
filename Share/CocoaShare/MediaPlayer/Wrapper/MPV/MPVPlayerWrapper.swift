@@ -323,13 +323,14 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
         self.mpv = mpvHandle
 
         // vo=libmpv + SW render context: 渲染到内存 buffer，不依赖 CAMetalLayer swapchain
-        mpvHandle.setOptionString(.vo, "libmpv")
-        mpvHandle.setOptionString(.hwdec, "videotoolbox")
+        mpvHandle.setProperty(.vo, "libmpv")
+        let hwdecMode = Preferences.shared.hwdecEnabled ? "videotoolbox" : "no"
+        mpvHandle.setProperty(.hwdec, hwdecMode)
 
         // tvOS: 兼容杜比全景声（系统设置中开启全景声时默认 coreaudio 输出）
 #if os(tvOS)
-        mpvHandle.setOptionString(.audioSpdif, "no")
-        mpvHandle.setOptionString(.audioChannels, "2")
+        mpvHandle.setProperty(.audioSpdif, "no")
+        mpvHandle.setProperty(.audioChannels, "2")
 #endif
 
         // 字幕配置
@@ -429,8 +430,8 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
 
     private func setupSubtitleFonts(mpvHandle: MPV) {
         guard let fontDir = playerPrepareFonts() else { return }
-        mpvHandle.setOptionString(.subtitleFontsDir, fontDir)
-        mpvHandle.setOptionString(.subtitleFont, playerCustomFontNames.first ?? "")
+        mpvHandle.setProperty(.subtitleFontsDir, fontDir)
+        mpvHandle.setProperty(.subtitleFont, playerCustomFontNames.first ?? "")
     }
 
     // MARK: - 播放时间通知（通过 mpv time-pos 属性观察，节流到 0.5 秒）

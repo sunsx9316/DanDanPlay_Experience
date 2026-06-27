@@ -27,6 +27,7 @@ class SettingViewController: ViewController {
     private enum SettingRow {
         case appLanguage
         case playerCore
+        case hardwareDecoding
         case autoLoadCustomSubtitle
         case mainColor
         case fastMatch
@@ -38,7 +39,7 @@ class SettingViewController: ViewController {
 
         var reuseIdentifier: String {
             switch self {
-            case .fastMatch, .autoLoadDanmaku, .autoLoadCustomSubtitle:
+            case .fastMatch, .autoLoadDanmaku, .autoLoadCustomSubtitle, .hardwareDecoding:
                 return SwitchSettingCell.reuseIdentifier
             case .appLanguage, .playerCore, .danmakuCacheDay, .mainColor,
                  .version, .cleanupCache, .cleanupHistory:
@@ -83,7 +84,7 @@ class SettingViewController: ViewController {
     private func rows(for section: Section) -> [SettingRow] {
         switch section {
         case .general:
-            return [.appLanguage, .playerCore, .autoLoadCustomSubtitle, .mainColor]
+            return [.appLanguage, .playerCore, .hardwareDecoding, .autoLoadCustomSubtitle, .mainColor]
         case .danmaku:
             return [.fastMatch, .autoLoadDanmaku, .danmakuCacheDay]
         case .about:
@@ -103,6 +104,15 @@ class SettingViewController: ViewController {
             if let cell = cell as? NavigationSettingCell {
                 cell.configure(title: NSLocalizedString("播放器内核", comment: ""),
                                detail: Preferences.shared.playerCore.displayName)
+            }
+
+        case .hardwareDecoding:
+            if let cell = cell as? SwitchSettingCell {
+                cell.configure(title: NSLocalizedString("硬件解码", comment: ""),
+                               isOn: Preferences.shared.hwdecEnabled)
+                cell.onSwitchChanged = { isOn in
+                    self.model.onChangeHwdecEnabled(isOn)
+                }
             }
 
         case .autoLoadCustomSubtitle:

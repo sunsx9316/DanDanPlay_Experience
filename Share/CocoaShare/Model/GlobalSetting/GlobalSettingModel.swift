@@ -31,6 +31,8 @@ class GlobalSettingContext {
 
     lazy var appLanguage = BehaviorSubject<AppLanguage>(value: Preferences.shared.appLanguage)
 
+    lazy var hardwareDecoding = BehaviorSubject<Bool>(value: Preferences.shared.hwdecEnabled)
+
 }
 
 extension GlobalSettingModel {
@@ -68,6 +70,10 @@ extension GlobalSettingModel {
 
     var appLanguage: AppLanguage {
         return Preferences.shared.appLanguage
+    }
+
+    var hardwareDecodingEnabled: Bool {
+        return (try? self.context.hardwareDecoding.value()) ?? true
     }
 }
 
@@ -124,6 +130,8 @@ class GlobalSettingModel {
             return NSLocalizedString("App主题色", comment: "")
         case .playerCore:
             return self.playerCore.displayName
+        case .hardwareDecoding:
+            return self.hardwareDecodingEnabled ? NSLocalizedString("开启", comment: "") : NSLocalizedString("关闭", comment: "")
         }
     }
     
@@ -166,6 +174,11 @@ class GlobalSettingModel {
     func onChangePlayerCore(_ coreType: MediaPlayer.CoreType) {
         Preferences.shared.playerCore = coreType
         self.context.playerCore.onNext(coreType)
+    }
+
+    func onChangeHwdecEnabled(_ enabled: Bool) {
+        Preferences.shared.hwdecEnabled = enabled
+        self.context.hardwareDecoding.onNext(enabled)
     }
 
     func onChangeAppLanguage(_ language: AppLanguage) {

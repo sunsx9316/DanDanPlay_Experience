@@ -74,6 +74,16 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
                 self?.model.onOpenAutoLoadCustomSubtitle(isOn)
             }
             return cell
+        case .hardwareDecoding:
+            let cell = tableView.dequeueReusableCell(class: SwitchDetailTableViewCell.self)
+            cell.aSwitch.isOn = self.model.hardwareDecodingEnabled
+            cell.titleLabel.text = type.title
+            cell.subtitleLabel.text = self.model.subtitle(settingType: type)
+            cell.onTouchSwitchCallBack = { [weak self] (aCell) in
+                let isOn = aCell.aSwitch.isOn
+                self?.model.onChangeHwdecEnabled(isOn)
+            }
+            return cell
         case .log, .cleanupCache, .cleanupHistory:
             let cell = tableView.dequeueReusableCell(class: TitleDetailTableViewCell.self)
             cell.titleLabel.text = type.title

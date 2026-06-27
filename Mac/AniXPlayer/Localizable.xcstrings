@@ -2915,6 +2915,38 @@
           }
         }
       }
+    },
+    "将在下次播放时生效" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Will take effect on next playback"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "将在下次播放时生效"
+          }
+        }
+      }
+    },
+    "硬件解码" : {
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hardware Decoding"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "硬件解码"
+          }
+        }
+      }
     }
   },
   "version" : "1.1"

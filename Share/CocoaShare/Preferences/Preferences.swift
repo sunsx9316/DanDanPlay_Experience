@@ -164,6 +164,9 @@ class Preferences {
         /// 迷你进度条显示
         case miniProgressBar
 
+        /// 硬件解码开关
+        case hwdecEnabled
+
         /// 文件浏览器排序升降序
         case fileBrowserSortAscending
 
@@ -222,6 +225,10 @@ class Preferences {
     /// 迷你进度条显示
     @StoreWrapper(defaultValue: true, key: .miniProgressBar)
     var miniProgressBar: Bool
+
+    /// 硬件解码开关（仅 MPV，默认开启）
+    @StoreWrapper(defaultValue: true, key: .hwdecEnabled)
+    var hwdecEnabled: Bool
 
     /// 文件浏览器排序选项
     @StoreWrapper(defaultValue: FileSortOption.default, key: .fileBrowserSortOption)

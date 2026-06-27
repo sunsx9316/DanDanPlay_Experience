@@ -58,6 +58,17 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
                 self?.model.onOpenAutoLoadCustomSubtitle(isOn)
             }
             return cell
+        case .hardwareDecoding:
+            let cell = tableView.dequeueCell(class: SwitchDetailTableViewCell.self, indexPath: indexPath)
+            cell.aSwitch.isOn = self.model.hardwareDecodingEnabled
+            cell.titleLabel.text = type.title
+            cell.subtitleLabel.text = self.model.subtitle(settingType: type)
+            cell.selectionStyle = .none
+            cell.onTouchSliderCallBack = { [weak self] (aCell) in
+                let isOn = aCell.aSwitch.isOn
+                self?.model.onChangeHwdecEnabled(isOn)
+            }
+            return cell
         case .danmakuCacheDay:
             let cell = tableView.dequeueCell(class: TitleDetailTableViewCell.self, indexPath: indexPath)
             cell.titleLabel.text = type.title

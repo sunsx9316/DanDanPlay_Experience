@@ -209,6 +209,7 @@ enum DanmakuAreaType: Int, CaseIterable {
 enum GlobalSettingType: CaseIterable {
     case appLanguage
     case playerCore
+    case hardwareDecoding
     case fastMatch
     case autoLoadCustomDanmaku
     case autoLoadCustomSubtitle
@@ -246,6 +247,8 @@ enum GlobalSettingType: CaseIterable {
             return NSLocalizedString("主题色", comment: "")
         case .playerCore:
             return NSLocalizedString("播放器内核", comment: "")
+        case .hardwareDecoding:
+            return NSLocalizedString("硬件解码", comment: "")
         }
     }
 }
