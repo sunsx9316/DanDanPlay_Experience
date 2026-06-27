@@ -12,7 +12,8 @@ echo ""
 echo "== 项目 Skills (位于 .claude/skills/) =="
 echo "可使用 Skill 工具调用："
 
-for f in "$SKILL_DIR"/*.skill.md; do
+for d in "$SKILL_DIR"/*/; do
+    f="${d}SKILL.md"
     [ -f "$f" ] || continue
     name=$(sed -n 's/^name: *//p' "$f")
     desc=$(sed -n 's/^description: *//p' "$f")
