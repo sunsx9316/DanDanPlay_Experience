@@ -54,7 +54,7 @@ if [ "$PLATFORM" = "mac" ]; then
     fi
 
     DOWNLOAD_URL="https://github.com/sunsx9316/DanDanPlay_Experience/releases/download/${VERSION_TAG}/${DMG_NAME}"
-    DESC=$(cat "$CHANGELOG_FILE" | python3 -c "import sys,json; print(json.dumps(sys.stdin.read().strip()))")
+    DESC=$(cat "$CHANGELOG_FILE" | python3 -c "import sys,json; print(json.dumps(sys.stdin.read().strip(), ensure_ascii=False))")
 
     cat > "$UPDATE_REPO/check_version.json" << EOF
 {
