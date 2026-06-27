@@ -1,25 +1,21 @@
----
-name: vlc-reference
-description: VLC播放器适配参考 - 修改VLCPlayerWrapper.swift或VLC相关代码前必读
----
-# VLC 参考手册
+## Why
 
-## 触发条件
-当用户要求修改 `VLCPlayerWrapper.swift`、VLC wrapper、VLCKit 封装或任何与VLC播放器相关的代码时，必须先阅读此skill。
+修改 `VLCPlayerWrapper.swift`、VLC wrapper、VLCKit 封装或任何与 VLC 播放器相关的代码时，必须先查阅这份参考文档，确保选项名称、参数格式、平台限制正确。
 
-## 核心文档
-VLC API参考文档位于：
-```
-.claude/skills/vlc_api_reference.md
-```
+## When to Consult
 
-## 使用流程
+- 修改 `VLCPlayerWrapper.swift` 中的选项配置
+- 新增 VLC 播放器特性（字幕、音频、视频参数调整）
+- 调试 VLC 相关的播放问题
+- 对比 VLC 与 MPV 的选项差异
 
-1. **修改代码前**：先阅读 `vlc_api_reference.md`，确认要使用的选项和参数
+## Workflow
+
+1. **修改代码前**：阅读 `api-reference.md`，确认要使用的选项和参数
 2. **编写代码时**：参考文档中的选项格式，确保选项名称和值正确
-3. **检查兼容性**：确认使用的VLC选项在目标版本（VLC 3.6.0分支）可用
+3. **检查兼容性**：确认使用的 VLC 选项在目标版本（VLC 3.6.0）可用
 
-## 快速查询
+## Quick Reference
 
 ### VLC 选项格式
 - VLC 选项使用 `--option=value` 格式
@@ -31,7 +27,7 @@ VLC API参考文档位于：
 | 字幕编码 | `--subsdec-encoding` | 解决乱码问题 |
 | 字幕字体 | `--freetype-font` | 使用字体家族名称 |
 | 字幕边距 | `--sub-margin` | 字幕底部间距 |
-| 字幕延迟 | `--sub-delay` | 单位为秒 |
+| 字幕延迟 | `--sub-delay` | 单位为 1/10 秒 |
 
 ### 重要限制
 - **VLC 不支持 `--sub-fonts-dir`**：VLC 使用系统字体注册表，不支持指定字体目录
@@ -50,8 +46,8 @@ VLC API参考文档位于：
 - VLC freetype 颜色使用**十进制**（如 `16777215` 表示白色）
 - 不是十六进制
 
-## 注意事项
+### 注意事项
 - VLCKit 是 Objective-C 封装，不是所有 libvlc API 都暴露
 - 播放器选项通过 `VLCMediaPlayer(options:)` 初始化时设置
 - **修改 `VLCPlayerWrapper.swift` 的选项时，必须确认选项对字幕渲染器有效**
-- 详细的API说明见 `vlc_api_reference.md`
+- 详细 API 参数见 `api-reference.md`
