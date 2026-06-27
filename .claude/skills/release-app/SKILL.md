@@ -80,11 +80,22 @@ bash scripts/release/update_project_version.sh <platform> <shortVersion> <build>
 
 ### Step 3: 生成更新日志
 
+**Tag 规则**: 格式 `v{version}-{platform}`（如 `v1.6.3-mac`），查找上一版本 tag 时用平台前缀。
+
 ```bash
 cd /Users/jimhuang/Dev/DanDanPlay_Experience
-LAST_TAG=$(git tag --sort=-creatordate | grep '^v' | head -1)
-bash scripts/release/gen_changelog.sh "$LAST_TAG"
+LAST_TAG=$(git tag --sort=-creatordate | grep "^v.*-<platform>" | head -1)
 ```
+
+**日志内容规则**:
+1. **只看平台相关目录**: `Mac/` + `Share/`（macOS）、`iOS/` + `Share/`（iOS）、`tvOS/` + `Share/`（tvOS）
+2. **只看 feat / update 提交**，跳过 docs、chore、refactor、style、test、ci、build、opt 等
+3. **只保留用户感知的功能改动**，剔除发布自动化、构建脚本、CI/CD 等非用户向内容
+4. **过滤其他平台专属功能**（如 Mac 发布日志不含 PiP 等 iOS 专属功能）
+5. **修复类提交**统一写一句“修复若干已知问题”，不展开
+6. **按功能聚合**：播放器、弹幕、媒体服务器、设置等，每个功能 3-5 条要点
+
+**生成方式**: 不用 `gen_changelog.sh`，而是手动分析 git log 后写入 `/tmp/release_changelog.txt`。
 
 把更新日志内容展示给用户。用 **AskUserQuestion** 确认：
 - “确认，日志没问题” (Recommended)
