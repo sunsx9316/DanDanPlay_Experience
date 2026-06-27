@@ -23,4 +23,12 @@ fi
 # 删除已有同名 DMG（brew 版 create-dmg 无 --overwrite）
 rm -f "$output_name"
 
-create-dmg "$output_name" "$app_path"
+create-dmg \
+    --volname "${app_basename%.app}" \
+    --window-pos 200 120 \
+    --window-size 480 400 \
+    --icon-size 100 \
+    --icon "${app_basename}" 110 190 \
+    --app-drop-link 370 190 \
+    "$output_name" \
+    "$app_path"
