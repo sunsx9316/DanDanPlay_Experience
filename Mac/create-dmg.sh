@@ -6,14 +6,21 @@ if [ $# -lt 1 ]; then
     exit 1
 fi
 
-file_path="$1"
+app_path="$1"
 dmg_name="${2:-}"
 
-dir_path=$(dirname "$file_path")
+# 切到 app 所在目录，DMG 生成在该目录下
+dir_path=$(dirname "$app_path")
+app_basename=$(basename "$app_path")
 cd "$dir_path" || { echo "无法切换到目录 '$dir_path'"; exit 3; }
 
 if [ -n "$dmg_name" ]; then
-    create-dmg --overwrite "$dmg_name" "$file_path"
+    output_name="$dmg_name"
 else
-    create-dmg "$file_path"
+    output_name="${app_basename%.app}.dmg"
 fi
+
+# 删除已有同名 DMG（brew 版 create-dmg 无 --overwrite）
+rm -f "$output_name"
+
+create-dmg "$output_name" "$app_path"
