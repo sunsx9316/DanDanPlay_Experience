@@ -74,12 +74,7 @@ fi
 NEW_SHORT_VERSION="${MAJOR}.${CURRENT_MONTH}.${NEW_MINOR}"
 
 # 计算 build: YYYYMMDDXX
-# 检查今天已有的 tag 数量来确定 XX
-TODAY_COUNT=$(git tag --sort=-creatordate | grep '^v' | head -20 | while read t; do
-    git log -1 --format="%ai" "$t" 2>/dev/null || echo ""
-done | grep "^${CURRENT_YEAR}-" | wc -l | tr -d ' ')
-
-# 更简单的方式：检查当前 build 号是否以今天日期开头
+# 检查当前 pbxproj 中的 build 号是否以今天日期开头，决定 XX
 CURRENT_BUILD=$(grep -m1 "CURRENT_PROJECT_VERSION" Mac/AniXPlayer.xcodeproj/project.pbxproj | head -1 | sed 's/.*= //;s/;//')
 if [[ "$CURRENT_BUILD" == "$TODAY"* ]]; then
     TODAY_SEQ=$((10#${CURRENT_BUILD:8:2} + 1))
@@ -264,7 +259,6 @@ EXPORT_PLIST="/tmp/exportOptions.plist"
 rm -rf "$ARCHIVE_PATH" "$EXPORT_PATH"
 
 # 动态生成 exportOptionsPlist
-/usr/libexec/PlistBuddy -c "Clear dict" "$EXPORT_PLIST" 2>/dev/null || true
 cat > "$EXPORT_PLIST" << PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -470,10 +464,10 @@ EOF
     echo "Release: $(gh release view "$VERSION_TAG" --json url -q '.url')"
 
 elif [ "$PLATFORM" = "ios" ] || [ "$PLATFORM" = "tvos" ]; then
-    # iOS/tvOS: 上传到 App Store Connect
-    echo "=== TODO: App Store Connect 上传 ==="
-    echo "暂未实现 iOS/tvOS 自动上传，请手动上传 $APP_PATH"
-    exit 1
+    # iOS/tvOS: 上传到 App Store Connect（后续版本实现）
+    echo "=== App Store Connect 上传 ==="
+    echo "iOS/tvOS 自动上传将在后续版本实现，当前请手动上传: $APP_PATH"
+    exit 0
 fi
 ```
 
@@ -678,7 +672,6 @@ fi
 echo ""
 echo "--- [4/6] 构建 Archive ---"
 "$SCRIPT_DIR/archive_and_export.sh" "$PLATFORM"
-EXPORTED_APP=$(grep "EXPORTED_APP=" /dev/stdin 2>/dev/null || true)
 
 # 获取产物路径
 if [ "$PLATFORM" = "mac" ]; then
@@ -705,6 +698,7 @@ fi
 # ============================================================
 # Step 6: 最终确认 + 发布
 # ============================================================
+VERSION_TAG="v${NEW_SHORT_VERSION}"
 echo ""
 echo "========================================"
 echo "  最终确认"
