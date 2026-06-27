@@ -7,10 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0D940143A9EA749C32FB72CE /* MPVColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB5CD1471298E585ECF60B50 /* MPVColor+Hex.swift */; };
-		11383C45132A728ADA7D1160 /* MPV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DAD9F72FD05CC200C71A33 /* MPV.swift */; };
 		1D44D17727674746ACA34E84 /* ServerHostListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F3AEACC0C2438C9D6162A6 /* ServerHostListViewController.swift */; };
-		58162927BF3D7DF992AFDD35 /* MPVProperty+Values.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F3C79DC102B9D27BFC8D360 /* MPVProperty+Values.swift */; };
 		8904475E2901A6E20088886B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8904475D2901A6E20088886B /* GoogleService-Info.plist */; };
 		8917059328CF6CF10075ECD9 /* PlayerUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8917058E28CF6CF10075ECD9 /* PlayerUIView.swift */; };
 		8917059428CF6CF10075ECD9 /* PlayerUITopView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8917058F28CF6CF10075ECD9 /* PlayerUITopView.swift */; };
@@ -108,6 +105,9 @@
 		894415EB28E3569100480172 /* SubtitleOrderViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894415EA28E3569100480172 /* SubtitleOrderViewController.swift */; };
 		894415F028E4821400480172 /* NSGestureRecognizer+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894415EF28E4821400480172 /* NSGestureRecognizer+Utils.swift */; };
 		894415F328E488CA00480172 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894415F228E488CA00480172 /* Constants.swift */; };
+		894F10882FEFA9F8007B7BF7 /* MPVFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 894F10872FEFA9F8007B7BF7 /* MPVFramework */; };
+		894F10892FEFAA89007B7BF7 /* MPVFramework in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 894F10872FEFA9F8007B7BF7 /* MPVFramework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		894F108C2FEFACD9007B7BF7 /* MPVFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 894F108B2FEFACD9007B7BF7 /* MPVFramework */; };
 		8953D00B2C9948A5003EF386 /* FilterDanmakuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8953D00A2C9948A5003EF386 /* FilterDanmakuViewController.swift */; };
 		8953D00F2C994A91003EF386 /* FilterDanmakuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8953D00D2C994A91003EF386 /* FilterDanmakuTableViewCell.swift */; };
 		8953D0132C99DF08003EF386 /* FilterDanmakuTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8953D0122C99DF08003EF386 /* FilterDanmakuTableViewCell.xib */; };
@@ -169,8 +169,6 @@
 		89DAD9D22FD05ADE00C71A33 /* GCDWebDAVServer in Frameworks */ = {isa = PBXBuildFile; productRef = 89DAD9D12FD05ADE00C71A33 /* GCDWebDAVServer */; };
 		89DAD9D42FD05ADE00C71A33 /* GCDWebServer in Frameworks */ = {isa = PBXBuildFile; productRef = 89DAD9D32FD05ADE00C71A33 /* GCDWebServer */; };
 		89DAD9D62FD05ADE00C71A33 /* GCDWebUploader in Frameworks */ = {isa = PBXBuildFile; productRef = 89DAD9D52FD05ADE00C71A33 /* GCDWebUploader */; };
-		89DAD9E22FD05C3A00C71A33 /* MPVFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89DAD9DC2FD05C3A00C71A33 /* MPVFramework.framework */; };
-		89DAD9E32FD05C3A00C71A33 /* MPVFramework.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 89DAD9DC2FD05C3A00C71A33 /* MPVFramework.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		89DAD9EB2FD05C5900C71A33 /* EmbyFileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DAD9E82FD05C5900C71A33 /* EmbyFileManager.swift */; };
 		89DAD9EC2FD05C5900C71A33 /* EmbyModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DAD9E92FD05C5900C71A33 /* EmbyModel.swift */; };
 		89DAD9F12FD05C8000C71A33 /* PiPPlayerConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DAD9EE2FD05C8000C71A33 /* PiPPlayerConfig.swift */; };
@@ -181,8 +179,6 @@
 		89DADA002FD05CC200C71A33 /* MPVPiPProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DAD9F92FD05CC200C71A33 /* MPVPiPProvider.swift */; };
 		89DADA022FD05CC200C71A33 /* SourceHanSansSC-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 89DAD9F42FD05CC200C71A33 /* SourceHanSansSC-Regular.otf */; };
 		89DADA032FD05CC200C71A33 /* SourceHanSansTC-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 89DAD9F52FD05CC200C71A33 /* SourceHanSansTC-Regular.otf */; };
-		89DADA072FD05D0200C71A33 /* MPVKit in Frameworks */ = {isa = PBXBuildFile; productRef = 89DADA062FD05D0200C71A33 /* MPVKit */; };
-		89DADA082FD05D1100C71A33 /* MPVFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 89DAD9DC2FD05C3A00C71A33 /* MPVFramework.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		89DADA0C2FD05DAB00C71A33 /* DragView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA0B2FD05DAB00C71A33 /* DragView.swift */; };
 		89DADA0E2FD05F2300C71A33 /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = 89DADA0D2FD05F2300C71A33 /* Localizable.xcstrings */; };
 		89DADA292FD0600200C71A33 /* JellyfinLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89DADA162FD0600200C71A33 /* JellyfinLoginHistoryViewController.swift */; };
@@ -212,18 +208,10 @@
 		89FFD1332D4B83BD00428206 /* Launcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD1322D4B83BD00428206 /* Launcher.swift */; };
 		A546C2584CAC40A6BFD3AD77 /* ThemedTableRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D126C7B2C39D46C1AA1B4176 /* ThemedTableRowView.swift */; };
 		B6BF5B7F28F54B4DB7CD684D /* SetMainColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCBE01C58043461C971F7664 /* SetMainColorViewController.swift */; };
-		DFED7E65204920970FBB7100 /* MPV+APIs.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD9DD52D13CFD47C4C29CE3B /* MPV+APIs.swift */; };
 		F7CC679A78A31AB0A704CFA9 /* Pods_AniXPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2F82727D2DE868C53427D0F5 /* Pods_AniXPlayer.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		89DAD9E02FD05C3A00C71A33 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 89945FDF28CA3BAE009AC640 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 89DAD9DB2FD05C3A00C71A33;
-			remoteInfo = MPVFramework;
-		};
 		89DADA092FD05D1100C71A33 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 89945FDF28CA3BAE009AC640 /* Project object */;
@@ -241,8 +229,8 @@
 			dstSubfolderSpec = 10;
 			files = (
 				89DADA3F2FD0755B00C71A33 /* AMSMB2 in Embed Frameworks */,
+				894F10892FEFAA89007B7BF7 /* MPVFramework in Embed Frameworks */,
 				89A9E76F2FD4B05B0019D4C4 /* ANXLog in Embed Frameworks */,
-				89DAD9E32FD05C3A00C71A33 /* MPVFramework.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -253,7 +241,6 @@
 		2F82727D2DE868C53427D0F5 /* Pods_AniXPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AniXPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B0EEE5086C5A5898ED1ED6D /* Pods-AniXPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.release.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.release.xcconfig"; sourceTree = "<group>"; };
 		5B03693BC2791417EF80AE28 /* Pods-AniXPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.debug.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.debug.xcconfig"; sourceTree = "<group>"; };
-		7F3C79DC102B9D27BFC8D360 /* MPVProperty+Values.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "MPVProperty+Values.swift"; sourceTree = "<group>"; };
 		8904475D2901A6E20088886B /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		8917058E28CF6CF10075ECD9 /* PlayerUIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerUIView.swift; sourceTree = "<group>"; };
 		8917058F28CF6CF10075ECD9 /* PlayerUITopView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerUITopView.swift; sourceTree = "<group>"; };
@@ -400,7 +387,6 @@
 		89C325A02C61229F002E2487 /* AboutViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutViewController.swift; sourceTree = "<group>"; };
 		89C325A12C61229F002E2487 /* AboutViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AboutViewController.xib; sourceTree = "<group>"; };
 		89C325A42C612923002E2487 /* AppVersionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersionModel.swift; sourceTree = "<group>"; };
-		89DAD9DC2FD05C3A00C71A33 /* MPVFramework.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MPVFramework.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		89DAD9E82FD05C5900C71A33 /* EmbyFileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbyFileManager.swift; sourceTree = "<group>"; };
 		89DAD9E92FD05C5900C71A33 /* EmbyModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmbyModel.swift; sourceTree = "<group>"; };
 		89DAD9ED2FD05C8000C71A33 /* PiPManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PiPManager.swift; sourceTree = "<group>"; };
@@ -408,7 +394,6 @@
 		89DAD9EF2FD05C8000C71A33 /* PiPPlayerProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PiPPlayerProtocol.swift; sourceTree = "<group>"; };
 		89DAD9F42FD05CC200C71A33 /* SourceHanSansSC-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceHanSansSC-Regular.otf"; sourceTree = "<group>"; };
 		89DAD9F52FD05CC200C71A33 /* SourceHanSansTC-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "SourceHanSansTC-Regular.otf"; sourceTree = "<group>"; };
-		89DAD9F72FD05CC200C71A33 /* MPV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPV.swift; sourceTree = "<group>"; };
 		89DAD9F92FD05CC200C71A33 /* MPVPiPProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVPiPProvider.swift; sourceTree = "<group>"; };
 		89DAD9FA2FD05CC200C71A33 /* MPVPlayerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVPlayerWrapper.swift; sourceTree = "<group>"; };
 		89DAD9FB2FD05CC200C71A33 /* MPVRenderContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVRenderContext.swift; sourceTree = "<group>"; };
@@ -440,9 +425,7 @@
 		89FFD1322D4B83BD00428206 /* Launcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Launcher.swift; sourceTree = "<group>"; };
 		A4F3AEACC0C2438C9D6162A6 /* ServerHostListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerHostListViewController.swift; sourceTree = "<group>"; };
 		D126C7B2C39D46C1AA1B4176 /* ThemedTableRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemedTableRowView.swift; sourceTree = "<group>"; };
-		DB5CD1471298E585ECF60B50 /* MPVColor+Hex.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "MPVColor+Hex.swift"; sourceTree = "<group>"; };
 		FCBE01C58043461C971F7664 /* SetMainColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetMainColorViewController.swift; sourceTree = "<group>"; };
-		FD9DD52D13CFD47C4C29CE3B /* MPV+APIs.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "MPV+APIs.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -451,31 +434,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				89DAD9CC2FD05A9100C71A33 /* AMSMB2 in Frameworks */,
+				894F108C2FEFACD9007B7BF7 /* MPVFramework in Frameworks */,
 				89A9E7662FD4AF200019D4C4 /* ANXLog in Frameworks */,
 				89DAD9D22FD05ADE00C71A33 /* GCDWebDAVServer in Frameworks */,
 				89DAD9D42FD05ADE00C71A33 /* GCDWebServer in Frameworks */,
 				89A9E7632FD4AF0A0019D4C4 /* VLCKit in Frameworks */,
-				89DADA082FD05D1100C71A33 /* MPVFramework.framework in Frameworks */,
 				8994E2442DB69B1300765AF6 /* YYCategories in Frameworks */,
+				894F10882FEFA9F8007B7BF7 /* MPVFramework in Frameworks */,
 				89B7EA5A2C9B14F500527B84 /* RxSwift in Frameworks */,
 				89B7EA522C9B14C700527B84 /* SnapKit in Frameworks */,
 				89DAD9CF2FD05AAE00C71A33 /* FilesProvider in Frameworks */,
 				89DAD9C92FD059F700C71A33 /* Kingfisher in Frameworks */,
 				89B7EA552C9B14DA00527B84 /* Alamofire in Frameworks */,
 				8994E2472DB69BB600765AF6 /* YYCategories in Frameworks */,
-				89DAD9E22FD05C3A00C71A33 /* MPVFramework.framework in Frameworks */,
 				89DAD9D62FD05ADE00C71A33 /* GCDWebUploader in Frameworks */,
 				89B7EA582C9B14F500527B84 /* RxCocoa in Frameworks */,
 				89C0D1802FD46072008DFE68 /* DanmakuRender in Frameworks */,
 				F7CC679A78A31AB0A704CFA9 /* Pods_AniXPlayer.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		89DAD9D92FD05C3A00C71A33 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				89DADA072FD05D0200C71A33 /* MPVKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -835,7 +810,6 @@
 			isa = PBXGroup;
 			children = (
 				89945FE728CA3BAE009AC640 /* AniXPlayer.app */,
-				89DAD9DC2FD05C3A00C71A33 /* MPVFramework.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1081,7 +1055,6 @@
 				89DAD9F92FD05CC200C71A33 /* MPVPiPProvider.swift */,
 				89DAD9FA2FD05CC200C71A33 /* MPVPlayerWrapper.swift */,
 				89DAD9FB2FD05CC200C71A33 /* MPVRenderContext.swift */,
-				F936CB9772CFB9A4513C6998 /* Core */,
 			);
 			path = MPV;
 			sourceTree = "<group>";
@@ -1175,29 +1148,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		F936CB9772CFB9A4513C6998 /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				89DAD9F72FD05CC200C71A33 /* MPV.swift */,
-				7F3C79DC102B9D27BFC8D360 /* MPVProperty+Values.swift */,
-				FD9DD52D13CFD47C4C29CE3B /* MPV+APIs.swift */,
-				DB5CD1471298E585ECF60B50 /* MPVColor+Hex.swift */,
-			);
-			name = Core;
-			path = Core;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
-
-/* Begin PBXHeadersBuildPhase section */
-		89DAD9D72FD05C3A00C71A33 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
 		89945FE628CA3BAE009AC640 /* AniXPlayer */ = {
@@ -1216,7 +1167,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				89DAD9E12FD05C3A00C71A33 /* PBXTargetDependency */,
 				89DADA0A2FD05D1100C71A33 /* PBXTargetDependency */,
 			);
 			name = AniXPlayer;
@@ -1236,31 +1186,12 @@
 				89C0D17F2FD46072008DFE68 /* DanmakuRender */,
 				89A9E7622FD4AF0A0019D4C4 /* VLCKit */,
 				89A9E7652FD4AF200019D4C4 /* ANXLog */,
+				894F10872FEFA9F8007B7BF7 /* MPVFramework */,
+				894F108B2FEFACD9007B7BF7 /* MPVFramework */,
 			);
 			productName = AniXPlayer;
 			productReference = 89945FE728CA3BAE009AC640 /* AniXPlayer.app */;
 			productType = "com.apple.product-type.application";
-		};
-		89DAD9DB2FD05C3A00C71A33 /* MPVFramework */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 89DAD9E42FD05C3A00C71A33 /* Build configuration list for PBXNativeTarget "MPVFramework" */;
-			buildPhases = (
-				89DAD9D72FD05C3A00C71A33 /* Headers */,
-				89DAD9D82FD05C3A00C71A33 /* Sources */,
-				89DAD9D92FD05C3A00C71A33 /* Frameworks */,
-				89DAD9DA2FD05C3A00C71A33 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = MPVFramework;
-			packageProductDependencies = (
-				89DADA062FD05D0200C71A33 /* MPVKit */,
-			);
-			productName = MPVFramework;
-			productReference = 89DAD9DC2FD05C3A00C71A33 /* MPVFramework.framework */;
-			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
@@ -1274,9 +1205,6 @@
 				TargetAttributes = {
 					89945FE628CA3BAE009AC640 = {
 						CreatedOnToolsVersion = 13.4.1;
-					};
-					89DAD9DB2FD05C3A00C71A33 = {
-						CreatedOnToolsVersion = 26.0.1;
 					};
 				};
 			};
@@ -1299,17 +1227,16 @@
 				89DAD9CA2FD05A9100C71A33 /* XCRemoteSwiftPackageReference "AMSMB2" */,
 				89DAD9CD2FD05AAE00C71A33 /* XCRemoteSwiftPackageReference "FileProvider" */,
 				89DAD9D02FD05ADE00C71A33 /* XCRemoteSwiftPackageReference "GCDWebServer" */,
-				89DADA052FD05D0200C71A33 /* XCRemoteSwiftPackageReference "MPVKit" */,
 				89C0D17E2FD46072008DFE68 /* XCRemoteSwiftPackageReference "DanmakuRender-Swift" */,
 				89A9E7612FD4AF0A0019D4C4 /* XCRemoteSwiftPackageReference "VLCKit" */,
 				89A9E7642FD4AF200019D4C4 /* XCRemoteSwiftPackageReference "ANXLog" */,
+				894F108A2FEFACD9007B7BF7 /* XCRemoteSwiftPackageReference "MPVFramework" */,
 			);
 			productRefGroup = 89945FE828CA3BAE009AC640 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
 				89945FE628CA3BAE009AC640 /* AniXPlayer */,
-				89DAD9DB2FD05C3A00C71A33 /* MPVFramework */,
 			);
 		};
 /* End PBXProject section */
@@ -1338,13 +1265,6 @@
 				8943151228D3762C0031619C /* StepTableViewCell.xib in Resources */,
 				8943150A28D374020031619C /* SliderTableViewCell.xib in Resources */,
 				8904475E2901A6E20088886B /* GoogleService-Info.plist in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		89DAD9DA2FD05C3A00C71A33 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1602,28 +1522,11 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		89DAD9D82FD05C3A00C71A33 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				11383C45132A728ADA7D1160 /* MPV.swift in Sources */,
-				58162927BF3D7DF992AFDD35 /* MPVProperty+Values.swift in Sources */,
-				DFED7E65204920970FBB7100 /* MPV+APIs.swift in Sources */,
-				0D940143A9EA749C32FB72CE /* MPVColor+Hex.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		89DAD9E12FD05C3A00C71A33 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 89DAD9DB2FD05C3A00C71A33 /* MPVFramework */;
-			targetProxy = 89DAD9E02FD05C3A00C71A33 /* PBXContainerItemProxy */;
-		};
 		89DADA0A2FD05D1100C71A33 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 89DAD9DB2FD05C3A00C71A33 /* MPVFramework */;
 			targetProxy = 89DADA092FD05D1100C71A33 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -1844,97 +1747,6 @@
 			};
 			name = Release;
 		};
-		89DAD9E52FD05C3A00C71A33 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEAD_CODE_STRIPPING = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_MODULE_VERIFIER = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/Frameworks",
-				);
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.0;
-				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
-				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
-				PRODUCT_BUNDLE_IDENTIFIER = com.anixplayer.mpv.MPVFramework.MPVFramework;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_INSTALL_MODULE = YES;
-				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
-		89DAD9E62FD05C3A00C71A33 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
-				BUILD_LIBRARY_FOR_DISTRIBUTION = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
-				CODE_SIGN_IDENTITY = "";
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				DEAD_CODE_STRIPPING = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_MODULE_VERIFIER = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu17;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/../Frameworks",
-					"@loader_path/Frameworks",
-				);
-				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				MARKETING_VERSION = 1.0;
-				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
-				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu17 gnu++20";
-				PRODUCT_BUNDLE_IDENTIFIER = com.anixplayer.mpv.MPVFramework.MPVFramework;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
-				SKIP_INSTALL = YES;
-				STRING_CATALOG_GENERATE_SYMBOLS = YES;
-				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_INSTALL_MODULE = YES;
-				SWIFT_INSTALL_OBJC_HEADER = NO;
-				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1956,18 +1768,17 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		89DAD9E42FD05C3A00C71A33 /* Build configuration list for PBXNativeTarget "MPVFramework" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				89DAD9E52FD05C3A00C71A33 /* Debug */,
-				89DAD9E62FD05C3A00C71A33 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		894F108A2FEFACD9007B7BF7 /* XCRemoteSwiftPackageReference "MPVFramework" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sunsx9316/MPVFramework";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.0;
+			};
+		};
 		8994E2452DB69BB600765AF6 /* XCRemoteSwiftPackageReference "YYCategories" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sunsx9316/YYCategories";
@@ -2056,17 +1867,18 @@
 				minimumVersion = 3.6.0;
 			};
 		};
-		89DADA052FD05D0200C71A33 /* XCRemoteSwiftPackageReference "MPVKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/mpvkit/MPVKit.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.41.0;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		894F10872FEFA9F8007B7BF7 /* MPVFramework */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MPVFramework;
+		};
+		894F108B2FEFACD9007B7BF7 /* MPVFramework */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 894F108A2FEFACD9007B7BF7 /* XCRemoteSwiftPackageReference "MPVFramework" */;
+			productName = MPVFramework;
+		};
 		8994E2432DB69B1300765AF6 /* YYCategories */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = YYCategories;
@@ -2140,11 +1952,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 89DAD9D02FD05ADE00C71A33 /* XCRemoteSwiftPackageReference "GCDWebServer" */;
 			productName = GCDWebUploader;
-		};
-		89DADA062FD05D0200C71A33 /* MPVKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 89DADA052FD05D0200C71A33 /* XCRemoteSwiftPackageReference "MPVKit" */;
-			productName = MPVKit;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
