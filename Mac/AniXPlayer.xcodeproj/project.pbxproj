@@ -107,7 +107,9 @@
 		894415F328E488CA00480172 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894415F228E488CA00480172 /* Constants.swift */; };
 		894F10882FEFA9F8007B7BF7 /* MPVFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 894F10872FEFA9F8007B7BF7 /* MPVFramework */; };
 		894F10892FEFAA89007B7BF7 /* MPVFramework in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 894F10872FEFA9F8007B7BF7 /* MPVFramework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		894F108C2FEFACD9007B7BF7 /* MPVFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 894F108B2FEFACD9007B7BF7 /* MPVFramework */; };
+		894F108F2FEFAEC1007B7BF7 /* MPVFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 894F108E2FEFAEC1007B7BF7 /* MPVFramework */; };
+		894F10922FEFB127007B7BF7 /* VLCFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 894F10912FEFB127007B7BF7 /* VLCFramework */; };
+		894F10952FEFB485007B7BF7 /* VLCFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 894F10942FEFB485007B7BF7 /* VLCFramework */; };
 		8953D00B2C9948A5003EF386 /* FilterDanmakuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8953D00A2C9948A5003EF386 /* FilterDanmakuViewController.swift */; };
 		8953D00F2C994A91003EF386 /* FilterDanmakuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8953D00D2C994A91003EF386 /* FilterDanmakuTableViewCell.swift */; };
 		8953D0132C99DF08003EF386 /* FilterDanmakuTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8953D0122C99DF08003EF386 /* FilterDanmakuTableViewCell.xib */; };
@@ -148,7 +150,6 @@
 		89A1C67028D5D3E100DC514E /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A1C66F28D5D3E100DC514E /* main.swift */; };
 		89A1C67228D5DA8F00DC514E /* InfoPlistUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A1C67128D5DA8F00DC514E /* InfoPlistUtils.swift */; };
 		89A1C68F28D5E38500DC514E /* NSApp+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A1C68E28D5E38500DC514E /* NSApp+Utils.swift */; };
-		89A9E7632FD4AF0A0019D4C4 /* VLCKit in Frameworks */ = {isa = PBXBuildFile; productRef = 89A9E7622FD4AF0A0019D4C4 /* VLCKit */; };
 		89A9E7662FD4AF200019D4C4 /* ANXLog in Frameworks */ = {isa = PBXBuildFile; productRef = 89A9E7652FD4AF200019D4C4 /* ANXLog */; };
 		89A9E7682FD4AFDE0019D4C4 /* ANXLogHelper+Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A9E7672FD4AFDE0019D4C4 /* ANXLogHelper+Swift.swift */; };
 		89A9E76F2FD4B05B0019D4C4 /* ANXLog in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 89A9E7652FD4AF200019D4C4 /* ANXLog */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -434,11 +435,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				89DAD9CC2FD05A9100C71A33 /* AMSMB2 in Frameworks */,
-				894F108C2FEFACD9007B7BF7 /* MPVFramework in Frameworks */,
+				894F108F2FEFAEC1007B7BF7 /* MPVFramework in Frameworks */,
 				89A9E7662FD4AF200019D4C4 /* ANXLog in Frameworks */,
+				894F10922FEFB127007B7BF7 /* VLCFramework in Frameworks */,
 				89DAD9D22FD05ADE00C71A33 /* GCDWebDAVServer in Frameworks */,
 				89DAD9D42FD05ADE00C71A33 /* GCDWebServer in Frameworks */,
-				89A9E7632FD4AF0A0019D4C4 /* VLCKit in Frameworks */,
 				8994E2442DB69B1300765AF6 /* YYCategories in Frameworks */,
 				894F10882FEFA9F8007B7BF7 /* MPVFramework in Frameworks */,
 				89B7EA5A2C9B14F500527B84 /* RxSwift in Frameworks */,
@@ -446,6 +447,7 @@
 				89DAD9CF2FD05AAE00C71A33 /* FilesProvider in Frameworks */,
 				89DAD9C92FD059F700C71A33 /* Kingfisher in Frameworks */,
 				89B7EA552C9B14DA00527B84 /* Alamofire in Frameworks */,
+				894F10952FEFB485007B7BF7 /* VLCFramework in Frameworks */,
 				8994E2472DB69BB600765AF6 /* YYCategories in Frameworks */,
 				89DAD9D62FD05ADE00C71A33 /* GCDWebUploader in Frameworks */,
 				89B7EA582C9B14F500527B84 /* RxCocoa in Frameworks */,
@@ -1162,7 +1164,7 @@
 				50EEF590C9774F872E54B481 /* [CP] Embed Pods Frameworks */,
 				8904475F2901A7360088886B /* ShellScript */,
 				89DAD9E72FD05C3A00C71A33 /* Embed Frameworks */,
-				774311DCF2BF4935B4ABE6EA /* Copy VLCKit dSYM */,
+				774311DCF2BF4935B4ABE6EA /* Copy VLCFramework dSYM */,
 			);
 			buildRules = (
 			);
@@ -1184,10 +1186,11 @@
 				89DAD9D32FD05ADE00C71A33 /* GCDWebServer */,
 				89DAD9D52FD05ADE00C71A33 /* GCDWebUploader */,
 				89C0D17F2FD46072008DFE68 /* DanmakuRender */,
-				89A9E7622FD4AF0A0019D4C4 /* VLCKit */,
 				89A9E7652FD4AF200019D4C4 /* ANXLog */,
 				894F10872FEFA9F8007B7BF7 /* MPVFramework */,
-				894F108B2FEFACD9007B7BF7 /* MPVFramework */,
+				894F108E2FEFAEC1007B7BF7 /* MPVFramework */,
+				894F10912FEFB127007B7BF7 /* VLCFramework */,
+				894F10942FEFB485007B7BF7 /* VLCFramework */,
 			);
 			productName = AniXPlayer;
 			productReference = 89945FE728CA3BAE009AC640 /* AniXPlayer.app */;
@@ -1228,9 +1231,9 @@
 				89DAD9CD2FD05AAE00C71A33 /* XCRemoteSwiftPackageReference "FileProvider" */,
 				89DAD9D02FD05ADE00C71A33 /* XCRemoteSwiftPackageReference "GCDWebServer" */,
 				89C0D17E2FD46072008DFE68 /* XCRemoteSwiftPackageReference "DanmakuRender-Swift" */,
-				89A9E7612FD4AF0A0019D4C4 /* XCRemoteSwiftPackageReference "VLCKit" */,
 				89A9E7642FD4AF200019D4C4 /* XCRemoteSwiftPackageReference "ANXLog" */,
-				894F108A2FEFACD9007B7BF7 /* XCRemoteSwiftPackageReference "MPVFramework" */,
+				894F108D2FEFAEC1007B7BF7 /* XCRemoteSwiftPackageReference "MPVFramework" */,
+				894F10932FEFB485007B7BF7 /* XCRemoteSwiftPackageReference "VLCFramework" */,
 			);
 			productRefGroup = 89945FE828CA3BAE009AC640 /* Products */;
 			projectDirPath = "";
@@ -1292,7 +1295,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		774311DCF2BF4935B4ABE6EA /* Copy VLCKit dSYM */ = {
+		774311DCF2BF4935B4ABE6EA /* Copy VLCFramework dSYM */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1301,7 +1304,7 @@
 			);
 			inputPaths = (
 			);
-			name = "Copy VLCKit dSYM";
+			name = "Copy VLCFramework dSYM";
 			outputFileListPaths = (
 			);
 			outputPaths = (
@@ -1771,12 +1774,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		894F108A2FEFACD9007B7BF7 /* XCRemoteSwiftPackageReference "MPVFramework" */ = {
+		894F108D2FEFAEC1007B7BF7 /* XCRemoteSwiftPackageReference "MPVFramework" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sunsx9316/MPVFramework";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 0.1.0;
+			};
+		};
+		894F10932FEFB485007B7BF7 /* XCRemoteSwiftPackageReference "VLCFramework" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sunsx9316/VLCFramework";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.1;
 			};
 		};
 		8994E2452DB69BB600765AF6 /* XCRemoteSwiftPackageReference "YYCategories" */ = {
@@ -1785,14 +1796,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.0.7;
-			};
-		};
-		89A9E7612FD4AF0A0019D4C4 /* XCRemoteSwiftPackageReference "VLCKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sunsx9316/VLCKit.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.0;
 			};
 		};
 		89A9E7642FD4AF200019D4C4 /* XCRemoteSwiftPackageReference "ANXLog" */ = {
@@ -1874,10 +1877,19 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = MPVFramework;
 		};
-		894F108B2FEFACD9007B7BF7 /* MPVFramework */ = {
+		894F108E2FEFAEC1007B7BF7 /* MPVFramework */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 894F108A2FEFACD9007B7BF7 /* XCRemoteSwiftPackageReference "MPVFramework" */;
+			package = 894F108D2FEFAEC1007B7BF7 /* XCRemoteSwiftPackageReference "MPVFramework" */;
 			productName = MPVFramework;
+		};
+		894F10912FEFB127007B7BF7 /* VLCFramework */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = VLCFramework;
+		};
+		894F10942FEFB485007B7BF7 /* VLCFramework */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 894F10932FEFB485007B7BF7 /* XCRemoteSwiftPackageReference "VLCFramework" */;
+			productName = VLCFramework;
 		};
 		8994E2432DB69B1300765AF6 /* YYCategories */ = {
 			isa = XCSwiftPackageProductDependency;
@@ -1887,11 +1899,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8994E2452DB69BB600765AF6 /* XCRemoteSwiftPackageReference "YYCategories" */;
 			productName = YYCategories;
-		};
-		89A9E7622FD4AF0A0019D4C4 /* VLCKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 89A9E7612FD4AF0A0019D4C4 /* XCRemoteSwiftPackageReference "VLCKit" */;
-			productName = VLCKit;
 		};
 		89A9E7652FD4AF200019D4C4 /* ANXLog */ = {
 			isa = XCSwiftPackageProductDependency;

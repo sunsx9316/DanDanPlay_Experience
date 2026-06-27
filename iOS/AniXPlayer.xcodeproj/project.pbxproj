@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 60;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -135,10 +135,11 @@
 		8944E87D263BD69800EF00B1 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8944E87C263BD69700EF00B1 /* Button.swift */; };
 		8949F8912662AA2100274520 /* WebDavLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8949F8902662AA2100274520 /* WebDavLoginHistoryViewController.swift */; };
 		8949F8932662AA8E00274520 /* FTPLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8949F8922662AA8E00274520 /* FTPLoginHistoryViewController.swift */; };
-		894F10792FEFA788007B7BF7 /* VLCKit in Frameworks */ = {isa = PBXBuildFile; productRef = 894F10782FEFA788007B7BF7 /* VLCKit */; };
 		894F107C2FEFA7B6007B7BF7 /* MPVFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 894F107B2FEFA7B6007B7BF7 /* MPVFramework */; };
 		894F107F2FEFA810007B7BF7 /* YYCategories in Frameworks */ = {isa = PBXBuildFile; productRef = 894F107E2FEFA810007B7BF7 /* YYCategories */; };
 		894F10802FEFA87B007B7BF7 /* MPVFramework in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 894F107B2FEFA7B6007B7BF7 /* MPVFramework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		894F109E2FEFB51D007B7BF7 /* MPVFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 894F109D2FEFB51D007B7BF7 /* MPVFramework */; };
+		894F10A12FEFB536007B7BF7 /* VLCFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 894F10A02FEFB536007B7BF7 /* VLCFramework */; };
 		895152CF2FC1ADC000F75DB7 /* upload.html in Resources */ = {isa = PBXBuildFile; fileRef = 895152CC2FC1ADC000F75DB7 /* upload.html */; };
 		895152D02FC1ADC000F75DB7 /* upload.js in Resources */ = {isa = PBXBuildFile; fileRef = 895152CD2FC1ADC000F75DB7 /* upload.js */; };
 		8953CDA42C987FF1003EF386 /* FilterDanmakuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8953CDA22C987FF1003EF386 /* FilterDanmakuTableViewCell.swift */; };
@@ -508,7 +509,6 @@
 				6F969714544C3EBD7E920F21 /* Pods_AniXPlayer.framework in Frameworks */,
 				89B7EA4F2C9B141100527B84 /* DanmakuRender in Frameworks */,
 				89C0D1832FD485CF008DFE68 /* ANXLog in Frameworks */,
-				894F10792FEFA788007B7BF7 /* VLCKit in Frameworks */,
 				89B7EA4C2C9B120100527B84 /* DanmakuRender in Frameworks */,
 				89D148722D44E2B000E7FDF5 /* YYCategories in Frameworks */,
 				894F107F2FEFA810007B7BF7 /* YYCategories in Frameworks */,
@@ -518,6 +518,7 @@
 				895A7FAB2FC7518500A997B8 /* GCDWebServer in Frameworks */,
 				8953D0352C99E4C7003EF386 /* MBProgressHUD in Frameworks */,
 				8953D0212C99E306003EF386 /* Alamofire in Frameworks */,
+				894F10A12FEFB536007B7BF7 /* VLCFramework in Frameworks */,
 				895A7FAD2FC7518500A997B8 /* GCDWebUploader in Frameworks */,
 				89A9E74E2FD49FEC0019D4C4 /* ANXLog in Frameworks */,
 				8955996B2FCB645F007F52E0 /* Kingfisher in Frameworks */,
@@ -531,6 +532,7 @@
 				890A0B2E2CAD624200AE1F6B /* Colorful in Frameworks */,
 				895A7FA92FC7518500A997B8 /* GCDWebDAVServer in Frameworks */,
 				8953D0242C99E374003EF386 /* MJRefresh in Frameworks */,
+				894F109E2FEFB51D007B7BF7 /* MPVFramework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1418,9 +1420,10 @@
 				898DF7C12FD493AA00675377 /* ANXLog */,
 				898DF7C42FD4945400675377 /* ANXLog */,
 				89A9E74D2FD49FEC0019D4C4 /* ANXLog */,
-				894F10782FEFA788007B7BF7 /* VLCKit */,
 				894F107B2FEFA7B6007B7BF7 /* MPVFramework */,
 				894F107E2FEFA810007B7BF7 /* YYCategories */,
+				894F109D2FEFB51D007B7BF7 /* MPVFramework */,
+				894F10A02FEFB536007B7BF7 /* VLCFramework */,
 			);
 			productName = AniXPlayer;
 			productReference = 890DF6C926160826002D8AE5 /* AniXPlayer.app */;
@@ -1466,9 +1469,9 @@
 				895A7FC22FC75A7100A997B8 /* XCRemoteSwiftPackageReference "AMSMB2" */,
 				895599692FCB645F007F52E0 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				89A9E74C2FD49FEC0019D4C4 /* XCRemoteSwiftPackageReference "ANXLog" */,
-				894F10772FEFA787007B7BF7 /* XCRemoteSwiftPackageReference "VLCKit" */,
-				894F107A2FEFA7B6007B7BF7 /* XCLocalSwiftPackageReference "../Share/MPVFramework" */,
 				894F107D2FEFA810007B7BF7 /* XCRemoteSwiftPackageReference "YYCategories" */,
+				894F109C2FEFB51C007B7BF7 /* XCRemoteSwiftPackageReference "MPVFramework" */,
+				894F109F2FEFB536007B7BF7 /* XCRemoteSwiftPackageReference "VLCFramework" */,
 			);
 			productRefGroup = 890DF6CA26160826002D8AE5 /* Products */;
 			projectDirPath = "";
@@ -2023,13 +2026,6 @@
 		};
 /* End XCConfigurationList section */
 
-/* Begin XCLocalSwiftPackageReference section */
-		894F107A2FEFA7B6007B7BF7 /* XCLocalSwiftPackageReference "../Share/MPVFramework" */ = {
-			isa = XCLocalSwiftPackageReference;
-			relativePath = ../Share/MPVFramework;
-		};
-/* End XCLocalSwiftPackageReference section */
-
 /* Begin XCRemoteSwiftPackageReference section */
 		890A0B2C2CAD624200AE1F6B /* XCRemoteSwiftPackageReference "Color-Picker-for-iOS" */ = {
 			isa = XCRemoteSwiftPackageReference;
@@ -2039,20 +2035,28 @@
 				minimumVersion = 3.0.2;
 			};
 		};
-		894F10772FEFA787007B7BF7 /* XCRemoteSwiftPackageReference "VLCKit" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sunsx9316/VLCKit.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.0;
-			};
-		};
 		894F107D2FEFA810007B7BF7 /* XCRemoteSwiftPackageReference "YYCategories" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sunsx9316/YYCategories";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.0.7;
+			};
+		};
+		894F109C2FEFB51C007B7BF7 /* XCRemoteSwiftPackageReference "MPVFramework" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sunsx9316/MPVFramework";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.1.0;
+			};
+		};
+		894F109F2FEFB536007B7BF7 /* XCRemoteSwiftPackageReference "VLCFramework" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sunsx9316/VLCFramework";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.1;
 			};
 		};
 		8953D01F2C99E306003EF386 /* XCRemoteSwiftPackageReference "Alamofire" */ = {
@@ -2159,11 +2163,6 @@
 			package = 890A0B2C2CAD624200AE1F6B /* XCRemoteSwiftPackageReference "Color-Picker-for-iOS" */;
 			productName = Colorful;
 		};
-		894F10782FEFA788007B7BF7 /* VLCKit */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 894F10772FEFA787007B7BF7 /* XCRemoteSwiftPackageReference "VLCKit" */;
-			productName = VLCKit;
-		};
 		894F107B2FEFA7B6007B7BF7 /* MPVFramework */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = MPVFramework;
@@ -2172,6 +2171,16 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 894F107D2FEFA810007B7BF7 /* XCRemoteSwiftPackageReference "YYCategories" */;
 			productName = YYCategories;
+		};
+		894F109D2FEFB51D007B7BF7 /* MPVFramework */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 894F109C2FEFB51C007B7BF7 /* XCRemoteSwiftPackageReference "MPVFramework" */;
+			productName = MPVFramework;
+		};
+		894F10A02FEFB536007B7BF7 /* VLCFramework */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 894F109F2FEFB536007B7BF7 /* XCRemoteSwiftPackageReference "VLCFramework" */;
+			productName = VLCFramework;
 		};
 		8953D0202C99E306003EF386 /* Alamofire */ = {
 			isa = XCSwiftPackageProductDependency;

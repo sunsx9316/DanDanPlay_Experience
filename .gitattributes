@@ -1,5 +1,5 @@
 Share/ANXLog/ANXLog/Resources/mars.xcframework/** filter=lfs diff=lfs merge=lfs -text
 Share/ANXLog/ANXLog/Resources/Mac/mars.framework/** filter=lfs diff=lfs merge=lfs -text
 Share/ANXLog/ANXLog/Resources/iOS/mars.framework/** filter=lfs diff=lfs merge=lfs -text
-Share/VLCKit/Sources/VLCKitSPM/VLCKit.xcframework/** filter=lfs diff=lfs merge=lfs -text
+Share/VLCFramework/Sources/VLCKitSPM/VLCKit.xcframework/** filter=lfs diff=lfs merge=lfs -text
 Share/TVVLCKit/Sources/TVVLCKitSPM/TVVLCKit.xcframework/** filter=lfs diff=lfs merge=lfs -text

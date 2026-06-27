@@ -11,7 +11,7 @@ target 'AniXPlayer' do
   
   pod 'FirebaseCrashlytics'
   #pod 'ANXLog', :path => '../Share/ANXLog'
-  #pod 'VLCKit', :path => '../Share/VLCKit'
+  #pod 'VLCKit', :path => '../Share/VLCFramework'
 
 end
 

@@ -12,7 +12,7 @@ target 'AniXPlayer' do
   #pod 'ProgressHUD', :path => 'LocalPods/ProgressHUD'
   pod 'FirebaseCrashlytics'
   # pod 'MMKV'
-  # pod 'VLCKit', :path => '../Share/VLCKit'
+  # pod 'VLCKit', :path => '../Share/VLCFramework'
   # pod 'ANXLog', :path => '../Share/ANXLog'
   # pod 'SnapKit'
   # pod 'DanmakuRender-Swift'
