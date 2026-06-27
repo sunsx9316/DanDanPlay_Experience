@@ -277,6 +277,8 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
         let pos = max(min(position, 1), 0)
         let time = pos * self.length
         ANX.logInfo(.player, "[MPV] 跳转: \(time)s (进度: \(pos))")
+        _mediaView.flush()
+        renderer.startRendering()
         mpv?.time.seek(to: time)
     }
 
