@@ -125,6 +125,8 @@ cd /Users/jimhuang/Dev/DanDanPlay_Experience
 bash scripts/release/notarize.sh /tmp/export/AniXPlayer.app
 ```
 
+脚本内部会自动将 `.app` 打包为 `.zip` 再提交公证（notarytool 不接受 `.app` 目录），公证成功后自动清理 zip 并钉入票据。
+
 等待完成后检查结果。如果公证失败，展示错误信息，**终止**。
 
 ### Step 6: 最终确认 + 发布
