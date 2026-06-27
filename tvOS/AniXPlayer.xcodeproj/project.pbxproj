@@ -1140,7 +1140,7 @@
 				C09E36E3B164B14BC54B494E /* Resources */,
 				0A1CBCFEF5553BF3A7B4E878 /* Frameworks */,
 				895A7F622FC5F82E00A997B8 /* Embed Frameworks */,
-				4E3A1759B7C246EEBDD3E00A /* Copy VLCKit dSYM */,
+				4E3A1759B7C246EEBDD3E00A /* Copy dSYMs */,
 			);
 			buildRules = (
 			);
@@ -1259,7 +1259,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		4E3A1759B7C246EEBDD3E00A /* Copy VLCKit dSYM */ = {
+		4E3A1759B7C246EEBDD3E00A /* Copy dSYMs */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1268,14 +1268,14 @@
 			);
 			inputPaths = (
 			);
-			name = "Copy VLCKit dSYM";
+			name = "Copy dSYMs";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PROJECT_DIR}/../scripts/copy_vlckit_dsym.sh\"\n";
+			shellScript = "\"${PROJECT_DIR}/../scripts/copy_dsyms.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1473,7 +1473,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2026060701;
+				CURRENT_PROJECT_VERSION = 2026062701;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = AniXPlayer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = AniXPlayer;
@@ -1482,6 +1482,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",
@@ -1654,7 +1655,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CURRENT_PROJECT_VERSION = 2026060701;
+				CURRENT_PROJECT_VERSION = 2026062701;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = AniXPlayer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = AniXPlayer;
@@ -1663,6 +1664,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				MARKETING_VERSION = 1.0.1;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-framework",

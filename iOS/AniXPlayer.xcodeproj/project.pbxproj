@@ -1390,7 +1390,7 @@
 				CC9BA52668FD7D5F30AC3E4B /* [CP] Embed Pods Frameworks */,
 				8904475C29018AE90088886B /* ShellScript */,
 				895B41C92F759C8100B4DA4C /* Embed Frameworks */,
-				F95AD7964086409CA4391242 /* Copy VLCKit dSYM */,
+				F95AD7964086409CA4391242 /* Copy dSYMs */,
 			);
 			buildRules = (
 			);
@@ -1562,7 +1562,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F95AD7964086409CA4391242 /* Copy VLCKit dSYM */ = {
+		F95AD7964086409CA4391242 /* Copy dSYMs */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1571,14 +1571,14 @@
 			);
 			inputPaths = (
 			);
-			name = "Copy VLCKit dSYM";
+			name = "Copy dSYMs";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PROJECT_DIR}/../scripts/copy_vlckit_dsym.sh\"\n";
+			shellScript = "\"${PROJECT_DIR}/../scripts/copy_dsyms.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -1942,7 +1942,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2026060701;
+				CURRENT_PROJECT_VERSION = 2026062701;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1978,7 +1978,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2026060701;
+				CURRENT_PROJECT_VERSION = 2026062701;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

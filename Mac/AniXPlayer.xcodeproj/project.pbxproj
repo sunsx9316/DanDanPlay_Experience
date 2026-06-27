@@ -1164,7 +1164,7 @@
 				50EEF590C9774F872E54B481 /* [CP] Embed Pods Frameworks */,
 				8904475F2901A7360088886B /* ShellScript */,
 				89DAD9E72FD05C3A00C71A33 /* Embed Frameworks */,
-				774311DCF2BF4935B4ABE6EA /* Copy VLCFramework dSYM */,
+				774311DCF2BF4935B4ABE6EA /* Copy dSYMs */,
 			);
 			buildRules = (
 			);
@@ -1295,7 +1295,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		774311DCF2BF4935B4ABE6EA /* Copy VLCFramework dSYM */ = {
+		774311DCF2BF4935B4ABE6EA /* Copy dSYMs */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1304,14 +1304,14 @@
 			);
 			inputPaths = (
 			);
-			name = "Copy VLCFramework dSYM";
+			name = "Copy dSYMs";
 			outputFileListPaths = (
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PROJECT_DIR}/../scripts/copy_vlckit_dsym.sh\"\n";
+			shellScript = "\"${PROJECT_DIR}/../scripts/copy_dsyms.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8904475F2901A7360088886B /* ShellScript */ = {
