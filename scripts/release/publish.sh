@@ -86,18 +86,16 @@ elif [ "$PLATFORM" = "ios" ] || [ "$PLATFORM" = "tvos" ]; then
         exit 1
     fi
 
-    # App Store Connect 上传凭证
-    APPLE_ID="${APPLE_ID:-}"
+    # App Store Connect 上传凭证（与 Mac 公证共用 Apple ID 和 App 专用密码）
+    APPLE_ID="${APPLE_ID:-jimhuang099@gmail.com}"
     ASC_PROFILE="${ASC_PROFILE:-AC_PASSWORD}"
 
-    if [ -z "$APPLE_ID" ]; then
-        echo "错误: 请设置 APPLE_ID 环境变量（Apple ID 邮箱）" >&2
-        exit 1
-    fi
-
+    # 检查 altool keychain 是否已配置（与 notarytool 的 keychain 不共用，需要单独创建）
     if ! xcrun altool --validate-app -f "$APP_PATH" -t "$PLATFORM" -u "$APPLE_ID" -p "@keychain:${ASC_PROFILE}" --output-format xml &>/dev/null; then
-        echo "错误: 验证 .ipa 失败，请检查 keychain profile '${ASC_PROFILE}' 是否正确配置" >&2
-        echo "配置方法: xcrun notarytool store-credentials '${ASC_PROFILE}' --apple-id <your-apple-id> --password <app-specific-password> --team-id 94L7P6P9PY" >&2
+        echo "错误: altool 验证失败，请先创建 keychain 条目:" >&2
+        echo "  xcrun altool --store-password-in-keychain-item '${ASC_PROFILE}' -u '${APPLE_ID}' -p @env:APP_SPECIFIC_PASSWORD" >&2
+        echo "或手动设置:" >&2
+        echo "  xcrun altool --store-password-in-keychain-item '${ASC_PROFILE}' -u '${APPLE_ID}'" >&2
         exit 1
     fi
 
