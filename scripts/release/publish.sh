@@ -88,7 +88,7 @@ elif [ "$PLATFORM" = "ios" ] || [ "$PLATFORM" = "tvos" ]; then
 
     # App Store Connect 上传凭证
     APPLE_ID="${APPLE_ID:-}"
-    ASC_PROFILE="${ASC_PROFILE:-ASC_PASSWORD}"
+    ASC_PROFILE="${ASC_PROFILE:-AC_PASSWORD}"
 
     if [ -z "$APPLE_ID" ]; then
         echo "错误: 请设置 APPLE_ID 环境变量（Apple ID 邮箱）" >&2
@@ -96,7 +96,7 @@ elif [ "$PLATFORM" = "ios" ] || [ "$PLATFORM" = "tvos" ]; then
     fi
 
     if ! xcrun altool --validate-app -f "$APP_PATH" -t "$PLATFORM" -u "$APPLE_ID" -p "@keychain:${ASC_PROFILE}" --output-format xml &>/dev/null; then
-        echo "错误: 验证 .ipa 失败，请检查 ASC_PASSWORD keychain profile 是否正确配置" >&2
+        echo "错误: 验证 .ipa 失败，请检查 keychain profile '${ASC_PROFILE}' 是否正确配置" >&2
         echo "配置方法: xcrun notarytool store-credentials '${ASC_PROFILE}' --apple-id <your-apple-id> --password <app-specific-password> --team-id 94L7P6P9PY" >&2
         exit 1
     fi
