@@ -21,14 +21,13 @@
 - **shortVersion**: `主版本.月份.次版本`，如 `1.6.2`
   - 第一位：每年 +1
   - 中间位：当月月份（目前 6 月为 `6`）
-  - 末位：每次打包相对上次 tag `+10`
+  - 末位：每次打包相对上次 tag `+1`
   - 若月份变更，中间位更新，末位重置为 `0`
 - **build**: `YYYYMMDDXX`，如 `2026062701`
   - `YYYYMMDD` 为打包日期
   - `XX` 为当天打包次数（从 01 开始）
   - 通过检查当天已有 git tag 来判断 `XX`
 
-> **注意**: 现有 tags (`v1.6.0` → `v1.6.1` → `v1.6.2`) 按 `+1` 递增，与用户的 `+10` 规则不一致。实现前需确认：自动化后是否从当前版本开始严格按 `+10` 规则（即下一个版本为 `1.6.12`），还是保持历史习惯 `+1`？
 
 ## 目录结构
 
@@ -194,7 +193,7 @@ publish.sh                  ←  一次性执行：
 
 | 项目 | 说明 | 命令 |
 |------|------|------|
-| **create-dmg** | npm 的 `create-dmg` 是 x86_64，arm64 Mac 需重装 | `arch -arm64 npm install -g create-dmg` 或 `brew install create-dmg` |
+| **create-dmg** | 通过 Homebrew 安装原生 arm64 版本 | `brew install create-dmg` |
 | **notarytool profile** | 公证凭证存储在 Keychain | `xcrun notarytool store-credentials "AC_PASSWORD" --apple-id <your_id> --team-id 94L7P6P9PY --password <app_specific_password>` |
 | **gh CLI 登录** | GitHub 认证 | `gh auth login` |
 | **Gitee SSH** | 更新仓库推送 | 确保 `~/.ssh/config` 配置了 `gitee.com` 的密钥 |
