@@ -25,6 +25,7 @@
 		2A5F68EC83AB278FB7BB94D1 /* UIColor+Adaptive.swift in Sources */ = {isa = PBXBuildFile; fileRef = D312D5D965F780F3866E0479 /* UIColor+Adaptive.swift */; };
 		2B305E79A009F3460F260926 /* HomePageFunctionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51F4249AC11C810C2EE970A /* HomePageFunctionCell.swift */; };
 		30E73545494248739525133A /* LocalFileBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 798EBE1B4EEB48958C016E7A /* LocalFileBrowserViewController.swift */; };
+		31472B579B6BE98345CF0BAF /* StoreBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E66428B6A4B1EA014F97446 /* StoreBackend.swift */; };
 		327C917E8D8C633109AF1DA9 /* CollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C4E0C2907511572960283F /* CollectionViewCell.swift */; };
 		3C2A91470F739628AC24E63C /* EmbyLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 681306416E62B09B5100DC8C /* EmbyLoginHistoryViewController.swift */; };
 		4029C6F24F4978C716E481D5 /* MediaLibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A2D64ECCE906A4811133267 /* MediaLibraryViewController.swift */; };
@@ -240,6 +241,7 @@
 		37A534159998D69DFC9D9538 /* HomePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageViewController.swift; sourceTree = "<group>"; };
 		3BD2EE63F353E4DD9B53D41D /* TableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableView.swift; sourceTree = "<group>"; };
 		3CF200CD9694C0FED849DBE1 /* HomePageContinueWatchingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageContinueWatchingCell.swift; sourceTree = "<group>"; };
+		3E66428B6A4B1EA014F97446 /* StoreBackend.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StoreBackend.swift; sourceTree = "<group>"; };
 		40EBDEA8AE5F90B083C90CA2 /* EmbyConnectViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EmbyConnectViewController.swift; sourceTree = "<group>"; };
 		46D6C194143629A951CC95A3 /* AddFilterTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AddFilterTableViewCell.swift; sourceTree = "<group>"; };
 		4F9AC278D22CE8C0C0740F07 /* MatchsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchsViewController.swift; sourceTree = "<group>"; };
@@ -376,6 +378,7 @@
 		895A7F722FC602C900A997B8 /* SubtitleColorPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtitleColorPickerViewController.swift; sourceTree = "<group>"; };
 		895A7F742FC602D900A997B8 /* ColorPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ColorPickerView.swift; sourceTree = "<group>"; };
 		89A9E7552FD4A6380019D4C4 /* FontHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontHelper.swift; sourceTree = "<group>"; };
+		89D3E39B2FF16CDD00CD6A92 /* AniXPlayer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AniXPlayer.entitlements; sourceTree = "<group>"; };
 		89DADA5F2FD3E92100C71A33 /* MPVFrameRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVFrameRenderer.swift; sourceTree = "<group>"; };
 		89DADA672FD43F3300C71A33 /* FontHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontHelper.swift; sourceTree = "<group>"; };
 		8D4AF521DBEFBEC5CE876848 /* UITableView+Extension.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UITableView+Extension.swift"; sourceTree = "<group>"; };
@@ -520,6 +523,7 @@
 		3EC62D8071F5F2E030A4997B /* AniXPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				89D3E39B2FF16CDD00CD6A92 /* AniXPlayer.entitlements */,
 				8951543C2FC1DC2D00F75DB7 /* CocoaShare */,
 				52F98607BDA2FDAE28B2429F /* BangumiDetail */,
 				210FAE529C0B46B7EC7BBAFD /* FileBrowser */,
@@ -850,6 +854,7 @@
 				895154242FC1DC2D00F75DB7 /* Preferences.swift */,
 				895154252FC1DC2D00F75DB7 /* Store.swift */,
 				895154262FC1DC2D00F75DB7 /* Store+Extension.swift */,
+				3E66428B6A4B1EA014F97446 /* StoreBackend.swift */,
 			);
 			path = Preferences;
 			sourceTree = "<group>";
@@ -1458,6 +1463,7 @@
 				FE984EA049298734B1EFB124 /* SectionHeaderView.swift in Sources */,
 				65E4B512D9F97D93EC78CED5 /* OptionTableViewCell.swift in Sources */,
 				1FE37201BB6BED0911C47A49 /* AddFilterTableViewCell.swift in Sources */,
+				31472B579B6BE98345CF0BAF /* StoreBackend.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1471,6 +1477,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = AniXPlayer/AniXPlayer.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 2026062701;
@@ -1655,6 +1662,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = AniXPlayer/AniXPlayer.entitlements;
 				CURRENT_PROJECT_VERSION = 2026062701;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = AniXPlayer/Info.plist;

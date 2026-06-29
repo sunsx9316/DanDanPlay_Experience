@@ -89,6 +89,24 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = self.model.subtitle(settingType: type)
             return cell
+        case .icloudSync:
+            let cell = tableView.dequeueReusableCell(class: SwitchDetailTableViewCell.self)
+            cell.aSwitch.isOn = self.model.icloudSyncEnabled
+            cell.titleLabel.text = type.title
+            cell.subtitleLabel.text = self.model.subtitle(settingType: type)
+            cell.onTouchSwitchCallBack = { [weak self] (aCell) in
+                guard let self = self else { return }
+                let isOn = aCell.aSwitch.isOn
+                if isOn && !Preferences.shared.isCloudAvailable {
+                    aCell.aSwitch.isOn = false
+                    return
+                }
+                self.model.onToggleSync(isOn)
+                if !isOn {
+                    self.scrollView.containerView.reloadData()
+                }
+            }
+            return cell
         case .mainColor, .playerCore, .appLanguage:
             let cell = tableView.dequeueReusableCell(class: TitleDetailTableViewCell.self)
             cell.titleLabel.text = type.title
@@ -107,7 +125,12 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
 
         let type = self.dataSource[selectedRow]
         
-        if type == .danmakuCacheDay {
+        if type == .icloudSync {
+            if case .failed = Preferences.shared.syncStatus {
+                self.model.onRetrySync()
+                self.scrollView.containerView.reloadData()
+            }
+        } else if type == .danmakuCacheDay {
             
             let vc = NSAlert()
             vc.messageText = type.title
@@ -273,6 +296,26 @@ class GlobalSettingViewController: ViewController {
         }
         
         bindModel()
+
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(cloudDataDidChange),
+                                               name: .cloudDataDidChange,
+                                               object: nil)
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    @objc private func cloudDataDidChange() {
+        refreshModel()
+        scrollView.containerView.reloadData()
+    }
+
+    private func refreshModel() {
+        bag = DisposeBag()
+        model = GlobalSettingModel()
+        bindModel()
     }
     
     // MARK: Private
@@ -298,6 +341,10 @@ class GlobalSettingViewController: ViewController {
         }).disposed(by: self.bag)
 
         self.model.context.playerCore.subscribe(onNext: { [weak self] _ in
+            self?.scrollView.containerView.reloadData()
+        }).disposed(by: self.bag)
+
+        self.model.context.icloudSyncEnabled.subscribe(onNext: { [weak self] _ in
             self?.scrollView.containerView.reloadData()
         }).disposed(by: self.bag)
     }

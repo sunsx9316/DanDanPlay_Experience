@@ -217,6 +217,7 @@ enum GlobalSettingType: CaseIterable {
     case subtitleLoadOrder
     case mainColor
     case host
+    case icloudSync
     case log
     case cleanupCache
     case cleanupHistory
@@ -249,6 +250,8 @@ enum GlobalSettingType: CaseIterable {
             return NSLocalizedString("播放器内核", comment: "")
         case .hardwareDecoding:
             return NSLocalizedString("硬件解码", comment: "")
+        case .icloudSync:
+            return NSLocalizedString("iCloud 同步", comment: "")
         }
     }
 }

@@ -74,6 +74,27 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = self.model.subtitle(settingType: type)
             return cell
+        case .icloudSync:
+            let cell = tableView.dequeueCell(class: SwitchDetailTableViewCell.self, indexPath: indexPath)
+            cell.aSwitch.isOn = self.model.icloudSyncEnabled
+            cell.titleLabel.text = type.title
+            cell.subtitleLabel.text = self.model.subtitle(settingType: type)
+            cell.selectionStyle = .none
+            cell.onTouchSliderCallBack = { [weak self] (aCell) in
+                guard let self = self else { return }
+                let isOn = aCell.aSwitch.isOn
+                if isOn && !Preferences.shared.isCloudAvailable {
+                    // iCloud 不可用，不允许开启
+                    aCell.aSwitch.setOn(false, animated: true)
+                    self.view.showHUD(NSLocalizedString("需要登录 iCloud", comment: ""))
+                    return
+                }
+                self.model.onToggleSync(isOn)
+                if !isOn {
+                    self.tableView.reloadData()
+                }
+            }
+            return cell
         case .subtitleLoadOrder, .mainColor, .playerCore, .appLanguage, .host:
             let cell = tableView.dequeueCell(class: TitleDetailMoreTableViewCell.self, indexPath: indexPath)
             cell.titleLabel.text = type.title
@@ -92,7 +113,13 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
         
         let type = self.dataSource[indexPath.item]
         
-        if type == .danmakuCacheDay {
+        if type == .icloudSync {
+            let status = Preferences.shared.syncStatus
+            if case .failed = status {
+                self.model.onRetrySync()
+                self.tableView.reloadData()
+            }
+        } else if type == .danmakuCacheDay {
             let vc = UIAlertController(title: type.title, message: nil, preferredStyle: .alert)
             weak var aTextField: UITextField?
             vc.addTextField { textField in
@@ -245,8 +272,14 @@ class SettingViewController: ViewController {
         }
         
         self.bindModel()
+
+        NotificationCenter.default.addObserver(self, selector: #selector(cloudDataDidChange), name: .cloudDataDidChange, object: nil)
     }
-    
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
     // MARK: Private
     private func bindModel() {
         self.model.context.host.subscribe(onNext: { [weak self] _ in
@@ -265,6 +298,20 @@ class SettingViewController: ViewController {
             self?.tableView.reloadData()
         }).disposed(by: self.bag)
 
+        self.model.context.icloudSyncEnabled.subscribe(onNext: { [weak self] _ in
+            self?.tableView.reloadData()
+        }).disposed(by: self.bag)
+    }
+
+    @objc private func cloudDataDidChange() {
+        refreshModel()
+        tableView.reloadData()
+    }
+
+    private func refreshModel() {
+        bag = DisposeBag()
+        model = GlobalSettingModel()
+        bindModel()
     }
     
     private func showAddressAlert(_ address: [String], at cell: UIView) {

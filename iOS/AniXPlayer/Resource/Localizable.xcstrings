@@ -225,6 +225,32 @@
         }
       }
     },
+    "iCloud 同步": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud Sync"
+          }
+        }
+      }
+    },
+    "iCloud 同步冲突": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud Sync Conflict"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud 同步冲突"
+          }
+        }
+      }
+    },
     "Jellyfin": {
       "localizations": {
         "en": {
@@ -497,6 +523,22 @@
         }
       }
     },
+    "使用 iCloud 数据": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use iCloud Data"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用 iCloud 数据"
+          }
+        }
+      }
+    },
     "使用备用地址": {
       "localizations": {
         "en": {
@@ -509,6 +551,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "使用备用地址"
+          }
+        }
+      }
+    },
+    "使用本机数据": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Use Local Data"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "使用本机数据"
           }
         }
       }
@@ -881,6 +939,22 @@
         }
       }
     },
+    "发现 %d 项设置与 iCloud 数据不一致，请选择以哪一端为准：": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Found %d settings conflicting with iCloud data. Choose which to keep:"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "发现 %d 项设置与 iCloud 数据不一致，请选择以哪一端为准："
+          }
+        }
+      }
+    },
     "发送": {
       "localizations": {
         "en": {
@@ -973,6 +1047,26 @@
           "stringUnit": {
             "state": "translated",
             "value": "合并重复弹幕"
+          }
+        }
+      }
+    },
+    "同步中…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Syncing…"
+          }
+        }
+      }
+    },
+    "同步失败：%@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sync failed: %@"
           }
         }
       }
@@ -1538,6 +1632,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "屏蔽"
+          }
+        }
+      }
+    },
+    "已同步": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Synced"
           }
         }
       }
@@ -2391,6 +2495,16 @@
         }
       }
     },
+    "有冲突待处理": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conflicts pending"
+          }
+        }
+      }
+    },
     "服务器地址格式不正确！": {
       "localizations": {
         "en": {
@@ -2831,7 +2945,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Login Success!"
+            "value": "Login successful!"
           }
         },
         "zh-Hans": {
@@ -3007,7 +3121,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Are you sure you want to log out?"
+            "value": "Are you sure you want to sign out?"
           }
         },
         "zh-Hans": {
@@ -3343,7 +3457,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Enter Password"
+            "value": "Please enter password"
           }
         },
         "zh-Hans": {
@@ -3359,7 +3473,7 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Enter Username"
+            "value": "Please enter username"
           }
         },
         "zh-Hans": {
@@ -3671,6 +3785,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "集数"
+          }
+        }
+      }
+    },
+    "需要登录 iCloud": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud account required"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要登录 iCloud"
           }
         }
       }

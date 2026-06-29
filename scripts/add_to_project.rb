@@ -84,9 +84,27 @@ def resolve_path(platform, file_path)
   File.expand_path(file_path)
 end
 
+# 按 real_path 在 group 树中递归搜索已有 group
+def find_group_by_real_path(group, target_path)
+  return group if group.real_path.to_s == target_path
+  group.groups.each do |g|
+    result = find_group_by_real_path(g, target_path)
+    return result if result
+  end
+  nil
+end
+
 # 在 group 树下创建或找到匹配物理路径的 group
 def ensure_group(project, group_path_parts)
   group = project.main_group
+
+  # 路径含 .. 时，先按物理路径查找已有 group 复用，避免创建平行 group 树
+  if group_path_parts.first == '..'
+    full_path = File.expand_path(File.join(group.real_path, *group_path_parts))
+    existing = find_group_by_real_path(project.main_group, full_path)
+    return existing if existing
+  end
+
   group_path_parts.each do |part|
     next_group = group.groups.find { |g| g.path == part }
     unless next_group

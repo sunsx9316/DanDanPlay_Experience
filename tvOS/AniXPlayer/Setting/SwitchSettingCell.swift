@@ -47,6 +47,14 @@ class SwitchSettingCell: TableViewCell {
         return label
     }()
 
+    private lazy var detailLabel: Label = {
+        let label = Label()
+        label.font = .ddp_small()
+        label.textColor = .secondaryLabel
+        label.numberOfLines = 0
+        return label
+    }()
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setupUI()
@@ -61,6 +69,7 @@ class SwitchSettingCell: TableViewCell {
         selectionStyle = .none
 
         contentView.addSubview(titleLabel)
+        contentView.addSubview(detailLabel)
         contentView.addSubview(stateLabel)
         contentView.addSubview(togglePill)
         togglePill.addSubview(toggleKnob)
@@ -68,8 +77,14 @@ class SwitchSettingCell: TableViewCell {
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.top.equalToSuperview().offset(14)
-            make.bottom.equalToSuperview().offset(-14).priority(.high)
             make.trailing.lessThanOrEqualTo(stateLabel.snp.leading).offset(-8)
+        }
+
+        detailLabel.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(20)
+            make.top.equalTo(titleLabel.snp.bottom).offset(2)
+            make.trailing.lessThanOrEqualTo(stateLabel.snp.leading).offset(-8)
+            make.bottom.equalToSuperview().offset(-14).priority(.high)
         }
 
         togglePill.snp.makeConstraints { make in
@@ -90,10 +105,16 @@ class SwitchSettingCell: TableViewCell {
         }
     }
 
-    func configure(title: String, isOn: Bool) {
+    func configure(title: String, detail: String? = nil, isOn: Bool) {
         titleLabel.text = title
+        detailLabel.text = detail
+        detailLabel.isHidden = (detail == nil)
         self.isSwitchOn = isOn
         updateToggleAppearance(animated: false)
+    }
+
+    func configure(title: String, isOn: Bool) {
+        configure(title: title, detail: nil, isOn: isOn)
     }
 
     override func pressesEnded(_ presses: Set<UIPress>, with event: UIPressesEvent?) {

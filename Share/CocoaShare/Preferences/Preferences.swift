@@ -64,25 +64,25 @@ class Preferences {
         
         /// 弹幕偏移时间
         case subtitleOffsetTime
-        
+
         /// smb登录信息
-        case smbLoginInfo
-        
+        case smbLoginInfo = "smbLoginInfo_v2"
+
         /// webdav登录信息
-        case webDavLoginInfo
-        
+        case webDavLoginInfo = "webDavLoginInfo_v2"
+
         /// ftp登录信息
-        case ftpLoginInfo
-        
+        case ftpLoginInfo = "ftpLoginInfo_v2"
+
         /// 电脑端登录信息
-        case pcLoginInfo
+        case pcLoginInfo = "pcLoginInfo_v2"
 
         /// Emby 登录信息
-        case embyLoginInfo
+        case embyLoginInfo = "embyLoginInfo_v2"
 
         /// Jellyfin 登录信息
-        case jellyfinLoginInfo
-        
+        case jellyfinLoginInfo = "jellyfinLoginInfo_v2"
+
         /// 字幕加载顺序关键字
         case subtitleLoadOrder
         
@@ -123,8 +123,8 @@ class Preferences {
         case audioOffsetTime
         
         /// 屏蔽弹幕
-        case filterDanmaku
-        
+        case filterDanmaku = "filterDanmaku_v2"
+
         /// 边缘样式
         case danmakuEffectStyle
         
@@ -170,14 +170,61 @@ class Preferences {
         /// 文件浏览器排序升降序
         case fileBrowserSortAscending
 
+        /// iCloud 同步开关
+        case icloudSyncEnabled
+
+        /// 播放进度历史
+        case watchTimeHistory = "DDPWatchTimeHistory"
+
+        /// 最后观看时间历史
+        case lastWatchDateHistory = "DDPLatWatchDateHistory"
+
         var storeKey: String {
             return self.rawValue
         }
     }
     
     static let shared = Preferences()
-    private init() {}
-    
+
+    /// 内部多后端存储，仅被 Preferences 使用
+    let store = Store()
+
+    private init() {
+        migrateOldFormatKeys()
+        // 不在 init 时自动恢复同步，避免在无 KVS entitlement 的设备上
+        // 访问 NSUbiquitousKeyValueStore 导致 EXC_BREAKPOINT。
+        // 同步恢复由用户手动打开开关触发 onToggleSync → startSync()
+    }
+
+    /// 迁移旧格式 [LoginInfo]/[FilterDanmaku] 直接 JSON 编码 → 新格式 via Array<Storeable> 双层编码
+    /// TODO: 2026 Q3 后删除
+    private func migrateOldFormatKeys() {
+        let loginInfoMigrations: [(old: String, new: KeyName)] = [
+            ("pcLoginInfo", .pcLoginInfo),
+            ("embyLoginInfo", .embyLoginInfo),
+            ("jellyfinLoginInfo", .jellyfinLoginInfo),
+            ("smbLoginInfo", .smbLoginInfo),
+            ("webDavLoginInfo", .webDavLoginInfo),
+            ("ftpLoginInfo", .ftpLoginInfo),
+        ]
+
+        for (oldKey, newKey) in loginInfoMigrations {
+            guard store.contains(oldKey), !store.contains(newKey.storeKey) else { continue }
+            if let oldData: Data = store.value(forKey: oldKey),
+               let oldValues = try? JSONDecoder().decode([LoginInfo].self, from: oldData) {
+                store.set(oldValues, forKey: newKey.storeKey)
+            }
+        }
+
+        // FilterDanmaku 同理
+        let oldFilterKey = "filterDanmaku"
+        if store.contains(oldFilterKey), !store.contains(KeyName.filterDanmaku.storeKey),
+           let oldData: Data = store.value(forKey: oldFilterKey),
+           let oldValues = try? JSONDecoder().decode([FilterDanmaku].self, from: oldData) {
+            store.set(oldValues, forKey: KeyName.filterDanmaku.storeKey)
+        }
+    }
+
     @StoreWrapper(defaultValue: PlayerAspectRatio.default, key: .aspectRatio)
     var aspectRatio: PlayerAspectRatio
 
@@ -199,23 +246,11 @@ class Preferences {
     var appLanguage: AppLanguage
 
     /// 字幕颜色（nil 表示使用默认颜色）
-    var subtitleColor: ANXColor? {
-        get {
-            let key = KeyName.subtitleColor
-            return Store.shared.value(forKey: key.storeKey)
-        }
-        set {
-            let key = KeyName.subtitleColor
-            if let newValue = newValue {
-                Store.shared.set(newValue, forKey: key.storeKey)
-            } else {
-                Store.shared.remove(key.storeKey)
-            }
-        }
-    }
+    @StoreWrapper(defaultValue: nil, key: .subtitleColor)
+    var subtitleColor: ANXColor?
 
     /// 字幕样式开关
-    @StoreWrapper(defaultValue: true, key: .subtitleStyle)
+    @StoreWrapper(defaultValue: true, key: .subtitleStyle, syncToCloud: true)
     var subtitleStyle: Bool
 
     /// 画中画
@@ -230,12 +265,22 @@ class Preferences {
     @StoreWrapper(defaultValue: true, key: .hwdecEnabled)
     var hwdecEnabled: Bool
 
+    /// iCloud 同步开关（开关状态不同步到 iCloud）
+    @StoreWrapper(defaultValue: false, key: .icloudSyncEnabled)
+    var icloudSyncEnabled: Bool {
+        didSet {
+            if !icloudSyncEnabled {
+                store.stopSync()
+            }
+        }
+    }
+
     /// 文件浏览器排序选项
-    @StoreWrapper(defaultValue: FileSortOption.default, key: .fileBrowserSortOption)
+    @StoreWrapper(defaultValue: FileSortOption.default, key: .fileBrowserSortOption, syncToCloud: true)
     var fileBrowserSortOption: FileSortOption
 
     /// 文件浏览器排序升降序
-    @StoreWrapper(defaultValue: true, key: .fileBrowserSortAscending)
+    @StoreWrapper(defaultValue: true, key: .fileBrowserSortAscending, syncToCloud: true)
     var fileBrowserSortAscending: Bool
 
     @StoreWrapper(defaultValue: ANXColor.defaultMainColor, key: .mainColor)
@@ -244,58 +289,58 @@ class Preferences {
     @StoreWrapper(defaultValue: "0", key: .lastUpdateVersion)
     var lastUpdateVersion: String
     
-    @StoreWrapper(defaultValue: 0, key: .danmakuOffsetTime)
+    @StoreWrapper(defaultValue: 0, key: .danmakuOffsetTime, syncToCloud: true)
     var danmakuOffsetTime: Int
     
-    @StoreWrapper(defaultValue: 0, key: .subtitleOffsetTime)
+    @StoreWrapper(defaultValue: 0, key: .subtitleOffsetTime, syncToCloud: true)
     var subtitleOffsetTime: Int
     
     @StoreWrapper(defaultValue: 0, key: .audioOffsetTime)
     var audioOffsetTime: Int
     
-    @StoreWrapper(defaultValue: true, key: .autoLoadCustomDanmaku)
+    @StoreWrapper(defaultValue: true, key: .autoLoadCustomDanmaku, syncToCloud: true)
     var autoLoadCustomDanmaku: Bool
     
-    @StoreWrapper(defaultValue: true, key: .autoLoadCustomSubtitle)
+    @StoreWrapper(defaultValue: true, key: .autoLoadCustomSubtitle, syncToCloud: true)
     var autoLoadCustomSubtitle: Bool
     
-    @StoreWrapper(defaultValue: true, key: .showDanmaku)
+    @StoreWrapper(defaultValue: true, key: .showDanmaku, syncToCloud: true)
     var isShowDanmaku: Bool
     
-    @StoreWrapper(defaultValue: true, key: .checkUpdate)
+    @StoreWrapper(defaultValue: true, key: .checkUpdate, syncToCloud: true)
     var checkUpdate: Bool
     
-    @StoreWrapper(defaultValue: DefaultHost, key: .host)
+    @StoreWrapper(defaultValue: DefaultHost, key: .host, syncToCloud: true)
     var host: String
     
-    @StoreWrapper(defaultValue: true, key: .mergeSameDanmaku)
+    @StoreWrapper(defaultValue: true, key: .mergeSameDanmaku, syncToCloud: true)
     var isMergeSameDanmaku: Bool
     
-    @StoreWrapper(defaultValue: false, key: .autoJumpTitleEnding)
+    @StoreWrapper(defaultValue: false, key: .autoJumpTitleEnding, syncToCloud: true)
     var autoJumpTitleEnding: Bool
     
-    @StoreWrapper(defaultValue: 0.0, key: .jumpTitleDuration)
+    @StoreWrapper(defaultValue: 0.0, key: .jumpTitleDuration, syncToCloud: true)
     var jumpTitleDuration: Double
     
-    @StoreWrapper(defaultValue: 0.0, key: .jumpEndingDuration)
+    @StoreWrapper(defaultValue: 0.0, key: .jumpEndingDuration, syncToCloud: true)
     var jumpEndingDuration: Double
     
     @StoreWrapper(defaultValue: 0, key: .subtitleYPosition)
     var subtitleYPosition: Float
     
-    @StoreWrapper(defaultValue: {
+    @StoreWrapper(defaultValueGetter: {
         #if os(tvOS)
         return 35
         #else
         return 20
         #endif
-    }(), key: .subtitleFontSize)
+    }, key: .subtitleFontSize)
     var subtitleFontSize: Float
     
     @StoreWrapper(defaultValue: "", key: .subtitleFontName)
     var subtitleFontName: String
     
-    @StoreWrapper(defaultValue: false, key: .openDanmakuRandomColor)
+    @StoreWrapper(defaultValue: false, key: .openDanmakuRandomColor, syncToCloud: true)
     var openDanmakuRandomColor: Bool
     
     @StoreWrapper(defaultValue: nil, key: .loginInfo)
@@ -306,10 +351,10 @@ class Preferences {
     }
     
     
-    @StoreWrapper(defaultValue: Comment.Mode.normal, key: .sendDanmakuType)
+    @StoreWrapper(defaultValue: Comment.Mode.normal, key: .sendDanmakuType, syncToCloud: true)
     var sendDanmakuType: Comment.Mode
     
-    @StoreWrapper(defaultValue: ANXColor.white, key: .sendDanmakuColor)
+    @StoreWrapper(defaultValue: ANXColor.white, key: .sendDanmakuColor, syncToCloud: true)
     var sendDanmakuColor: ANXColor
 
     static let defaultSendDanmakuColors: [ANXColor] = [
@@ -321,368 +366,129 @@ class Preferences {
         ANXColor(anxRgb: 0xFF00FF),
     ]
 
-    var sendDanmakuColors: [ANXColor] {
-        get {
-            if let jsonData: Data = Store.shared.value(forKey: KeyName.sendDanmakuColors.storeKey) {
-                do {
-                    let hexValues = try JSONDecoder().decode([UInt].self, from: jsonData)
-                    return hexValues.compactMap { ANXColor.create(from: $0) }
-                } catch {
-                    debugPrint("读取 sendDanmakuColors 失败 error: \(error)")
-                }
-            }
-            return Self.defaultSendDanmakuColors
-        }
-        set {
-            do {
-                let hexValues = newValue.map { $0.toValue() }
-                let data = try JSONEncoder().encode(hexValues)
-                Store.shared.set(data, forKey: KeyName.sendDanmakuColors.storeKey)
-            } catch {
-                debugPrint("设置 sendDanmakuColors 失败 error: \(error)")
-            }
-        }
-    }
+    @StoreWrapper(defaultValue: Preferences.defaultSendDanmakuColors, key: .sendDanmakuColors, syncToCloud: true)
+    var sendDanmakuColors: [ANXColor]
     
-    @StoreWrapper(defaultValue: PlayerMode.autoPlayNext, key: .playerMode)
+    @StoreWrapper(defaultValue: PlayerMode.autoPlayNext, key: .playerMode, syncToCloud: true)
     var playerMode: PlayerMode
     
-    @StoreWrapper(defaultValue: 1, key: .playerSpeed)
+    @StoreWrapper(defaultValue: 1, key: .playerSpeed, syncToCloud: true)
     var playerSpeed: Double
     
     @StoreWrapper(defaultValue: true, key: .showHomePageTips)
     var showHomePageTips: Bool
     
-    @StoreWrapper(defaultValue: DanmakuAreaType.area_1_1, key: .danmakuArea)
+    @StoreWrapper(defaultValue: DanmakuAreaType.area_1_1, key: .danmakuArea, syncToCloud: true)
     var danmakuArea: DanmakuAreaType
     
-    @StoreWrapper(defaultValue: 1, key: .danmakuAlpha)
+    @StoreWrapper(defaultValue: 1, key: .danmakuAlpha, syncToCloud: true)
     var danmakuAlpha: Double
     
-    @StoreWrapper(defaultValue: true, key: .fastMatch)
+    @StoreWrapper(defaultValue: true, key: .fastMatch, syncToCloud: true)
     var fastMatch: Bool
     
-    @StoreWrapper(defaultValue: true, key: .subtitleSafeArea)
+    @StoreWrapper(defaultValue: true, key: .subtitleSafeArea, syncToCloud: true)
     var subtitleSafeArea: Bool
     
-    @StoreWrapper(defaultValue: 7, key: .danmakuCacheDay)
+    @StoreWrapper(defaultValue: 7, key: .danmakuCacheDay, syncToCloud: true)
     var danmakuCacheDay: Int
     
-    #if os(tvOS)
-    @StoreWrapper(defaultValue: 30, key: .danmakuFontSize)
-    #else
-    @StoreWrapper(defaultValue: 20, key: .danmakuFontSize)
-    #endif
+    @StoreWrapper(defaultValueGetter: {
+        #if os(tvOS)
+        return 30.0
+        #else
+        return 20.0
+        #endif
+    }, key: .danmakuFontSize)
     var danmakuFontSize: Double
     
-    @StoreWrapper(defaultValue: 1, key: .danmakuSpeed)
+    @StoreWrapper(defaultValue: 1, key: .danmakuSpeed, syncToCloud: true)
     var danmakuSpeed: Double
     
     /// 弹幕密度 取值 1 ~ 10
-    @StoreWrapper(defaultValue: 10, key: .danmakuDensity)
+    @StoreWrapper(defaultValue: 10, key: .danmakuDensity, syncToCloud: true)
     var danmakuDensity: Float
     
     /// 弹幕边缘样式
-    @StoreWrapper(defaultValue: DanmakuEffectStyle.stroke, key: .danmakuEffectStyle)
+    @StoreWrapper(defaultValue: DanmakuEffectStyle.stroke, key: .danmakuEffectStyle, syncToCloud: true)
     var danmakuEffectStyle: DanmakuEffectStyle
     
-    var pcLoginInfos: [LoginInfo]? {
-        get {
-            if let jsonData: Data = Store.shared.value(forKey: KeyName.pcLoginInfo.storeKey) {
-                do {
-                    let loginInfo = try JSONDecoder().decode([LoginInfo].self, from: jsonData)
-                    return loginInfo
-                } catch let error {
-                    debugPrint("读取 pcLoginInfos 失败 error: \(error)")
-                }
-            }
-            return nil
-        }
-        
-        set {
-            if let newValue = newValue {
-                do {
-                    let data = try JSONEncoder().encode(newValue)
-                    Store.shared.set(data, forKey: KeyName.pcLoginInfo.storeKey)
-                } catch let error {
-                    debugPrint("设置 pcLoginInfos 失败 error: \(error)")
-                }
-            } else {
-                Store.shared.remove(KeyName.pcLoginInfo.storeKey)
-            }
-        }
-    }
+    @StoreWrapper(defaultValue: nil, key: .pcLoginInfo)
+    var pcLoginInfos: [LoginInfo]?
+
+    @StoreWrapper(defaultValue: nil, key: .embyLoginInfo)
+    var embyLoginInfos: [LoginInfo]?
+
+    @StoreWrapper(defaultValue: nil, key: .jellyfinLoginInfo)
+    var jellyfinLoginInfos: [LoginInfo]?
+
+    @StoreWrapper(defaultValue: nil, key: .smbLoginInfo)
+    var smbLoginInfos: [LoginInfo]?
+
+    @StoreWrapper(defaultValue: nil, key: .webDavLoginInfo)
+    var webDavLoginInfos: [LoginInfo]?
+
+    @StoreWrapper(defaultValue: nil, key: .ftpLoginInfo)
+    var ftpLoginInfos: [LoginInfo]?
     
-    var embyLoginInfos: [LoginInfo]? {
-        get {
-            if let jsonData: Data = Store.shared.value(forKey: KeyName.embyLoginInfo.storeKey) {
-                do {
-                    let loginInfo = try JSONDecoder().decode([LoginInfo].self, from: jsonData)
-                    return loginInfo
-                } catch let error {
-                    debugPrint("读取 embyLoginInfos 失败 error: \(error)")
-                }
-            }
-            return nil
-        }
-
-        set {
-            if let newValue = newValue {
-                do {
-                    let data = try JSONEncoder().encode(newValue)
-                    Store.shared.set(data, forKey: KeyName.embyLoginInfo.storeKey)
-                } catch let error {
-                    debugPrint("设置 embyLoginInfos 失败 error: \(error)")
-                }
-            } else {
-                Store.shared.remove(KeyName.embyLoginInfo.storeKey)
-            }
-        }
-    }
-
-    var jellyfinLoginInfos: [LoginInfo]? {
-        get {
-            if let jsonData: Data = Store.shared.value(forKey: KeyName.jellyfinLoginInfo.storeKey) {
-                do {
-                    let loginInfo = try JSONDecoder().decode([LoginInfo].self, from: jsonData)
-                    return loginInfo
-                } catch let error {
-                    debugPrint("读取 jellyfinLoginInfos 失败 error: \(error)")
-                }
-            }
-            return nil
-        }
-
-        set {
-            if let newValue = newValue {
-                do {
-                    let data = try JSONEncoder().encode(newValue)
-                    Store.shared.set(data, forKey: KeyName.jellyfinLoginInfo.storeKey)
-                } catch let error {
-                    debugPrint("设置 jellyfinLoginInfos 失败 error: \(error)")
-                }
-            } else {
-                Store.shared.remove(KeyName.jellyfinLoginInfo.storeKey)
-            }
-        }
-    }
-
-    var smbLoginInfos: [LoginInfo]? {
-        get {
-            if let jsonData: Data = Store.shared.value(forKey: KeyName.smbLoginInfo.storeKey) {
-                do {
-                    let smbLoginInfo = try JSONDecoder().decode([LoginInfo].self, from: jsonData)
-                    return smbLoginInfo
-                } catch let error {
-                    debugPrint("读取 smbLoginInfo 失败 error: \(error)")
-                }
-            }
-            return nil
-        }
-        
-        set {
-            if let newValue = newValue {
-                do {
-                    let data = try JSONEncoder().encode(newValue)
-                    Store.shared.set(data, forKey: KeyName.smbLoginInfo.storeKey)
-                } catch let error {
-                    debugPrint("设置 smbLoginInfo 失败 error: \(error)")
-                }
-            } else {
-                Store.shared.remove(KeyName.smbLoginInfo.storeKey)
-            }
-        }
-    }
+    @StoreWrapper(defaultValue: nil, key: .subtitleLoadOrder, syncToCloud: true)
+    var subtitleLoadOrder: [String]?
     
-    var webDavLoginInfos: [LoginInfo]? {
-        get {
-            if let jsonData: Data = Store.shared.value(forKey: KeyName.webDavLoginInfo.storeKey) {
-                do {
-                    let loginInfo = try JSONDecoder().decode([LoginInfo].self, from: jsonData)
-                    return loginInfo
-                } catch let error {
-                    debugPrint("读取 webDavLoginInfos 失败 error: \(error)")
-                }
-            }
-            return nil
-        }
-        
-        set {
-            if let newValue = newValue {
-                do {
-                    let data = try JSONEncoder().encode(newValue)
-                    Store.shared.set(data, forKey: KeyName.webDavLoginInfo.storeKey)
-                } catch let error {
-                    debugPrint("设置 webDavLoginInfos 失败 error: \(error)")
-                }
-            } else {
-                Store.shared.remove(KeyName.webDavLoginInfo.storeKey)
-            }
-        }
-    }
-    
-    var ftpLoginInfos: [LoginInfo]? {
-        get {
-            if let jsonData: Data = Store.shared.value(forKey: KeyName.ftpLoginInfo.storeKey) {
-                do {
-                    let loginInfo = try JSONDecoder().decode([LoginInfo].self, from: jsonData)
-                    return loginInfo
-                } catch let error {
-                    debugPrint("读取 ftpLoginInfos 失败 error: \(error)")
-                }
-            }
-            return nil
-        }
-        
-        set {
-            if let newValue = newValue {
-                do {
-                    let data = try JSONEncoder().encode(newValue)
-                    Store.shared.set(data, forKey: KeyName.ftpLoginInfo.storeKey)
-                } catch let error {
-                    debugPrint("设置 webDavLoginInfos 失败 error: \(error)")
-                }
-            } else {
-                Store.shared.remove(KeyName.ftpLoginInfo.storeKey)
-            }
-        }
-    }
-    
-    var subtitleLoadOrder: [String]? {
-        get {
-            if let jsonData: Data = Store.shared.value(forKey: KeyName.subtitleLoadOrder.storeKey) {
-                do {
-                    let loadOrder = try JSONDecoder().decode([String].self, from: jsonData)
-                    return loadOrder
-                } catch let error {
-                    debugPrint("读取 subtitleLoadOrder 失败 error: \(error)")
-                }
-            }
-            return nil
-        }
-        
-        set {
-            if let newValue = newValue {
-                do {
-                    let data = try JSONEncoder().encode(newValue)
-                    Store.shared.set(data, forKey: KeyName.subtitleLoadOrder.storeKey)
-                } catch let error {
-                    debugPrint("设置 subtitleLoadOrder 失败 error: \(error)")
-                }
-            } else {
-                Store.shared.remove(KeyName.subtitleLoadOrder.storeKey)
-            }
-        }
-    }
-    
-    var filterDanmakus: [FilterDanmaku]? {
-        get {
-            if let jsonData: Data = Store.shared.value(forKey: KeyName.filterDanmaku.storeKey) {
-                do {
-                    let shildDanmaku = try JSONDecoder().decode([FilterDanmaku].self, from: jsonData)
-                    return shildDanmaku
-                } catch let error {
-                    debugPrint("读取 filterDanmaku 失败 error: \(error)")
-                }
-            }
-            return nil
-        }
+    @StoreWrapper(defaultValue: nil, key: .filterDanmaku, syncToCloud: true)
+    var filterDanmakus: [FilterDanmaku]?
 
-        set {
-            if let newValue = newValue {
-                do {
-                    let data = try JSONEncoder().encode(newValue)
-                    Store.shared.set(data, forKey: KeyName.filterDanmaku.storeKey)
-                } catch let error {
-                    debugPrint("设置 filterDanmaku 失败 error: \(error)")
-                }
-            } else {
-                Store.shared.remove(KeyName.filterDanmaku.storeKey)
-            }
-        }
-    }
+    @StoreWrapper(defaultValue: nil, key: .customHosts, syncToCloud: true)
+    var customHosts: [String]?
 
-    /// 自定义域名列表
-    var customHosts: [String]? {
-        get {
-            if let jsonData: Data = Store.shared.value(forKey: KeyName.customHosts.storeKey) {
-                do {
-                    let hosts = try JSONDecoder().decode([String].self, from: jsonData)
-                    return hosts
-                } catch let error {
-                    debugPrint("读取 customHosts 失败 error: \(error)")
-                }
-            }
-            return nil
-        }
+    @StoreWrapper(defaultValue: nil, key: .backupHosts, syncToCloud: true)
+    var backupHosts: [String]?
 
-        set {
-            if let newValue = newValue {
-                do {
-                    let data = try JSONEncoder().encode(newValue)
-                    Store.shared.set(data, forKey: KeyName.customHosts.storeKey)
-                } catch let error {
-                    debugPrint("设置 customHosts 失败 error: \(error)")
-                }
-            } else {
-                Store.shared.remove(KeyName.customHosts.storeKey)
-            }
-        }
-    }
+    @StoreWrapper(defaultValue: nil, key: .watchTimeHistory, syncToCloud: true)
+    var watchTimeHistory: [String: TimeInterval]?
 
-    /// 备用域名缓存
-    var backupHosts: [String]? {
-        get {
-            if let jsonData: Data = Store.shared.value(forKey: KeyName.backupHosts.storeKey) {
-                do {
-                    let hosts = try JSONDecoder().decode([String].self, from: jsonData)
-                    return hosts
-                } catch let error {
-                    debugPrint("读取 backupHosts 失败 error: \(error)")
-                }
-            }
-            return nil
-        }
-
-        set {
-            if let newValue = newValue {
-                do {
-                    let data = try JSONEncoder().encode(newValue)
-                    Store.shared.set(data, forKey: KeyName.backupHosts.storeKey)
-                } catch let error {
-                    debugPrint("设置 backupHosts 失败 error: \(error)")
-                }
-            } else {
-                Store.shared.remove(KeyName.backupHosts.storeKey)
-            }
-        }
-    }
+    @StoreWrapper(defaultValue: nil, key: .lastWatchDateHistory, syncToCloud: true)
+    var lastWatchDateHistory: [String: TimeInterval]?
 
 }
 
 extension Preferences {
     @propertyWrapper
     struct StoreWrapper<Value: Storeable> {
-        
+
         private var value: Value
-        private var key: KeyName
-        
-        init(defaultValue: Value, key: KeyName) {
+        let key: KeyName
+        let syncToCloud: Bool
+
+        init(defaultValue: Value, key: KeyName, syncToCloud: Bool = false) {
             self.value = defaultValue
             self.key = key
+            self.syncToCloud = syncToCloud
+            Store.registry.append((key.storeKey, syncToCloud))
         }
-        
-        init(defaultValueGetter: () -> Value, key: KeyName) {
+
+        init(defaultValueGetter: () -> Value, key: KeyName, syncToCloud: Bool = false) {
             self.value = defaultValueGetter()
             self.key = key
+            self.syncToCloud = syncToCloud
+            Store.registry.append((key.storeKey, syncToCloud))
+        }
+
+        /// $propertyName 可读取 syncToCloud、key 等 wrapper 元信息
+        var projectedValue: StoreWrapper {
+            return self
         }
 
         var wrappedValue: Value {
             get {
-                return Store.shared.value(forKey: key.storeKey) ?? self.value
+                return Preferences.shared.store.value(forKey: key.storeKey) ?? self.value
             }
             set {
-                Store.shared.set(newValue, forKey: key.storeKey)
+                // 检测 Optional 类型的 nil 值，避免 Store.set 中 double-wrap 导致强制解包崩溃
+                if let nilable = newValue as? _OptionalNilable, nilable._isNil {
+                    Preferences.shared.store.remove(key.storeKey)
+                } else {
+                    Preferences.shared.store.set(newValue, forKey: key.storeKey)
+                }
             }
         }
     }

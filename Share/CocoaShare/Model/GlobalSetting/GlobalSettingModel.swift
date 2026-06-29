@@ -12,19 +12,19 @@ import YYCategories
 #endif
 
 class GlobalSettingContext {
-    
+
     lazy var fastMatch = BehaviorSubject<Bool>(value: Preferences.shared.fastMatch)
-    
+
     lazy var autoLoadCustomDanmaku = BehaviorSubject<Bool>(value: Preferences.shared.autoLoadCustomDanmaku)
-    
+
     lazy var autoLoadCustomSubtitle = BehaviorSubject<Bool>(value: Preferences.shared.autoLoadCustomSubtitle)
-    
+
     lazy var danmakuCacheDay = BehaviorSubject<Int>(value: Preferences.shared.danmakuCacheDay)
-    
+
     lazy var subtitleLoadOrder = BehaviorSubject<[String]?>(value: Preferences.shared.subtitleLoadOrder)
-    
+
     lazy var host = BehaviorSubject<String>(value: Preferences.shared.host)
-    
+
     lazy var mainColor = BehaviorSubject<ANXColor>(value: Preferences.shared.mainColor)
 
     lazy var playerCore = BehaviorSubject<MediaPlayer.CoreType>(value: Preferences.shared.playerCore)
@@ -32,6 +32,11 @@ class GlobalSettingContext {
     lazy var appLanguage = BehaviorSubject<AppLanguage>(value: Preferences.shared.appLanguage)
 
     lazy var hardwareDecoding = BehaviorSubject<Bool>(value: Preferences.shared.hwdecEnabled)
+
+    lazy var icloudSyncEnabled = BehaviorSubject<Bool>(value: {
+        if case .disabled = Preferences.shared.syncStatus { return false }
+        return true
+    }())
 
 }
 
@@ -74,6 +79,10 @@ extension GlobalSettingModel {
 
     var hardwareDecodingEnabled: Bool {
         return (try? self.context.hardwareDecoding.value()) ?? true
+    }
+
+    var icloudSyncEnabled: Bool {
+        return (try? self.context.icloudSyncEnabled.value()) ?? false
     }
 }
 
@@ -136,6 +145,8 @@ class GlobalSettingModel {
             return self.playerCore.displayName
         case .hardwareDecoding:
             return self.hardwareDecodingEnabled ? NSLocalizedString("开启", comment: "") : NSLocalizedString("关闭", comment: "")
+        case .icloudSync:
+            return Preferences.shared.syncStatus.displayText
         }
     }
     
@@ -201,6 +212,32 @@ class GlobalSettingModel {
         CacheManager.shared.cleanupCache()
     }
     
+    func onToggleSync(_ isOn: Bool) {
+        if isOn {
+            Preferences.shared.store.startSync()
+            if case .available = Preferences.shared.syncStatus {
+                Preferences.shared.commitSync()
+            }
+            updateSyncStatus()
+        } else {
+            Preferences.shared.icloudSyncEnabled = false
+            updateSyncStatus()
+        }
+    }
+
+    func onRetrySync() {
+        Preferences.shared.retrySync()
+        updateSyncStatus()
+    }
+
+    func updateSyncStatus() {
+        if case .disabled = Preferences.shared.syncStatus {
+            self.context.icloudSyncEnabled.onNext(false)
+        } else {
+            self.context.icloudSyncEnabled.onNext(true)
+        }
+    }
+
     func cleanupHistory() {
         HistoryManager.shared.cleanUpAllCache()
     }

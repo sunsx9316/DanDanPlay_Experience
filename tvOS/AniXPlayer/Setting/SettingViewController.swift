@@ -33,13 +33,14 @@ class SettingViewController: ViewController {
         case fastMatch
         case autoLoadDanmaku
         case danmakuCacheDay
+        case icloudSync
         case version
         case cleanupCache
         case cleanupHistory
 
         var reuseIdentifier: String {
             switch self {
-            case .fastMatch, .autoLoadDanmaku, .autoLoadCustomSubtitle, .hardwareDecoding:
+            case .fastMatch, .autoLoadDanmaku, .autoLoadCustomSubtitle, .hardwareDecoding, .icloudSync:
                 return SwitchSettingCell.reuseIdentifier
             case .appLanguage, .playerCore, .danmakuCacheDay, .mainColor,
                  .version, .cleanupCache, .cleanupHistory:
@@ -57,7 +58,8 @@ class SettingViewController: ViewController {
         tv.registerClassCell(class: SwitchSettingCell.self)
         tv.registerClassCell(class: NavigationSettingCell.self)
         tv.register(SectionHeaderView.self, forHeaderFooterViewReuseIdentifier: SectionHeaderView.reuseIdentifier)
-        tv.rowHeight = 66
+        tv.estimatedRowHeight = 66
+        tv.rowHeight = UITableView.automaticDimension
         return tv
     }()
 
@@ -69,6 +71,20 @@ class SettingViewController: ViewController {
         tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(cloudDataDidChange),
+                                               name: .cloudDataDidChange,
+                                               object: nil)
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    @objc private func cloudDataDidChange() {
+        self.model = GlobalSettingModel()
+        self.tableView.reloadData()
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -84,7 +100,7 @@ class SettingViewController: ViewController {
     private func rows(for section: Section) -> [SettingRow] {
         switch section {
         case .general:
-            var rows: [SettingRow] = [.appLanguage, .playerCore, .autoLoadCustomSubtitle, .mainColor]
+            var rows: [SettingRow] = [.appLanguage, .playerCore, .autoLoadCustomSubtitle, .mainColor, .icloudSync]
             if Preferences.shared.playerCore == .mpv {
                 rows.insert(.hardwareDecoding, at: 2)
             }
@@ -162,6 +178,34 @@ class SettingViewController: ViewController {
                     detail = String(format: NSLocalizedString("%d天", comment: ""), day)
                 }
                 cell.configure(title: NSLocalizedString("弹幕缓存时间", comment: ""), detail: detail)
+            }
+
+        case .icloudSync:
+            if let cell = cell as? SwitchSettingCell {
+                let isOn = Preferences.shared.icloudSyncEnabled
+                cell.configure(title: NSLocalizedString("iCloud 同步", comment: ""),
+                               detail: Preferences.shared.syncStatus.displayText,
+                               isOn: isOn)
+                cell.onSwitchChanged = { [weak self] isOn in
+                    guard let self = self else { return }
+                    if isOn && !Preferences.shared.isCloudAvailable {
+                        let alert = UIAlertController(
+                            title: nil,
+                            message: NSLocalizedString("需要登录 iCloud", comment: ""),
+                            preferredStyle: .alert
+                        )
+                        alert.addAction(UIAlertAction(title: NSLocalizedString("确定", comment: ""), style: .default))
+                        self.present(alert, animated: true)
+                        self.tableView.reloadData()
+                        return
+                    }
+                    if case .failed = Preferences.shared.syncStatus {
+                        self.model.onRetrySync()
+                    } else {
+                        self.model.onToggleSync(isOn)
+                    }
+                    self.tableView.reloadData()
+                }
             }
 
         case .version:

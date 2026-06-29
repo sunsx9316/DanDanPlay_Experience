@@ -65,6 +65,38 @@ class AudioAPI {
 }
 ```
 
+### 4. NotificationCenter 观察者
+
+**addObserver 必须在 deinit 中 removeObserver**，否则对象释放后通知中心仍持有悬垂指针：
+
+```swift
+// 推荐 - add + deinit remove 配对
+class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options: UIScene.ConnectionOptions) {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(showConflictAlert),
+            name: .syncConflictDetected,
+            object: nil
+        )
+    }
+}
+
+// 不推荐 - 只 add 不 remove
+class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+    func scene(_ scene: UIScene, ...) {
+        NotificationCenter.default.addObserver(...)  // 没有 deinit remove！
+    }
+}
+```
+
+AppDelegate 等全生命周期对象也不例外。
+
 ### 3. Delegate 模式
 
 Delegate 必须用 `weak`：

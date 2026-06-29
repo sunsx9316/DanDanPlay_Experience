@@ -225,12 +225,16 @@ class ProgressHUD: NSView {
 
     /// Dismisses the currently visible `ProgressHUD` if visible, after a time interval
     class func dismiss(delay: TimeInterval) {
-        ProgressHUD.shared.perform(#selector(hideDelayed(_:)), with: 1, afterDelay: delay)
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+            ProgressHUD.shared.hideDelayed()
+        }
     }
 
     /// Dismisses the currently visible `ProgressHUD` if visible, after a time interval and calls the completion closure
     class func dismiss(delay: TimeInterval, completion: ProgressHUDDismissCompletion?) {
-        ProgressHUD.shared.perform(#selector(hideDelayed(_:)), with: 1, afterDelay: delay)
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+            ProgressHUD.shared.hideDelayed()
+        }
     }
 
     /// Returns `true` is a `ProgressHUD` is currently being shown
@@ -310,7 +314,6 @@ class ProgressHUD: NSView {
     private func hide(_ animated: Bool) {
         NotificationCenter.default.post(name: ProgressHUD.willDisappear, object: self)
         useAnimation = animated
-        NSObject.cancelPreviousPerformRequests(withTarget: self)
         if animated {
             // Fade out
             NSAnimationContext.beginGrouping()
@@ -391,9 +394,8 @@ class ProgressHUD: NSView {
         }
     }
 
-    @objc private func hideDelayed(_ animated: NSNumber?) {
-        NSObject.cancelPreviousPerformRequests(withTarget: self)
-        hide((animated != 0))
+    private func hideDelayed() {
+        hide(true)
     }
 
     private func displayDuration(for string: String) -> TimeInterval {

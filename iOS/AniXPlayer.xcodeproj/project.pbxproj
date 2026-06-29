@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0B5CD34C100D4654A1569260 /* AMSMB2 in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 895A7FC32FC75A7100A997B8 /* AMSMB2 */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		36F0FE27956956D50A07121E /* StoreBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3DA91DC2CB2BDFC2138D3A3 /* StoreBackend.swift */; };
 		6F969714544C3EBD7E920F21 /* Pods_AniXPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6620BF43605B5DDE3E8B15B6 /* Pods_AniXPlayer.framework */; };
 		89044759290186B40088886B /* UIViewController+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89044758290186B40088886B /* UIViewController+Helper.swift */; };
 		8904475B290189CD0088886B /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8904475A290189CD0088886B /* GoogleService-Info.plist */; };
@@ -480,6 +481,7 @@
 		89C79B932A881B200040FEDA /* DanmakuLoadUtil.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuLoadUtil.swift; sourceTree = "<group>"; };
 		89D100032D00000100000003 /* DanmakuListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuListCell.swift; sourceTree = "<group>"; };
 		89D100042D00000100000004 /* DanmakuListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DanmakuListViewController.swift; sourceTree = "<group>"; };
+		89D3E39A2FF16CA600CD6A92 /* AniXPlayer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AniXPlayer.entitlements; sourceTree = "<group>"; };
 		89DADA692FD4421C00C71A33 /* FontHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontHelper.swift; sourceTree = "<group>"; };
 		89E0D60D2669113400E2337B /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		89E0D6102669127A00E2337B /* SwitchDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchDetailTableViewCell.swift; sourceTree = "<group>"; };
@@ -496,6 +498,7 @@
 		B1D7E33D6F9F7EB2F69A64FD /* UIImage+Helper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIImage+Helper.swift"; sourceTree = "<group>"; };
 		B54627AC0D74F1F7C3F2CB1D /* DanmakuInputView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DanmakuInputView.swift; sourceTree = "<group>"; };
 		B54627AC0D74F1F7C3F2CB1E /* ColorManagementViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorManagementViewController.swift; sourceTree = "<group>"; };
+		C3DA91DC2CB2BDFC2138D3A3 /* StoreBackend.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StoreBackend.swift; sourceTree = "<group>"; };
 		CF2D5334A2A53D20F8B80E22 /* Pods-AniXPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.release.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.release.xcconfig"; sourceTree = "<group>"; };
 		EE600170BF1445D9B00A4593 /* FolderProgressCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderProgressCell.swift; sourceTree = "<group>"; };
 		F410B8A741526DF765820021 /* Pods-AniXPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.debug.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.debug.xcconfig"; sourceTree = "<group>"; };
@@ -588,6 +591,7 @@
 		890DF6CB26160826002D8AE5 /* AniXPlayer */ = {
 			isa = PBXGroup;
 			children = (
+				89D3E39A2FF16CA600CD6A92 /* AniXPlayer.entitlements */,
 				899C4E9C263CF88600A17C83 /* AniXPlayer-Bridging-Header.h */,
 				8925B86C2CA7E4C3001A8388 /* CocoaShare */,
 				8994607328CC6CE1009AC640 /* Vendor */,
@@ -1031,6 +1035,7 @@
 				8925B8562CA7E4C3001A8388 /* Preferences.swift */,
 				8925B8572CA7E4C3001A8388 /* Store.swift */,
 				8925B8582CA7E4C3001A8388 /* Store+Extension.swift */,
+				C3DA91DC2CB2BDFC2138D3A3 /* StoreBackend.swift */,
 			);
 			path = Preferences;
 			sourceTree = "<group>";
@@ -1791,6 +1796,7 @@
 				9DE8B429CAFC3A5D26DE9E57 /* ColorManagementViewController.swift in Sources */,
 				AA72AB931D94179E273EEC53 /* JellyfinLoginHistoryViewController.swift in Sources */,
 				951494A4B490C1DDB3FEBA28 /* UIImage+Helper.swift in Sources */,
+				36F0FE27956956D50A07121E /* StoreBackend.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1940,6 +1946,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = AniXPlayer/AniXPlayer.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2026062701;
@@ -1976,6 +1983,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_ENTITLEMENTS = AniXPlayer/AniXPlayer.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 2026062701;
