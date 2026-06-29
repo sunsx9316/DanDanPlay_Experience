@@ -24,7 +24,7 @@ class TimelineViewController: ViewController {
         cv.delegate = self
         cv.dataSource = self
         cv.registerClassCell(class: TimelineItemCell.self)
-        cv.register(HomePageSectionHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: HomePageSectionHeaderView.reuseIdentifier)
+        cv.registerSupplementaryView(class: HomePageSectionHeaderView.self, kind: UICollectionView.elementKindSectionHeader)
         return cv
     }()
 
@@ -105,7 +105,7 @@ extension TimelineViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-        let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: HomePageSectionHeaderView.reuseIdentifier, for: indexPath) as! HomePageSectionHeaderView
+        let header = collectionView.dequeueSupplementaryView(class: HomePageSectionHeaderView.self, kind: kind, indexPath: indexPath)
         let key = weekdayKeys[indexPath.section]
         header.title = weekdayName(for: key)
         return header

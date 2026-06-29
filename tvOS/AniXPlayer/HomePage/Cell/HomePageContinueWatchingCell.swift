@@ -11,8 +11,6 @@ import Kingfisher
 
 class HomePageContinueWatchingCell: TableViewCell {
 
-    static let reuseIdentifier = "HomePageContinueWatchingCell"
-
     var items: [BangumiQueueIntro] = [] {
         didSet {
             collectionView.reloadData()
@@ -88,7 +86,6 @@ class HomePageContinueWatchingCell: TableViewCell {
 extension HomePageContinueWatchingCell {
 
     class PosterItemCell: CollectionViewCell {
-        static let reuseIdentifier = "PosterItemCell"
 
         private lazy var posterImageView: UIImageView = {
             let iv = UIImageView()

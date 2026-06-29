@@ -47,6 +47,8 @@ class HomeViewController: UIViewController {
 
 根据视图类型使用对应的基类：
 
+### iOS
+
 | 视图类型 | 基类 | 文件位置 |
 |---------|------|---------|
 | UIButton | Button | `Vendor/Base/View/Button.swift` |
@@ -57,6 +59,17 @@ class HomeViewController: UIViewController {
 | UICollectionViewCell | CollectionViewCell | `Vendor/Base/View/CollectionViewCell.swift` |
 | UITextField | TextField | `Vendor/Base/View/TextField.swift` |
 | RefreshHeader | RefreshHeader | `Vendor/Base/View/RefreshHeader.swift` |
+
+### Mac
+
+| 视图类型 | 基类 | 文件位置 |
+|---------|------|---------|
+| NSButton | Button | `Base/View/Button.swift` |
+| NSTextField (label) | Label | `Base/View/Label.swift` |
+| NSTextField (input) | TextField | `Base/View/TextField.swift` |
+| NSTableView | TableView | `Base/View/TableView.swift` |
+| NSOutlineView | OutlineView | `Base/View/OutlineView.swift` |
+| NSImageView | ImageView | `Base/View/ImageView.swift` |
 
 ```swift
 // 推荐
@@ -105,6 +118,15 @@ class PlayButton: UIButton {
 - `SliderTableViewCell` → `TableViewCell`
 - `TitleDetailMoreTableViewCell` → `TableViewCell`
 - `TitleDetailOpertationTableViewCell` → `TableViewCell`
+
+### Mac View（位于 `Mac/AniXPlayer/Base/View/`）
+
+- `Button` → `NSButton`
+- `Label` → `NSTextField`
+- `TextField` → `NSTextField`
+- `TableView` → `NSTableView`
+- `OutlineView` → `NSOutlineView`
+- `ImageView` → `NSImageView`
 - `TitleTableViewHeaderFooterView` → `UITableViewHeaderFooterView`
 
 ## 为什么必须使用基类

@@ -11,8 +11,6 @@ import Kingfisher
 
 class HomePageBannerCell: TableViewCell {
 
-    static let reuseIdentifier = "HomePageBannerCell"
-
     var banners: [BannerPageItem] = [] {
         didSet {
             collectionView.reloadData()
@@ -69,6 +67,20 @@ class HomePageBannerCell: TableViewCell {
         autoScrollTimer?.invalidate()
     }
 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        autoScrollTimer?.invalidate()
+    }
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        if window != nil {
+            startAutoScrollIfNeeded()
+        } else {
+            autoScrollTimer?.invalidate()
+        }
+    }
+
     private func setupUI() {
         backgroundColor = .clear
         contentView.backgroundColor = .clear
@@ -100,6 +112,8 @@ class HomePageBannerCell: TableViewCell {
 
     private func scrollToNextPage() {
         guard banners.count > 1 else { return }
+        let pageWidth = collectionView.bounds.width
+        guard pageWidth > 0 else { return }
         let nextPage = (currentPage + 1) % banners.count
         let indexPath = IndexPath(item: nextPage, section: 0)
         collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
@@ -113,7 +127,6 @@ class HomePageBannerCell: TableViewCell {
 extension HomePageBannerCell {
 
     class BannerItemCell: CollectionViewCell {
-        static let reuseIdentifier = "BannerItemCell"
 
         private lazy var imageView: UIImageView = {
             let iv = UIImageView()

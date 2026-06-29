@@ -427,34 +427,34 @@ extension PlayerViewController: MatchsViewControllerDelegate {
     ///   - hud: 指示器
     private func parseMedia(event: RxSwift.Event<PlayerModel.MediaLoadState>) {
         
-        let builder = self.view.showProgress()
+        let hud = self.view.showProgress()
         
         switch event {
         case .next(let element):
             switch element {
             case .parse(let state, let progress):
                 
-                builder.progress = CGFloat(0.8 * progress)
+                hud.progress = Float(0.8 * progress)
                 
                 switch state {
                 case .parseMedia:
-                    builder.statusText = NSLocalizedString("开始解析...", comment: "")
+                    hud.labelText = NSLocalizedString("开始解析...", comment: "")
                 case .downloadLocalDanmaku:
-                    builder.statusText = NSLocalizedString("下载本地弹幕...", comment: "")
+                    hud.labelText = NSLocalizedString("下载本地弹幕...", comment: "")
                 case .matchMedia(progress: _):
-                    builder.statusText = NSLocalizedString("解析视频中...", comment: "")
+                    hud.labelText = NSLocalizedString("解析视频中...", comment: "")
                 case .downloadDanmaku:
-                    builder.statusText = NSLocalizedString("加载弹幕中...", comment: "")
+                    hud.labelText = NSLocalizedString("加载弹幕中...", comment: "")
                 }
             case .filterDanmaku(progress: _):
-                builder.progress = 0.85
-                builder.statusText = NSLocalizedString("解析弹幕中...", comment: "")
+                hud.progress = 0.85
+                hud.labelText = NSLocalizedString("解析弹幕中...", comment: "")
             case .subtitle(_):
-                builder.progress = 0.9
-                builder.statusText = NSLocalizedString("加载字幕中...", comment: "")
+                hud.progress = 0.9
+                hud.labelText = NSLocalizedString("加载字幕中...", comment: "")
             case .lastWatchProgress(let lastWatchProgress):
-                builder.progress = 1
-                builder.statusText = NSLocalizedString("即将开始播放...", comment: "")
+                hud.progress = 1
+                hud.labelText = NSLocalizedString("即将开始播放...", comment: "")
                 
                 self.showGotoLastWatchTime(lastWatchProgress: lastWatchProgress)
             }

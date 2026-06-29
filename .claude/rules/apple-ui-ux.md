@@ -118,6 +118,57 @@ private lazy var iconImageView: UIImageView = {
 }()
 ```
 
+## UITableViewCell / NSTableView / NSOutlineView Cell 规范
+
+**Cell 必须抽取为独立类文件**，禁止在 `cellForRowAt` / `viewFor tableColumn` / `viewFor item` 代理方法中内联构造子视图和约束。
+
+### iOS (UITableViewCell / UICollectionViewCell)
+
+```swift
+// 推荐 — 独立 cell 类，子视图在 init 中创建
+class MatchsCell: UITableViewCell {
+    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+        super.init(style: style, reuseIdentifier: reuseIdentifier)
+        // 子视图创建 + SnapKit 约束
+    }
+}
+
+// 代理方法只做复用 + 数据配置
+func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    let cell = tableView.dequeueCell(class: MatchsCell.self, indexPath: indexPath)
+    cell.label.text = data[indexPath.row]
+    return cell
+}
+
+// 不推荐 — cellForRowAt 中内联 addSubview + 约束
+```
+
+### Mac (NSTableCellView / NSOutlineView)
+
+```swift
+// 推荐 — 独立 cell 类，子视图在 init(frame:) 中创建
+class ServerHostCellView: NSTableCellView {
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        // 子视图创建 + SnapKit 约束
+    }
+}
+
+// 代理方法只做复用 + 数据配置
+func outlineView(_ outlineView: NSOutlineView, viewFor ...) -> NSView? {
+    let cell = outlineView.makeView(withIdentifier: cellId, owner: nil) as? ServerHostCellView
+        ?? ServerHostCellView()
+    cell.identifier = cellId
+    cell.textField?.stringValue = ...
+    return cell
+}
+```
+
+**规则**：
+- Cell 类文件命名：`{Feature}CellView.swift`（Mac）或 `{Feature}Cell.swift`（iOS）
+- 子视图和约束始终在 `init` 中完成
+- 代理方法只负责取出 cell 并配置数据，不做 view 构建
+
 ## 命名规范
 
 - View 文件：`{Feature}View.swift`

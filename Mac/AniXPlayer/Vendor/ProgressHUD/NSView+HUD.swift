@@ -2,63 +2,66 @@
 //  NSView+HUD.swift
 //  ProgressHUD
 //
-//  Created by jimhuang on 2024/6/27.
+//  NSView 便捷扩展，内部转调 ProgressHUD
 //
 
-import Foundation
 import Cocoa
 
-public class ProgressHUDBuilder {
-    
-    public var progress: CGFloat = 0 {
-        didSet {
-            self.view?.setup()
-            ProgressHUD.show(progress: progress)
-        }
-    }
-    
-    public var statusText: String? {
-        didSet {
-            self.view?.setup()
-            ProgressHUD.setStatus(statusText ?? "")
-        }
-    }
-    
-    private weak var view: NSView?
-    
-    fileprivate init(view: NSView) {
-        self.view = view
-    }
-}
-
 extension NSView {
-    
-    public func showLoading(statusText: String) {
-        setup()
-        ProgressHUD.show(withStatus: statusText)
+
+    // MARK: - Loading
+
+    @discardableResult
+    func showLoading(statusText: String) -> ProgressHUD {
+        dismiss()
+        let hud = ProgressHUD.showAdded(to: self, animated: true)
+        hud.mode = .indeterminate
+        hud.labelText = statusText
+        hud.bezelColor = NSColor.black.withAlphaComponent(0.6)
+        hud.contentColor = .white
+        hud.removeFromSuperViewOnHide = true
+        return hud
     }
-    
-    public func showProgress() -> ProgressHUDBuilder {
-        return ProgressHUDBuilder(view: self)
+
+    // MARK: - Progress
+
+    @discardableResult
+    func showProgress() -> ProgressHUD {
+        dismiss()
+        let hud = ProgressHUD.showAdded(to: self, animated: true)
+        hud.mode = .determinateHorizontalBar
+        hud.bezelColor = NSColor.black.withAlphaComponent(0.6)
+        hud.contentColor = .white
+        hud.removeFromSuperViewOnHide = true
+        return hud
     }
-    
-    public func show(error: Error) {
-        setup()
-        ProgressHUD.showErrorWithStatus(error.localizedDescription)
+
+    // MARK: - Text / Error
+
+    func show(text: String) {
+        dismiss()
+        let hud = ProgressHUD.showAdded(to: self, animated: true)
+        hud.mode = .text
+        hud.labelText = text
+        hud.bezelColor = NSColor.black.withAlphaComponent(0.6)
+        hud.contentColor = .white
+        hud.removeFromSuperViewOnHide = true
+        hud.hide(animated: true, afterDelay: 2)
     }
-    
-    public func show(text: String) {
-        setup()
-        ProgressHUD.showTextWithStatus(text)
+
+    func show(error: Error) {
+        show(text: error.localizedDescription)
     }
-    
-    public func dismiss(delay: TimeInterval) {
-        ProgressHUD.dismiss(delay: delay)
+
+    // MARK: - Dismiss
+
+    func dismiss(delay: TimeInterval = 0) {
+        if delay > 0 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+                ProgressHUD.hide(for: self, animated: true)
+            }
+        } else {
+            ProgressHUD.hide(for: self, animated: true)
+        }
     }
-    
-    fileprivate func setup() {
-        ProgressHUD.setDefaultStyle(.dark)
-        ProgressHUD.setContainerView(self.window?.contentView)
-    }
-    
 }

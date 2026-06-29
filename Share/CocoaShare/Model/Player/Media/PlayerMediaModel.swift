@@ -859,12 +859,14 @@ extension PlayerMediaModel {
         if self.media != nil {
             if self.player.isPlaying {
                 self.player.pause()
+                return .playing
             } else {
                 self.player.play()
+                return .pause
             }
         }
         
-        return self.player.state
+        return .stop
     }
     
     /// 调整播放器进度

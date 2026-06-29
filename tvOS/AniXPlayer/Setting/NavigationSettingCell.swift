@@ -10,8 +10,6 @@ import SnapKit
 
 class NavigationSettingCell: TableViewCell {
 
-    static let reuseIdentifier = "NavigationSettingCell"
-
     var colorIndicatorColor: UIColor? {
         didSet {
             colorIndicator.backgroundColor = colorIndicatorColor

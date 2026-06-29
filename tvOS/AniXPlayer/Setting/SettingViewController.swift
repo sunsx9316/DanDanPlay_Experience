@@ -38,13 +38,13 @@ class SettingViewController: ViewController {
         case cleanupCache
         case cleanupHistory
 
-        var reuseIdentifier: String {
+        var cellClass: UITableViewCell.Type {
             switch self {
             case .fastMatch, .autoLoadDanmaku, .autoLoadCustomSubtitle, .hardwareDecoding, .icloudSync:
-                return SwitchSettingCell.reuseIdentifier
+                return SwitchSettingCell.self
             case .appLanguage, .playerCore, .danmakuCacheDay, .mainColor,
                  .version, .cleanupCache, .cleanupHistory:
-                return NavigationSettingCell.reuseIdentifier
+                return NavigationSettingCell.self
             }
         }
     }
@@ -57,7 +57,7 @@ class SettingViewController: ViewController {
         tv.dataSource = self
         tv.registerClassCell(class: SwitchSettingCell.self)
         tv.registerClassCell(class: NavigationSettingCell.self)
-        tv.register(SectionHeaderView.self, forHeaderFooterViewReuseIdentifier: SectionHeaderView.reuseIdentifier)
+        tv.registerHeaderFooterView(class: SectionHeaderView.self)
         tv.estimatedRowHeight = 66
         tv.rowHeight = UITableView.automaticDimension
         return tv
@@ -367,13 +367,13 @@ extension SettingViewController: UITableViewDataSource {
         guard let sectionType = Section(rawValue: indexPath.section) else { return UITableViewCell() }
         let row = rows(for: sectionType)[indexPath.row]
 
-        let cell = tableView.dequeueReusableCell(withIdentifier: row.reuseIdentifier, for: indexPath)
+        let cell = tableView.dequeueCell(class: row.cellClass, indexPath: indexPath)
         configureCell(cell, for: row)
         return cell
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: SectionHeaderView.reuseIdentifier) as? SectionHeaderView
+        let header = tableView.dequeueHeaderFooterView(class: SectionHeaderView.self)
         header?.title = Section(rawValue: section)?.title
         return header
     }

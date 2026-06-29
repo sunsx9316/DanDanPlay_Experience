@@ -15,8 +15,6 @@ class HomePageFunctionCell: TableViewCell {
         case favorite
     }
 
-    static let reuseIdentifier = "HomePageFunctionCell"
-
     var onItemSelected: ((ItemType) -> Void)?
 
     private var stackView: UIStackView = {

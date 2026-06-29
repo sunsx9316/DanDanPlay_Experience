@@ -9,7 +9,9 @@ import Cocoa
 import SnapKit
 import RxSwift
 
-extension ServerHostListViewController: NSTableViewDelegate, NSTableViewDataSource {
+// MARK: - NSOutlineView DataSource & Delegate
+
+extension ServerHostListViewController: NSOutlineViewDataSource, NSOutlineViewDelegate {
 
     private enum Section: Int, CaseIterable {
         case official
@@ -18,160 +20,123 @@ extension ServerHostListViewController: NSTableViewDelegate, NSTableViewDataSour
         var title: String {
             switch self {
             case .official: return NSLocalizedString("官方域名", comment: "")
-            case .custom: return NSLocalizedString("自定义域名", comment: "")
+            case .custom:   return NSLocalizedString("自定义域名", comment: "")
             }
         }
     }
 
     private var officialHosts: [String] {
         var hosts = [DefaultHost]
-        if let backups = backupHosts {
+        if let backups = backupHosts, !backups.isEmpty {
             hosts.append(contentsOf: backups)
         }
         return hosts
     }
 
-    func numberOfRows(in tableView: NSTableView) -> Int {
-        return officialHosts.count + (customHosts?.count ?? 0)
-    }
+    // MARK: - DataSource
 
-    func tableView(_ tableView: NSTableView, isGroupRow row: Int) -> Bool {
-        return row == 0 || row == officialHosts.count
-    }
-
-    func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-        if row == 0 || row == officialHosts.count {
-            return 24
+    func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
+        if item == nil {
+            return Section.allCases.count
         }
+        guard let section = item as? Section else { return 0 }
+        switch section {
+        case .official: return officialHosts.count
+        case .custom:   return customHosts?.count ?? 0
+        }
+    }
+
+    func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
+        if item == nil {
+            return Section.allCases[index]
+        }
+        guard let section = item as? Section else { return "" }
+        switch section {
+        case .official: return officialHosts[index]
+        case .custom:   return customHosts?[index] ?? ""
+        }
+    }
+
+    func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
+        return item is Section
+    }
+
+    // MARK: - Delegate
+
+    func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
+        if let section = item as? Section {
+            return makeSectionCell(outlineView: outlineView, section: section)
+        }
+        if let host = item as? String {
+            return makeHostCell(outlineView: outlineView, host: host, isSelected: host == currentHost)
+        }
+        return nil
+    }
+
+    func outlineView(_ outlineView: NSOutlineView, shouldExpandItem item: Any) -> Bool {
+        return item is Section
+    }
+
+    func outlineView(_ outlineView: NSOutlineView, shouldCollapseItem item: Any) -> Bool {
+        return false
+    }
+
+    func outlineView(_ outlineView: NSOutlineView, shouldSelectItem item: Any) -> Bool {
+        return item is String
+    }
+
+    func outlineView(_ outlineView: NSOutlineView, shouldShowOutlineCellForItem item: Any) -> Bool {
+        return false
+    }
+
+    func outlineView(_ outlineView: NSOutlineView, heightOfRowByItem item: Any) -> CGFloat {
+        if item is Section { return 24 }
         return 36
     }
 
-    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        if row == 0 {
-            return makeGroupCell(tableView: tableView, title: Section.official.title, showRefresh: true)
-        }
-
-        let officialCount = officialHosts.count
-        if row == officialCount {
-            return makeGroupCell(tableView: tableView, title: Section.custom.title, showRefresh: false)
-        }
-
-        if row < officialCount {
-            let hostIndex = row - 1
-            let host = officialHosts[hostIndex]
-            return makeHostCell(tableView: tableView, host: host, isSelected: host == currentHost)
-        } else {
-            let hostIndex = row - officialCount - 1
-            guard let host = customHosts?[hostIndex] else { return nil }
-            return makeHostCell(tableView: tableView, host: host, isSelected: host == currentHost)
-        }
+    func outlineView(_ outlineView: NSOutlineView, rowViewForItem item: Any) -> NSTableRowView? {
+        return outlineView.themedRowView(forRow: outlineView.row(forItem: item))
     }
 
-    func tableView(_ tableView: NSTableView, shouldSelectRow row: Int) -> Bool {
-        let officialCount = officialHosts.count
-        return row != 0 && row != officialCount
+    func outlineViewSelectionDidChange(_ notification: Notification) {
+        let row = outlineView.selectedRow
+        guard row >= 0, let item = outlineView.item(atRow: row) as? String else { return }
+
+        currentHost = item
+        globalSettingModel.onChangeHost(item)
+        outlineView.reloadData()
     }
 
-    func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
-        return tableView.themedRowView(forRow: row)
-    }
+    // MARK: - Section Header Creation
 
-    func tableViewSelectionDidChange(_ notification: Notification) {
-        let row = tableView.selectedRow
-        let officialCount = officialHosts.count
-        guard row >= 0, row != 0, row != officialCount else { return }
-
-        let host: String
-        if row < officialCount {
-            host = officialHosts[row - 1]
-        } else {
-            let hostIndex = row - officialCount - 1
-            guard let h = customHosts?[hostIndex] else { return }
-            host = h
-        }
-
-        currentHost = host
-        globalSettingModel.onChangeHost(host)
-        tableView.reloadData()
-    }
-
-    // MARK: - Cell Factory
-
-    private func makeGroupCell(tableView: NSTableView, title: String, showRefresh: Bool) -> NSView? {
-        let cellId = NSUserInterfaceItemIdentifier("GroupCell")
-        var cell = tableView.makeView(withIdentifier: cellId, owner: nil) as? NSTableCellView
+    private func makeSectionCell(outlineView: NSOutlineView, section: Section) -> NSView? {
+        let cellId = NSUserInterfaceItemIdentifier("SectionCell")
+        var cell = outlineView.makeView(withIdentifier: cellId, owner: nil) as? ServerHostSectionCellView
         if cell == nil {
-            cell = NSTableCellView()
+            cell = ServerHostSectionCellView()
             cell?.identifier = cellId
-
-            let tf = NSTextField()
-            tf.isEditable = false
-            tf.isBordered = false
-            tf.backgroundColor = .clear
-            tf.font = .systemFont(ofSize: 11, weight: .semibold)
-            tf.textColor = .secondaryLabelColor
-            cell?.textField = tf
-            cell?.addSubview(tf)
-            tf.snp.makeConstraints { make in
-                make.leading.equalToSuperview().offset(12)
-                make.centerY.equalToSuperview()
-            }
+            cell?.refreshButton.target = self
+            cell?.refreshButton.action = #selector(onTouchRefresh(_:))
         }
-        cell?.textField?.stringValue = title
-
-        if showRefresh {
-            var btn = cell?.subviews.compactMap({ $0 as? NSButton }).first
-            if btn == nil {
-                btn = NSButton(image: NSImage(systemSymbolName: "arrow.clockwise", accessibilityDescription: nil)!, target: self, action: #selector(onTouchRefresh(_:)))
-                btn?.bezelStyle = .inline
-                btn?.isBordered = false
-                cell?.addSubview(btn!)
-                btn?.snp.makeConstraints { make in
-                    make.leading.equalTo(cell!.textField!.snp.trailing).offset(4)
-                    make.centerY.equalToSuperview()
-                    make.width.height.equalTo(16)
-                }
-            }
-            btn?.isHidden = false
-        } else {
-            let btn = cell?.subviews.compactMap({ $0 as? NSButton }).first
-            btn?.isHidden = true
-        }
-
+        cell?.textField?.stringValue = section.title
+        cell?.refreshButton.isHidden = (section != .official)
         return cell
     }
 
-    private func makeHostCell(tableView: NSTableView, host: String, isSelected: Bool) -> NSView? {
+    private func makeHostCell(outlineView: NSOutlineView, host: String, isSelected: Bool) -> NSView? {
         let cellId = NSUserInterfaceItemIdentifier("HostCell")
-        var cell = tableView.makeView(withIdentifier: cellId, owner: nil) as? NSTableCellView
+        var cell = outlineView.makeView(withIdentifier: cellId, owner: nil) as? ServerHostCellView
         if cell == nil {
-            cell = NSTableCellView()
+            cell = ServerHostCellView()
             cell?.identifier = cellId
-
-            let tf = NSTextField()
-            tf.isEditable = false
-            tf.isBordered = false
-            tf.backgroundColor = .clear
-            tf.font = .systemFont(ofSize: 13)
-            cell?.textField = tf
-            cell?.addSubview(tf)
-            tf.snp.makeConstraints { make in
-                make.leading.equalToSuperview().offset(24)
-                make.centerY.equalToSuperview()
-                make.trailing.equalToSuperview().offset(-12)
-            }
         }
         cell?.textField?.stringValue = host
         cell?.textField?.textColor = isSelected ? .mainColor : .textColor
         return cell
     }
-
-    // MARK: - Actions
-
-    @objc private func onTouchRefresh(_ sender: NSButton) {
-        loadBackupHosts()
-    }
 }
+
+// MARK: - ViewController
 
 class ServerHostListViewController: ViewController {
 
@@ -180,11 +145,11 @@ class ServerHostListViewController: ViewController {
     fileprivate var currentHost: String = Preferences.shared.host
 
     fileprivate var customHosts: [String]? {
-        didSet { tableView.reloadData() }
+        didSet { outlineView.reloadData() }
     }
 
     fileprivate var backupHosts: [String]? {
-        didSet { tableView.reloadData() }
+        didSet { outlineView.reloadData() }
     }
 
     private let bag = DisposeBag()
@@ -210,27 +175,25 @@ class ServerHostListViewController: ViewController {
         return btn
     }()
 
-    private lazy var tableView: TableView = {
-        let tv = TableView()
-        tv.delegate = self
-        tv.dataSource = self
-        tv.headerView = nil
-        tv.rowHeight = 36
-        tv.style = .sourceList
-        tv.enableRowHoverTracking()
+    private lazy var outlineView: OutlineView = {
+        let ov = OutlineView()
+        ov.dataSource = self
+        ov.delegate = self
+        ov.indentationPerLevel = 0
+        ov.enableRowHoverTracking()
 
         let col = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("host"))
         col.width = 420
-        tv.addTableColumn(col)
+        ov.addTableColumn(col)
 
-        return tv
+        return ov
     }()
 
     private lazy var scrollView: NSScrollView = {
         let sv = NSScrollView()
         sv.hasVerticalScroller = true
         sv.borderType = .noBorder
-        sv.documentView = tableView
+        sv.documentView = outlineView
         return sv
     }()
 
@@ -278,23 +241,36 @@ class ServerHostListViewController: ViewController {
 
         customHosts = Preferences.shared.customHosts
 
-        if let cached = Preferences.shared.backupHosts {
+        if let cached = Preferences.shared.backupHosts, !cached.isEmpty {
             backupHosts = cached
         } else {
             loadBackupHosts()
         }
+
+        // 自动展开所有 section
+        for section in Section.allCases {
+            outlineView.expandItem(section)
+        }
     }
 
-    // MARK: - Private
+    // MARK: - Actions
 
     fileprivate func loadBackupHosts() {
         _ = globalSettingModel.backupAddress().subscribe(onNext: { [weak self] hosts in
             guard let self = self else { return }
             self.backupHosts = hosts
-            Preferences.shared.backupHosts = hosts
+            if let hosts = hosts, !hosts.isEmpty {
+                Preferences.shared.backupHosts = hosts
+            }
+            // 刷新后重新展开
+            self.outlineView.expandItem(Section.official)
         }, onError: { error in
             print("[ServerHostList] 加载备用域名失败: \(error)")
         })
+    }
+
+    @objc private func onTouchRefresh(_ sender: NSButton) {
+        loadBackupHosts()
     }
 
     @objc private func onTouchAdd(_ sender: NSButton) {
@@ -321,27 +297,24 @@ class ServerHostListViewController: ViewController {
                 hosts.insert(text, at: 0)
                 Preferences.shared.customHosts = hosts
                 self.customHosts = hosts
+                self.outlineView.expandItem(Section.custom)
             }
         }
     }
 
     @objc private func onTouchDelete(_ sender: NSButton) {
-        let row = tableView.selectedRow
-        guard row >= 0 else { return }
+        let row = outlineView.selectedRow
+        guard row >= 0, let item = outlineView.item(atRow: row) as? String else { return }
 
-        let officialCount = officialHosts.count
-        guard row > officialCount else { return }
+        // 只允许删除自定义域名
+        guard var hosts = customHosts, let index = hosts.firstIndex(of: item) else { return }
 
-        let hostIndex = row - officialCount - 1
-        guard var hosts = customHosts, hostIndex < hosts.count else { return }
-
-        let deletedHost = hosts[hostIndex]
-        if deletedHost == currentHost {
+        if item == currentHost {
             globalSettingModel.onChangeHost(DefaultHost)
             currentHost = DefaultHost
         }
 
-        hosts.remove(at: hostIndex)
+        hosts.remove(at: index)
         Preferences.shared.customHosts = hosts
         customHosts = hosts
     }
@@ -350,3 +323,4 @@ class ServerHostListViewController: ViewController {
         view.window?.close()
     }
 }
+

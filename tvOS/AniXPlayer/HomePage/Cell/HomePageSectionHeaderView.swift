@@ -10,8 +10,6 @@ import SnapKit
 
 class HomePageSectionHeaderView: UICollectionReusableView {
 
-    static let reuseIdentifier = "HomePageSectionHeaderView"
-
     var title: String? {
         didSet {
             titleLabel.text = title

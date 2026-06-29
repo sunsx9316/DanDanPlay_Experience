@@ -31,7 +31,7 @@ class OptionListViewController: ViewController {
         let tv = TableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self
-        tv.register(OptionTableViewCell.self, forCellReuseIdentifier: "OptionCell")
+        tv.registerClassCell(class: OptionTableViewCell.self)
         tv.rowHeight = 66
         return tv
     }()
@@ -85,7 +85,7 @@ extension OptionListViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "OptionCell", for: indexPath) as! OptionTableViewCell
+        let cell = tableView.dequeueCell(class: OptionTableViewCell.self, indexPath: indexPath)
         let option = options[indexPath.row]
         cell.configure(title: option.title, isSelected: indexPath.row == selectedIndex)
         return cell

@@ -245,3 +245,46 @@ extension MediaPlayer.CoreType: Storeable {
 ```
 
 **注意**：如果枚举 rawValue 类型为 `String`，则 `create` 和 `toValue` 的参数类型也要改为 `String`。
+
+## Cell 注册与复用规范
+
+**必须使用项目提供的 Helper 方法**，禁止手写字符串 identifier 和 `as!` 强制转型：
+
+### UITableView
+
+```swift
+// 注册
+tableView.registerClassCell(class: TitleTableViewCell.self)
+
+// 复用
+let cell = tableView.dequeueCell(class: TitleTableViewCell.self, indexPath: indexPath)
+// 或
+let cell = tableView.dequeueCell(class: TitleTableViewCell.self)
+
+// 不推荐 — 手写 identifier + as! 强转
+tableView.register(TitleTableViewCell.self, forCellReuseIdentifier: "TitleTableViewCell")
+let cell = tableView.dequeueReusableCell(withIdentifier: "TitleTableViewCell", for: indexPath) as! TitleTableViewCell
+```
+
+### UICollectionView
+
+```swift
+// 注册
+collectionView.registerClassCell(class: HomePageBannerItemCell.self)
+
+// 复用
+let cell = collectionView.dequeueCell(class: HomePageBannerItemCell.self, indexPath: indexPath)
+
+// 不推荐 — 手写 identifier + as! 强转
+collectionView.register(HomePageBannerItemCell.self, forCellWithReuseIdentifier: "HomePageBannerItemCell")
+let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomePageBannerItemCell", for: indexPath) as! HomePageBannerItemCell
+```
+
+**Helper 位置**：
+- iOS: `iOS/AniXPlayer/Helper/UITableView+Helper.swift`、`UICollectionView+Helper.swift`
+- Mac: 使用 `NSOutlineView.makeView(withIdentifier:owner:)` + cell 类名作为 identifier（如 `ServerHostCellView` 的类名字符串）
+
+**规则**：
+- ReuseIdentifier 统一用类名，由 Helper 自动处理
+- 禁止手写字符串 identifier
+- 禁止 `as!` 强制转型 cell

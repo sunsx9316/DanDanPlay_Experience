@@ -23,7 +23,7 @@ class SMBLoginHistoryViewController: RemoteLoginHistoryViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(SectionHeaderView.self, forHeaderFooterViewReuseIdentifier: SectionHeaderView.reuseIdentifier)
+        tableView.registerHeaderFooterView(class: SectionHeaderView.self)
         loadData()
     }
 
@@ -167,7 +167,7 @@ class SMBLoginHistoryViewController: RemoteLoginHistoryViewController {
         } else {
             return nil
         }
-        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: SectionHeaderView.reuseIdentifier) as? SectionHeaderView
+        let header = tableView.dequeueHeaderFooterView(class: SectionHeaderView.self)
         header?.title = title
         return header
     }

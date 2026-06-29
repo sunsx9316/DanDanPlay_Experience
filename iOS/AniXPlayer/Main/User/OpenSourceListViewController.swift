@@ -40,7 +40,7 @@ class OpenSourceListViewController: ViewController {
         let tv = TableView(frame: .zero, style: .plain)
         tv.delegate = self
         tv.dataSource = self
-        tv.register(SeparatorTableViewCell.self, forCellReuseIdentifier: "Cell")
+        tv.registerClassCell(class: SeparatorTableViewCell.self)
         tv.rowHeight = 50
         tv.separatorStyle = .none
         return tv
@@ -63,7 +63,7 @@ extension OpenSourceListViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! SeparatorTableViewCell
+        let cell = tableView.dequeueCell(class: SeparatorTableViewCell.self, indexPath: indexPath)
         cell.textLabel?.text = libraries[indexPath.row].name
         cell.textLabel?.font = .systemFont(ofSize: 16)
         cell.accessoryType = .disclosureIndicator

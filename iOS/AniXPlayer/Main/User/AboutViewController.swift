@@ -65,7 +65,7 @@ class AboutViewController: ViewController {
         let tv = TableView(frame: .zero, style: .plain)
         tv.delegate = self
         tv.dataSource = self
-        tv.register(SeparatorTableViewCell.self, forCellReuseIdentifier: "Cell")
+        tv.registerClassCell(class: SeparatorTableViewCell.self)
         tv.rowHeight = 50
         tv.separatorStyle = .none
         return tv
@@ -142,7 +142,7 @@ extension AboutViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath) as! SeparatorTableViewCell
+        let cell = tableView.dequeueCell(class: SeparatorTableViewCell.self, indexPath: indexPath)
         cell.textLabel?.text = Row(rawValue: indexPath.row)?.title
         cell.textLabel?.font = .systemFont(ofSize: 16)
         cell.accessoryType = .disclosureIndicator

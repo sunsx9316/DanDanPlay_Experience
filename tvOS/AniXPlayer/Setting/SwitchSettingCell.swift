@@ -10,8 +10,6 @@ import SnapKit
 
 class SwitchSettingCell: TableViewCell {
 
-    static let reuseIdentifier = "SwitchSettingCell"
-
     var onSwitchChanged: ((Bool) -> Void)?
 
     private var isSwitchOn = false

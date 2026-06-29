@@ -55,8 +55,7 @@ class UserInfoViewController: ViewController {
         let tv = TableView(frame: .zero, style: .plain)
         tv.delegate = self
         tv.dataSource = self
-        tv.register(SeparatorTableViewCell.self, forCellReuseIdentifier: "UserInfoCell")
-        tv.register(SeparatorTableViewCell.self, forCellReuseIdentifier: "MenuCell")
+        tv.registerClassCell(class: SeparatorTableViewCell.self)
         tv.rowHeight = 50
         tv.separatorStyle = .none
         return tv
@@ -155,7 +154,7 @@ extension UserInfoViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch Section(rawValue: indexPath.section)! {
         case .userInfo:
-            let cell = tableView.dequeueReusableCell(withIdentifier: "UserInfoCell", for: indexPath) as! SeparatorTableViewCell
+            let cell = tableView.dequeueCell(class: SeparatorTableViewCell.self, indexPath: indexPath)
             configureUserInfoCell(cell)
             cell.showSeparator = false
             cell.accessoryType = Preferences.shared.loginInfo != nil ? .disclosureIndicator : .none
@@ -163,7 +162,7 @@ extension UserInfoViewController: UITableViewDataSource {
 
         case .menu:
             let item = menuItems[indexPath.row]
-            let cell = tableView.dequeueReusableCell(withIdentifier: "MenuCell", for: indexPath) as! SeparatorTableViewCell
+            let cell = tableView.dequeueCell(class: SeparatorTableViewCell.self, indexPath: indexPath)
             cell.textLabel?.text = item.title
             return cell
         }

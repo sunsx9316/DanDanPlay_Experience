@@ -11,8 +11,6 @@ import Kingfisher
 
 class TimelineItemCell: CollectionViewCell {
 
-    static let reuseIdentifier = "TimelineItemCell"
-
     private lazy var posterImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill

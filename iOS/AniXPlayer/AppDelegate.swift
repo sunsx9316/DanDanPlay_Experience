@@ -68,6 +68,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         do {
             let tabbarAppearance = UITabBar.appearance()
             tabbarAppearance.barTintColor = .backgroundColor
+            tabbarAppearance.tintColor = .mainColor
+            tabbarAppearance.unselectedItemTintColor = .secondaryLabel
         }
         
         do {

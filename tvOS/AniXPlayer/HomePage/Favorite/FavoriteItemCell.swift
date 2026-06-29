@@ -11,8 +11,6 @@ import Kingfisher
 
 class FavoriteItemCell: CollectionViewCell {
 
-    static let reuseIdentifier = "FavoriteItemCell"
-
     private lazy var posterImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill

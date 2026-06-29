@@ -10,8 +10,6 @@ import SnapKit
 
 class SectionHeaderView: UITableViewHeaderFooterView {
 
-    static let reuseIdentifier = "SectionHeaderView"
-
     var title: String? {
         didSet { titleLabel.text = title }
     }

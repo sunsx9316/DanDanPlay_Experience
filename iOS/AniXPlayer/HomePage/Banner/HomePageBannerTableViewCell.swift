@@ -19,7 +19,7 @@ extension HomePageBannerTableViewCell: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomePageBannerItemCell", for: indexPath) as! HomePageBannerItemCell
+        let cell = collectionView.dequeueCell(class: HomePageBannerItemCell.self, indexPath: indexPath)
         cell.item = banners?[indexPath.item]
         return cell
     }
@@ -90,7 +90,7 @@ class HomePageBannerTableViewCell: TableViewCell {
         cv.backgroundColor = .clear
         cv.delegate = self
         cv.dataSource = self
-        cv.register(HomePageBannerItemCell.self, forCellWithReuseIdentifier: "HomePageBannerItemCell")
+        cv.registerClassCell(class: HomePageBannerItemCell.self)
         return cv
     }()
 
@@ -133,6 +133,20 @@ class HomePageBannerTableViewCell: TableViewCell {
         autoScrollTimer?.invalidate()
     }
 
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        stopAutoScroll()
+    }
+
+    override func didMoveToWindow() {
+        super.didMoveToWindow()
+        if window != nil {
+            startAutoScroll()
+        } else {
+            stopAutoScroll()
+        }
+    }
+
     // MARK: Private
 
     private func setupUI() {
@@ -166,18 +180,21 @@ class HomePageBannerTableViewCell: TableViewCell {
 
     private func scrollToNextPage() {
         guard let count = banners?.count, count > 1 else { return }
+        let pageWidth = collectionView.bounds.width
+        guard pageWidth > 0 else { return }
 
         let nextPage = (currentPage + 1) % count
-        let currentSection = Int(round(collectionView.contentOffset.x / collectionView.bounds.width)) / count
-        let indexPath = IndexPath(item: nextPage, section: currentSection)
+        let currentSection = Int(round(collectionView.contentOffset.x / pageWidth)) / count
+        var targetSection = currentSection
 
-        // 跨 section 边界时调整 section
         if nextPage == 0 {
-            let nextSection = currentSection + 1
-            collectionView.scrollToItem(at: IndexPath(item: 0, section: nextSection), at: .centeredHorizontally, animated: true)
-        } else {
-            collectionView.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+            targetSection = currentSection + 1
+            if targetSection >= sectionCount {
+                targetSection = sectionCount / 2
+            }
         }
+
+        collectionView.scrollToItem(at: IndexPath(item: nextPage, section: targetSection), at: .centeredHorizontally, animated: true)
 
         currentPage = nextPage
         pageControl.currentPage = currentPage

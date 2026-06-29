@@ -28,7 +28,7 @@ class FilterDanmakuViewController: ViewController {
         tv.delegate = self
         tv.dataSource = self
         tv.registerClassCell(class: NavigationSettingCell.self)
-        tv.register(AddFilterTableViewCell.self, forCellReuseIdentifier: "AddCell")
+        tv.registerClassCell(class: AddFilterTableViewCell.self)
         tv.rowHeight = 76
         return tv
     }()
@@ -147,7 +147,7 @@ extension FilterDanmakuViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath.section == 0 {
-            let cell = tableView.dequeueReusableCell(withIdentifier: "AddCell", for: indexPath) as! AddFilterTableViewCell
+            let cell = tableView.dequeueCell(class: AddFilterTableViewCell.self, indexPath: indexPath)
             return cell
         } else {
             let cell = tableView.dequeueCell(class: NavigationSettingCell.self, indexPath: indexPath)

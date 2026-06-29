@@ -33,7 +33,7 @@ class DanmakuSettingViewController: ViewController {
         tv.registerClassCell(class: StepperSettingCell.self)
         tv.registerClassCell(class: NavigationSettingCell.self)
         tv.registerClassCell(class: TitleMoreTableViewCell.self)
-        tv.register(SectionHeaderView.self, forHeaderFooterViewReuseIdentifier: SectionHeaderView.reuseIdentifier)
+        tv.registerHeaderFooterView(class: SectionHeaderView.self)
         tv.estimatedRowHeight = 76
         tv.rowHeight = UITableView.automaticDimension
         return tv
@@ -186,7 +186,7 @@ extension DanmakuSettingViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let header = tableView.dequeueReusableHeaderFooterView(withIdentifier: SectionHeaderView.reuseIdentifier) as? SectionHeaderView
+        let header = tableView.dequeueHeaderFooterView(class: SectionHeaderView.self)
         header?.title = self.dataSource[section].title
         return header
     }
