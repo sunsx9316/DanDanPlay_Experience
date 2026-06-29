@@ -44,22 +44,22 @@ class RoundProgressView: NSView {
         let lineWidth: CGFloat = 2
         let center = CGPoint(x: bounds.midX, y: bounds.midY)
         let radius = min(bounds.width, bounds.height) / 2 - lineWidth
-        let startAngle: CGFloat = -.pi / 2
-        let endAngle = startAngle + (.pi * 2 * CGFloat(progress))
+        let startAngle: CGFloat = .pi / 2
+        let endAngle = startAngle - (.pi * 2 * CGFloat(progress))
 
         if isAnnular {
             // Background ring
             context.setStrokeColor(backgroundTintColor.cgColor)
             context.setLineWidth(lineWidth)
             context.beginPath()
-            context.addArc(center: center, radius: radius, startAngle: 0, endAngle: .pi * 2, clockwise: false)
+            context.addArc(center: center, radius: radius, startAngle: 0, endAngle: .pi * 2, clockwise: true)
             context.strokePath()
 
             // Progress ring
             context.setStrokeColor(progressTintColor.cgColor)
             context.setLineWidth(lineWidth)
             context.beginPath()
-            context.addArc(center: center, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: false)
+            context.addArc(center: center, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: true)
             context.strokePath()
         } else {
             // Round (pie chart) style
@@ -68,7 +68,7 @@ class RoundProgressView: NSView {
                 context.setFillColor(progressTintColor.cgColor)
                 context.beginPath()
                 context.move(to: center)
-                context.addArc(center: center, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: false)
+                context.addArc(center: center, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: true)
                 context.closePath()
                 context.fillPath()
             }
@@ -77,7 +77,7 @@ class RoundProgressView: NSView {
             context.setStrokeColor(backgroundTintColor.cgColor)
             context.setLineWidth(lineWidth)
             context.beginPath()
-            context.addArc(center: center, radius: radius, startAngle: 0, endAngle: .pi * 2, clockwise: false)
+            context.addArc(center: center, radius: radius, startAngle: 0, endAngle: .pi * 2, clockwise: true)
             context.strokePath()
         }
     }

@@ -34,7 +34,8 @@ class BarProgressView: NSView {
         guard let context = NSGraphicsContext.current?.cgContext else { return }
 
         let lineHeight: CGFloat = 2
-        let progressRect = bounds.insetBy(dx: 0, dy: (bounds.height - lineHeight) / 2)
+        let horizontalMargin: CGFloat = 6
+        let progressRect = bounds.insetBy(dx: horizontalMargin, dy: (bounds.height - lineHeight) / 2)
         let progressWidth = progressRect.width * CGFloat(max(0, min(1, progress)))
 
         // Track (remaining)

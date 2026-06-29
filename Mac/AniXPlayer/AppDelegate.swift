@@ -219,7 +219,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         NSApp.mainMenu = mainMenu
     }
-    
+
     @objc private func onGlobalSettingItemDidClick(_ item: NSMenuItem) {
         let vc = GlobalSettingViewController()
         self.mainWindowController.contentViewController?.presentAsModalWindow(vc)

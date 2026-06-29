@@ -514,7 +514,7 @@ class ProgressHUD: NSView {
         }
 
         // Calculate total size
-        totalSize.width = max(indicatorHeight, labelSize.width, detailsSize.width)
+        totalSize.width = max(indicatorSize.width, indicatorHeight, labelSize.width, detailsSize.width)
         totalSize.height = indicatorHeight
         if indicatorHeight > 0 && labelSize.height > 0 { totalSize.height += 4 }
         totalSize.height += labelSize.height
