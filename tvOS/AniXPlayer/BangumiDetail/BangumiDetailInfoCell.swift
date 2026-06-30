@@ -82,8 +82,8 @@ class BangumiDetailInfoCell: TableViewCell {
         posterImageView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(60)
             make.top.equalToSuperview().offset(20)
-            make.width.equalTo(200)
-            make.height.equalTo(112)
+            make.width.equalTo(400)
+            make.height.equalTo(200)
             make.bottom.lessThanOrEqualToSuperview().offset(-20)
         }
 

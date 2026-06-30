@@ -14,6 +14,7 @@
 		092376397254D281D509C484 /* GCDWebUploader in Frameworks */ = {isa = PBXBuildFile; productRef = A4AA32FA8B3AAAA3987665F5 /* GCDWebUploader */; };
 		0925E7191013E0084F5C39B8 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0B30951C7B9FF3ECC13707 /* SnapKit */; };
 		09C476275D0A177BC4EA9567 /* LogCompat.swift in Sources */ = {isa = PBXBuildFile; fileRef = F24454E75EA8110FC21C5B7E /* LogCompat.swift */; };
+		0FE787E2058E2EE8DDDEE67F /* WaterfallLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE8929A6681CE662A509C59 /* WaterfallLayout.swift */; };
 		1234567890ABCDEF123460 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1234567890ABCDEF123459 /* Helper.swift */; };
 		1AB193E23ABF89D37D06D84F /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838AF3C49C536CD8B9CDE4A4 /* TimelineViewController.swift */; };
 		1B423B1CEC539DDAA6DBD8BA /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F81955354E774AC159E81405 /* NavigationController.swift */; };
@@ -43,6 +44,7 @@
 		68DECFF3546DD369D47F64C7 /* HomePageBannerCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E31FEB1F554271CE0497AB53 /* HomePageBannerCell.swift */; };
 		6B60904E446F32A55C83BEC8 /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = D2ACC2742F5F25C8A5E0B65B /* Alamofire */; };
 		7108031F03EA8FC3327EB60F /* HomePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37A534159998D69DFC9D9538 /* HomePageViewController.swift */; };
+		7334A95F4EAB490D62253790 /* BangumiDetailEpisodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45976BE7BEE796AC2E51E139 /* BangumiDetailEpisodeViewController.swift */; };
 		774E877EE01A41D4BBE3B8D5 /* SettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7E6861E1EA504C7B855020FA /* SettingViewController.swift */; };
 		7C905D4AA1123B12E415AB7B /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = EAF9C9307AF39D2FE1A14272 /* Kingfisher */; };
 		7F0739FC5182AC6FF9795B39 /* UserInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BC4CFE26680AB3E3419C009 /* UserInfoViewController.swift */; };
@@ -188,6 +190,7 @@
 		AB8B625667E0CD802F14F42C /* SidePanelAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7051C7C8FEE41D818FB28914 /* SidePanelAnimator.swift */; };
 		B1C2D3E4F5A6B7C8D9E0F1A2 /* UIFont+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1B2C3D4E5F6789012345678 /* UIFont+Helper.swift */; };
 		B1EF5B597AD43B774405AAD2 /* DanmakuInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBD24D4AAE2D8C68FA85C91 /* DanmakuInputViewController.swift */; };
+		B30A84DC48D25ED6BAD5F197 /* BangumiDetailRelatedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 907923255DE722CCDE65F9AF /* BangumiDetailRelatedCell.swift */; };
 		BE70495B7145AD63341B362C /* TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD2EE63F353E4DD9B53D41D /* TableView.swift */; };
 		C1234567890ABCDEF123457 /* SearchAnimeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1234567890ABCDEF123456 /* SearchAnimeCell.swift */; };
 		C1234567890ABCDEF123459 /* SearchEpisodeCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1234567890ABCDEF123458 /* SearchEpisodeCell.swift */; };
@@ -244,7 +247,9 @@
 		3CF200CD9694C0FED849DBE1 /* HomePageContinueWatchingCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageContinueWatchingCell.swift; sourceTree = "<group>"; };
 		3E66428B6A4B1EA014F97446 /* StoreBackend.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StoreBackend.swift; sourceTree = "<group>"; };
 		40EBDEA8AE5F90B083C90CA2 /* EmbyConnectViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EmbyConnectViewController.swift; sourceTree = "<group>"; };
+		45976BE7BEE796AC2E51E139 /* BangumiDetailEpisodeViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BangumiDetailEpisodeViewController.swift; sourceTree = "<group>"; };
 		46D6C194143629A951CC95A3 /* AddFilterTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AddFilterTableViewCell.swift; sourceTree = "<group>"; };
+		4AE8929A6681CE662A509C59 /* WaterfallLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WaterfallLayout.swift; sourceTree = "<group>"; };
 		4F9AC278D22CE8C0C0740F07 /* MatchsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchsViewController.swift; sourceTree = "<group>"; };
 		5E53A886C538EFE38B2041B7 /* FileListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileListCell.swift; sourceTree = "<group>"; };
 		5E8AAC94DFFD3333729A4CD8 /* EpisodeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EpisodeCell.swift; sourceTree = "<group>"; };
@@ -383,6 +388,7 @@
 		89DADA5F2FD3E92100C71A33 /* MPVFrameRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVFrameRenderer.swift; sourceTree = "<group>"; };
 		89DADA672FD43F3300C71A33 /* FontHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontHelper.swift; sourceTree = "<group>"; };
 		8FC49B9E2ED8389CE13EF6A6 /* Pods-AniXPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.release.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.release.xcconfig"; sourceTree = "<group>"; };
+		907923255DE722CCDE65F9AF /* BangumiDetailRelatedCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BangumiDetailRelatedCell.swift; sourceTree = "<group>"; };
 		96041B6E4AE79C25D2164B75 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		97E928C35023F19C1B326679 /* JellyfinLoginHistoryViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = JellyfinLoginHistoryViewController.swift; sourceTree = "<group>"; };
 		98A21E20596A3F605DAE1637 /* BangumiDetailInfoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiDetailInfoCell.swift; sourceTree = "<group>"; };
@@ -508,6 +514,7 @@
 				5B61C4AE463226CEA2297E9A /* Favorite */,
 				476C75CE96A41BB7BF7D2C8D /* Timeline */,
 				37A534159998D69DFC9D9538 /* HomePageViewController.swift */,
+				C0C120F23B9B137097EAB40F /* View */,
 			);
 			path = HomePage;
 			sourceTree = "<group>";
@@ -569,6 +576,8 @@
 				98A21E20596A3F605DAE1637 /* BangumiDetailInfoCell.swift */,
 				A2803616669F75742C682D87 /* BangumiDetailViewController.swift */,
 				5E8AAC94DFFD3333729A4CD8 /* EpisodeCell.swift */,
+				DBCA1BABFCA871FCAC320360 /* View */,
+				45976BE7BEE796AC2E51E139 /* BangumiDetailEpisodeViewController.swift */,
 			);
 			path = BangumiDetail;
 			sourceTree = "<group>";
@@ -1066,6 +1075,15 @@
 			path = Main;
 			sourceTree = "<group>";
 		};
+		C0C120F23B9B137097EAB40F /* View */ = {
+			isa = PBXGroup;
+			children = (
+				4AE8929A6681CE662A509C59 /* WaterfallLayout.swift */,
+			);
+			name = View;
+			path = View;
+			sourceTree = "<group>";
+		};
 		C5876D20A13F4BED6705FEB7 /* Helper */ = {
 			isa = PBXGroup;
 			children = (
@@ -1095,6 +1113,15 @@
 				96041B6E4AE79C25D2164B75 /* ViewController.swift */,
 			);
 			path = ViewController;
+			sourceTree = "<group>";
+		};
+		DBCA1BABFCA871FCAC320360 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				907923255DE722CCDE65F9AF /* BangumiDetailRelatedCell.swift */,
+			);
+			name = View;
+			path = View;
 			sourceTree = "<group>";
 		};
 		DC698D791AA67C0E2A3CC6AC /* Player */ = {
@@ -1464,6 +1491,9 @@
 				1FE37201BB6BED0911C47A49 /* AddFilterTableViewCell.swift in Sources */,
 				31472B579B6BE98345CF0BAF /* StoreBackend.swift in Sources */,
 				249B05D39A64C7EAFC453EB0 /* UITableView+Helper.swift in Sources */,
+				0FE787E2058E2EE8DDDEE67F /* WaterfallLayout.swift in Sources */,
+				B30A84DC48D25ED6BAD5F197 /* BangumiDetailRelatedCell.swift in Sources */,
+				7334A95F4EAB490D62253790 /* BangumiDetailEpisodeViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

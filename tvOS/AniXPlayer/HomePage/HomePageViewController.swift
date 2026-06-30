@@ -149,7 +149,11 @@ extension HomePageViewController: UITableViewDelegate {
         case .function:
             return 100
         case .continueWatching:
-            return continueWatchingItems.isEmpty ? 0 : 275
+            guard !continueWatchingItems.isEmpty else { return 0 }
+            return HomePageContinueWatchingCell.estimatedHeight(
+                for: continueWatchingItems,
+                width: tableView.bounds.width
+            )
         }
     }
 }

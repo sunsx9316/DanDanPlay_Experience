@@ -2,7 +2,7 @@
 //  FavoriteItemCell.swift
 //  AniXPlayer
 //
-//  tvOS 收藏 Cell
+//  tvOS 收藏 Cell — 瀑布流卡片
 //
 
 import UIKit
@@ -15,8 +15,9 @@ class FavoriteItemCell: CollectionViewCell {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
         iv.clipsToBounds = true
-        iv.layer.cornerRadius = 6
+        iv.layer.cornerRadius = 8
         iv.backgroundColor = UIColor.white.withAlphaComponent(0.1)
+        iv.adjustsImageWhenAncestorFocused = true
         return iv
     }()
 
@@ -24,6 +25,7 @@ class FavoriteItemCell: CollectionViewCell {
         let label = Label()
         label.font = .ddp_small(weight: .medium)
         label.textColor = .label
+        label.numberOfLines = 2
         return label
     }()
 
@@ -45,37 +47,50 @@ class FavoriteItemCell: CollectionViewCell {
     }
 
     private func setupUI() {
-        contentView.backgroundColor = UIColor.white.withAlphaComponent(0.06)
-        contentView.layer.cornerRadius = 8
-
         contentView.addSubview(posterImageView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(progressLabel)
 
         posterImageView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(12)
-            make.centerY.equalToSuperview()
-            make.width.equalTo(100)
-            make.height.equalTo(56)
+            make.top.leading.trailing.equalToSuperview()
+            make.height.equalTo(posterImageView.snp.width).multipliedBy(9.0 / 16.0)
         }
 
         titleLabel.snp.makeConstraints { make in
-            make.leading.equalTo(posterImageView.snp.trailing).offset(16)
-            make.trailing.equalToSuperview().offset(-12)
-            make.top.equalTo(posterImageView).offset(4)
+            make.top.equalTo(posterImageView.snp.bottom).offset(8)
+            make.leading.equalToSuperview().offset(4)
+            make.trailing.equalToSuperview().offset(-4)
         }
 
         progressLabel.snp.makeConstraints { make in
             make.leading.equalTo(titleLabel)
-            make.top.equalTo(titleLabel.snp.bottom).offset(6)
+            make.top.equalTo(titleLabel.snp.bottom).offset(4)
+            make.bottom.lessThanOrEqualToSuperview().offset(-8)
         }
     }
 
     func configure(with item: UserFavoriteItem) {
         titleLabel.text = item.animeTitle
-        progressLabel.text = "\(NSLocalizedString("已看", comment: "")) \(item.episodeWatched)/\(item.episodeTotal)"
+        progressLabel.text = String(format: NSLocalizedString("已看 %d/%d", comment: ""), item.episodeWatched, item.episodeTotal)
         if let url = URL(string: item.imageUrl) {
             posterImageView.kf.setImage(with: url, placeholder: UIImage.placeholder)
         }
+    }
+
+    static func estimatedHeight(for item: UserFavoriteItem, width: CGFloat) -> CGFloat {
+        let imageHeight = width * 9.0 / 16.0
+        let titleHeight = item.animeTitle.boundingRect(
+            with: CGSize(width: width - 8, height: 44),
+            options: .usesLineFragmentOrigin,
+            attributes: [.font: UIFont.ddp_small(weight: .medium)],
+            context: nil
+        ).height.rounded(.up)
+        let progressHeight = String(format: NSLocalizedString("已看 %d/%d", comment: ""), item.episodeWatched, item.episodeTotal).boundingRect(
+            with: CGSize(width: width - 8, height: 30),
+            options: .usesLineFragmentOrigin,
+            attributes: [.font: UIFont.ddp_small()],
+            context: nil
+        ).height.rounded(.up)
+        return imageHeight + 8 + titleHeight + 4 + progressHeight + 8
     }
 }

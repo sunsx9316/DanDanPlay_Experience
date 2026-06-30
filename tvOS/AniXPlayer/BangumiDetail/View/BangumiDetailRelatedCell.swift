@@ -1,31 +1,29 @@
 //
-//  HomePageContinueWatchingCell.swift
+//  BangumiDetailRelatedCell.swift
 //  AniXPlayer
 //
-//  tvOS 首页"继续播放" — TableViewCell 内嵌瀑布流 CollectionView
+//  tvOS 番剧详情关联/相似作品 — TableViewCell 内嵌瀑布流 CollectionView
 //
 
 import UIKit
 import SnapKit
 import Kingfisher
 
-class HomePageContinueWatchingCell: TableViewCell {
+class BangumiDetailRelatedCell: TableViewCell {
 
-    var items: [BangumiQueueIntro] = [] {
+    var items: [BangumiIntro] = [] {
         didSet {
             collectionView.reloadData()
-            titleLabel.isHidden = items.isEmpty
             updateCollectionViewHeight()
         }
     }
 
-    var onItemSelected: ((BangumiQueueIntro) -> Void)?
+    var onItemSelected: ((Int) -> Void)?
 
-    private lazy var titleLabel: UILabel = {
+    let titleLabel: UILabel = {
         let label = UILabel()
-        label.font = .ddp_small(weight: .bold)
+        label.font = .ddp_large()
         label.textColor = .white
-        label.text = NSLocalizedString("继续播放", comment: "")
         return label
     }()
 
@@ -42,7 +40,7 @@ class HomePageContinueWatchingCell: TableViewCell {
         cv.isScrollEnabled = false
         cv.delegate = self
         cv.dataSource = self
-        cv.registerClassCell(class: PosterItemCell.self)
+        cv.registerClassCell(class: RelatedAnimeCardCell.self)
         return cv
     }()
 
@@ -74,14 +72,14 @@ class HomePageContinueWatchingCell: TableViewCell {
 
         titleLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(60)
-            make.top.equalToSuperview().offset(10)
+            make.top.equalToSuperview().offset(16)
         }
 
         collectionView.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(12)
             make.leading.equalToSuperview().offset(60)
             make.trailing.equalToSuperview().offset(-60)
-            make.bottom.equalToSuperview().offset(-10).priority(999)
+            make.bottom.equalToSuperview().offset(-16).priority(999)
             collectionViewHeightConstraint = make.height.equalTo(1).constraint
         }
     }
@@ -92,13 +90,13 @@ class HomePageContinueWatchingCell: TableViewCell {
         collectionViewHeightConstraint?.update(offset: contentSize.height)
     }
 
-    static func estimatedHeight(for items: [BangumiQueueIntro], width: CGFloat) -> CGFloat {
+    static func estimatedHeight(for items: [BangumiIntro], width: CGFloat) -> CGFloat {
         guard !items.isEmpty else { return 0 }
 
-        let titleHeight = NSLocalizedString("继续播放", comment: "").boundingRect(
-            with: CGSize(width: width - 60 - 60, height: 40),
+        let titleHeight = NSLocalizedString("关联作品", comment: "").boundingRect(
+            with: CGSize(width: width - 60 - 60, height: 60),
             options: .usesLineFragmentOrigin,
-            attributes: [.font: UIFont.ddp_small(weight: .bold)],
+            attributes: [.font: UIFont.ddp_large()],
             context: nil
         ).height.rounded(.up)
 
@@ -111,29 +109,29 @@ class HomePageContinueWatchingCell: TableViewCell {
         var columnHeights = Array(repeating: inset.top, count: layout.columnCount)
         for item in items {
             let column = columnHeights.enumerated().min(by: { $0.element < $1.element })?.offset ?? 0
-            let height = PosterItemCell.estimatedHeight(for: item, width: itemWidth)
+            let height = RelatedAnimeCardCell.estimatedHeight(for: item, width: itemWidth)
             columnHeights[column] = columnHeights[column] + height + layout.itemPadding
         }
         let waterfallHeight = (columnHeights.max() ?? inset.top) + inset.bottom
-        return titleHeight + 10 + 12 + waterfallHeight + 10
+        return titleHeight + 16 + 12 + waterfallHeight + 16
     }
 }
 
 // MARK: - WaterfallLayoutDelegate
 
-extension HomePageContinueWatchingCell: WaterfallLayoutDelegate {
+extension BangumiDetailRelatedCell: WaterfallLayoutDelegate {
 
     func waterfallLayout(_ layout: WaterfallLayout, heightForItemAt indexPath: IndexPath, itemWidth: CGFloat) -> CGFloat {
         guard indexPath.item < items.count else { return itemWidth * 0.65 }
-        return PosterItemCell.estimatedHeight(for: items[indexPath.item], width: itemWidth)
+        return RelatedAnimeCardCell.estimatedHeight(for: items[indexPath.item], width: itemWidth)
     }
 }
 
-// MARK: - PosterItemCell
+// MARK: - RelatedAnimeCardCell
 
-extension HomePageContinueWatchingCell {
+extension BangumiDetailRelatedCell {
 
-    class PosterItemCell: CollectionViewCell {
+    class RelatedAnimeCardCell: CollectionViewCell {
 
         private lazy var posterImageView: UIImageView = {
             let iv = UIImageView()
@@ -154,10 +152,19 @@ extension HomePageContinueWatchingCell {
             return label
         }()
 
+        private lazy var ratingLabel: UILabel = {
+            let label = UILabel()
+            label.font = .ddp_small()
+            label.textColor = .mainColor
+            label.textAlignment = .center
+            return label
+        }()
+
         override init(frame: CGRect) {
             super.init(frame: frame)
             contentView.addSubview(posterImageView)
             contentView.addSubview(nameLabel)
+            contentView.addSubview(ratingLabel)
 
             posterImageView.snp.makeConstraints { make in
                 make.top.centerX.equalToSuperview()
@@ -169,20 +176,27 @@ extension HomePageContinueWatchingCell {
                 make.top.equalTo(posterImageView.snp.bottom).offset(10)
                 make.leading.trailing.equalToSuperview().inset(8)
             }
+
+            ratingLabel.snp.makeConstraints { make in
+                make.top.equalTo(nameLabel.snp.bottom).offset(4)
+                make.leading.trailing.equalToSuperview().inset(4)
+            }
         }
 
         required init?(coder: NSCoder) {
             super.init(coder: coder)
         }
 
-        func configure(with item: BangumiQueueIntro) {
+        func configure(with item: BangumiIntro) {
             nameLabel.text = item.animeTitle
+            ratingLabel.text = String(format: "%.1f", item.rating)
+            ratingLabel.isHidden = item.rating <= 0
             if let url = URL(string: item.imageUrl) {
                 posterImageView.kf.setImage(with: url, placeholder: UIImage.placeholder)
             }
         }
 
-        static func estimatedHeight(for item: BangumiQueueIntro, width: CGFloat) -> CGFloat {
+        static func estimatedHeight(for item: BangumiIntro, width: CGFloat) -> CGFloat {
             let imageHeight = width * 9.0 / 16.0
             let titleHeight = item.animeTitle.boundingRect(
                 with: CGSize(width: width - 16, height: 44),
@@ -190,26 +204,34 @@ extension HomePageContinueWatchingCell {
                 attributes: [.font: UIFont.ddp_small(weight: .medium)],
                 context: nil
             ).height.rounded(.up)
-            return imageHeight + 10 + titleHeight
+            let ratingHeight: CGFloat = item.rating > 0
+                ? String(format: "%.1f", item.rating).boundingRect(
+                    with: CGSize(width: width - 8, height: 30),
+                    options: .usesLineFragmentOrigin,
+                    attributes: [.font: UIFont.ddp_small()],
+                    context: nil
+                ).height.rounded(.up)
+                : 0
+            return imageHeight + 10 + titleHeight + (ratingHeight > 0 ? 4 + ratingHeight : 0)
         }
     }
 }
 
 // MARK: - UICollectionViewDataSource / Delegate
 
-extension HomePageContinueWatchingCell: UICollectionViewDataSource, UICollectionViewDelegate {
+extension BangumiDetailRelatedCell: UICollectionViewDataSource, UICollectionViewDelegate {
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return items.count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueCell(class: PosterItemCell.self, indexPath: indexPath)
+        let cell = collectionView.dequeueCell(class: RelatedAnimeCardCell.self, indexPath: indexPath)
         cell.configure(with: items[indexPath.item])
         return cell
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        onItemSelected?(items[indexPath.item])
+        onItemSelected?(items[indexPath.item].animeId)
     }
 }

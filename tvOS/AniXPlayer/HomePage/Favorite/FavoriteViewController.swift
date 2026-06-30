@@ -2,7 +2,7 @@
 //  FavoriteViewController.swift
 //  AniXPlayer
 //
-//  tvOS 我的关注
+//  tvOS 我的关注 — 瀑布流
 //
 
 import UIKit
@@ -12,9 +12,17 @@ class FavoriteViewController: ViewController {
 
     private var dataSource: [UserFavoriteItem] = []
 
+    private lazy var waterfallLayout: WaterfallLayout = {
+        let layout = WaterfallLayout()
+        layout.columnCount = 3
+        layout.sectionInset = UIEdgeInsets(top: 40, left: 60, bottom: 20, right: 60)
+        layout.itemPadding = 16
+        layout.delegate = self
+        return layout
+    }()
+
     private lazy var collectionView: CollectionView = {
-        let layout = Self.createLayout()
-        let cv = CollectionView(frame: .zero, collectionViewLayout: layout)
+        let cv = CollectionView(frame: .zero, collectionViewLayout: waterfallLayout)
         cv.delegate = self
         cv.dataSource = self
         cv.registerClassCell(class: FavoriteItemCell.self)
@@ -49,20 +57,6 @@ class FavoriteViewController: ViewController {
             }
         }
     }
-
-    private static func createLayout() -> UICollectionViewLayout {
-        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(100))
-        let item = NSCollectionLayoutItem(layoutSize: itemSize)
-
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .absolute(100))
-        let group = NSCollectionLayoutGroup.vertical(layoutSize: groupSize, subitems: [item])
-
-        let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = 8
-        section.contentInsets = NSDirectionalEdgeInsets(top: 40, leading: 60, bottom: 20, trailing: 60)
-
-        return UICollectionViewCompositionalLayout(section: section)
-    }
 }
 
 extension FavoriteViewController: UICollectionViewDataSource {
@@ -84,5 +78,13 @@ extension FavoriteViewController: UICollectionViewDelegate {
         let item = dataSource[indexPath.item]
         let detailVC = BangumiDetailViewController(animateId: item.animeId)
         self.navigationController?.pushViewController(detailVC, animated: true)
+    }
+}
+
+extension FavoriteViewController: WaterfallLayoutDelegate {
+
+    func waterfallLayout(_ layout: WaterfallLayout, heightForItemAt indexPath: IndexPath, itemWidth: CGFloat) -> CGFloat {
+        guard indexPath.item < dataSource.count else { return itemWidth * 0.65 }
+        return FavoriteItemCell.estimatedHeight(for: dataSource[indexPath.item], width: itemWidth)
     }
 }
