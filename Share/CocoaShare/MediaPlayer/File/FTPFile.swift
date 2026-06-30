@@ -22,7 +22,7 @@ class FTPFile: File {
     
     let path: String
     
-    static var rootFile: File = FTPFile(url: URL(string: "/")!, fileSize: 0)
+    static var rootFile: File = FTPFile(url: URL(fileURLWithPath: "/"), fileSize: 0)
     
     var parentFile: File? {
         return FTPFile(url: self.url.deletingLastPathComponent(), fileSize: 0)

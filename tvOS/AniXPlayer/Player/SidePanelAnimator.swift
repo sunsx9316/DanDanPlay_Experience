@@ -79,7 +79,8 @@ class SidePanelPresentAnimate: NSObject, UIViewControllerAnimatedTransitioning {
         guard let toView = transitionContext.view(forKey: .to) else { return }
 
         let containerView = transitionContext.containerView
-        let finalFrame = transitionContext.finalFrame(for: transitionContext.viewController(forKey: .to)!)
+        guard let toVC = transitionContext.viewController(forKey: .to) else { return }
+        let finalFrame = transitionContext.finalFrame(for: toVC)
 
         toView.frame = finalFrame.offsetBy(dx: finalFrame.width, dy: 0)
         containerView.addSubview(toView)

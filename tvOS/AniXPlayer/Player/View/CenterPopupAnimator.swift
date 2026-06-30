@@ -83,7 +83,8 @@ class CenterPopupPresentAnimate: NSObject, UIViewControllerAnimatedTransitioning
         guard let toView = transitionContext.view(forKey: .to) else { return }
 
         let containerView = transitionContext.containerView
-        let finalFrame = transitionContext.finalFrame(for: transitionContext.viewController(forKey: .to)!)
+        guard let toVC = transitionContext.viewController(forKey: .to) else { return }
+        let finalFrame = transitionContext.finalFrame(for: toVC)
 
         toView.frame = finalFrame
         toView.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)

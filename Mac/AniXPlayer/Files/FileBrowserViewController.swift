@@ -12,7 +12,6 @@ import RxSwift
 
 class FileBrowserViewController: ViewController, NSTableViewDelegate, NSTableViewDataSource {
 
-    weak var navigator: MediaLibraryNavigation?
     var onSelectFile: ((File, [File]) -> Void)?
 
     private let rootFile: File
@@ -27,37 +26,30 @@ class FileBrowserViewController: ViewController, NSTableViewDelegate, NSTableVie
         return type(of: rootFile).fileManager
     }
 
-    private lazy var backButton: NSButton = {
-        let btn = NSButton(title: NSLocalizedString("← 返回", comment: ""), target: self, action: #selector(onTouchBackButton))
-        btn.bezelStyle = .inline
-        btn.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        return btn
-    }()
-
-    private lazy var titleLabel: NSTextField = {
-        let tf = NSTextField(labelWithString: rootFile.fileName)
+    private lazy var titleLabel: Label = {
+        let tf = Label(labelWithString: rootFile.fileName)
         tf.font = NSFont.ddp_small(weight: .semibold)
         tf.lineBreakMode = .byTruncatingMiddle
         return tf
     }()
 
-    private lazy var filterButton: NSButton = {
-        let btn = NSButton(title: NSLocalizedString("显示全部", comment: ""), target: self, action: #selector(onTouchFilterButton))
+    private lazy var filterButton: Button = {
+        let btn = Button(title: NSLocalizedString("显示全部", comment: ""), target: self, action: #selector(onTouchFilterButton))
         btn.bezelStyle = .inline
         btn.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return btn
     }()
 
-    private lazy var scrollView: NSScrollView = {
-        let sv = NSScrollView()
+    private lazy var scrollView: ScrollView<TableView> = {
+        let sv = ScrollView<TableView>()
         sv.hasVerticalScroller = true
         sv.borderType = .noBorder
-        sv.documentView = tableView
+        sv.containerView = tableView
         return sv
     }()
 
-    private lazy var tableView: NSTableView = {
-        let tv = NSTableView()
+    private lazy var tableView: TableView = {
+        let tv = TableView()
         tv.delegate = self
         tv.dataSource = self
         tv.headerView = nil
@@ -112,7 +104,7 @@ class FileBrowserViewController: ViewController, NSTableViewDelegate, NSTableVie
 
         title = rootFile.fileName
 
-        let headerStack = NSStackView(views: [backButton, titleLabel, sortButton, filterButton])
+        let headerStack = NSStackView(views: [titleLabel, sortButton, filterButton])
         headerStack.orientation = .horizontal
         headerStack.alignment = .centerY
         headerStack.spacing = 8
@@ -177,18 +169,13 @@ class FileBrowserViewController: ViewController, NSTableViewDelegate, NSTableVie
                     self.fileWrappers = sorted.map { _FileWrapper(file: $0) }
                     self.tableView.reloadData()
                 case .failure(let error):
-                    let alert = NSAlert(error: error)
-                    alert.beginSheetModal(for: self.view.window!)
+                    self.view.show(error: error)
                 }
             }
         }
     }
 
     // MARK: - Actions
-
-    @objc private func onTouchBackButton() {
-        navigator?.popViewController()
-    }
 
     @objc private func onTouchFilterButton() {
         isShowAllFile.toggle()
@@ -278,30 +265,30 @@ private class _FileWrapper {
 
 private class FileBrowserCellView: NSTableCellView {
 
-    let titleLabel: NSTextField = {
-        let tf = NSTextField(labelWithString: "")
+    let titleLabel: Label = {
+        let tf = Label(labelWithString: "")
         tf.font = NSFont.ddp_normal()
         tf.lineBreakMode = .byTruncatingMiddle
         return tf
     }()
 
-    let detailLabel: NSTextField = {
-        let tf = NSTextField(labelWithString: "")
+    let detailLabel: Label = {
+        let tf = Label(labelWithString: "")
         tf.font = NSFont.ddp_small()
         tf.textColor = .secondaryLabelColor
         return tf
     }()
 
-    private let folderIconView: NSImageView = {
-        let iv = NSImageView()
-        iv.imageScaling = .scaleProportionallyUpOrDown
+    private let folderIconView: ImageView = {
+        let iv = ImageView()
+        iv.setScaling(.aspectFit)
         iv.contentTintColor = .mainColor
         iv.image = NSImage(systemSymbolName: "folder.fill", accessibilityDescription: nil)
         return iv
     }()
 
-    private let typeLabel: NSTextField = {
-        let tf = NSTextField(labelWithString: "")
+    private let typeLabel: Label = {
+        let tf = Label(labelWithString: "")
         tf.font = NSFont.ddp_small(weight: .medium)
         tf.alignment = .center
         tf.wantsLayer = true

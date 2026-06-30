@@ -24,8 +24,8 @@ class EmbyConnectSvrViewController: BaseConnectSvrViewController {
         return segment
     }()
 
-    private lazy var apiKeyField: NSTextField = {
-        let tf = NSTextField()
+    private lazy var apiKeyField: TextField = {
+        let tf = TextField()
         tf.placeholderString = fileManager.apiKeyDesc
         return tf
     }()

@@ -145,14 +145,16 @@ extension UserInfoViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch Section(rawValue: section)! {
+        guard let sec = Section(rawValue: section) else { return 0 }
+        switch sec {
         case .userInfo: return 1
         case .menu: return menuItems.count
         }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch Section(rawValue: indexPath.section)! {
+        guard let sec = Section(rawValue: indexPath.section) else { return UITableViewCell() }
+        switch sec {
         case .userInfo:
             let cell = tableView.dequeueCell(class: SeparatorTableViewCell.self, indexPath: indexPath)
             configureUserInfoCell(cell)
@@ -174,7 +176,8 @@ extension UserInfoViewController: UITableViewDataSource {
 extension UserInfoViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch Section(rawValue: indexPath.section)! {
+        guard let sec = Section(rawValue: indexPath.section) else { return 0 }
+        switch sec {
         case .userInfo: return 100
         case .menu: return 50
         }
@@ -190,7 +193,8 @@ extension UserInfoViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        switch Section(rawValue: indexPath.section)! {
+        guard let sec = Section(rawValue: indexPath.section) else { return }
+        switch sec {
         case .userInfo:
             if Preferences.shared.loginInfo != nil {
                 let alert = UIAlertController(title: nil, message: NSLocalizedString("确定退出登录吗？", comment: ""), preferredStyle: .alert)

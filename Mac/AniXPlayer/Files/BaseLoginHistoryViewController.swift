@@ -11,7 +11,6 @@ import SnapKit
 
 class BaseLoginHistoryViewController<F: File>: ViewController, NSTableViewDelegate, NSTableViewDataSource, NSMenuDelegate {
 
-    weak var navigator: MediaLibraryNavigation?
     var onSelectFile: ((File, [File]) -> Void)?
 
     var dataSource: [LoginInfo] {
@@ -19,16 +18,16 @@ class BaseLoginHistoryViewController<F: File>: ViewController, NSTableViewDelega
         set { }
     }
 
-    private lazy var scrollView: NSScrollView = {
-        let sv = NSScrollView()
+    private lazy var scrollView: ScrollView<TableView> = {
+        let sv = ScrollView<TableView>()
         sv.hasVerticalScroller = true
         sv.borderType = .noBorder
-        sv.documentView = tableView
+        sv.containerView = tableView
         return sv
     }()
 
-    lazy var tableView: NSTableView = {
-        let tv = NSTableView()
+    lazy var tableView: TableView = {
+        let tv = TableView()
         tv.delegate = self
         tv.dataSource = self
         tv.headerView = nil
@@ -46,32 +45,25 @@ class BaseLoginHistoryViewController<F: File>: ViewController, NSTableViewDelega
         return tv
     }()
 
-    private lazy var addButton: NSButton = {
-        let btn = NSButton(title: "+", target: self, action: #selector(onTouchAddButton))
+    private lazy var addButton: Button = {
+        let btn = Button(title: "+", target: self, action: #selector(onTouchAddButton))
         btn.font = NSFont.ddp_large()
         btn.bezelStyle = .rounded
         btn.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return btn
     }()
 
-    private lazy var titleLabel: NSTextField = {
-        let tf = NSTextField(labelWithString: NSLocalizedString("登录历史", comment: ""))
+    private lazy var titleLabel: Label = {
+        let tf = Label(labelWithString: NSLocalizedString("登录历史", comment: ""))
         tf.font = NSFont.ddp_small(weight: .semibold)
         tf.textColor = .secondaryLabelColor
         return tf
     }()
 
-    private lazy var backButton: NSButton = {
-        let btn = NSButton(title: NSLocalizedString("← 返回", comment: ""), target: self, action: #selector(onTouchBackButton))
-        btn.bezelStyle = .inline
-        btn.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        return btn
-    }()
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let headerStack = NSStackView(views: [backButton, titleLabel, addButton])
+        let headerStack = NSStackView(views: [titleLabel, addButton])
         headerStack.orientation = .horizontal
         headerStack.alignment = .centerY
         headerStack.spacing = 8
@@ -90,6 +82,7 @@ class BaseLoginHistoryViewController<F: File>: ViewController, NSTableViewDelega
             make.leading.trailing.bottom.equalToSuperview()
         }
 
+        tableView.registerClassCell(class: LoginHistoryCellView.self)
         tableView.reloadData()
     }
 
@@ -121,10 +114,6 @@ class BaseLoginHistoryViewController<F: File>: ViewController, NSTableViewDelega
         jumpToConnectViewController()
     }
 
-    @objc private func onTouchBackButton() {
-        navigator?.popViewController()
-    }
-
     // MARK: - NSTableViewDelegate, NSTableViewDataSource
 
     func numberOfRows(in tableView: NSTableView) -> Int {
@@ -133,21 +122,15 @@ class BaseLoginHistoryViewController<F: File>: ViewController, NSTableViewDelega
 
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         let info = dataSource[row]
-        let cellId = NSUserInterfaceItemIdentifier("LoginHistoryCell")
-        var cell = tableView.makeView(withIdentifier: cellId, owner: nil) as? LoginHistoryCellView
+        let cell = tableView.dequeueReusableCell(class: LoginHistoryCellView.self)
 
-        if cell == nil {
-            cell = LoginHistoryCellView()
-            cell?.identifier = cellId
-        }
-
-        cell?.titleLabel.stringValue = info.url.host ?? ""
+        cell.titleLabel.stringValue = info.url.host ?? ""
         let userName = info.auth?.userName ?? ""
-        cell?.detailLabel.stringValue = userName
-        cell?.detailLabel.isHidden = userName.isEmpty
+        cell.detailLabel.stringValue = userName
+        cell.detailLabel.isHidden = userName.isEmpty
         let remark = info.remark ?? ""
-        cell?.remarkLabel.stringValue = remark
-        cell?.remarkLabel.isHidden = remark.isEmpty
+        cell.remarkLabel.stringValue = remark
+        cell.remarkLabel.isHidden = remark.isEmpty
         return cell
     }
 
@@ -164,8 +147,7 @@ class BaseLoginHistoryViewController<F: File>: ViewController, NSTableViewDelega
                 guard let self = self else { return }
                 self.view.dismiss(delay: 0)
                 if let error = error {
-                    let alert = NSAlert(error: error)
-                    alert.beginSheetModal(for: self.view.window!)
+                    self.view.show(error: error)
                 } else {
                     var loginInfos = self.dataSource
                     if let index = loginInfos.firstIndex(of: loginInfo) {
@@ -195,13 +177,13 @@ class BaseLoginHistoryViewController<F: File>: ViewController, NSTableViewDelega
         menu.addItem(withTitle: NSLocalizedString("删除", comment: ""), action: #selector(onClickDeleteMenu(_:)), keyEquivalent: "")
     }
 
-    @objc private func onClickEditMenu(_ item: NSMenuItem) {
+    @objc func onClickEditMenu(_ item: NSMenuItem) {
         let row = tableView.clickedRow
         guard row >= 0, row < dataSource.count else { return }
         jumpToConnectViewController(dataSource[row])
     }
 
-    @objc private func onClickDeleteMenu(_ item: NSMenuItem) {
+    @objc func onClickDeleteMenu(_ item: NSMenuItem) {
         let row = tableView.clickedRow
         guard row >= 0, row < dataSource.count else { return }
         var loginInfos = dataSource
@@ -213,23 +195,23 @@ class BaseLoginHistoryViewController<F: File>: ViewController, NSTableViewDelega
 
 // MARK: - LoginHistoryCellView
 
-private class LoginHistoryCellView: NSTableCellView {
+class LoginHistoryCellView: NSTableCellView {
 
-    let titleLabel: NSTextField = {
-        let tf = NSTextField(labelWithString: "")
+    let titleLabel: Label = {
+        let tf = Label(labelWithString: "")
         tf.font = NSFont.ddp_small()
         return tf
     }()
 
-    let detailLabel: NSTextField = {
-        let tf = NSTextField(labelWithString: "")
+    let detailLabel: Label = {
+        let tf = Label(labelWithString: "")
         tf.font = NSFont.ddp_small()
         tf.textColor = .secondaryLabelColor
         return tf
     }()
 
-    let remarkLabel: NSTextField = {
-        let tf = NSTextField(labelWithString: "")
+    let remarkLabel: Label = {
+        let tf = Label(labelWithString: "")
         tf.font = NSFont.ddp_small()
         tf.textColor = .secondaryLabelColor
         return tf

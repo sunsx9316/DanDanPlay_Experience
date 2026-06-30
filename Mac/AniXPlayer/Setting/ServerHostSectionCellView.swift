@@ -10,8 +10,8 @@ import SnapKit
 
 class ServerHostSectionCellView: NSTableCellView {
 
-    private(set) lazy var refreshButton: NSButton = {
-        let btn = NSButton(image: NSImage(systemSymbolName: "arrow.clockwise", accessibilityDescription: nil)!, target: nil, action: nil)
+    private(set) lazy var refreshButton: Button = {
+        let btn = Button(image: NSImage.safeSystemSymbol("arrow.clockwise"), target: nil, action: nil)
         btn.bezelStyle = .inline
         btn.isBordered = false
         return btn
@@ -20,10 +20,7 @@ class ServerHostSectionCellView: NSTableCellView {
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
 
-        let tf = NSTextField()
-        tf.isEditable = false
-        tf.isBordered = false
-        tf.backgroundColor = .clear
+        let tf = Label()
         tf.font = .systemFont(ofSize: 11, weight: .semibold)
         tf.textColor = .secondaryLabelColor
         textField = tf

@@ -8,7 +8,7 @@
 
 import Cocoa
 
-class PlayerListTableViewCell: NSView {
+class PlayerListTableViewCell: BaseView {
 
     @IBOutlet weak var pointView: NSView!
     @IBOutlet weak var label: NSTextField!

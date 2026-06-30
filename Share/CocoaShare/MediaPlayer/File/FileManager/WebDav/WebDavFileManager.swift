@@ -67,7 +67,8 @@ class WebDavFileManager: FileManagerProtocol {
         
         let rootFile: File
         if let webDavRootPath = loginInfo.parameter?[LoginInfo.Key.webDavRootPath.rawValue], !webDavRootPath.isEmpty {
-            rootFile = WebDavFile(url: URL(string: webDavRootPath)!, fileSize: 0)
+            guard let url = URL(string: webDavRootPath) else { return }
+            rootFile = WebDavFile(url: url, fileSize: 0)
         } else {
             rootFile = WebDavFile.rootFile
         }

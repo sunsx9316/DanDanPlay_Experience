@@ -7,7 +7,7 @@
 
 import Cocoa
 
-class FilterDanmakuTableViewCell: NSView {
+class FilterDanmakuTableViewCell: BaseView {
     
     @IBOutlet weak var titleLabel: NSTextField!
     

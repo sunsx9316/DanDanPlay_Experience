@@ -47,7 +47,7 @@ xcodebuild -workspace tvOS/AniXPlayer.xcworkspace -scheme AniXPlayer -configurat
 ```
 
 - 打开项目用 `.xcworkspace`，不是 `.xcodeproj`
-- 新增文件用 `ruby scripts/add_to_project.rb <platform> <路径>`，**禁止手动编辑 pbxproj**
+- 新增/删除文件用 `ruby scripts/xcode_project.rb <platform> add|remove <路径>`，**禁止手动编辑 pbxproj**
 - 更新 Podfile 后运行 `pod install`
 
 ## 关键约束

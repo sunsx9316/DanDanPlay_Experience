@@ -33,6 +33,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private var loginWindowController: NSWindowController?
 
+    private var homePageWindowController: HomePageNavigationWindowController?
+
     private lazy var mainWindowController: WindowController = {
         let mainWindowController = WindowController()
         mainWindowController.contentViewController = PlayerViewController()
@@ -123,6 +125,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.mainWindowController.contentViewController?.presentAsModalWindow(vc)
     }
     
+    @objc private func showHomePage(_ item: NSMenuItem) {
+        if let wc = homePageWindowController {
+            wc.window?.makeKeyAndOrderFront(nil)
+            return
+        }
+        let homeVC = HomePageViewController()
+        let wc = HomePageNavigationWindowController(rootViewController: homeVC)
+        homeVC.navigator = wc
+        wc.showWindow(nil)
+        homePageWindowController = wc
+    }
+
     @objc private func onOpenNetworkFile(_ item: NSMenuItem) {
         let wc = MediaLibraryWindowController()
         wc.onSelectFile = { [weak self] file, allFiles in
@@ -152,17 +166,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let mainAppMenuItem = NSMenuItem(title: InfoPlistUtils.appName, action: nil, keyEquivalent: "")
             let appMenu = NSMenu()
             appMenu.addItem(withTitle: NSLocalizedString("关于", comment: "") + InfoPlistUtils.appName, action: #selector(onAboutItemDidClick(_:)), keyEquivalent: "")
-            appMenu.addItem(NSMenuItem.separator())
-            appMenu.addItem(withTitle: NSLocalizedString("全局设置", comment: ""), action: #selector(onGlobalSettingItemDidClick(_:)), keyEquivalent: ",")
-            appMenu.addItem(NSMenuItem.separator())
-
-            let userItem = NSMenuItem()
-            userItem.action = #selector(onUserMenuItemDidClick(_:))
-            userItem.target = self
-            appMenu.addItem(userItem)
-            self.userMenuItem = userItem
-            updateUserMenuItem()
-
             appMenu.addItem(NSMenuItem.separator())
             appMenu.addItem(withTitle: NSLocalizedString("隐藏", comment: ""), action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
             appMenu.addItem({ () -> NSMenuItem in
@@ -212,12 +215,34 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             return mainEditMenuItem
         }
 
+        func functionItem() -> NSMenuItem {
+            let item = NSMenuItem(title: "", action: nil, keyEquivalent: "")
+            let menu = NSMenu(title: NSLocalizedString("功能", comment: ""))
+
+            menu.addItem(withTitle: NSLocalizedString("主页", comment: ""), action: #selector(showHomePage(_:)), keyEquivalent: "")
+            menu.addItem(NSMenuItem.separator())
+            menu.addItem(withTitle: NSLocalizedString("全局设置", comment: ""), action: #selector(onGlobalSettingItemDidClick(_:)), keyEquivalent: ",")
+
+            menu.addItem(NSMenuItem.separator())
+
+            let userItem = NSMenuItem()
+            userItem.action = #selector(onUserMenuItemDidClick(_:))
+            userItem.target = self
+            menu.addItem(userItem)
+            self.userMenuItem = userItem
+
+            item.submenu = menu
+            return item
+        }
+
         let mainMenu = NSMenu()
         mainMenu.addItem(appItem())
+        mainMenu.addItem(functionItem())
         mainMenu.addItem(fileItem())
         mainMenu.addItem(editItem())
 
         NSApp.mainMenu = mainMenu
+        updateUserMenuItem()
     }
 
     @objc private func onGlobalSettingItemDidClick(_ item: NSMenuItem) {

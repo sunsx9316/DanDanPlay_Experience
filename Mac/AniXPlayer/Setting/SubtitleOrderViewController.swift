@@ -62,9 +62,10 @@ extension SubtitleOrderViewController: NSTableViewDelegate, NSTableViewDataSourc
 
             var oldIndexes = [Int]()
             info.enumerateDraggingItems(options: [], for: tableView, classes: [NSPasteboardItem.self], searchOptions: [:]) { dragItem, _, _ in
-                if let str = (dragItem.item as! NSPasteboardItem).string(forType: self.dragDropType), let index = Int(str) {
-                    oldIndexes.append(index)
-                }
+                guard let item = dragItem.item as? NSPasteboardItem,
+                      let str = item.string(forType: self.dragDropType),
+                      let index = Int(str) else { return }
+                oldIndexes.append(index)
             }
 
             var oldIndexOffset = 0

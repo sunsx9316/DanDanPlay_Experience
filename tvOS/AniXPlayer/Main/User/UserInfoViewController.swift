@@ -99,14 +99,16 @@ extension UserInfoViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch Section(rawValue: section)! {
+        guard let sec = Section(rawValue: section) else { return 0 }
+        switch sec {
         case .userInfo: return 1
         case .menu: return menuItems.count
         }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch Section(rawValue: indexPath.section)! {
+        guard let sec = Section(rawValue: indexPath.section) else { return UITableViewCell() }
+        switch sec {
         case .userInfo:
             let cell = tableView.dequeueCell(class: UserInfoCell.self, indexPath: indexPath)
             if let userInfo = Preferences.shared.loginInfo {
@@ -130,14 +132,16 @@ extension UserInfoViewController: UITableViewDataSource {
 extension UserInfoViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch Section(rawValue: indexPath.section)! {
+        guard let sec = Section(rawValue: indexPath.section) else { return 0 }
+        switch sec {
         case .userInfo: return 120
         case .menu: return 66
         }
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch Section(rawValue: indexPath.section)! {
+        guard let sec = Section(rawValue: indexPath.section) else { return }
+        switch sec {
         case .userInfo:
             if Preferences.shared.loginInfo == nil {
                 showLogin()

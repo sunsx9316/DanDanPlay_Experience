@@ -52,7 +52,8 @@ class PCQRScannerViewController: ViewController {
             let appName = AppInfoHelper.appDisplayName
             let vc = UIAlertController(title: NSLocalizedString("提示", comment: ""), message: "请在设置-\(appName)中允许\(appName)访问您的相机~", preferredStyle: .alert)
             vc.addAction(UIAlertAction(title: NSLocalizedString("好的", comment: ""), style: .default, handler: { _ in
-                UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!)
+                guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+                UIApplication.shared.open(url)
             }))
             
             vc.addAction(UIAlertAction(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: { _ in
@@ -133,7 +134,8 @@ class PCQRScannerViewController: ViewController {
                     vc = UIAlertController(title: "是否连接到\(model.name)", message: ip, preferredStyle: .alert)
                     
                     vc?.addAction(.init(title: "确认", style: .default, handler: { _ in
-                        self.select(LoginInfo(url: URL(string: ip)!))
+                        guard let url = URL(string: ip) else { return }
+                        self.select(LoginInfo(url: url))
                     }))
                 } else {
                     //多网卡情况
@@ -142,7 +144,8 @@ class PCQRScannerViewController: ViewController {
                     for ip in model.ip {
                         let address = "http://\(ip):\(model.port)"
                         vc?.addAction(.init(title: address, style: .default, handler: { _ in
-                            self.select(LoginInfo(url: URL(string: address)!))
+                            guard let url = URL(string: address) else { return }
+                            self.select(LoginInfo(url: url))
                         }))
                     }
                 }

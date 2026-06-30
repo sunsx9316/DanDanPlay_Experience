@@ -107,7 +107,8 @@ class SMBLoginHistoryViewController: BaseLoginHistoryViewController<SMBFile> {
                     vc.addAction(UIAlertAction(title: address.ip, style: .default, handler: { [weak self] _ in
                         guard let self = self else { return }
 
-                        let loginInfo = LoginInfo(url: URL(string: "smb://\(address.ip)")!, auth: nil)
+                        guard let url = URL(string: "smb://\(address.ip)") else { return }
+                        let loginInfo = LoginInfo(url: url, auth: nil)
                         self.jumpToConnectViewController(loginInfo)
                     }))
                 }
@@ -115,7 +116,8 @@ class SMBLoginHistoryViewController: BaseLoginHistoryViewController<SMBFile> {
                 vc.addAction(UIAlertAction(title: NSLocalizedString("取消", comment: ""), style: .cancel, handler: nil))
                 self.present(vc, atView: tableView.cellForRow(at: indexPath))
             } else if addressModels.count == 1 {
-                let loginInfo = LoginInfo(url: URL(string: "smb://\(addressModels[0].ip)")!, auth: nil)
+                guard let url = URL(string: "smb://\(addressModels[0].ip)") else { return }
+                let loginInfo = LoginInfo(url: url, auth: nil)
                 self.jumpToConnectViewController(loginInfo)
             }
         } else {

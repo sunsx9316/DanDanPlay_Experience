@@ -82,14 +82,16 @@ extension BangumiDetailViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch Section(rawValue: section)! {
+        guard let sec = Section(rawValue: section) else { return 0 }
+        switch sec {
         case .info: return 1
         case .episodes: return detail?.episodes.count ?? 0
         }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        switch Section(rawValue: indexPath.section)! {
+        guard let sec = Section(rawValue: indexPath.section) else { return UITableViewCell() }
+        switch sec {
         case .info:
             let cell = tableView.dequeueCell(class: BangumiDetailInfoCell.self, indexPath: indexPath)
             if let detail = detail {
@@ -112,7 +114,8 @@ extension BangumiDetailViewController: UITableViewDataSource {
 extension BangumiDetailViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        switch Section(rawValue: indexPath.section)! {
+        guard let sec = Section(rawValue: indexPath.section) else { return 0 }
+        switch sec {
         case .info:
             return UITableView.automaticDimension
         case .episodes:
@@ -121,7 +124,8 @@ extension BangumiDetailViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        switch Section(rawValue: indexPath.section)! {
+        guard let sec = Section(rawValue: indexPath.section) else { return }
+        switch sec {
         case .info:
             break
         case .episodes:

@@ -29,7 +29,9 @@ class WebDavLoginHistoryViewController: BaseLoginHistoryViewController<WebDavFil
     private var rootPath: String?
 
     override var rootFile: any File {
-        return WebDavFile(url: URL(string: self.rootPath ?? WebDavFile.rootFile.url.absoluteString)!, fileSize: 0)
+        let path = self.rootPath ?? WebDavFile.rootFile.url.absoluteString
+        guard let url = URL(string: path) else { return WebDavFile.rootFile }
+        return WebDavFile(url: url, fileSize: 0)
     }
 
     override func displayAddress(for loginInfo: LoginInfo) -> String? {

@@ -280,11 +280,76 @@ collectionView.register(HomePageBannerItemCell.self, forCellWithReuseIdentifier:
 let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "HomePageBannerItemCell", for: indexPath) as! HomePageBannerItemCell
 ```
 
+### Mac NSTableView
+
+```swift
+// 注册
+tableView.registerClassCell(class: LoginHistoryCellView.self)
+
+// 复用
+let cell = tableView.dequeueReusableCell(class: LoginHistoryCellView.self)
+
+// 不推荐 — 手写 identifier + if-let 创建
+let cellId = NSUserInterfaceItemIdentifier("LoginHistoryCell")
+var cell = tableView.makeView(withIdentifier: cellId, owner: nil) as? LoginHistoryCellView
+if cell == nil {
+    cell = LoginHistoryCellView()
+    cell?.identifier = cellId
+}
+```
+
+### Mac NSCollectionView
+
+```swift
+// 注册
+collectionView.registerItem(class: TimelineItem.self)
+
+// 复用
+let item = collectionView.dequeueItem(class: TimelineItem.self, for: indexPath)
+
+// 不推荐 — 手写 identifier + as! 强转
+collectionView.register(TimelineItem.self, forItemWithIdentifier: NSUserInterfaceItemIdentifier("TimelineItem"))
+let item = collectionView.makeItem(withIdentifier: NSUserInterfaceItemIdentifier("TimelineItem"), for: indexPath) as! TimelineItem
+```
+
 **Helper 位置**：
 - iOS: `iOS/AniXPlayer/Helper/UITableView+Helper.swift`、`UICollectionView+Helper.swift`
-- Mac: 使用 `NSOutlineView.makeView(withIdentifier:owner:)` + cell 类名作为 identifier（如 `ServerHostCellView` 的类名字符串）
+- Mac: `Mac/AniXPlayer/Base/Helper/NSTableView+Utils.swift`、`Mac/AniXPlayer/Helper/NSCollectionView+Helper.swift`
 
 **规则**：
 - ReuseIdentifier 统一用类名，由 Helper 自动处理
 - 禁止手写字符串 identifier
 - 禁止 `as!` 强制转型 cell
+- Mac 的 `dequeueReusableCell` 返回非 `Optional`，直接 `.` 访问成员，不用 `?.`
+
+## ImageView 缩放模式
+
+**必须使用 `setScaling(_:)` 方法**设置缩放模式，使用项目自定义的 `ImageScaling` 枚举。**禁止**直接设置 `imageScaling` 属性：
+
+```swift
+// 推荐 — 使用 setScaling
+let iv = ImageView()
+iv.setScaling(.aspectFit)
+iv.setScaling(.aspectFill)
+iv.setScaling(.proportionallyDown)
+iv.setScaling(.scaleToFill)
+iv.setScaling(.none)
+
+// 不推荐 — 直接设置原生 imageScaling
+iv.imageScaling = .scaleProportionallyUpOrDown
+iv.imageScaling = .scaleAxesIndependently
+iv.imageScaling = .scaleNone
+iv.imageScaling = .scaleProportionallyDown
+```
+
+`ImageScaling` 枚举值与原生 `NSImageScaling` 对应关系：
+
+| ImageScaling | NSImageScaling | 说明 |
+|---|---|---|
+| `.none` | `.scaleNone` | 不缩放 |
+| `.scaleToFill` | `.scaleAxesIndependently` | 拉伸填充 |
+| `.aspectFit` | `.scaleProportionallyUpOrDown` | 等比缩放适配 |
+| `.aspectFill` | `.scaleNone` + layer `resizeAspectFill` | 等比缩放填满（裁剪） |
+| `.proportionallyDown` | `.scaleProportionallyDown` | 仅缩小，不放大 |
+
+**原因**：macOS `NSImageView` 不支持 `scaleAspectFill`，`ImageView` 基类通过 `setScaling(.aspectFill)` 内部用 CALayer 实现，直接设 `imageScaling` 无法使用此模式。

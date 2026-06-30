@@ -8,7 +8,7 @@
 import Cocoa
 import SnapKit
 
-class PlayerUITopView: NSView {
+class PlayerUITopView: BaseView {
     
     lazy var titleLabel: TextField = {
         let label = TextField(labelWithString: "")

@@ -155,14 +155,14 @@ class ServerHostListViewController: ViewController {
     private let bag = DisposeBag()
 
     private lazy var addButton: Button = {
-        let btn = Button(image: NSImage(systemSymbolName: "plus", accessibilityDescription: nil)!, target: self, action: #selector(onTouchAdd(_:)))
+        let btn = Button(image: NSImage.safeSystemSymbol("plus"), target: self, action: #selector(onTouchAdd(_:)))
         btn.bezelStyle = .inline
         btn.toolTip = NSLocalizedString("添加自定义域名", comment: "")
         return btn
     }()
 
     private lazy var deleteButton: Button = {
-        let btn = Button(image: NSImage(systemSymbolName: "minus", accessibilityDescription: nil)!, target: self, action: #selector(onTouchDelete(_:)))
+        let btn = Button(image: NSImage.safeSystemSymbol("minus"), target: self, action: #selector(onTouchDelete(_:)))
         btn.bezelStyle = .inline
         btn.toolTip = NSLocalizedString("删除选中域名", comment: "")
         return btn
@@ -189,11 +189,11 @@ class ServerHostListViewController: ViewController {
         return ov
     }()
 
-    private lazy var scrollView: NSScrollView = {
-        let sv = NSScrollView()
+    private lazy var scrollView: ScrollView<OutlineView> = {
+        let sv = ScrollView<OutlineView>()
         sv.hasVerticalScroller = true
         sv.borderType = .noBorder
-        sv.documentView = outlineView
+        sv.containerView = outlineView
         return sv
     }()
 

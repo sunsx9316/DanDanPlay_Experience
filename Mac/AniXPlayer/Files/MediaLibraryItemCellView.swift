@@ -13,8 +13,8 @@ class MediaLibraryItemCellView: NSTableCellView {
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
 
-        let iv = NSImageView()
-        iv.imageScaling = .scaleProportionallyUpOrDown
+        let iv = ImageView()
+        iv.setScaling(.proportionallyDown)
         iv.contentTintColor = NSColor.mainColor
         imageView = iv
         addSubview(iv)
@@ -24,10 +24,7 @@ class MediaLibraryItemCellView: NSTableCellView {
             make.width.height.equalTo(28)
         }
 
-        let tf = NSTextField()
-        tf.isEditable = false
-        tf.isBordered = false
-        tf.backgroundColor = .clear
+        let tf = Label()
         tf.font = .systemFont(ofSize: 14)
         textField = tf
         addSubview(tf)

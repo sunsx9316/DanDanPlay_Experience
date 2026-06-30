@@ -5,7 +5,7 @@
 //  Created by jimhuang on 2024/9/27.
 //
 
-#if os(iOS) || os(tvOS)
+#if os(iOS) || os(tvOS) || os(macOS)
 
 import Foundation
 import Network

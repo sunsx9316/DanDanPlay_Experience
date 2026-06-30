@@ -152,7 +152,8 @@ class SMBLoginHistoryViewController: RemoteLoginHistoryViewController {
 
     private func connectTo(address: String) {
         let urlStr = "smb://\(address)"
-        let loginInfo = LoginInfo(url: URL(string: urlStr)!, auth: nil)
+        guard let url = URL(string: urlStr) else { return }
+        let loginInfo = LoginInfo(url: url, auth: nil)
         let vc = connectViewController(loginInfo: loginInfo)
         vc.delegate = self
         navigationController?.pushViewController(vc, animated: true)

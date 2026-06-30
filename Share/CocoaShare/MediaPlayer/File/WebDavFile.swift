@@ -22,7 +22,7 @@ class WebDavFile: File {
     
     var fileSize = 0
     
-    static var rootFile: File = WebDavFile(url: URL(string: "/")!, fileSize: 0)
+    static var rootFile: File = WebDavFile(url: URL(fileURLWithPath: "/"), fileSize: 0)
     
     var parentFile: File? {
         get {

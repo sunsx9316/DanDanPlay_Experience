@@ -15,8 +15,8 @@ class MediaSettingViewController: ViewController {
     
     private lazy var dataSource = [MediaSettingInfo]()
     
-    private lazy var scrollView: ScrollView<NSOutlineView> = {
-        let tableView = NSOutlineView()
+    private lazy var scrollView: ScrollView<OutlineView> = {
+        let tableView = OutlineView()
         tableView.delegate = self
         tableView.dataSource = self
         tableView.headerView = nil

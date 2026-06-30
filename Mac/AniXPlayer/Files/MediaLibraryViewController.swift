@@ -51,19 +51,18 @@ class MediaLibraryViewController: ViewController {
         Section(title: NSLocalizedString("媒体服务器", comment: ""), items: [.emby, .jellyfin, .pc]),
     ]
 
-    weak var navigator: MediaLibraryNavigation?
     var onSelectFile: ((File, [File]) -> Void)?
 
-    private lazy var scrollView: NSScrollView = {
-        let sv = NSScrollView()
+    private lazy var scrollView: ScrollView<OutlineView> = {
+        let sv = ScrollView<OutlineView>()
         sv.hasVerticalScroller = true
         sv.borderType = .noBorder
-        sv.documentView = outlineView
+        sv.containerView = outlineView
         return sv
     }()
 
-    private lazy var outlineView: NSOutlineView = {
-        let ov = NSOutlineView()
+    private lazy var outlineView: OutlineView = {
+        let ov = OutlineView()
         ov.delegate = self
         ov.dataSource = self
         ov.headerView = nil

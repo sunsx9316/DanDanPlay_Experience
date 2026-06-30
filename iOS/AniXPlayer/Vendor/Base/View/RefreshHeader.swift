@@ -21,7 +21,7 @@ class RefreshHeader: MJRefreshNormalHeader {
         didSet {
             if self.state == .refreshing {
                 self.labelLeftInset = 20
-                self.setTitle(self.refreshTexts.randomElement()!, for: .refreshing)
+                self.setTitle(self.refreshTexts.randomElement() ?? "", for: .refreshing)
                 self.loadingView?.isHidden = false
             } else {
                 self.labelLeftInset = 0

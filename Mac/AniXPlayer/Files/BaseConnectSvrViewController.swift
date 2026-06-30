@@ -11,7 +11,6 @@ import SnapKit
 
 class BaseConnectSvrViewController: ViewController {
 
-    weak var navigator: MediaLibraryNavigation?
     var onSuccessConnected: ((LoginInfo) -> Void)?
 
     let fileManager: FileManagerProtocol
@@ -19,21 +18,14 @@ class BaseConnectSvrViewController: ViewController {
 
     private(set) var loginInfo: LoginInfo?
 
-    private lazy var backButton: NSButton = {
-        let btn = NSButton(title: NSLocalizedString("← 返回", comment: ""), target: self, action: #selector(onTouchBackButton))
-        btn.bezelStyle = .inline
-        btn.setContentHuggingPriority(.defaultHigh, for: .horizontal)
-        return btn
-    }()
-
-    lazy var addressField: NSTextField = {
-        let tf = NSTextField()
+    lazy var addressField: TextField = {
+        let tf = TextField()
         tf.placeholderString = fileManager.addressExampleDesc
         return tf
     }()
 
-    lazy var userNameField: NSTextField = {
-        let tf = NSTextField()
+    lazy var userNameField: TextField = {
+        let tf = TextField()
         tf.placeholderString = NSLocalizedString("登录用户名", comment: "")
         return tf
     }()
@@ -45,14 +37,14 @@ class BaseConnectSvrViewController: ViewController {
         return tf
     }()
 
-    lazy var remarkField: NSTextField = {
-        let tf = NSTextField()
+    lazy var remarkField: TextField = {
+        let tf = TextField()
         tf.placeholderString = NSLocalizedString("备注", comment: "")
         return tf
     }()
 
-    private lazy var loginButton: NSButton = {
-        let btn = NSButton(title: NSLocalizedString("登录", comment: ""), target: self, action: #selector(onTouchLoginButton))
+    private lazy var loginButton: Button = {
+        let btn = Button(title: NSLocalizedString("登录", comment: ""), target: self, action: #selector(onTouchLoginButton))
         btn.bezelStyle = .rounded
         btn.keyEquivalent = "\r"
         return btn
@@ -80,7 +72,7 @@ class BaseConnectSvrViewController: ViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let headerStack = NSStackView(views: [backButton, NSTextField(labelWithString: NSLocalizedString("登录", comment: ""))])
+        let headerStack = NSStackView(views: [Label(labelWithString: NSLocalizedString("登录", comment: ""))])
         headerStack.orientation = .horizontal
         headerStack.alignment = .centerY
         headerStack.spacing = 8
@@ -135,7 +127,7 @@ class BaseConnectSvrViewController: ViewController {
     }
 
     func makeFormRow(label: String, field: NSView) -> NSStackView {
-        let lbl = NSTextField(labelWithString: label + ":")
+        let lbl = Label(labelWithString: label + ":")
         lbl.alignment = .right
         lbl.font = .systemFont(ofSize: 13)
         lbl.setContentHuggingPriority(.defaultHigh, for: .horizontal)
@@ -168,16 +160,10 @@ class BaseConnectSvrViewController: ViewController {
 
     // MARK: - Actions
 
-    @objc private func onTouchBackButton() {
-        navigator?.popViewController()
-    }
-
     @objc private func onTouchLoginButton() {
         let address = addressField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !address.isEmpty, let url = URL(string: address) else {
-            let alert = NSAlert()
-            alert.messageText = NSLocalizedString("服务器地址格式不正确！", comment: "")
-            alert.beginSheetModal(for: view.window!)
+            self.view.show(text: NSLocalizedString("服务器地址格式不正确！", comment: ""))
             return
         }
 
@@ -193,8 +179,7 @@ class BaseConnectSvrViewController: ViewController {
                 guard let self = self else { return }
                 self.view.dismiss(delay: 0)
                 if let error = error {
-                    let alert = NSAlert(error: error)
-                    alert.beginSheetModal(for: self.view.window!)
+                    self.view.show(error: error)
                 } else {
                     self.loginInfo = loginInfo
                     self.navigator?.popViewController()

@@ -13,10 +13,7 @@ class ServerHostCellView: NSTableCellView {
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
 
-        let tf = NSTextField()
-        tf.isEditable = false
-        tf.isBordered = false
-        tf.backgroundColor = .clear
+        let tf = Label()
         tf.font = .systemFont(ofSize: 13)
         textField = tf
         addSubview(tf)

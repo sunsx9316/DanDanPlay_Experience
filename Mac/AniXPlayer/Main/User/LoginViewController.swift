@@ -10,7 +10,7 @@ import SnapKit
 
 class LoginViewController: ViewController {
 
-    private lazy var usernameTextField: NSTextField = {
+    private lazy var usernameTextField: TextField = {
         let textField = TextField()
         textField.placeholderString = NSLocalizedString("用户名", comment: "")
         return textField

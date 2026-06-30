@@ -17,8 +17,8 @@ class GotoLastWatchPointView: BaseView {
         return label
     }()
     
-    private lazy var gotoButton: NSButton = {
-        let button = NSButton(title: NSLocalizedString("跳转", comment: ""), target: self, action: #selector(onTouchGotoButton))
+    private lazy var gotoButton: Button = {
+        let button = Button(title: NSLocalizedString("跳转", comment: ""), target: self, action: #selector(onTouchGotoButton))
         button.layer?.cornerRadius = 3
         button.layer?.masksToBounds = true
         button.font = .ddp_normal

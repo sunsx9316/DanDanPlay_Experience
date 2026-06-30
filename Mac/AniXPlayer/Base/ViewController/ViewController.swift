@@ -8,7 +8,9 @@
 import Cocoa
 
 class ViewController: NSViewController {
-    
+
+    weak var navigator: NavigationWindowController?
+
     init() {
         let nibName = "\(type(of: self).self)"
         let bundle = Bundle(for: type(of: self))

@@ -163,7 +163,8 @@ extension AboutViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
 
-        switch Row(rawValue: indexPath.row)! {
+        guard let row = Row(rawValue: indexPath.row) else { return }
+        switch row {
         case .openSource:
             let vc = OpenSourceListViewController()
             navigationController?.pushViewController(vc, animated: true)
