@@ -320,7 +320,9 @@ private class BannerCarouselView: BaseView {
     }
 
     private let sectionCount = 100
-    private var currentIndex = 0
+    private var currentIndex = 0 {
+        didSet { updateLabelsForCurrentBanner() }
+    }
     private var autoScrollTimer: Timer?
     private var imageViews: [ImageView] = []
     private let wheelScrollView = ScrollView<NSStackView>()
@@ -330,7 +332,10 @@ private class BannerCarouselView: BaseView {
         let tf = Label(labelWithString: "")
         tf.font = .ddp_large(weight: .bold)
         tf.textColor = .white
-        tf.alignment = .center
+        tf.alignment = .left
+        tf.cell?.wraps = true
+        tf.cell?.isScrollable = false
+        tf.maximumNumberOfLines = 2
         return tf
     }()
 
@@ -338,9 +343,47 @@ private class BannerCarouselView: BaseView {
         let tf = Label(labelWithString: "")
         tf.font = .ddp_small()
         tf.textColor = .white
-        tf.alignment = .center
+        tf.alignment = .left
+        tf.cell?.wraps = true
+        tf.cell?.isScrollable = false
+        tf.maximumNumberOfLines = 3
         return tf
     }()
+
+    private lazy var leftArrowView: NSView = {
+        let view = makeArrowView(symbolName: "chevron.left")
+        let click = NSClickGestureRecognizer(target: self, action: #selector(scrollToPrev))
+        view.addGestureRecognizer(click)
+        return view
+    }()
+
+    private lazy var rightArrowView: NSView = {
+        let view = makeArrowView(symbolName: "chevron.right")
+        let click = NSClickGestureRecognizer(target: self, action: #selector(scrollToNext))
+        view.addGestureRecognizer(click)
+        return view
+    }()
+
+    private func makeArrowView(symbolName: String) -> NSView {
+        let view = NSView()
+        view.wantsLayer = true
+        view.layer?.backgroundColor = NSColor.black.withAlphaComponent(0.3).cgColor
+        view.layer?.cornerRadius = 20
+        view.alphaValue = 0
+
+        let iv = ImageView()
+        iv.image = NSImage(systemSymbolName: symbolName, accessibilityDescription: nil)
+        iv.contentTintColor = .white
+        iv.setScaling(.aspectFit)
+        view.addSubview(iv)
+
+        iv.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.width.height.equalTo(20)
+        }
+
+        return view
+    }
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
@@ -365,10 +408,21 @@ private class BannerCarouselView: BaseView {
 
     override func mouseEntered(with event: NSEvent) {
         stopAutoScroll()
+        updateArrowVisibility(visible: true)
     }
 
     override func mouseExited(with event: NSEvent) {
         startAutoScroll()
+        updateArrowVisibility(visible: false)
+    }
+
+    private func updateArrowVisibility(visible: Bool) {
+        guard banners.count > 1 else { return }
+        NSAnimationContext.runAnimationGroup { ctx in
+            ctx.duration = 0.2
+            leftArrowView.animator().alphaValue = visible ? 1 : 0
+            rightArrowView.animator().alphaValue = visible ? 1 : 0
+        }
     }
 
     override func mouseDown(with event: NSEvent) {
@@ -401,17 +455,30 @@ private class BannerCarouselView: BaseView {
             make.edges.equalToSuperview()
         }
 
+        addSubview(leftArrowView)
+        addSubview(rightArrowView)
+
+        leftArrowView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(12)
+            make.centerY.equalToSuperview()
+            make.width.height.equalTo(40)
+        }
+
+        rightArrowView.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().offset(-12)
+            make.centerY.equalToSuperview()
+            make.width.height.equalTo(40)
+        }
+
         titleLabel.snp.makeConstraints { make in
             make.bottom.equalTo(descLabel.snp.top).offset(-4)
-            make.centerX.equalToSuperview()
-            make.leading.greaterThanOrEqualToSuperview().offset(16)
+            make.leading.equalToSuperview().offset(16)
             make.trailing.lessThanOrEqualToSuperview().offset(-16)
         }
 
         descLabel.snp.makeConstraints { make in
             make.bottom.equalToSuperview().offset(-40)
-            make.centerX.equalToSuperview()
-            make.leading.greaterThanOrEqualToSuperview().offset(16)
+            make.leading.equalToSuperview().offset(16)
             make.trailing.lessThanOrEqualToSuperview().offset(-16)
         }
 
@@ -452,11 +519,18 @@ private class BannerCarouselView: BaseView {
 
     private func makeBannerImageView(for banner: BannerPageItem) -> ImageView {
         let iv = ImageView()
-        iv.setScaling(.aspectFit)
+        iv.setScaling(.aspectFill)
         if let url = URL(string: banner.imageUrl) {
             iv.kf.setImage(with: url)
         }
         return iv
+    }
+
+    private func updateLabelsForCurrentBanner() {
+        guard !banners.isEmpty, currentIndex < banners.count else { return }
+        let banner = banners[currentIndex]
+        titleLabel.stringValue = banner.title
+        descLabel.stringValue = banner.description
     }
 
     override func layout() {
@@ -500,10 +574,23 @@ private class BannerCarouselView: BaseView {
         autoScrollTimer = nil
     }
 
-    private func scrollToNext() {
+    @objc private func scrollToNext() {
         guard banners.count > 1 else { return }
         let nextIndex = (currentIndex + 1) % banners.count
         currentIndex = nextIndex
+        scrollToCurrentIndex()
+        onPageChanged?(currentIndex)
+    }
+
+    @objc private func scrollToPrev() {
+        guard banners.count > 1 else { return }
+        let prevIndex = (currentIndex - 1 + banners.count) % banners.count
+        currentIndex = prevIndex
+        scrollToCurrentIndex()
+        onPageChanged?(currentIndex)
+    }
+
+    private func scrollToCurrentIndex() {
         let mid = sectionCount / 2
         let targetIndex = mid * banners.count + currentIndex
         let targetX = CGFloat(targetIndex) * bounds.width
@@ -511,7 +598,6 @@ private class BannerCarouselView: BaseView {
             ctx.duration = 0.3
             wheelScrollView.contentView.animator().setBoundsOrigin(NSPoint(x: targetX, y: 0))
         }
-        onPageChanged?(currentIndex)
     }
 }
 
