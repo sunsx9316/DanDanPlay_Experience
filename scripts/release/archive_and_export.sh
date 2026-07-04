@@ -14,8 +14,8 @@ fi
 
 case "$PLATFORM" in
     mac)  PLATFORM_DIR="Mac";  EXPORT_METHOD="developer-id" ;;
-    ios)  PLATFORM_DIR="iOS";  EXPORT_METHOD="app-store" ;;
-    tvos) PLATFORM_DIR="tvOS"; EXPORT_METHOD="app-store" ;;
+    ios)  PLATFORM_DIR="iOS";  EXPORT_METHOD="app-store"; BUNDLE_ID="com.anixplayer.ios"; PROFILE_NAME="iOS App Store" ;;
+    tvos) PLATFORM_DIR="tvOS"; EXPORT_METHOD="app-store"; BUNDLE_ID="com.anixplayer.ios"; PROFILE_NAME="tvOS App Store" ;;
     *)    echo "错误: 无效平台 '$PLATFORM'" >&2; exit 1 ;;
 esac
 
@@ -28,7 +28,8 @@ EXPORT_PLIST="/tmp/exportOptions.plist"
 rm -rf "$ARCHIVE_PATH" "$EXPORT_PATH"
 
 # 动态生成 exportOptionsPlist
-cat > "$EXPORT_PLIST" << PLIST
+if [ "$PLATFORM" = "mac" ]; then
+    cat > "$EXPORT_PLIST" << PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -40,13 +41,33 @@ cat > "$EXPORT_PLIST" << PLIST
 </dict>
 </plist>
 PLIST
+else
+    cat > "$EXPORT_PLIST" << PLIST
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>method</key>
+    <string>${EXPORT_METHOD}</string>
+    <key>teamID</key>
+    <string>94L7P6P9PY</string>
+    <key>provisioningProfiles</key>
+    <dict>
+        <key>${BUNDLE_ID}</key>
+        <string>${PROFILE_NAME}</string>
+    </dict>
+</dict>
+</plist>
+PLIST
+fi
 
 echo "=== Archive ==="
 xcodebuild archive \
     -workspace "$REPO_ROOT/$PLATFORM_DIR/AniXPlayer.xcworkspace" \
     -scheme AniXPlayer \
     -configuration Release \
-    -archivePath "$ARCHIVE_PATH"
+    -archivePath "$ARCHIVE_PATH" \
+    -allowProvisioningUpdates
 
 echo "=== Export ==="
 xcodebuild -exportArchive \

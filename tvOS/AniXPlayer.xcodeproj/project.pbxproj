@@ -1212,11 +1212,6 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 2600;
 				LastUpgradeCheck = 2600;
-				TargetAttributes = {
-					15E0E31D2605F8F391BF7331 = {
-						ProvisioningStyle = Automatic;
-					};
-				};
 			};
 			buildConfigurationList = FA3E261FBFBCD7306F028865 /* Build configuration list for PBXProject "AniXPlayer" */;
 			developmentRegion = en;
@@ -1511,8 +1506,10 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = AniXPlayer/AniXPlayer.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Distribution";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "iPhone Distribution";
 				CODE_SIGN_STYLE = Manual;
-				CURRENT_PROJECT_VERSION = 2026062701;
+				CURRENT_PROJECT_VERSION = 2026070501;
+				"DEVELOPMENT_TEAM[sdk=appletvos*]" = 94L7P6P9PY;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = AniXPlayer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = AniXPlayer;
@@ -1544,6 +1541,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.anixplayer.ios;
 				PROVISIONING_PROFILE_SPECIFIER = "tvOS App Store";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=appletvos*]" = "tvOS App Store";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 17.6;
@@ -1587,7 +1585,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2026070501;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -1659,7 +1657,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 1;
+				CURRENT_PROJECT_VERSION = 2026070501;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 94L7P6P9PY;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -1695,7 +1693,11 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_ENTITLEMENTS = AniXPlayer/AniXPlayer.entitlements;
-				CURRENT_PROJECT_VERSION = 2026062701;
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
+				CURRENT_PROJECT_VERSION = 2026070501;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=appletvos*]" = 94L7P6P9PY;
 				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = AniXPlayer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = AniXPlayer;
@@ -1726,6 +1728,8 @@
 					"-liconv",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.anixplayer.ios;
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=appletvos*]" = "tvOS App Store";
 				SDKROOT = appletvos;
 				TARGETED_DEVICE_FAMILY = 3;
 				TVOS_DEPLOYMENT_TARGET = 17.6;
