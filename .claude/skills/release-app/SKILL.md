@@ -101,22 +101,42 @@ bash scripts/release/update_project_version.sh <platform> --testflight <build>
 
 ### Step 4: 生成更新日志
 
-**Tag 规则**: 格式 `v{version}-{platform}`（如 `v1.6.3-mac`），查找上一版本 tag 时用平台前缀。
+**核心原则：更新日志必须只包含当前平台相关的改动。** 例如打包 iOS，日志只列 iOS 相关的功能，不出现 Mac/tvOS 专属内容。
+
+**Tag 规则**: 格式 `v{version}-{platform}`（如 `v1.6.3-ios`），查找上一版本 tag 时用平台前缀。
 
 ```bash
 cd /Users/jimhuang/Dev/DanDanPlay_Experience
-LAST_TAG=$(git tag --sort=-creatordate | grep "^v.*-<platform>" | head -1)
+LAST_TAG=$(git tag --sort=-creatordate | grep “^v.*-<platform>” | head -1)
 ```
 
-**日志内容规则**:
-1. **只看平台相关目录**: `Mac/` + `Share/`（macOS）、`iOS/` + `Share/`（iOS）、`tvOS/` + `Share/`（tvOS）
-2. **只看 feat / update 提交**，跳过 docs、chore、refactor、style、test、ci、build、opt 等
-3. **只保留用户感知的功能改动**，剔除发布自动化、构建脚本、CI/CD 等非用户向内容
-4. **过滤其他平台专属功能**（如 Mac 发布日志不含 PiP 等 iOS 专属功能）
-5. **修复类提交**统一写一句“修复若干已知问题”，不展开
-6. **按功能聚合**：播放器、弹幕、媒体服务器、设置等，每个功能 3-5 条要点
+**日志内容规则（按优先级排序）**:
 
-**生成方式**: 不用 `gen_changelog.sh`，而是手动分析 git log 后写入 `/tmp/release_changelog.txt`。
+1. **只看当前平台相关目录的改动**:
+   - `iOS/` + `Share/`（iOS）
+   - `tvOS/` + `Share/`（tvOS）
+   - `Mac/` + `Share/`（macOS）
+   - 不在此范围内的目录（如其他平台的专属目录）的改动**一律忽略**
+
+2. **Share/ 目录改动需二次判断**：Share/ 下的代码三平台共用，但需判断改动是否影响当前平台。与当前平台无关的 Share/ 改动（如仅被其他平台引用的代码）应排除
+
+3. **只看 feat / update 类型提交**，跳过 docs、chore、refactor、style、test、ci、build、opt 等
+
+4. **只保留用户可感知的功能改动**，剔除发布自动化、构建脚本、CI/CD、内部重构等非用户向内容
+
+5. **严格排除其他平台专属功能**：
+   - 发布 iOS 时：不含 Mac 专属（菜单栏、窗口管理、DMG 安装等）、tvOS 专属功能
+   - 发布 tvOS 时：不含 iOS 专属（PiP、横竖屏旋转等）、Mac 专属功能
+   - 发布 Mac 时：不含 iOS 专属（PiP、触控手势等）、tvOS 专属（Focus Engine 等）功能
+
+6. **修复类提交**统一写一句”修复若干已知问题”，不展开
+
+7. **按功能聚合**：播放器、弹幕、媒体服务器、设置等，每个功能 3-5 条要点
+
+**生成方式**: 不用 `gen_changelog.sh`，而是手动分析 git log 后写入 `/tmp/release_changelog.txt`。分析时：
+- 先用 `git log --oneline <LAST_TAG>..HEAD -- <platform_dir/> Share/` 获取候选提交
+- 逐条判断是否与当前平台相关
+- 合并同类的 feat/update，剔除平台无关的内容
 
 把更新日志内容展示给用户。用 **AskUserQuestion** 确认：
 - “确认，日志没问题” (Recommended)
