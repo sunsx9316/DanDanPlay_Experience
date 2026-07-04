@@ -18,26 +18,41 @@
     document.getElementById('pageTitle').textContent = C.appName + ' - ' + t('title');
     document.getElementById('pageSubtitle').textContent = t('title');
     document.getElementById('dropTitle').textContent = t('dropTitle');
-    document.getElementById('dropSubtitle').textContent = t('dropSubtitle');
-    document.getElementById('browseFileBtn').textContent = t('browseFile');
-    document.getElementById('browseFolderBtn').textContent = t('browseFolder');
+    document.getElementById('uploadBtnLabel').textContent = t('upload');
+    document.getElementById('uploadFileItem').textContent = t('uploadFile');
+    document.getElementById('uploadFolderItem').textContent = t('uploadFolder');
+    document.getElementById('newFolderBtnLabel').textContent = t('newFolder');
+    document.getElementById('loadingMsg').textContent = t('loading');
 
     // ---- Upload logic ----
     var dropzone = document.getElementById('dropzone');
     var fileInput = document.getElementById('fileInput');
     var folderInput = document.getElementById('folderInput');
-    var browseFileBtn = document.getElementById('browseFileBtn');
-    var browseFolderBtn = document.getElementById('browseFolderBtn');
+    var uploadBtn = document.getElementById('uploadBtn');
+    var uploadDropdown = document.getElementById('uploadDropdown');
+    var uploadFileItem = document.getElementById('uploadFileItem');
+    var uploadFolderItem = document.getElementById('uploadFolderItem');
     var fileList = document.getElementById('fileList');
 
-    browseFileBtn.addEventListener('click', function(e) {
+    uploadBtn.addEventListener('click', function(e) {
         e.stopPropagation();
+        uploadDropdown.classList.toggle('show');
+    });
+
+    uploadFileItem.addEventListener('click', function(e) {
+        e.stopPropagation();
+        uploadDropdown.classList.remove('show');
         fileInput.click();
     });
 
-    browseFolderBtn.addEventListener('click', function(e) {
+    uploadFolderItem.addEventListener('click', function(e) {
         e.stopPropagation();
+        uploadDropdown.classList.remove('show');
         folderInput.click();
+    });
+
+    document.addEventListener('click', function() {
+        uploadDropdown.classList.remove('show');
     });
 
     dropzone.addEventListener('click', function() {
@@ -161,6 +176,22 @@
         });
     }
 
+    function handleFolderFiles(files) {
+        var groups = {};
+        for (var i = 0; i < files.length; i++) {
+            var f = files[i];
+            var relativePath = f.webkitRelativePath || f.name;
+            var rootName = relativePath.split('/')[0] || f.name;
+            if (!groups[rootName]) groups[rootName] = [];
+            groups[rootName].push({ file: f, relativePath: relativePath });
+        }
+        fileList.classList.remove('empty');
+        var keys = Object.keys(groups);
+        for (var k = 0; k < keys.length; k++) {
+            uploadFolderContents(groups[keys[k]], keys[k]);
+        }
+    }
+
     function handleFiles(files) {
         fileList.classList.remove('empty');
         for (var i = 0; i < files.length; i++) {
@@ -209,24 +240,6 @@
 
         xhr.open('POST', '/upload');
         xhr.send(formData);
-    }
-
-    function handleFolderFiles(files) {
-        var groups = {};
-        for (var i = 0; i < files.length; i++) {
-            var f = files[i];
-            var relativePath = f.webkitRelativePath || f.name;
-            var rootName = relativePath.split('/')[0] || f.name;
-
-            if (!groups[rootName]) groups[rootName] = [];
-            groups[rootName].push({ file: f, relativePath: relativePath });
-        }
-
-        fileList.classList.remove('empty');
-        var keys = Object.keys(groups);
-        for (var k = 0; k < keys.length; k++) {
-            uploadFolderContents(groups[keys[k]], keys[k]);
-        }
     }
 
     function uploadFolderContents(fileList_in, folderName) {
@@ -315,6 +328,14 @@
         metaEl.textContent = formatSize(completedBytes) + ' / ' + formatSize(totalSize) + ' · ' + totalFiles + ' ' + t('files');
     }
 
+    var refreshTimer = null;
+    function scheduleRefresh() {
+        if (refreshTimer) clearTimeout(refreshTimer);
+        refreshTimer = setTimeout(function() {
+            if (window.__fmRefresh) window.__fmRefresh();
+        }, 300);
+    }
+
     function markFolderComplete(item, totalSize, totalFiles) {
         var iconEl = item.querySelector('.file-icon');
         var statusEl = item.querySelector('.file-status');
@@ -333,6 +354,8 @@
         progressFill.style.width = '100%';
 
         metaEl.textContent = formatSize(totalSize) + ' · ' + totalFiles + ' ' + t('files');
+
+        scheduleRefresh();
     }
 
     function createFileItem(file, relativePath) {
@@ -385,6 +408,8 @@
         progressFill.classList.add('success');
         progressFill.style.width = '100%';
         metaEl.textContent = formatSize(fileSize);
+
+        scheduleRefresh();
     }
 
     function markError(item, reason) {

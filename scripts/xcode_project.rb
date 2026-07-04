@@ -119,6 +119,12 @@ end
 def add_file_to_project(project, target, platform, file_path, source_root, base_group_path: nil)
   relative = Pathname.new(file_path).relative_path_from(Pathname.new(source_root)).to_s
 
+  # CocoaShare 特殊处理：展示路径用工程根目录为基准，但 group 层级保留 .. 以保证物理路径正确
+  display_relative = relative
+  if relative.start_with?('../Share/CocoaShare/')
+    display_relative = Pathname.new(file_path).relative_path_from(Pathname.new(PROJECT_ROOT)).to_s
+  end
+
   group_path = base_group_path || File.dirname(relative)
   group_parts = group_path.split('/').reject(&:empty?)
   group = ensure_group(project, group_parts)
@@ -137,7 +143,7 @@ def add_file_to_project(project, target, platform, file_path, source_root, base_
     target.resources_build_phase.add_file_reference(file_ref)
   end
 
-  { relative: relative, phase: phase_type }
+  { relative: display_relative, phase: phase_type }
 end
 
 # 从工程中删除文件引用
@@ -227,9 +233,13 @@ def add_file(platform, file_path, target_name: nil, group_path: nil, dry_run: fa
 
   relative = Pathname.new(file_path).relative_path_from(Pathname.new(config[:source_root])).to_s
 
+  # CocoaShare 特殊处理：展示路径用工程根目录为基准
+  display_relative = relative.start_with?('../Share/CocoaShare/') ?
+    Pathname.new(file_path).relative_path_from(Pathname.new(PROJECT_ROOT)).to_s : relative
+
   if dry_run
     puts "[DRY RUN] platform=#{platform} file=#{file_path}"
-    puts "          relative=#{relative}"
+    puts "          relative=#{display_relative}"
     puts "          target=#{target_name}"
     puts "          build_phase=#{build_phase_for(file_path)}"
     return
@@ -246,7 +256,7 @@ def add_file(platform, file_path, target_name: nil, group_path: nil, dry_run: fa
 
   case result
   when :skip
-    puts "ALREADY_EXISTS: #{relative}"
+    puts "ALREADY_EXISTS: #{display_relative}"
   else
     project.save
     tag = result[:phase] ? "[#{result[:phase].capitalize}]" : "[Group]"

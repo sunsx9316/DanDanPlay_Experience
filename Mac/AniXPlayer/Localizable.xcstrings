@@ -3790,6 +3790,22 @@
           }
         }
       }
+    },
+    "上传": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Upload"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "上传"
+          }
+        }
+      }
     }
   },
   "version": "1.1"

@@ -10,6 +10,7 @@ import UIKit
 #else
 import Cocoa
 #endif
+import ANXLog
 
 class LocalFileManager: FileManagerProtocol {
     
@@ -40,14 +41,25 @@ class LocalFileManager: FileManagerProtocol {
         return NSLocalizedString("本地文件", comment: "")
     }
     
+    private var logDirName: String {
+        #if !os(tvOS)
+        return (ANXLogHelper.logPath() as NSString).lastPathComponent
+        #else
+        return "log"
+        #endif
+    }
+
     func contentsOfDirectory(at directory: File, filterType: URLFilterType?, completion: @escaping ((Result<[File], Error>) -> Void)) {
         do {
 
             let url = directory.url
             let urls = try FileManager.default.contentsOfDirectory(at: url, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
-            
+
             let files = urls.compactMap { (aURL) -> LocalFile? in
                 let file = LocalFile(with: aURL)
+                if file.type == .folder, file.fileName == self.logDirName {
+                    return nil
+                }
                 if let filterType = filterType, file.type == .file {
                     return file.url.isThisType(filterType) ? file : nil
                 }

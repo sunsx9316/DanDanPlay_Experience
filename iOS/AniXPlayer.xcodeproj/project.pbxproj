@@ -249,6 +249,7 @@
 		951494A4B490C1DDB3FEBA28 /* UIImage+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D7E33D6F9F7EB2F69A64FD /* UIImage+Helper.swift */; };
 		9DE8B428CAFC3A5D26DE9E56 /* DanmakuInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54627AC0D74F1F7C3F2CB1D /* DanmakuInputView.swift */; };
 		9DE8B429CAFC3A5D26DE9E57 /* ColorManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54627AC0D74F1F7C3F2CB1E /* ColorManagementViewController.swift */; };
+		A6518D0C0A32144DB461F392 /* fileManager.js in Resources */ = {isa = PBXBuildFile; fileRef = F12AB76456C8FC4F546CE518 /* fileManager.js */; };
 		AA72AB931D94179E273EEC53 /* JellyfinLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3DC22C756D2488DE35619F /* JellyfinLoginHistoryViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -501,6 +502,7 @@
 		C3DA91DC2CB2BDFC2138D3A3 /* StoreBackend.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StoreBackend.swift; sourceTree = "<group>"; };
 		CF2D5334A2A53D20F8B80E22 /* Pods-AniXPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.release.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.release.xcconfig"; sourceTree = "<group>"; };
 		EE600170BF1445D9B00A4593 /* FolderProgressCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderProgressCell.swift; sourceTree = "<group>"; };
+		F12AB76456C8FC4F546CE518 /* fileManager.js */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.javascript; path = fileManager.js; sourceTree = "<group>"; };
 		F410B8A741526DF765820021 /* Pods-AniXPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.debug.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1121,6 +1123,7 @@
 			children = (
 				895152CC2FC1ADC000F75DB7 /* upload.html */,
 				895152CD2FC1ADC000F75DB7 /* upload.js */,
+				F12AB76456C8FC4F546CE518 /* fileManager.js */,
 			);
 			path = Web;
 			sourceTree = "<group>";
@@ -1497,6 +1500,7 @@
 				890DF6D926160827002D8AE5 /* LaunchScreen.storyboard in Resources */,
 				895152CF2FC1ADC000F75DB7 /* upload.html in Resources */,
 				895152D02FC1ADC000F75DB7 /* upload.js in Resources */,
+				A6518D0C0A32144DB461F392 /* fileManager.js in Resources */,
 				890DF6D626160827002D8AE5 /* Assets.xcassets in Resources */,
 				8904475B290189CD0088886B /* GoogleService-Info.plist in Resources */,
 				8931A91F2F7C0A8A00125F69 /* Localizable.xcstrings in Resources */,
@@ -1949,7 +1953,7 @@
 				CODE_SIGN_ENTITLEMENTS = AniXPlayer/AniXPlayer.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2026062701;
+				CURRENT_PROJECT_VERSION = 2026070401;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -1986,7 +1990,7 @@
 				CODE_SIGN_ENTITLEMENTS = AniXPlayer/AniXPlayer.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2026062701;
+				CURRENT_PROJECT_VERSION = 2026070401;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",

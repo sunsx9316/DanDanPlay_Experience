@@ -121,6 +121,7 @@
 		895154882FC1DC2D00F75DB7 /* MediaThumbnailer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895153F02FC1DC2D00F75DB7 /* MediaThumbnailer.swift */; };
 		8951548A2FC1DC2D00F75DB7 /* upload.html in Resources */ = {isa = PBXBuildFile; fileRef = 895153D02FC1DC2D00F75DB7 /* upload.html */; };
 		8951548B2FC1DC2D00F75DB7 /* upload.js in Resources */ = {isa = PBXBuildFile; fileRef = 895153D12FC1DC2D00F75DB7 /* upload.js */; };
+		E296FB2BA5C4CEBAD390D71F /* fileManager.js in Resources */ = {isa = PBXBuildFile; fileRef = C689D5645CD727D4D42AB2DC /* fileManager.js */; };
 		895157502FC36B3D00F75DB7 /* StepperSettingCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8951574C2FC36B3D00F75DB7 /* StepperSettingCell.swift */; };
 		895157512FC36B3D00F75DB7 /* CenterPopupAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895157442FC36B3D00F75DB7 /* CenterPopupAnimator.swift */; };
 		895157522FC36B3D00F75DB7 /* DanmakuListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8951573D2FC36B3D00F75DB7 /* DanmakuListViewController.swift */; };
@@ -410,6 +411,7 @@
 		C1234567890ABCDEF123458 /* SearchEpisodeCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchEpisodeCell.swift; sourceTree = "<group>"; };
 		C2A8BDECA9A11E73C628B9B0 /* MatchCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchCell.swift; sourceTree = "<group>"; };
 		C51F4249AC11C810C2EE970A /* HomePageFunctionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageFunctionCell.swift; sourceTree = "<group>"; };
+		C689D5645CD727D4D42AB2DC /* fileManager.js */ = {isa = PBXFileReference; includeInIndex = 1; path = fileManager.js; sourceTree = "<group>"; };
 		CC3A26474515EB836FC07219 /* CollectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
 		CCABE78F4458C5717BC3CCB9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CE01DA07EC91885EC6E9BD0B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -637,6 +639,7 @@
 			children = (
 				895153D02FC1DC2D00F75DB7 /* upload.html */,
 				895153D12FC1DC2D00F75DB7 /* upload.js */,
+				C689D5645CD727D4D42AB2DC /* fileManager.js */,
 			);
 			path = Web;
 			sourceTree = "<group>";
@@ -1261,6 +1264,7 @@
 				895A7F6E2FC5FBC300A997B8 /* SourceHanSansSC-Regular.otf in Resources */,
 				895A7F6F2FC5FBC300A997B8 /* SourceHanSansTC-Regular.otf in Resources */,
 				8951548B2FC1DC2D00F75DB7 /* upload.js in Resources */,
+				E296FB2BA5C4CEBAD390D71F /* fileManager.js in Resources */,
 				8955999B2FCC2C3C007F52E0 /* Assets.xcassets in Resources */,
 				068825FFDE12B7EACBA14635 /* Localizable.xcstrings in Resources */,
 			);
