@@ -52,7 +52,8 @@ echo "=== Export ==="
 xcodebuild -exportArchive \
     -archivePath "$ARCHIVE_PATH" \
     -exportPath "$EXPORT_PATH" \
-    -exportOptionsPlist "$EXPORT_PLIST"
+    -exportOptionsPlist "$EXPORT_PLIST" \
+    -allowProvisioningUpdates
 
 # 输出产物路径
 if [ "$PLATFORM" = "mac" ]; then

@@ -157,6 +157,13 @@ bash scripts/release/archive_and_export.sh <platform>
 
 如果构建失败，展示错误信息，**终止**。
 
+**常见错误排查**：
+
+| 错误 | 原因 | 处理 |
+|------|------|------|
+| `Provisioning profile "xxx" doesn't support the iCloud capability` | Store Provisioning Profile 不含 iCloud entitlement（entitlements 新增 iCloud 后出现） | 用 `-allowProvisioningUpdates` 重试导出：`xcodebuild -exportArchive -archivePath /tmp/AniXPlayer.xcarchive -exportPath /tmp/export -exportOptionsPlist /tmp/exportOptions.plist -allowProvisioningUpdates` |
+| `Your session has expired. Please log in.` | Apple ID session 过期 | 在 Xcode → Settings → Accounts 中重新登录 |
+
 ### Step 6: 创建 DMG（仅 macOS）
 
 ```bash
@@ -209,7 +216,13 @@ bash scripts/release/publish.sh <ios|tvos> /tmp/export/AniXPlayer.ipa <shortVers
 ## 注意事项
 
 - macOS 环境前提：notarytool `AC_PASSWORD`、`gh` CLI 已配置，`UPDATE_REPO_PATH`（Gitee 更新仓库）
-- iOS / tvOS 环境前提：`APPLE_ID` 环境变量 + Keychain profile（默认 `AC_PASSWORD`，与 Mac 公证共用）
+- iOS / tvOS 环境前提：`APP_SPECIFIC_PASSWORD` 环境变量（建议写入 `~/.zshrc` 持久化）+ `APPLE_ID`（默认 `jimhuang099@gmail.com`）
+- **Xcode 17 `altool` keychain 兼容性**：`altool --store-password-in-keychain-item` 在 Xcode 17 中可能无法正确读取 keychain 条目，如果 publish.sh 报 keychain 错误，改用 `@env:APP_SPECIFIC_PASSWORD` 直接上传：
+  ```bash
+  xcrun altool --validate-app -f /tmp/export/AniXPlayer.ipa -t <ios|tvos> -u jimhuang099@gmail.com -p "@env:APP_SPECIFIC_PASSWORD"
+  xcrun altool --upload-app -f /tmp/export/AniXPlayer.ipa -t <ios|tvos> -u jimhuang099@gmail.com -p "@env:APP_SPECIFIC_PASSWORD"
+  git tag "v<version>-<platform>" && git push origin "v<version>-<platform>"
+  ```
 - macOS 发布会推送到 GitHub Release + Gitee 更新仓库 + git tag
 - iOS / tvOS 发布会上传 `.ipa` 到 App Store Connect + git tag（后续需在 App Store Connect 中完成提审）
 - 如果某步失败，用户可以从失败的那步重来（子脚本可独立运行）
