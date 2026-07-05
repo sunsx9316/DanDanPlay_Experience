@@ -146,6 +146,7 @@ Mac/AniXPlayer/Base/
 |------|--------|---------|
 | `BaseView` | `NSView` | 自动 `wantsLayer = true` |
 | `Button` | `NSButton` | 静态工厂 `custom()` 创建无边框按钮 |
+| `PopUpButton` | `NSPopUpButton` | `contentTintColor = .mainColor` |
 | `TextField` | `NSTextField` | 字体 `.ddp_normal`、颜色 `.textColor` |
 | `Label` | `TextField` | 叠加 `isEditable=false`、`isBordered=false`、`drawsBackground=false` |
 | `TextView` | `NSTextView` | `isEditable=false`、`isSelectable=true`、透明背景、`ddp_normal`/`textColor`、零内边距、禁止水平缩放、允许垂直缩放 |
@@ -154,17 +155,19 @@ Mac/AniXPlayer/Base/
 | `TableView` | `NSTableView` | 类型标识（空子类） |
 | `CollectionViewItem` | `NSCollectionViewItem` | `init(nibName:bundle:)` 传 `nil` 避免 nib 查找，统一走 `loadView()` |
 | `OutlineView` | `NSOutlineView` | 自动 `headerView=nil`、`style=.sourceList` |
+| `Slider` | `NSSlider` | `trackFillColor = .mainColor` |
+| `CheckBox` | `NSButton` | checkbox 类型，`contentTintColor = .mainColor` |
 | `ThemedTableRowView` | `NSTableRowView` | 悬停高亮（6% `.mainColor`）、选中高亮（12%-24% `.mainColor`）+ `enableRowHoverTracking()` |
 
-**TableViewCell 预置子类（xib 驱动，均继承 `NSView`）：**
+**TableViewCell 预置子类（纯代码，均继承 `NSView`）：**
 
 | 基类 | 用途 |
 |------|------|
 | `TitleTableViewCell` | 单行标题 |
 | `TitleDetailTableViewCell` | 标题 + 副标题 |
 | `SheetTableViewCell` | 标题 + NSPopUpButton |
-| `SwitchTableViewCell` | 标题 + NSButton(checkbox) |
-| `SwitchDetailTableViewCell` | 标题 + 副标题 + NSSwitch |
+| `SwitchTableViewCell` | 标题 + CheckBox |
+| `SwitchDetailTableViewCell` | 标题 + 副标题 + CheckBox |
 | `StepTableViewCell` | 标题 + NSStepper + 值 |
 | `SliderTableViewCell` | 标题 + NSSlider + 多值标签 |
 

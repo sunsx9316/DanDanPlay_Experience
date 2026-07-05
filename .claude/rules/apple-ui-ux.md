@@ -91,6 +91,44 @@ NSLayoutConstraint.activate([
 
 > **例外**：从 nib/storyboard 中已存在的约束（IBOutlet 引用），可用于修改 constant，不需要用 SnapKit 重建。
 
+### NSControl/UIControl 添加 target/action 必须使用 `addTarget(_:action:)`
+
+**禁止**分开设置 `.target` 和 `.action`，必须使用项目扩展的 `addTarget(_:action:)` 方法：
+
+```swift
+// 推荐
+button.addTarget(self, action: #selector(onClick))
+textField.addTarget(self, action: #selector(onEnter))
+
+// 不推荐
+button.target = self
+button.action = #selector(onClick)
+```
+
+### UI 类型必须使用 lazy var
+
+所有 UI 类型（`UIView`/`NSView` 及其子类、`UIViewController`/`NSViewController` 及其子类等）**禁止使用 `let` 直接初始化**，必须使用 `lazy var`：
+
+```swift
+// 推荐 - lazy var
+private lazy var titleLabel: Label = {
+    let label = Label()
+    label.font = .ddp_large
+    return label
+}()
+
+private lazy var aSwitch = NSSwitch()
+
+// 不推荐 - let 直接初始化
+let titleLabel = Label()
+let aSwitch = NSSwitch()
+```
+
+**原因**：
+- `lazy var` 中 `self` 可用，便于设置 target/action、delegate 等依赖 `self` 的属性
+- 与项目现有代码风格保持一致
+- 延迟初始化，避免在 `init` 完成前创建不必要的对象
+
 ### 禁止在懒加载中写约束
 
 懒加载（`lazy var`）只负责创建 view，**禁止**在其中调用 `addSubview` 或写约束。必须在外部（如 `awakeFromNib`、`init`、`setupUI` 等方法中）先 `addSubview` 后再加约束：
@@ -122,6 +160,45 @@ private lazy var iconImageView: UIImageView = {
     return iv
 }()
 ```
+
+### 禁止引用 SnapKit Constraint 调整布局
+
+**禁止**将 SnapKit `Constraint` 引用为成员变量（`Constraint?`），再通过 `.update(offset:)` 调整。布局需要动态变化时，使用 `snp.updateConstraints` 或 `snp.remakeConstraints`：
+
+```swift
+// 推荐 — snp.updateConstraints（仅更新变化部分）
+var showPoint: Bool = false {
+    didSet {
+        pointView.isHidden = !showPoint
+        label.snp.updateConstraints { make in
+            make.leading.equalToSuperview().offset(showPoint ? 21 : 7)
+        }
+    }
+}
+
+// 推荐 — snp.remakeConstraints（整体重建）
+func updateIndicator(animated: Bool) {
+    indicatorView.snp.remakeConstraints { make in
+        make.bottom.equalToSuperview()
+        make.height.equalTo(indicatorHeight)
+        make.centerX.equalTo(targetButton)
+        make.width.equalTo(targetButton.snp.width).multipliedBy(0.6)
+    }
+}
+
+// 不推荐 — 存储 Constraint 引用
+private var labelLeadingConstraint: Constraint?
+
+var showPoint: Bool = false {
+    didSet {
+        labelLeadingConstraint?.update(offset: showPoint ? 21 : 7)
+    }
+}
+```
+
+**区别**：
+- `updateConstraints`：更新已有约束的常量值，适合少量参数变化，需确保初始 `makeConstraints` 已设置该约束
+- `remakeConstraints`：移除并重建所有约束，适合整体布局变化
 
 ## UITableViewCell / NSTableView / NSOutlineView Cell 规范
 
