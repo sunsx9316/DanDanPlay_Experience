@@ -56,17 +56,20 @@ fi
 # App Store 模式: 从该平台最新 git tag 计算
 LAST_TAG=$(git tag --sort=-creatordate | grep "^${PLATFORM}-v" | head -1)
 if [ -z "$LAST_TAG" ]; then
-    echo "错误: 未找到 ${PLATFORM} 的版本 tag，请先手动创建一个（如 ${PLATFORM}-v1.0.0-$(date +%Y%m%d)01）" >&2
-    exit 1
+    # 首次发布：从 pbxproj 读取当前版本作为基准
+    CURRENT_SHORT=$(grep -m1 "MARKETING_VERSION" "$PBXPROJ" | sed 's/.*= //;s/;//')
+    IFS='.' read -r MAJOR _LAST_MONTH LAST_MINOR <<< "$CURRENT_SHORT"
+    LAST_MINOR="${LAST_MINOR:-0}"
+    _LAST_MONTH="${_LAST_MONTH:-1}"
+else
+    TAG_VERSION="${LAST_TAG#${PLATFORM}-v}"
+    LAST_SHORT="${TAG_VERSION%-*}"
+    IFS='.' read -r MAJOR LAST_MONTH LAST_MINOR <<< "$LAST_SHORT"
+    LAST_MINOR="${LAST_MINOR:-0}"
+    _LAST_MONTH="$LAST_MONTH"
 fi
 
-# 解析 <platform>-vX.Y.Z-BUILD 格式
-TAG_VERSION="${LAST_TAG#${PLATFORM}-v}"  # X.Y.Z-BUILD
-LAST_SHORT="${TAG_VERSION%-*}"            # X.Y.Z
-IFS='.' read -r MAJOR LAST_MONTH LAST_MINOR <<< "$LAST_SHORT"
-LAST_MINOR="${LAST_MINOR:-0}"
-
-if [ "$CURRENT_MONTH" -ne "$LAST_MONTH" ]; then
+if [ "$CURRENT_MONTH" -ne "$_LAST_MONTH" ]; then
     NEW_MINOR=0
 else
     NEW_MINOR=$((LAST_MINOR + 1))

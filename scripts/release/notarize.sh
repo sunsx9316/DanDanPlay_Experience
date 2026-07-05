@@ -12,11 +12,21 @@ if [ -z "$INPUT_PATH" ]; then
     exit 1
 fi
 
-# 检查 Keychain profile
+# 检查认证方式：优先 keychain profile，其次环境变量
 echo "=== 检查公证凭证 ==="
-if ! xcrun notarytool history --keychain-profile "$KEYCHAIN_PROFILE" &>/dev/null; then
-    echo "错误: Keychain profile '${KEYCHAIN_PROFILE}' 不存在" >&2
-    echo "请先配置: xcrun notarytool store-credentials '${KEYCHAIN_PROFILE}'" >&2
+AUTH_ARGS=""
+if xcrun notarytool history --keychain-profile "$KEYCHAIN_PROFILE" &>/dev/null; then
+    AUTH_ARGS="--keychain-profile $KEYCHAIN_PROFILE"
+    echo "使用 Keychain profile '${KEYCHAIN_PROFILE}'"
+elif [ -n "${APPLE_ID:-}" ] && [ -n "${APP_SPECIFIC_PASSWORD:-}" ]; then
+    APPLE_TEAM_ID="${APPLE_TEAM_ID:-94L7P6P9PY}"
+    AUTH_ARGS="--apple-id $APPLE_ID --team-id $APPLE_TEAM_ID --password @env:APP_SPECIFIC_PASSWORD"
+    echo "使用环境变量 APPLE_ID / APP_SPECIFIC_PASSWORD"
+else
+    echo "错误: Keychain profile '${KEYCHAIN_PROFILE}' 不存在，且环境变量未设置" >&2
+    echo "请选择其一配置:" >&2
+    echo "  方式1: xcrun notarytool store-credentials '${KEYCHAIN_PROFILE}'" >&2
+    echo "  方式2: export APPLE_ID=xxx APP_SPECIFIC_PASSWORD=xxx APPLE_TEAM_ID=xxx" >&2
     exit 1
 fi
 echo "凭证 OK"
@@ -41,7 +51,7 @@ fi
 # 提交公证
 echo "=== 提交公证（可能需要 5-15 分钟）==="
 xcrun notarytool submit "$SUBMIT_PATH" \
-    --keychain-profile "$KEYCHAIN_PROFILE" \
+    $AUTH_ARGS \
     --wait
 
 # 清理临时 zip

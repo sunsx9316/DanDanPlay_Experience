@@ -1,6 +1,9 @@
 #!/bin/bash
 set -euo pipefail
 
+# 加载环境变量（GITEE_TOKEN 等）
+source ~/.zshrc 2>/dev/null || true
+
 # 发布：DMG + GitHub Release + git tag + 更新仓库
 # 用法: publish.sh <platform> <app_path> <short_version> <build> <changelog_file>
 
@@ -65,28 +68,41 @@ if [ "$PLATFORM" = "mac" ]; then
             echo "Gitee Release 创建成功, id=$GITEE_RELEASE_ID"
 
             echo "=== 上传 DMG 到 Gitee Release ==="
-            GITEE_UPLOAD_RESP=$(curl -sS -X POST "https://gitee.com/api/v5/repos/${GITEE_REPO}/releases/${GITEE_RELEASE_ID}/attach_files" \
-                -F "access_token=${GITEE_TOKEN}" \
-                -F "file=@${DMG_PATH}" \
-                --connect-timeout 30 \
-                --max-time 600)
-
-            GITEE_DOWNLOAD_URL=$(echo "$GITEE_UPLOAD_RESP" | python3 -c "import sys,json; print(json.load(sys.stdin).get('browser_download_url', ''))")
-
-            if [ -z "$GITEE_DOWNLOAD_URL" ] || [ "$GITEE_DOWNLOAD_URL" = "" ]; then
-                echo "警告: 上传 DMG 到 Gitee 失败: $GITEE_UPLOAD_RESP" >&2
+            DMG_SIZE=$(stat -f%z "$DMG_PATH" 2>/dev/null || stat -c%s "$DMG_PATH" 2>/dev/null || echo 0)
+            GITEE_MAX_SIZE=$((100 * 1024 * 1024))
+            if [ "$DMG_SIZE" -gt "$GITEE_MAX_SIZE" ]; then
+                DMG_SIZE_MB=$((DMG_SIZE / 1024 / 1024))
+                echo "跳过: DMG (${DMG_SIZE_MB}MB) 超过 Gitee 附件限制 (100MB)，仅使用 GitHub 下载"
             else
-                echo "Gitee 下载 URL: $GITEE_DOWNLOAD_URL"
+                GITEE_UPLOAD_RESP=$(curl -sS -X POST "https://gitee.com/api/v5/repos/${GITEE_REPO}/releases/${GITEE_RELEASE_ID}/attach_files" \
+                    -F "access_token=${GITEE_TOKEN}" \
+                    -F "file=@${DMG_PATH}" \
+                    --connect-timeout 30 \
+                    --max-time 600)
+
+                GITEE_DOWNLOAD_URL=$(echo "$GITEE_UPLOAD_RESP" | python3 -c "import sys,json; print(json.load(sys.stdin).get('browser_download_url', ''))")
+
+                if [ -z "$GITEE_DOWNLOAD_URL" ] || [ "$GITEE_DOWNLOAD_URL" = "" ]; then
+                    echo "警告: 上传 DMG 到 Gitee 失败: $GITEE_UPLOAD_RESP" >&2
+                else
+                    echo "Gitee 下载 URL: $GITEE_DOWNLOAD_URL"
+                fi
             fi
         fi
     else
         echo "提示: 未设置 GITEE_TOKEN，跳过 Gitee Release 上传"
     fi
 
-    # 4. Tag + push 主仓库
-    echo "=== Tag 主仓库 ==="
-    git tag "$VERSION_TAG"
-    git push origin "$VERSION_TAG"
+    # 4. push 主仓库（版本号 commit + tag）
+    echo "=== Push 主仓库 ==="
+    CURRENT_BRANCH=$(git branch --show-current)
+    git push origin "$CURRENT_BRANCH"
+    if git rev-parse "$VERSION_TAG" >/dev/null 2>&1; then
+        echo "Tag 已存在，跳过创建"
+    else
+        git tag "$VERSION_TAG"
+    fi
+    git push origin "$VERSION_TAG" 2>/dev/null || echo "Tag 可能已存在于远端，跳过 push"
 
     # 5. 更新 check_version.json
     echo "=== 更新 check_version.json ==="
@@ -120,7 +136,7 @@ EOF
     git commit -m "[update]更新${SHORT_VERSION}版本"
     git tag "$UPDATE_TAG"
     git push origin HEAD
-    git push origin "$UPDATE_TAG"
+    git push origin "$UPDATE_TAG" 2>/dev/null || echo "更新仓库 Tag 可能已存在，跳过 push"
     cd "$REPO_ROOT"
 
     echo "=== 发布完成 ==="

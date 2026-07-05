@@ -43,7 +43,7 @@ git rev-parse HEAD
 git rev-parse origin/develop
 ```
 
-如果不一致，用 AskUserQuestion 确认是否继续。
+如果本地落后于远程，用 AskUserQuestion 确认是否继续。本地领先（有未推送的提交）是正常的，继续即可。
 
 ```bash
 # macOS: 检查 pod install 是否需要
@@ -151,6 +151,18 @@ cp /tmp/release_changelog_<platform>.txt scripts/release/changelogs/<platform>.t
 
 > changelog 按平台独立维护于 `scripts/release/changelogs/<platform>.txt`。
 
+### Step 4.5: 提交版本号与 changelog
+
+版本号更新和 changelog 写入后，**先 commit** 再打包，确保 tag 指向的 commit 包含正确的版本号和 changelog：
+
+```bash
+cd /Users/jimhuang/Dev/DanDanPlay_Experience
+git add <platform_dir>/AniXPlayer.xcodeproj/project.pbxproj scripts/release/changelogs/<platform>.txt
+git commit -m "chore(release): bump <platform> version to <shortVersion> (<build>)"
+```
+
+**注意**：此时不 push，等发布完成后再统一 push。
+
 ### Step 5: Archive + Export（后台执行）
 
 这一步耗时较长（几分钟到十几分钟），用 `run_in_background` 执行：
@@ -193,6 +205,18 @@ bash scripts/release/notarize.sh /tmp/export/AniXPlayer.dmg
 
 `notarize.sh` 支持 `.app`（自动打包为 zip 提交）和 `.dmg`（直接提交），公证成功后自动钉入票据。
 
+优先使用 keychain profile `AC_PASSWORD`，若不存在则自动 fallback 到环境变量 `APPLE_ID` + `APP_SPECIFIC_PASSWORD` + `APPLE_TEAM_ID`。
+
+**首次使用**需要创建 keychain 凭证：
+```bash
+# 先 source 环境变量
+source ~/.zshrc
+xcrun notarytool store-credentials 'AC_PASSWORD' \
+    --apple-id "jimhuang099@gmail.com" \
+    --team-id "94L7P6P9PY" \
+    --password "$APP_SPECIFIC_PASSWORD"
+```
+
 等待完成后检查结果。如果公证失败，展示错误信息，**终止**。
 
 ### Step 8: 最终确认 + 发布
@@ -222,7 +246,10 @@ bash scripts/release/publish.sh <ios|tvos> /tmp/export/AniXPlayer.ipa <shortVers
 
 ## 注意事项
 
-- macOS 环境前提：notarytool `AC_PASSWORD`、`gh` CLI 已配置，`UPDATE_REPO_PATH`（Gitee 更新仓库）
+- macOS 环境前提：`GITEE_TOKEN` 环境变量（建议写入 `~/.zshrc`）、`gh` CLI 已配置、`UPDATE_REPO_PATH`（Gitee 更新仓库）
+- 公证凭证：优先使用 keychain `AC_PASSWORD`，fallback 到 `APPLE_ID` + `APP_SPECIFIC_PASSWORD` + `APPLE_TEAM_ID` 环境变量
+- Gitee 附件限制 100MB，若 DMG 超限自动跳过上传，仅使用 GitHub 下载
+- `gh release create` 会自动创建并推送 git tag，`publish.sh` 已做幂等处理（tag 存在则跳过）
 - iOS / tvOS 环境前提：`APP_SPECIFIC_PASSWORD` 环境变量（建议写入 `~/.zshrc` 持久化）+ `APPLE_ID`（默认 `jimhuang099@gmail.com`）
 - **Xcode 17 `altool` keychain 兼容性**：`altool --store-password-in-keychain-item` 在 Xcode 17 中可能无法正确读取 keychain 条目，如果 publish.sh 报 keychain 错误，改用 `@env:APP_SPECIFIC_PASSWORD` 直接上传：
   ```bash
