@@ -17,7 +17,7 @@ if [ -z "$PLATFORM" ] || [ -z "$APP_PATH" ] || [ -z "$SHORT_VERSION" ] || [ -z "
 fi
 
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-VERSION_TAG="v${SHORT_VERSION}-${PLATFORM}-${BUILD}"
+VERSION_TAG="${PLATFORM}-v${SHORT_VERSION}-${BUILD}"
 
 if [ "$PLATFORM" = "mac" ]; then
     # 1. 创建/使用 DMG

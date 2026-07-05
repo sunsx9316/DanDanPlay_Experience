@@ -103,7 +103,7 @@ bash scripts/release/update_project_version.sh <platform> --testflight <build>
 
 **核心原则：更新日志必须只包含当前平台相关的改动。** 例如打包 iOS，日志只列 iOS 相关的功能，不出现 Mac/tvOS 专属内容。
 
-**Tag 规则**: 格式 `v{version}-{platform}-{build}`（如 `v1.6.3-ios-2026070501`），查找上一版本 tag 时用平台前缀。
+**Tag 规则**: 格式 `<platform>-v{version}-{build}`（如 `ios-v1.6.3-2026070501`），查找上一版本 tag 时用平台前缀。
 
 ```bash
 cd /Users/jimhuang/Dev/DanDanPlay_Experience
@@ -228,7 +228,7 @@ bash scripts/release/publish.sh <ios|tvos> /tmp/export/AniXPlayer.ipa <shortVers
   ```bash
   xcrun altool --validate-app -f /tmp/export/AniXPlayer.ipa -t <ios|tvos> -u jimhuang099@gmail.com -p "@env:APP_SPECIFIC_PASSWORD"
   xcrun altool --upload-app -f /tmp/export/AniXPlayer.ipa -t <ios|tvos> -u jimhuang099@gmail.com -p "@env:APP_SPECIFIC_PASSWORD"
-  git tag "v<version>-<platform>-<build>" && git push origin "v<version>-<platform>-<build>"
+  git tag "<platform>-v<version>-<build>" && git push origin "<platform>-v<version>-<build>"
   ```
 - macOS 发布会推送到 GitHub Release + Gitee 更新仓库 + git tag
 - iOS / tvOS 发布会上传 `.ipa` 到 App Store Connect + git tag（后续需在 App Store Connect 中完成提审）
