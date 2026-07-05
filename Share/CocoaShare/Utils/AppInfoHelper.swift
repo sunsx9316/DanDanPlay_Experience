@@ -18,7 +18,8 @@ class AppInfoHelper {
     }
     
     static var copyright: String {
-        return Bundle.main.object(forInfoDictionaryKey: "NSHumanReadableCopyright") as? String ?? ""
+        let year = Calendar.current.component(.year, from: Date())
+        return "Copyright © 2022 - \(year) jimhuang"
     }
     
 }

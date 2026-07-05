@@ -31,7 +31,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private var mediaLibraryWindowController: MediaLibraryWindowController?
 
-    private var loginWindowController: NSWindowController?
+    private var loginWindowController: WindowController?
 
     private var homePageWindowController: HomePageNavigationWindowController?
 
@@ -132,6 +132,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let homeVC = HomePageViewController()
         let wc = HomePageNavigationWindowController(rootViewController: homeVC)
         homeVC.navigator = wc
+        wc.windowWillCloseCallBack = { [weak self] in
+            self?.homePageWindowController = nil
+        }
         wc.showWindow(nil)
         homePageWindowController = wc
     }
@@ -144,6 +147,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             mainVC.openNetworkFiles(allFiles, startWith: file)
             self.mainWindowController.window?.makeKeyAndOrderFront(nil)
             NSApp.activate(ignoringOtherApps: true)
+        }
+        wc.windowWillCloseCallBack = { [weak self] in
+            self?.mediaLibraryWindowController = nil
         }
         wc.showWindow(nil)
         self.mediaLibraryWindowController = wc
@@ -270,7 +276,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let window = NSWindow(contentViewController: vc)
             window.styleMask = [.titled, .closable, .miniaturizable]
             window.isReleasedWhenClosed = false
-            let wc = NSWindowController(window: window)
+            let wc = WindowController(window: window)
+            window.delegate = wc
+            wc.windowWillCloseCallBack = { [weak self] in
+                self?.loginWindowController = nil
+            }
             wc.showWindow(nil)
             self.loginWindowController = wc
         }

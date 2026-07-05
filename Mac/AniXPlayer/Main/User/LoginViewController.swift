@@ -10,34 +10,56 @@ import SnapKit
 
 class LoginViewController: ViewController {
 
+    private static let fieldHeight: CGFloat = 32
+    private static let horizontalPadding: CGFloat = 40
+
     private lazy var usernameTextField: TextField = {
-        let textField = TextField()
-        textField.placeholderString = NSLocalizedString("用户名", comment: "")
-        return textField
+        let tf = TextField()
+        tf.centersVertically = true
+        tf.placeholderString = NSLocalizedString("用户名", comment: "")
+        tf.isBordered = false
+        tf.wantsLayer = true
+        tf.layer?.cornerRadius = 6
+        tf.layer?.borderWidth = 1
+        tf.layer?.borderColor = NSColor.separatorColor.cgColor
+        tf.backgroundColor = NSColor.textBackgroundColor
+        return tf
     }()
 
-    private lazy var passwordTextField: NSSecureTextField = {
-        let textField = NSSecureTextField()
-        textField.font = .ddp_normal
-        textField.textColor = .textColor
-        textField.placeholderString = NSLocalizedString("密码", comment: "")
-        return textField
+    private lazy var passwordTextField: SecureTextField = {
+        let tf = SecureTextField()
+        tf.centersVertically = true
+        tf.placeholderString = NSLocalizedString("密码", comment: "")
+        tf.isBordered = false
+        tf.wantsLayer = true
+        tf.layer?.cornerRadius = 6
+        tf.layer?.borderWidth = 1
+        tf.layer?.borderColor = NSColor.separatorColor.cgColor
+        tf.backgroundColor = NSColor.textBackgroundColor
+        return tf
     }()
 
     private lazy var loginButton: Button = {
         let button = Button.custom()
-        button.title = NSLocalizedString("登录", comment: "")
+        let title = NSLocalizedString("登录", comment: "")
+        let attrTitle = NSAttributedString(
+            string: title,
+            attributes: [
+                .font: NSFont.ddp_normal(weight: .medium) as Any,
+                .foregroundColor: NSColor.white,
+            ]
+        )
+        button.attributedTitle = attrTitle
         button.addTarget(self, action: #selector(loginButtonTapped))
         button.keyEquivalent = "\r"
-        let color = NSColor(named: "MainColor") ?? .systemBlue
         button.wantsLayer = true
-        button.layer?.backgroundColor = color.cgColor
-        button.layer?.cornerRadius = 4
+        button.layer?.backgroundColor = (NSColor(named: "MainColor") ?? .systemBlue).cgColor
+        button.layer?.cornerRadius = 6
         return button
     }()
 
     override func loadView() {
-        self.view = .init(frame: .init(x: 0, y: 0, width: 400, height: 250))
+        self.view = .init(frame: .init(x: 0, y: 0, width: 400, height: 260))
     }
 
     override func viewDidAppear() {
@@ -56,23 +78,23 @@ class LoginViewController: ViewController {
 
         usernameTextField.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(40)
-            make.leading.equalToSuperview().offset(40)
-            make.trailing.equalToSuperview().offset(-40)
-            make.height.equalTo(28)
+            make.leading.equalToSuperview().offset(Self.horizontalPadding)
+            make.trailing.equalToSuperview().offset(-Self.horizontalPadding)
+            make.height.equalTo(Self.fieldHeight)
         }
 
         passwordTextField.snp.makeConstraints { make in
-            make.top.equalTo(usernameTextField.snp.bottom).offset(20)
+            make.top.equalTo(usernameTextField.snp.bottom).offset(16)
             make.leading.equalTo(usernameTextField)
             make.trailing.equalTo(usernameTextField)
-            make.height.equalTo(28)
+            make.height.equalTo(Self.fieldHeight)
         }
 
         loginButton.snp.makeConstraints { make in
             make.top.equalTo(passwordTextField.snp.bottom).offset(24)
             make.leading.equalTo(passwordTextField)
             make.trailing.equalTo(passwordTextField)
-            make.height.equalTo(32)
+            make.height.equalTo(36)
         }
     }
 
@@ -99,4 +121,3 @@ class LoginViewController: ViewController {
         }
     }
 }
-

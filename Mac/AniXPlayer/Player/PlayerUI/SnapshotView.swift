@@ -13,8 +13,8 @@ class SnapshotView: BaseView {
     
     private lazy var imgView = ImageView()
     
-    private lazy var timeLabel: TextField = {
-        let label = TextField(labelWithString: "")
+    private lazy var timeLabel: Label = {
+        let label = Label(labelWithString: "")
         return label
     }()
     

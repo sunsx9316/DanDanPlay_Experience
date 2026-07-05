@@ -15,6 +15,7 @@
 		1F93C14709A5B850D79A6335 /* ServerHostCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8177CF2ED2F5545BC19553A /* ServerHostCellView.swift */; };
 		25AABE9574E0A08C674E5D10 /* NavigationWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F7C255B009A08B1E2B77CA /* NavigationWindowController.swift */; };
 		2E2FD202ED0009FED5CE66DB /* Slider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F268B6B06684283A4E523C /* Slider.swift */; };
+		3401FC98DFC04E2623FB7560 /* SubtitleOrderCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C148A7983AE2275B0BB16B3 /* SubtitleOrderCellView.swift */; };
 		381DA539B91CF3F9046A9917 /* NeighborServiceCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C64CE1B64811811E4B84007B /* NeighborServiceCellView.swift */; };
 		3EC2817079DE697B7194B2F2 /* CollectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E42C2E6BDD7BA6129308382C /* CollectionView.swift */; };
 		3EF68E2E7D203EC4A5F4F5CD /* OutlineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8418363AFF675F9FE08893E4 /* OutlineView.swift */; };
@@ -269,6 +270,7 @@
 		66534665E437829E46B7BF15 /* HomePageViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomePageViewController.swift; sourceTree = "<group>"; };
 		74DA0A6EC341BF92124570EC /* EpisodeCellView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EpisodeCellView.swift; sourceTree = "<group>"; };
 		7949B8C389D4592B988347CF /* CollectionViewItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CollectionViewItem.swift; sourceTree = "<group>"; };
+		7C148A7983AE2275B0BB16B3 /* SubtitleOrderCellView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SubtitleOrderCellView.swift; sourceTree = "<group>"; };
 		7CB9B28278FD6BBB9F4B4D97 /* PopUpButton.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PopUpButton.swift; sourceTree = "<group>"; };
 		7D1BD781FB689E3C8DE22117 /* BarProgressView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BarProgressView.swift; sourceTree = "<group>"; };
 		8418363AFF675F9FE08893E4 /* OutlineView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OutlineView.swift; sourceTree = "<group>"; };
@@ -837,6 +839,7 @@
 				FCBE01C58043461C971F7664 /* SetMainColorViewController.swift */,
 				DA882863CED1C4D1CB5CA29B /* ServerHostSectionCellView.swift */,
 				D8177CF2ED2F5545BC19553A /* ServerHostCellView.swift */,
+				7C148A7983AE2275B0BB16B3 /* SubtitleOrderCellView.swift */,
 			);
 			path = Setting;
 			sourceTree = "<group>";
@@ -1658,6 +1661,7 @@
 				76C8B3F33829BFE4671CA855 /* CheckBox.swift in Sources */,
 				8E419CE788CC81E88C432CCA /* PlayerLaunchViewController.swift in Sources */,
 				0CEBAA8DC7317C3074C7D557 /* MainViewController.swift in Sources */,
+				3401FC98DFC04E2623FB7560 /* SubtitleOrderCellView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1820,7 +1824,7 @@
 				INFOPLIST_FILE = AniXPlayer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 - 2024 jimhuang";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 - 2026 jimhuang";
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1869,7 +1873,7 @@
 				INFOPLIST_FILE = AniXPlayer/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = "$(PRODUCT_NAME)";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.video";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 - 2024 jimhuang";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2022 - 2026 jimhuang";
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",

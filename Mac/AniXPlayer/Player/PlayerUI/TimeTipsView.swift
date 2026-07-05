@@ -10,8 +10,8 @@ import SnapKit
 
 class TimeTipsView: BaseView {
     
-    lazy var timeLabel: TextField = {
-        var timeLabel = TextField(labelWithString: "")
+    lazy var timeLabel: Label = {
+        var timeLabel = Label(labelWithString: "")
         timeLabel.alignment = .center
         return timeLabel
     }()

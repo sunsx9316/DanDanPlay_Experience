@@ -365,3 +365,24 @@ iv.imageScaling = .scaleProportionallyDown
 | `.proportionallyDown` | `.scaleProportionallyDown` | 仅缩小，不放大 |
 
 **原因**：macOS `NSImageView` 不支持 `scaleAspectFill`，`ImageView` 基类通过 `setScaling(.aspectFill)` 内部用 CALayer 实现，直接设 `imageScaling` 无法使用此模式。
+
+## 非编辑文本使用 Label
+
+**展示类只读文本必须使用 `Label` 基类，禁止使用 `TextField(labelWithString:)`**：
+
+```swift
+// 推荐 — 使用 Label（自动 isEditable=false, isBordered=false, drawsBackground=false, horizontalPadding=0）
+private lazy var titleLabel: Label = {
+    let label = Label(labelWithString: "")
+    label.font = .ddp_large
+    return label
+}()
+
+// 不推荐 — TextField(labelWithString:) 需手动配置多项属性
+private lazy var titleLabel: TextField = {
+    let title = TextField(labelWithString: "")
+    return title
+}()
+```
+
+**原因**：`Label` 继承 `TextField`，在 `setupInit()` 中自动设置 `isEditable = false`、`isBordered = false`、`drawsBackground = false`、`horizontalPadding = 0`，而 `TextField(labelWithString:)` 不会经过这些设置，且需要手动配置。

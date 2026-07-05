@@ -22,6 +22,10 @@ protocol PlayerUIViewDelegate: AnyObject {
 
     func onTouchSendDanmakuButton(playerUIView: PlayerUIView)
 
+    func onTouchDanmakuConfigButton(playerUIView: PlayerUIView, button: NSButton)
+
+    func playerUIView(_ playerUIView: PlayerUIView, didPressEnterInDanmakuTextField textField: NSTextField)
+
     func onTouchPlayButton(playerUIView: PlayerUIView, isSelected: Bool)
 
     func onTouchStopButton(playerUIView: PlayerUIView)
@@ -90,6 +94,8 @@ class PlayerUIView: BaseView {
         bottomView.playButton.addTarget(self, action: #selector(onTouchPlayButton(_:)))
         bottomView.mediaSettingButton.addTarget(self, action: #selector(onTouchMediaButton(_:)))
         bottomView.danmakuSettingButton.addTarget(self, action: #selector(onTouchDanmakuButton(_:)))
+        bottomView.danmakuConfigButton.addTarget(self, action: #selector(onTouchDanmakuConfigButton(_:)))
+        bottomView.danmakuTextField.delegate = self
         bottomView.progressSlider.addEvent(.mouseUp, action: { [weak self] (sender, _) in
             guard let self = self else { return }
             self.delegate?.tapSlider(playerUIView: self, progress: CGFloat(sender.progress))
@@ -248,6 +254,10 @@ class PlayerUIView: BaseView {
         delegate?.onTouchDanmakuSettingButton(playerUIView: self, button: sender)
     }
 
+    @objc private func onTouchDanmakuConfigButton(_ sender: NSButton) {
+        delegate?.onTouchDanmakuConfigButton(playerUIView: self, button: sender)
+    }
+
     @IBAction private func onTouchPlayerList(_ sender: NSButton) {
         delegate?.onTouchPlayerList(playerUIView: self, button: sender)
     }
@@ -364,4 +374,16 @@ class PlayerUIView: BaseView {
     }
 
 
+}
+
+// MARK: - NSTextFieldDelegate
+extension PlayerUIView: NSTextFieldDelegate {
+
+    func control(_ control: NSControl, textView: NSTextView, doCommandBy commandSelector: Selector) -> Bool {
+        if commandSelector == #selector(NSResponder.insertNewline(_:)) {
+            delegate?.playerUIView(self, didPressEnterInDanmakuTextField: bottomView.danmakuTextField)
+            return true
+        }
+        return false
+    }
 }

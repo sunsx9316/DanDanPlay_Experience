@@ -10,8 +10,8 @@ import SnapKit
 
 class PlayerUITopView: BaseView {
     
-    lazy var titleLabel: TextField = {
-        let label = TextField(labelWithString: "")
+    lazy var titleLabel: Label = {
+        let label = Label(labelWithString: "")
         label.font = NSFont.systemFont(ofSize: 15)
         label.textColor = .white
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)

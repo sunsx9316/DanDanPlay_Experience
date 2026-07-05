@@ -37,6 +37,7 @@ class NavigationWindowController: WindowController, NSToolbarDelegate {
         )
         window.title = config.defaultTitle
         super.init(window: window)
+        window.delegate = self
 
         window.contentViewController = rootViewController
         window.setContentSize(config.windowSize)

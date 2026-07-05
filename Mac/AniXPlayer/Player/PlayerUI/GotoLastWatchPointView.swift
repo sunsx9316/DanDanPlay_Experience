@@ -10,8 +10,8 @@ import SnapKit
 
 class GotoLastWatchPointView: BaseView {
 
-    private lazy var timeLabel: TextField = {
-        let label = TextField(labelWithString: "")
+    private lazy var timeLabel: Label = {
+        let label = Label(labelWithString: "")
         label.textColor = .white
         label.font = .ddp_large
         return label

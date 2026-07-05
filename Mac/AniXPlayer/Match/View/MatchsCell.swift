@@ -10,13 +10,13 @@ import SnapKit
 
 class MatchsCell: BaseView {
 
-    private lazy var titleLabel: TextField = {
-        let title = TextField(labelWithString: "")
+    private lazy var titleLabel: Label = {
+        let title = Label(labelWithString: "")
         return title
     }()
-    
-    private lazy var typeLabel: TextField = {
-        let title = TextField(labelWithString: "")
+
+    private lazy var typeLabel: Label = {
+        let title = Label(labelWithString: "")
         title.backgroundColor = .mainColor
         title.drawsBackground = true
         title.wantsLayer = true

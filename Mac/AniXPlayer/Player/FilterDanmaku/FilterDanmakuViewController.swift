@@ -110,6 +110,7 @@ class FilterDanmakuViewController: ViewController {
         let field = TextField()
         field.placeholderString = NSLocalizedString("输入屏蔽词后回车添加", comment: "")
         field.font = .ddp_normal
+        field.isBordered = true
         field.addTarget(self, action: #selector(onClickAdd(_:)))
         return field
     }()

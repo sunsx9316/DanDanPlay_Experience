@@ -70,6 +70,9 @@ class PlayerViewController: ViewController {
 
     private weak var danmakuMenu: NSMenu?
 
+    private var sendDanmakuColor: ANXColor = Preferences.shared.sendDanmakuColor
+    private var sendDanmakuMode: Comment.Mode = .normal
+
     // 开始活动以防止系统休眠
     private var activityToken: NSObjectProtocol?
 
@@ -553,42 +556,64 @@ extension PlayerViewController: PlayerUIViewDelegate, NSMenuDelegate {
     }
 
     func onTouchSendDanmakuButton(playerUIView: PlayerUIView) {
-        guard let item = self.mediaModel.media, self.mediaModel.isMatch(media: item) else {
+    }
+
+    func onTouchDanmakuConfigButton(playerUIView: PlayerUIView, button: NSButton) {
+        ANX.logInfo(.player, "[Player] 打开弹幕配置")
+        dismissPresented()
+
+        let vc = SendDanmakuViewController(color: sendDanmakuColor, mode: sendDanmakuMode)
+        vc.onColorChanged = { [weak self] color in
+            self?.sendDanmakuColor = color
+        }
+        vc.onModeChanged = { [weak self] mode in
+            self?.sendDanmakuMode = mode
+        }
+        present(vc, asPopoverRelativeTo: .zero, of: button, preferredEdge: .minY, behavior: .transient)
+    }
+
+    func playerUIView(_ playerUIView: PlayerUIView, didPressEnterInDanmakuTextField textField: NSTextField) {
+        let text = textField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !text.isEmpty else { return }
+        guard let item = self.mediaModel.media, self.mediaModel.isMatch(media: item),
+              let matchId = self.mediaModel.matchInfo(media: item)?.matchId else {
             self.view.show(text: NSLocalizedString("需要指定视频弹幕列表，才能发弹幕哟~", comment: ""))
             return
         }
-        ANX.logInfo(.player, "[Player] 打开发送弹幕页面")
-        
-//        let vc = SendDanmakuViewController()
-//        vc.onTouchSendButtonCallBack = { [weak self] (text, aVC) in
-//            guard let self = self else { return }
-//
-//            guard let item = self.player.currentPlayItem,
-//                  let _ = self.findPlayItem(item)?.episodeId else {
-//
-//                self.view.showHUD("需要指定视频弹幕列表，才能发弹幕哟~")
-//                return
-//            }
-//
-////            if !text.isEmpty {
-////                let danmaku = DanmakuModel()
-////                danmaku.mode = .normal
-////                danmaku.time = self.danmakuRender.currentTime + self.danmakuRender.offsetTime
-////                danmaku.message = text
-////                danmaku.id = "\(Date().timeIntervalSince1970)"
-////
-////                let msg = SendDanmakuMessage()
-////                msg.danmaku = danmaku
-////                msg.episodeId = episodeId
-////                #warning("待处理")
-//////                MessageHandler.sendMessage(msg)
-////
-//////                self.danmakuRender.sendDanmaku(DanmakuManager.shared.conver(danmaku))
-////            }
-//
-//            aVC.navigationController?.popViewController(animated: true)
-//        }
-//        self.navigationController?.pushViewController(vc, animated: true)
+
+        guard Preferences.shared.loginInfo != nil else {
+            let alert = NSAlert()
+            alert.messageText = NSLocalizedString("未登录", comment: "")
+            alert.informativeText = NSLocalizedString("发送弹幕需要登录账号，是否前往登录？", comment: "")
+            alert.addButton(withTitle: NSLocalizedString("去登录", comment: ""))
+            alert.addButton(withTitle: NSLocalizedString("取消", comment: ""))
+            alert.alertStyle = .warning
+            if alert.runModal() == .alertFirstButtonReturn {
+                let loginVC = LoginViewController()
+                let window = NSWindow(contentViewController: loginVC)
+                window.styleMask = [.titled, .closable, .miniaturizable]
+                window.isReleasedWhenClosed = false
+                let wc = NSWindowController(window: window)
+                wc.showWindow(nil)
+            }
+            return
+        }
+
+        var comment = Comment()
+        comment.message = text
+        comment.mode = sendDanmakuMode
+        comment.color = sendDanmakuColor
+        comment.time = mediaModel.currentTime
+
+        ANX.logInfo(.player, "[Player] 发送弹幕: \"\(text)\" mode=\(comment.mode) color=\(comment.color)")
+        danmakuModel.sendDanmaku(matchId: matchId, danmaku: comment) { [weak self] success, msg in
+            DispatchQueue.main.async {
+                self?.view.show(text: msg ?? "")
+                if success {
+                    textField.stringValue = ""
+                }
+            }
+        }
     }
     
     func onTouchPlayButton(playerUIView: PlayerUIView, isSelected: Bool) {

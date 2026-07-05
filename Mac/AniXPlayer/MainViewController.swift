@@ -26,6 +26,7 @@ class MainViewController: ViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = AppInfoHelper.appDisplayName
         showLaunch()
     }
 

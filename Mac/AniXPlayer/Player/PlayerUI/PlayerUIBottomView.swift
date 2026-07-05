@@ -8,6 +8,8 @@
 import Cocoa
 import SnapKit
 
+// MARK: - PlayerUIBottomView
+
 class PlayerUIBottomView: BaseView {
 
     lazy var progressSlider: PlayerSlider = {
@@ -39,10 +41,11 @@ class PlayerUIBottomView: BaseView {
         return button
     }()
     
-    lazy var timeLabel: TextField = {
-        let label = TextField(labelWithString: "")
+    lazy var timeLabel: Label = {
+        let label = Label(labelWithString: "")
         label.textColor = .white
-        label.font = .systemFont(ofSize: 12)
+        label.font = .monospacedDigitSystemFont(ofSize: 12, weight: .regular)
+        label.alignment = .center
         label.setContentCompressionResistancePriority(.required, for: .horizontal)
         label.setContentHuggingPriority(.required, for: .horizontal)
         return label
@@ -57,7 +60,28 @@ class PlayerUIBottomView: BaseView {
         let button = Button(title: NSLocalizedString("弹幕设置", comment: ""), target: nil, action: nil)
         return button
     }()
-    
+
+    lazy var danmakuTextField: TextField = {
+        let tf = TextField()
+        tf.centersVertically = true
+        tf.font = .systemFont(ofSize: 12)
+        tf.textColor = .white
+        tf.drawsBackground = true
+        tf.backgroundColor = NSColor(white: 0, alpha: 0.3)
+        tf.placeholderString = NSLocalizedString("发个弹幕吧", comment: "")
+        tf.isBordered = false
+        tf.wantsLayer = true
+        tf.layer?.cornerRadius = 4
+        tf.layer?.masksToBounds = true
+        return tf
+    }()
+
+    lazy var danmakuConfigButton: Button = {
+        let button = Button(title: NSLocalizedString("弹幕配置", comment: ""), target: nil, action: nil)
+        button.font = .systemFont(ofSize: 12)
+        return button
+    }()
+
     lazy var mediaSettingButton: Button = {
         let button = Button(title: NSLocalizedString("视频设置", comment: ""), target: nil, action: nil)
         return button
@@ -90,6 +114,8 @@ class PlayerUIBottomView: BaseView {
         containerView.addSubview(self.timeLabel)
         containerView.addSubview(self.playerListButton)
         containerView.addSubview(self.mediaSettingButton)
+        containerView.addSubview(self.danmakuTextField)
+        containerView.addSubview(self.danmakuConfigButton)
         containerView.addSubview(self.danmakuSettingButton)
         
         self.addSubview(containerView)
@@ -132,18 +158,31 @@ class PlayerUIBottomView: BaseView {
         self.timeLabel.snp.makeConstraints { make in
             make.leading.equalTo(self.nextButton.snp.trailing).offset(20)
             make.centerY.equalTo(self.playButton)
+            make.width.greaterThanOrEqualTo(100)
         }
-        
+
+        self.danmakuTextField.snp.makeConstraints { make in
+            make.centerY.equalTo(self.playButton)
+            make.leading.equalTo(self.timeLabel.snp.trailing).offset(10)
+            make.width.equalTo(130)
+            make.height.equalTo(24)
+        }
+
+        self.danmakuConfigButton.snp.makeConstraints { make in
+            make.centerY.equalTo(self.playButton)
+            make.leading.equalTo(self.danmakuTextField.snp.trailing).offset(6)
+        }
+
         self.playerListButton.snp.makeConstraints { make in
             make.centerY.equalTo(self.playButton)
-            make.leading.greaterThanOrEqualTo(self.timeLabel.snp.trailing).offset(15)
+            make.leading.greaterThanOrEqualTo(self.danmakuConfigButton.snp.trailing).offset(15)
         }
-        
+
         self.mediaSettingButton.snp.makeConstraints { make in
             make.centerY.equalTo(self.playButton)
             make.leading.equalTo(self.playerListButton.snp.trailing).offset(10)
         }
-        
+
         self.danmakuSettingButton.snp.makeConstraints { make in
             make.trailing.equalTo(-10)
             make.centerY.equalTo(self.playButton)
