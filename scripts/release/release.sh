@@ -83,10 +83,10 @@ echo ""
 # Step 1: 计算版本号
 # ============================================================
 echo "--- [1/6] 计算版本号 ---"
-source <("$SCRIPT_DIR/calc_version.sh")
+source <("$SCRIPT_DIR/calc_version.sh" "$PLATFORM")
 echo "  shortVersion: $NEW_SHORT_VERSION"
 echo "  build:        $NEW_BUILD"
-echo "  上次 tag:     $(git tag --sort=-creatordate | grep '^v' | head -1)"
+echo "  上次 tag:     $(git tag --sort=-creatordate | grep "^${PLATFORM}-v" | head -1)"
 
 echo ""
 read -p "版本号确认，输入 y 继续，或输入新版本号手动修正 (如 1.7.0): " confirm
@@ -112,8 +112,8 @@ echo "--- [2/6] 更新工程版本号 ---"
 # ============================================================
 echo ""
 echo "--- [3/6] 生成更新日志 ---"
-LAST_TAG=$(git tag --sort=-creatordate | grep '^v' | head -1)
-CHANGELOG_FILE="/tmp/release_changelog.txt"
+LAST_TAG=$(git tag --sort=-creatordate | grep "^${PLATFORM}-v" | head -1)
+CHANGELOG_FILE="/tmp/release_changelog_${PLATFORM}.txt"
 "$SCRIPT_DIR/gen_changelog.sh" "$LAST_TAG" "$CHANGELOG_FILE"
 
 echo ""
@@ -156,7 +156,7 @@ fi
 # ============================================================
 # Step 6: 最终确认 + 发布
 # ============================================================
-VERSION_TAG="v${NEW_SHORT_VERSION}"
+VERSION_TAG="${PLATFORM}-v${NEW_SHORT_VERSION}-${NEW_BUILD}"
 echo ""
 echo "========================================"
 echo "  最终确认"

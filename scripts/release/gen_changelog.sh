@@ -10,7 +10,7 @@ OUTPUT_FILE="${2:-/tmp/release_changelog.txt}"
 
 if [ -z "$LAST_TAG" ]; then
     echo "用法: $0 <last_tag> [output_file]" >&2
-    echo "示例: $0 v1.6.2" >&2
+    echo "示例: $0 ios-v1.6.2-2026070501" >&2
     exit 1
 fi
 

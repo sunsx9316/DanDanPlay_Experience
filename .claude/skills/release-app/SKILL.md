@@ -72,9 +72,9 @@ macOS 跳过此步骤，直接到 Step 2。
 ```bash
 cd /Users/jimhuang/Dev/DanDanPlay_Experience
 # App Store / macOS 模式
-bash scripts/release/calc_version.sh
+bash scripts/release/calc_version.sh <platform>
 # TestFlight 模式
-bash scripts/release/calc_version.sh --testflight <platform>
+bash scripts/release/calc_version.sh <platform> --testflight
 ```
 
 输出示例：
@@ -107,7 +107,7 @@ bash scripts/release/update_project_version.sh <platform> --testflight <build>
 
 ```bash
 cd /Users/jimhuang/Dev/DanDanPlay_Experience
-LAST_TAG=$(git tag --sort=-creatordate | grep “^v.*-<platform>” | head -1)
+LAST_TAG=$(git tag --sort=-creatordate | grep “^<platform>-v” | head -1)
 ```
 
 **日志内容规则（按优先级排序）**:
