@@ -194,6 +194,40 @@
         }
       }
     },
+    "Gitee 下载": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gitee Download"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gitee 下载"
+          }
+        }
+      }
+    },
+    "GitHub 下载": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GitHub Download"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GitHub 下载"
+          }
+        }
+      }
+    },
     "iCloud 同步": {
       "localizations": {
         "en": {
@@ -285,6 +319,23 @@
         }
       }
     },
+    "上传": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Upload"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "上传"
+          }
+        }
+      }
+    },
     "上次观看: %@": {
       "localizations": {
         "en": {
@@ -313,6 +364,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "上次观看时间："
+          }
+        }
+      }
+    },
+    "下载失败，请尝试手动下载": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download failed, please try manual download"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下载失败，请尝试手动下载"
+          }
+        }
+      }
+    },
+    "下载完成，正在安装...": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Download complete, installing..."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "下载完成，正在安装..."
           }
         }
       }
@@ -378,6 +461,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "中文"
+          }
+        }
+      }
+    },
+    "主节点": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Primary"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "主节点"
+          }
+        }
+      }
+    },
+    "主链接无法访问，正在切换备用链接...": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Primary link unavailable, switching to fallback..."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "主链接无法访问，正在切换备用链接..."
           }
         }
       }
@@ -474,6 +589,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "保存"
+          }
+        }
+      }
+    },
+    "保存文件失败": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed to save file"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "保存文件失败"
           }
         }
       }
@@ -927,6 +1058,38 @@
         }
       }
     },
+    "发现新版本": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New Version Available"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "发现新版本"
+          }
+        }
+      }
+    },
+    "发现新版本 %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "New Version %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "发现新版本 %@"
+          }
+        }
+      }
+    },
     "发送失败": {
       "localizations": {
         "en": {
@@ -971,6 +1134,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "取消"
+          }
+        }
+      }
+    },
+    "取消下载": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancel Download"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "取消下载"
           }
         }
       }
@@ -1104,6 +1283,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "备注"
+          }
+        }
+      }
+    },
+    "备用节点": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mirror"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "备用节点"
           }
         }
       }
@@ -1536,6 +1731,23 @@
         }
       }
     },
+    "帮助": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "test"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "帮助"
+          }
+        }
+      }
+    },
     "开启": {
       "localizations": {
         "en": {
@@ -1852,6 +2064,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "我的关注"
+          }
+        }
+      }
+    },
+    "手动下载": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Manual Download"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "手动下载"
           }
         }
       }
@@ -2210,6 +2438,22 @@
         }
       }
     },
+    "新版本包含功能改进与问题修复。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This version includes feature improvements and bug fixes."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "新版本包含功能改进与问题修复。"
+          }
+        }
+      }
+    },
     "新番时间表": {
       "localizations": {
         "en": {
@@ -2238,6 +2482,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "无"
+          }
+        }
+      }
+    },
+    "无效的下载地址": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid download URL"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无效的下载地址"
           }
         }
       }
@@ -2286,6 +2546,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "显示区域"
+          }
+        }
+      }
+    },
+    "暂不更新": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Skip"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "暂不更新"
           }
         }
       }
@@ -2442,6 +2718,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "正则表达式"
+          }
+        }
+      }
+    },
+    "正在下载...": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Downloading..."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在下载..."
+          }
+        }
+      }
+    },
+    "正在下载... %d%% (%.1f / %.1f MB)": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Downloading... %d%% (%.1f / %.1f MB)"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在下载... %d%% (%.1f / %.1f MB)"
           }
         }
       }
@@ -3056,6 +3364,22 @@
         }
       }
     },
+    "自动更新": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Auto Update"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "自动更新"
+          }
+        }
+      }
+    },
     "自动跳过片头/片尾": {
       "localizations": {
         "en": {
@@ -3556,6 +3880,22 @@
         }
       }
     },
+    "重试": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Retry"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重试"
+          }
+        }
+      }
+    },
     "防挡字幕": {
       "localizations": {
         "en": {
@@ -3791,18 +4131,18 @@
         }
       }
     },
-    "上传": {
+    "检查更新失败": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Upload"
+            "value": "Update check failed"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "上传"
+            "value": "检查更新失败"
           }
         }
       }

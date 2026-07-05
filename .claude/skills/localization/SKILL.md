@@ -48,6 +48,20 @@ python3 scripts/add_localization.py ios --add "备注" "Remark"
 
 - 参数1: key（也作为 zh-Hans）
 - 参数2: 英文翻译
+- 仅对新 key 有效，已存在的 key 不修改
+
+### 更新已有翻译
+
+`--sync` 会用 key 占位填充 en，需要后续手动修正为准确的英文翻译：
+
+```bash
+python3 scripts/add_localization.py ios --update "备注" "Remark" ["中文原文"]
+```
+
+- 参数1: key
+- 参数2: 英文翻译
+- 参数3: zh-Hans 翻译（可选，默认等于 key）
+- 与 `--add` 不同，`--update` 会覆盖已存在的翻译
 
 ### 检查 key
 
@@ -100,4 +114,4 @@ python3 scripts/add_localization.py ios --list
 
 1. 代码中写 `NSLocalizedString("新字符串", comment: "")`
 2. 下次 build 时 Xcode 自动将 key 加入 xcstrings
-3. 运行 `--sync` 补全缺翻译，或用 `--add` 手动添加翻译
+3. 运行 `--sync` 补全缺翻译，再用 `--update` 修正 en 为准确翻译（sync 阶段 en 只是占位 key）

@@ -41,12 +41,54 @@ if [ "$PLATFORM" = "mac" ]; then
         --notes-file "$CHANGELOG_FILE" \
         "$DMG_PATH"
 
-    # 3. Tag + push 主仓库
+    # 3. Gitee Release（上传 DMG 到 Gitee，国内备用下载）
+    GITEE_TOKEN="${GITEE_TOKEN:-}"
+    GITEE_DOWNLOAD_URL=""
+    if [ -n "$GITEE_TOKEN" ]; then
+        UPDATE_REPO="${UPDATE_REPO_PATH:-$REPO_ROOT/../dandanplay_mac_update}"
+        GITEE_REMOTE=$(cd "$UPDATE_REPO" && git remote get-url origin 2>/dev/null || echo "")
+        GITEE_REPO=$(echo "$GITEE_REMOTE" | sed -E 's|.*[:/]([^/]+/[^/]+)(\.git)?$|\1|')
+        GITEE_BRANCH=$(cd "$UPDATE_REPO" && git branch --show-current)
+
+        RELEASE_BODY=$(python3 -c "import sys,json; print(json.dumps(sys.stdin.read().strip(), ensure_ascii=False))" < "$CHANGELOG_FILE")
+
+        echo "=== 创建 Gitee Release ==="
+        GITEE_RELEASE_RESP=$(curl -sS -X POST "https://gitee.com/api/v5/repos/${GITEE_REPO}/releases" \
+            -H "Content-Type: application/json" \
+            -d "{\"access_token\":\"${GITEE_TOKEN}\",\"tag_name\":\"${UPDATE_TAG}\",\"name\":\"${VERSION_TAG}\",\"body\":${RELEASE_BODY},\"target_commitish\":\"${GITEE_BRANCH}\",\"prerelease\":false}")
+
+        GITEE_RELEASE_ID=$(echo "$GITEE_RELEASE_RESP" | python3 -c "import sys,json; print(json.load(sys.stdin).get('id', ''))")
+
+        if [ -z "$GITEE_RELEASE_ID" ] || [ "$GITEE_RELEASE_ID" = "" ]; then
+            echo "警告: 创建 Gitee Release 失败: $GITEE_RELEASE_RESP" >&2
+        else
+            echo "Gitee Release 创建成功, id=$GITEE_RELEASE_ID"
+
+            echo "=== 上传 DMG 到 Gitee Release ==="
+            GITEE_UPLOAD_RESP=$(curl -sS -X POST "https://gitee.com/api/v5/repos/${GITEE_REPO}/releases/${GITEE_RELEASE_ID}/attach_files" \
+                -F "access_token=${GITEE_TOKEN}" \
+                -F "file=@${DMG_PATH}" \
+                --connect-timeout 30 \
+                --max-time 600)
+
+            GITEE_DOWNLOAD_URL=$(echo "$GITEE_UPLOAD_RESP" | python3 -c "import sys,json; print(json.load(sys.stdin).get('browser_download_url', ''))")
+
+            if [ -z "$GITEE_DOWNLOAD_URL" ] || [ "$GITEE_DOWNLOAD_URL" = "" ]; then
+                echo "警告: 上传 DMG 到 Gitee 失败: $GITEE_UPLOAD_RESP" >&2
+            else
+                echo "Gitee 下载 URL: $GITEE_DOWNLOAD_URL"
+            fi
+        fi
+    else
+        echo "提示: 未设置 GITEE_TOKEN，跳过 Gitee Release 上传"
+    fi
+
+    # 4. Tag + push 主仓库
     echo "=== Tag 主仓库 ==="
     git tag "$VERSION_TAG"
     git push origin "$VERSION_TAG"
 
-    # 4. 更新 check_version.json
+    # 5. 更新 check_version.json
     echo "=== 更新 check_version.json ==="
     UPDATE_REPO="${UPDATE_REPO_PATH:-$REPO_ROOT/../dandanplay_mac_update}"
     if [ ! -d "$UPDATE_REPO/.git" ]; then
@@ -56,11 +98,13 @@ if [ "$PLATFORM" = "mac" ]; then
     fi
 
     DOWNLOAD_URL="https://github.com/sunsx9316/DanDanPlay_Experience/releases/download/${VERSION_TAG}/${DMG_NAME}"
+    GITEE_URL_JSON=$(if [ -n "$GITEE_DOWNLOAD_URL" ]; then echo "\"giteeUrl\": \"${GITEE_DOWNLOAD_URL}\","; else echo ""; fi)
     DESC=$(cat "$CHANGELOG_FILE" | python3 -c "import sys,json; print(json.dumps(sys.stdin.read().strip(), ensure_ascii=False))")
 
     cat > "$UPDATE_REPO/check_version.json" << EOF
 {
   "url": "${DOWNLOAD_URL}",
+  ${GITEE_URL_JSON}
   "version": "${BUILD}",
   "shortVersion": "${SHORT_VERSION}",
   "desc": ${DESC},
@@ -69,7 +113,7 @@ if [ "$PLATFORM" = "mac" ]; then
 }
 EOF
 
-    # 5. 提交 + tag + push 更新仓库
+    # 6. 提交 + tag + push 更新仓库
     echo "=== 推送更新仓库 ==="
     cd "$UPDATE_REPO"
     git add check_version.json

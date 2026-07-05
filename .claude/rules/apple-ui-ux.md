@@ -1,6 +1,6 @@
 # Apple UI/UX 规范
 
-applyTo: "**/*View.swift"
+applyTo: "**/*View.swift,**/*ViewController.swift"
 
 ## SwiftUI vs UIKit 选择原则
 
@@ -67,7 +67,7 @@ class PlayerViewController: UIViewController {
 
 ### 使用 SnapKit
 
-所有约束必须使用 SnapKit，**禁止**使用原生 NSLayoutConstraint 写法：
+所有平台（iOS / tvOS / macOS）必须使用 SnapKit 或 UIStackView / NSStackView 进行布局，**禁止**使用原生 NSLayoutConstraint 写法：
 
 ```swift
 // 推荐 - SnapKit
@@ -76,6 +76,11 @@ iconImageView.snp.makeConstraints { make in
     make.centerY.equalToSuperview()
     make.width.height.equalTo(24)
 }
+
+// 推荐 - StackView（简单线性布局）
+let stack = UIStackView(arrangedSubviews: [a, b, c])
+stack.axis = .vertical
+stack.spacing = 8
 
 // 不推荐 - 原生 Auto Layout
 NSLayoutConstraint.activate([

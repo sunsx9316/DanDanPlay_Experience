@@ -10,25 +10,19 @@ import RxSwift
 
 class AppVersionModel {
     
-    func checkUpdate() -> Observable<UpdateInfo> {
-        return Observable<UpdateInfo>.create { sub in
+    func checkUpdate() -> Observable<UpdateInfo?> {
+        return Observable<UpdateInfo?>.create { sub in
             ConfigNetworkHandle.checkUpdate { info, error in
-                if let info = info {
-                    DispatchQueue.main.async {
-                        sub.onNext(info)
-                        sub.onCompleted()
-                    }
-                } else if let error = error {
-                    DispatchQueue.main.async {
+                DispatchQueue.main.async {
+                    if let error = error {
                         sub.onError(error)
-                    }
-                } else {
-                    DispatchQueue.main.async {
+                    } else {
+                        sub.onNext(info)
                         sub.onCompleted()
                     }
                 }
             }
-            
+
             return Disposables.create()
         }
     }

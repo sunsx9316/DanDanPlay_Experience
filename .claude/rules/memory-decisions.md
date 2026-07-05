@@ -122,7 +122,7 @@ class MPVView {
 | Masonry | 遗留代码（Obj-C） |
 | Apple 原生 | 简单约束 |
 
-**本项目**：iOS 使用 SnapKit，Mac 使用原生 Auto Layout
+**本项目**：所有平台统一使用 SnapKit 或 UIStackView / NSStackView 布局，**禁止**使用原生 NSLayoutConstraint 写法（`NSLayoutConstraint.activate`、`Anchor.constraint` 等）
 
 ### SnapKit 示例
 

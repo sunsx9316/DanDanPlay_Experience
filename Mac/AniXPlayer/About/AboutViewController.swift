@@ -72,18 +72,34 @@ class AboutViewController: ViewController {
     private func checkUpdate(byUser: Bool) {
         _ = self.appVersionModel.checkUpdate().subscribe(onNext: { [weak self] info in
             guard let self = self else { return }
-            
-            self.updateInfo.onNext(info)
-            if self.appVersionModel.shouldUpdate(updateInfo: info) {
-                self.showAppVersionVC(info)
+
+            if let info = info {
+                self.updateInfo.onNext(info)
+                if self.appVersionModel.shouldUpdate(updateInfo: info) {
+                    self.showAppVersionVC(info)
+                } else if byUser {
+                    self.showAlreadyLatestAlert()
+                }
             } else if byUser {
-                let vc = NSAlert()
-                vc.messageText = NSLocalizedString("提示", comment: "")
-                vc.informativeText = NSLocalizedString("已是最新版本", comment: "")
-                vc.alertStyle = .informational
-                vc.addButton(withTitle: NSLocalizedString("确定", comment: ""))
-                vc.runModal()
+                self.showAlreadyLatestAlert()
             }
+        }, onError: { [weak self] _ in
+            guard let self = self, byUser else { return }
+            let vc = NSAlert()
+            vc.messageText = NSLocalizedString("提示", comment: "")
+            vc.informativeText = NSLocalizedString("检查更新失败", comment: "")
+            vc.alertStyle = .warning
+            vc.addButton(withTitle: NSLocalizedString("确定", comment: ""))
+            vc.runModal()
         })
+    }
+
+    private func showAlreadyLatestAlert() {
+        let vc = NSAlert()
+        vc.messageText = NSLocalizedString("提示", comment: "")
+        vc.informativeText = NSLocalizedString("已是最新版本", comment: "")
+        vc.alertStyle = .informational
+        vc.addButton(withTitle: NSLocalizedString("确定", comment: ""))
+        vc.runModal()
     }
 }

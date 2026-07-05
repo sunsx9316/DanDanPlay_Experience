@@ -152,8 +152,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc private func checkUpdate() {
         _ = self.appVersionModel.checkUpdate().subscribe(onNext: { [weak self] info in
-            guard let self = self else { return }
-            
+            guard let self = self, let info = info else { return }
+
             if self.appVersionModel.shouldUpdate(updateInfo: info) {
                 self.showAppVersionVC(info)
             }

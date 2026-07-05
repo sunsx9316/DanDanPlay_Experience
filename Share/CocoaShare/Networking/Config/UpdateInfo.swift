@@ -9,6 +9,9 @@
 struct UpdateInfo: Decodable {
     /// 更新url
     @Default<String> var url: String
+
+    /// Gitee 备用下载 url（国内用户）
+    @Default<String> var giteeUrl: String
     
     /// "2022092601"
     @Default<String> var version: String

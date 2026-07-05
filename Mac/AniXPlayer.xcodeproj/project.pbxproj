@@ -111,7 +111,6 @@
 		8943151028D376260031619C /* StepTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8943150F28D376260031619C /* StepTableViewCell.swift */; };
 		8943151228D3762C0031619C /* StepTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8943151128D3762C0031619C /* StepTableViewCell.xib */; };
 		8944159D28E0C6C400480172 /* AppVersionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8944159C28E0C6C400480172 /* AppVersionViewController.swift */; };
-		8944159F28E0C6EC00480172 /* AppVersionViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 8944159E28E0C6EC00480172 /* AppVersionViewController.xib */; };
 		894415DE28E34A1700480172 /* GlobalSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894415DD28E34A1700480172 /* GlobalSettingViewController.swift */; };
 		894415E128E34BD200480172 /* SwitchDetailTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 894415E028E34BD200480172 /* SwitchDetailTableViewCell.swift */; };
 		894415E328E34C0700480172 /* SwitchDetailTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 894415E228E34C0700480172 /* SwitchDetailTableViewCell.xib */; };
@@ -366,7 +365,6 @@
 		8943150F28D376260031619C /* StepTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StepTableViewCell.swift; sourceTree = "<group>"; };
 		8943151128D3762C0031619C /* StepTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StepTableViewCell.xib; sourceTree = "<group>"; };
 		8944159C28E0C6C400480172 /* AppVersionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppVersionViewController.swift; sourceTree = "<group>"; };
-		8944159E28E0C6EC00480172 /* AppVersionViewController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = AppVersionViewController.xib; sourceTree = "<group>"; };
 		894415DD28E34A1700480172 /* GlobalSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettingViewController.swift; sourceTree = "<group>"; };
 		894415E028E34BD200480172 /* SwitchDetailTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchDetailTableViewCell.swift; sourceTree = "<group>"; };
 		894415E228E34C0700480172 /* SwitchDetailTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = SwitchDetailTableViewCell.xib; sourceTree = "<group>"; };
@@ -843,7 +841,6 @@
 			isa = PBXGroup;
 			children = (
 				8944159C28E0C6C400480172 /* AppVersionViewController.swift */,
-				8944159E28E0C6EC00480172 /* AppVersionViewController.xib */,
 				89C325A42C612923002E2487 /* AppVersionModel.swift */,
 			);
 			path = Update;
@@ -1400,7 +1397,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				899461E728CC8A29009AC640 /* MatchsViewController.xib in Resources */,
-				8944159F28E0C6EC00480172 /* AppVersionViewController.xib in Resources */,
 				8943150E28D375AC0031619C /* SwitchTableViewCell.xib in Resources */,
 				89DADA022FD05CC200C71A33 /* SourceHanSansSC-Regular.otf in Resources */,
 				89DADA032FD05CC200C71A33 /* SourceHanSansTC-Regular.otf in Resources */,

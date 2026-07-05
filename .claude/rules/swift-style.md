@@ -182,6 +182,18 @@ let alignedStride = ((pipStride + 63) / 64) * 64
 
 ## NSLocalizedString 使用规范
 
+**所有展示类文案必须使用 `NSLocalizedString` 包装，禁止硬编码字符串**：
+
+```swift
+// 推荐 - NSLocalizedString 包装
+titleLabel.stringValue = NSLocalizedString("发现新版本", comment: "")
+btn.title = NSLocalizedString("自动更新", comment: "")
+
+// 不推荐 - 硬编码字符串（即使只有中文）
+titleLabel.stringValue = "发现新版本"
+btn.title = "自动更新"
+```
+
 **使用 `NSLocalizedString` 后必须同步更新 `Localizable.xcstrings`**：
 
 ```json
