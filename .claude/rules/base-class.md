@@ -146,8 +146,9 @@ Mac/AniXPlayer/Base/
 |------|--------|---------|
 | `BaseView` | `NSView` | 自动 `wantsLayer = true` |
 | `Button` | `NSButton` | 静态工厂 `custom()` 创建无边框按钮 |
-| `Label` | `NSTextField` | `isEditable=false`、`isBordered=false`、`drawsBackground=false`、字体 `.ddp_normal`、颜色 `.textColor` |
 | `TextField` | `NSTextField` | 字体 `.ddp_normal`、颜色 `.textColor` |
+| `Label` | `TextField` | 叠加 `isEditable=false`、`isBordered=false`、`drawsBackground=false` |
+| `TextView` | `NSTextView` | `isEditable=false`、`isSelectable=true`、透明背景、`ddp_normal`/`textColor`、零内边距、禁止水平缩放、允许垂直缩放 |
 | `ImageView` | `NSImageView` | 类型标识（空子类） |
 | `ScrollView<ContainerView>` | `NSScrollView` | 泛型容器视图、覆盖式滚动条 |
 | `TableView` | `NSTableView` | 类型标识（空子类） |

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="24128" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="22690"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="24128"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -14,14 +14,14 @@
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
             <subviews>
                 <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="lmW-8D-EUZ">
-                    <rect key="frame" x="194" y="30" width="19" height="28"/>
+                    <rect key="frame" x="190" y="31" width="20" height="26"/>
                     <stepperCell key="cell" continuous="YES" alignment="left" maxValue="100" doubleValue="1" id="OOc-VG-LnG"/>
                     <connections>
                         <action selector="onTouchStepper:" target="c22-O7-iKe" id="PSZ-e7-6Ly"/>
                     </connections>
                 </stepper>
                 <textField focusRingType="none" horizontalHuggingPriority="253" verticalHuggingPriority="750" horizontalCompressionResistancePriority="752" translatesAutoresizingMaskIntoConstraints="NO" id="wi2-I7-OjV" customClass="TextField" customModule="AniXPlayer" customModuleProvider="target">
-                    <rect key="frame" x="152" y="36" width="37" height="16"/>
+                    <rect key="frame" x="145" y="36" width="37" height="16"/>
                     <textFieldCell key="cell" lineBreakMode="clipping" title="Label" id="yRY-oS-6CU">
                         <font key="font" metaFont="system"/>
                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>

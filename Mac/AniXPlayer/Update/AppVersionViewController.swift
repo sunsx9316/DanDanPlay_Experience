@@ -26,6 +26,38 @@ class AppVersionViewController: ViewController {
     private var isFallback = false
     private var fallbackDownloadURL: String?
 
+    // MARK: - Stack Views
+
+    private lazy var mainStack: NSStackView = {
+        let stack = NSStackView()
+        stack.orientation = .vertical
+        stack.alignment = .centerX
+        stack.spacing = 0
+        return stack
+    }()
+
+    private lazy var topStack: NSStackView = {
+        let stack = NSStackView()
+        stack.orientation = .horizontal
+        stack.alignment = .centerY
+        stack.spacing = 16
+        return stack
+    }()
+
+    private lazy var bottomStack: NSStackView = {
+        let stack = NSStackView()
+        stack.orientation = .horizontal
+        stack.alignment = .centerY
+        stack.spacing = 12
+        return stack
+    }()
+
+    private lazy var bottomSpacer: NSView = {
+        let v = NSView()
+        v.setContentHuggingPriority(.fittingSizeCompression, for: .horizontal)
+        return v
+    }()
+
     // MARK: - UI Elements
 
     private lazy var iconView: ImageView = {
@@ -42,15 +74,29 @@ class AppVersionViewController: ViewController {
         return tf
     }()
 
-    private lazy var descLabel: Label = {
-        let tf = Label(labelWithString: "")
-        tf.font = .systemFont(ofSize: 13)
-        tf.textColor = .secondaryLabelColor
-        tf.lineBreakMode = .byWordWrapping
-        tf.maximumNumberOfLines = 0
-        tf.preferredMaxLayoutWidth = 390
-        return tf
+    private lazy var descScrollView: ScrollView<TextView> = {
+        let sv = ScrollView(containerView: descTextView)
+        sv.hasHorizontalScroller = false
+        sv.autohidesScrollers = true
+        sv.borderType = .noBorder
+        sv.drawsBackground = false
+        sv.setContentHuggingPriority(.fittingSizeCompression, for: .vertical)
+        return sv
     }()
+
+    private lazy var descTextView: TextView = {
+        let tv = TextView()
+        tv.font = .systemFont(ofSize: 13)
+        tv.textColor = .secondaryLabelColor
+        return tv
+    }()
+
+    private var descTextAttributes: [NSAttributedString.Key: Any] {
+        [
+            .font: NSFont.systemFont(ofSize: 13),
+            .foregroundColor: NSColor.secondaryLabelColor
+        ]
+    }
 
     private lazy var separator: NSBox = {
         let box = NSBox()
@@ -121,11 +167,12 @@ class AppVersionViewController: ViewController {
     // MARK: - Lifecycle
 
     override func loadView() {
-        view = BaseView(frame: NSRect(x: 0, y: 0, width: 460, height: 340))
+        view = BaseView(frame: NSRect(x: 0, y: 0, width: 460, height: 380))
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.title = NSLocalizedString("软件更新", comment: "")
         setupUI()
         populateContent()
     }
@@ -147,70 +194,59 @@ class AppVersionViewController: ViewController {
     private func setupUI() {
         view.layer?.backgroundColor = NSColor.windowBackgroundColor.cgColor
 
-        let views: [NSView] = [
-            iconView, titleLabel, descLabel, separator,
-            progressBar, progressLabel, cancelDownloadBtn,
-            autoUpdateBtn, manualDownloadBtn, skipBtn
-        ]
-        views.forEach { v in
-            v.translatesAutoresizingMaskIntoConstraints = false
-            view.addSubview(v)
-        }
+        // Top stack: icon + title
+        topStack.addArrangedSubview(iconView)
+        topStack.addArrangedSubview(titleLabel)
 
-        iconView.snp.makeConstraints { make in
+        // Bottom stack: skipBtn | manualDownloadBtn | spacer | autoUpdateBtn
+        bottomStack.addArrangedSubview(skipBtn)
+        bottomStack.addArrangedSubview(manualDownloadBtn)
+        bottomStack.addArrangedSubview(bottomSpacer)
+        bottomStack.addArrangedSubview(autoUpdateBtn)
+
+        // Main vertical stack
+        mainStack.addArrangedSubview(topStack)
+        mainStack.addArrangedSubview(descScrollView)
+        mainStack.addArrangedSubview(separator)
+        mainStack.addArrangedSubview(progressBar)
+        mainStack.addArrangedSubview(progressLabel)
+        mainStack.addArrangedSubview(cancelDownloadBtn)
+        mainStack.addArrangedSubview(bottomStack)
+
+        mainStack.setCustomSpacing(14, after: topStack)
+        mainStack.setCustomSpacing(20, after: descScrollView)
+        mainStack.setCustomSpacing(16, after: separator)
+        mainStack.setCustomSpacing(6, after: progressBar)
+        mainStack.setCustomSpacing(12, after: progressLabel)
+
+        view.addSubview(mainStack)
+        mainStack.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(28)
             make.leading.equalToSuperview().offset(28)
-            make.width.height.equalTo(56)
-        }
-
-        titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(iconView).offset(2)
-            make.leading.equalTo(iconView.snp.trailing).offset(16)
             make.trailing.equalToSuperview().offset(-28)
-        }
-
-        descLabel.snp.makeConstraints { make in
-            make.top.equalTo(iconView.snp.bottom).offset(14)
-            make.leading.equalToSuperview().offset(28)
-            make.trailing.equalToSuperview().offset(-28)
-        }
-
-        separator.snp.makeConstraints { make in
-            make.top.equalTo(descLabel.snp.bottom).offset(20)
-            make.leading.equalToSuperview().offset(28)
-            make.trailing.equalToSuperview().offset(-28)
-        }
-
-        progressBar.snp.makeConstraints { make in
-            make.top.equalTo(separator.snp.bottom).offset(16)
-            make.leading.equalToSuperview().offset(28)
-            make.trailing.equalToSuperview().offset(-28)
-        }
-
-        progressLabel.snp.makeConstraints { make in
-            make.top.equalTo(progressBar.snp.bottom).offset(6)
-            make.centerX.equalToSuperview()
-        }
-
-        cancelDownloadBtn.snp.makeConstraints { make in
-            make.top.equalTo(progressLabel.snp.bottom).offset(12)
-            make.centerX.equalToSuperview()
-        }
-
-        skipBtn.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(28)
             make.bottom.equalToSuperview().offset(-24)
         }
 
-        manualDownloadBtn.snp.makeConstraints { make in
-            make.leading.equalTo(skipBtn.snp.trailing).offset(12)
-            make.centerY.equalTo(skipBtn)
+        // Full-width items
+        for v in [topStack, descScrollView, separator, progressBar, bottomStack] {
+            v.snp.makeConstraints { make in
+                make.width.equalTo(mainStack.snp.width)
+            }
         }
 
-        autoUpdateBtn.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().offset(-28)
-            make.centerY.equalTo(skipBtn)
+        // Icon fixed size
+        iconView.snp.makeConstraints { make in
+            make.width.height.equalTo(56)
         }
+
+        // descScrollView stretches to fill space
+        descScrollView.setContentHuggingPriority(.fittingSizeCompression, for: .vertical)
+
+        // Initially hide progress widgets
+        separator.isHidden = true
+        progressBar.isHidden = true
+        progressLabel.isHidden = true
+        cancelDownloadBtn.isHidden = true
     }
 
     private func populateContent() {
@@ -220,11 +256,9 @@ class AppVersionViewController: ViewController {
             titleLabel.stringValue = NSLocalizedString("发现新版本", comment: "")
         }
 
-        if let desc = appVersion?.desc, !desc.isEmpty, desc != "Unknown" {
-            descLabel.stringValue = desc
-        } else {
-            descLabel.stringValue = NSLocalizedString("新版本包含功能改进与问题修复。", comment: "")
-        }
+        let text = (appVersion?.desc).flatMap { $0.isEmpty || $0 == "Unknown" ? nil : $0 }
+            ?? NSLocalizedString("新版本包含功能改进与问题修复。", comment: "")
+        descTextView.textStorage?.setAttributedString(NSAttributedString(string: text, attributes: descTextAttributes))
     }
 
     // MARK: - UI State Transitions
@@ -235,6 +269,7 @@ class AppVersionViewController: ViewController {
         manualDownloadBtn.isHidden = true
         skipBtn.isHidden = true
 
+        separator.isHidden = false
         progressBar.isHidden = false
         progressBar.doubleValue = 0
         progressLabel.isHidden = false
@@ -247,6 +282,7 @@ class AppVersionViewController: ViewController {
         isFallback = false
         fallbackDownloadURL = nil
 
+        separator.isHidden = true
         progressBar.isHidden = true
         progressLabel.isHidden = true
         cancelDownloadBtn.isHidden = true
@@ -262,6 +298,7 @@ class AppVersionViewController: ViewController {
         fallbackDownloadURL = nil
         finishSession(cancel: true)
 
+        separator.isHidden = true
         progressBar.isHidden = true
         cancelDownloadBtn.isHidden = true
 
@@ -407,10 +444,7 @@ class AppVersionViewController: ViewController {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
             guard let self = self else { return }
 
-            let task = Process()
-            task.launchPath = "/usr/bin/hdiutil"
-            task.arguments = ["attach", destURL.path]
-            task.launch()
+            NSWorkspace.shared.open(destURL, configuration: NSWorkspace.OpenConfiguration())
 
             self.appVersionModel.updateIgnoreVersion(updateInfo: self.appVersion)
             self.onClickOKCallBack?(self)

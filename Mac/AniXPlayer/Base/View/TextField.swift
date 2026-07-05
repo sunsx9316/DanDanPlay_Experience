@@ -8,21 +8,42 @@
 import Cocoa
 
 class TextField: NSTextField {
-    
+
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
         self.setupInit()
     }
-    
+
     required init?(coder: NSCoder) {
         super.init(coder: coder)
         self.setupInit()
     }
-    
+
     //MARK: Private
     private func setupInit() {
         self.font = .ddp_normal
         self.textColor = .textColor
     }
-    
+
+}
+
+class Label: TextField {
+
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        self.setupInit()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        self.setupInit()
+    }
+
+    // MARK: - Private
+
+    private func setupInit() {
+        self.isEditable = false
+        self.isBordered = false
+        self.drawsBackground = false
+    }
 }

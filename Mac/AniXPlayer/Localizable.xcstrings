@@ -4146,6 +4146,22 @@
           }
         }
       }
+    },
+    "软件更新": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Software Update"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "软件更新"
+          }
+        }
+      }
     }
   },
   "version": "1.1"
