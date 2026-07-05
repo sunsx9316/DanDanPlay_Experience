@@ -133,7 +133,7 @@ LAST_TAG=$(git tag --sort=-creatordate | grep “^v.*-<platform>” | head -1)
 
 7. **按功能聚合**：播放器、弹幕、媒体服务器、设置等，每个功能 3-5 条要点
 
-**生成方式**: 不用 `gen_changelog.sh`，而是手动分析 git log 后写入 `/tmp/release_changelog.txt`。分析时：
+**生成方式**: 不用 `gen_changelog.sh`，而是手动分析 git log 后写入 `/tmp/release_changelog_<platform>.txt`。分析时：
 - 先用 `git log --oneline <LAST_TAG>..HEAD -- <platform_dir/> Share/` 获取候选提交
 - 逐条判断是否与当前平台相关
 - 合并同类的 feat/update，剔除平台无关的内容
@@ -142,7 +142,14 @@ LAST_TAG=$(git tag --sort=-creatordate | grep “^v.*-<platform>” | head -1)
 - “确认，日志没问题” (Recommended)
 - “我来编辑日志内容”
 
-如果用户要编辑，等他修改完 `/tmp/release_changelog.txt` 再确认。
+如果用户要编辑，等他修改完 `/tmp/release_changelog_<platform>.txt` 再确认。
+
+用户确认后，追加到持久化 changelog：
+```bash
+cp /tmp/release_changelog_<platform>.txt scripts/release/changelogs/<platform>.txt
+```
+
+> changelog 按平台独立维护于 `scripts/release/changelogs/<platform>.txt`。
 
 ### Step 5: Archive + Export（后台执行）
 
@@ -199,18 +206,18 @@ bash scripts/release/notarize.sh /tmp/export/AniXPlayer.dmg
 - “确认发布” (Recommended)
 - “取消”
 
-确认后执行发布：
+确认后执行发布，引用当前平台的 changelog：
 
 **macOS:**
 ```bash
 cd /Users/jimhuang/Dev/DanDanPlay_Experience
-bash scripts/release/publish.sh mac /tmp/export/AniXPlayer.dmg <shortVersion> <build> /tmp/release_changelog.txt
+bash scripts/release/publish.sh mac /tmp/export/AniXPlayer.dmg <shortVersion> <build> /tmp/release_changelog_mac.txt
 ```
 
 **iOS / tvOS:**
 ```bash
 cd /Users/jimhuang/Dev/DanDanPlay_Experience
-bash scripts/release/publish.sh <ios|tvos> /tmp/export/AniXPlayer.ipa <shortVersion> <build> /tmp/release_changelog.txt
+bash scripts/release/publish.sh <ios|tvos> /tmp/export/AniXPlayer.ipa <shortVersion> <build> /tmp/release_changelog_<platform>.txt
 ```
 
 ## 注意事项
