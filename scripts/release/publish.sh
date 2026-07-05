@@ -18,6 +18,8 @@ fi
 
 REPO_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 VERSION_TAG="${PLATFORM}-v${SHORT_VERSION}-${BUILD}"
+# 更新仓库（dandanplay_mac_update）保持旧格式 vX.Y.Z
+UPDATE_TAG="v${SHORT_VERSION}"
 
 if [ "$PLATFORM" = "mac" ]; then
     # 1. 创建/使用 DMG
@@ -72,9 +74,9 @@ EOF
     cd "$UPDATE_REPO"
     git add check_version.json
     git commit -m "[update]更新${SHORT_VERSION}版本"
-    git tag "$VERSION_TAG"
+    git tag "$UPDATE_TAG"
     git push origin HEAD
-    git push origin "$VERSION_TAG"
+    git push origin "$UPDATE_TAG"
     cd "$REPO_ROOT"
 
     echo "=== 发布完成 ==="
