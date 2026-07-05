@@ -29,7 +29,7 @@ class GotoLastWatchPointView: BaseView {
     
     var timeString: String? {
         didSet {
-            self.timeLabel.stringValue = self.timeString ?? ""
+            self.timeLabel.text = self.timeString ?? ""
         }
     }
     

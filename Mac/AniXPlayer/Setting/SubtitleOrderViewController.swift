@@ -142,7 +142,7 @@ class SubtitleOrderViewController: ViewController {
         tableView.dataSource = self
         tableView.headerView = nil
         tableView.registerForDraggedTypes([dragDropType])
-        tableView.registerNibCell(class: TitleTableViewCell.self)
+        tableView.registerClassCell(class: TitleTableViewCell.self)
         tableView.enableRowHoverTracking()
 
         let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: ""))

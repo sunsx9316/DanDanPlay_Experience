@@ -82,9 +82,9 @@ class QueueItem: CollectionViewItem {
     }()
 
     func configure(with item: BangumiQueueIntro) {
-        titleLabel.stringValue = item.animeTitle
-        episodeLabel.stringValue = item.episodeTitle
-        statusLabel.stringValue = item.description
+        titleLabel.text = item.animeTitle
+        episodeLabel.text = item.episodeTitle
+        statusLabel.text = item.description
 
         if let url = URL(string: item.imageUrl) {
             coverImageView.kf.setImage(with: url)

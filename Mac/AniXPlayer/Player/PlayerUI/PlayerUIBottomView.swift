@@ -25,6 +25,13 @@ class PlayerUIBottomView: BaseView {
         return button
     }()
     
+    lazy var stopButton: Button = {
+        let button = Button.custom()
+        button.imagePosition = .imageOnly
+        button.image = NSImage(named: "Player/stop")
+        return button
+    }()
+
     lazy var nextButton: Button = {
         let button = Button.custom()
         button.imagePosition = .imageOnly
@@ -78,6 +85,7 @@ class PlayerUIBottomView: BaseView {
         let containerView = BaseView()
         containerView.addSubview(self.progressSlider)
         containerView.addSubview(self.playButton)
+        containerView.addSubview(self.stopButton)
         containerView.addSubview(self.nextButton)
         containerView.addSubview(self.timeLabel)
         containerView.addSubview(self.playerListButton)
@@ -111,11 +119,16 @@ class PlayerUIBottomView: BaseView {
             make.width.height.equalTo(50)
         }
         
-        self.nextButton.snp.makeConstraints { make in
+        self.stopButton.snp.makeConstraints { make in
             make.leading.equalTo(self.playButton.snp.trailing).offset(20)
             make.centerY.equalTo(self.playButton)
         }
-        
+
+        self.nextButton.snp.makeConstraints { make in
+            make.leading.equalTo(self.stopButton.snp.trailing).offset(20)
+            make.centerY.equalTo(self.playButton)
+        }
+
         self.timeLabel.snp.makeConstraints { make in
             make.leading.equalTo(self.nextButton.snp.trailing).offset(20)
             make.centerY.equalTo(self.playButton)
@@ -123,18 +136,18 @@ class PlayerUIBottomView: BaseView {
         
         self.playerListButton.snp.makeConstraints { make in
             make.centerY.equalTo(self.playButton)
-            make.leading.greaterThanOrEqualTo(self.timeLabel.snp.trailing)
+            make.leading.greaterThanOrEqualTo(self.timeLabel.snp.trailing).offset(15)
         }
         
         self.mediaSettingButton.snp.makeConstraints { make in
             make.centerY.equalTo(self.playButton)
-            make.leading.greaterThanOrEqualTo(self.playerListButton.snp.trailing).offset(10)
+            make.leading.equalTo(self.playerListButton.snp.trailing).offset(10)
         }
         
         self.danmakuSettingButton.snp.makeConstraints { make in
             make.trailing.equalTo(-10)
             make.centerY.equalTo(self.playButton)
-            make.leading.greaterThanOrEqualTo(self.mediaSettingButton.snp.trailing).offset(10)
+            make.leading.equalTo(self.mediaSettingButton.snp.trailing).offset(10)
         }
         
     }

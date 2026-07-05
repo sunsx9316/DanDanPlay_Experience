@@ -6,6 +6,7 @@
 //
 
 import Cocoa
+import SnapKit
 
 
 protocol SearchViewControllerDelegate: AnyObject {
@@ -13,46 +14,78 @@ protocol SearchViewControllerDelegate: AnyObject {
 }
 
 class SearchViewController: ViewController {
-    
-    @IBOutlet weak var searchField: NSSearchField!
-    
-    @IBOutlet weak var outlineView: NSOutlineView!
-    
+
+    private lazy var searchField: NSSearchField = {
+        let field = NSSearchField()
+        field.addTarget(self, action: #selector(searchAction(_:)))
+        return field
+    }()
+
+    private lazy var scrollView: ScrollView<OutlineView> = {
+        let outlineView = OutlineView()
+        outlineView.dataSource = self
+        outlineView.delegate = self
+        outlineView.rowSizeStyle = .custom
+        outlineView.registerClassCell(class: MatchsCell.self)
+        outlineView.enableRowHoverTracking()
+
+        let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: ""))
+        column.isEditable = false
+        outlineView.addTableColumn(column)
+
+        return ScrollView(containerView: outlineView)
+    }()
+
+    private var outlineView: NSOutlineView {
+        return scrollView.containerView
+    }
+
     weak var delegate: SearchViewControllerDelegate?
-    
+
     private var dataSource = [MediaMatchItem]()
-    
+
+    override func loadView() {
+        self.view = .init(frame: .init(x: 0, y: 0, width: 500, height: 344))
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         self.title = NSLocalizedString("搜索结果", comment: "")
-        
-        self.outlineView.registerClassCell(class: MatchsCell.self)
-        self.outlineView.enableRowHoverTracking()
-        self.searchField.target = self
-        self.searchField.action = #selector(searchAction(_:))
+
+        self.view.addSubview(self.searchField)
+        self.view.addSubview(self.scrollView)
+        self.searchField.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(5)
+            make.trailing.equalToSuperview().offset(-5)
+            make.top.equalToSuperview().offset(5)
+        }
+        self.scrollView.snp.makeConstraints { make in
+            make.leading.trailing.bottom.equalToSuperview()
+            make.top.equalTo(self.searchField.snp.bottom).offset(5)
+        }
     }
-    
+
     // MARK: Private
     @objc private func searchAction(_ sender: NSSearchField) {
-        
+
         let text = sender.stringValue
-        
+
         if text.isEmpty {
             return
         }
-        
+
         SearchNetworkHandle.searchWithKeyword(text) { [weak self] (result, error) in
-            
+
             guard let self = self else { return }
-            
+
             if let error = error {
                 DispatchQueue.main.async {
                     self.view.show(error: error)
                 }
                 return
             }
-            
+
             DispatchQueue.main.async {
                 self.dataSource = result?.collection ?? []
                 self.outlineView.reloadData()
@@ -64,17 +97,17 @@ class SearchViewController: ViewController {
 
 extension SearchViewController: NSOutlineViewDataSource {
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
-        
+
         if item is NSNull {
             return 0
         }
-        
+
         if let item = item as? MediaMatchItem {
             return item.items?.count ?? 0
         }
         return self.dataSource.count
     }
-    
+
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
         if item == nil {
             return self.dataSource[index]
@@ -83,14 +116,14 @@ extension SearchViewController: NSOutlineViewDataSource {
         }
         return NSNull()
     }
-    
+
     func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
         if let item = item as? MediaMatchItem {
             return item.items?.isEmpty == false
         }
         return false
     }
-    
+
 }
 
 
@@ -120,4 +153,3 @@ extension SearchViewController: NSOutlineViewDelegate {
         }
     }
 }
-

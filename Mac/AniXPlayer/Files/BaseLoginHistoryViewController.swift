@@ -124,12 +124,12 @@ class BaseLoginHistoryViewController<F: File>: ViewController, NSTableViewDelega
         let info = dataSource[row]
         let cell = tableView.dequeueReusableCell(class: LoginHistoryCellView.self)
 
-        cell.titleLabel.stringValue = info.url.host ?? ""
+        cell.titleLabel.text = info.url.host ?? ""
         let userName = info.auth?.userName ?? ""
-        cell.detailLabel.stringValue = userName
+        cell.detailLabel.text = userName
         cell.detailLabel.isHidden = userName.isEmpty
         let remark = info.remark ?? ""
-        cell.remarkLabel.stringValue = remark
+        cell.remarkLabel.text = remark
         cell.remarkLabel.isHidden = remark.isEmpty
         return cell
     }

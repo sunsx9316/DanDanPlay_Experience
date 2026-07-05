@@ -53,9 +53,9 @@ class MetadataCellView: NSTableCellView {
     }
 
     func configure(title: String, detail: String?) {
-        titleField.stringValue = title
+        titleField.text = title
         if let detail = detail, !detail.isEmpty {
-            detailField.stringValue = detail
+            detailField.text = detail
             detailField.isHidden = false
         } else {
             detailField.isHidden = true

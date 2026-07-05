@@ -529,8 +529,8 @@ private class BannerCarouselView: BaseView {
     private func updateLabelsForCurrentBanner() {
         guard !banners.isEmpty, currentIndex < banners.count else { return }
         let banner = banners[currentIndex]
-        titleLabel.stringValue = banner.title
-        descLabel.stringValue = banner.description
+        titleLabel.text = banner.title
+        descLabel.text = banner.description
     }
 
     override func layout() {

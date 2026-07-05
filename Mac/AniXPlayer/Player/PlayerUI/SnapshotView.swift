@@ -39,7 +39,7 @@ class SnapshotView: BaseView {
         
         let current = Date(timeIntervalSince1970: currentTime)
         let total = Date(timeIntervalSince1970: totalTime)
-        self.timeLabel.stringValue = timeFormatter.string(from: current) + "/" + timeFormatter.string(from: total)
+        self.timeLabel.text = timeFormatter.string(from: current) + "/" + timeFormatter.string(from: total)
     }
     
     private func setupInit() {

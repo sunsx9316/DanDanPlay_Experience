@@ -332,7 +332,7 @@ private class FileBrowserCellView: NSTableCellView {
 
     func configure(with wrapper: _FileWrapper) {
         let file = wrapper.file
-        titleLabel.stringValue = file.fileName
+        titleLabel.text = file.fileName
 
         let isFolder = wrapper.type == .folder
         folderIconView.isHidden = !isFolder
@@ -352,7 +352,7 @@ private class FileBrowserCellView: NSTableCellView {
                 .paragraphStyle: paragraphStyle
             ])
             let size = file.fileSize
-            detailLabel.stringValue = size > 0 ? ByteCountFormatter.string(fromByteCount: Int64(size), countStyle: .file) : ""
+            detailLabel.text = size > 0 ? ByteCountFormatter.string(fromByteCount: Int64(size), countStyle: .file) : ""
         }
     }
 }

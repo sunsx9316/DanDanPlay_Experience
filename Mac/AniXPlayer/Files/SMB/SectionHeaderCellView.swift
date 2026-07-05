@@ -19,7 +19,7 @@ class SectionHeaderCellView: NSTableCellView {
 
     var title: String = "" {
         didSet {
-            label.stringValue = title
+            label.text = title
         }
     }
 

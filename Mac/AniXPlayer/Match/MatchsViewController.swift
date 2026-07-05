@@ -6,134 +6,199 @@
 //
 
 import Cocoa
+import SnapKit
 
 
 protocol MatchsViewControllerDelegate: AnyObject {
     func matchsViewController(_ matchsViewController: MatchsViewController, didMatched matchInfo: MatchInfo)
-    
+
     func playNowInMatchsViewController(_ matchsViewController: MatchsViewController)
 }
 
 class MatchsViewController: ViewController {
-    
+
     private class _AnimateModel: MediaMatchItem {
-        
+
         var matchId: Int {
             return 0
         }
-        
+
         var matchDesc: String {
             return ""
         }
-        
+
         var typeDesc: String? {
             return self.match.typeDescription
         }
-        
+
         var items: [MediaMatchItem]? = .init()
-        
+
         var title: String {
             return self.match.animeTitle
         }
-        
+
         var episodeId: Int? {
             return nil
         }
-        
+
         let match: Match
-        
+
         init(match: Match) {
             self.match = match
         }
     }
-    
+
     private class _EpisodeModel: _AnimateModel {
-        
+
         override var matchId: Int {
             return self.episodeId
         }
-        
+
         override var episodeId: Int {
             return self.match.episodeId
         }
-        
+
         override var title: String {
             return self.match.episodeTitle
         }
-        
+
         override var matchDesc: String {
             return self.match.matchDesc
         }
     }
-    
-    
-    @IBOutlet weak var outlineView: NSOutlineView!
-    
+
+    private lazy var scrollView: ScrollView<OutlineView> = {
+        let outlineView = OutlineView()
+        outlineView.dataSource = self
+        outlineView.delegate = self
+        outlineView.rowSizeStyle = .custom
+        outlineView.enableRowHoverTracking()
+        outlineView.registerClassCell(class: MatchsCell.self)
+
+        let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: ""))
+        column.isEditable = false
+        outlineView.addTableColumn(column)
+
+        return ScrollView(containerView: outlineView)
+    }()
+
+    private lazy var searchButton: Button = {
+        let btn = Button(title: NSLocalizedString("搜索更多弹幕", comment: ""), target: nil, action: nil)
+        btn.bezelStyle = .rounded
+        btn.addTarget(self, action: #selector(searchAction))
+        return btn
+    }()
+
+    private lazy var refreshButton: Button = {
+        let btn = Button(title: NSLocalizedString("刷新", comment: ""), target: nil, action: nil)
+        btn.bezelStyle = .rounded
+        btn.addTarget(self, action: #selector(startRequestData))
+        return btn
+    }()
+
+    private lazy var playNowButton: Button = {
+        let btn = Button(title: NSLocalizedString("直接播放", comment: ""), target: nil, action: nil)
+        btn.bezelStyle = .rounded
+        btn.keyEquivalent = "\r"
+        btn.addTarget(self, action: #selector(playNow))
+        return btn
+    }()
+
+    private var outlineView: NSOutlineView {
+        return scrollView.containerView
+    }
+
     weak var delegate: MatchsViewControllerDelegate?
-    
+
     private var searchWindowController: WindowController?
-    
+
     init(file: File) {
         self.file = file
         super.init()
     }
-    
+
     init(with collection: MatchCollection, file: File) {
         self.file = file
         super.init()
         self.dataFromInit = true
         self.dataSource = type(of: self).converCollection(collection)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
+
     let file: File
-    
+
     private var dataSource = [MediaMatchItem]()
-    
+
     /// 数据来源于初始化
     private var dataFromInit = false
-    
+
     deinit {
         self.closeSearchWindow()
     }
-    
+
+    override func loadView() {
+        self.view = .init(frame: .init(x: 0, y: 0, width: 570, height: 348))
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.title = NSLocalizedString("弹幕匹配结果（右键搜索）", comment: "")
-        
-        self.outlineView.enableRowHoverTracking()
-        self.outlineView.registerClassCell(class: MatchsCell.self)
-        
-        let menu = NSMenu()
-        menu.addItem(withTitle: NSLocalizedString("刷新", comment: ""), action: #selector(startRequestData), keyEquivalent: "")
-        menu.addItem(withTitle: NSLocalizedString("搜索更多弹幕", comment: ""), action: #selector(searchAction), keyEquivalent: "")
-        menu.addItem(withTitle: NSLocalizedString("直接播放", comment: ""), action: #selector(playNow), keyEquivalent: "")
-        self.view.menu = menu
-        
+
+        self.title = NSLocalizedString("弹幕匹配结果", comment: "")
+
+        let toolbar = NSStackView(views: [searchButton, refreshButton, NSView(), playNowButton])
+        toolbar.orientation = .horizontal
+        toolbar.alignment = .centerY
+        toolbar.spacing = 8
+        toolbar.edgeInsets = NSEdgeInsets(top: 8, left: 12, bottom: 8, right: 12)
+
+        self.view.addSubview(self.scrollView)
+        self.view.addSubview(toolbar)
+
+        self.scrollView.snp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+        }
+
+        toolbar.snp.makeConstraints { make in
+            make.top.equalTo(self.scrollView.snp.bottom)
+            make.leading.trailing.bottom.equalToSuperview()
+            make.height.equalTo(44)
+        }
+
+        playNowButton.snp.makeConstraints { make in
+            make.width.equalTo(80)
+            make.height.equalTo(28)
+        }
+
         if dataFromInit {
             self.outlineView.reloadData()
+            expandAllItems()
         } else {
             self.startRequestData()
         }
     }
-    
+
+    private func expandAllItems() {
+        for item in dataSource {
+            outlineView.expandItem(item)
+        }
+    }
+
     // MARK: Private
     private func closeSearchWindow() {
         self.searchWindowController?.close()
         self.searchWindowController = nil
     }
-    
+
     @objc private func playNow() {
         self.delegate?.playNowInMatchsViewController(self)
     }
-    
+
     @objc private func searchAction() {
         self.closeSearchWindow()
-        
+
         let vc = SearchViewController()
         vc.delegate = self
         self.searchWindowController = .init()
@@ -143,34 +208,35 @@ class MatchsViewController: ViewController {
         self.searchWindowController?.window?.level = .floating
         self.searchWindowController?.windowWillCloseCallBack = { [weak self] in
             guard let self = self else { return }
-            
+
             self.searchWindowController = nil
         }
     }
-    
+
     @objc private func startRequestData() {
         self.view.showLoading(statusText: "")
         self.requestData { [weak self] in
             guard let self = self else { return }
-            
+
             self.view.dismiss(delay: 0)
         }
     }
-    
+
     private func requestData(completion: @escaping(() -> Void)) {
         MatchNetworkHandle.match(with: file) { (_) in
-            
+
         } completion: { [weak self] (collection, error) in
-            
+
             guard let self = self else {
                 return
             }
-            
+
             if let collection = collection {
                 DispatchQueue.main.async {
                     let items = type(of: self).converCollection(collection)
                     self.dataSource = items
                     self.outlineView.reloadData()
+                    self.expandAllItems()
                     completion()
                 }
             } else if let error = error {
@@ -181,44 +247,44 @@ class MatchsViewController: ViewController {
             }
         }
     }
-    
+
     private static func converCollection(_ collection: MatchCollection) -> [_AnimateModel] {
         var animateDic = [Int : _AnimateModel]()
-        
+
         for item in collection.collection {
             if animateDic[item.animeId] == nil {
                 let anime = _AnimateModel(match: item)
                 animateDic[item.animeId] = anime
             }
-            
+
             let episodeModel = _EpisodeModel(match: item)
             animateDic[item.animeId]?.items?.append(episodeModel)
         }
-        
+
         return Array(animateDic.values).sorted { m1, m2 in
-            
+
             let t1 = m1.title
             let t2 = m2.title
-            
+
             return t1.compare(t2) == .orderedDescending
         }
     }
-    
+
 }
 
 extension MatchsViewController: NSOutlineViewDataSource {
     func outlineView(_ outlineView: NSOutlineView, numberOfChildrenOfItem item: Any?) -> Int {
-        
+
         if item is NSNull {
             return 0
         }
-        
+
         if let item = item as? MediaMatchItem {
             return item.items?.count ?? 0
         }
         return self.dataSource.count
     }
-    
+
     func outlineView(_ outlineView: NSOutlineView, child index: Int, ofItem item: Any?) -> Any {
         if item == nil {
             return self.dataSource[index]
@@ -227,14 +293,14 @@ extension MatchsViewController: NSOutlineViewDataSource {
         }
         return NSNull()
     }
-    
+
     func outlineView(_ outlineView: NSOutlineView, isItemExpandable item: Any) -> Bool {
         if let item = item as? MediaMatchItem {
             return item.items?.isEmpty == false
         }
         return false
     }
-    
+
 }
 
 
@@ -270,5 +336,5 @@ extension MatchsViewController: SearchViewControllerDelegate {
     func searchViewController(_ searchViewController: SearchViewController, didMatched matchInfo: any MatchInfo) {
         self.delegate?.matchsViewController(self, didMatched: matchInfo)
     }
-    
+
 }

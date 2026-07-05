@@ -28,7 +28,7 @@ class PlayerListViewController: ViewController {
         column.isEditable = false
         tableView.addTableColumn(column)
         tableView.enableRowHoverTracking()
-        tableView.registerNibCell(class: PlayerListTableViewCell.self)
+        tableView.registerClassCell(class: PlayerListTableViewCell.self)
         
         tableView.menu = .init()
         tableView.menu?.delegate = self

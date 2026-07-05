@@ -32,8 +32,8 @@ class MatchsCell: BaseView {
             let typeDesc = self.model?.typeDesc ?? ""
             let title = self.model?.title ?? ""
             
-            self.typeLabel.stringValue = typeDesc
-            self.titleLabel.stringValue = title
+            self.typeLabel.text = typeDesc
+            self.titleLabel.text = title
             self.titleLabel.toolTip = title
             
             self.typeLabel.isHidden = typeDesc.isEmpty

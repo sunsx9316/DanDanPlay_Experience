@@ -292,17 +292,17 @@ class TimelineItem: CollectionViewItem {
     func configure(with item: BangumiIntro) {
         animeId = item.animeId
         isFavorited = item.isFavorited
-        titleLabel.stringValue = item.animeTitle
+        titleLabel.text = item.animeTitle
 
         if let url = URL(string: item.imageUrl) {
             coverImageView.kf.setImage(with: url)
         }
 
         let rating = item.rating
-        ratingLabel.stringValue = ratingFormatter.string(from: NSNumber(value: rating)) ?? "\(rating)"
+        ratingLabel.text = ratingFormatter.string(from: NSNumber(value: rating)) ?? "\(rating)"
         ratingLabel.isHidden = rating <= 0
 
-        statusLabel.stringValue = item.isOnAir ? NSLocalizedString("连载中", comment: "") : NSLocalizedString("已完结", comment: "")
+        statusLabel.text = item.isOnAir ? NSLocalizedString("连载中", comment: "") : NSLocalizedString("已完结", comment: "")
 
         let symbolName = item.isFavorited ? "heart.fill" : "heart"
         favoriteButton.image = NSImage(systemSymbolName: symbolName, accessibilityDescription: nil)

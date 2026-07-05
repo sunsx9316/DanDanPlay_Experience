@@ -282,22 +282,22 @@ class FavoriteItem: CollectionViewItem {
     func configure(with item: UserFavoriteItem) {
         animeId = item.animeId
         isFavorited = item.favoriteStatus == .favorited
-        titleLabel.stringValue = item.animeTitle
+        titleLabel.text = item.animeTitle
 
         if let url = URL(string: item.imageUrl) {
             coverImageView.kf.setImage(with: url)
         }
 
         let rating = item.rating
-        ratingLabel.stringValue = ratingFormatter.string(from: NSNumber(value: rating)) ?? "\(rating)"
+        ratingLabel.text = ratingFormatter.string(from: NSNumber(value: rating)) ?? "\(rating)"
         ratingLabel.isHidden = rating <= 0
 
-        statusLabel.stringValue = item.isOnAir ? NSLocalizedString("连载中", comment: "") : NSLocalizedString("已完结", comment: "")
+        statusLabel.text = item.isOnAir ? NSLocalizedString("连载中", comment: "") : NSLocalizedString("已完结", comment: "")
 
         if let lastWatch = item.lastWatchTime {
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            lastWatchLabel.stringValue = String(format: NSLocalizedString("上次观看: %@", comment: ""), formatter.string(from: lastWatch))
+            lastWatchLabel.text = String(format: NSLocalizedString("上次观看: %@", comment: ""), formatter.string(from: lastWatch))
             lastWatchLabel.isHidden = false
         } else {
             lastWatchLabel.isHidden = true

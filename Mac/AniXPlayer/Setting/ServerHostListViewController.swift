@@ -118,7 +118,7 @@ extension ServerHostListViewController: NSOutlineViewDataSource, NSOutlineViewDe
             cell?.refreshButton.target = self
             cell?.refreshButton.action = #selector(onTouchRefresh(_:))
         }
-        cell?.textField?.stringValue = section.title
+        cell?.textField?.text = section.title
         cell?.refreshButton.isHidden = (section != .official)
         return cell
     }
@@ -130,7 +130,7 @@ extension ServerHostListViewController: NSOutlineViewDataSource, NSOutlineViewDe
             cell = ServerHostCellView()
             cell?.identifier = cellId
         }
-        cell?.textField?.stringValue = host
+        cell?.textField?.text = host
         cell?.textField?.textColor = isSelected ? .mainColor : .textColor
         return cell
     }
@@ -289,7 +289,7 @@ class ServerHostListViewController: ViewController {
         alert.beginSheetModal(for: window) { [weak self] response in
             guard let self = self, response == .alertFirstButtonReturn else { return }
 
-            let text = textField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+            let text = (textField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
             guard !text.isEmpty else { return }
 
             var hosts = self.customHosts ?? []

@@ -48,8 +48,6 @@ class TimelineSegmentBar: BaseView {
     }()
 
     private var buttons: [Button] = []
-    private var indicatorCenterXConstraint: Constraint?
-    private var indicatorWidthConstraint: Constraint?
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)

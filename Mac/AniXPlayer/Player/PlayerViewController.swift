@@ -13,15 +13,17 @@ import ANXLog
 import AVKit
 
 class PlayerViewController: ViewController {
-    
+
+    var onStopCallBack: (() -> Void)?
+
     private lazy var dragView: DragView = {
         let view = DragView()
         view.dragFilesCallBack = { [weak self] urls in
             guard let self = self else { return }
-            
-            self.openURLs(urls)
+
+            self.loadFiles(urls)
         }
-            
+
         return view
     }()
     
@@ -41,7 +43,7 @@ class PlayerViewController: ViewController {
         return view
     }()
     
-    private lazy var playerModel = PlayerModel()
+    lazy var playerModel = PlayerModel()
     
     private var danmakuModel: PlayerDanmakuModel {
         return self.playerModel.danmakuModel
@@ -53,7 +55,7 @@ class PlayerViewController: ViewController {
     
     
     private lazy var disposeBag = DisposeBag()
-    
+
     private weak var gotoLastWatchPointView: GotoLastWatchPointView?
     
 
@@ -118,7 +120,6 @@ class PlayerViewController: ViewController {
 
         self.bindModel()
         self.uiView.autoShowControlView()
-        self.setupMenu()
     }
     
     override func mouseMoved(with event: NSEvent) {
@@ -239,10 +240,8 @@ class PlayerViewController: ViewController {
             self.view.show(text: NSLocalizedString("音量: ", comment: "") + "\(volume)")
         }).disposed(by: self.disposeBag)
         
-        self.mediaModel.context.playList.subscribe(onNext: { [weak self] playList in
+        self.mediaModel.context.playList.subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
-            
-            self.uiView.showOpenButton = !(playList?.isEmpty == false)
         }).disposed(by: self.disposeBag)
     }
     
@@ -334,71 +333,39 @@ class PlayerViewController: ViewController {
         self.matchWindowController = nil
     }
     
-    private func setupMenu() {
-        if let fileItem = NSApp.appDelegate?.fileMenu?.item(withTag: MenuTag.fileOpen.rawValue) {
-            fileItem.target = self
-            fileItem.action = #selector(pickFile)
+    /// 批量加载文件并开始播放
+    func loadFiles(_ files: [File], startWith file: File? = nil) {
+        if !files.isEmpty {
+            self.mediaModel.loadMedias(files)
+            self.playerModel.tryParseMedia(file ?? files[0])
         }
     }
-    
-    /// 文件拾取器
-    @objc private func pickFile() {
-        
-        let currentPlayItem = self.mediaModel.media ?? LocalFile.rootFile
 
+    @objc private func pickFile() {
+        let currentPlayItem = self.mediaModel.media ?? LocalFile.rootFile
         type(of: currentPlayItem).fileManager.pickFiles(currentPlayItem.parentFile, from: self, filterType: .all) { [weak self] result in
             guard let self = self else { return }
-            
+
             switch result {
             case .success(let files):
-                if files.count == 1 && files[0].url.isSubtitleFile {
-                    _ = self.mediaModel.loadSubtitleByUser(files[0]).subscribe(onError: { [weak self] error in
-                        guard let self = self else { return }
-                        
-                        self.view.show(error: error)
-                    }, onCompleted: { [weak self] in
-                        guard let self = self else { return }
-                        
-                        self.view.show(text: NSLocalizedString("加载本地字幕成功！", comment: ""))
-                    })
-                } else if files.count == 1 && files[0].url.isDanmakuFile {
-                    _ = self.danmakuModel.loadDanmakuByUser(files[0]).subscribe(onError: { [weak self] error in
-                        guard let self = self else { return }
-                        
-                        self.view.show(error: error)
-                    }, onCompleted: { [weak self] in
-                        guard let self = self else { return }
-                        
-                        self.view.show(text: NSLocalizedString("加载本地弹幕成功！", comment: ""))
-                    })
-                } else {
-                    self.openURLs(files)
+                if files.count == 1, let file = files.first {
+                    if file.url.isSubtitleFile {
+                        _ = self.mediaModel.loadSubtitleByUser(file).subscribe(onError: { [weak self] error in
+                            self?.view.show(error: error)
+                        }, onCompleted: { [weak self] in
+                            self?.view.show(text: NSLocalizedString("加载本地字幕成功！", comment: ""))
+                        })
+                    } else if file.url.isDanmakuFile {
+                        _ = self.danmakuModel.loadDanmakuByUser(file).subscribe(onError: { [weak self] error in
+                            self?.view.show(error: error)
+                        }, onCompleted: { [weak self] in
+                            self?.view.show(text: NSLocalizedString("加载本地弹幕成功！", comment: ""))
+                        })
+                    }
                 }
-            case .failure(_):
+            case .failure:
                 break
             }
-            
-        }
-    }
-    
-    @objc private func openDanmakuFiles(_ item: NSMenuItem) {
-        
-    }
-    
-    /// 批量加载url
-    /// - Parameter urls: url集合
-    private func openURLs(_ files: [File]) {
-        if !files.isEmpty {
-            self.mediaModel.loadMedias(files)
-            self.playerModel.tryParseMedia(files[0])
-        }
-    }
-
-    /// 从网络媒体库加载文件并播放
-    func openNetworkFiles(_ files: [File], startWith file: File) {
-        if !files.isEmpty {
-            self.mediaModel.loadMedias(files)
-            self.playerModel.tryParseMedia(file)
         }
     }
 }
@@ -426,16 +393,16 @@ extension PlayerViewController: MatchsViewControllerDelegate {
     ///   - event: 解析事件
     ///   - hud: 指示器
     private func parseMedia(event: RxSwift.Event<PlayerModel.MediaLoadState>) {
-        
+
         let hud = self.view.showProgress()
-        
+
         switch event {
         case .next(let element):
             switch element {
             case .parse(let state, let progress):
-                
+
                 hud.progress = Float(0.8 * progress)
-                
+
                 switch state {
                 case .parseMedia:
                     hud.labelText = NSLocalizedString("开始解析...", comment: "")
@@ -455,10 +422,11 @@ extension PlayerViewController: MatchsViewControllerDelegate {
             case .lastWatchProgress(let lastWatchProgress):
                 hud.progress = 1
                 hud.labelText = NSLocalizedString("即将开始播放...", comment: "")
-                
+
                 self.showGotoLastWatchTime(lastWatchProgress: lastWatchProgress)
             }
         case .error(let error):
+            self.view.dismiss()
             if let error = error as? PlayerModel.ParseError {
                 switch error {
                 case .matched(let collection, let media):
@@ -547,11 +515,6 @@ extension PlayerViewController: PlayerUIViewDataSource {
 // MARK: - PlayerUIViewDelegate
 extension PlayerViewController: PlayerUIViewDelegate, NSMenuDelegate {
     
-    func openButtonDidClick(playerUIView: PlayerUIView, button: NSButton) {
-        ANX.logInfo(.player, "[Player] 点击打开文件按钮")
-        self.pickFile()
-    }
-
     func onTouchDanmakuSettingButton(playerUIView: PlayerUIView, button: NSButton) {
         ANX.logInfo(.player, "[Player] 打开弹幕设置")
         self.dismissPresented()
@@ -636,6 +599,12 @@ extension PlayerViewController: PlayerUIViewDelegate, NSMenuDelegate {
     func doubleTap(playerUIView: PlayerUIView) {
         ANX.logInfo(.player, "[Player] 双击切换全屏")
         self.onToggleFullScreen()
+    }
+
+    func onTouchStopButton(playerUIView: PlayerUIView) {
+        ANX.logInfo(.player, "[Player] 点击停止按钮")
+        self.mediaModel.stop()
+        onStopCallBack?()
     }
 
     func onTouchNextButton(playerUIView: PlayerUIView) {

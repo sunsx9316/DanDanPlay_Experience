@@ -351,7 +351,7 @@ class DetailHeaderItem: CollectionViewItem {
     func configure(with item: BangumiDetail) {
         animeId = item.animeId
         isFavorited = item.isFavorited
-        titleLabel.stringValue = item.animeTitle
+        titleLabel.text = item.animeTitle
 
         if let url = URL(string: item.imageUrl) {
             coverImageView.kf.setImage(with: url)
@@ -360,12 +360,12 @@ class DetailHeaderItem: CollectionViewItem {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.minimumFractionDigits = 1
-        ratingLabel.stringValue = formatter.string(from: NSNumber(value: item.rating)) ?? "\(item.rating)"
+        ratingLabel.text = formatter.string(from: NSNumber(value: item.rating)) ?? "\(item.rating)"
 
-        statusLabel.stringValue = item.isOnAir ? NSLocalizedString("连载中", comment: "") : NSLocalizedString("已完结", comment: "")
+        statusLabel.text = item.isOnAir ? NSLocalizedString("连载中", comment: "") : NSLocalizedString("已完结", comment: "")
 
         let tagText = item.tags.sorted(by: { $0.count > $1.count }).prefix(5).map { $0.name }.joined(separator: ", ")
-        tagsLabel.stringValue = tagText
+        tagsLabel.text = tagText
 
         let symbolName = item.isFavorited ? "heart.fill" : "heart"
         favoriteButton.image = NSImage(systemSymbolName: symbolName, accessibilityDescription: nil)
@@ -510,7 +510,7 @@ class DetailRelatedItem: CollectionViewItem, NSCollectionViewDataSource, NSColle
     }
 
     func configure(title: String, items: [BangumiIntro]) {
-        titleLabel.stringValue = title
+        titleLabel.text = title
         self.items = items
         innerCollectionView.reloadData()
         innerCollectionView.layoutSubtreeIfNeeded()
@@ -657,7 +657,7 @@ class RelatedAnimeItem: CollectionViewItem {
     func configure(with item: BangumiIntro) {
         animeId = item.animeId
         isFavorited = item.isFavorited
-        titleLabel.stringValue = item.animeTitle
+        titleLabel.text = item.animeTitle
 
         if let url = URL(string: item.imageUrl) {
             coverImageView.kf.setImage(with: url)
@@ -666,7 +666,7 @@ class RelatedAnimeItem: CollectionViewItem {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal
         formatter.minimumFractionDigits = 1
-        ratingLabel.stringValue = formatter.string(from: NSNumber(value: item.rating)) ?? "\(item.rating)"
+        ratingLabel.text = formatter.string(from: NSNumber(value: item.rating)) ?? "\(item.rating)"
 
         let symbolName = item.isFavorited ? "heart.fill" : "heart"
         favoriteButton.image = NSImage(systemSymbolName: symbolName, accessibilityDescription: nil)

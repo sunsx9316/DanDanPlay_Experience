@@ -6,32 +6,93 @@
 //
 
 import Cocoa
+import SnapKit
 
 class FilterDanmakuTableViewCell: BaseView {
-    
-    @IBOutlet weak var titleLabel: NSTextField!
-    
-    @IBOutlet weak var checkbox: NSButton!
-    
-    @IBOutlet weak var aSwitch: NSSwitch!
-    
-    var onClickSwitchCallBack: ((FilterDanmakuTableViewCell) -> Void)?
-    var onClickCheckCallBack: ((FilterDanmakuTableViewCell) -> Void)?
-    
-    @IBAction func onTouchSwitch(_ sender: NSSwitch) {
-        self.onClickSwitchCallBack?(self)
+
+    lazy var enableCheckBox: CheckBox = {
+        let button = CheckBox()
+        return button
+    }()
+
+    lazy var textField: TextField = {
+        let field = TextField()
+        field.font = .ddp_small
+        field.placeholderString = NSLocalizedString("屏蔽词", comment: "")
+        return field
+    }()
+
+    lazy var deleteButton: Button = {
+        let button = Button.custom()
+        button.title = "✕"
+        button.font = .ddp_small
+        button.contentTintColor = .subtitleTextColor
+        return button
+    }()
+
+    lazy var regexCheckBox: CheckBox = {
+        let button = CheckBox()
+        button.title = NSLocalizedString("正则表达式", comment: "")
+        return button
+    }()
+
+    var onClickEnableCallBack: ((FilterDanmakuTableViewCell) -> Void)?
+    var onClickRegexCallBack: ((FilterDanmakuTableViewCell) -> Void)?
+    var onEndEditingCallBack: ((FilterDanmakuTableViewCell) -> Void)?
+    var onClickDeleteCallBack: ((FilterDanmakuTableViewCell) -> Void)?
+
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        addSubview(enableCheckBox)
+        addSubview(textField)
+        addSubview(deleteButton)
+        addSubview(regexCheckBox)
+
+        enableCheckBox.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(10)
+            make.centerY.equalToSuperview()
+        }
+        textField.snp.makeConstraints { make in
+            make.leading.equalTo(enableCheckBox.snp.trailing).offset(10)
+            make.centerY.equalToSuperview()
+            make.top.equalToSuperview().offset(4)
+            make.bottom.equalToSuperview().offset(-4)
+        }
+        deleteButton.snp.makeConstraints { make in
+            make.leading.equalTo(textField.snp.trailing).offset(8)
+            make.centerY.equalToSuperview()
+        }
+        regexCheckBox.snp.makeConstraints { make in
+            make.leading.equalTo(deleteButton.snp.trailing).offset(8)
+            make.trailing.equalToSuperview().offset(-10)
+            make.centerY.equalToSuperview()
+        }
+
+        enableCheckBox.addTarget(self, action: #selector(onClickEnable(_:)))
+        regexCheckBox.addTarget(self, action: #selector(onClickRegex(_:)))
+        deleteButton.addTarget(self, action: #selector(onClickDelete(_:)))
+        textField.delegate = self
     }
-    
-    @IBAction func onClickCheckButton(_ sender: NSButton) {
-        self.onClickCheckCallBack?(self)
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
     }
-    
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        
-        self.titleLabel.font = .ddp_small
-        self.checkbox.font = .ddp_small
+
+    @objc private func onClickEnable(_ sender: NSButton) {
+        onClickEnableCallBack?(self)
     }
-    
+
+    @objc private func onClickRegex(_ sender: NSButton) {
+        onClickRegexCallBack?(self)
+    }
+
+    @objc private func onClickDelete(_ sender: NSButton) {
+        onClickDeleteCallBack?(self)
+    }
+}
+
+extension FilterDanmakuTableViewCell: NSTextFieldDelegate {
+    func controlTextDidEndEditing(_ obj: Notification) {
+        onEndEditingCallBack?(self)
+    }
 }

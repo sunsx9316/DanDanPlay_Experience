@@ -148,20 +148,20 @@ class BaseConnectSvrViewController: ViewController {
     // MARK: - Methods for override
 
     func createAuth() -> Auth? {
-        return Auth(userName: userNameField.stringValue, password: passwordField.stringValue)
+        return Auth(userName: userNameField.text, password: passwordField.text)
     }
 
     func update(with loginInfo: LoginInfo?) {
-        addressField.stringValue = loginInfo?.url.absoluteString ?? ""
-        userNameField.stringValue = loginInfo?.auth?.userName ?? ""
-        passwordField.stringValue = loginInfo?.auth?.password ?? ""
-        remarkField.stringValue = loginInfo?.remark ?? ""
+        addressField.text = loginInfo?.url.absoluteString ?? ""
+        userNameField.text = loginInfo?.auth?.userName ?? ""
+        passwordField.text = loginInfo?.auth?.password ?? ""
+        remarkField.text = loginInfo?.remark ?? ""
     }
 
     // MARK: - Actions
 
     @objc private func onTouchLoginButton() {
-        let address = addressField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+        let address = (addressField.text ?? "").trimmingCharacters(in: .whitespacesAndNewlines)
         guard !address.isEmpty, let url = URL(string: address) else {
             self.view.show(text: NSLocalizedString("服务器地址格式不正确！", comment: ""))
             return
@@ -170,7 +170,7 @@ class BaseConnectSvrViewController: ViewController {
         let loginInfo = LoginInfo(
             url: url,
             auth: createAuth(),
-            remark: remarkField.stringValue
+            remark: remarkField.text
         )
 
         view.showLoading(statusText: NSLocalizedString("连接中...", comment: ""))

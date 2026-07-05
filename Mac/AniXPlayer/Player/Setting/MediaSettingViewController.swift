@@ -25,12 +25,12 @@ class MediaSettingViewController: ViewController {
         tableView.addTableColumn(column)
         tableView.enableRowHoverTracking()
 
-        tableView.registerNibCell(class: SwitchTableViewCell.self)
-        tableView.registerNibCell(class: SliderTableViewCell.self)
-        tableView.registerNibCell(class: SheetTableViewCell.self)
-        tableView.registerNibCell(class: TitleTableViewCell.self)
-        tableView.registerNibCell(class: StepTableViewCell.self)
-        tableView.registerNibCell(class: TitleDetailTableViewCell.self)
+        tableView.registerClassCell(class: SwitchTableViewCell.self)
+        tableView.registerClassCell(class: SliderTableViewCell.self)
+        tableView.registerClassCell(class: SheetTableViewCell.self)
+        tableView.registerClassCell(class: TitleTableViewCell.self)
+        tableView.registerClassCell(class: StepTableViewCell.self)
+        tableView.registerClassCell(class: TitleDetailTableViewCell.self)
         
         
         var scrollView = ScrollView(containerView: tableView)
@@ -134,7 +134,7 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
             case .subtitleSafeArea:
                 let cell = outlineView.dequeueReusableCell(class: SwitchTableViewCell.self)
                 cell.aSwitch.isOn = self.mediaModel.subtitleSafeArea
-                cell.aSwitch.title = type.title
+                cell.titleLabel.text = type.title
                 cell.onTouchSliderCallBack = { [weak self] (aCell) in
                     guard let self = self else { return }
                     
@@ -219,7 +219,7 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
             case .autoJumpTitleEnding:
                 let cell = outlineView.dequeueReusableCell(class: SwitchTableViewCell.self)
                 cell.aSwitch.isOn = self.mediaModel.autoJumpTitleEnding
-                cell.aSwitch.title = type.title
+                cell.titleLabel.text = type.title
                 cell.onTouchSliderCallBack = { [weak self] (aCell) in
                     guard let self = self else { return }
                     
@@ -416,7 +416,7 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
             case .subtitleStyle:
                 let cell = outlineView.dequeueReusableCell(class: SwitchTableViewCell.self)
                 cell.aSwitch.isOn = Preferences.shared.subtitleStyle
-                cell.aSwitch.title = type.title
+                cell.titleLabel.text = type.title
                 cell.onTouchSliderCallBack = { [weak self] (aCell) in
                     guard let self = self else { return }
                     self.mediaModel.onChangeSubtitleStyle(aCell.aSwitch.isOn)
@@ -441,7 +441,7 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
             case .miniProgressBar:
                 let cell = outlineView.dequeueReusableCell(class: SwitchTableViewCell.self)
                 cell.aSwitch.isOn = Preferences.shared.miniProgressBar
-                cell.aSwitch.title = type.title
+                cell.titleLabel.text = type.title
                 cell.onTouchSliderCallBack = { [weak self] (aCell) in
                     guard let self = self else { return }
                     self.mediaModel.onChangeMiniProgressBar(aCell.aSwitch.isOn)
@@ -450,7 +450,7 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
             case .playerPiP:
                 let cell = outlineView.dequeueReusableCell(class: SwitchTableViewCell.self)
                 cell.aSwitch.isOn = self.mediaModel.playerPiP
-                cell.aSwitch.title = type.title
+                cell.titleLabel.text = type.title
                 cell.onTouchSliderCallBack = { [weak self] (aCell) in
                     guard let self = self else { return }
                     self.mediaModel.onChangePlayerPiP(aCell.aSwitch.isOn)

@@ -36,15 +36,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private var homePageWindowController: HomePageNavigationWindowController?
 
     private lazy var mainWindowController: WindowController = {
-        let mainWindowController = WindowController()
-        mainWindowController.contentViewController = PlayerViewController()
-        mainWindowController.window?.title = InfoPlistUtils.appName
-        mainWindowController.window?.isReleasedWhenClosed = true
-        mainWindowController.window?.setFrameAutosaveName("MainWindow")
-        mainWindowController.windowWillCloseCallBack = {
+        let mainVC = MainViewController()
+        let wc = WindowController()
+        wc.window?.setFrameAutosaveName("MainWindow")
+        wc.windowWillCloseCallBack = {
             NSApp.terminate(nil)
         }
-        return mainWindowController
+        wc.contentViewController = mainVC
+        return wc
     }()
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
@@ -141,8 +140,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let wc = MediaLibraryWindowController()
         wc.onSelectFile = { [weak self] file, allFiles in
             guard let self = self,
-                  let playerVC = self.mainWindowController.contentViewController as? PlayerViewController else { return }
-            playerVC.openNetworkFiles(allFiles, startWith: file)
+                  let mainVC = self.mainWindowController.contentViewController as? MainViewController else { return }
+            mainVC.openNetworkFiles(allFiles, startWith: file)
             self.mainWindowController.window?.makeKeyAndOrderFront(nil)
             NSApp.activate(ignoringOtherApps: true)
         }
@@ -186,7 +185,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
             let fileMenu = NSMenu(title: NSLocalizedString("文件", comment: ""))
 
-            let fileItem = NSMenuItem(title: NSLocalizedString("打开...", comment: ""), action: nil, keyEquivalent: "n")
+            let fileItem = NSMenuItem(title: NSLocalizedString("打开本地文件...", comment: ""), action: nil, keyEquivalent: "n")
             fileItem.tag = MenuTag.fileOpen.rawValue
             fileMenu.addItem(fileItem)
 

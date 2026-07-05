@@ -207,11 +207,11 @@ class SMBLoginHistoryViewController: BaseLoginHistoryViewController<SMBFile> {
 
     private func makeServiceCell(tableView: NSTableView, service: SMBService) -> NSView? {
         let cell = tableView.dequeueReusableCell(class: NeighborServiceCellView.self)
-        cell.titleLabel.stringValue = service.name
+        cell.titleLabel.text = service.name
         if service.didResolve {
-            cell.detailLabel.stringValue = service.addresses.map(\.ip).joined(separator: ", ")
+            cell.detailLabel.text = service.addresses.map(\.ip).joined(separator: ", ")
         } else {
-            cell.detailLabel.stringValue = NSLocalizedString("解析中…", comment: "")
+            cell.detailLabel.text = NSLocalizedString("解析中…", comment: "")
         }
         return cell
     }

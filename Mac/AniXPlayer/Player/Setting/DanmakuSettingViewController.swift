@@ -35,11 +35,11 @@ class DanmakuSettingViewController: ViewController {
         column.isEditable = false
         tableView.addTableColumn(column)
         tableView.enableRowHoverTracking()
-        tableView.registerNibCell(class: SliderTableViewCell.self)
-        tableView.registerNibCell(class: SwitchTableViewCell.self)
-        tableView.registerNibCell(class: StepTableViewCell.self)
-        tableView.registerNibCell(class: TitleTableViewCell.self)
-        tableView.registerNibCell(class: SheetTableViewCell.self)
+        tableView.registerClassCell(class: SliderTableViewCell.self)
+        tableView.registerClassCell(class: SwitchTableViewCell.self)
+        tableView.registerClassCell(class: StepTableViewCell.self)
+        tableView.registerClassCell(class: TitleTableViewCell.self)
+        tableView.registerClassCell(class: SheetTableViewCell.self)
         
         
         var scrollView = ScrollView(containerView: tableView)
@@ -172,10 +172,10 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
         case .showDanmaku:
             let cell = tableView.dequeueReusableCell(class: SwitchTableViewCell.self)
             cell.aSwitch.isOn = self.danmakuModel.isShowDanmaku
-            cell.aSwitch.title = type.title
+            cell.titleLabel.text = type.title
             cell.onTouchSliderCallBack = { [weak self] (aCell) in
                 guard let self = self else { return }
-                
+
                 let isOn = aCell.aSwitch.isOn
                 self.danmakuModel.onChangeIsShowDanmaku(isOn)
             }
@@ -240,10 +240,10 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
         case .mergeSameDanmaku:
             let cell = tableView.dequeueReusableCell(class: SwitchTableViewCell.self)
             cell.aSwitch.isOn = self.danmakuModel.isMergeSameDanmaku
-            cell.aSwitch.title = type.title
+            cell.titleLabel.text = type.title
             cell.onTouchSliderCallBack = { [weak self] (aCell) in
                 guard let self = self else { return }
-                
+
                 let isOn = aCell.aSwitch.isOn
                 self.danmakuModel.onChangeIsMergeSameDanmaku(isOn)
             }
@@ -262,7 +262,16 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
             }
             return cell
         case .openDanmakuRandomColor:
-            return nil
+            let cell = tableView.dequeueReusableCell(class: SwitchTableViewCell.self)
+            cell.aSwitch.isOn = self.danmakuModel.openDanmakuRandomColor
+            cell.titleLabel.text = type.title
+            cell.onTouchSliderCallBack = { [weak self] (aCell) in
+                guard let self = self else { return }
+
+                let isOn = aCell.aSwitch.isOn
+                self.danmakuModel.onOpenDanmakuRandomColor(isOn)
+            }
+            return cell
         }
     }
 

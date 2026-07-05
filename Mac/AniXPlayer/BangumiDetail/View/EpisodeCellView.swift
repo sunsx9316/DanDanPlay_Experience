@@ -53,7 +53,7 @@ class EpisodeCellView: NSTableCellView {
     }
 
     func configure(title: String, detail: String) {
-        titleField.stringValue = title
-        detailField.stringValue = detail
+        titleField.text = title
+        detailField.text = detail
     }
 }

@@ -17,8 +17,7 @@ class SetMainColorViewController: ViewController {
     private lazy var colorWell: NSColorWell = {
         let cw = NSColorWell()
         cw.color = selectedColor
-        cw.target = self
-        cw.action = #selector(onColorWellChange(_:))
+        cw.addTarget(self, action: #selector(onColorWellChange(_:)))
         return cw
     }()
 

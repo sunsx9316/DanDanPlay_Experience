@@ -914,7 +914,7 @@ extension PlayerMediaModel: MediaPlayerDelegate {
     }
     
     func playerListDidChange(_ player: MediaPlayer) {
-        
+        self.context.playList.onNext(self.playList)
     }
     
     func player(_ player: MediaPlayer, mediaDidChange media: File?) {

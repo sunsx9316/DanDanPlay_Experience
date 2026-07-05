@@ -77,7 +77,7 @@ class EmbyConnectSvrViewController: BaseConnectSvrViewController {
         updateUIForAuthMode()
 
         if let info = loginInfo {
-            apiKeyField.stringValue = info.auth?.apiKey ?? ""
+            apiKeyField.text = info.auth?.apiKey ?? ""
         }
     }
 
@@ -85,21 +85,21 @@ class EmbyConnectSvrViewController: BaseConnectSvrViewController {
 
     override func createAuth() -> Auth? {
         if currentMode == .apiKey {
-            return Auth(userName: nil, password: nil, apiKey: apiKeyField.stringValue)
+            return Auth(userName: nil, password: nil, apiKey: apiKeyField.text)
         }
-        return Auth(userName: userNameField.stringValue, password: passwordField.stringValue)
+        return Auth(userName: userNameField.text, password: passwordField.text)
     }
 
     override func update(with loginInfo: LoginInfo?) {
         super.update(with: loginInfo)
-        apiKeyField.stringValue = loginInfo?.auth?.apiKey ?? ""
+        apiKeyField.text = loginInfo?.auth?.apiKey ?? ""
     }
 
     // MARK: - Private
 
     @objc private func modeDidChange() {
         if currentMode == .apiKey {
-            userNameField.stringValue = ""
+            userNameField.text = ""
         }
         updateUIForAuthMode()
     }

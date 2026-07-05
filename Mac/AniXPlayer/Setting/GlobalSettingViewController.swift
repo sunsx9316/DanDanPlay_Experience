@@ -178,6 +178,7 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
             
             if response == .alertFirstButtonReturn {
                 self.model.cleanupCache()
+                self.view.show(text: NSLocalizedString("缓存已清除", comment: ""))
             }
         } else if type == .cleanupHistory {
             let vc = NSAlert()
@@ -191,6 +192,7 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
 
             if response == .alertFirstButtonReturn {
                 self.model.cleanupHistory()
+                self.view.show(text: NSLocalizedString("播放历史已清除", comment: ""))
             }
         } else if type == .playerCore {
             let vc = NSAlert()
@@ -272,8 +274,8 @@ class GlobalSettingViewController: ViewController {
         let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: ""))
         column.isEditable = false
         tableView.addTableColumn(column)
-        tableView.registerNibCell(class: SwitchDetailTableViewCell.self)
-        tableView.registerNibCell(class: TitleDetailTableViewCell.self)
+        tableView.registerClassCell(class: SwitchDetailTableViewCell.self)
+        tableView.registerClassCell(class: TitleDetailTableViewCell.self)
         
         var scrollView = ScrollView(containerView: tableView)
         return scrollView

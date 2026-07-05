@@ -27,8 +27,7 @@ class LoginViewController: ViewController {
     private lazy var loginButton: Button = {
         let button = Button.custom()
         button.title = NSLocalizedString("登录", comment: "")
-        button.target = self
-        button.action = #selector(loginButtonTapped)
+        button.addTarget(self, action: #selector(loginButtonTapped))
         button.keyEquivalent = "\r"
         let color = NSColor(named: "MainColor") ?? .systemBlue
         button.wantsLayer = true
@@ -78,11 +77,11 @@ class LoginViewController: ViewController {
     }
 
     @objc private func loginButtonTapped() {
-        guard let userName = usernameTextField.stringValue.nilIfEmpty else {
+        guard let userName = usernameTextField.text, !userName.isEmpty else {
             view.show(text: NSLocalizedString("请输入用户名", comment: ""))
             return
         }
-        guard let password = passwordTextField.stringValue.nilIfEmpty else {
+        guard let password = passwordTextField.text, !password.isEmpty else {
             view.show(text: NSLocalizedString("请输入密码", comment: ""))
             return
         }
@@ -101,8 +100,3 @@ class LoginViewController: ViewController {
     }
 }
 
-private extension String {
-    var nilIfEmpty: String? {
-        return trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? nil : self
-    }
-}

@@ -251,9 +251,9 @@ class AppVersionViewController: ViewController {
 
     private func populateContent() {
         if let version = appVersion?.shortVersion {
-            titleLabel.stringValue = String(format: NSLocalizedString("发现新版本 %@", comment: ""), version)
+            titleLabel.text = String(format: NSLocalizedString("发现新版本 %@", comment: ""), version)
         } else {
-            titleLabel.stringValue = NSLocalizedString("发现新版本", comment: "")
+            titleLabel.text = NSLocalizedString("发现新版本", comment: "")
         }
 
         let text = (appVersion?.desc).flatMap { $0.isEmpty || $0 == "Unknown" ? nil : $0 }
@@ -273,7 +273,7 @@ class AppVersionViewController: ViewController {
         progressBar.isHidden = false
         progressBar.doubleValue = 0
         progressLabel.isHidden = false
-        progressLabel.stringValue = NSLocalizedString("正在下载...", comment: "")
+        progressLabel.text = NSLocalizedString("正在下载...", comment: "")
         cancelDownloadBtn.isHidden = false
     }
 
@@ -303,7 +303,7 @@ class AppVersionViewController: ViewController {
         cancelDownloadBtn.isHidden = true
 
         progressLabel.isHidden = false
-        progressLabel.stringValue = message
+        progressLabel.text = message
         progressLabel.textColor = .systemRed
 
         autoUpdateBtn.isHidden = false
@@ -415,7 +415,7 @@ class AppVersionViewController: ViewController {
         fallbackDownloadURL = nil
         isFallback = true
         progressBar.doubleValue = 0
-        progressLabel.stringValue = NSLocalizedString("主链接无法访问，正在切换备用链接...", comment: "")
+        progressLabel.text = NSLocalizedString("主链接无法访问，正在切换备用链接...", comment: "")
         startDownload(from: fallback, fallbackURL: nil)
     }
 
@@ -439,7 +439,7 @@ class AppVersionViewController: ViewController {
 
         progressLabel.isHidden = false
         progressLabel.textColor = .secondaryLabelColor
-        progressLabel.stringValue = NSLocalizedString("下载完成，正在安装...", comment: "")
+        progressLabel.text = NSLocalizedString("下载完成，正在安装...", comment: "")
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
             guard let self = self else { return }
@@ -462,7 +462,7 @@ extension AppVersionViewController: URLSessionDownloadDelegate {
         let pct = Int(fraction * 100)
         let sizeMB = Double(totalBytesExpectedToWrite) / 1_048_576
         let downloadedMB = Double(totalBytesWritten) / 1_048_576
-        progressLabel.stringValue = String(format: NSLocalizedString("正在下载... %d%% (%.1f / %.1f MB)", comment: ""), pct, downloadedMB, sizeMB)
+        progressLabel.text = String(format: NSLocalizedString("正在下载... %d%% (%.1f / %.1f MB)", comment: ""), pct, downloadedMB, sizeMB)
     }
 
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {

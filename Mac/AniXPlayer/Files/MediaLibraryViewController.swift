@@ -170,7 +170,7 @@ extension MediaLibraryViewController: NSOutlineViewDelegate, NSOutlineViewDataSo
                 cell = MediaLibrarySectionCellView()
                 cell?.identifier = cellId
             }
-            cell?.textField?.stringValue = section.title
+            cell?.textField?.text = section.title
             return cell
         }
 
@@ -184,7 +184,7 @@ extension MediaLibraryViewController: NSOutlineViewDelegate, NSOutlineViewDataSo
             let image = NSImage(named: type.iconName)
             image?.isTemplate = true
             cell?.imageView?.image = image
-            cell?.textField?.stringValue = type.name
+            cell?.textField?.text = type.name
             return cell
         }
 
