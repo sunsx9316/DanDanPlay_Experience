@@ -81,6 +81,9 @@ EOF
 
     echo "=== 发布完成 ==="
     echo "Release: $(gh release view "$VERSION_TAG" --json url -q '.url')"
+    echo ""
+    echo "=== 更新日志 ==="
+    cat "$CHANGELOG_FILE"
 
 elif [ "$PLATFORM" = "ios" ] || [ "$PLATFORM" = "tvos" ]; then
     if [[ "$APP_PATH" != *.ipa ]]; then
@@ -111,4 +114,7 @@ elif [ "$PLATFORM" = "ios" ] || [ "$PLATFORM" = "tvos" ]; then
 
     echo "=== 发布完成 ==="
     echo "App 已上传至 App Store Connect，请在 App Store Connect 中完成提审"
+    echo ""
+    echo "=== 更新日志 ==="
+    cat "$CHANGELOG_FILE"
 fi
