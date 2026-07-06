@@ -17,8 +17,10 @@ class Localize {
             UserDefaults.standard.set(["zh-Hans"], forKey: "AppleLanguages")
         case .english:
             UserDefaults.standard.set(["en"], forKey: "AppleLanguages")
+        case .followSystem:
+            UserDefaults.standard.removeObject(forKey: "AppleLanguages")
         }
-        
+
         UserDefaults.standard.synchronize()
 
             // 2. 更新 Preferences

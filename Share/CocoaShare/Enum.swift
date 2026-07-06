@@ -273,6 +273,7 @@ extension DanmakuEffectStyle {
 
 /// 应用语言
 enum AppLanguage: Int, CaseIterable {
+    case followSystem = -1
     case chinese = 0
     case english = 1
 
@@ -282,6 +283,8 @@ enum AppLanguage: Int, CaseIterable {
             return NSLocalizedString("中文", comment: "")
         case .english:
             return NSLocalizedString("英文", comment: "")
+        case .followSystem:
+            return NSLocalizedString("跟随系统", comment: "")
         }
     }
 }

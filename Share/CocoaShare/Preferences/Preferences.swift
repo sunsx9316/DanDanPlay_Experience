@@ -242,7 +242,7 @@ class Preferences {
     var playerCore: MediaPlayer.CoreType
 
     /// 应用语言
-    @StoreWrapper(defaultValue: .chinese, key: .appLanguage)
+    @StoreWrapper(defaultValue: .followSystem, key: .appLanguage)
     var appLanguage: AppLanguage
 
     /// 字幕颜色（nil 表示使用默认颜色）

@@ -405,6 +405,9 @@ class HttpServer {
             lang = "en"
         case .chinese:
             lang = "zh-Hans"
+        case .followSystem:
+            let preferred = Bundle.main.preferredLocalizations.first ?? "en"
+            lang = preferred.hasPrefix("zh") ? "zh-Hans" : "en"
         }
 
         let configScript = """

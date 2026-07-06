@@ -29,7 +29,7 @@ class PlayerLaunchViewController: ViewController {
     private lazy var openButton: Button = {
         let button = Button.custom()
         button.bezelStyle = .texturedSquare
-        button.title = NSLocalizedString("打开或拖入文件", comment: "")
+        button.title = NSLocalizedString("打开或拖入文件/文件夹", comment: "")
         button.isBordered = true
         button.showsBorderOnlyWhileMouseInside = true
         button.focusRingType = .none
