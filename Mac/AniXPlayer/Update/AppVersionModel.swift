@@ -36,7 +36,8 @@ class AppVersionModel {
     }
     
     private func isNewVersion(updateInfo: UpdateInfo) -> Bool {
-        if let appVersion = InfoPlistUtils.appBuildNumber {
+        let appVersion = AppInfoHelper.buildNumber
+        if !appVersion.isEmpty {
             //有版本更新
             if updateInfo.version.compare(appVersion, options: .numeric) == .orderedDescending {
                 return true

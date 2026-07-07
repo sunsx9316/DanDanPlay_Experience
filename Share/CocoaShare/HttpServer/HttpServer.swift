@@ -11,6 +11,38 @@ import GCDWebServer
 import ANXLog
 #endif
 
+// MARK: - SHA-256 via CommonCrypto (no bridging header needed)
+
+@_silgen_name("CC_SHA256_Init")
+private func CC_SHA256_Init(_ c: UnsafeMutableRawPointer) -> Int32
+
+@_silgen_name("CC_SHA256_Update")
+private func CC_SHA256_Update(_ c: UnsafeMutableRawPointer, _ data: UnsafeRawPointer, _ len: UInt32) -> Int32
+
+@_silgen_name("CC_SHA256_Final")
+private func CC_SHA256_Final(_ md: UnsafeMutablePointer<UInt8>, _ c: UnsafeMutableRawPointer) -> Int32
+
+private let kSHA256DigestLength = 32
+private let kSHA256CtxSize = 512
+
+/// 流式计算文件 SHA-256，分块读取不占内存
+private func sha256HashOfFile(atPath path: String) -> String? {
+    guard let fh = FileHandle(forReadingAtPath: path) else { return nil }
+    defer { try? fh.close() }
+
+    let ctx = UnsafeMutableRawPointer.allocate(byteCount: kSHA256CtxSize, alignment: 8)
+    defer { ctx.deallocate() }
+    _ = CC_SHA256_Init(ctx)
+
+    while let chunk = try? fh.read(upToCount: 1024 * 1024), !chunk.isEmpty {
+        chunk.withUnsafeBytes { _ = CC_SHA256_Update(ctx, $0.baseAddress!, UInt32($0.count)) }
+    }
+
+    var digest = [UInt8](repeating: 0, count: kSHA256DigestLength)
+    _ = CC_SHA256_Final(&digest, ctx)
+    return digest.map { String(format: "%02x", $0) }.joined()
+}
+
 protocol HttpServerDelegate: AnyObject {
     func httpServer(_ httpServer: HttpServer, didReceiveFileAtPath path: String, folderName: String?, totalFiles: Int?)
     func httpServerDidStart(_ httpServer: HttpServer)
@@ -66,13 +98,22 @@ class HttpServer {
             let folderName: String? = {
                 let trimmed = relativePath.trimmingCharacters(in: CharacterSet(charactersIn: "/"))
                 guard !trimmed.isEmpty else { return nil }
-                let components = trimmed.split(separator: "/", maxSplits: 1, omittingEmptySubsequences: true)
-                return components.first.map(String.init)
+                let components = trimmed.split(separator: "/", maxSplits: 2, omittingEmptySubsequences: true)
+                // 至少 2 层（目录/文件）才算文件夹上传，否则是单文件
+                guard components.count > 1 else { return nil }
+                return String(components[0])
             }()
 
             let totalFiles: Int? = {
                 guard let str = multipartRequest.firstArgument(forControlName: "total")?.string,
                       let n = Int(str) else { return nil }
+                return n
+            }()
+
+            let expectedChecksum = multipartRequest.firstArgument(forControlName: "checksum")?.string
+            let expectedSize: UInt64? = {
+                guard let str = multipartRequest.firstArgument(forControlName: "size")?.string,
+                      let n = UInt64(str) else { return nil }
                 return n
             }()
 
@@ -87,7 +128,7 @@ class HttpServer {
                 let relPath = (relativePath as NSString)
                 if relPath.length > 0 {
                     let dirPart = relPath.deletingLastPathComponent
-                    if !dirPart.isEmpty && dirPart != "." {
+                    if !dirPart.isEmpty && dirPart != "." && dirPart != "/" {
                         subDir = dirPart
                     } else {
                         subDir = ""
@@ -122,22 +163,53 @@ class HttpServer {
                     counter += 1
                 }
 
+                var fileInfo: [String: Any] = ["name": fileName]
+                var verified = false
+
                 do {
-                    let tempData = try Data(contentsOf: URL(fileURLWithPath: tempPath))
-                    try tempData.write(to: URL(fileURLWithPath: finalPath))
-                    let fileSize = UInt64(tempData.count)
+                    // 使用 copyItem 替代 Data(contentsOf:)，避免将大文件加载到内存
+                    try fileManager.copyItem(atPath: tempPath, toPath: finalPath)
+                    let writtenSize = (try? fileManager.attributesOfItem(atPath: finalPath)[.size] as? UInt64) ?? 0
+                    fileInfo["size"] = writtenSize
 
-                    savedFiles.append([
-                        "name": fileName,
-                        "size": fileSize
-                    ])
+                    // 校验：先比较文件大小
+                    var sizeOk = true
+                    if let expectedSize = expectedSize {
+                        sizeOk = (writtenSize == expectedSize)
+                    }
 
-                    DispatchQueue.main.async {
+                    // 校验：SHA-256 比对
+                    var hashOk = true
+                    if let checksum = expectedChecksum {
+                        if let writtenHash = sha256HashOfFile(atPath: finalPath) {
+                            hashOk = (writtenHash == checksum)
+                            if !hashOk {
+                                ANX.logInfo(.HTTP, "SHA-256 校验失败: \(fileName), expected=\(checksum), got=\(writtenHash)")
+                            }
+                        } else {
+                            hashOk = false
+                        }
+                    }
+
+                    verified = sizeOk && hashOk
+                    fileInfo["verified"] = verified
+
+                    if !verified {
+                        fileInfo["error"] = sizeOk ? "SHA-256 mismatch" : "Size mismatch"
+                    }
+
+                    DispatchQueue.main.async { [weak self] in
+                        guard let self = self else { return }
                         self.delegate?.httpServer(self, didReceiveFileAtPath: finalPath, folderName: folderName, totalFiles: totalFiles)
                     }
                 } catch {
                     ANX.logInfo(.HTTP, "保存文件失败: \(error)")
+                    fileInfo["size"] = 0
+                    fileInfo["verified"] = false
+                    fileInfo["error"] = error.localizedDescription
                 }
+
+                savedFiles.append(fileInfo)
             }
 
             let responseDict: [String: Any] = [
@@ -393,9 +465,7 @@ class HttpServer {
             return GCDWebServerDataResponse(html: "<h1>页面加载失败</h1>")
         }
 
-        let appName = Bundle.main.infoDictionary?["CFBundleDisplayName"] as? String
-            ?? Bundle.main.infoDictionary?["CFBundleName"] as? String
-            ?? "AniXPlayer"
+        let appName = AppInfoHelper.appDisplayName
         let themeHex = String(format: "#%06X", ANXColor.mainColor.anxRgbValue)
         let lang: String
         switch Preferences.shared.appLanguage {
@@ -438,7 +508,8 @@ class HttpServer {
                 upload: "\(NSLocalizedString("上传", comment: ""))",
                 uploadFile: "\(NSLocalizedString("选择文件", comment: ""))",
                 uploadFolder: "\(NSLocalizedString("选择文件夹", comment: ""))",
-                loading: "\(NSLocalizedString("加载中...", comment: ""))"
+                loading: "\(NSLocalizedString("加载中...", comment: ""))",
+                waiting: "\(NSLocalizedString("排队中...", comment: ""))"
             }
         };
         </script>

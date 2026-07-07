@@ -108,7 +108,7 @@ class EmbyFileManager: FileManagerProtocol {
         }
 
         let authURL = serverURL.appendingPathComponent("Users/AuthenticateByName")
-        let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+        let appVersion = !AppInfoHelper.appVersion.isEmpty ? AppInfoHelper.appVersion : "1.0"
         let body: [String: String] = [
             "Username": loginInfo.auth?.userName ?? "",
             "Pw": password,
@@ -500,10 +500,8 @@ class EmbyFileManager: FileManagerProtocol {
     }
 
     private func embyAuthorizationHeader() -> String {
-        let appName = Bundle.main.infoDictionary?["CFBundleDisplayName"] as? String
-            ?? Bundle.main.infoDictionary?["CFBundleName"] as? String
-            ?? "AniXPlayer"
-        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
+        let appName = AppInfoHelper.appDisplayName
+        let version = !AppInfoHelper.appVersion.isEmpty ? AppInfoHelper.appVersion : "1.0"
         #if os(macOS)
         let rawName = Host.current().localizedName ?? "Unknown Mac"
         let deviceName = rawName.asciiSanitized()

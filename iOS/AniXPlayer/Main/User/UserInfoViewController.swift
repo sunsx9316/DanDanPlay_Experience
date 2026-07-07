@@ -24,39 +24,19 @@ class UserInfoViewController: ViewController {
             switch self {
             case .settings: return NSLocalizedString("设置", comment: "")
             case .about:
-                let appName = Bundle.main.infoDictionary?["CFBundleDisplayName"] as? String
-                    ?? Bundle.main.infoDictionary?["CFBundleName"] as? String
-                    ?? "AniXPlayer"
-                return NSLocalizedString("关于", comment: "") + " " + appName
+                return NSLocalizedString("关于", comment: "") + " " + AppInfoHelper.appDisplayName
             }
         }
     }
 
     private let menuItems = MenuItem.allCases
 
-    private lazy var avatarImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.layer.cornerRadius = 40
-        imageView.clipsToBounds = true
-        imageView.layer.borderWidth = 2
-        imageView.layer.borderColor = UIColor.mainColor.cgColor
-        return imageView
-    }()
-
-    private lazy var usernameLabel: UILabel = {
-        let label = Label()
-        label.font = UIFont.systemFont(ofSize: 18, weight: .medium)
-        label.numberOfLines = 0
-        return label
-    }()
-
     private lazy var tableView: TableView = {
         let tv = TableView(frame: .zero, style: .plain)
         tv.delegate = self
         tv.dataSource = self
+        tv.registerClassCell(class: UserInfoCell.self)
         tv.registerClassCell(class: SeparatorTableViewCell.self)
-        tv.rowHeight = 50
         tv.separatorStyle = .none
         return tv
     }()
@@ -70,17 +50,6 @@ class UserInfoViewController: ViewController {
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        reloadData()
-    }
-
-    private func reloadData() {
-        if let userInfo = Preferences.shared.loginInfo {
-            avatarImageView.kf.setImage(with: URL(string: userInfo.profileImage), placeholder: UIImage.placeholder)
-            usernameLabel.text = userInfo.screenName
-        } else {
-            avatarImageView.image = UIImage.placeholder
-            usernameLabel.text = NSLocalizedString("点击登录", comment: "")
-        }
         tableView.reloadData()
     }
 
@@ -92,7 +61,7 @@ class UserInfoViewController: ViewController {
             vc.navigationController?.popViewController(animated: true)
             self.view.showHUD(NSLocalizedString("登录成功！", comment: ""))
             Preferences.shared.loginInfo = info
-            self.reloadData()
+            self.tableView.reloadData()
         }
         navigationController?.pushViewController(vc, animated: true)
     }
@@ -111,28 +80,7 @@ class UserInfoViewController: ViewController {
 
     private func logout() {
         Preferences.shared.loginInfo = nil
-        reloadData()
-    }
-
-    private var configuredUserInfoCell: UITableViewCell?
-
-    private func configureUserInfoCell(_ cell: UITableViewCell) {
-        guard configuredUserInfoCell !== cell else { return }
-        configuredUserInfoCell = cell
-        avatarImageView.removeFromSuperview()
-        usernameLabel.removeFromSuperview()
-        cell.contentView.addSubview(avatarImageView)
-        cell.contentView.addSubview(usernameLabel)
-        avatarImageView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(20)
-            make.centerY.equalToSuperview()
-            make.width.height.equalTo(80)
-        }
-        usernameLabel.snp.makeConstraints { make in
-            make.leading.equalTo(avatarImageView.snp.trailing).offset(16)
-            make.centerY.equalToSuperview()
-            make.trailing.lessThanOrEqualToSuperview().offset(-20)
-        }
+        tableView.reloadData()
     }
 }
 
@@ -156,10 +104,15 @@ extension UserInfoViewController: UITableViewDataSource {
         guard let sec = Section(rawValue: indexPath.section) else { return UITableViewCell() }
         switch sec {
         case .userInfo:
-            let cell = tableView.dequeueCell(class: SeparatorTableViewCell.self, indexPath: indexPath)
-            configureUserInfoCell(cell)
+            let cell = tableView.dequeueCell(class: UserInfoCell.self, indexPath: indexPath)
             cell.showSeparator = false
-            cell.accessoryType = Preferences.shared.loginInfo != nil ? .disclosureIndicator : .none
+            if let userInfo = Preferences.shared.loginInfo {
+                cell.configure(avatarURL: URL(string: userInfo.profileImage), username: userInfo.screenName)
+                cell.accessoryType = .disclosureIndicator
+            } else {
+                cell.configure(avatarURL: nil, username: NSLocalizedString("点击登录", comment: ""))
+                cell.accessoryType = .none
+            }
             return cell
 
         case .menu:
@@ -184,7 +137,7 @@ extension UserInfoViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-        return section == 0 ? 20 : 20
+        return 20
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {

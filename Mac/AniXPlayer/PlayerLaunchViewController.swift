@@ -43,7 +43,7 @@ class PlayerLaunchViewController: ViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.title = InfoPlistUtils.appName
+        self.title = AppInfoHelper.appDisplayName
 
         self.view.addSubview(dragView)
         self.view.addSubview(openButton)

@@ -22,8 +22,13 @@ class ViewController: UIViewController {
     }
     
     private func setupNavigationItem() {
-        self.navigationItem.leftBarButtonItem = .init(backToTopItem: self, action: #selector(onTouchLeftBarButtonItem(_:)))
-        self.navigationItem.leftItemsSupplementBackButton = true
+        let isRoot = navigationController?.viewControllers.first === self
+        if isRoot {
+            navigationItem.leftBarButtonItem = nil
+        } else {
+            navigationItem.leftBarButtonItem = .init(backToTopItem: self, action: #selector(onTouchLeftBarButtonItem(_:)))
+            navigationItem.leftItemsSupplementBackButton = true
+        }
     }
     
     @objc private func onTouchLeftBarButtonItem(_ item: UIButton) {

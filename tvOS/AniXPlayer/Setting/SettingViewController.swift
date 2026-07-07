@@ -210,7 +210,7 @@ class SettingViewController: ViewController {
 
         case .version:
             if let cell = cell as? NavigationSettingCell {
-                let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
+                let version = AppInfoHelper.appVersion
                 cell.configure(title: NSLocalizedString("版本", comment: ""), detail: version)
                 cell.showDisclosure = false
             }

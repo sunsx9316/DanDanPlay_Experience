@@ -16,26 +16,20 @@ class AboutViewController: ViewController {
         let view = UIView()
 
         let iconView = UIImageView()
-        iconView.image = Self.appIcon()
+        iconView.image = Self.appIcon
         iconView.contentMode = .scaleAspectFit
         iconView.layer.cornerRadius = 16
         iconView.clipsToBounds = true
         view.addSubview(iconView)
 
-        let appName = Bundle.main.infoDictionary?["CFBundleDisplayName"] as? String
-            ?? Bundle.main.infoDictionary?["CFBundleName"] as? String
-            ?? "AniXPlayer"
-        let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
-        let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? ""
-
         let nameLabel = Label()
-        nameLabel.text = appName
+        nameLabel.text = AppInfoHelper.appDisplayName
         nameLabel.font = .systemFont(ofSize: 20, weight: .semibold)
         nameLabel.textAlignment = .center
         view.addSubview(nameLabel)
 
         let versionLabel = Label()
-        versionLabel.text = "v\(version) (\(build))"
+        versionLabel.text = "v\(AppInfoHelper.appVersion) (\(AppInfoHelper.buildNumber))"
         versionLabel.font = .systemFont(ofSize: 14)
         versionLabel.textColor = .secondaryLabel
         versionLabel.textAlignment = .center
@@ -112,14 +106,9 @@ class AboutViewController: ViewController {
 
     // MARK: - App Icon
 
-    private static func appIcon() -> UIImage? {
-        if let icons = Bundle.main.infoDictionary?["CFBundleIcons"] as? [String: Any],
-           let primary = icons["CFBundlePrimaryIcon"] as? [String: Any],
-           let files = primary["CFBundleIconFiles"] as? [String],
-           let lastIcon = files.last {
-            return UIImage(named: lastIcon)
-        }
-        return nil
+    private static var appIcon: UIImage? {
+        guard let name = AppInfoHelper.appIconName else { return nil }
+        return UIImage(named: name)
     }
 }
 

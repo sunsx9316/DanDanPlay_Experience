@@ -168,9 +168,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private func setupMenu() {
 
         func appItem() -> NSMenuItem {
-            let mainAppMenuItem = NSMenuItem(title: InfoPlistUtils.appName, action: nil, keyEquivalent: "")
+            let mainAppMenuItem = NSMenuItem(title: AppInfoHelper.appDisplayName, action: nil, keyEquivalent: "")
             let appMenu = NSMenu()
-            appMenu.addItem(withTitle: NSLocalizedString("关于", comment: "") + InfoPlistUtils.appName, action: #selector(onAboutItemDidClick(_:)), keyEquivalent: "")
+            appMenu.addItem(withTitle: NSLocalizedString("关于", comment: "") + AppInfoHelper.appDisplayName, action: #selector(onAboutItemDidClick(_:)), keyEquivalent: "")
             appMenu.addItem(NSMenuItem.separator())
             appMenu.addItem(withTitle: NSLocalizedString("隐藏", comment: ""), action: #selector(NSApplication.hide(_:)), keyEquivalent: "h")
             appMenu.addItem({ () -> NSMenuItem in
