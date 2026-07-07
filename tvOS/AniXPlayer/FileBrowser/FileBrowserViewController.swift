@@ -71,6 +71,11 @@ class FileBrowserViewController: ViewController, FileBrowserViewControllerDelega
         let sortItem = UIBarButtonItem(image: sortImage, style: .plain, target: self, action: #selector(showSortOptions))
         navigationItem.rightBarButtonItem = sortItem
 
+        // 长按"选择/回车"键触发删除菜单
+        let longPressRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(handleLongPressSelect))
+        longPressRecognizer.allowedPressTypes = [NSNumber(value: UIPress.PressType.select.rawValue)]
+        view.addGestureRecognizer(longPressRecognizer)
+
         self.view.addSubview(tableView)
         tableView.snp.makeConstraints { make in
             make.top.trailing.bottom.equalToSuperview()
@@ -180,6 +185,50 @@ class FileBrowserViewController: ViewController, FileBrowserViewControllerDelega
         if let index = files.firstIndex(where: { $0.url == highlightedFile.url }) {
             let indexPath = IndexPath(row: index, section: 0)
             tableView.scrollToRow(at: indexPath, at: .middle, animated: false)
+        }
+    }
+
+    // MARK: - Delete
+
+    @objc private func handleLongPressSelect(_ recognizer: UILongPressGestureRecognizer) {
+        guard recognizer.state == .began else { return }
+        // 找到当前焦点所在的 cell
+        guard let focusedCell = UIScreen.main.focusedView as? FileListCell,
+              let indexPath = tableView.indexPath(for: focusedCell),
+              indexPath.row < files.count else { return }
+
+        let file = files[indexPath.row]
+        guard file.isCanDelete else { return }
+
+        let confirmAlert = UIAlertController(
+            title: NSLocalizedString("删除", comment: ""),
+            message: file.type == .folder
+                ? NSLocalizedString("确定要删除此文件夹吗？", comment: "")
+                : NSLocalizedString("确定要删除此文件吗？", comment: ""),
+            preferredStyle: .alert
+        )
+
+        confirmAlert.addAction(UIAlertAction(title: NSLocalizedString("取消", comment: ""), style: .cancel))
+        confirmAlert.addAction(UIAlertAction(title: NSLocalizedString("删除", comment: ""), style: .destructive) { [weak self] _ in
+            self?.delete(file: file)
+        })
+
+        present(confirmAlert, animated: true)
+    }
+
+    private func delete(file: File) {
+        let hud = view.showLoading()
+        type(of: file).fileManager.deleteFile(file) { [weak self] error in
+            DispatchQueue.main.async {
+                hud.hide(animated: true)
+                guard let self = self else { return }
+
+                if let error = error {
+                    self.view.showError(error)
+                } else if let dir = self.currentDirectory {
+                    self.enterDirectory(dir)
+                }
+            }
         }
     }
 

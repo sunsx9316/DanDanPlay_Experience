@@ -24,6 +24,160 @@
     document.getElementById('newFolderBtnLabel').textContent = t('newFolder');
     document.getElementById('loadingMsg').textContent = t('loading');
 
+    // ============================================================
+    //  Streaming SHA-256 (pure JS, works without HTTPS/Web Crypto)
+    // ============================================================
+
+    function SHA256() {
+        var K = new Uint32Array([
+            0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+            0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+            0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+            0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+            0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+            0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+            0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+            0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
+        ]);
+
+        var H = new Uint32Array([0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a, 0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19]);
+        var block = new Uint8Array(64);
+        var blockView = new DataView(block.buffer);
+        var buflen = 0;
+        var totalLen = 0;
+
+        function rotr(x, n) { return (x >>> n) | (x << (32 - n)); }
+        function ch(x, y, z) { return (x & y) ^ (~x & z); }
+        function maj(x, y, z) { return (x & y) ^ (x & z) ^ (y & z); }
+        function sigma0(x) { return rotr(x, 2) ^ rotr(x, 13) ^ rotr(x, 22); }
+        function sigma1(x) { return rotr(x, 6) ^ rotr(x, 11) ^ rotr(x, 25); }
+        function gamma0(x) { return rotr(x, 7) ^ rotr(x, 18) ^ (x >>> 3); }
+        function gamma1(x) { return rotr(x, 17) ^ rotr(x, 19) ^ (x >>> 10); }
+
+        function processBlock() {
+            var W = new Uint32Array(64);
+            for (var t = 0; t < 16; t++) {
+                W[t] = blockView.getUint32(t * 4, false);
+            }
+            for (var t = 16; t < 64; t++) {
+                W[t] = (gamma1(W[t - 2]) + W[t - 7] + gamma0(W[t - 15]) + W[t - 16]) >>> 0;
+            }
+
+            var a = H[0], b = H[1], c = H[2], d = H[3];
+            var e = H[4], f = H[5], g = H[6], h = H[7];
+
+            for (var t = 0; t < 64; t++) {
+                var T1 = (h + sigma1(e) + ch(e, f, g) + K[t] + W[t]) >>> 0;
+                var T2 = (sigma0(a) + maj(a, b, c)) >>> 0;
+                h = g; g = f; f = e; e = (d + T1) >>> 0;
+                d = c; c = b; b = a; a = (T1 + T2) >>> 0;
+            }
+
+            H[0] = (H[0] + a) >>> 0; H[1] = (H[1] + b) >>> 0;
+            H[2] = (H[2] + c) >>> 0; H[3] = (H[3] + d) >>> 0;
+            H[4] = (H[4] + e) >>> 0; H[5] = (H[5] + f) >>> 0;
+            H[6] = (H[6] + g) >>> 0; H[7] = (H[7] + h) >>> 0;
+        }
+
+        this.update = function(data) {
+            totalLen += data.byteLength;
+            var offset = 0;
+            if (buflen > 0) {
+                var space = 64 - buflen;
+                var copyLen = Math.min(space, data.byteLength);
+                block.set(new Uint8Array(data.buffer, data.byteOffset + offset, copyLen), buflen);
+                buflen += copyLen;
+                offset += copyLen;
+                if (buflen === 64) {
+                    processBlock();
+                    buflen = 0;
+                }
+            }
+            while (offset + 64 <= data.byteLength) {
+                block.set(new Uint8Array(data.buffer, data.byteOffset + offset, 64));
+                processBlock();
+                offset += 64;
+            }
+            if (offset < data.byteLength) {
+                var remaining = data.byteLength - offset;
+                block.set(new Uint8Array(data.buffer, data.byteOffset + offset, remaining));
+                buflen = remaining;
+            }
+        };
+
+        this.digest = function() {
+            var bitLen = totalLen * 8;
+            // Pad with 0x80
+            block[buflen] = 0x80;
+            buflen++;
+            if (buflen > 56) {
+                block.fill(0, buflen, 64);
+                processBlock();
+                buflen = 0;
+            }
+            block.fill(0, buflen, 56);
+            // Append bit length as big-endian 64-bit
+            blockView.setUint32(56, Math.floor(bitLen / 0x100000000), false);
+            blockView.setUint32(60, bitLen >>> 0, false);
+            processBlock();
+
+            var hex = '';
+            for (var i = 0; i < 8; i++) {
+                hex += ('0000000' + H[i].toString(16)).slice(-8);
+            }
+            return hex;
+        };
+    }
+
+    // ---- Compute SHA-256 of a File (chunked, streaming) ----
+
+    function readChunk(blob) {
+        return new Promise(function(resolve, reject) {
+            var reader = new FileReader();
+            reader.onload = function() { resolve(new Uint8Array(reader.result)); };
+            reader.onerror = function() { reject(reader.error); };
+            reader.readAsArrayBuffer(blob);
+        });
+    }
+
+    var MAX_HASH_SIZE = 200 * 1024 * 1024; // 200MB — 超过此大小只做大小校验
+
+    async function computeSHA256(file) {
+        if (file.size > MAX_HASH_SIZE) return null;
+        var sha = new SHA256();
+        var chunkSize = 1024 * 1024; // 1 MB
+        var offset = 0;
+        while (offset < file.size) {
+            var end = Math.min(offset + chunkSize, file.size);
+            var chunk = file.slice(offset, end);
+            var buf = await readChunk(chunk);
+            sha.update(buf);
+            offset = end;
+        }
+        return sha.digest();
+    }
+
+    // ---- Upload concurrency limiter ----
+    var MAX_CONCURRENT = 3;
+    var uploadQueue = [];
+    var activeUploads = 0;
+
+    function enqueue(task) {
+        uploadQueue.push(task);
+        pumpQueue();
+    }
+
+    function pumpQueue() {
+        while (activeUploads < MAX_CONCURRENT && uploadQueue.length > 0) {
+            var task = uploadQueue.shift();
+            activeUploads++;
+            task().finally(function() {
+                activeUploads--;
+                pumpQueue();
+            });
+        }
+    }
+
     // ---- Upload logic ----
     var dropzone = document.getElementById('dropzone');
     var fileInput = document.getElementById('fileInput');
@@ -119,7 +273,11 @@
             return new Promise(function(resolve) {
                 entry.file(function(file) {
                     fileList.classList.remove('empty');
-                    uploadFile(file, '');
+                    // 立即展示为"排队中"
+                    var item = createFileItem(file, '');
+                    item.querySelector('.file-status').textContent = '⏳ ' + t('waiting');
+                    fileList.insertBefore(item, fileList.firstChild);
+                    enqueue(function() { return uploadFile(file, '', item); });
                     resolve();
                 });
             });
@@ -195,51 +353,96 @@
     function handleFiles(files) {
         fileList.classList.remove('empty');
         for (var i = 0; i < files.length; i++) {
-            uploadFile(files[i], '');
+            (function(f) {
+                // 立即展示所有文件为"排队中"
+                var item = createFileItem(f, '');
+                item.querySelector('.file-status').textContent = '⏳ ' + t('waiting');
+                fileList.insertBefore(item, fileList.firstChild);
+                enqueue(function() { return uploadFile(f, '', item); });
+            })(files[i]);
         }
     }
 
-    function uploadFile(file, relativePath) {
-        var item = createFileItem(file, relativePath);
-        fileList.insertBefore(item, fileList.firstChild);
+    function getUploadPath(fileName, relativePath) {
+        var dir = (window.__fmCurrentPath || '/');
+        var base = relativePath || fileName;
+        return dir === '/' ? '/' + base : dir + '/' + base;
+    }
 
-        var xhr = new XMLHttpRequest();
-        var formData = new FormData();
-        formData.append('file', file);
-        if (relativePath) formData.append('path', relativePath);
+    // ---- Hashing indicator helpers ----
 
-        var lastLoaded = 0;
-        var lastTime = Date.now();
+    function showHashing(item) {
+        var metaEl = item.querySelector('.file-meta');
+        metaEl.textContent = t('loading') + ' SHA-256...';
+    }
 
-        xhr.upload.addEventListener('progress', function(e) {
-            if (e.lengthComputable) {
-                var percent = Math.round((e.loaded / e.total) * 100);
-                var now = Date.now();
-                var timeDiff = (now - lastTime) / 1000;
-                var bytesDiff = e.loaded - lastLoaded;
-                var speed = timeDiff > 0 ? bytesDiff / timeDiff : 0;
-                lastLoaded = e.loaded;
-                lastTime = now;
-                updateProgress(item, percent, e.loaded, e.total, speed);
-            }
+    // ---- Upload (async — hash first, then send) ----
+
+    async function uploadFile(file, relativePath, existingItem) {
+        var item = existingItem || createFileItem(file, relativePath);
+        if (!existingItem) {
+            fileList.insertBefore(item, fileList.firstChild);
+        }
+
+        // Compute SHA-256 before upload
+        showHashing(item);
+        var checksum;
+        try {
+            checksum = await computeSHA256(file);
+        } catch (e) {
+            console.error('[sha256] failed:', e);
+            checksum = null;
+        }
+
+        return new Promise(function(resolve) {
+            var xhr = new XMLHttpRequest();
+            var formData = new FormData();
+            formData.append('file', file);
+            formData.append('path', getUploadPath(file.name, relativePath));
+            formData.append('size', file.size);
+            if (checksum) formData.append('checksum', checksum);
+
+            var lastLoaded = 0;
+            var lastTime = Date.now();
+
+            xhr.upload.addEventListener('progress', function(e) {
+                if (e.lengthComputable) {
+                    var percent = Math.round((e.loaded / e.total) * 100);
+                    var now = Date.now();
+                    var timeDiff = (now - lastTime) / 1000;
+                    var bytesDiff = e.loaded - lastLoaded;
+                    var speed = timeDiff > 0 ? bytesDiff / timeDiff : 0;
+                    lastLoaded = e.loaded;
+                    lastTime = now;
+                    updateProgress(item, percent, e.loaded, e.total, speed);
+                }
+            });
+
+            xhr.addEventListener('load', function() {
+                if (xhr.status === 200) {
+                    try {
+                        var resp = JSON.parse(xhr.responseText);
+                        var verified = resp.files && resp.files[0] && resp.files[0].verified;
+                        markComplete(item, file.size, verified);
+                    } catch (e) {
+                        markComplete(item, file.size, false);
+                    }
+                } else {
+                    console.error('[file] server error:', xhr.status, file.name);
+                    markError(item, t('serverError'));
+                }
+                resolve();
+            });
+
+            xhr.addEventListener('error', function() {
+                console.error('[file] network error:', file.name);
+                markError(item, t('networkError'));
+                resolve();
+            });
+
+            xhr.open('POST', '/upload');
+            xhr.send(formData);
         });
-
-        xhr.addEventListener('load', function() {
-            if (xhr.status === 200) {
-                markComplete(item, file.size);
-            } else {
-                console.error('[file] server error:', xhr.status, file.name);
-                markError(item, t('serverError'));
-            }
-        });
-
-        xhr.addEventListener('error', function() {
-            console.error('[file] network error:', file.name);
-            markError(item, t('networkError'));
-        });
-
-        xhr.open('POST', '/upload');
-        xhr.send(formData);
     }
 
     function uploadFolderContents(fileList_in, folderName) {
@@ -254,37 +457,56 @@
 
         var completedBytes = 0;
         var completedFiles = 0;
+        var failedCount = 0;
 
-        function uploadNext(index) {
+        async function uploadNext(index) {
             if (index >= fileList_in.length) {
-                markFolderComplete(item, totalSize, totalFiles);
+                markFolderComplete(item, totalSize, totalFiles, failedCount);
                 return;
             }
 
             var f = fileList_in[index];
+
+            var checksum;
+            try {
+                checksum = await computeSHA256(f.file);
+            } catch (e) {
+                checksum = null;
+            }
+
             var xhr = new XMLHttpRequest();
             var formData = new FormData();
             formData.append('file', f.file);
-            formData.append('path', f.relativePath);
+            formData.append('path', getUploadPath(f.file.name, f.relativePath));
             formData.append('total', totalFiles);
+            formData.append('size', f.file.size);
+            if (checksum) formData.append('checksum', checksum);
 
             xhr.addEventListener('load', function() {
                 completedFiles++;
                 completedBytes += f.file.size;
-                updateFolderProgress(item, completedBytes, totalSize, completedFiles, totalFiles);
 
                 if (xhr.status === 200) {
-                    uploadNext(index + 1);
+                    try {
+                        var resp = JSON.parse(xhr.responseText);
+                        if (!resp.files || !resp.files[0] || !resp.files[0].verified) {
+                            failedCount++;
+                        }
+                    } catch (e) {
+                        failedCount++;
+                    }
                 } else {
-                    console.error('[folder] server error:', xhr.status, f.relativePath);
-                    uploadNext(index + 1);
+                    failedCount++;
                 }
+
+                updateFolderProgress(item, completedBytes, totalSize, completedFiles, totalFiles);
+                uploadNext(index + 1);
             });
 
             xhr.addEventListener('error', function() {
-                console.error('[folder] network error:', f.relativePath);
                 completedFiles++;
                 completedBytes += f.file.size;
+                failedCount++;
                 updateFolderProgress(item, completedBytes, totalSize, completedFiles, totalFiles);
                 uploadNext(index + 1);
             });
@@ -295,6 +517,8 @@
 
         uploadNext(0);
     }
+
+    // ---- UI Helpers ----
 
     function createFolderItem(folderName, totalSize, totalFiles) {
         var div = document.createElement('div');
@@ -336,23 +560,31 @@
         }, 300);
     }
 
-    function markFolderComplete(item, totalSize, totalFiles) {
+    function markFolderComplete(item, totalSize, totalFiles, failedCount) {
         var iconEl = item.querySelector('.file-icon');
         var statusEl = item.querySelector('.file-status');
         var progressFill = item.querySelector('.progress-fill');
         var metaEl = item.querySelector('.file-meta');
 
-        iconEl.classList.remove('uploading');
-        iconEl.classList.add('success');
-        iconEl.innerHTML = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+        if (failedCount === 0) {
+            iconEl.classList.remove('uploading');
+            iconEl.classList.add('success');
+            iconEl.innerHTML = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+            statusEl.textContent = '✓ ' + t('complete');
+            statusEl.classList.remove('uploading');
+            statusEl.classList.add('success');
+            progressFill.classList.add('success');
+        } else {
+            iconEl.classList.remove('uploading');
+            iconEl.classList.add('error');
+            iconEl.innerHTML = '<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+            statusEl.textContent = '⚠ ' + failedCount + ' ' + t('files') + ' failed';
+            statusEl.classList.remove('uploading');
+            statusEl.classList.add('error');
+            progressFill.classList.add('error');
+        }
 
-        statusEl.textContent = t('complete');
-        statusEl.classList.remove('uploading');
-        statusEl.classList.add('success');
-
-        progressFill.classList.add('success');
         progressFill.style.width = '100%';
-
         metaEl.textContent = formatSize(totalSize) + ' · ' + totalFiles + ' ' + t('files');
 
         scheduleRefresh();
@@ -394,20 +626,31 @@
         metaEl.textContent = formatSize(loaded) + ' / ' + formatSize(total) + speedStr;
     }
 
-    function markComplete(item, fileSize) {
+    function markComplete(item, fileSize, verified) {
         var iconEl = item.querySelector('.file-icon');
         var statusEl = item.querySelector('.file-status');
         var progressFill = item.querySelector('.progress-fill');
         var metaEl = item.querySelector('.file-meta');
+
         iconEl.classList.remove('uploading');
-        iconEl.classList.add('success');
-        iconEl.innerHTML = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
-        statusEl.classList.remove('uploading');
-        statusEl.classList.add('success');
-        statusEl.textContent = t('complete');
-        progressFill.classList.add('success');
         progressFill.style.width = '100%';
         metaEl.textContent = formatSize(fileSize);
+
+        if (verified) {
+            iconEl.classList.add('success');
+            iconEl.innerHTML = '<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>';
+            statusEl.textContent = '✓ ' + t('complete');
+            statusEl.classList.remove('uploading');
+            statusEl.classList.add('success');
+            progressFill.classList.add('success');
+        } else {
+            iconEl.classList.add('error');
+            iconEl.innerHTML = '<svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+            statusEl.textContent = '⚠ ' + t('complete') + ' - unverified';
+            statusEl.classList.remove('uploading');
+            statusEl.classList.add('error');
+            progressFill.classList.add('error');
+        }
 
         scheduleRefresh();
     }

@@ -17,7 +17,7 @@ extension HttpServerViewController: HttpServerDelegate {
                     return false
                 }) {
                     if case .folder(let name, let completed, _) = self.items[index] {
-                        self.items[index] = .folder(name: name, completed: completed + 1, total: totalFiles ?? (self.items[index].total ?? 0))
+                        self.items[index] = .folder(name: name, completed: completed + 1, total: totalFiles ?? self.items[index].total)
                     }
                 } else {
                     self.items.append(.folder(name: folderName, completed: 1, total: totalFiles))

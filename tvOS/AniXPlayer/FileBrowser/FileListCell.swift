@@ -71,6 +71,7 @@ class FileListCell: TableViewCell {
             make.leading.equalToSuperview().offset(20)
             make.top.equalToSuperview().offset(16)
             make.size.equalTo(CGSize(width: 48, height: 48))
+            make.bottom.lessThanOrEqualToSuperview().offset(-16)
         }
 
         textStack.snp.makeConstraints { make in

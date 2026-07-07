@@ -31,7 +31,7 @@ extension HttpServerViewController: HttpServerDelegate {
                     return false
                 }) {
                     if case .folder(let name, let completed, _) = self.uploadItems[index] {
-                        self.uploadItems[index] = .folder(name: name, completed: completed + 1, total: totalFiles ?? (self.uploadItems[index].total ?? 0))
+                        self.uploadItems[index] = .folder(name: name, completed: completed + 1, total: totalFiles ?? self.uploadItems[index].total)
                     }
                 } else {
                     self.uploadItems.append(.folder(name: folderName, completed: 1, total: totalFiles))
@@ -145,7 +145,8 @@ class HttpServerViewController: ViewController {
         tv.delegate = self
         tv.dataSource = self
         tv.registerClassCell(class: FileListCell.self)
-        tv.rowHeight = 80
+        tv.rowHeight = UITableView.automaticDimension
+        tv.estimatedRowHeight = 80
         return tv
     }()
 

@@ -162,13 +162,13 @@ class RemoteLoginHistoryViewController: ViewController {
     }
 
     func connect(with loginInfo: LoginInfo) {
-        view.anx_showLoading(NSLocalizedString("连接中…", comment: ""))
+        let hud = view.showLoading()
         fileManager.connectWithLoginInfo(loginInfo) { [weak self] error in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                self.view.anx_hideHUD()
+                hud.hide(animated: true)
                 if let error = error {
-                    self.view.anx_showError(error.localizedDescription)
+                    self.view.showError(error)
                 } else {
                     if let index = self.loginInfos.firstIndex(of: loginInfo) {
                         self.loginInfos.remove(at: index)

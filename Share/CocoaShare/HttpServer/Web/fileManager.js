@@ -65,6 +65,7 @@
 
     function loadFiles(path) {
         currentPath = path;
+        window.__fmCurrentPath = path;
         updateHash(path);
         var url = '/api/files?path=' + encodeURIComponent(path);
         fetch(url)

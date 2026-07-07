@@ -123,7 +123,7 @@ class EmbyConnectViewController: RemoteConnectViewController {
         let addressText = addressLabel.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
 
         guard !addressText.isEmpty else {
-            view.anx_showError(NSLocalizedString("请输入服务器地址", comment: ""))
+            view.showHUD(NSLocalizedString("请输入服务器地址", comment: ""))
             return
         }
 
@@ -135,7 +135,7 @@ class EmbyConnectViewController: RemoteConnectViewController {
         }
 
         guard let url = URL(string: urlString) else {
-            view.anx_showError(NSLocalizedString("服务器地址格式不正确！", comment: ""))
+            view.showHUD(NSLocalizedString("服务器地址格式不正确！", comment: ""))
             return
         }
 
@@ -152,17 +152,17 @@ class EmbyConnectViewController: RemoteConnectViewController {
     }
 
     private func loginWithInfo(_ info: LoginInfo) {
-        view.anx_showLoading(NSLocalizedString("连接中…", comment: ""))
+        let hud = view.showLoading()
 
         fileManager.connectWithLoginInfo(info) { [weak self] error in
             guard let self = self else { return }
 
             DispatchQueue.main.async {
-                self.view.anx_hideHUD()
+                hud.hide(animated: true)
 
                 if let error = error {
                     ANX.logError(.webDav, "Emby 连接失败 error: %@", error as NSError)
-                    self.view.anx_showError(error.localizedDescription)
+                    self.view.showHUD(error.localizedDescription)
                 } else {
                     self.delegate?.connectViewController(self, didSuccessConnect: info)
                 }
