@@ -2239,6 +2239,7 @@
         }
       }
     },
+    "排队中...": {},
     "描边": {
       "localizations": {
         "en": {
@@ -3709,6 +3710,22 @@
         }
       }
     },
+    "跟随系统": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Follow System"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "跟随系统"
+          }
+        }
+      }
+    },
     "路径": {
       "localizations": {
         "en": {
@@ -4138,22 +4155,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "默认排序"
-          }
-        }
-      }
-    },
-    "跟随系统": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Follow System"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "跟随系统"
           }
         }
       }
