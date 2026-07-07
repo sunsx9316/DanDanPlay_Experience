@@ -46,7 +46,7 @@ def source_extensions
 end
 
 def resource_extensions
-  %w[.xcstrings .plist .xcassets .json .storyboard .xib .png .jpg .jpeg .gif .pdf .svg .ttf .otf .lproj]
+  %w[.xcstrings .plist .xcassets .json .storyboard .xib .png .jpg .jpeg .gif .pdf .svg .ttf .otf .lproj .html .js .css]
 end
 
 def build_phase_for(file_path)
@@ -94,17 +94,61 @@ def find_group_by_real_path(group, target_path)
   nil
 end
 
+# 在 group 树中查找 real_path 是 target_path 祖先的最近 group（用于复用已有 group 层级）
+def find_nearest_ancestor_group(group, target_path)
+  best = nil
+  best_len = 0
+
+  search = lambda do |g|
+    rp = g.real_path.to_s
+    # 确保 target_path 以 rp 开头且后面是 / 或正好相等（避免 /foo 匹配到 /foobar）
+    if target_path.start_with?(rp) && (target_path.length == rp.length || target_path[rp.length] == '/')
+      if rp.length > best_len
+        best = g
+        best_len = rp.length
+      end
+    end
+    g.groups.each { |child| search.call(child) }
+  end
+
+  search.call(group)
+  best_len > 0 ? best : nil
+end
+
 # 在 group 树下创建或找到匹配物理路径的 group
 def ensure_group(project, group_path_parts)
   group = project.main_group
 
-  # 路径含 .. 时，先按物理路径查找已有 group 复用，避免创建平行 group 树
+  # 路径含 .. 时，优先按物理路径找到已有 group 树复用
   if group_path_parts.first == '..'
     full_path = File.expand_path(File.join(group.real_path, *group_path_parts))
+
+    # 1. 先精确匹配
     existing = find_group_by_real_path(project.main_group, full_path)
     return existing if existing
+
+    # 2. 找最近的祖先 group，在其下创建剩余子 group
+    ancestor = find_nearest_ancestor_group(project.main_group, full_path)
+    if ancestor
+      rel = Pathname.new(full_path).relative_path_from(Pathname.new(ancestor.real_path.to_s)).to_s
+      remaining = rel.split('/').reject(&:empty?)
+      if remaining.any?
+        group = ancestor
+        remaining.each do |part|
+          next_group = group.groups.find { |g| g.path == part }
+          unless next_group
+            next_group = group.new_group(part, part)
+          end
+          group = next_group
+        end
+        return group
+      end
+      # remaining 为空说明 ancestor 就是目标 group
+      return ancestor
+    end
   end
 
+  # 3. 兜底：逐级创建（含 .. 引用）
   group_path_parts.each do |part|
     next_group = group.groups.find { |g| g.path == part }
     unless next_group

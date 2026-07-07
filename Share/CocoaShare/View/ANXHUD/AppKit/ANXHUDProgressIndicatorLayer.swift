@@ -1,13 +1,15 @@
 //
-//  ProgressIndicatorLayer.swift
-//  ProgressHUD
+//  ANXHUDProgressIndicatorLayer.swift
+//  AniXPlayer
 //
-//  旋转菊花动画 CALayer
+//  旋转菊花动画 CALayer（Mac）
 //
+
+#if os(macOS)
 
 import AppKit
 
-class ProgressIndicatorLayer: CALayer {
+class ANXHUDProgressIndicatorLayer: CALayer {
 
     private(set) var isRunning = false
 
@@ -156,3 +158,5 @@ class ProgressIndicatorLayer: CALayer {
         }
     }
 }
+
+#endif

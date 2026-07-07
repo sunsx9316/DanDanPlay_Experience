@@ -17,6 +17,10 @@ extension UIFont {
     }
 
     /// 中等字号 30pt — 标题、section header
+    static var ddp_normal: UIFont {
+        return .systemFont(ofSize: 30)
+    }
+
     static func ddp_normal(weight: UIFont.Weight = .regular, monospaced: Bool = false) -> UIFont {
         return monospaced
             ? .monospacedDigitSystemFont(ofSize: 30, weight: weight)

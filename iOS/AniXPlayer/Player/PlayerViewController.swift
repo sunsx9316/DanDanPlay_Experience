@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 import YYCategories
-import MBProgressHUD
+
 import RxSwift
 import ANXLog
 import AVFoundation
@@ -50,10 +50,10 @@ class PlayerViewController: ViewController {
     
     private lazy var disposeBag = DisposeBag()
     
-    private var parseMediaHUD: MBProgressHUD?
+    private var parseMediaHUD: ANXHUD?
     
     ///加速指示器
-    private weak var speedUpHUD: MBProgressHUD?
+    private weak var speedUpHUD: ANXHUD?
     
     ///开启临时加速前的速度
     private var originSpeed: Double?
@@ -457,7 +457,7 @@ class PlayerViewController: ViewController {
     /// 显示播放器装填
     /// - Parameter isPlay: 是否正在播放
     private func showPlayStateHUD(isPlay: Bool) {
-        let view = MBProgressHUD.showAdded(to: self.view, animated: true)
+        let view = ANXHUD.showAdded(to: self.view, animated: true)
         view.mode = .customView
         view.bezelView.color = UIColor(red: 0, green: 0, blue: 0, alpha: 0.6)
         view.bezelView.style = .solidColor
@@ -614,7 +614,7 @@ extension PlayerViewController: PlayerUIViewDelegate {
             ANX.logInfo(.player, "[Player] 长按开始倍速播放: 4x (原速度: \(self.originSpeed ?? 1.0))")
             self.playerModel.changeSpeed(4)
 
-            let view = MBProgressHUD.showAdded(to: self.view, animated: true)
+            let view = ANXHUD.showAdded(to: self.view, animated: true)
             self.speedUpHUD = view
             view.offset.y = -1000
             view.mode = .customView

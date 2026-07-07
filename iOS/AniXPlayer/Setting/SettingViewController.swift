@@ -263,14 +263,14 @@ class SettingViewController: ViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         self.title = NSLocalizedString("设置", comment: "")
-        
+
         self.view.addSubview(self.tableView)
         self.tableView.snp.makeConstraints { (make) in
             make.edges.equalTo(self.view.safeAreaLayoutGuide.snp.edges)
         }
-        
+
         self.bindModel()
 
         NotificationCenter.default.addObserver(self, selector: #selector(cloudDataDidChange), name: .cloudDataDidChange, object: nil)

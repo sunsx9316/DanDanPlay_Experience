@@ -8,7 +8,7 @@
 import UIKit
 import AVFoundation
 import SnapKit
-import MBProgressHUD
+
 
 protocol PlayerUIViewDelegate: AnyObject {
 
@@ -186,7 +186,7 @@ class PlayerUIView: UIView {
         return controlView
     }
     
-    private weak var timeSnapHUD: MBProgressHUD?
+    private weak var timeSnapHUD: ANXHUD?
     
     private var panType: PanType?
     
@@ -536,7 +536,7 @@ class PlayerUIView: UIView {
         
         self.timeSnapHUD?.hide(animated: false)
         
-        let aHUD = MBProgressHUD.showAdded(to: self, animated: true)
+        let aHUD = ANXHUD.showAdded(to: self, animated: true)
         self.timeSnapHUD = aHUD
         aHUD.mode = .text
         aHUD.bezelView.color = UIColor(red: 0, green: 0, blue: 0, alpha: 0.6)

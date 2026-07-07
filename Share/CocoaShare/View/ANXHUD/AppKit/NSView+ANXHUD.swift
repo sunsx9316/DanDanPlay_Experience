@@ -1,9 +1,11 @@
 //
-//  NSView+HUD.swift
-//  ProgressHUD
+//  NSView+ANXHUD.swift
+//  AniXPlayer
 //
-//  NSView 便捷扩展，内部转调 ProgressHUD
+//  NSView 便捷扩展，内部转调 ANXHUD（Mac）
 //
+
+#if os(macOS)
 
 import Cocoa
 
@@ -12,9 +14,9 @@ extension NSView {
     // MARK: - Loading
 
     @discardableResult
-    func showLoading(statusText: String) -> ProgressHUD {
+    func showLoading(statusText: String) -> ANXHUD {
         dismiss()
-        let hud = ProgressHUD.showAdded(to: self, animated: true)
+        let hud = ANXHUD.showAdded(to: self, animated: true)
         hud.mode = .indeterminate
         hud.labelText = statusText
         hud.bezelColor = NSColor.black.withAlphaComponent(0.6)
@@ -26,9 +28,9 @@ extension NSView {
     // MARK: - Progress
 
     @discardableResult
-    func showProgress() -> ProgressHUD {
+    func showProgress() -> ANXHUD {
         dismiss()
-        let hud = ProgressHUD.showAdded(to: self, animated: true)
+        let hud = ANXHUD.showAdded(to: self, animated: true)
         hud.mode = .determinateHorizontalBar
         hud.bezelColor = NSColor.black.withAlphaComponent(0.6)
         hud.contentColor = .white
@@ -40,7 +42,7 @@ extension NSView {
 
     func show(text: String) {
         dismiss()
-        let hud = ProgressHUD.showAdded(to: self, animated: true)
+        let hud = ANXHUD.showAdded(to: self, animated: true)
         hud.mode = .text
         hud.labelText = text
         hud.bezelColor = NSColor.black.withAlphaComponent(0.6)
@@ -58,10 +60,12 @@ extension NSView {
     func dismiss(delay: TimeInterval = 0) {
         if delay > 0 {
             DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-                ProgressHUD.hide(for: self, animated: true)
+                ANXHUD.hide(for: self, animated: true)
             }
         } else {
-            ProgressHUD.hide(for: self, animated: true)
+            ANXHUD.hide(for: self, animated: true)
         }
     }
 }
+
+#endif

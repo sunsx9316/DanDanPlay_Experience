@@ -1,13 +1,15 @@
 //
-//  BarProgressView.swift
-//  ProgressHUD
+//  ANXHUDBarProgressView.swift
+//  AniXPlayer
 //
-//  水平进度条，对齐 MBBarProgressView
+//  水平进度条（Mac）
 //
+
+#if os(macOS)
 
 import AppKit
 
-class BarProgressView: NSView {
+class ANXHUDBarProgressView: NSView {
 
     var progress: Float = 0 {
         didSet { needsDisplay = true }
@@ -61,3 +63,5 @@ class BarProgressView: NSView {
         }
     }
 }
+
+#endif

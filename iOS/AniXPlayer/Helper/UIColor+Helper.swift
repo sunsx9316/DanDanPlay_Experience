@@ -74,6 +74,6 @@ extension UIColor {
     }
     
     static var shadowColor: UIColor {
-        return UIColor(red: 0, green: 0, blue: 0, alpha: 1)
+        return UIColor { $0.userInterfaceStyle == .dark ? UIColor.black : UIColor.white }
     }
 }

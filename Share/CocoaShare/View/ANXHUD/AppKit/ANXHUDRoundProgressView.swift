@@ -1,13 +1,15 @@
 //
-//  RoundProgressView.swift
-//  ProgressHUD
+//  ANXHUDRoundProgressView.swift
+//  AniXPlayer
 //
-//  圆形/环形进度视图，对齐 MBRoundProgressView
+//  圆形/环形进度视图（Mac）
 //
+
+#if os(macOS)
 
 import AppKit
 
-class RoundProgressView: NSView {
+class ANXHUDRoundProgressView: NSView {
 
     var progress: Float = 0 {
         didSet { needsDisplay = true }
@@ -82,3 +84,5 @@ class RoundProgressView: NSView {
         }
     }
 }
+
+#endif

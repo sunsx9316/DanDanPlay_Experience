@@ -25,7 +25,7 @@ class OpenSourceListViewController: ViewController {
         .init(name: "FirebaseCrashlytics", url: "https://github.com/firebase/firebase-ios-sdk"),
         .init(name: "GCDWebServer", url: "https://github.com/sunsx9316/GCDWebServer"),
         .init(name: "IQKeyboardManager", url: "https://github.com/hackiftekhar/IQKeyboardManager"),
-        .init(name: "MBProgressHUD", url: "https://github.com/jdg/MBProgressHUD"),
+
         .init(name: "MJRefresh", url: "https://github.com/CoderMJLee/MJRefresh"),
         .init(name: "VLCKit", url: "https://code.videolan.org/videolan/VLCKit"),
         .init(name: "MPVKit", url: "https://github.com/mpvkit/MPVKit"),
