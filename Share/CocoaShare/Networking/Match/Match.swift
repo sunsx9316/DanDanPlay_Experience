@@ -9,7 +9,7 @@ import Foundation
 
 enum EpisodeType: String, Codable, DefaultValue {
     static let defaultValue = EpisodeType.unknown
-    
+
     case tvSeries = "tvseries"
     case tvSpecial = "tvspecial"
     case ova
@@ -20,6 +20,8 @@ enum EpisodeType: String, Codable, DefaultValue {
     case jpMovie = "jpmovie"
     case jpDrama = "jpdrama"
     case unknown
+    case tmdbTV = "tmdbtv"
+    case tmdbMovie = "tmdbmovie"
 }
 
 struct Match: Decodable {
