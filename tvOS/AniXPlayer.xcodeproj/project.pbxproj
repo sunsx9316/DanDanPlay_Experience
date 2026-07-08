@@ -471,7 +471,6 @@
 			children = (
 				F877776812C16601732A9879 /* UIKit */,
 			);
-			name = ANXHUD;
 			path = ANXHUD;
 			sourceTree = "<group>";
 		};
@@ -565,14 +564,6 @@
 				CE01DA07EC91885EC6E9BD0B /* Info.plist */,
 			);
 			path = AniXPlayer;
-			sourceTree = "<group>";
-		};
-		4062D5D1043F2E461BB6B4DA /* MBProgressHUD */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = MBProgressHUD;
-			path = MBProgressHUD;
 			sourceTree = "<group>";
 		};
 		476C75CE96A41BB7BF7D2C8D /* Timeline */ = {
@@ -1136,7 +1127,6 @@
 			children = (
 				002FB3118F257D4A37AD8798 /* ANXHUD */,
 			);
-			name = View;
 			path = View;
 			sourceTree = "<group>";
 		};
@@ -1179,7 +1169,6 @@
 			isa = PBXGroup;
 			children = (
 				75C20FD784441E4E998E3BED /* Base */,
-				4062D5D1043F2E461BB6B4DA /* MBProgressHUD */,
 			);
 			path = Vendor;
 			sourceTree = "<group>";
@@ -1202,7 +1191,6 @@
 				30B9DF6E7012D5017917BB9D /* ANXHUDRoundProgressView.swift */,
 				89547816EB514C6FD849C2EE /* ANXHUDBarProgressView.swift */,
 			);
-			name = UIKit;
 			path = UIKit;
 			sourceTree = "<group>";
 		};
