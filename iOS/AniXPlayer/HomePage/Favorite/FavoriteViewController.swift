@@ -9,25 +9,88 @@ import UIKit
 import SnapKit
 import MJRefresh
 
-extension FavoriteViewController: UICollectionViewDataSource {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.dataSources?.count ?? 0
+class FavoriteViewController: ViewController {
+
+    private lazy var tableView: TableView = {
+        let tableView = TableView(frame: .zero, style: .plain)
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.estimatedRowHeight = 150
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.separatorStyle = .none
+        tableView.registerClassCell(class: FavoriteTableViewCell.self)
+        tableView.mj_header = RefreshHeader(refreshingTarget: self, refreshingAction: #selector(startRefresh))
+        return tableView
+    }()
+
+    private lazy var ratingNumberFormatter: NumberFormatter = {
+        let formatter = NumberFormatter()
+        formatter.numberStyle = .decimal
+        formatter.minimumFractionDigits = 1
+        formatter.roundingMode = .halfEven
+        return formatter
+    }()
+
+    private lazy var dateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        return formatter
+    }()
+
+    private var dataSources: [UserFavoriteItem] = []
+
+    var didSelectedAnimateCallBack: ((Int) -> Void)?
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.title = NSLocalizedString("我的关注", comment: "")
+
+        self.view.addSubview(self.tableView)
+        self.tableView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+
+        self.tableView.mj_header?.beginRefreshing()
     }
-    
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
-        let model = self.dataSources?[indexPath.item]
-        
-        let cell = collectionView.dequeueCell(class: FavoriteCollectionViewCell.self, indexPath: indexPath)
-        cell.update(item: model, ratingNumberFormatter: self.ratingNumberFormatter, dateFormatter: self.dateFormatter)
+
+    @objc private func startRefresh() {
+        FavoriteNetworkHandle.getFavoriteList { [weak self] res, error in
+            guard let self = self else { return }
+
+            DispatchQueue.main.async {
+                self.tableView.mj_header?.endRefreshing()
+                if let error = error {
+                    self.view.showError(error)
+                } else {
+                    self.dataSources = res?.favorites ?? []
+                    self.tableView.reloadData()
+                }
+            }
+        }
+    }
+}
+
+extension FavoriteViewController: UITableViewDelegate, UITableViewDataSource {
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return dataSources.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueCell(class: FavoriteTableViewCell.self, indexPath: indexPath)
+        let item = dataSources[indexPath.row]
+        cell.update(item: item, ratingNumberFormatter: ratingNumberFormatter)
         cell.didTouchLikeButton = { [weak self] (aCell, isLike) in
-            guard let animeId = aCell.item?.animeId else { return }
-            
+            guard let self = self,
+                  let indexPath = self.tableView.indexPath(for: aCell) else { return }
+
+            let animeId = self.dataSources[indexPath.row].animeId
             aCell.favoritedButton.isUserInteractionEnabled = false
-            
+
             FavoriteNetworkHandle.changeFavorite(animateId: animeId, isLike: isLike) { [weak self, weak aCell] error in
                 guard let self = self, let aCell = aCell else { return }
-                
+
                 DispatchQueue.main.async {
                     aCell.favoritedButton.isUserInteractionEnabled = true
                     if let error = error {
@@ -40,90 +103,15 @@ extension FavoriteViewController: UICollectionViewDataSource {
         }
         return cell
     }
-}
 
-extension FavoriteViewController: UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: collectionView.bounds.size.width, height: 140)
-    }
-    
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        collectionView.deselectItem(at: indexPath, animated: true)
-        
-        let model = self.dataSources?[indexPath.item]
-        
-        if let animeId = model?.animeId, animeId != 0 {
-            let vc = BangumiDetailViewController(animateId: animeId)
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+
+        let item = dataSources[indexPath.row]
+        if item.animeId != 0 {
+            let vc = BangumiDetailViewController(animateId: item.animeId)
             self.navigationController?.pushViewController(vc, animated: true)
-            self.didSelectedAnimateCallBack?(animeId)
+            self.didSelectedAnimateCallBack?(item.animeId)
         }
-    }
-}
-
-class FavoriteViewController: ViewController {
-    
-    private lazy var collectionView: CollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 0
-        layout.minimumInteritemSpacing = 0
-        layout.sectionInset = .init(top: 5, left: 0, bottom: 5, right: 0)
-        layout.scrollDirection = .vertical
-        
-        let collectionView = CollectionView(frame: self.view.bounds, collectionViewLayout: layout)
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        collectionView.isPagingEnabled = false
-        collectionView.registerClassCell(class: FavoriteCollectionViewCell.self)
-        collectionView.mj_header = RefreshHeader(refreshingTarget: self, refreshingAction: #selector(startRefresh))
-        return collectionView
-    }()
-    
-    @objc private func startRefresh() {
-        FavoriteNetworkHandle.getFavoriteList { res, error in
-            DispatchQueue.main.async {
-                self.collectionView.mj_header?.endRefreshing()
-                if let error = error {
-                    self.view.showError(error)
-                } else {
-                    self.dataSources = res?.favorites
-                }
-            }
-        }
-    }
-    
-    private lazy var ratingNumberFormatter: NumberFormatter = {
-        var ratingNumberFormatter = NumberFormatter()
-        ratingNumberFormatter.numberStyle = .decimal
-        ratingNumberFormatter.minimumFractionDigits = 1
-        ratingNumberFormatter.roundingMode = .halfEven
-        return ratingNumberFormatter
-    }()
-    
-    private lazy var dateFormatter: DateFormatter = {
-        var dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "YYYY-MM-dd HH:mm:ss"
-        return dateFormatter
-    }()
-    
-    var dataSources: [UserFavoriteItem]? {
-        didSet {
-            self.collectionView.reloadData()
-        }
-    }
-    
-    var didSelectedAnimateCallBack: ((Int) -> Void)?
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        self.title = NSLocalizedString("我的关注", comment: "")
-        
-        self.view.addSubview(self.collectionView)
-        self.collectionView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        
-        self.collectionView.reloadData()
-        self.collectionView.mj_header?.beginRefreshing()
     }
 }

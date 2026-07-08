@@ -88,7 +88,7 @@ class TimelineViewController: ViewController {
 
             // 重建子 VC 列表
             self.childVCs = self.pageDataSourceIndex.map { day in
-                let vc = TimelineItemViewController(scrollDirection: .vertical, dataSources: pageDataSource[day])
+                let vc = TimelineItemViewController(dataSources: pageDataSource[day])
                 vc.refreshDataCallBack = { [weak self] in
                     self?.refreshDataCallBack?()
                 }

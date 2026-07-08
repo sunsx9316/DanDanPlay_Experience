@@ -258,6 +258,31 @@ extension MediaPlayer.CoreType: Storeable {
 
 **注意**：如果枚举 rawValue 类型为 `String`，则 `create` 和 `toValue` 的参数类型也要改为 `String`。
 
+## Cell 命名规范
+
+**Cell 类名必须带 `TableViewCell` 或 `CollectionViewCell` 后缀**，与继承的基类对应：
+
+```swift
+// 推荐 — 名称体现继承关系
+class BangumiCommentTableViewCell: TableViewCell { }
+class AnimeListTableViewCell: TableViewCell { }
+class HorizontalAnimeCollectionViewCell: CollectionViewCell { }
+
+// 不推荐 — 名称不体现继承关系
+class BangumiCommentCell: TableViewCell { }
+class AnimeListCell: TableViewCell { }
+class HorizontalAnimeCell: CollectionViewCell { }
+```
+
+| 继承自 | 名称后缀 |
+|--------|---------|
+| `TableViewCell` | `...TableViewCell` |
+| `CollectionViewCell` | `...CollectionViewCell` |
+
+**规则**：
+- 子类也必须遵循（如 `FavoriteTableViewCell: AnimeListTableViewCell` ✅）
+- 基类 Cell 也不例外（如 `AnimeListTableViewCell`、`TitleDetailTableViewCell`）
+
 ## Cell 注册与复用规范
 
 **必须使用项目提供的 Helper 方法**，禁止手写字符串 identifier 和 `as!` 强制转型：

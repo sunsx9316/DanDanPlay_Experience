@@ -22,6 +22,23 @@ enum EpisodeType: String, Codable, DefaultValue {
     case unknown
     case tmdbTV = "tmdbtv"
     case tmdbMovie = "tmdbmovie"
+
+    var displayName: String {
+        switch self {
+        case .tvSeries: return "TV 动画"
+        case .tvSpecial: return "TV 特别篇"
+        case .ova: return "OVA"
+        case .movie: return "剧场版"
+        case .musicvideo: return "MV"
+        case .web: return "网络动画"
+        case .other: return "其他"
+        case .jpMovie: return "日影"
+        case .jpDrama: return "日剧"
+        case .unknown: return ""
+        case .tmdbTV: return "TMDB 电视剧"
+        case .tmdbMovie: return "TMDB 电影"
+        }
+    }
 }
 
 struct Match: Decodable {

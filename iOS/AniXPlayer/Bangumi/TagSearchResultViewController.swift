@@ -1,14 +1,21 @@
 //
-//  TimelineItemViewController.swift
+//  TagSearchResultViewController.swift
 //  AniXPlayer
 //
-//  Created by jimhuang on 2024/7/7.
+//  Created by jimhuang on 2026/7/8.
 //
 
 import UIKit
 import SnapKit
+import MJRefresh
 
-class TimelineItemViewController: ViewController {
+extension SearchBangumiDetails: AnimeListItem { }
+
+class TagSearchResultViewController: ViewController {
+
+    private let tag: String
+
+    private var items: [SearchBangumiDetails] = []
 
     private lazy var tableView: TableView = {
         let tableView = TableView(frame: .zero, style: .plain)
@@ -17,7 +24,8 @@ class TimelineItemViewController: ViewController {
         tableView.estimatedRowHeight = 150
         tableView.rowHeight = UITableView.automaticDimension
         tableView.separatorStyle = .none
-        tableView.registerClassCell(class: TimelineItemTableViewCell.self)
+        tableView.registerClassCell(class: AnimeListTableViewCell.self)
+        tableView.mj_header = RefreshHeader(refreshingTarget: self, refreshingAction: #selector(startRefresh))
         return tableView
     }()
 
@@ -29,19 +37,10 @@ class TimelineItemViewController: ViewController {
         return formatter
     }()
 
-    var dataSources: [BangumiIntro]? {
-        didSet {
-            self.tableView.reloadData()
-        }
-    }
-
-    var didSelectedAnimateCallBack: ((Int) -> Void)?
-
-    var refreshDataCallBack: (() -> Void)?
-
-    init(dataSources: [BangumiIntro]?) {
-        self.dataSources = dataSources
+    init(tag: String) {
+        self.tag = tag
         super.init(nibName: nil, bundle: nil)
+        self.title = tag
     }
 
     required init?(coder: NSCoder) {
@@ -56,23 +55,41 @@ class TimelineItemViewController: ViewController {
             make.edges.equalToSuperview()
         }
 
-        self.tableView.reloadData()
+        self.tableView.mj_header?.beginRefreshing()
+    }
+
+    @objc private func startRefresh() {
+        SearchNetworkHandle.searchByTag(self.tag) { [weak self] res, error in
+            guard let self = self else { return }
+
+            DispatchQueue.main.async {
+                self.tableView.mj_header?.endRefreshing()
+                if let error = error {
+                    self.view.showError(error)
+                } else {
+                    self.items = res?.bangumis ?? []
+                    self.tableView.reloadData()
+                }
+            }
+        }
     }
 }
 
-extension TimelineItemViewController: UITableViewDelegate, UITableViewDataSource {
+extension TagSearchResultViewController: UITableViewDelegate, UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataSources?.count ?? 0
+        return items.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueCell(class: TimelineItemTableViewCell.self, indexPath: indexPath)
-        guard let item = dataSources?[indexPath.row] else { return cell }
+        let cell = tableView.dequeueCell(class: AnimeListTableViewCell.self, indexPath: indexPath)
+        let item = items[indexPath.row]
         cell.update(item: item, ratingNumberFormatter: ratingNumberFormatter)
         cell.didTouchLikeButton = { [weak self] (aCell, isLike) in
-            guard let animeId = aCell.item?.animeId else { return }
+            guard let self = self,
+                  let indexPath = self.tableView.indexPath(for: aCell) else { return }
 
+            let animeId = self.items[indexPath.row].animeId
             aCell.favoritedButton.isUserInteractionEnabled = false
 
             FavoriteNetworkHandle.changeFavorite(animateId: animeId, isLike: isLike) { [weak self, weak aCell] error in
@@ -82,8 +99,6 @@ extension TimelineItemViewController: UITableViewDelegate, UITableViewDataSource
                     aCell.favoritedButton.isUserInteractionEnabled = true
                     if let error = error {
                         self.view.showError(error)
-                    } else {
-                        self.refreshDataCallBack?()
                     }
                 }
             }
@@ -93,10 +108,8 @@ extension TimelineItemViewController: UITableViewDelegate, UITableViewDataSource
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-
-        guard let item = dataSources?[indexPath.row], item.animeId != 0 else { return }
+        let item = items[indexPath.row]
         let vc = BangumiDetailViewController(animateId: item.animeId)
         self.navigationController?.pushViewController(vc, animated: true)
-        self.didSelectedAnimateCallBack?(item.animeId)
     }
 }

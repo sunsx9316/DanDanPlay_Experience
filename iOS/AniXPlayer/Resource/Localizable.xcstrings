@@ -1,6 +1,22 @@
 {
   "sourceLanguage": "en",
   "strings": {
+    "%d 条评论": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d Reviews"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d 条评论"
+          }
+        }
+      }
+    },
     "▶︎": {
       "localizations": {
         "en": {
@@ -1758,6 +1774,22 @@
         }
       }
     },
+    "已完结": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已完结"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已完结"
+          }
+        }
+      }
+    },
     "延后(%ds)": {
       "localizations": {
         "en": {
@@ -2641,6 +2673,22 @@
         }
       }
     },
+    "暂无评论": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No Reviews"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "暂无评论"
+          }
+        }
+      }
+    },
     "有冲突待处理": {
       "localizations": {
         "en": {
@@ -2763,6 +2811,22 @@
         }
       }
     },
+    "正在加载...": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading..."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在加载..."
+          }
+        }
+      }
+    },
     "此目录为空": {
       "localizations": {
         "en": {
@@ -2775,6 +2839,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "此目录为空"
+          }
+        }
+      }
+    },
+    "没有更多了": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No More"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有更多了"
           }
         }
       }
@@ -3178,6 +3258,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "相似作品"
+          }
+        }
+      }
+    },
+    "短评论": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Short Reviews"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "短评论"
           }
         }
       }
@@ -3786,6 +3882,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "跳过片尾时长"
+          }
+        }
+      }
+    },
+    "进度: %d/%d 集": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Progress: %d/%d Episodes"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "进度: %d/%d 集"
           }
         }
       }
