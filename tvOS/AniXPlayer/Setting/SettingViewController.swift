@@ -188,17 +188,6 @@ class SettingViewController: ViewController {
                                isOn: isOn)
                 cell.onSwitchChanged = { [weak self] isOn in
                     guard let self = self else { return }
-                    if isOn && !Preferences.shared.isCloudAvailable {
-                        let alert = UIAlertController(
-                            title: nil,
-                            message: NSLocalizedString("需要登录 iCloud", comment: ""),
-                            preferredStyle: .alert
-                        )
-                        alert.addAction(UIAlertAction(title: NSLocalizedString("确定", comment: ""), style: .default))
-                        self.present(alert, animated: true)
-                        self.tableView.reloadData()
-                        return
-                    }
                     if case .failed = Preferences.shared.syncStatus {
                         self.model.onRetrySync()
                     } else {
