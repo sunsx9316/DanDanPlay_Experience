@@ -9,8 +9,8 @@ import UIKit
 
 class OptionTableViewCell: TableViewCell {
 
-    private let checkmarkView: UILabel = {
-        let label = UILabel()
+    private let checkmarkView: Label = {
+        let label = Label()
         label.text = "✓"
         label.font = .boldSystemFont(ofSize: 22)
         label.textColor = .mainColor

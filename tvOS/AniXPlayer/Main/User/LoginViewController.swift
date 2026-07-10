@@ -12,16 +12,16 @@ class LoginViewController: ViewController {
 
     var didLoginCallBack: ((LoginViewController, AnixLoginInfo) -> Void)?
 
-    private lazy var usernameTextField: UITextField = {
-        let tf = UITextField()
+    private lazy var usernameTextField: TextField = {
+        let tf = TextField()
         tf.placeholder = NSLocalizedString("用户名", comment: "")
         tf.borderStyle = .roundedRect
         tf.font = .ddp_small()
         return tf
     }()
 
-    private lazy var passwordTextField: UITextField = {
-        let tf = UITextField()
+    private lazy var passwordTextField: TextField = {
+        let tf = TextField()
         tf.placeholder = NSLocalizedString("密码", comment: "")
         tf.borderStyle = .roundedRect
         tf.isSecureTextEntry = true
@@ -29,13 +29,14 @@ class LoginViewController: ViewController {
         return tf
     }()
 
-    private lazy var loginButton: UIButton = {
-        let button = UIButton(type: .system)
+    private lazy var loginButton: Button = {
+        let button = Button()
         button.setTitle(NSLocalizedString("登录", comment: ""), for: .normal)
         button.titleLabel?.font = .ddp_small(weight: .medium)
-        button.setTitleColor(.white, for: .normal)
-        button.setTitleColor(.black, for: .focused)
         button.addTarget(self, action: #selector(loginTapped), for: .primaryActionTriggered)
+        button.backgroundColor = .mainColor
+        button.layer.cornerRadius = 8
+        button.clipsToBounds = true
         return button
     }()
 

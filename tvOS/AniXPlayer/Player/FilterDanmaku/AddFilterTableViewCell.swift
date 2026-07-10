@@ -13,7 +13,7 @@ class AddFilterTableViewCell: TableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         textLabel?.text = NSLocalizedString("添加屏蔽弹幕", comment: "")
         textLabel?.font = .ddp_small(weight: .medium)
-        textLabel?.textColor = .systemBlue
+        textLabel?.textColor = .mainColor
     }
 
     required init?(coder: NSCoder) {

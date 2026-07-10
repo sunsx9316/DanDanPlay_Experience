@@ -35,7 +35,7 @@ class SetMainColorViewController: ViewController {
         let cv = CollectionView(frame: .zero, collectionViewLayout: layout)
         cv.delegate = self
         cv.dataSource = self
-        cv.registerClassCell(class: MainColorCell.self)
+        cv.registerClassCell(class: MainColorCollectionViewCell.self)
         return cv
     }()
 
@@ -75,7 +75,7 @@ extension SetMainColorViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueCell(class: MainColorCell.self, indexPath: indexPath)
+        let cell = collectionView.dequeueCell(class: MainColorCollectionViewCell.self, indexPath: indexPath)
         let color = Self.presetColors[indexPath.item]
         let isSelected = color.anxRgbValue == Preferences.shared.mainColor.anxRgbValue
         cell.configure(with: color, isSelected: isSelected)

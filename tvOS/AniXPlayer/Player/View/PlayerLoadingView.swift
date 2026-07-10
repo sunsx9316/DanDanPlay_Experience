@@ -25,8 +25,8 @@ class PlayerLoadingView: UIView {
         return pv
     }()
 
-    private let statusLabel: UILabel = {
-        let label = UILabel()
+    private let statusLabel: Label = {
+        let label = Label()
         label.textColor = .white
         label.font = .ddp_small(weight: .medium)
         label.textAlignment = .center

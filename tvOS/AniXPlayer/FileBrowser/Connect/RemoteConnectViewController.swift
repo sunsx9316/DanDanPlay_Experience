@@ -43,8 +43,8 @@ class RemoteConnectViewController: ViewController {
         return stack
     }()
 
-    private(set) lazy var addressLabel: UITextField = {
-        let tf = UITextField()
+    private(set) lazy var addressLabel: TextField = {
+        let tf = TextField()
         tf.delegate = self
         tf.keyboardType = .URL
         tf.font = .ddp_normal()
@@ -52,8 +52,8 @@ class RemoteConnectViewController: ViewController {
         return tf
     }()
 
-    private(set) lazy var userNameLabel: UITextField = {
-        let tf = UITextField()
+    private(set) lazy var userNameLabel: TextField = {
+        let tf = TextField()
         tf.font = .ddp_normal()
         tf.textColor = .label
         tf.attributedPlaceholder = NSAttributedString(
@@ -63,8 +63,8 @@ class RemoteConnectViewController: ViewController {
         return tf
     }()
 
-    private(set) lazy var passwordLabel: UITextField = {
-        let tf = UITextField()
+    private(set) lazy var passwordLabel: TextField = {
+        let tf = TextField()
         tf.font = .ddp_normal()
         tf.textColor = .label
         tf.isSecureTextEntry = true
@@ -75,8 +75,8 @@ class RemoteConnectViewController: ViewController {
         return tf
     }()
 
-    private(set) lazy var remarkTextField: UITextField = {
-        let tf = UITextField()
+    private(set) lazy var remarkTextField: TextField = {
+        let tf = TextField()
         tf.font = .ddp_normal()
         tf.textColor = .label
         tf.attributedPlaceholder = NSAttributedString(
@@ -87,11 +87,9 @@ class RemoteConnectViewController: ViewController {
     }()
 
     private lazy var loginButton: Button = {
-        let button = Button(type: .system)
+        let button = Button()
         button.setTitle(NSLocalizedString("登录", comment: ""), for: .normal)
-        button.setTitleColor(.white, for: .normal)
-        button.setTitleColor(.black, for: .focused)
-        button.backgroundColor = UIColor.systemBlue
+        button.backgroundColor = UIColor.mainColor
         button.layer.cornerRadius = 8
         button.layer.masksToBounds = true
         button.addTarget(self, action: #selector(onTouchLoginButton), for: .primaryActionTriggered)

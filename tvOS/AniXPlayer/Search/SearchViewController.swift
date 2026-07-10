@@ -20,8 +20,8 @@ class SearchViewController: ViewController {
 
     // MARK: - Search Bar
 
-    private let searchTextField: UITextField = {
-        let tf = UITextField()
+    private let searchTextField: TextField = {
+        let tf = TextField()
         tf.placeholder = NSLocalizedString("输入关键词搜索番剧", comment: "")
         tf.borderStyle = .roundedRect
         tf.returnKeyType = .search
@@ -35,8 +35,8 @@ class SearchViewController: ViewController {
         let tv = TableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self
-        tv.registerClassCell(class: SearchAnimeCell.self)
-        tv.registerClassCell(class: SearchEpisodeCell.self)
+        tv.registerClassCell(class: SearchAnimeTableViewCell.self)
+        tv.registerClassCell(class: SearchEpisodeTableViewCell.self)
         tv.rowHeight = UITableView.automaticDimension
         tv.estimatedRowHeight = 80
         return tv
@@ -149,11 +149,11 @@ extension SearchViewController: UITableViewDataSource {
         let hasSubItems = item.items?.isEmpty == false
 
         if hasSubItems {
-            let cell = tableView.dequeueCell(class: SearchAnimeCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: SearchAnimeTableViewCell.self, indexPath: indexPath)
             cell.configure(with: item)
             return cell
         } else {
-            let cell = tableView.dequeueCell(class: SearchEpisodeCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: SearchEpisodeTableViewCell.self, indexPath: indexPath)
             cell.configure(with: item)
             return cell
         }

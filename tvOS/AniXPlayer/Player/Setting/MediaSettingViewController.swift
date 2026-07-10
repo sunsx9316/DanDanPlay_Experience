@@ -24,9 +24,9 @@ class MediaSettingViewController: ViewController {
         let tv = TableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self
-        tv.registerClassCell(class: SwitchSettingCell.self)
-        tv.registerClassCell(class: StepperSettingCell.self)
-        tv.registerClassCell(class: NavigationSettingCell.self)
+        tv.registerClassCell(class: SwitchSettingTableViewCell.self)
+        tv.registerClassCell(class: StepperSettingTableViewCell.self)
+        tv.registerClassCell(class: NavigationSettingTableViewCell.self)
         tv.registerClassCell(class: TitleTableViewCell.self)
         tv.registerHeaderFooterView(class: SectionHeaderView.self)
         tv.estimatedRowHeight = 76
@@ -96,7 +96,7 @@ extension MediaSettingViewController: UITableViewDataSource {
 
         switch type {
         case .subtitleSafeArea:
-            let cell = tableView.dequeueCell(class: SwitchSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: SwitchSettingTableViewCell.self, indexPath: indexPath)
             cell.configure(title: type.title, isOn: mediaModel.subtitleSafeArea)
             cell.onSwitchChanged = { [weak self] isOn in
                 self?.mediaModel.onChangeSubtitleSafeArea(isOn)
@@ -104,7 +104,7 @@ extension MediaSettingViewController: UITableViewDataSource {
             return cell
 
         case .miniProgressBar:
-            let cell = tableView.dequeueCell(class: SwitchSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: SwitchSettingTableViewCell.self, indexPath: indexPath)
             cell.configure(title: type.title, isOn: Preferences.shared.miniProgressBar)
             cell.onSwitchChanged = { [weak self] isOn in
                 self?.mediaModel.onChangeMiniProgressBar(isOn)
@@ -112,7 +112,7 @@ extension MediaSettingViewController: UITableViewDataSource {
             return cell
 
         case .playerSpeed:
-            let cell = tableView.dequeueCell(class: StepperSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: StepperSettingTableViewCell.self, indexPath: indexPath)
             let range = mediaModel.playerSpeedRange()
             let value = mediaModel.playerSpeed
             cell.configure(title: type.title, value: value, min: Double(range.min), max: Double(range.max), step: Double(range.step),
@@ -123,32 +123,32 @@ extension MediaSettingViewController: UITableViewDataSource {
             return cell
 
         case .playerMode:
-            let cell = tableView.dequeueCell(class: NavigationSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: NavigationSettingTableViewCell.self, indexPath: indexPath)
             cell.configure(title: type.title, detail: mediaModel.playerMode.title)
             return cell
 
         case .aspectRatio:
-            let cell = tableView.dequeueCell(class: NavigationSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: NavigationSettingTableViewCell.self, indexPath: indexPath)
             cell.configure(title: type.title, detail: mediaModel.aspectRatio.name)
             return cell
 
         case .loadSubtitle:
-            let cell = tableView.dequeueCell(class: NavigationSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: NavigationSettingTableViewCell.self, indexPath: indexPath)
             cell.configure(title: type.title, detail: "")
             return cell
 
         case .subtitleTrack:
-            let cell = tableView.dequeueCell(class: NavigationSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: NavigationSettingTableViewCell.self, indexPath: indexPath)
             cell.configure(title: type.title, detail: mediaModel.currentSubtitle?.subtitleName ?? NSLocalizedString("无", comment: ""))
             return cell
 
         case .audioTrack:
-            let cell = tableView.dequeueCell(class: NavigationSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: NavigationSettingTableViewCell.self, indexPath: indexPath)
             cell.configure(title: type.title, detail: mediaModel.currentAudioChannel?.audioName ?? NSLocalizedString("无", comment: ""))
             return cell
 
         case .autoJumpTitleEnding:
-            let cell = tableView.dequeueCell(class: SwitchSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: SwitchSettingTableViewCell.self, indexPath: indexPath)
             cell.configure(title: type.title, isOn: mediaModel.autoJumpTitleEnding)
             cell.onSwitchChanged = { [weak self] isOn in
                 self?.mediaModel.onChangeAutoJumpTitleEnding(isOn)
@@ -157,7 +157,7 @@ extension MediaSettingViewController: UITableViewDataSource {
             return cell
 
         case .jumpTitleDuration:
-            let cell = tableView.dequeueCell(class: StepperSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: StepperSettingTableViewCell.self, indexPath: indexPath)
             let range = mediaModel.jumpTitleDurationRange()
             let value = mediaModel.jumpTitleDuration
             cell.configure(title: type.title, value: Double(value), min: Double(range.min), max: Double(range.max), step: Double(range.step),
@@ -168,7 +168,7 @@ extension MediaSettingViewController: UITableViewDataSource {
             return cell
 
         case .jumpEndingDuration:
-            let cell = tableView.dequeueCell(class: StepperSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: StepperSettingTableViewCell.self, indexPath: indexPath)
             let range = mediaModel.jumpTitleDurationRange()
             let value = mediaModel.jumpEndingDuration
             cell.configure(title: type.title, value: Double(value), min: Double(range.min), max: Double(range.max), step: Double(range.step),
@@ -179,7 +179,7 @@ extension MediaSettingViewController: UITableViewDataSource {
             return cell
 
         case .subtitleDelay:
-            let cell = tableView.dequeueCell(class: StepperSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: StepperSettingTableViewCell.self, indexPath: indexPath)
             let range = mediaModel.subtitleDelayRange()
             let value = Double(mediaModel.subtitleOffsetTime)
             cell.configure(title: type.title, value: value, min: range.min, max: range.max, step: 1,
@@ -190,7 +190,7 @@ extension MediaSettingViewController: UITableViewDataSource {
             return cell
 
         case .subtitleYPosition:
-            let cell = tableView.dequeueCell(class: StepperSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: StepperSettingTableViewCell.self, indexPath: indexPath)
             let range = mediaModel.subtitleYPositionRange()
             let value = Double(mediaModel.subtitleYPosition)
             cell.configure(title: type.title, value: value, min: Double(range.min), max: Double(range.max), step: 1,
@@ -201,7 +201,7 @@ extension MediaSettingViewController: UITableViewDataSource {
             return cell
 
         case .subtitleFontSize:
-            let cell = tableView.dequeueCell(class: StepperSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: StepperSettingTableViewCell.self, indexPath: indexPath)
             let range = mediaModel.subtitleFontSizeRange()
             let value = Double(mediaModel.subtitleFontSize)
             cell.configure(title: type.title, value: value, min: Double(range.min), max: Double(range.max), step: Double(range.step))
@@ -221,7 +221,7 @@ extension MediaSettingViewController: UITableViewDataSource {
             return cell
 
         case .audioDelay:
-            let cell = tableView.dequeueCell(class: StepperSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: StepperSettingTableViewCell.self, indexPath: indexPath)
             let range = mediaModel.audioDelayRange()
             let value = Double(mediaModel.audioOffsetTime)
             cell.configure(title: type.title, value: value, min: range.min, max: range.max, step: 1,
@@ -232,12 +232,12 @@ extension MediaSettingViewController: UITableViewDataSource {
             return cell
 
         case .subtitleFont:
-            let cell = tableView.dequeueCell(class: NavigationSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: NavigationSettingTableViewCell.self, indexPath: indexPath)
             cell.configure(title: type.title, detail: mediaModel.subtitleFontReadableName())
             return cell
 
         case .subtitleColor:
-            let cell = tableView.dequeueCell(class: NavigationSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: NavigationSettingTableViewCell.self, indexPath: indexPath)
             let color = mediaModel.subtitleColor ?? .white
             cell.colorIndicatorColor = color
             let colorName = Self.subtitleColorName(mediaModel.subtitleColor)
@@ -245,7 +245,7 @@ extension MediaSettingViewController: UITableViewDataSource {
             return cell
 
         case .subtitleStyle:
-            let cell = tableView.dequeueCell(class: SwitchSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: SwitchSettingTableViewCell.self, indexPath: indexPath)
             cell.configure(title: type.title, isOn: Preferences.shared.subtitleStyle)
             cell.onSwitchChanged = { [weak self] isOn in
                 self?.mediaModel.onChangeSubtitleStyle(isOn)

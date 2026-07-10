@@ -14,13 +14,13 @@ class PlayerProgressBar: UIView {
         didSet { updateFill() }
     }
 
-    var fillColor: UIColor = .systemGreen {
+    var fillColor: UIColor = .mainColor {
         didSet { fillView.backgroundColor = fillColor }
     }
 
     private let fillView: UIView = {
         let view = UIView()
-        view.backgroundColor = .systemGreen
+        view.backgroundColor = .mainColor
         return view
     }()
 

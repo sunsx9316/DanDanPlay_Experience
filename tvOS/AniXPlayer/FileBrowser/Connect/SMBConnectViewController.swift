@@ -20,8 +20,8 @@ class SMBConnectViewController: RemoteConnectViewController {
         }
     }
 
-    private lazy var pathLabel: UITextField = {
-        let tf = UITextField()
+    private lazy var pathLabel: TextField = {
+        let tf = TextField()
         tf.font = .ddp_normal()
         tf.textColor = .label
         tf.attributedPlaceholder = NSAttributedString(

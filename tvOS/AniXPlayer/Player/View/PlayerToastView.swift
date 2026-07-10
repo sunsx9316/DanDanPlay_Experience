@@ -12,8 +12,8 @@ class PlayerToastView: UIView {
     
     private var durationTimer: Timer?
 
-    private let label: UILabel = {
-        let label = UILabel()
+    private let label: Label = {
+        let label = Label()
         label.textColor = .white
         label.font = .ddp_large(weight: .medium)
         label.textAlignment = .center

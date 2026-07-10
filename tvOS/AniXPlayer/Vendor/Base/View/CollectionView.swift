@@ -20,7 +20,7 @@ class CollectionView: UICollectionView {
     }
 
     private func setup() {
-        self.backgroundColor = .black
+        self.backgroundColor = .adaptiveBackground
         self.remembersLastFocusedIndexPath = true
     }
 }

@@ -55,7 +55,7 @@ class ColorPickerView: UIView {
         cv.clipsToBounds = false
         cv.delegate = self
         cv.dataSource = self
-        cv.registerClassCell(class: MainColorCell.self)
+        cv.registerClassCell(class: MainColorCollectionViewCell.self)
         return cv
     }()
 
@@ -135,7 +135,7 @@ extension ColorPickerView: UICollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueCell(class: MainColorCell.self, indexPath: indexPath)
+        let cell = collectionView.dequeueCell(class: MainColorCollectionViewCell.self, indexPath: indexPath)
         let color = colorValues[indexPath.item]
         cell.configure(with: color ?? .white, isSelected: isSelectedColor(color), isDefault: color == nil)
         return cell

@@ -34,8 +34,8 @@ class EmbyConnectViewController: RemoteConnectViewController {
         return segment
     }()
 
-    private(set) lazy var apiKeyLabel: UITextField = {
-        let tf = UITextField()
+    private(set) lazy var apiKeyLabel: TextField = {
+        let tf = TextField()
         tf.font = .ddp_normal()
         tf.textColor = .label
         tf.attributedPlaceholder = NSAttributedString(

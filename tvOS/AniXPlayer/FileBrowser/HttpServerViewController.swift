@@ -61,7 +61,7 @@ extension HttpServerViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueCell(class: FileListCell.self, indexPath: indexPath)
+        let cell = tableView.dequeueCell(class: FileListTableViewCell.self, indexPath: indexPath)
         let item = uploadItems[indexPath.row]
         switch item {
         case .file(let file):
@@ -144,7 +144,7 @@ class HttpServerViewController: ViewController {
         let tv = TableView(frame: .zero, style: .plain)
         tv.delegate = self
         tv.dataSource = self
-        tv.registerClassCell(class: FileListCell.self)
+        tv.registerClassCell(class: FileListTableViewCell.self)
         tv.rowHeight = UITableView.automaticDimension
         tv.estimatedRowHeight = 80
         return tv

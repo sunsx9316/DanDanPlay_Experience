@@ -29,8 +29,8 @@ class DanmakuInputViewController: ViewController {
         return view
     }()
 
-    private let titleLabel: UILabel = {
-        let label = UILabel()
+    private let titleLabel: Label = {
+        let label = Label()
         label.text = NSLocalizedString("发送弹幕", comment: "")
         label.font = .ddp_normal(weight: .bold)
         label.textColor = .white
@@ -38,8 +38,8 @@ class DanmakuInputViewController: ViewController {
         return label
     }()
 
-    private lazy var textField: UITextField = {
-        let tf = UITextField()
+    private lazy var textField: TextField = {
+        let tf = TextField()
         tf.placeholder = NSLocalizedString("发个弹幕吧", comment: "")
         tf.font = .ddp_small()
         tf.textColor = .white
@@ -48,8 +48,8 @@ class DanmakuInputViewController: ViewController {
         return tf
     }()
 
-    private let colorLabel: UILabel = {
-        let label = UILabel()
+    private let colorLabel: Label = {
+        let label = Label()
         label.text = NSLocalizedString("弹幕颜色", comment: "")
         label.font = .ddp_small(weight: .medium)
         label.textColor = .lightGray
@@ -70,8 +70,8 @@ class DanmakuInputViewController: ViewController {
         return view
     }()
 
-    private let modeLabel: UILabel = {
-        let label = UILabel()
+    private let modeLabel: Label = {
+        let label = Label()
         label.text = NSLocalizedString("弹幕模式", comment: "")
         label.font = .ddp_small(weight: .medium)
         label.textColor = .lightGray
@@ -86,24 +86,20 @@ class DanmakuInputViewController: ViewController {
         return seg
     }()
 
-    private lazy var sendButton: UIButton = {
-        let button = UIButton(type: .system)
+    private lazy var sendButton: Button = {
+        let button = Button()
         button.setTitle(NSLocalizedString("发送", comment: ""), for: .normal)
         button.titleLabel?.font = .ddp_small(weight: .bold)
-        button.setTitleColor(.white, for: .normal)
-        button.setTitleColor(.black, for: .focused)
-        button.backgroundColor = .systemGreen
+        button.backgroundColor = .mainColor
         button.layer.cornerRadius = 10
         button.addTarget(self, action: #selector(sendPressed), for: .primaryActionTriggered)
         return button
     }()
 
-    private lazy var cancelButton: UIButton = {
-        let button = UIButton(type: .system)
+    private lazy var cancelButton: Button = {
+        let button = Button()
         button.setTitle(NSLocalizedString("取消", comment: ""), for: .normal)
         button.titleLabel?.font = .ddp_small(weight: .medium)
-        button.setTitleColor(.white, for: .normal)
-        button.setTitleColor(.black, for: .focused)
         button.addTarget(self, action: #selector(cancelPressed), for: .primaryActionTriggered)
         return button
     }()

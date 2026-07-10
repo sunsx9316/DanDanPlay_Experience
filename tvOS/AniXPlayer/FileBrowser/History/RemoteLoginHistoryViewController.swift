@@ -46,14 +46,14 @@ class RemoteLoginHistoryViewController: ViewController {
         let tv = TableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self
-        tv.registerClassCell(class: FileListCell.self)
+        tv.registerClassCell(class: FileListTableViewCell.self)
         tv.rowHeight = UITableView.automaticDimension
         tv.estimatedRowHeight = 80
         return tv
     }()
 
-    private lazy var emptyLabel: UILabel = {
-        let label = UILabel()
+    private lazy var emptyLabel: Label = {
+        let label = Label()
         label.text = NSLocalizedString("暂无记录，点击右上角 ⊕ 添加", comment: "")
         label.font = .ddp_normal()
         label.textColor = .lightGray
@@ -218,7 +218,7 @@ extension RemoteLoginHistoryViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueCell(class: FileListCell.self, indexPath: indexPath)
+        let cell = tableView.dequeueCell(class: FileListTableViewCell.self, indexPath: indexPath)
         let info = loginInfos[indexPath.row]
 
         let title = displayAddress(for: info) ?? ""

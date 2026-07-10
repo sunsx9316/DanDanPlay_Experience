@@ -15,7 +15,7 @@ class SectionHeaderView: UITableViewHeaderFooterView {
     }
 
     let titleLabel: UILabel = {
-        let label = UILabel()
+        let label = Label()
         label.font = .ddp_normal(weight: .bold)
         label.textColor = .adaptiveText
         return label

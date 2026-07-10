@@ -41,10 +41,10 @@ class SettingViewController: ViewController {
         var cellClass: UITableViewCell.Type {
             switch self {
             case .fastMatch, .autoLoadDanmaku, .autoLoadCustomSubtitle, .hardwareDecoding, .icloudSync:
-                return SwitchSettingCell.self
+                return SwitchSettingTableViewCell.self
             case .appLanguage, .playerCore, .danmakuCacheDay, .mainColor,
                  .version, .cleanupCache, .cleanupHistory:
-                return NavigationSettingCell.self
+                return NavigationSettingTableViewCell.self
             }
         }
     }
@@ -55,8 +55,8 @@ class SettingViewController: ViewController {
         let tv = TableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self
-        tv.registerClassCell(class: SwitchSettingCell.self)
-        tv.registerClassCell(class: NavigationSettingCell.self)
+        tv.registerClassCell(class: SwitchSettingTableViewCell.self)
+        tv.registerClassCell(class: NavigationSettingTableViewCell.self)
         tv.registerHeaderFooterView(class: SectionHeaderView.self)
         tv.estimatedRowHeight = 66
         tv.rowHeight = UITableView.automaticDimension
@@ -115,19 +115,19 @@ class SettingViewController: ViewController {
     private func configureCell(_ cell: UITableViewCell, for row: SettingRow) {
         switch row {
         case .appLanguage:
-            if let cell = cell as? NavigationSettingCell {
+            if let cell = cell as? NavigationSettingTableViewCell {
                 cell.configure(title: NSLocalizedString("语言", comment: ""),
                                detail: Preferences.shared.appLanguage.displayName)
             }
 
         case .playerCore:
-            if let cell = cell as? NavigationSettingCell {
+            if let cell = cell as? NavigationSettingTableViewCell {
                 cell.configure(title: NSLocalizedString("播放器内核", comment: ""),
                                detail: Preferences.shared.playerCore.displayName)
             }
 
         case .hardwareDecoding:
-            if let cell = cell as? SwitchSettingCell {
+            if let cell = cell as? SwitchSettingTableViewCell {
                 cell.configure(title: NSLocalizedString("硬件解码", comment: ""),
                                isOn: Preferences.shared.hwdecEnabled)
                 cell.onSwitchChanged = { isOn in
@@ -136,7 +136,7 @@ class SettingViewController: ViewController {
             }
 
         case .autoLoadCustomSubtitle:
-            if let cell = cell as? SwitchSettingCell {
+            if let cell = cell as? SwitchSettingTableViewCell {
                 cell.configure(title: NSLocalizedString("自动加载本地字幕", comment: ""),
                                isOn: Preferences.shared.autoLoadCustomSubtitle)
                 cell.onSwitchChanged = { isOn in
@@ -145,13 +145,13 @@ class SettingViewController: ViewController {
             }
 
         case .mainColor:
-            if let cell = cell as? NavigationSettingCell {
+            if let cell = cell as? NavigationSettingTableViewCell {
                 cell.configure(title: NSLocalizedString("主题色", comment: ""), detail: "")
                 cell.colorIndicatorColor = Preferences.shared.mainColor
             }
 
         case .fastMatch:
-            if let cell = cell as? SwitchSettingCell {
+            if let cell = cell as? SwitchSettingTableViewCell {
                 cell.configure(title: NSLocalizedString("快速匹配弹幕", comment: ""),
                                isOn: Preferences.shared.fastMatch)
                 cell.onSwitchChanged = { isOn in
@@ -160,7 +160,7 @@ class SettingViewController: ViewController {
             }
 
         case .autoLoadDanmaku:
-            if let cell = cell as? SwitchSettingCell {
+            if let cell = cell as? SwitchSettingTableViewCell {
                 cell.configure(title: NSLocalizedString("自动加载本地弹幕", comment: ""),
                                isOn: Preferences.shared.autoLoadCustomDanmaku)
                 cell.onSwitchChanged = { isOn in
@@ -169,7 +169,7 @@ class SettingViewController: ViewController {
             }
 
         case .danmakuCacheDay:
-            if let cell = cell as? NavigationSettingCell {
+            if let cell = cell as? NavigationSettingTableViewCell {
                 let day = Preferences.shared.danmakuCacheDay
                 let detail: String
                 if day <= 0 {
@@ -181,7 +181,7 @@ class SettingViewController: ViewController {
             }
 
         case .icloudSync:
-            if let cell = cell as? SwitchSettingCell {
+            if let cell = cell as? SwitchSettingTableViewCell {
                 let isOn = Preferences.shared.icloudSyncEnabled
                 cell.configure(title: NSLocalizedString("iCloud 同步", comment: ""),
                                detail: Preferences.shared.syncStatus.displayText,
@@ -198,20 +198,20 @@ class SettingViewController: ViewController {
             }
 
         case .version:
-            if let cell = cell as? NavigationSettingCell {
+            if let cell = cell as? NavigationSettingTableViewCell {
                 let version = AppInfoHelper.appVersion
                 cell.configure(title: NSLocalizedString("版本", comment: ""), detail: version)
                 cell.showDisclosure = false
             }
 
         case .cleanupCache:
-            if let cell = cell as? NavigationSettingCell {
+            if let cell = cell as? NavigationSettingTableViewCell {
                 cell.configure(title: NSLocalizedString("清除缓存", comment: ""), detail: "")
                 cell.showDisclosure = false
             }
 
         case .cleanupHistory:
-            if let cell = cell as? NavigationSettingCell {
+            if let cell = cell as? NavigationSettingTableViewCell {
                 cell.configure(title: NSLocalizedString("清除播放记录", comment: ""), detail: "")
                 cell.showDisclosure = false
             }

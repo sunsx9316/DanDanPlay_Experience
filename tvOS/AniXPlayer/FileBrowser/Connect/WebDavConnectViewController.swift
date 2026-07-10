@@ -9,8 +9,8 @@ import UIKit
 
 class WebDavConnectViewController: RemoteConnectViewController {
 
-    private lazy var rootPathLabel: UITextField = {
-        let tf = UITextField()
+    private lazy var rootPathLabel: TextField = {
+        let tf = TextField()
         tf.font = .ddp_normal()
         tf.textColor = .label
         tf.attributedPlaceholder = NSAttributedString(

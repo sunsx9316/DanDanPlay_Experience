@@ -33,7 +33,7 @@ class FileBrowserViewController: ViewController, FileBrowserViewControllerDelega
         tv.remembersLastFocusedIndexPath = false
         tv.delegate = self
         tv.dataSource = self
-        tv.registerClassCell(class: FileListCell.self)
+        tv.registerClassCell(class: FileListTableViewCell.self)
         tv.rowHeight = UITableView.automaticDimension
         tv.estimatedRowHeight = 80
         return tv
@@ -193,7 +193,7 @@ class FileBrowserViewController: ViewController, FileBrowserViewControllerDelega
     @objc private func handleLongPressSelect(_ recognizer: UILongPressGestureRecognizer) {
         guard recognizer.state == .began else { return }
         // 找到当前焦点所在的 cell
-        guard let focusedCell = UIScreen.main.focusedView as? FileListCell,
+        guard let focusedCell = UIScreen.main.focusedView as? FileListTableViewCell,
               let indexPath = tableView.indexPath(for: focusedCell),
               indexPath.row < files.count else { return }
 
@@ -262,7 +262,7 @@ extension FileBrowserViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueCell(class: FileListCell.self, indexPath: indexPath)
+        let cell = tableView.dequeueCell(class: FileListTableViewCell.self, indexPath: indexPath)
         let file = files[indexPath.row]
         cell.configure(with: file)
         if let highlightedFile = highlightedFile, file.url == highlightedFile.url {

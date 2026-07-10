@@ -43,8 +43,8 @@ class UserInfoViewController: ViewController {
         let tv = TableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self
-        tv.registerClassCell(class: UserInfoCell.self)
-        tv.registerClassCell(class: MenuCell.self)
+        tv.registerClassCell(class: UserInfoTableViewCell.self)
+        tv.registerClassCell(class: MenuTableViewCell.self)
         tv.rowHeight = 66
         return tv
     }()
@@ -110,7 +110,7 @@ extension UserInfoViewController: UITableViewDataSource {
         guard let sec = Section(rawValue: indexPath.section) else { return UITableViewCell() }
         switch sec {
         case .userInfo:
-            let cell = tableView.dequeueCell(class: UserInfoCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: UserInfoTableViewCell.self, indexPath: indexPath)
             if let userInfo = Preferences.shared.loginInfo {
                 cell.configure(avatarURL: URL(string: userInfo.profileImage), username: userInfo.screenName)
             } else {
@@ -120,7 +120,7 @@ extension UserInfoViewController: UITableViewDataSource {
 
         case .menu:
             let item = menuItems[indexPath.row]
-            let cell = tableView.dequeueCell(class: MenuCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: MenuTableViewCell.self, indexPath: indexPath)
             cell.configure(icon: item.icon, title: item.title)
             return cell
         }

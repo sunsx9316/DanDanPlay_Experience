@@ -20,7 +20,7 @@ class CollectionViewCell: UICollectionViewCell {
     }
 
     private func setup() {
-        self.backgroundColor = .clear
+        self.backgroundColor = .adaptiveSecondaryBackground
     }
 
     override func didUpdateFocus(in context: UIFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {

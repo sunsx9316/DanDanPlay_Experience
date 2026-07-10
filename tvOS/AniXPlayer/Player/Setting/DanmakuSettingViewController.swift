@@ -29,9 +29,9 @@ class DanmakuSettingViewController: ViewController {
         let tv = TableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self
-        tv.registerClassCell(class: SwitchSettingCell.self)
-        tv.registerClassCell(class: StepperSettingCell.self)
-        tv.registerClassCell(class: NavigationSettingCell.self)
+        tv.registerClassCell(class: SwitchSettingTableViewCell.self)
+        tv.registerClassCell(class: StepperSettingTableViewCell.self)
+        tv.registerClassCell(class: NavigationSettingTableViewCell.self)
         tv.registerClassCell(class: TitleMoreTableViewCell.self)
         tv.registerHeaderFooterView(class: SectionHeaderView.self)
         tv.estimatedRowHeight = 76
@@ -90,13 +90,13 @@ extension DanmakuSettingViewController: UITableViewDataSource {
 
         switch type {
         case .danmakuInfo:
-            let cell = tableView.dequeueCell(class: NavigationSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: NavigationSettingTableViewCell.self, indexPath: indexPath)
             let count = self.danmakuModel.danmakuList.count
             cell.configure(title: String(format: NSLocalizedString("弹幕信息(%d条)", comment: ""), count), detail: "")
             return cell
 
         case .danmakuAlpha:
-            let cell = tableView.dequeueCell(class: StepperSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: StepperSettingTableViewCell.self, indexPath: indexPath)
             let value = Double(danmakuModel.danmakuAlpha)
             cell.configure(title: type.title, value: value, min: 0, max: 1.0, step: 0.1,
                           formatter: { String(format: "%.0f%%", $0 * 100) })
@@ -106,7 +106,7 @@ extension DanmakuSettingViewController: UITableViewDataSource {
             return cell
 
         case .danmakuFontSize:
-            let cell = tableView.dequeueCell(class: StepperSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: StepperSettingTableViewCell.self, indexPath: indexPath)
             let value = danmakuModel.danmakuFontSize
             cell.configure(title: type.title, value: value, min: 10, max: 40, step: 1)
             cell.onValueChanged = { [weak self] newValue in
@@ -115,7 +115,7 @@ extension DanmakuSettingViewController: UITableViewDataSource {
             return cell
 
         case .danmakuSpeed:
-            let cell = tableView.dequeueCell(class: StepperSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: StepperSettingTableViewCell.self, indexPath: indexPath)
             let value = danmakuModel.danmakuSpeed
             cell.configure(title: type.title, value: value, min: 0.5, max: 3.0, step: 0.1,
                           formatter: { String(format: "%.1fx", $0) })
@@ -125,7 +125,7 @@ extension DanmakuSettingViewController: UITableViewDataSource {
             return cell
 
         case .danmakuDensity:
-            let cell = tableView.dequeueCell(class: StepperSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: StepperSettingTableViewCell.self, indexPath: indexPath)
             let value = Double(danmakuModel.danmakuDensity)
             cell.configure(title: type.title, value: value, min: 1, max: 10, step: 1,
                           formatter: { String(format: "%.0f/10", $0) })
@@ -135,12 +135,12 @@ extension DanmakuSettingViewController: UITableViewDataSource {
             return cell
 
         case .danmakuArea:
-            let cell = tableView.dequeueCell(class: NavigationSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: NavigationSettingTableViewCell.self, indexPath: indexPath)
             cell.configure(title: type.title, detail: danmakuModel.danmakuArea.title)
             return cell
 
         case .showDanmaku:
-            let cell = tableView.dequeueCell(class: SwitchSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: SwitchSettingTableViewCell.self, indexPath: indexPath)
             cell.configure(title: type.title, isOn: danmakuModel.isShowDanmaku)
             cell.onSwitchChanged = { [weak self] isOn in
                 self?.danmakuModel.onChangeIsShowDanmaku(isOn)
@@ -148,7 +148,7 @@ extension DanmakuSettingViewController: UITableViewDataSource {
             return cell
 
         case .danmakuOffsetTime:
-            let cell = tableView.dequeueCell(class: StepperSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: StepperSettingTableViewCell.self, indexPath: indexPath)
             let value = Double(danmakuModel.danmakuOffsetTime)
             cell.configure(title: type.title, value: value, min: -500, max: 500, step: 1,
                           formatter: { [weak self] in self?.readableString(Int($0)) ?? "" })
@@ -158,12 +158,12 @@ extension DanmakuSettingViewController: UITableViewDataSource {
             return cell
 
         case .loadDanmaku, .searchDanmaku, .filterDanmaku:
-            let cell = tableView.dequeueCell(class: NavigationSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: NavigationSettingTableViewCell.self, indexPath: indexPath)
             cell.configure(title: type.title, detail: "")
             return cell
 
         case .mergeSameDanmaku:
-            let cell = tableView.dequeueCell(class: SwitchSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: SwitchSettingTableViewCell.self, indexPath: indexPath)
             cell.configure(title: type.title, isOn: danmakuModel.isMergeSameDanmaku)
             cell.onSwitchChanged = { [weak self] isOn in
                 self?.danmakuModel.onChangeIsMergeSameDanmaku(isOn)
@@ -171,12 +171,12 @@ extension DanmakuSettingViewController: UITableViewDataSource {
             return cell
 
         case .danmakuEffectStyle:
-            let cell = tableView.dequeueCell(class: NavigationSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: NavigationSettingTableViewCell.self, indexPath: indexPath)
             cell.configure(title: type.title, detail: danmakuModel.danmakuEffectStyle.title)
             return cell
 
         case .openDanmakuRandomColor:
-            let cell = tableView.dequeueCell(class: SwitchSettingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: SwitchSettingTableViewCell.self, indexPath: indexPath)
             cell.configure(title: type.title, isOn: danmakuModel.openDanmakuRandomColor)
             cell.onSwitchChanged = { [weak self] isOn in
                 self?.danmakuModel.onOpenDanmakuRandomColor(isOn)

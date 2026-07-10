@@ -20,7 +20,7 @@ class TableViewCell: UITableViewCell {
     }
 
     private func setup() {
-        self.backgroundColor = .adaptiveBackground
+        self.backgroundColor = .adaptiveSecondaryBackground
         self.contentView.backgroundColor = .adaptiveSecondaryBackground
         self.layer.cornerRadius = 16
         self.clipsToBounds = true
@@ -31,11 +31,9 @@ class TableViewCell: UITableViewCell {
 
         coordinator.addCoordinatedAnimations({
             if self.isFocused {
-                self.backgroundColor = .clear
                 self.layer.borderWidth = 4
                 self.layer.borderColor = UIColor.mainColor.cgColor
             } else {
-                self.backgroundColor = .clear
                 self.layer.borderWidth = 0
                 self.layer.borderColor = UIColor.clear.cgColor
             }

@@ -102,7 +102,7 @@ class SMBLoginHistoryViewController: RemoteLoginHistoryViewController {
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueCell(class: FileListCell.self, indexPath: indexPath)
+        let cell = tableView.dequeueCell(class: FileListTableViewCell.self, indexPath: indexPath)
 
         if indexPath.section == 0 && !discoveredServices.isEmpty {
             let service = discoveredServices[indexPath.row]

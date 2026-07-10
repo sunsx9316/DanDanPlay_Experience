@@ -16,7 +16,7 @@ class BangumiDetailEpisodeViewController: ViewController {
         let tv = TableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self
-        tv.registerClassCell(class: EpisodeCell.self)
+        tv.registerClassCell(class: EpisodeTableViewCell.self)
         tv.rowHeight = 80
         return tv
     }()
@@ -46,7 +46,7 @@ extension BangumiDetailEpisodeViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueCell(class: EpisodeCell.self, indexPath: indexPath)
+        let cell = tableView.dequeueCell(class: EpisodeTableViewCell.self, indexPath: indexPath)
         if let episode = dataSource[safe: indexPath.row] {
             cell.configure(with: episode)
         }

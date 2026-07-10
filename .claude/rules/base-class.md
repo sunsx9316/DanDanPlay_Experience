@@ -200,6 +200,44 @@ class PlayButton: UIButton { }
 3. **功能复用**：导航栏配置、Focus Engine 特效等公共逻辑只需实现一次
 4. **便于扩展**：后续新增全局特性只需修改基类
 
+## 基础控件替换规则
+
+**所有 UIKit/AppKit 基础控件必须使用项目基类替代**，禁止直接使用系统原生类：
+
+| 系统原生类 | 替代基类 | 适用范围 |
+|-----------|---------|---------|
+| `UILabel` / `NSTextField(label)` | `Label` | 三平台 |
+| `UIButton` / `NSButton` | `Button` | 三平台 |
+| `UITextField` / `NSTextField(input)` | `TextField` | 三平台 |
+| `UIImageView` / `NSImageView` | `ImageView` | 三平台 |
+| `UITableView` / `NSTableView` | `TableView` | 三平台 |
+| `UICollectionView` / `NSCollectionView` | `CollectionView` | 三平台 |
+| `UITableViewCell` | `TableViewCell` | iOS / tvOS |
+| `UICollectionViewCell` | `CollectionViewCell` | iOS / tvOS |
+
+```swift
+// 推荐 — 使用项目基类
+private lazy var titleLabel: Label = {
+    let label = Label()
+    label.font = .ddp_normal()
+    return label
+}()
+
+private lazy var actionButton: Button = {
+    let btn = Button()
+    return btn
+}()
+
+// 不推荐 — 直接使用系统类
+private lazy var titleLabel: UILabel = { ... }()
+private lazy var actionButton: UIButton = { ... }()
+```
+
+**例外**：
+- 装饰性标签（如评分 badge）不需要 Focus Engine 时可用 `UILabel`
+- `UITextFieldDelegate` / `NSTextFieldDelegate` 协议方法参数保持系统类型
+- 基类本身继承自系统原生类
+
 ## 新增基类
 
 如果现有基类不满足需求，可在对应平台目录下新增：

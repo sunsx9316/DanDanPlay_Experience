@@ -36,8 +36,8 @@ class MatchsViewController: ViewController {
 
     // MARK: - Toolbar Buttons
 
-    private lazy var searchButton: UIButton = {
-        let btn = UIButton(type: .system)
+    private lazy var searchButton: Button = {
+        let btn = Button()
         btn.setTitle(NSLocalizedString("搜索弹幕", comment: ""), for: .normal)
         btn.setImage(UIImage(systemName: "magnifyingglass"), for: .normal)
         btn.titleLabel?.font = .ddp_small()
@@ -46,8 +46,8 @@ class MatchsViewController: ViewController {
         return btn
     }()
 
-    private lazy var playNowButton: UIButton = {
-        let btn = UIButton(type: .system)
+    private lazy var playNowButton: Button = {
+        let btn = Button()
         btn.setTitle(NSLocalizedString("直接播放", comment: ""), for: .normal)
         btn.setImage(UIImage(systemName: "play.fill"), for: .normal)
         btn.titleLabel?.font = .ddp_small()
@@ -70,7 +70,7 @@ class MatchsViewController: ViewController {
         let tv = TableView(frame: .zero, style: .grouped)
         tv.delegate = self
         tv.dataSource = self
-        tv.registerClassCell(class: MatchCell.self)
+        tv.registerClassCell(class: MatchTableViewCell.self)
         tv.rowHeight = UITableView.automaticDimension
         tv.estimatedRowHeight = 100
         return tv
@@ -192,7 +192,7 @@ extension MatchsViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueCell(class: MatchCell.self, indexPath: indexPath)
+        let cell = tableView.dequeueCell(class: MatchTableViewCell.self, indexPath: indexPath)
         cell.configure(with: matches[indexPath.row])
         return cell
     }

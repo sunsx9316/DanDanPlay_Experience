@@ -28,9 +28,9 @@ class HomePageViewController: ViewController {
         let tv = TableView(frame: .zero, style: .plain)
         tv.delegate = self
         tv.dataSource = self
-        tv.registerClassCell(class: HomePageBannerCell.self)
-        tv.registerClassCell(class: HomePageFunctionCell.self)
-        tv.registerClassCell(class: HomePageContinueWatchingCell.self)
+        tv.registerClassCell(class: HomePageBannerTableViewCell.self)
+        tv.registerClassCell(class: HomePageFunctionTableViewCell.self)
+        tv.registerClassCell(class: HomePageContinueWatchingTableViewCell.self)
         tv.rowHeight = UITableView.automaticDimension
         tv.estimatedRowHeight = 200
         return tv
@@ -60,7 +60,10 @@ class HomePageViewController: ViewController {
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            self?.loadData()
+            guard let self = self else { return }
+            self.continueWatchingItems = []
+            self.dataSource = nil
+            self.loadData()
         }
     }
 
@@ -106,12 +109,12 @@ extension HomePageViewController: UITableViewDataSource {
 
         switch type {
         case .banner:
-            let cell = tableView.dequeueCell(class: HomePageBannerCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: HomePageBannerTableViewCell.self, indexPath: indexPath)
             cell.banners = dataSource?.banners ?? []
             return cell
 
         case .function:
-            let cell = tableView.dequeueCell(class: HomePageFunctionCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: HomePageFunctionTableViewCell.self, indexPath: indexPath)
             cell.onItemSelected = { [weak self] itemType in
                 switch itemType {
                 case .timeline:
@@ -125,7 +128,7 @@ extension HomePageViewController: UITableViewDataSource {
             return cell
 
         case .continueWatching:
-            let cell = tableView.dequeueCell(class: HomePageContinueWatchingCell.self, indexPath: indexPath)
+            let cell = tableView.dequeueCell(class: HomePageContinueWatchingTableViewCell.self, indexPath: indexPath)
             cell.items = continueWatchingItems
             cell.onItemSelected = { [weak self] item in
                 let detailVC = BangumiDetailViewController(animateId: item.animeId)
@@ -145,12 +148,12 @@ extension HomePageViewController: UITableViewDelegate {
 
         switch type {
         case .banner:
-            return dataSource?.banners.isEmpty == false ? 360 : 0
+            return dataSource?.banners.isEmpty == false ? 320 : 0
         case .function:
-            return 100
+            return 80
         case .continueWatching:
             guard !continueWatchingItems.isEmpty else { return 0 }
-            return HomePageContinueWatchingCell.estimatedHeight(
+            return HomePageContinueWatchingTableViewCell.estimatedHeight(
                 for: continueWatchingItems,
                 width: tableView.bounds.width
             )

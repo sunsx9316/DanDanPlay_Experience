@@ -26,30 +26,27 @@ class PlayerUIBottomView: UIView {
 
     // MARK: - Focusable elements（外部只读）
 
-    private(set) lazy var danmakuButton: UIButton = {
-        let button = UIButton(type: .system)
+    private(set) lazy var danmakuButton: Button = {
+        let button = Button()
         button.setTitle(NSLocalizedString("发弹幕", comment: ""), for: .normal)
         button.titleLabel?.font = .ddp_small(weight: .medium)
-        button.setTitleColor(.white, for: .normal)
-        button.setTitleColor(.black, for: .focused)
+        button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
         return button
     }()
 
-    private(set) lazy var settingsButton: UIButton = {
-        let button = UIButton(type: .system)
+    private(set) lazy var settingsButton: Button = {
+        let button = Button()
         button.setTitle(NSLocalizedString("设置", comment: ""), for: .normal)
         button.titleLabel?.font = .ddp_small(weight: .medium)
-        button.setTitleColor(.white, for: .normal)
-        button.setTitleColor(.black, for: .focused)
+        button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
         return button
     }()
 
-    private(set) lazy var playlistButton: UIButton = {
-        let button = UIButton(type: .system)
+    private(set) lazy var playlistButton: Button = {
+        let button = Button()
         button.setTitle(NSLocalizedString("播放列表", comment: ""), for: .normal)
         button.titleLabel?.font = .ddp_small(weight: .medium)
-        button.setTitleColor(.white, for: .normal)
-        button.setTitleColor(.black, for: .focused)
+        button.contentEdgeInsets = UIEdgeInsets(top: 8, left: 16, bottom: 8, right: 16)
         return button
     }()
 
@@ -72,16 +69,16 @@ class PlayerUIBottomView: UIView {
         cornerRadius: 3
     )
 
-    private let currentTimeLabel: UILabel = {
-        let label = UILabel()
+    private let currentTimeLabel: Label = {
+        let label = Label()
         label.textColor = .white
         label.font = .ddp_small(monospaced: true)
         label.text = "00:00"
         return label
     }()
 
-    private let totalTimeLabel: UILabel = {
-        let label = UILabel()
+    private let totalTimeLabel: Label = {
+        let label = Label()
         label.textColor = .white
         label.font = .ddp_small(monospaced: true)
         label.text = "00:00"
