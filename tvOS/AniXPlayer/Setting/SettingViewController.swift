@@ -363,7 +363,7 @@ extension SettingViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueHeaderFooterView(class: SectionHeaderView.self)
-        header?.title = Section(rawValue: section)?.title
+        header.title = Section(rawValue: section)?.title
         return header
     }
 }

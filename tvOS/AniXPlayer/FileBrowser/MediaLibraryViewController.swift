@@ -98,7 +98,7 @@ extension MediaLibraryViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueHeaderFooterView(class: SectionHeaderView.self)
-        header?.title = sections[section].title
+        header.title = sections[section].title
         return header
     }
 

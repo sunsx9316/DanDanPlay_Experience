@@ -1,10 +1,9 @@
 //
 //  UIView+Helper.swift
-//  Runner
-//
-//  Created by JimHuang on 2020/7/12.
+//  AniXPlayer
 //
 
+#if os(iOS) || os(tvOS)
 import UIKit
 
 extension UIView {
@@ -18,3 +17,4 @@ extension UIView {
         return nib.instantiate(withOwner: nil, options: nil).first as! Self
     }
 }
+#endif

@@ -17,9 +17,7 @@ import UIKit
 import AppKit
 #endif
 
-#if os(iOS)
 import YYCategories
-#endif
 
 fileprivate extension Timer {
     class func mp_scheduledTimer(timeInterval ti: TimeInterval, repeats yesOrNo: Bool, action: @escaping((Timer) -> Void)) -> Timer {

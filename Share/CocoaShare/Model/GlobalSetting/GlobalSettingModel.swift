@@ -7,9 +7,7 @@
 
 import Foundation
 import RxSwift
-#if os(iOS)
 import YYCategories
-#endif
 
 class GlobalSettingContext {
 

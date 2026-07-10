@@ -169,7 +169,7 @@ class SMBLoginHistoryViewController: RemoteLoginHistoryViewController {
             return nil
         }
         let header = tableView.dequeueHeaderFooterView(class: SectionHeaderView.self)
-        header?.title = title
+        header.title = title
         return header
     }
 

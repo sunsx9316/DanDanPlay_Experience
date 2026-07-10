@@ -9,9 +9,7 @@ import Foundation
 #if !os(tvOS)
 import ANXLog
 #endif
-#if os(iOS) || os(tvOS)
 import YYCategories
-#endif
 
 
 /// 语言转换枚举

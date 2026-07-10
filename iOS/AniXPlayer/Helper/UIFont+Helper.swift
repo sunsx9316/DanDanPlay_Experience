@@ -8,11 +8,11 @@
 import UIKit
 
 extension UIFont {
-    
+
     static var ddp_small: UIFont {
         return UIFont.systemFont(ofSize: 13)
     }
-    
+
     static var ddp_normal: UIFont {
         return UIFont.systemFont(ofSize: 15)
     }
@@ -20,7 +20,7 @@ extension UIFont {
     static var ddp_large: UIFont {
         return UIFont.systemFont(ofSize: 17)
     }
-    
+
     static var ddp_huge: UIFont {
         return UIFont.systemFont(ofSize: 21)
     }

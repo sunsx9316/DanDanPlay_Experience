@@ -260,7 +260,7 @@ extension MediaSettingViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let header = tableView.dequeueHeaderFooterView(class: SectionHeaderView.self)
-        header?.title = self.dataSource[section].title
+        header.title = self.dataSource[section].title
         return header
     }
 

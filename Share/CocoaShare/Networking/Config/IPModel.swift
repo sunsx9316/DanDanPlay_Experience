@@ -6,9 +6,7 @@
 //
 
 import Foundation
-#if os(iOS)
 import Alamofire
-#endif
 
 struct IPResponse: Decodable {
     

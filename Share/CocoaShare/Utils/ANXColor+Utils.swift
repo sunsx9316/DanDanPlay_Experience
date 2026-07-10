@@ -7,8 +7,10 @@
 
 import Foundation
 
-#if os(tvOS)
+// MARK: - 品牌色 & 便捷 Init（internal，跨平台共用）
+
 extension ANXColor {
+
     convenience init(red: Int, green: Int, blue: Int, alpha: CGFloat = 1) {
         self.init(red: CGFloat(red) / 255, green: CGFloat(green) / 255, blue: CGFloat(blue) / 255, alpha: alpha)
     }
@@ -21,9 +23,11 @@ extension ANXColor {
         return Preferences.shared.mainColor
     }
 }
-#endif
+
+// MARK: - RGB 互换（public）
 
 public extension ANXColor {
+
     convenience init(anxRgb rgbValue: Int) {
         self.init(red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
                      green: CGFloat((rgbValue & 0xFF00) >> 8) / 255.0,
