@@ -369,7 +369,7 @@ class PlayerViewController: ViewController {
 
     private func showSettings() {
         let vc = PlayerSettingViewController(playerModel: playerModel)
-        let nav = UINavigationController(rootViewController: vc)
+        let nav = NavigationController(rootViewController: vc)
         nav.modalPresentationStyle = .custom
         nav.transitioningDelegate = sidePanelAnimator
         present(nav, animated: true)
@@ -399,7 +399,7 @@ class PlayerViewController: ViewController {
         fileBrowserVC.filterType = .video
         fileBrowserVC.highlightedFile = currentMedia
         fileBrowserVC.delegate = self
-        let nav = UINavigationController(rootViewController: fileBrowserVC)
+        let nav = NavigationController(rootViewController: fileBrowserVC)
         nav.modalPresentationStyle = .custom
         nav.transitioningDelegate = sidePanelAnimator
         present(nav, animated: true)
@@ -566,7 +566,7 @@ class PlayerViewController: ViewController {
             case .matched(let collection, let media):
                 let vc = MatchsViewController(collection: collection, media: media, playerModel: playerModel, style: .full)
                 vc.delegate = self
-                let nav = UINavigationController(rootViewController: vc)
+                let nav = NavigationController(rootViewController: vc)
                 nav.modalPresentationStyle = .custom
                 nav.transitioningDelegate = sidePanelAnimator
                 present(nav, animated: true)
