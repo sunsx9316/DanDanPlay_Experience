@@ -7,7 +7,7 @@
 
 import Foundation
 import ANXLog
-#if os(iOS)
+#if os(iOS) || os(macOS)
 import FirebaseCore
 import FirebaseCrashlytics
 #endif
@@ -26,9 +26,9 @@ class Launcher {
     
     private static func setupFirebase() {
 #if os(iOS)
-#if os(macOS)
+        FirebaseApp.configure()
+#elseif os(macOS)
         UserDefaults.standard.register(defaults: ["NSApplicationCrashOnExceptions": true])
-#endif
         FirebaseApp.configure()
 #endif
     }
