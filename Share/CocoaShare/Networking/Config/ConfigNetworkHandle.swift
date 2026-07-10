@@ -6,9 +6,7 @@
 //
 
 import Foundation
-#if !os(tvOS)
 import ANXLog
-#endif
 
 class ConfigNetworkHandle {
 #if os(macOS)

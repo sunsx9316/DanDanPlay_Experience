@@ -1,8 +1,6 @@
 import UIKit
 import AVFoundation
-#if !os(tvOS)
 import ANXLog
-#endif
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {

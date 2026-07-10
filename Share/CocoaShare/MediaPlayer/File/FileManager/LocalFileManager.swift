@@ -42,11 +42,7 @@ class LocalFileManager: FileManagerProtocol {
     }
     
     private var logDirName: String {
-        #if !os(tvOS)
         return (ANXLogHelper.logPath() as NSString).lastPathComponent
-        #else
-        return "log"
-        #endif
     }
 
     func contentsOfDirectory(at directory: File, filterType: URLFilterType?, completion: @escaping ((Result<[File], Error>) -> Void)) {

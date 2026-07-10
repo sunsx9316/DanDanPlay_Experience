@@ -6,9 +6,7 @@
 //
 
 import Foundation
-#if !os(tvOS)
 import ANXLog
-#endif
 
 import VLCKit
 #if os(iOS) || os(tvOS)

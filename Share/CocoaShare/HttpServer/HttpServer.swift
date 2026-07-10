@@ -6,10 +6,8 @@
 //
 
 import Foundation
-import GCDWebServer
-#if !os(tvOS)
 import ANXLog
-#endif
+import GCDWebServer
 
 // MARK: - SHA-256 via CommonCrypto (no bridging header needed)
 
@@ -402,12 +400,8 @@ class HttpServer {
 
     /// 需要隐藏的目录名（如日志目录）
     private var hiddenDirectoryNames: Set<String> {
-        #if !os(tvOS)
         let logName = (ANXLogHelper.logPath() as NSString).lastPathComponent
         return [logName]
-        #else
-        return ["log"]
-        #endif
     }
 
     /// 列出目录内容

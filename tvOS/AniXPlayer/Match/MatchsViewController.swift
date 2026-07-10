@@ -8,9 +8,7 @@
 import UIKit
 import SnapKit
 import RxSwift
-#if !os(tvOS)
 import ANXLog
-#endif
 
 protocol MatchsViewControllerDelegate: AnyObject {
     func matchsViewController(_ matchsViewController: MatchsViewController, didMatched matchInfo: MatchInfo)

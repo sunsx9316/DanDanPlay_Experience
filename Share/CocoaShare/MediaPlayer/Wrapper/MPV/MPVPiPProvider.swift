@@ -6,10 +6,8 @@
 //
 
 import Foundation
-import AVFoundation
-#if !os(tvOS)
 import ANXLog
-#endif
+import AVFoundation
 import MPVFramework
 
 class MPVPiPProvider: PiPPlayerProtocol {

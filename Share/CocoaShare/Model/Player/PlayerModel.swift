@@ -6,11 +6,9 @@
 //
 
 import Foundation
+import ANXLog
 import DanmakuRender
 import RxSwift
-#if !os(tvOS)
-import ANXLog
-#endif
 
 
 class PlayerModel {

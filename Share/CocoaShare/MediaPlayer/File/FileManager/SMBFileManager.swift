@@ -6,11 +6,9 @@
 //
 
 import Foundation
+import ANXLog
 import AMSMB2
 import GCDWebServer
-#if !os(tvOS)
-import ANXLog
-#endif
 
 class SMBFileManager: FileManagerProtocol {
 

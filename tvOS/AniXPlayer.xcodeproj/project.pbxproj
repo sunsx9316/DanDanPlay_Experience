@@ -15,12 +15,12 @@
 		083555F8E46DA2ACB2770F9F /* JellyfinLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 97E928C35023F19C1B326679 /* JellyfinLoginHistoryViewController.swift */; };
 		092376397254D281D509C484 /* GCDWebUploader in Frameworks */ = {isa = PBXBuildFile; productRef = A4AA32FA8B3AAAA3987665F5 /* GCDWebUploader */; };
 		0925E7191013E0084F5C39B8 /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 9E0B30951C7B9FF3ECC13707 /* SnapKit */; };
-		09C476275D0A177BC4EA9567 /* LogCompat.swift in Sources */ = {isa = PBXBuildFile; fileRef = F24454E75EA8110FC21C5B7E /* LogCompat.swift */; };
 		0FE787E2058E2EE8DDDEE67F /* WaterfallLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AE8929A6681CE662A509C59 /* WaterfallLayout.swift */; };
 		1234567890ABCDEF123460 /* Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1234567890ABCDEF123459 /* Helper.swift */; };
 		1AB193E23ABF89D37D06D84F /* TimelineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 838AF3C49C536CD8B9CDE4A4 /* TimelineViewController.swift */; };
 		1B423B1CEC539DDAA6DBD8BA /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F81955354E774AC159E81405 /* NavigationController.swift */; };
 		1B63C378E0E7CC350C81B24A /* HomePageContinueWatchingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90C10EAB879CCE22A5114B6D /* HomePageContinueWatchingTableViewCell.swift */; };
+		1DA8DD2B27323E79A97732F0 /* ANXLogHelper+Swift.swift in Sources */ = {isa = PBXBuildFile; fileRef = D393ADEB15AAEF2B3D107731 /* ANXLogHelper+Swift.swift */; };
 		1E819AE621893A3C845D8E78 /* SetMainColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B028731CD4A13D93F299C6C4 /* SetMainColorViewController.swift */; };
 		1FE37201BB6BED0911C47A49 /* AddFilterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46D6C194143629A951CC95A3 /* AddFilterTableViewCell.swift */; };
 		20DD9FD4A397E3DEF5D5AC82 /* UIColor+Adaptive.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1EB8F9AD088E4C1B03D57D8 /* UIColor+Adaptive.swift */; };
@@ -442,6 +442,7 @@
 		CC50444CC4A1D67A2A538286 /* FileListTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FileListTableViewCell.swift; sourceTree = "<group>"; };
 		CCABE78F4458C5717BC3CCB9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CE01DA07EC91885EC6E9BD0B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		D393ADEB15AAEF2B3D107731 /* ANXLogHelper+Swift.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "ANXLogHelper+Swift.swift"; sourceTree = "<group>"; };
 		D4BC15B4CE13C5659472F037 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		E1EB8F9AD088E4C1B03D57D8 /* UIColor+Adaptive.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIColor+Adaptive.swift"; sourceTree = "<group>"; };
 		E78C4329EDF01A77D4DED5A6 /* SectionHeaderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SectionHeaderView.swift; sourceTree = "<group>"; };
@@ -449,7 +450,6 @@
 		E8C4E0C2907511572960283F /* CollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCell.swift; sourceTree = "<group>"; };
 		ECEB188927C66B73452D4381 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
 		EFB220147CB34B579B2366B9 /* MatchTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MatchTableViewCell.swift; sourceTree = "<group>"; };
-		F24454E75EA8110FC21C5B7E /* LogCompat.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LogCompat.swift; sourceTree = "<group>"; };
 		F81955354E774AC159E81405 /* NavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -623,7 +623,6 @@
 		548BCFE67F939B6092AEC71A /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				F24454E75EA8110FC21C5B7E /* LogCompat.swift */,
 				92D2306E25E349668C45366D /* UIFont+Helper.swift */,
 			);
 			path = Utils;
@@ -926,6 +925,7 @@
 				70B374448A363E9F09E499ED /* UITableView+Helper.swift */,
 				69B62E34E30C6A787ED7E996 /* UICollectionView+Helper.swift */,
 				B7D15A2889A7D1B9EA8D26C9 /* UIView+HitTest.swift */,
+				D393ADEB15AAEF2B3D107731 /* ANXLogHelper+Swift.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -1521,7 +1521,6 @@
 				3C2A91470F739628AC24E63C /* EmbyLoginHistoryViewController.swift in Sources */,
 				083555F8E46DA2ACB2770F9F /* JellyfinLoginHistoryViewController.swift in Sources */,
 				E5C041C7C205232819A4BCAF /* TextField.swift in Sources */,
-				09C476275D0A177BC4EA9567 /* LogCompat.swift in Sources */,
 				FE984EA049298734B1EFB124 /* SectionHeaderView.swift in Sources */,
 				65E4B512D9F97D93EC78CED5 /* OptionTableViewCell.swift in Sources */,
 				1FE37201BB6BED0911C47A49 /* AddFilterTableViewCell.swift in Sources */,
@@ -1567,6 +1566,7 @@
 				FEA0C12F04EF2C4733487E0B /* UIView+HitTest.swift in Sources */,
 				20DD9FD4A397E3DEF5D5AC82 /* UIColor+Adaptive.swift in Sources */,
 				24A5D304CEEEC7BE82DB3FDD /* UIFont+Helper.swift in Sources */,
+				1DA8DD2B27323E79A97732F0 /* ANXLogHelper+Swift.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

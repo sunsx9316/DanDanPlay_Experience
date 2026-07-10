@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import ANXLog
 #if os(iOS) || os(tvOS)
 import UIKit
 #else
@@ -14,9 +15,6 @@ import AppKit
 #endif
 import AVFoundation
 import MPVFramework
-#if !os(tvOS)
-import ANXLog
-#endif
 
 // MARK: - 内嵌字幕
 struct MPVSubtitle: SubtitleProtocol {

@@ -6,11 +6,9 @@
 //
 
 import Foundation
+import ANXLog
 import FilesProvider
 import YYCategories
-#if !os(tvOS)
-import ANXLog
-#endif
 
 class WebDavFileManager: FileManagerProtocol {
     

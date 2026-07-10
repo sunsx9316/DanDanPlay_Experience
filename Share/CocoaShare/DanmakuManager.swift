@@ -7,13 +7,11 @@
 //
 
 import Foundation
+import ANXLog
 import DanmakuRender
 
 typealias DanmakuEntity = (BaseDanmaku & DanmakuInfoProtocol)
 typealias DanmakuMapResult = [UInt : [DanmakuEntity]]
-#if !os(tvOS)
-import ANXLog
-#endif
 typealias LoadingProgressAction = ((LoadingState) -> Void)
 
 enum LoadingState {

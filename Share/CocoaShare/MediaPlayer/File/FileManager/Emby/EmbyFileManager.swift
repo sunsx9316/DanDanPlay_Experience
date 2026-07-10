@@ -7,11 +7,8 @@
 
 import Foundation
 import Alamofire
-#if !os(tvOS)
 import ANXLog
-#else
 import UIKit
-#endif
 
 class EmbyFileManager: FileManagerProtocol {
 

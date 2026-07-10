@@ -7,10 +7,8 @@ import YYCategories
 //
 
 import Foundation
-import Alamofire
-#if !os(tvOS)
 import ANXLog
-#endif
+import Alamofire
 
 class NetworkManager {
     

@@ -7,9 +7,7 @@
 
 import UIKit
 import SnapKit
-#if !os(tvOS)
 import ANXLog
-#endif
 
 class PlayerSettingViewController: UITabBarController {
 

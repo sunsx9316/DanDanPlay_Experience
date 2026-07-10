@@ -6,10 +6,8 @@
 //
 
 import Foundation
-import RxSwift
-#if !os(tvOS)
 import ANXLog
-#endif
+import RxSwift
 
 private class PlayMediaInfo: HistoryManager.WatchProgressStoreable {
     
