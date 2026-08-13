@@ -1,26 +1,26 @@
 //
-//  MediaLibrarySectionCellView.swift
+//  ServerHostCellView.swift
 //  AniXPlayer
 //
-//  Created by jimhuang on 2026/6/4.
+//  Created by jimhuang on 2026/6/29.
 //
 
 import Cocoa
 import SnapKit
 
-class MediaLibrarySectionCellView: NSTableCellView {
+class ServerHostTableViewCell: NSTableCellView {
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
 
         let tf = Label()
-        tf.font = .systemFont(ofSize: 11, weight: .semibold)
-        tf.textColor = .secondaryLabelColor
+        tf.font = .systemFont(ofSize: 13)
         textField = tf
         addSubview(tf)
         tf.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(12)
+            make.leading.equalToSuperview().offset(24)
             make.centerY.equalToSuperview()
+            make.trailing.equalToSuperview().offset(-12)
         }
     }
 

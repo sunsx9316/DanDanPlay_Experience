@@ -165,9 +165,9 @@ extension MediaLibraryViewController: NSOutlineViewDelegate, NSOutlineViewDataSo
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         if let section = item as? Section {
             let cellId = NSUserInterfaceItemIdentifier("SectionCell")
-            var cell = outlineView.makeView(withIdentifier: cellId, owner: nil) as? MediaLibrarySectionCellView
+            var cell = outlineView.makeView(withIdentifier: cellId, owner: nil) as? MediaLibrarySectionTableViewCell
             if cell == nil {
-                cell = MediaLibrarySectionCellView()
+                cell = MediaLibrarySectionTableViewCell()
                 cell?.identifier = cellId
             }
             cell?.textField?.text = section.title
@@ -176,9 +176,9 @@ extension MediaLibraryViewController: NSOutlineViewDelegate, NSOutlineViewDataSo
 
         if let type = item as? CellType {
             let cellId = NSUserInterfaceItemIdentifier("Cell")
-            var cell = outlineView.makeView(withIdentifier: cellId, owner: nil) as? MediaLibraryItemCellView
+            var cell = outlineView.makeView(withIdentifier: cellId, owner: nil) as? MediaLibraryItemTableViewCell
             if cell == nil {
-                cell = MediaLibraryItemCellView()
+                cell = MediaLibraryItemTableViewCell()
                 cell?.identifier = cellId
             }
             let image = NSImage(named: type.iconName)

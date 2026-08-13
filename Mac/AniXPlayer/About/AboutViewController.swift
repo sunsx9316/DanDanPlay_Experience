@@ -32,8 +32,8 @@ class AboutViewController: ViewController {
         return label
     }()
 
-    private lazy var checkUpdateButton: NSButton = {
-        let button = NSButton()
+    private lazy var checkUpdateButton: Button = {
+        let button = Button()
         button.title = NSLocalizedString("检查更新", comment: "")
         button.bezelStyle = .rounded
         button.addTarget(self, action: #selector(onClickCheckUpdateButton))

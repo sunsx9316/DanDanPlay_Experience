@@ -8,7 +8,7 @@
 import Cocoa
 import SnapKit
 
-class ServerHostSectionCellView: NSTableCellView {
+class ServerHostSectionTableViewCell: NSTableCellView {
 
     private(set) lazy var refreshButton: Button = {
         let btn = Button(image: NSImage.safeSystemSymbol("arrow.clockwise"), target: nil, action: nil)

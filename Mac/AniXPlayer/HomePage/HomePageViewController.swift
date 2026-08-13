@@ -80,7 +80,7 @@ class HomePageViewController: ViewController {
     private lazy var queueCollectionView: CollectionView = {
         let cv = CollectionView()
         cv.collectionViewLayout = queueLayout
-        cv.registerItem(class: QueueItem.self)
+        cv.registerItem(class: BangumiQueueCollectionViewCell.self)
         cv.dataSource = self
         cv.delegate = self
         cv.backgroundColors = [.clear]
@@ -674,7 +674,7 @@ extension HomePageViewController: NSCollectionViewDataSource {
     }
 
     func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
-        let item = collectionView.dequeueItem(class: QueueItem.self, for: indexPath)
+        let item = collectionView.dequeueItem(class: BangumiQueueCollectionViewCell.self, for: indexPath)
         if let queueItems = dataSource?.bangumiQueueIntroList, indexPath.item < queueItems.count {
             item.configure(with: queueItems[indexPath.item])
         }
@@ -704,7 +704,7 @@ extension HomePageViewController: WaterfallLayoutDelegate {
     func waterfallLayout(_ layout: WaterfallLayout, heightForItemAt indexPath: IndexPath, itemWidth: CGFloat) -> CGFloat {
         guard let items = dataSource?.bangumiQueueIntroList,
               indexPath.item < items.count else { return itemWidth * 1.6 }
-        return QueueItem.estimatedHeight(for: items[indexPath.item], width: itemWidth)
+        return BangumiQueueCollectionViewCell.estimatedHeight(for: items[indexPath.item], width: itemWidth)
     }
 }
 

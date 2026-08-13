@@ -73,7 +73,7 @@ class MatchsViewController: ViewController {
         outlineView.delegate = self
         outlineView.rowSizeStyle = .custom
         outlineView.enableRowHoverTracking()
-        outlineView.registerClassCell(class: MatchsCell.self)
+        outlineView.registerClassCell(class: MatchsTableViewCell.self)
 
         let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: ""))
         column.isEditable = false
@@ -307,7 +307,7 @@ extension MatchsViewController: NSOutlineViewDataSource {
 extension MatchsViewController: NSOutlineViewDelegate {
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         if let item = item as? MediaMatchItem {
-            let cell = outlineView.dequeueReusableCell(class: MatchsCell.self)
+            let cell = outlineView.dequeueReusableCell(class: MatchsTableViewCell.self)
             cell.model = item
             return cell
         }

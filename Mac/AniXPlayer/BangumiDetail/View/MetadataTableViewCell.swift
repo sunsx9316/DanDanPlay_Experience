@@ -8,7 +8,7 @@
 import Cocoa
 import SnapKit
 
-class MetadataCellView: NSTableCellView {
+class MetadataTableViewCell: NSTableCellView {
 
     private let titleField: Label = {
         let tf = Label(labelWithString: "")

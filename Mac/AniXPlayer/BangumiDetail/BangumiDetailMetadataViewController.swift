@@ -53,7 +53,7 @@ class BangumiDetailMetadataViewController: ViewController, NSTableViewDataSource
 
         title = NSLocalizedString("作品详情", comment: "")
 
-        tableView.registerClassCell(class: MetadataCellView.self)
+        tableView.registerClassCell(class: MetadataTableViewCell.self)
 
         view.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
@@ -80,7 +80,7 @@ class BangumiDetailMetadataViewController: ViewController, NSTableViewDataSource
     }
 
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        let cell = tableView.dequeueReusableCell(class: MetadataCellView.self)
+        let cell = tableView.dequeueReusableCell(class: MetadataTableViewCell.self)
 
         let (section, sectionRow) = sectionAndRow(at: row)
         switch section {

@@ -8,7 +8,7 @@
 import Cocoa
 import SnapKit
 
-class SubtitleOrderCellView: BaseView {
+class SubtitleOrderTableViewCell: BaseView {
 
     lazy var label: Label = {
         let label = Label()
@@ -24,7 +24,7 @@ class SubtitleOrderCellView: BaseView {
         return button
     }()
 
-    var onClickDeleteCallBack: ((SubtitleOrderCellView) -> Void)?
+    var onClickDeleteCallBack: ((SubtitleOrderTableViewCell) -> Void)?
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)

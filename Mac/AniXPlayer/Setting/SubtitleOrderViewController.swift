@@ -18,7 +18,7 @@ extension SubtitleOrderViewController: NSTableViewDelegate, NSTableViewDataSourc
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
         let name = self.dataSource[row]
 
-        let cell = tableView.dequeueReusableCell(class: SubtitleOrderCellView.self)
+        let cell = tableView.dequeueReusableCell(class: SubtitleOrderTableViewCell.self)
         cell.label.text = name
         cell.onClickDeleteCallBack = { [weak self] aCell in
             guard let self = self else { return }
@@ -127,7 +127,7 @@ class SubtitleOrderViewController: ViewController {
         tableView.headerView = nil
         tableView.rowSizeStyle = .custom
         tableView.registerForDraggedTypes([dragDropType])
-        tableView.registerClassCell(class: SubtitleOrderCellView.self)
+        tableView.registerClassCell(class: SubtitleOrderTableViewCell.self)
         tableView.enableRowHoverTracking()
 
         let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: ""))

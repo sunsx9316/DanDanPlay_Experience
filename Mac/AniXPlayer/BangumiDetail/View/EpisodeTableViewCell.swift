@@ -8,7 +8,7 @@
 import Cocoa
 import SnapKit
 
-class EpisodeCellView: NSTableCellView {
+class EpisodeTableViewCell: NSTableCellView {
 
     private let titleField: Label = {
         let tf = Label(labelWithString: "")

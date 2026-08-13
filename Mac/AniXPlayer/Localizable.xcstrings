@@ -4521,6 +4521,54 @@
           }
         }
       }
+    },
+    "⭐ %.1f": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⭐ %.1f"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⭐ %.1f"
+          }
+        }
+      }
+    },
+    "查看观众短评论": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "View Short Reviews"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查看观众短评论"
+          }
+        }
+      }
+    },
+    "短评论": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Short Reviews"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "短评论"
+          }
+        }
+      }
     }
   },
   "version": "1.1"

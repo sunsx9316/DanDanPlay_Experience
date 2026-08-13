@@ -42,7 +42,7 @@ class BangumiDetailEpisodeViewController: ViewController, NSTableViewDataSource,
 
         title = NSLocalizedString("分集信息", comment: "")
 
-        tableView.registerClassCell(class: EpisodeCellView.self)
+        tableView.registerClassCell(class: EpisodeTableViewCell.self)
 
         view.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
@@ -57,7 +57,7 @@ class BangumiDetailEpisodeViewController: ViewController, NSTableViewDataSource,
     }
 
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        let cell = tableView.dequeueReusableCell(class: EpisodeCellView.self)
+        let cell = tableView.dequeueReusableCell(class: EpisodeTableViewCell.self)
         let episode = dataSource[row]
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"

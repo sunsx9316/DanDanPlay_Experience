@@ -111,9 +111,9 @@ extension ServerHostListViewController: NSOutlineViewDataSource, NSOutlineViewDe
 
     private func makeSectionCell(outlineView: NSOutlineView, section: Section) -> NSView? {
         let cellId = NSUserInterfaceItemIdentifier("SectionCell")
-        var cell = outlineView.makeView(withIdentifier: cellId, owner: nil) as? ServerHostSectionCellView
+        var cell = outlineView.makeView(withIdentifier: cellId, owner: nil) as? ServerHostSectionTableViewCell
         if cell == nil {
-            cell = ServerHostSectionCellView()
+            cell = ServerHostSectionTableViewCell()
             cell?.identifier = cellId
             cell?.refreshButton.target = self
             cell?.refreshButton.action = #selector(onTouchRefresh(_:))
@@ -125,9 +125,9 @@ extension ServerHostListViewController: NSOutlineViewDataSource, NSOutlineViewDe
 
     private func makeHostCell(outlineView: NSOutlineView, host: String, isSelected: Bool) -> NSView? {
         let cellId = NSUserInterfaceItemIdentifier("HostCell")
-        var cell = outlineView.makeView(withIdentifier: cellId, owner: nil) as? ServerHostCellView
+        var cell = outlineView.makeView(withIdentifier: cellId, owner: nil) as? ServerHostTableViewCell
         if cell == nil {
-            cell = ServerHostCellView()
+            cell = ServerHostTableViewCell()
             cell?.identifier = cellId
         }
         cell?.textField?.text = host

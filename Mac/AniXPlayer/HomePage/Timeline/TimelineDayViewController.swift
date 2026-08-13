@@ -1,22 +1,27 @@
 //
-//  FavoriteViewController.swift
+//  TimelineDayViewController.swift
 //  AniXPlayer
 //
-//  Created by jimhuang on 2026/6/29.
+//  Created by jimhuang on 2026/7/11.
 //
 
 import Cocoa
 import SnapKit
 
-class FavoriteViewController: ViewController, NSCollectionViewDataSource, NSCollectionViewDelegate, WaterfallLayoutDelegate {
+/// 展示某一天的番剧列表，瀑布流
+class TimelineDayViewController: ViewController, NSCollectionViewDataSource, NSCollectionViewDelegate, WaterfallLayoutDelegate {
 
-    private var dataList: [UserFavoriteItem] = [] {
+    var items: [BangumiIntro] = [] {
         didSet {
+            guard isViewLoaded else { return }
             waterfallLayout.invalidateLayout()
             collectionView.reloadData()
+            collectionView.layoutSubtreeIfNeeded()
             updateCollectionFrame()
         }
     }
+
+    var onFavoriteToggle: ((Int, Bool) -> Void)?
 
     private lazy var waterfallLayout: WaterfallLayout = {
         let layout = WaterfallLayout()
@@ -33,7 +38,7 @@ class FavoriteViewController: ViewController, NSCollectionViewDataSource, NSColl
         cv.backgroundColors = [.backgroundColor]
         cv.isSelectable = true
         cv.frame = NSRect(x: 0, y: 0, width: 600, height: 400)
-        cv.registerItem(class: FavoriteCollectionViewCell.self)
+        cv.registerItem(class: TimelineCollectionViewCell.self)
         return cv
     }()
 
@@ -46,34 +51,10 @@ class FavoriteViewController: ViewController, NSCollectionViewDataSource, NSColl
         return sv
     }()
 
-    private lazy var loginPromptLabel: Label = {
-        let tf = Label(labelWithString: NSLocalizedString("请先登录以查看关注", comment: ""))
-        tf.font = .ddp_normal()
-        tf.textColor = .subtitleTextColor
-        tf.alignment = .center
-        tf.isHidden = true
-        return tf
-    }()
-
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = NSLocalizedString("我的关注", comment: "")
         view.addSubview(scrollView)
-        view.addSubview(loginPromptLabel)
         scrollView.snp.makeConstraints { make in make.edges.equalToSuperview() }
-        loginPromptLabel.snp.makeConstraints { make in make.center.equalToSuperview() }
-    }
-
-    override func viewWillAppear() {
-        super.viewWillAppear()
-        if Preferences.shared.loginInfo == nil {
-            loginPromptLabel.isHidden = false
-            scrollView.isHidden = true
-        } else {
-            loginPromptLabel.isHidden = true
-            scrollView.isHidden = false
-            fetchData()
-        }
     }
 
     override func viewDidLayout() {
@@ -81,7 +62,10 @@ class FavoriteViewController: ViewController, NSCollectionViewDataSource, NSColl
         updateCollectionFrame()
     }
 
-    // MARK: - Private
+    override func viewWillAppear() {
+        super.viewWillAppear()
+        updateCollectionFrame()
+    }
 
     private func updateCollectionFrame() {
         let w = scrollView.contentView.bounds.width
@@ -92,39 +76,18 @@ class FavoriteViewController: ViewController, NSCollectionViewDataSource, NSColl
         collectionView.frame.size.height = max(h, scrollView.contentView.bounds.height)
     }
 
-    private func fetchData() {
-        FavoriteNetworkHandle.getFavoriteList { [weak self] rsp, error in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                if let error = error {
-                    self.view.show(error: error)
-                } else if let list = rsp?.favorites {
-                    self.dataList = list
-                }
-            }
-        }
-    }
-
     // MARK: - NSCollectionViewDataSource
 
     func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
-        dataList.count
+        items.count
     }
 
     func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
-        let item = collectionView.dequeueItem(class: FavoriteCollectionViewCell.self, for: indexPath)
-        let model = dataList[indexPath.item]
+        let item = collectionView.dequeueItem(class: TimelineCollectionViewCell.self, for: indexPath)
+        let model = items[indexPath.item]
         item.configure(with: model)
         item.onFavoriteToggle = { [weak self] animeId, isLike in
-            FavoriteNetworkHandle.changeFavorite(animateId: animeId, isLike: isLike) { error in
-                DispatchQueue.main.async {
-                    if let error = error {
-                        self?.view.show(error: error)
-                    } else {
-                        self?.fetchData()
-                    }
-                }
-            }
+            self?.onFavoriteToggle?(animeId, isLike)
         }
         return item
     }
@@ -133,23 +96,22 @@ class FavoriteViewController: ViewController, NSCollectionViewDataSource, NSColl
 
     func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
         collectionView.deselectItems(at: indexPaths)
-        guard let indexPath = indexPaths.first, indexPath.item < dataList.count else { return }
-        navigator?.pushViewController(BangumiDetailViewController(animateId: dataList[indexPath.item].animeId))
+        guard let indexPath = indexPaths.first, indexPath.item < items.count else { return }
+        let vc = BangumiDetailViewController(animateId: items[indexPath.item].animeId)
+        navigator?.pushViewController(vc)
     }
 
     // MARK: - WaterfallLayoutDelegate
 
     func waterfallLayout(_ layout: WaterfallLayout, heightForItemAt indexPath: IndexPath, itemWidth: CGFloat) -> CGFloat {
-        guard indexPath.item < dataList.count else { return itemWidth * 1.6 }
-        let item = dataList[indexPath.item]
+        guard indexPath.item < items.count else { return itemWidth * 1.6 }
+        let m = items[indexPath.item]
         let ih = itemWidth * 1.4
-        let th = item.animeTitle.boundingRect(
+        let th = m.animeTitle.boundingRect(
             with: NSSize(width: itemWidth - 16, height: 40),
             options: .usesLineFragmentOrigin,
             attributes: [.font: NSFont.ddp_normal()]
         ).height.rounded(.up)
-        var extra: CGFloat = 0
-        if item.lastWatchTime != nil { extra += 20 }
-        return 4 + ih + 4 + th + 4 + 20 + 4 + extra + 8
+        return 4 + ih + 4 + th + 4 + 20 + 4 + 8
     }
 }

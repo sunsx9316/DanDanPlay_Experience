@@ -8,7 +8,7 @@
 import Cocoa
 import SnapKit
 
-class MediaLibraryItemCellView: NSTableCellView {
+class MediaLibraryItemTableViewCell: NSTableCellView {
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)

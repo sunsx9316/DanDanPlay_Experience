@@ -73,8 +73,9 @@ class FileBrowserViewController: ViewController, NSTableViewDelegate, NSTableVie
         }
     }
 
-    private lazy var sortButton: NSPopUpButton = {
-        let btn = NSPopUpButton(title: "", target: self, action: #selector(onSortChanged(_:)))
+    private lazy var sortButton: PopUpButton = {
+        let btn = PopUpButton()
+        btn.addTarget(self, action: #selector(onSortChanged(_:)))
         btn.bezelStyle = .inline
         btn.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return btn

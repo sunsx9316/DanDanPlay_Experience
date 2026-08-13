@@ -8,7 +8,7 @@
 import Cocoa
 import SnapKit
 
-class NeighborServiceCellView: NSTableCellView {
+class NeighborServiceTableViewCell: NSTableCellView {
 
     let titleLabel: Label = {
         let tf = Label()

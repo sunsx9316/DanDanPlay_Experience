@@ -7,8 +7,5 @@
 
 import Cocoa
 
-extension NSColor {
-    static var defaultMainColor: NSColor {
-        return NSColor(red: 20, green: 180, blue: 9, alpha: 1)
-    }
-}
+// Mac 端颜色扩展已迁移至 Share/CocoaShare/Utils/ANXColor+Utils.swift
+// defaultMainColor / mainColor 等品牌色统一在 ANXColor+Utils.swift 中定义

@@ -26,7 +26,7 @@ class SearchViewController: ViewController {
         outlineView.dataSource = self
         outlineView.delegate = self
         outlineView.rowSizeStyle = .custom
-        outlineView.registerClassCell(class: MatchsCell.self)
+        outlineView.registerClassCell(class: MatchsTableViewCell.self)
         outlineView.enableRowHoverTracking()
 
         let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier(rawValue: ""))
@@ -130,7 +130,7 @@ extension SearchViewController: NSOutlineViewDataSource {
 extension SearchViewController: NSOutlineViewDelegate {
     func outlineView(_ outlineView: NSOutlineView, viewFor tableColumn: NSTableColumn?, item: Any) -> NSView? {
         if let item = item as? MediaMatchItem {
-            let cell = outlineView.dequeueReusableCell(class: MatchsCell.self)
+            let cell = outlineView.dequeueReusableCell(class: MatchsTableViewCell.self)
             cell.model = item
             return cell
         }

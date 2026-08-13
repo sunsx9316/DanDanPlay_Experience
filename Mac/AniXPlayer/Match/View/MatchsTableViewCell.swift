@@ -8,7 +8,7 @@
 import Cocoa
 import SnapKit
 
-class MatchsCell: BaseView {
+class MatchsTableViewCell: BaseView {
 
     private lazy var titleLabel: Label = {
         let title = Label(labelWithString: "")

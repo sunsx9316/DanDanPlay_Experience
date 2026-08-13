@@ -201,7 +201,7 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
             vc.addButton(withTitle: NSLocalizedString("确定", comment: ""))
             vc.addButton(withTitle: NSLocalizedString("取消", comment: ""))
 
-            let popup = NSPopUpButton(frame: .init(x: 0, y: 0, width: 150, height: 25))
+            let popup = PopUpButton(frame: .init(x: 0, y: 0, width: 150, height: 25), pullsDown: false)
             for coreType in MediaPlayer.CoreType.allCoreType {
                 popup.addItem(withTitle: coreType.displayName)
                 popup.lastItem?.tag = coreType.rawValue
@@ -224,7 +224,7 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
             vc.addButton(withTitle: NSLocalizedString("确定", comment: ""))
             vc.addButton(withTitle: NSLocalizedString("取消", comment: ""))
 
-            let popup = NSPopUpButton(frame: .init(x: 0, y: 0, width: 150, height: 25))
+            let popup = PopUpButton(frame: .init(x: 0, y: 0, width: 150, height: 25), pullsDown: false)
             for language in AppLanguage.allCases {
                 popup.addItem(withTitle: language.displayName)
                 popup.lastItem?.tag = language.rawValue

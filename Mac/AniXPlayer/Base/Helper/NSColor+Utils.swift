@@ -10,24 +10,12 @@ import YYCategories
 
 extension NSColor {
     
-    convenience init(red: Int, green: Int, blue: Int, alpha: CGFloat = 1) {
-        let normalizedRed = CGFloat(red) / 255
-        let normalizedGreen = CGFloat(green) / 255
-        let normalizedBlue = CGFloat(blue) / 255
-
-        self.init(red: normalizedRed, green: normalizedGreen, blue: normalizedBlue, alpha: alpha)
-    }
-    
     private static func byName(_ name: String) -> NSColor {
         if let color = NSColor(named: name) {
             return color
         }
         assert(false, "未找到颜色 \(name)")
         return .white
-    }
-    
-    static var mainColor: NSColor {
-        return Preferences.shared.mainColor
     }
     
     static var backgroundColor: NSColor {

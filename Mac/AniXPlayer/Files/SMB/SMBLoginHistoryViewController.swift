@@ -45,8 +45,8 @@ class SMBLoginHistoryViewController: BaseLoginHistoryViewController<SMBFile> {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = SMBFile.fileManager.desc
-        tableView.registerClassCell(class: SectionHeaderCellView.self)
-        tableView.registerClassCell(class: NeighborServiceCellView.self)
+        tableView.registerClassCell(class: SectionHeaderTableViewCell.self)
+        tableView.registerClassCell(class: NeighborServiceTableViewCell.self)
     }
 
     override func viewWillAppear() {
@@ -200,13 +200,13 @@ class SMBLoginHistoryViewController: BaseLoginHistoryViewController<SMBFile> {
     // MARK: - Cell factory
 
     private func makeSectionCell(tableView: NSTableView, title: String) -> NSView? {
-        let cell = tableView.dequeueReusableCell(class: SectionHeaderCellView.self)
+        let cell = tableView.dequeueReusableCell(class: SectionHeaderTableViewCell.self)
         cell.title = title
         return cell
     }
 
     private func makeServiceCell(tableView: NSTableView, service: SMBService) -> NSView? {
-        let cell = tableView.dequeueReusableCell(class: NeighborServiceCellView.self)
+        let cell = tableView.dequeueReusableCell(class: NeighborServiceTableViewCell.self)
         cell.titleLabel.text = service.name
         if service.didResolve {
             cell.detailLabel.text = service.addresses.map(\.ip).joined(separator: ", ")

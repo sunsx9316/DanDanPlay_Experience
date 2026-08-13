@@ -11,6 +11,7 @@ import Foundation
 
 extension ANXColor {
 
+    /// macOS 上 NSColor 已有 CGFloat 版本的同名 init，Int 版本会导致歧义
     convenience init(red: Int, green: Int, blue: Int, alpha: CGFloat = 1) {
         self.init(red: CGFloat(red) / 255, green: CGFloat(green) / 255, blue: CGFloat(blue) / 255, alpha: alpha)
     }

@@ -8,7 +8,7 @@
 import Cocoa
 import SnapKit
 
-class SectionHeaderCellView: NSTableCellView {
+class SectionHeaderTableViewCell: NSTableCellView {
 
     private let label: Label = {
         let tf = Label()
