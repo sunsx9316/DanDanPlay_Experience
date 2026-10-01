@@ -101,14 +101,17 @@ iOS/AniXPlayer/Assets.xcassets/
 
 ### 跨平台影响（重要）
 
-`GlobalSettingType` 定义在 `Share/CocoaShare/Enum.swift`，是 iOS / Mac / tvOS **共享枚举**，三端设置页都对它做 `switch`。新增 `.supporter` 时需：
+`GlobalSettingType` 定义在 `Share/CocoaShare/Enum.swift`，由 **iOS 与 Mac** 共用（二者的设置页都对它做穷尽 `switch`，无 `default`）。**tvOS 不使用**它——tvOS 设置页用的是自己的 `SettingRow` 枚举，因此本功能不影响 tvOS。
 
-1. 在 `GlobalSettingType` 添加 case 与 `title`；
-2. 在 `GlobalSettingModel.subtitle(settingType:)` 与新 case 的 `switch` 分支中处理；
-3. 在 iOS `SettingViewController`、Mac `GlobalSettingViewController`、tvOS `SettingViewController` 的 `switch` 中补分支（Mac/tvOS 分支可为空实现，仅保证编译）；
-4. 在 `GlobalSettingModel.allSettingType()` 中过滤：仅 iOS 且 iOS 15+ 才返回 `.supporter`，其余平台与低版本隐藏。
+新增 `.supporter` 时需：
 
-这样共享枚举不破坏另外两个平台的构建，同时入口严格限制在 iOS 15+。
+1. 在 `GlobalSettingType` 添加 case 与 `title`（`Share/CocoaShare/Enum.swift`）；
+2. 在 `GlobalSettingModel.subtitle(settingType:)` 的穷尽 `switch` 中补分支（`Share/CocoaShare/Model/GlobalSetting/GlobalSettingModel.swift`）；
+3. 在 iOS `SettingViewController` 与 Mac `GlobalSettingViewController` 的穷尽 `switch` 中补分支（Mac 分支为空实现，仅保证编译）；
+4. 在 `GlobalSettingModel.allSettingType()` 中过滤：`#if os(iOS)` 且 `#available(iOS 15, *)` 才返回 `.supporter`；Mac 与低版本隐藏；
+5. iOS 侧再按 `SupporterConfig.isConfigured` 二次过滤，未配置商品时隐藏入口。
+
+这样既不破坏 Mac 构建，也不影响 tvOS，同时入口严格限制在 iOS 15+ 且已配置商品时。
 
 ## 数据流
 
