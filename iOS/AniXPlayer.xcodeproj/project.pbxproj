@@ -2022,7 +2022,7 @@
 					"$(PROJECT_DIR)/AniXPlayer/Vendor",
 				);
 				INFOPLIST_FILE = AniXPlayer/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14;
+				IPHONEOS_DEPLOYMENT_TARGET = 15;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -2058,7 +2058,7 @@
 					"$(PROJECT_DIR)/AniXPlayer/Vendor",
 				);
 				INFOPLIST_FILE = AniXPlayer/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14;
+				IPHONEOS_DEPLOYMENT_TARGET = 15;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
