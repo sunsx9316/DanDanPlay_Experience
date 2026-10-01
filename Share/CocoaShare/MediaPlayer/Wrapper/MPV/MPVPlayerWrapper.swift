@@ -16,6 +16,45 @@ import AppKit
 import AVFoundation
 import MPVFramework
 
+/// MPV 截图错误
+enum MPVThumbnailError: Error {
+    case noMedia
+    case createFailed
+    case frameUnavailable
+}
+
+/// 把渲染管线产出的帧（BGRA，alpha 字节无意义）转成图片
+fileprivate extension CMSampleBuffer {
+    func anxImage() -> ANXImage? {
+        guard let pixelBuffer = CMSampleBufferGetImageBuffer(self) else { return nil }
+
+        CVPixelBufferLockBaseAddress(pixelBuffer, .readOnly)
+        defer { CVPixelBufferUnlockBaseAddress(pixelBuffer, .readOnly) }
+
+        let width = CVPixelBufferGetWidth(pixelBuffer)
+        let height = CVPixelBufferGetHeight(pixelBuffer)
+        guard width > 0, height > 0,
+              let baseAddress = CVPixelBufferGetBaseAddress(pixelBuffer) else {
+            return nil
+        }
+
+        // 渲染输出为 BGRA（源自 mpv 的 bgr0），用 noneSkipFirst 忽略 alpha，避免生成全透明图片
+        let bitmapInfo = CGImageAlphaInfo.noneSkipFirst.rawValue | CGBitmapInfo.byteOrder32Little.rawValue
+        guard let context = CGContext(data: baseAddress,
+                                      width: width,
+                                      height: height,
+                                      bitsPerComponent: 8,
+                                      bytesPerRow: CVPixelBufferGetBytesPerRow(pixelBuffer),
+                                      space: CGColorSpaceCreateDeviceRGB(),
+                                      bitmapInfo: bitmapInfo),
+              let cgImage = context.makeImage() else {
+            return nil
+        }
+
+        return ANXImage(cgImage: cgImage)
+    }
+}
+
 // MARK: - 内嵌字幕
 struct MPVSubtitle: SubtitleProtocol {
     let subtitleName: String
@@ -44,6 +83,12 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
     private let renderer = MPVFrameRenderer()
     private var didOutputFirstFrame = false
 
+    /// 最近渲染的一帧，用于"截取当前帧"（懒转换，不逐帧转图）
+    private var lastFrameSampleBuffer: CMSampleBuffer?
+
+    /// 独立的 headless 截图器，用于任意进度截图（按媒体复用，不重复创建）
+    private var thumbnailer: MediaThumbnailFetcher?
+
     // MARK: - 媒体视图
     
     private lazy var _mediaView = MPVView(frame: .zero)
@@ -56,6 +101,11 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
 
     var currentPlayItem: File? {
         didSet {
+            // 媒体变更：清空缓存帧并释放旧截图器
+            self.lastFrameSampleBuffer = nil
+            self.thumbnailer?.terminate()
+            self.thumbnailer = nil
+
             if let item = currentPlayItem,
                 let media = item.createMPVMedia() {
                 mpv?.loadFile(media.url.absoluteString)
@@ -298,6 +348,7 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
 
     func stop() {
         ANX.logInfo(.player, "[MPV] 停止")
+        self.lastFrameSampleBuffer = nil
         _mediaView.flush()
         renderer.startRendering()
         mpv?.stop()
@@ -307,11 +358,56 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
 
     func terminate() {
         ANX.logInfo(.player, "[MPV] 终止")
+        self.lastFrameSampleBuffer = nil
+        self.thumbnailer?.terminate()
+        self.thumbnailer = nil
         renderer.terminate()
         self.mpv?.quit()
         SMBFileManager.shared.stopStreaming()
         stateChangedCallBack?(self, .stop)
     }
+    
+    /// 截取当前帧（原生分辨率，含字幕），不打断播放
+    func fetchThumbnail(completion: @escaping FetchThumbnailAction) {
+        guard let sampleBuffer = self.lastFrameSampleBuffer,
+              let image = sampleBuffer.anxImage() else {
+            ANX.logError(.player, "[MPV] 截图失败：当前帧不可用")
+            completion(.failure(MPVThumbnailError.frameUnavailable))
+            return
+        }
+
+        ANX.logInfo(.player, "[MPV] 截图成功")
+        completion(.success(image))
+    }
+
+    /// 任意进度缩略图（进度条预览）
+    func fetchThumbnail(at position: Float, completion: @escaping FetchThumbnailAction) {
+        // 按媒体复用截图器：同一个媒体只创建一次 MPV / MPVMedia
+        if self.thumbnailer == nil {
+            guard let file = self.currentPlayItem else {
+                ANX.logError(.player, "[MPV] 截图失败：没有正在播放的媒体")
+                completion(.failure(MPVThumbnailError.noMedia))
+                return
+            }
+
+            guard let thumbnailer = MediaThumbnailFetcher(file: file) else {
+                ANX.logError(.player, "[MPV] 截图失败：创建截图器失败")
+                completion(.failure(MPVThumbnailError.createFailed))
+                return
+            }
+            self.thumbnailer = thumbnailer
+        }
+
+        guard let thumbnailer = self.thumbnailer else {
+            completion(.failure(MPVThumbnailError.createFailed))
+            return
+        }
+
+        // position 为 0~1 归一化进度，换算成秒
+        let seconds = Double(max(min(position, 1), 0)) * self.length
+        thumbnailer.fetchThumbnail(position: seconds, completion: completion)
+    }
+    
 
     // MARK: - 初始化
 
@@ -344,6 +440,7 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
             renderer.positionProvider = { [weak self] in self?.mpv?.time.position ?? 0 }
             renderer.videoSizeProvider = { [weak self] in self?.mpv?.videoSize ?? .zero }
             renderer.onFrame = { [weak self] sampleBuffer in
+                self?.lastFrameSampleBuffer = sampleBuffer
                 self?._mediaView.enqueue(sampleBuffer)
             }
             if !renderer.create(mpvHandle: handle) {
@@ -562,5 +659,197 @@ extension MPVPlayerWrapper {
             cfg.subtitleFont = playerCustomFontNames.first
         }
         return MPVPiPProvider(config: cfg)
+    }
+}
+
+// MARK: - 截图（独立 headless mpv 实例）
+
+/// 独立的 headless mpv 实例，用于在任意进度生成截图，与主播放器互不干扰
+/// 实例按媒体复用：同一媒体只创建一次 MPV / MPVMedia，之后每次截图只做 seek
+fileprivate final class MediaThumbnailFetcher {
+
+    enum ErrorReason: Error {
+        case createFailed
+        case timeOut
+    }
+
+    private var mpv: MPV?
+    private let renderer = MPVFrameRenderer()
+
+    /// 本次截图所用的媒体（按媒体复用，只创建一次）
+    private let media: MPVMedia
+
+    private var isTerminated = false
+    private var isLoaded = false
+    private var isLoading = false
+
+    private var completion: ((Result<ANXImage, Error>) -> Void)?
+    private var targetPosition: Double = 0
+    private var isWaitingForFrame = false
+    /// seek 是否已完成（用于丢弃 seek 前的旧帧）
+    private var isSeekCompleted = false
+    private var timeoutWorkItem: DispatchWorkItem?
+
+    /// 截图超时时间
+    private let timeout: TimeInterval = 8
+
+    init?(file: File) {
+        guard let media = file.createMPVMedia(), let mpv = MPV() else { return nil }
+        self.media = media
+        self.mpv = mpv
+
+        // 与主播放器一致的软渲染管线；静音，避免 headless 实例出声
+        mpv.setProperty(.vo, "libmpv")
+        mpv.setProperty(.hwdec, Preferences.shared.hwdecEnabled ? "videotoolbox" : "no")
+        mpv.audio.isMuted = true
+        mpv.subtitle.autoLoad = .no
+        mpv.subtitle.assOverride = .yes
+
+        guard let handle = mpv.mpv else { return nil }
+
+        renderer.outputScale = 1.0
+        renderer.positionProvider = { [weak self] in self?.mpv?.time.position ?? 0 }
+        renderer.videoSizeProvider = { [weak self] in self?.mpv?.videoSize ?? .zero }
+        renderer.onFrame = { [weak self] sampleBuffer in
+            self?.handleFrame(sampleBuffer)
+        }
+
+        guard renderer.create(mpvHandle: handle) else {
+            ANX.logError(.player, "[MPV] 创建截图渲染上下文失败")
+            return nil
+        }
+
+        guard mpv.initialize() >= 0 else {
+            ANX.logError(.player, "[MPV] 截图器 mpv_initialize 失败")
+            return nil
+        }
+
+        // 只在文件加载完成后开始渲染，避免截到空帧
+        mpv.on(.fileLoaded) { [weak self] _ in
+            DispatchQueue.main.async {
+                guard let self = self, !self.isTerminated else { return }
+                self.isLoaded = true
+                self.isLoading = false
+                if self.isWaitingForFrame, let mpv = self.mpv {
+                    self.beginCapture(mpv: mpv)
+                }
+            }
+        }
+
+        // seek 完成后，等 VO 稳定再主动渲染一帧，确保拿到目标帧
+        mpv.on(.seek) { [weak self] _ in
+            DispatchQueue.main.async {
+                guard let self = self, !self.isTerminated, self.isWaitingForFrame else { return }
+                self.isSeekCompleted = true
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+                    guard let self = self, !self.isTerminated, self.isWaitingForFrame else { return }
+                    self.renderer.requestFrame()
+                }
+            }
+        }
+    }
+
+    deinit {
+        terminate()
+    }
+
+    /// 在指定进度生成截图
+    /// - Parameters:
+    ///   - position: 目标时间（秒）
+    ///   - completion: 主线程回调
+    func fetchThumbnail(position: Double, completion: @escaping (Result<ANXImage, Error>) -> Void) {
+        guard !isTerminated, let mpv = mpv else {
+            completion(.failure(ErrorReason.createFailed))
+            return
+        }
+
+        self.completion = completion
+        self.targetPosition = max(position, 0)
+        self.isWaitingForFrame = true
+        self.startTimeout()
+
+        if isLoaded {
+            beginCapture(mpv: mpv)
+        } else if !isLoading {
+            isLoading = true
+            mpv.loadFile(media.url.absoluteString)
+        }
+        // 已在加载中：等 fileLoaded 回调按最新 target 开始
+    }
+
+    /// 终止并释放实例
+    func terminate() {
+        guard !isTerminated else { return }
+        isTerminated = true
+        isLoaded = false
+        isLoading = false
+        isWaitingForFrame = false
+        timeoutWorkItem?.cancel()
+        timeoutWorkItem = nil
+        completion = nil
+
+        // 先释放渲染上下文，再关闭 mpv
+        renderer.terminate()
+        mpv?.quit()
+        mpv = nil
+    }
+
+    // MARK: - 私有
+
+    private func beginCapture(mpv: MPV) {
+        ANX.logInfo(.player, "[MPV] 开始截图: \(String(format: "%.1f", targetPosition))s")
+        isSeekCompleted = false
+        // 暂停：seek 后画面停在目标帧，避免边播边截导致时间偏移
+        mpv.playback.isPaused = true
+
+        renderer.startRendering()
+
+        let currentPosition = mpv.time.position ?? 0
+        if abs(currentPosition - targetPosition) <= 0.3 {
+            // 已停在目标附近，直接渲染
+            isSeekCompleted = true
+            renderer.requestFrame()
+        } else {
+            // 精确 seek；渲染在 seek 完成事件里做
+            mpv.execute(.seek, args: [String(targetPosition), "absolute+exact"])
+        }
+    }
+
+    private func handleFrame(_ sampleBuffer: CMSampleBuffer) {
+        guard !isTerminated, isWaitingForFrame, isSeekCompleted else { return }
+
+        // 只在目标时间附近取帧：既要丢弃 seek 前的旧帧，也不能接受偏差过大的帧
+        let currentPosition = mpv?.time.position ?? 0
+        guard abs(currentPosition - targetPosition) <= 0.5 else { return }
+
+        guard let image = sampleBuffer.anxImage() else { return }
+
+        ANX.logInfo(.player, "[MPV] 截图成功: \(String(format: "%.1f", currentPosition))s")
+        finishCurrentFetch(.success(image))
+    }
+
+    private func startTimeout() {
+        timeoutWorkItem?.cancel()
+        let item = DispatchWorkItem { [weak self] in
+            ANX.logError(.player, "[MPV] 截图超时")
+            self?.finishCurrentFetch(.failure(ErrorReason.timeOut))
+        }
+        timeoutWorkItem = item
+        DispatchQueue.main.asyncAfter(deadline: .now() + timeout, execute: item)
+    }
+
+    private func finishCurrentFetch(_ result: Result<ANXImage, Error>) {
+        guard isWaitingForFrame else { return }
+        isWaitingForFrame = false
+        timeoutWorkItem?.cancel()
+        timeoutWorkItem = nil
+
+        // 截图完成后暂停，避免 headless 实例持续解码
+        mpv?.playback.isPaused = true
+
+        let completion = self.completion
+        self.completion = nil
+        completion?(result)
     }
 }

@@ -18,6 +18,22 @@
         }
       }
     },
+    "⭐ %.1f": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⭐ %.1f"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⭐ %.1f"
+          }
+        }
+      }
+    },
     "0则不缓存": {
       "localizations": {
         "en": {
@@ -1304,6 +1320,7 @@
         }
       }
     },
+    "图片编码失败": {},
     "地址": {
       "localizations": {
         "en": {
@@ -1787,6 +1804,39 @@
         }
       }
     },
+    "已保存：%@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved: %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已保存：%@"
+          }
+        }
+      }
+    },
+    "已保存到相册": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved to Photos"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已保存到相册"
+          }
+        }
+      }
+    },
     "已同步": {
       "localizations": {
         "en": {
@@ -2259,6 +2309,71 @@
           "stringUnit": {
             "state": "translated",
             "value": "我的关注"
+          }
+        }
+      }
+    },
+    "截图": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Screenshot"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "截图"
+          }
+        }
+      }
+    },
+    "截图保存到相册失败": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed to Save Screenshot to Photos"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "截图保存到相册失败"
+          }
+        }
+      }
+    },
+    "截图保存失败": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed to Save Screenshot"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "截图保存失败"
+          }
+        }
+      }
+    },
+    "截图失败": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed to Capture Screenshot"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "截图失败"
           }
         }
       }
@@ -2934,6 +3049,22 @@
         }
       }
     },
+    "查看观众短评论": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "View Short Reviews"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查看观众短评论"
+          }
+        }
+      }
+    },
     "根路径": {
       "extractionState": "stale",
       "localizations": {
@@ -3027,6 +3158,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "正在下载... %d%% (%.1f / %.1f MB)"
+          }
+        }
+      }
+    },
+    "正在保存...": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saving..."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在保存..."
           }
         }
       }
@@ -3398,6 +3545,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "相似作品"
+          }
+        }
+      }
+    },
+    "短评论": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Short Reviews"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "短评论"
           }
         }
       }
@@ -3927,6 +4090,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "请输入用户名"
+          }
+        }
+      }
+    },
+    "跟随系统": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Follow System"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "跟随系统"
           }
         }
       }
@@ -4506,66 +4685,82 @@
         }
       }
     },
-    "跟随系统": {
+    "截图保存位置": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Follow System"
+            "value": "Screenshot Location"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "跟随系统"
+            "value": "截图保存位置"
           }
         }
       }
     },
-    "⭐ %.1f": {
+    "选择文件夹…": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "⭐ %.1f"
+            "value": "Choose Folder…"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "⭐ %.1f"
+            "value": "选择文件夹…"
           }
         }
       }
     },
-    "查看观众短评论": {
+    "选择": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "View Short Reviews"
+            "value": "Choose"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "查看观众短评论"
+            "value": "选择"
           }
         }
       }
     },
-    "短评论": {
+    "无法保存截图": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Short Reviews"
+            "value": "Unable to Save Screenshot"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "短评论"
+            "value": "无法保存截图"
+          }
+        }
+      }
+    },
+    "没有权限保存到当前目录，请重新选择保存位置。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No permission to save to the current folder. Please choose another location."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有权限保存到当前目录，请重新选择保存位置。"
           }
         }
       }

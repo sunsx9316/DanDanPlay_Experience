@@ -39,6 +39,9 @@ protocol PlayerUIViewDelegate: AnyObject {
     func playerUIView(_ playerUIView: PlayerUIView, didChangeDanmakuInputViewState isExpanding: Bool)
 
     func playerUIView(_ playerUIView: PlayerUIView, didSendDanmaku text: String, mode: Comment.Mode, color: ANXColor)
+
+    /// 请求指定进度（0~1）的缩略图，用于进度条预览
+    func playerUIView(_ playerUIView: PlayerUIView, requestThumbnailAt progress: CGFloat, completion: @escaping (ANXImage?) -> Void)
 }
 
 protocol PlayerUIViewDataSource: AnyObject {
@@ -48,8 +51,6 @@ protocol PlayerUIViewDataSource: AnyObject {
     func playerTotalTime(playerUIView: PlayerUIView) -> TimeInterval
     
     func playerProgress(playerUIView: PlayerUIView) -> CGFloat
-    
-    func playerMediaThumbnailer(playerUIView: PlayerUIView) -> MediaThumbnailer?
     
     func shouldShowResetScaleButton(playerUIView: PlayerUIView) -> Bool
     
@@ -186,8 +187,12 @@ class PlayerUIView: UIView {
         return controlView
     }
     
-    private weak var timeSnapHUD: ANXHUD?
-    
+    private weak var snapshotPreviewView: SnapshotPreviewView?
+
+    /// 缩略图：停留延时请求 + 请求版本号（丢弃过期结果）
+    private var thumbnailDwellItem: DispatchWorkItem?
+    private var thumbnailRequestToken = 0
+
     private var panType: PanType?
     
     private lazy var timeFormatter: DateFormatter = {
@@ -533,33 +538,75 @@ class PlayerUIView: UIView {
     }
     
     private func showTimeSnapLabel() {
-        
-        self.timeSnapHUD?.hide(animated: false)
-        
-        let aHUD = ANXHUD.showAdded(to: self, animated: true)
-        self.timeSnapHUD = aHUD
-        aHUD.mode = .text
-        aHUD.bezelView.color = UIColor(red: 0, green: 0, blue: 0, alpha: 0.6)
-        aHUD.bezelView.style = .solidColor
-        aHUD.label.font = .ddp_normal
-        aHUD.label.numberOfLines = 0
-        aHUD.contentColor = .white
-        aHUD.margin = 15
-        aHUD.isUserInteractionEnabled = true
-        
+        self.cancelThumbnailRequest()
+
+        let preview: SnapshotPreviewView
+        if let aPreview = self.snapshotPreviewView {
+            preview = aPreview
+        } else {
+            preview = SnapshotPreviewView()
+            self.addSubview(preview)
+            self.snapshotPreviewView = preview
+        }
+
         let currentTime = dataSource?.playerCurrentTime(playerUIView: self) ?? 0
         updateDataTimeSnapLabel(currentTime: currentTime)
     }
     
     private func hideTimeSnapLabel() {
-        self.timeSnapHUD?.hide(animated: true)
+        self.cancelThumbnailRequest()
+        self.snapshotPreviewView?.removeFromSuperview()
     }
     
     private func updateDataTimeSnapLabel(currentTime: TimeInterval) {
+        guard let preview = self.snapshotPreviewView else { return }
+
         let totalTime = dataSource?.playerTotalTime(playerUIView: self) ?? 0
         let current = Date(timeIntervalSince1970: currentTime)
         let total = Date(timeIntervalSince1970: totalTime)
-        self.timeSnapHUD?.label.text = timeFormatter.string(from: current) + "/" + timeFormatter.string(from: total)
+        preview.timeText = timeFormatter.string(from: current) + "/" + timeFormatter.string(from: total)
+        self.updateSnapshotPreviewFrame()
+
+        guard totalTime > 0 else { return }
+        // 停在某个进度一段时间后再生成缩略图
+        self.scheduleThumbnailFetch(progress: CGFloat(currentTime / totalTime))
+    }
+
+    //MARK: 进度条缩略图
+
+    private func scheduleThumbnailFetch(progress: CGFloat) {
+        self.thumbnailDwellItem?.cancel()
+        self.thumbnailRequestToken += 1
+        let token = self.thumbnailRequestToken
+
+        let item = DispatchWorkItem { [weak self] in
+            self?.requestThumbnail(progress: progress, token: token)
+        }
+        self.thumbnailDwellItem = item
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: item)
+    }
+
+    private func requestThumbnail(progress: CGFloat, token: Int) {
+        self.delegate?.playerUIView(self, requestThumbnailAt: progress) { [weak self] image in
+            guard let self = self, token == self.thumbnailRequestToken else { return }
+            self.snapshotPreviewView?.setThumbnail(image)
+            self.updateSnapshotPreviewFrame()
+        }
+    }
+
+    private func cancelThumbnailRequest() {
+        self.thumbnailDwellItem?.cancel()
+        self.thumbnailDwellItem = nil
+        self.thumbnailRequestToken += 1
+    }
+
+    private func updateSnapshotPreviewFrame() {
+        guard let preview = self.snapshotPreviewView else { return }
+
+        let size = preview.desiredSize
+        let x = max(8, (self.bounds.width - size.width) / 2)
+        let y = max(8, self.bottomView.frame.minY - size.height - 8)
+        preview.frame = CGRect(x: x, y: y, width: size.width, height: size.height)
     }
 }
 

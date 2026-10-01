@@ -39,6 +39,11 @@ protocol PlayerUIViewDelegate: AnyObject {
     func playerUIView(_ playerUIView: PlayerUIView, didChangeControlViewState show: Bool)
 
     func onClickRightMouse(playerUIView: PlayerUIView, at point: NSPoint)
+    
+    func onTouchThumbnailerButton(playerUIView: PlayerUIView)
+
+    /// 请求指定进度（0~1）的缩略图，用于进度条预览
+    func playerUIView(_ playerUIView: PlayerUIView, requestThumbnailAt progress: CGFloat, completion: @escaping (ANXImage?) -> Void)
 }
 
 protocol PlayerUIViewDataSource: AnyObject {
@@ -48,8 +53,6 @@ protocol PlayerUIViewDataSource: AnyObject {
     func playerTotalTime(playerUIView: PlayerUIView) -> TimeInterval
 
     func playerProgress(playerUIView: PlayerUIView) -> CGFloat
-
-    func playerMediaThumbnailer(playerUIView: PlayerUIView) -> MediaThumbnailer?
 
 }
 
@@ -93,12 +96,15 @@ class PlayerUIView: BaseView {
         bottomView.stopButton.addTarget(self, action: #selector(onTouchStopButton(_:)))
         bottomView.playButton.addTarget(self, action: #selector(onTouchPlayButton(_:)))
         bottomView.mediaSettingButton.addTarget(self, action: #selector(onTouchMediaButton(_:)))
+        bottomView.thumbnailButton.addTarget(self, action: #selector(onTouchThumbnailerButton(_:)))
         bottomView.danmakuSettingButton.addTarget(self, action: #selector(onTouchDanmakuButton(_:)))
         bottomView.danmakuConfigButton.addTarget(self, action: #selector(onTouchDanmakuConfigButton(_:)))
         bottomView.danmakuTextField.delegate = self
         bottomView.progressSlider.addEvent(.mouseUp, action: { [weak self] (sender, _) in
             guard let self = self else { return }
             self.delegate?.tapSlider(playerUIView: self, progress: CGFloat(sender.progress))
+            self.cancelThumbnailRequest()
+            self.timeTipsView?.dismiss()
         })
 
         bottomView.progressSlider.addEvent(.mouseMoved, action: { [weak self] (sender, parameter) in
@@ -110,6 +116,7 @@ class PlayerUIView: BaseView {
         bottomView.progressSlider.addEvent(.mouseExited, action: { [weak self] (sender, _) in
             guard let self = self else { return }
 
+            self.cancelThumbnailRequest()
             self.timeTipsView?.dismiss()
         })
         return bottomView
@@ -122,6 +129,10 @@ class PlayerUIView: BaseView {
     }()
 
     private weak var timeTipsView: TimeTipsView?
+
+    /// 进度条缩略图：停留延时请求 + 请求版本号（丢弃过期结果）
+    private var thumbnailDwellItem: DispatchWorkItem?
+    private var thumbnailRequestToken = 0
 
     private var autoHiddenTimer: Timer?
 
@@ -208,6 +219,7 @@ class PlayerUIView: BaseView {
     func autoHideControlView() {
         DispatchQueue.main.async {
             self.setControlViewsHidden(true, animated: true) {
+                self.cancelThumbnailRequest()
                 self.timeTipsView?.dismiss()
             }
         }
@@ -297,12 +309,17 @@ class PlayerUIView: BaseView {
         delegate?.onTouchNextButton(playerUIView: self)
     }
 
+    @objc private func onTouchThumbnailerButton(_ sender: NSButton) {
+        delegate?.onTouchThumbnailerButton(playerUIView: self)
+    }
+
 
     //MARK: 滑动条
 
     @objc private func onSliderMouseMove(_ sender: PlayerSlider, progress: CGFloat) {
 
         guard let totalTime = dataSource?.playerTotalTime(playerUIView: self), totalTime > 0 else {
+            self.cancelThumbnailRequest()
             self.timeTipsView?.dismiss()
             return
         }
@@ -324,11 +341,48 @@ class PlayerUIView: BaseView {
         }
 
         hud.timeLabel.text = timeStr
+        self.updateTipsViewFrame()
 
+        // 停在某个进度一段时间后再生成缩略图
+        self.scheduleThumbnailFetch(progress: progress)
+    }
+
+    //MARK: 进度条缩略图
+
+    private func scheduleThumbnailFetch(progress: CGFloat) {
+        self.thumbnailDwellItem?.cancel()
+        self.thumbnailRequestToken += 1
+        let token = self.thumbnailRequestToken
+
+        let item = DispatchWorkItem { [weak self] in
+            self?.requestThumbnail(progress: progress, token: token)
+        }
+        self.thumbnailDwellItem = item
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: item)
+    }
+
+    private func requestThumbnail(progress: CGFloat, token: Int) {
+        self.delegate?.playerUIView(self, requestThumbnailAt: progress) { [weak self] image in
+            guard let self = self, token == self.thumbnailRequestToken else { return }
+            self.timeTipsView?.setThumbnail(image)
+            self.updateTipsViewFrame()
+        }
+    }
+
+    private func cancelThumbnailRequest() {
+        self.thumbnailDwellItem?.cancel()
+        self.thumbnailDwellItem = nil
+        self.thumbnailRequestToken += 1
+    }
+
+    private func updateTipsViewFrame() {
+        guard let hud = self.timeTipsView else { return }
+
+        let size = hud.desiredSize
         let mouseLocation = self.window?.mouseLocationOutsideOfEventStream ?? .zero
-        var frame = CGRect(x: 0, y: 0, width: 100, height: 35)
-        frame.origin.x = mouseLocation.x - (frame.width / 2)
-        frame.origin.y = self.bottomView.frame.minY - (frame.height + 5)
+        var frame = CGRect(origin: .zero, size: size)
+        frame.origin.x = mouseLocation.x - (size.width / 2)
+        frame.origin.y = self.bottomView.frame.minY - (size.height + 5)
 
         if (frame.minX < 5) {
             frame.origin.x = 5

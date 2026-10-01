@@ -57,6 +57,11 @@ class PlayerViewController: ViewController {
     private lazy var disposeBag = DisposeBag()
 
     private weak var gotoLastWatchPointView: GotoLastWatchPointView?
+
+    private weak var snapshotPreviewView: SnapshotPreviewView?
+
+    /// 进度条缩略图缓存（key = 秒）
+    private var thumbnailCache = [Int: ANXImage]()
     
 
     /// 弹幕画布容器
@@ -498,9 +503,6 @@ extension PlayerViewController: MatchsViewControllerDelegate {
 
 // MARK: - PlayerUIViewDataSource
 extension PlayerViewController: PlayerUIViewDataSource {
-    func playerMediaThumbnailer(playerUIView: PlayerUIView) -> MediaThumbnailer? {
-        return nil
-    }
     
     func playerCurrentTime(playerUIView: PlayerUIView) -> TimeInterval {
         return mediaModel.currentTime
@@ -517,6 +519,148 @@ extension PlayerViewController: PlayerUIViewDataSource {
 
 // MARK: - PlayerUIViewDelegate
 extension PlayerViewController: PlayerUIViewDelegate, NSMenuDelegate {
+    
+    func onTouchThumbnailerButton(playerUIView: PlayerUIView) {
+        ANX.logInfo(.player, "[Player] 点击截图")
+
+        self.playerModel.mediaModel.onFetchThumbnail { [weak self] result in
+            guard let self = self else { return }
+
+            switch result {
+            case .success(let image):
+                ANX.logInfo(.player, "[Player] 截图成功")
+
+                let preview = self.showSnapshotPreview(image: image)
+                self.saveSnapshot(image: image, fileName: self.snapshotFileName(), preview: preview)
+            case .failure(let error):
+                ANX.logError(.player, "[Player] 截图失败: \(error)")
+                self.view.show(text: NSLocalizedString("截图失败", comment: ""))
+            }
+        }
+    }
+
+    /// 在播放器右侧展示截图预览
+    /// - Parameter image: 截图
+    /// - Returns: 预览视图，便于外部更新提示文案
+    @discardableResult
+    private func showSnapshotPreview(image: NSImage) -> SnapshotPreviewView? {
+        let preview: SnapshotPreviewView
+        if let aPreview = self.snapshotPreviewView {
+            preview = aPreview
+        } else {
+            preview = SnapshotPreviewView()
+            self.snapshotPreviewView = preview
+        }
+
+        preview.tipText = NSLocalizedString("正在保存...", comment: "")
+        preview.show(image: image, from: self.view)
+        return preview
+    }
+
+    /// 进度条预览：按需生成指定进度的缩略图（带缓存）
+    func playerUIView(_ playerUIView: PlayerUIView, requestThumbnailAt progress: CGFloat, completion: @escaping (ANXImage?) -> Void) {
+        let totalTime = self.mediaModel.length
+        guard totalTime > 0 else {
+            completion(nil)
+            return
+        }
+
+        let second = Int(Double(progress) * totalTime)
+        if let image = self.thumbnailCache[second] {
+            completion(image)
+            return
+        }
+
+        self.playerModel.mediaModel.fetchThumbnail(at: Float(progress)) { [weak self] result in
+            guard let self = self else { return }
+
+            if case .success(let image) = result {
+                self.cacheThumbnail(image, forKey: second)
+                completion(image)
+            } else {
+                completion(nil)
+            }
+        }
+    }
+
+    private func cacheThumbnail(_ image: ANXImage, forKey key: Int) {
+        if self.thumbnailCache.count >= 200 {
+            self.thumbnailCache.removeAll()
+        }
+        self.thumbnailCache[key] = image
+    }
+
+    /// 保存截图；若因沙盒权限失败，则引导用户重新选择目录后重试
+    private func saveSnapshot(image: NSImage, fileName: String, preview: SnapshotPreviewView?) {
+        image.saveSnapshot(fileName: fileName) { [weak self] result in
+            guard let self = self else { return }
+
+            switch result {
+            case .success(let url):
+                ANX.logInfo(.player, "[Player] 截图已保存: \(url.path)")
+                preview?.tipText = String(format: NSLocalizedString("已保存：%@", comment: ""), url.lastPathComponent)
+                preview?.didClickReveal = {
+                    NSWorkspace.shared.activateFileViewerSelecting([url])
+                }
+            case .failure(let error):
+                ANX.logError(.player, "[Player] 截图保存失败: \(error)")
+                if self.isSnapshotPermissionError(error) {
+                    preview?.dismiss()
+                    self.promptSnapshotDirectory(image: image, fileName: fileName)
+                } else {
+                    preview?.dismiss()
+                    self.view.show(text: NSLocalizedString("截图保存失败", comment: ""))
+                }
+            }
+        }
+    }
+
+    private func isSnapshotPermissionError(_ error: Error) -> Bool {
+        let nsError = error as NSError
+        return nsError.domain == NSCocoaErrorDomain && nsError.code == NSFileWriteNoPermissionError
+    }
+
+    /// 没有权限时提示用户重新选择保存位置，并重试
+    private func promptSnapshotDirectory(image: NSImage, fileName: String) {
+        let alert = NSAlert()
+        alert.messageText = NSLocalizedString("无法保存截图", comment: "")
+        alert.informativeText = NSLocalizedString("没有权限保存到当前目录，请重新选择保存位置。", comment: "")
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: NSLocalizedString("选择文件夹…", comment: ""))
+        alert.addButton(withTitle: NSLocalizedString("取消", comment: ""))
+
+        guard alert.runModal() == .alertFirstButtonReturn else { return }
+
+        let panel = NSOpenPanel()
+        panel.canChooseFiles = false
+        panel.canChooseDirectories = true
+        panel.canCreateDirectories = true
+        panel.allowsMultipleSelection = false
+        panel.prompt = NSLocalizedString("选择", comment: "")
+        panel.directoryURL = SnapshotLocation.currentDirectoryURL
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+
+        SnapshotLocation.saveBookmark(for: url)
+        Preferences.shared.snapshotDirectory = url.path
+
+        // 用新目录重试保存
+        let preview = self.showSnapshotPreview(image: image)
+        self.saveSnapshot(image: image, fileName: fileName, preview: preview)
+    }
+
+    /// 生成截图文件名：视频名 + 时间戳
+    private func snapshotFileName() -> String {
+        let sourceName = self.mediaModel.media?.fileName ?? "Snapshot"
+        let baseName = (sourceName as NSString).deletingPathExtension
+
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyyMMdd_HHmmss_SSS"
+
+        let name = "\(baseName)_\(formatter.string(from: Date()))"
+        /// 过滤文件名中的非法字符
+        let invalidCharacters = CharacterSet(charactersIn: "/\\:*?\"<>|")
+        return name.components(separatedBy: invalidCharacters).joined(separator: "_")
+    }
     
     func onTouchDanmakuSettingButton(playerUIView: PlayerUIView, button: NSButton) {
         ANX.logInfo(.player, "[Player] 打开弹幕设置")

@@ -36,6 +36,8 @@ class GlobalSettingContext {
         return true
     }())
 
+    lazy var snapshotDirectory = BehaviorSubject<String>(value: Preferences.shared.snapshotDirectory)
+
 }
 
 extension GlobalSettingModel {
@@ -82,6 +84,10 @@ extension GlobalSettingModel {
     var icloudSyncEnabled: Bool {
         return (try? self.context.icloudSyncEnabled.value()) ?? false
     }
+
+    var snapshotDirectory: String {
+        return (try? self.context.snapshotDirectory.value()) ?? ""
+    }
 }
 
 class GlobalSettingModel {
@@ -93,6 +99,10 @@ class GlobalSettingModel {
         if playerCore != .mpv {
             types.removeAll { $0 == .hardwareDecoding }
         }
+        #if !os(macOS)
+        // 截图保存位置仅 Mac 支持
+        types.removeAll { $0 == .snapshotDirectory }
+        #endif
         return types
     }
     
@@ -145,6 +155,9 @@ class GlobalSettingModel {
             return self.hardwareDecodingEnabled ? NSLocalizedString("开启", comment: "") : NSLocalizedString("关闭", comment: "")
         case .icloudSync:
             return Preferences.shared.syncStatus.displayText
+        case .snapshotDirectory:
+            let path = Preferences.shared.snapshotDirectory
+            return path.isEmpty ? NSLocalizedString("默认", comment: "") : (path as NSString).abbreviatingWithTildeInPath
         }
     }
     
@@ -192,6 +205,11 @@ class GlobalSettingModel {
     func onChangeHwdecEnabled(_ enabled: Bool) {
         Preferences.shared.hwdecEnabled = enabled
         self.context.hardwareDecoding.onNext(enabled)
+    }
+
+    func onChangeSnapshotDirectory(_ path: String) {
+        Preferences.shared.snapshotDirectory = path
+        self.context.snapshotDirectory.onNext(path)
     }
 
     func onChangeAppLanguage(_ language: AppLanguage) {

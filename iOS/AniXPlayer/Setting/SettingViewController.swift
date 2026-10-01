@@ -100,7 +100,7 @@ extension SettingViewController: UITableViewDelegate, UITableViewDataSource {
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = self.model.subtitle(settingType: type)
             return cell
-        case .log, .cleanupCache, .cleanupHistory:
+        case .log, .cleanupCache, .cleanupHistory, .snapshotDirectory:
             let cell = tableView.dequeueCell(class: TitleDetailTableViewCell.self, indexPath: indexPath)
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = self.model.subtitle(settingType: type)

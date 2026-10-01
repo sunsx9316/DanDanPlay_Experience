@@ -86,6 +86,15 @@ class PlayerUIBottomView: BaseView {
         let button = Button(title: NSLocalizedString("视频设置", comment: ""), target: nil, action: nil)
         return button
     }()
+
+    lazy var thumbnailButton: Button = {
+        let button = Button.custom()
+        button.imagePosition = .imageOnly
+        button.image = NSImage.safeSystemSymbol("camera")
+        button.contentTintColor = .white
+        button.toolTip = NSLocalizedString("截图", comment: "")
+        return button
+    }()
     
     private lazy var bgView: BaseView = {
         let bgView = BaseView()
@@ -114,6 +123,7 @@ class PlayerUIBottomView: BaseView {
         containerView.addSubview(self.timeLabel)
         containerView.addSubview(self.playerListButton)
         containerView.addSubview(self.mediaSettingButton)
+        containerView.addSubview(self.thumbnailButton)
         containerView.addSubview(self.danmakuTextField)
         containerView.addSubview(self.danmakuConfigButton)
         containerView.addSubview(self.danmakuSettingButton)
@@ -183,10 +193,15 @@ class PlayerUIBottomView: BaseView {
             make.leading.equalTo(self.playerListButton.snp.trailing).offset(10)
         }
 
+        self.thumbnailButton.snp.makeConstraints { make in
+            make.centerY.equalTo(self.playButton)
+            make.leading.equalTo(self.mediaSettingButton.snp.trailing).offset(10)
+        }
+
         self.danmakuSettingButton.snp.makeConstraints { make in
             make.trailing.equalTo(-10)
             make.centerY.equalTo(self.playButton)
-            make.leading.equalTo(self.mediaSettingButton.snp.trailing).offset(10)
+            make.leading.equalTo(self.thumbnailButton.snp.trailing).offset(10)
         }
         
     }

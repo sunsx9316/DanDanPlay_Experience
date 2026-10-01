@@ -62,7 +62,6 @@
 		7F99B155655AB99289366058 /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = CD55FFBBE18590F428239AF1 /* RxCocoa */; };
 		894F10832FEFA8E4007B7BF7 /* MPVFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 894F10822FEFA8E4007B7BF7 /* MPVFramework */; };
 		894F10842FEFA9B8007B7BF7 /* MPVFramework in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 894F10822FEFA8E4007B7BF7 /* MPVFramework */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		894F10982FEFB4BF007B7BF7 /* VLCFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 894F10972FEFB4BF007B7BF7 /* VLCFramework */; };
 		894F109B2FEFB4D5007B7BF7 /* MPVFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 894F109A2FEFB4D5007B7BF7 /* MPVFramework */; };
 		8951543D2FC1DC2D00F75DB7 /* Preferences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895154242FC1DC2D00F75DB7 /* Preferences.swift */; };
 		8951543F2FC1DC2D00F75DB7 /* Atomic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895154332FC1DC2D00F75DB7 /* Atomic.swift */; };
@@ -129,7 +128,6 @@
 		895154852FC1DC2D00F75DB7 /* PlayerDanmakuModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895153F62FC1DC2D00F75DB7 /* PlayerDanmakuModel.swift */; };
 		895154862FC1DC2D00F75DB7 /* Launcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8951543A2FC1DC2D00F75DB7 /* Launcher.swift */; };
 		895154872FC1DC2D00F75DB7 /* Store.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895154252FC1DC2D00F75DB7 /* Store.swift */; };
-		895154882FC1DC2D00F75DB7 /* MediaThumbnailer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895153F02FC1DC2D00F75DB7 /* MediaThumbnailer.swift */; };
 		8951548A2FC1DC2D00F75DB7 /* upload.html in Resources */ = {isa = PBXBuildFile; fileRef = 895153D02FC1DC2D00F75DB7 /* upload.html */; };
 		8951548B2FC1DC2D00F75DB7 /* upload.js in Resources */ = {isa = PBXBuildFile; fileRef = 895153D12FC1DC2D00F75DB7 /* upload.js */; };
 		895157512FC36B3D00F75DB7 /* CenterPopupAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895157442FC36B3D00F75DB7 /* CenterPopupAnimator.swift */; };
@@ -175,6 +173,8 @@
 		895A7F6F2FC5FBC300A997B8 /* SourceHanSansTC-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = 895A7F6C2FC5FBC300A997B8 /* SourceHanSansTC-Regular.otf */; };
 		895A7F732FC602C900A997B8 /* SubtitleColorPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7F722FC602C900A997B8 /* SubtitleColorPickerViewController.swift */; };
 		895A7F752FC602D900A997B8 /* ColorPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 895A7F742FC602D900A997B8 /* ColorPickerView.swift */; };
+		899DAF58306EB4BC0066B287 /* VLCFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 899DAF57306EB4BC0066B287 /* VLCFramework */; };
+		899DAF5B306EB7590066B287 /* VLCFramework in Frameworks */ = {isa = PBXBuildFile; productRef = 899DAF5A306EB7590066B287 /* VLCFramework */; };
 		89A9E7562FD4A6380019D4C4 /* FontHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89A9E7552FD4A6380019D4C4 /* FontHelper.swift */; };
 		89A9E7592FD4A65F0019D4C4 /* ANXLog in Frameworks */ = {isa = PBXBuildFile; productRef = 89A9E7582FD4A65F0019D4C4 /* ANXLog */; };
 		89A9E75E2FD4AE9E0019D4C4 /* ANXLog in Embed Frameworks */ = {isa = PBXBuildFile; productRef = 89A9E7582FD4A65F0019D4C4 /* ANXLog */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
@@ -308,7 +308,6 @@
 		895153E82FC1DC2D00F75DB7 /* WebDavFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebDavFile.swift; sourceTree = "<group>"; };
 		895153ED2FC1DC2D00F75DB7 /* VLCPlayerWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VLCPlayerWrapper.swift; sourceTree = "<group>"; };
 		895153EF2FC1DC2D00F75DB7 /* MediaPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaPlayer.swift; sourceTree = "<group>"; };
-		895153F02FC1DC2D00F75DB7 /* MediaThumbnailer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaThumbnailer.swift; sourceTree = "<group>"; };
 		895153F12FC1DC2D00F75DB7 /* URL+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URL+Extension.swift"; sourceTree = "<group>"; };
 		895153F32FC1DC2D00F75DB7 /* GlobalSettingModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSettingModel.swift; sourceTree = "<group>"; };
 		895153F52FC1DC2D00F75DB7 /* PlayerDanmakuContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerDanmakuContext.swift; sourceTree = "<group>"; };
@@ -460,8 +459,8 @@
 			files = (
 				9B6D6957EDF3C3D3C360F371 /* RxSwift in Frameworks */,
 				894F109B2FEFB4D5007B7BF7 /* MPVFramework in Frameworks */,
-				894F10982FEFB4BF007B7BF7 /* VLCFramework in Frameworks */,
 				7F99B155655AB99289366058 /* RxCocoa in Frameworks */,
+				899DAF58306EB4BC0066B287 /* VLCFramework in Frameworks */,
 				A3496C02A5AEA2326D11242D /* MMKV in Frameworks */,
 				A1C0BE5CDFACA58D6BE045B3 /* GCDWebServer in Frameworks */,
 				F6D04BDCB732B91EC584BE02 /* GCDWebDAVServer in Frameworks */,
@@ -471,6 +470,7 @@
 				895A7EF02FC5D09C00A997B8 /* FilesProvider in Frameworks */,
 				092376397254D281D509C484 /* GCDWebUploader in Frameworks */,
 				0925E7191013E0084F5C39B8 /* SnapKit in Frameworks */,
+				899DAF5B306EB7590066B287 /* VLCFramework in Frameworks */,
 				7C905D4AA1123B12E415AB7B /* Kingfisher in Frameworks */,
 				6B60904E446F32A55C83BEC8 /* Alamofire in Frameworks */,
 				8D7C10EF8EC94BD12BAF8486 /* DanmakuRender in Frameworks */,
@@ -741,7 +741,6 @@
 				895153EA2FC1DC2D00F75DB7 /* File */,
 				895153EE2FC1DC2D00F75DB7 /* Wrapper */,
 				895599AB2FCC2CA0007F52E0 /* PiP */,
-				895153F02FC1DC2D00F75DB7 /* MediaThumbnailer.swift */,
 				895153EF2FC1DC2D00F75DB7 /* MediaPlayer.swift */,
 				895153F12FC1DC2D00F75DB7 /* URL+Extension.swift */,
 			);
@@ -1261,8 +1260,9 @@
 				89FA76DA2FCF408300A65DAC /* YYCategories */,
 				89A9E7582FD4A65F0019D4C4 /* ANXLog */,
 				894F10822FEFA8E4007B7BF7 /* MPVFramework */,
-				894F10972FEFB4BF007B7BF7 /* VLCFramework */,
 				894F109A2FEFB4D5007B7BF7 /* MPVFramework */,
+				899DAF57306EB4BC0066B287 /* VLCFramework */,
+				899DAF5A306EB7590066B287 /* VLCFramework */,
 			);
 			productName = AniXPlayer;
 			productReference = 36E50A45F15CE7B0252555F5 /* AniXPlayer.app */;
@@ -1300,8 +1300,8 @@
 				895A7EF12FC5D54E00A997B8 /* XCRemoteSwiftPackageReference "AMSMB2" */,
 				89FA76D92FCF408300A65DAC /* XCRemoteSwiftPackageReference "YYCategories" */,
 				89A9E7572FD4A65F0019D4C4 /* XCRemoteSwiftPackageReference "ANXLog" */,
-				894F10962FEFB4BF007B7BF7 /* XCRemoteSwiftPackageReference "VLCFramework" */,
 				894F10992FEFB4D5007B7BF7 /* XCRemoteSwiftPackageReference "MPVFramework" */,
+				899DAF59306EB7590066B287 /* XCRemoteSwiftPackageReference "VLCFramework" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2A5E88962AE499ECAFC960DB /* Products */;
@@ -1491,7 +1491,6 @@
 				895154852FC1DC2D00F75DB7 /* PlayerDanmakuModel.swift in Sources */,
 				895154862FC1DC2D00F75DB7 /* Launcher.swift in Sources */,
 				895154872FC1DC2D00F75DB7 /* Store.swift in Sources */,
-				895154882FC1DC2D00F75DB7 /* MediaThumbnailer.swift in Sources */,
 				D6025411E3066FEDFFEBD87A /* PlayerSettingViewController.swift in Sources */,
 				895157512FC36B3D00F75DB7 /* CenterPopupAnimator.swift in Sources */,
 				895A7F152FC5EE2300A997B8 /* PCLoginHistoryViewController.swift in Sources */,
@@ -1860,14 +1859,6 @@
 				minimumVersion = 7.12.0;
 			};
 		};
-		894F10962FEFB4BF007B7BF7 /* XCRemoteSwiftPackageReference "VLCFramework" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/sunsx9316/VLCFramework";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 4.0.1;
-			};
-		};
 		894F10992FEFB4D5007B7BF7 /* XCRemoteSwiftPackageReference "MPVFramework" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/sunsx9316/MPVFramework";
@@ -1890,6 +1881,14 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 4.0.3;
+			};
+		};
+		899DAF59306EB7590066B287 /* XCRemoteSwiftPackageReference "VLCFramework" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sunsx9316/VLCFramework";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.0.4;
 			};
 		};
 		89A9E7572FD4A65F0019D4C4 /* XCRemoteSwiftPackageReference "ANXLog" */ = {
@@ -1967,11 +1966,6 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = MPVFramework;
 		};
-		894F10972FEFB4BF007B7BF7 /* VLCFramework */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 894F10962FEFB4BF007B7BF7 /* XCRemoteSwiftPackageReference "VLCFramework" */;
-			productName = VLCFramework;
-		};
 		894F109A2FEFB4D5007B7BF7 /* MPVFramework */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 894F10992FEFB4D5007B7BF7 /* XCRemoteSwiftPackageReference "MPVFramework" */;
@@ -1986,6 +1980,15 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 895A7EF12FC5D54E00A997B8 /* XCRemoteSwiftPackageReference "AMSMB2" */;
 			productName = AMSMB2;
+		};
+		899DAF57306EB4BC0066B287 /* VLCFramework */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = VLCFramework;
+		};
+		899DAF5A306EB7590066B287 /* VLCFramework */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 899DAF59306EB7590066B287 /* XCRemoteSwiftPackageReference "VLCFramework" */;
+			productName = VLCFramework;
 		};
 		89A9E7582FD4A65F0019D4C4 /* ANXLog */ = {
 			isa = XCSwiftPackageProductDependency;

@@ -218,6 +218,7 @@ enum GlobalSettingType: CaseIterable {
     case mainColor
     case host
     case icloudSync
+    case snapshotDirectory
     case log
     case cleanupCache
     case cleanupHistory
@@ -252,6 +253,8 @@ enum GlobalSettingType: CaseIterable {
             return NSLocalizedString("硬件解码", comment: "")
         case .icloudSync:
             return NSLocalizedString("iCloud 同步", comment: "")
+        case .snapshotDirectory:
+            return NSLocalizedString("截图保存位置", comment: "")
         }
     }
 }

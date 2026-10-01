@@ -64,6 +64,11 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
             cell.titleLabel.text = type.title
             cell.subtitleLabel.text = self.model.subtitle(settingType: type)
             return cell
+        case .snapshotDirectory:
+            let cell = tableView.dequeueReusableCell(class: TitleDetailTableViewCell.self)
+            cell.titleLabel.text = type.title
+            cell.subtitleLabel.text = SnapshotLocation.displayPath
+            return cell
         case .autoLoadCustomSubtitle:
             let cell = tableView.dequeueReusableCell(class: SwitchDetailTableViewCell.self)
             cell.aSwitch.isOn = self.model.autoLoadCustomSubtitle
@@ -164,6 +169,34 @@ extension GlobalSettingViewController: NSTableViewDelegate, NSTableViewDataSourc
         } else if type == .subtitleLoadOrder {
             let vc = SubtitleOrderViewController(globalSettingModel: self.model)
             self.presentAsModalWindow(vc)
+        } else if type == .snapshotDirectory {
+            let alert = NSAlert()
+            alert.messageText = type.title
+            alert.informativeText = SnapshotLocation.displayPath
+            alert.alertStyle = .informational
+            alert.addButton(withTitle: NSLocalizedString("选择文件夹…", comment: ""))
+            alert.addButton(withTitle: NSLocalizedString("恢复默认", comment: ""))
+            alert.addButton(withTitle: NSLocalizedString("取消", comment: ""))
+
+            let response: NSApplication.ModalResponse = alert.runModal()
+
+            if response == .alertFirstButtonReturn {
+                let panel = NSOpenPanel()
+                panel.canChooseFiles = false
+                panel.canChooseDirectories = true
+                panel.canCreateDirectories = true
+                panel.allowsMultipleSelection = false
+                panel.prompt = NSLocalizedString("选择", comment: "")
+                panel.directoryURL = SnapshotLocation.currentDirectoryURL
+
+                if panel.runModal() == .OK, let url = panel.url {
+                    SnapshotLocation.saveBookmark(for: url)
+                    self.model.onChangeSnapshotDirectory(url.path)
+                }
+            } else if response == .alertSecondButtonReturn {
+                SnapshotLocation.clearBookmark()
+                self.model.onChangeSnapshotDirectory("")
+            }
         } else if type == .log {
             NSWorkspace.shared.open(URL(fileURLWithPath: ANXLogHelper.logPath()))
         } else if type == .cleanupCache {
@@ -347,6 +380,10 @@ class GlobalSettingViewController: ViewController {
         }).disposed(by: self.bag)
 
         self.model.context.icloudSyncEnabled.subscribe(onNext: { [weak self] _ in
+            self?.scrollView.containerView.reloadData()
+        }).disposed(by: self.bag)
+
+        self.model.context.snapshotDirectory.subscribe(onNext: { [weak self] _ in
             self?.scrollView.containerView.reloadData()
         }).disposed(by: self.bag)
     }

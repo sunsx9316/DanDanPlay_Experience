@@ -173,6 +173,12 @@ class Preferences {
         /// iCloud 同步开关
         case icloudSyncEnabled
 
+        /// 截图保存目录（空 = 默认「图片/AniXPlayer」）
+        case snapshotDirectory
+
+        /// 截图保存目录的 security-scoped bookmark（沙盒持久访问）
+        case snapshotDirectoryBookmark
+
         /// 播放进度历史
         case watchTimeHistory = "DDPWatchTimeHistory"
 
@@ -339,6 +345,14 @@ class Preferences {
     
     @StoreWrapper(defaultValue: "", key: .subtitleFontName)
     var subtitleFontName: String
+
+    /// 截图保存目录（空 = 默认）
+    @StoreWrapper(defaultValue: "", key: .snapshotDirectory)
+    var snapshotDirectory: String
+
+    /// 截图保存目录的 security-scoped bookmark
+    @StoreWrapper(defaultValue: nil, key: .snapshotDirectoryBookmark)
+    var snapshotDirectoryBookmark: Data?
     
     @StoreWrapper(defaultValue: false, key: .openDanmakuRandomColor, syncToCloud: true)
     var openDanmakuRandomColor: Bool

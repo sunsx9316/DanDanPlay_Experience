@@ -22,6 +22,8 @@ protocol MediaPlayerDelegate: AnyObject {
 
 protocol MediaPlayerProtocol: AnyObject {
     
+    typealias FetchThumbnailAction = (Result<ANXImage, Error>) -> Void
+    
     var mediaView: ANXView { get }
     
     var currentPlayItem: File? { set get }
@@ -83,6 +85,12 @@ protocol MediaPlayerProtocol: AnyObject {
     func stop()
     
     func terminate()
+    
+    /// 截取当前帧
+    func fetchThumbnail(completion: @escaping(FetchThumbnailAction))
+
+    /// 截取指定进度（0~1）的缩略图，用于进度条预览
+    func fetchThumbnail(at position: Float, completion: @escaping(FetchThumbnailAction))
 }
 
 enum PlayerMode: Int, CaseIterable {
@@ -407,6 +415,14 @@ class MediaPlayer {
     
     func terminate() {
         self.player.terminate()
+    }
+    
+    func fetchThumbnail(completion: @escaping(MediaPlayerProtocol.FetchThumbnailAction)) {
+        self.player.fetchThumbnail(completion: completion)
+    }
+
+    func fetchThumbnail(at position: Float, completion: @escaping(MediaPlayerProtocol.FetchThumbnailAction)) {
+        self.player.fetchThumbnail(at: position, completion: completion)
     }
     
     func addMediaToPlayList(_ media: File) {

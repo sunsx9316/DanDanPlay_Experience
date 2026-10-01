@@ -336,6 +336,14 @@ class PlayerMediaModel {
         self.context.miniProgressBar.onNext(enabled)
         ANX.logInfo(.UI, "更改迷你进度条开关: \(enabled)")
     }
+    
+    func onFetchThumbnail(completion: @escaping(MediaPlayerProtocol.FetchThumbnailAction)) {
+        self.player.fetchThumbnail(completion: completion)
+    }
+
+    func fetchThumbnail(at position: Float, completion: @escaping(MediaPlayerProtocol.FetchThumbnailAction)) {
+        self.player.fetchThumbnail(at: position, completion: completion)
+    }
 
     // MARK: - PiP
 

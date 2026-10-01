@@ -28,6 +28,14 @@ fileprivate extension Timer {
     }
 }
 
+/// VLC 截图错误
+fileprivate enum VLCThumbnailError: Error {
+    case noPlayer
+    case snapshotFailed
+    case timeOut
+    case cancelled
+}
+
 /// 内嵌字幕
 private struct VLCSubtitle: SubtitleProtocol {
     let subtitleName: String
@@ -79,9 +87,12 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     /// 当前选中的音轨 track id
     private var currentAudioTrackId: String?
 
-#if os(iOS)
-    private var mediaThumbnailer: MediaThumbnailer?
-#endif
+    private var mediaThumbnailer: MediaThumbnailFetcher?
+
+    /// 当前帧截图状态（saveVideoSnapshotAt 是异步的）
+    private var snapshotCompletion: ((Result<ANXImage, Error>) -> Void)?
+    private var snapshotPath: String?
+    private var snapshotTimeoutItem: DispatchWorkItem?
 
     lazy var mediaView: ANXView = {
         let view = ANXView()
@@ -112,13 +123,11 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
             self.currentSubTitleFile = nil
             let media = self.currentPlayItem?.createVLCMedia(delegate: self)
             self.player?.media = media
-#if os(iOS)
             if let media = media {
-                self.mediaThumbnailer = .init(media: media)
+                self.mediaThumbnailer = .init(media: media, player: self.player)
             } else {
                 self.mediaThumbnailer = nil
             }
-#endif
         }
     }
 
@@ -384,9 +393,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
                     let index = Int(audioChannel.audioId)
                     ANX.logInfo(.player, "[VLC] 选择音轨: \(audioChannel.audioName) (index: \(index))")
                     self.player?.selectTrack(at: Int(index), type: .audio)
-                    if let tracks = self.player?.audioTracks
-,
-                       index < tracks.count {
+                    if let tracks = self.player?.audioTracks, index < tracks.count {
                         self.currentAudioTrackId = tracks[index].trackId
                     }
                 } else {
@@ -484,13 +491,13 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
 
     var state: PlayerState {
         switch self.player?.state {
-        case .stopped:
+        case .stopped, .stopping:
             return .stop
         case .paused:
             return .pause
         case .playing:
             return .playing
-        case .buffering:
+        case .opening:
             if self.timeIsUpdate {
                 return .playing
             } else {
@@ -535,6 +542,51 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
     func terminate() {
         ANX.logInfo(.player, "[VLC] 终止")
         stop()
+    }
+    
+    /// 截取当前帧（原生分辨率：saveVideoSnapshot 的宽高传 0）
+    func fetchThumbnail(completion: @escaping(MediaPlayerProtocol.FetchThumbnailAction)) {
+        guard let player = self.player else {
+            completion(.failure(VLCThumbnailError.noPlayer))
+            return
+        }
+
+        // 取消上一次未完成的截图
+        self.finishSnapshot(.failure(VLCThumbnailError.cancelled))
+
+        let path = (NSTemporaryDirectory() as NSString).appendingPathComponent("anx_snapshot_\(UUID().uuidString).png")
+        ANX.logInfo(.player, "[VLC] 截图: \(path)")
+        self.snapshotCompletion = completion
+        self.snapshotPath = path
+
+        player.saveVideoSnapshot(at: path, withWidth: 0, andHeight: 0)
+
+        let item = DispatchWorkItem { [weak self] in
+            ANX.logError(.player, "[VLC] 截图超时")
+            self?.finishSnapshot(.failure(VLCThumbnailError.timeOut))
+        }
+        self.snapshotTimeoutItem = item
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5, execute: item)
+    }
+
+    /// 任意进度缩略图（进度条预览）
+    func fetchThumbnail(at position: Float, completion: @escaping(MediaPlayerProtocol.FetchThumbnailAction)) {
+        self.mediaThumbnailer?.fetchThumbnail(positon: position, completion)
+    }
+
+    private func finishSnapshot(_ result: Result<ANXImage, Error>) {
+        self.snapshotTimeoutItem?.cancel()
+        self.snapshotTimeoutItem = nil
+
+        if let path = self.snapshotPath {
+            try? FileManager.default.removeItem(atPath: path)
+            self.snapshotPath = nil
+        }
+
+        let completion = self.snapshotCompletion
+        self.snapshotCompletion = nil
+        guard let completion = completion else { return }
+        DispatchQueue.main.async { completion(result) }
     }
 
     deinit {
@@ -660,6 +712,87 @@ extension VLCPlayerWarrper: VLCMediaPlayerDelegate {
     func mediaPlayerStateChanged(_ newState: VLCMediaPlayerState) {
         DispatchQueue.main.async {
             self.stateChangedCallBack?(self, self.state)
+        }
+    }
+
+    func mediaPlayerSnapshot(_ aNotification: Notification) {
+        guard let path = self.snapshotPath else { return }
+
+        if let image = ANXImage(contentsOfFile: path) {
+            ANX.logInfo(.player, "[VLC] 截图完成")
+            self.finishSnapshot(.success(image))
+        } else {
+            ANX.logError(.player, "[VLC] 截图读取失败: \(path)")
+            self.finishSnapshot(.failure(VLCThumbnailError.snapshotFailed))
+        }
+    }
+}
+
+fileprivate class MediaThumbnailFetcher: NSObject, VLCMediaThumbnailerDelegate {
+    
+    enum ErrorReason: Error {
+        case timeOut
+    }
+    
+    private let media: VLCMedia
+    
+    private weak var player: VLCMediaPlayer?
+    
+    private var thumbnailer: VLCMediaThumbnailer?
+    
+    private var completion: MediaPlayerProtocol.FetchThumbnailAction?
+    
+    private var isFinished = false
+    
+    init(media: VLCMedia, player: VLCMediaPlayer?) {
+        self.media = media
+        self.player = player
+        super.init()
+    }
+    
+    deinit {
+        self.thumbnailer?.cancel()
+    }
+    
+    func fetchThumbnail(positon: Float, _ completion: @escaping(MediaPlayerProtocol.FetchThumbnailAction)) {
+        // 取消上一次请求，并重新创建 thumbnailer。
+        // 复用同一实例时 VLCMediaThumbnailer 内部的 parser 可能未复位，
+        // 再次 fetch 会触发 "We are already fetching a thumbnail" 断言。
+        self.thumbnailer?.cancel()
+        self.thumbnailer = nil
+        
+        let thumbnailer = VLCMediaThumbnailer(media: self.media, andDelegate: self)
+        thumbnailer.snapshotPosition = positon
+        
+        if let size = self.player?.videoSize {
+            thumbnailer.thumbnailWidth = size.width
+            thumbnailer.thumbnailHeight = size.height
+        }
+        
+        self.thumbnailer = thumbnailer
+        self.completion = completion
+        self.isFinished = false
+        thumbnailer.fetchThumbnail()
+    }
+    
+    //MARK: VLCMediaThumbnailerDelegate
+    func mediaThumbnailerDidTimeOut(_ mediaThumbnailer: VLCMediaThumbnailer) {
+        self.finish(mediaThumbnailer, result: .failure(ErrorReason.timeOut))
+    }
+    
+    func mediaThumbnailer(_ mediaThumbnailer: VLCMediaThumbnailer, didFinishThumbnail thumbnail: CGImage) {
+        self.finish(mediaThumbnailer, result: .success(ANXImage(cgImage: thumbnail)))
+    }
+    
+    /// 仅接受当前 thumbnailer 的回调，忽略已被替换的旧实例
+    private func finish(_ mediaThumbnailer: VLCMediaThumbnailer, result: Result<ANXImage, Error>) {
+        guard mediaThumbnailer === self.thumbnailer, !self.isFinished else { return }
+        self.isFinished = true
+        
+        let completion = self.completion
+        self.completion = nil
+        DispatchQueue.main.async {
+            completion?(result)
         }
     }
 }

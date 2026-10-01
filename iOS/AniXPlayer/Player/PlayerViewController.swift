@@ -49,7 +49,10 @@ class PlayerViewController: ViewController {
     
     
     private lazy var disposeBag = DisposeBag()
-    
+
+    /// 进度条缩略图缓存（key = 秒）
+    private var thumbnailCache = [Int: ANXImage]()
+
     private var parseMediaHUD: ANXHUD?
     
     ///加速指示器
@@ -649,6 +652,39 @@ extension PlayerViewController: PlayerUIViewDelegate {
         ANX.logDebug(.player, "[Player] 进度微调: \(diffValue)s")
         self.playerModel.changePosition(diffValue: diffValue)
     }
+
+    /// 进度条预览：按需生成指定进度的缩略图（带缓存）
+    func playerUIView(_ playerUIView: PlayerUIView, requestThumbnailAt progress: CGFloat, completion: @escaping (ANXImage?) -> Void) {
+        let totalTime = self.mediaModel.length
+        guard totalTime > 0 else {
+            completion(nil)
+            return
+        }
+
+        let second = Int(Double(progress) * totalTime)
+        if let image = self.thumbnailCache[second] {
+            completion(image)
+            return
+        }
+
+        self.mediaModel.fetchThumbnail(at: Float(progress)) { [weak self] result in
+            guard let self = self else { return }
+
+            if case .success(let image) = result {
+                self.cacheThumbnail(image, forKey: second)
+                completion(image)
+            } else {
+                completion(nil)
+            }
+        }
+    }
+
+    private func cacheThumbnail(_ image: ANXImage, forKey key: Int) {
+        if self.thumbnailCache.count >= 200 {
+            self.thumbnailCache.removeAll()
+        }
+        self.thumbnailCache[key] = image
+    }
     
     func playerUIView(_ playerUIView: PlayerUIView, didChangeControlViewState show: Bool) {
         self.setNeedsStatusBarAppearanceUpdate()
@@ -673,10 +709,6 @@ extension PlayerViewController: PlayerUIViewDelegate {
 
 //MARK: - PlayerUIViewDataSource
 extension PlayerViewController: PlayerUIViewDataSource {
-    func playerMediaThumbnailer(playerUIView: PlayerUIView) -> MediaThumbnailer? {
-        return nil
-    }
-    
     func playerCurrentTime(playerUIView: PlayerUIView) -> TimeInterval {
         return self.mediaModel.currentTime
     }
