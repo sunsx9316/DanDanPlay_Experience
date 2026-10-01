@@ -41,7 +41,7 @@ class AnimeListCollectionViewCell: CollectionViewItem {
 
     lazy var imgView: ImageView = {
         let iv = ImageView()
-        iv.setScaling(.aspectFill)
+        iv.setScaling(.aspectFit)
         iv.wantsLayer = true
         iv.layer?.cornerRadius = 6
         iv.layer?.masksToBounds = true

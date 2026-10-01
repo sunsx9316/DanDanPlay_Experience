@@ -120,7 +120,7 @@ class BangumiCommentTableViewCell: NSTableCellView {
         commentTextLabel.text = comment.text
 
         if comment.rating > 0 {
-            ratingLabel.text = String(format: NSLocalizedString("⭐ %.1f", comment: ""), comment.rating)
+            ratingLabel.text = String(format: NSLocalizedString("⭐ %.1f", comment: ""), Double(comment.rating))
             ratingLabel.isHidden = false
         } else {
             ratingLabel.isHidden = true

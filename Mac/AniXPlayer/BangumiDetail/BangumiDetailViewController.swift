@@ -121,6 +121,13 @@ class BangumiDetailViewController: ViewController, NSCollectionViewDataSource, N
         navigator?.pushViewController(vc)
     }
 
+    private func pushMetadata() {
+        guard let detail = detail else { return }
+        let vc = BangumiDetailMetadataViewController()
+        vc.configure(metaData: detail.metadata, titles: detail.titles, onlineDatabases: detail.onlineDatabases)
+        navigator?.pushViewController(vc)
+    }
+
     // MARK: - NSCollectionViewDataSource
 
     func numberOfSections(in collectionView: NSCollectionView) -> Int {
@@ -150,10 +157,7 @@ class BangumiDetailViewController: ViewController, NSCollectionViewDataSource, N
                     }
                 }
                 item.onTapMetadata = { [weak self] in
-                    guard let self = self, let detail = self.detail else { return }
-                    let vc = BangumiDetailMetadataViewController()
-                    vc.configure(metaData: detail.metadata, titles: detail.titles, onlineDatabases: detail.onlineDatabases)
-                    self.navigator?.pushViewController(vc)
+                    self?.pushMetadata()
                 }
             }
             return item
@@ -200,6 +204,12 @@ class BangumiDetailViewController: ViewController, NSCollectionViewDataSource, N
     }
 
     // MARK: - NSCollectionViewDelegateFlowLayout
+
+    func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
+        collectionView.deselectItems(at: indexPaths)
+        guard let indexPath = indexPaths.first, sections[indexPath.item] == .info else { return }
+        pushMetadata()
+    }
 
     func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> NSSize {
         let width = collectionView.bounds.width
