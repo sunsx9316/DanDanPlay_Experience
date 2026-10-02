@@ -59,11 +59,11 @@ CocoaPods 已进入维护模式（官方 trunk 将于 2026-12-02 只读），且
 - App target 已经是 15，本改动主要是对齐项目级默认值（12.0 → 15.0）与文档。
 - 使 Firebase 12.x（要求 iOS 15）可用。
 
-### 5. pbxproj 改动方式：扩展 `scripts/xcode_project.rb`
+### 5. pbxproj 改动方式：新增一次性迁移脚本 `scripts/migrate_to_spm.rb`
 
-- 用同一个 `xcodeproj` gem（已验证 1.27.0，支持 `XCRemoteSwiftPackageReference` / `XCSwiftPackageProductDependency`）。
-- 新增 SPM 子命令，脚本化添加 package/product，并脚本化删除 Pods xcconfig 引用与 `[CP]` build phase，避免手动编辑。
-- 新增/删除源文件仍沿用既有 `add`/`remove`/`--sync`。
+- 用与 `xcode_project.rb` 相同的 `xcodeproj` gem（已验证 1.27.0，支持 `XCRemoteSwiftPackageReference` / `XCSwiftPackageProductDependency`）。
+- 脚本按平台执行：添加 Firebase SPM package/product、删除 Pods xcconfig 引用与 `[CP]` build phase、修正 Crashlytics run-script 路径、iOS 项目级部署目标改 15。
+- 保持职责分离：日常源文件增删仍用 `scripts/xcode_project.rb`，本脚本只服务这次迁移（可重复执行、幂等），迁移完成后保留作为记录。
 
 ### 6. Git hooks 安装改由 `scripts/bootstrap.sh`
 
