@@ -1,8 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(ruby:*)",
-      "Bash(pod install:*)"
+      "Bash(ruby:*)"
     ]
   }
 }

@@ -3,6 +3,9 @@
 
 # 一次性迁移脚本：把某平台 Xcode 工程从 CocoaPods 迁到 Firebase SPM。
 #
+# 注意: 仅用于本次迁移。脚本幂等，但工程迁移完成后不建议再对已迁移工程重跑，
+#       以免误删人为保留的结构。
+#
 # 用法:
 #   ruby scripts/migrate_to_spm.rb <ios|mac|tvos> [--dry-run]
 
@@ -42,6 +45,18 @@ def strip_pods(project)
   end
 
   remove_pods_frameworks(project)
+  remove_empty_pods_groups(project)
+end
+
+# 删除 CocoaPods 留下的空 "Pods" group（引用已全部移除后残留）。
+def remove_empty_pods_groups(project)
+  project.main_group.recursive_children.dup.each do |child|
+    next unless child.is_a?(Xcodeproj::Project::Object::PBXGroup)
+    next unless child.display_name == 'Pods'
+    next unless child.children.empty?
+
+    child.remove_from_project
+  end
 end
 
 # CocoaPods use_frameworks! 会生成 Pods_<target>.framework 并直接链接，

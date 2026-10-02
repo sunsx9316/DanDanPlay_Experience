@@ -572,13 +572,6 @@
 			path = Web;
 			sourceTree = "<group>";
 		};
-		7E78693FEB4DDA048C2F9DDB /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		890886C229FFE2E4005EDBD6 /* PC */ = {
 			isa = PBXGroup;
 			children = (
@@ -603,7 +596,6 @@
 			children = (
 				890DF6CB26160826002D8AE5 /* AniXPlayer */,
 				890DF6CA26160826002D8AE5 /* Products */,
-				7E78693FEB4DDA048C2F9DDB /* Pods */,
 				A36E3F8730C441A1F2AC3DAF /* Frameworks */,
 			);
 			sourceTree = "<group>";

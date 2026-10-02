@@ -547,13 +547,6 @@
 			path = Timeline;
 			sourceTree = "<group>";
 		};
-		3C212790FE434105204253ED /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		44C8CE44554A93CDD3AA482B /* Favorite */ = {
 			isa = PBXGroup;
 			children = (
@@ -910,7 +903,6 @@
 			children = (
 				89945FE928CA3BAE009AC640 /* AniXPlayer */,
 				89945FE828CA3BAE009AC640 /* Products */,
-				3C212790FE434105204253ED /* Pods */,
 				E8141592C1C6FA59A9A560BE /* Frameworks */,
 			);
 			sourceTree = "<group>";

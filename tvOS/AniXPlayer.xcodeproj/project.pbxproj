@@ -485,13 +485,6 @@
 			path = ANXHUD;
 			sourceTree = "<group>";
 		};
-		08530EEC5867A53F46FCFADC /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Pods;
-			sourceTree = "<group>";
-		};
 		102AFA13ECA55078A00B6A50 /* User */ = {
 			isa = PBXGroup;
 			children = (
@@ -1202,7 +1195,6 @@
 				3EC62D8071F5F2E030A4997B /* AniXPlayer */,
 				895A7F3A2FC5F21400A997B8 /* Frameworks */,
 				2A5E88962AE499ECAFC960DB /* Products */,
-				08530EEC5867A53F46FCFADC /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
