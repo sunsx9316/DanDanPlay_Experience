@@ -211,7 +211,6 @@
 		E296FB2BA5C4CEBAD390D71F /* fileManager.js in Resources */ = {isa = PBXBuildFile; fileRef = C689D5645CD727D4D42AB2DC /* fileManager.js */; };
 		E2E37E3F5D0CB5C7F2EF3E0F /* MenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399DD1884E88717F3A0C618E /* MenuTableViewCell.swift */; };
 		E5C041C7C205232819A4BCAF /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63499CADF0AB6CCE09ABED8 /* TextField.swift */; };
-		E752BF63B6728DF5DDC56891 /* Pods_AniXPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B5714F8E88446CDC4A3BE0FC /* Pods_AniXPlayer.framework */; };
 		EE846158C3C1893E43D87DD7 /* FileBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC90E930AEDDD1D5D5918388 /* FileBrowserViewController.swift */; };
 		F35CEF5EFC32E57C6AC804DD /* TimelineItemCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 940F90321EDA7D1BCBAA4CC9 /* TimelineItemCollectionViewCell.swift */; };
 		F4066280CEFD08C5B0B450EA /* StepperSettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91FDE025D8F1F1BABD83351 /* StepperSettingTableViewCell.swift */; };
@@ -285,7 +284,6 @@
 		70B374448A363E9F09E499ED /* UITableView+Helper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UITableView+Helper.swift"; sourceTree = "<group>"; };
 		7763FCC0E637053ABEF36AB6 /* HomePageBannerTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomePageBannerTableViewCell.swift; sourceTree = "<group>"; };
 		798EBE1B4EEB48958C016E7A /* LocalFileBrowserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalFileBrowserViewController.swift; sourceTree = "<group>"; };
-		7C71B9C4EC7CEEC3F9781A53 /* Pods-AniXPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.debug.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 		7C74F2003EF43D0B303DCDD2 /* BangumiDetailRelatedTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BangumiDetailRelatedTableViewCell.swift; sourceTree = "<group>"; };
 		7E6861E1EA504C7B855020FA /* SettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingViewController.swift; sourceTree = "<group>"; };
 		7F0E3E297085ADC0DAABC6F5 /* ImageView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ImageView.swift; sourceTree = "<group>"; };
@@ -414,7 +412,6 @@
 		89D3E39B2FF16CDD00CD6A92 /* AniXPlayer.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AniXPlayer.entitlements; sourceTree = "<group>"; };
 		89DADA5F2FD3E92100C71A33 /* MPVFrameRenderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MPVFrameRenderer.swift; sourceTree = "<group>"; };
 		89DADA672FD43F3300C71A33 /* FontHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontHelper.swift; sourceTree = "<group>"; };
-		8FC49B9E2ED8389CE13EF6A6 /* Pods-AniXPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.release.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.release.xcconfig"; sourceTree = "<group>"; };
 		90C10EAB879CCE22A5114B6D /* HomePageContinueWatchingTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HomePageContinueWatchingTableViewCell.swift; sourceTree = "<group>"; };
 		92D2306E25E349668C45366D /* UIFont+Helper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIFont+Helper.swift"; sourceTree = "<group>"; };
 		940F90321EDA7D1BCBAA4CC9 /* TimelineItemCollectionViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TimelineItemCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -428,7 +425,6 @@
 		AC90E930AEDDD1D5D5918388 /* FileBrowserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBrowserViewController.swift; sourceTree = "<group>"; };
 		B028731CD4A13D93F299C6C4 /* SetMainColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetMainColorViewController.swift; sourceTree = "<group>"; };
 		B3045FAACAEE99BB1FD70D94 /* TableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewCell.swift; sourceTree = "<group>"; };
-		B5714F8E88446CDC4A3BE0FC /* Pods_AniXPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AniXPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B63499CADF0AB6CCE09ABED8 /* TextField.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TextField.swift; sourceTree = "<group>"; };
 		B7D15A2889A7D1B9EA8D26C9 /* UIView+HitTest.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIView+HitTest.swift"; sourceTree = "<group>"; };
 		B9AE2CA8A09B763A89B5D204 /* UserInfoTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UserInfoTableViewCell.swift; sourceTree = "<group>"; };
@@ -474,7 +470,6 @@
 				7C905D4AA1123B12E415AB7B /* Kingfisher in Frameworks */,
 				6B60904E446F32A55C83BEC8 /* Alamofire in Frameworks */,
 				8D7C10EF8EC94BD12BAF8486 /* DanmakuRender in Frameworks */,
-				E752BF63B6728DF5DDC56891 /* Pods_AniXPlayer.framework in Frameworks */,
 				89A9E7592FD4A65F0019D4C4 /* ANXLog in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -493,8 +488,6 @@
 		08530EEC5867A53F46FCFADC /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				7C71B9C4EC7CEEC3F9781A53 /* Pods-AniXPlayer.debug.xcconfig */,
-				8FC49B9E2ED8389CE13EF6A6 /* Pods-AniXPlayer.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1085,7 +1078,6 @@
 				895A7F3F2FC5F22000A997B8 /* IOSurface.framework */,
 				895A7F3D2FC5F21A00A997B8 /* CoreText.framework */,
 				895A7F3B2FC5F21400A997B8 /* CoreGraphics.framework */,
-				B5714F8E88446CDC4A3BE0FC /* Pods_AniXPlayer.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -1232,7 +1224,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 37B8271C122D62F6C718AA81 /* Build configuration list for PBXNativeTarget "AniXPlayer" */;
 			buildPhases = (
-				21242E2294D6BB0D163C4927 /* [CP] Check Pods Manifest.lock */,
 				01D72DFC502C8ADEB56CD8F4 /* Sources */,
 				C09E36E3B164B14BC54B494E /* Resources */,
 				0A1CBCFEF5553BF3A7B4E878 /* Frameworks */,
@@ -1331,28 +1322,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		21242E2294D6BB0D163C4927 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-AniXPlayer-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		4E3A1759B7C246EEBDD3E00A /* Copy dSYMs */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1574,7 +1543,6 @@
 /* Begin XCBuildConfiguration section */
 		2DE2A93334790D65C93DDB6F /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8FC49B9E2ED8389CE13EF6A6 /* Pods-AniXPlayer.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
@@ -1762,7 +1730,6 @@
 		};
 		E7ADE945B8221EECF6FF73EA /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7C71B9C4EC7CEEC3F9781A53 /* Pods-AniXPlayer.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Brand Assets";
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
