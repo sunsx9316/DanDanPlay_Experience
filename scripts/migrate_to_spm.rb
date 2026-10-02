@@ -40,6 +40,27 @@ def strip_pods(project)
     path = file.path.to_s
     file.remove_from_project if path.end_with?('.xcconfig') && path.include?('Pods-')
   end
+
+  remove_pods_frameworks(project)
+end
+
+# CocoaPods use_frameworks! 会生成 Pods_<target>.framework 并直接链接，
+# 需连同其 PBXBuildFile 引用一起移除，否则链接报 framework not found。
+def remove_pods_frameworks(project)
+  project.targets.each do |target|
+    target.build_phases.each do |phase|
+      phase.files.dup.each do |build_file|
+        name = build_file.file_ref&.path.to_s
+        next unless name.match?(/Pods_.*\.framework\z/) || build_file.display_name.to_s.include?('Pods_')
+
+        build_file.remove_from_project
+      end
+    end
+  end
+
+  project.files.dup.each do |file|
+    file.remove_from_project if file.path.to_s.match?(/Pods_.*\.framework\z/)
+  end
 end
 
 def add_firebase_spm(project)

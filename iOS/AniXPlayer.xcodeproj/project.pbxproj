@@ -20,7 +20,6 @@
 		5719ACF85A59CD5CE3C620A0 /* SnapshotPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33165FA2496F48294A218139 /* SnapshotPreviewView.swift */; };
 		59BC76D687C645B07724D774 /* FavoriteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0C1A7BACD10629F34BE763 /* FavoriteTableViewCell.swift */; };
 		5A95F9BEA930AB5D5948511A /* HttpServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D99F379A772AEFC3ED5D64B /* HttpServer.swift */; };
-		6F969714544C3EBD7E920F21 /* Pods_AniXPlayer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6620BF43605B5DDE3E8B15B6 /* Pods_AniXPlayer.framework */; };
 		71F9CAF4348C083227C649FE /* UIDevice+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CA385F845F2CD68FDA2691D /* UIDevice+Helper.swift */; };
 		7384EF4EC738DF3A0695DFD4 /* ANXHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71197F0018F4A2C1B6C341CC /* ANXHUD.swift */; };
 		765432CA78DF5FCC45929AA0 /* TimelineItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D26BA3A451F45A72262D29 /* TimelineItemTableViewCell.swift */; };
@@ -291,7 +290,6 @@
 		3FA8CB89E4570CEBB18E9F5A /* upload.js */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.javascript; path = upload.js; sourceTree = "<group>"; };
 		434257BA70662EB64A5443E9 /* BangumiCommentTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BangumiCommentTableViewCell.swift; sourceTree = "<group>"; };
 		65B6EA5EB354CD3E477CF94B /* UIView+Helper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIView+Helper.swift"; sourceTree = "<group>"; };
-		6620BF43605B5DDE3E8B15B6 /* Pods_AniXPlayer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AniXPlayer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6CA385F845F2CD68FDA2691D /* UIDevice+Helper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIDevice+Helper.swift"; sourceTree = "<group>"; };
 		71197F0018F4A2C1B6C341CC /* ANXHUD.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ANXHUD.swift; sourceTree = "<group>"; };
 		7844687114A96DF14AF6BF75 /* TagListTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagListTableViewCell.swift; sourceTree = "<group>"; };
@@ -530,7 +528,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6F969714544C3EBD7E920F21 /* Pods_AniXPlayer.framework in Frameworks */,
 				89B7EA4F2C9B141100527B84 /* DanmakuRender in Frameworks */,
 				89C0D1832FD485CF008DFE68 /* ANXLog in Frameworks */,
 				89B7EA4C2C9B120100527B84 /* DanmakuRender in Frameworks */,
@@ -1387,7 +1384,6 @@
 				899A11B82A18BE24009B2953 /* CoreFoundation.framework */,
 				899A11B62A18BE1E009B2953 /* SystemConfiguration.framework */,
 				899A11B42A18BE18009B2953 /* Foundation.framework */,
-				6620BF43605B5DDE3E8B15B6 /* Pods_AniXPlayer.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
