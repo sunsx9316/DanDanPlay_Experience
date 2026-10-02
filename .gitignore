@@ -4,7 +4,10 @@
 
 ## User settings
 xcuserdata/
-xcshareddata/
+# 允许提交 SPM 锁文件，保证依赖版本可复现（其余 xcshareddata 仍忽略）
+**/xcshareddata/**
+!**/xcshareddata/swiftpm/
+!**/xcshareddata/swiftpm/Package.resolved
 
 ## compatibility with Xcode 8 and earlier (ignoring not required starting Xcode 9)
 *.xcscmblueprint
