@@ -6,7 +6,7 @@ CocoaPods 已进入维护模式（官方 trunk 将于 2026-12-02 只读），且
 
 迁移后：
 
-- iOS / macOS 通过 SPM 依赖 FirebaseCrashlytics（锁定 12.10.0）。
+- iOS / macOS 通过 SPM 依赖 FirebaseCrashlytics（锁定最新稳定版 12.19.2）。
 - tvOS 本就没有 Firebase 依赖，仅清理遗留的空 CocoaPods 产物。
 - 打开与构建从 `.xcworkspace` 改为 `.xcodeproj`。
 - iOS 部署目标统一为 15.0。
@@ -22,7 +22,7 @@ CocoaPods 已进入维护模式（官方 trunk 将于 2026-12-02 只读），且
 | 代码使用量 | 仅 `Share/CocoaShare/Launcher.swift` 的 `FirebaseApp.configure()` + `import FirebaseCore`/`FirebaseCrashlytics`；`Mac/AniXPlayer/AppDelegate.swift` 有一个 `import FirebaseCore`。无任何 `recordError`/`setCustomValue` 等 Crashlytics API 调用 |
 | iOS 部署目标 | App target 实际已是 15；项目级默认仍为 12.0 |
 | macOS 部署目标 | App target 12.0；项目级默认 11.0 |
-| Xcode | 26.0.1 |
+| Xcode | 26.6（Swift 6.3.3） |
 | pbxproj 规则 | 项目规定「禁止手动编辑 pbxproj」，新增/删除文件用 `scripts/xcode_project.rb`（基于 `xcodeproj` gem） |
 | 发布脚本 | `scripts/release/archive_and_export.sh` 目前用 `-workspace`；`release.sh` 有 CocoaPods 预检 |
 
@@ -34,15 +34,17 @@ CocoaPods 已进入维护模式（官方 trunk 将于 2026-12-02 只读），且
 - Firebase 官方推荐并持续维护 SPM 支持。
 - 手动集成 xcframework / 自建 Pods specs 仓成本更高，仅在必须留在 CocoaPods 时才考虑，不采用。
 
-### 2. Firebase 版本锁定 12.10.0
+### 2. Firebase 版本锁定 12.19.2（当前最新稳定版）
 
 | Firebase | SPM 最低 iOS | 备注 |
 |----------|--------------|------|
 | 11.15.0 | iOS 12 / macOS 10.15 / tvOS 13 | iOS 现在用的 pod 版本 |
-| **12.10.0** | **iOS 15 / macOS 10.15 / tvOS 15** | **本次采用**，与 Mac 当前 pod 版本一致 |
-| 13.0.0 (main) | iOS 15 | 要求 Xcode 26.2+，当前 26.0.1 不满足，排除 |
+| **12.19.2** | **iOS 15 / macOS 10.15 / tvOS 15** | **本次采用**，当前最新已发布 tag |
+| 13.0.0 | iOS 15 | 仅在 main 分支开发中、尚无发布 tag，不采用 |
 
-- 用精确版本 `12.10.0`，保证可复现、避免解析到要求更高 Xcode 的更新版本。
+- 用精确版本 `12.19.2`，保证可复现、避免解析到未来要求更高工具链的版本。
+- `12.19.2` 要求 `swift-tools-version 6.1`（Xcode 16.3+），当前 Xcode 26.6 / Swift 6.3.3 满足。
+- 升级到 12.19.2 相比原 12.10.0 不改变平台最低要求（仍 iOS 15 / macOS 10.15 / tvOS 15），无需额外改部署目标。
 - products 选择：`FirebaseCrashlytics` 与显式 `FirebaseCore`（代码里有 `import FirebaseCore`）。
 - 无需 `-ObjC` 链接标志（那是 FirebaseAnalytics 的要求，Crashlytics 不需要）。
 
@@ -77,7 +79,7 @@ CocoaPods 已进入维护模式（官方 trunk 将于 2026-12-02 只读），且
 
 1. 新增远程 SPM 包
    - repositoryURL：`https://github.com/firebase/firebase-ios-sdk.git`
-   - requirement：exact `12.10.0`
+   - requirement：exact `12.19.2`
 2. 给 target `AniXPlayer` 增加 product 依赖
    - `FirebaseCrashlytics`、`FirebaseCore`
    - 加入 target 的 `packageProductDependencies` 与 Frameworks build phase
@@ -165,7 +167,7 @@ CocoaPods 已进入维护模式（官方 trunk 将于 2026-12-02 只读），且
 |------|------|
 | 首次 SPM 解析需联网拉取 Firebase 依赖链，耗时较长 | 属预期；在验证步骤中显式构建一次完成缓存 |
 | pbxproj 脚本化改动可能破坏工程 | 用 `xcodeproj` gem 操作 + `git diff` 检查 + 三平台构建验证 |
-| Firebase 12.10.0 与 Xcode 26.0.1 兼容性 | 同版本已在 Mac 通过 CocoaPods 使用；SPM manifest 为 swift-tools-version 6.0，Xcode 16+ 可构建；构建验证兜底 |
+| Firebase 12.19.2 与当前工具链兼容性 | 其 manifest 为 swift-tools-version 6.1（Xcode 16.3+），当前 Xcode 26.6 / Swift 6.3.3 满足；平台要求 iOS 15 / macOS 10.15 / tvOS 15 与既有目标兼容；构建验证兜底 |
 | 删除 workspace 影响其他脚本/文档引用 | 已系统性排查：`archive_and_export.sh`、`release.sh`、build-ios.md、README、CLAUDE.md、release-app skill |
 | Git hooks 不再自动安装 | `scripts/bootstrap.sh` + README 明示 |
 
@@ -173,5 +175,5 @@ CocoaPods 已进入维护模式（官方 trunk 将于 2026-12-02 只读），且
 
 - 不引入 Firebase 的其它产品（Analytics / Performance 等）。
 - 不改动 Crashlytics 业务逻辑或新增 API 调用。
-- 不升级到 Firebase 13.x / 不动 Xcode 版本。
+- 不采用尚未发布 tag 的 Firebase 13.x（待其正式发布后再单独评估升级）。
 - 不做与本迁移无关的工程重构。
