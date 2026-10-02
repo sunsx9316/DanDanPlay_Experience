@@ -247,8 +247,10 @@
 		89FFD1352D4B904000428206 /* SelectedFontViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD1342D4B904000428206 /* SelectedFontViewController.swift */; };
 		8CC5E781D18C4C83A9F2A6BE /* FolderProgressCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE600170BF1445D9B00A4593 /* FolderProgressCell.swift */; };
 		8FB5BDA2AD126A8CA5BB773E /* UIColor+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F38CCA0ED39E98C2FE28D3 /* UIColor+Helper.swift */; };
+		9BF17D68F82C52E81117BC9F /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = D6F529145107718446EDC5FC /* FirebaseCrashlytics */; };
 		9DE8B428CAFC3A5D26DE9E56 /* DanmakuInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54627AC0D74F1F7C3F2CB1D /* DanmakuInputView.swift */; };
 		9DE8B429CAFC3A5D26DE9E57 /* ColorManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54627AC0D74F1F7C3F2CB1E /* ColorManagementViewController.swift */; };
+		9EB3A42B136EBFC7F7C318AB /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = FF7891D7F52FF7F18F0275E7 /* FirebaseCore */; };
 		A332B7B988818A7DF6A6C210 /* fileManager.js in Resources */ = {isa = PBXBuildFile; fileRef = BCC270DC364AD0E54876107D /* fileManager.js */; };
 		A94CED4A04A1169D701212A2 /* ANXHUDBarProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3682D199ED83FADCF958B49A /* ANXHUDBarProgressView.swift */; };
 		AA72AB931D94179E273EEC53 /* JellyfinLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3DC22C756D2488DE35619F /* JellyfinLoginHistoryViewController.swift */; };
@@ -514,7 +516,6 @@
 		B54627AC0D74F1F7C3F2CB1E /* ColorManagementViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ColorManagementViewController.swift; sourceTree = "<group>"; };
 		BCC270DC364AD0E54876107D /* fileManager.js */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.javascript; path = fileManager.js; sourceTree = "<group>"; };
 		C3DA91DC2CB2BDFC2138D3A3 /* StoreBackend.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StoreBackend.swift; sourceTree = "<group>"; };
-		CF2D5334A2A53D20F8B80E22 /* Pods-AniXPlayer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.release.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.release.xcconfig"; sourceTree = "<group>"; };
 		D55E9C217C5272A0B0689421 /* UIFont+Helper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIFont+Helper.swift"; sourceTree = "<group>"; };
 		DDF12E752B121D7B0C457AD6 /* UITableView+Helper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UITableView+Helper.swift"; sourceTree = "<group>"; };
 		DE55112B175182B91A24EB57 /* BangumiDetailInfoTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BangumiDetailInfoTableViewCell.swift; sourceTree = "<group>"; };
@@ -522,7 +523,6 @@
 		E573AA6285416F5FF0A9A3F6 /* RefreshFooter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RefreshFooter.swift; sourceTree = "<group>"; };
 		EE600170BF1445D9B00A4593 /* FolderProgressCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderProgressCell.swift; sourceTree = "<group>"; };
 		EF8798C7EE51FED380C246DE /* ANXHUDRoundProgressView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ANXHUDRoundProgressView.swift; sourceTree = "<group>"; };
-		F410B8A741526DF765820021 /* Pods-AniXPlayer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AniXPlayer.debug.xcconfig"; path = "Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -557,6 +557,8 @@
 				895A7FA92FC7518500A997B8 /* GCDWebDAVServer in Frameworks */,
 				8953D0242C99E374003EF386 /* MJRefresh in Frameworks */,
 				894F109E2FEFB51D007B7BF7 /* MPVFramework in Frameworks */,
+				9BF17D68F82C52E81117BC9F /* FirebaseCrashlytics in Frameworks */,
+				9EB3A42B136EBFC7F7C318AB /* FirebaseCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -576,8 +578,6 @@
 		7E78693FEB4DDA048C2F9DDB /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				F410B8A741526DF765820021 /* Pods-AniXPlayer.debug.xcconfig */,
-				CF2D5334A2A53D20F8B80E22 /* Pods-AniXPlayer.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -1443,11 +1443,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 890DF6DD26160827002D8AE5 /* Build configuration list for PBXNativeTarget "AniXPlayer" */;
 			buildPhases = (
-				F5BDEC334CEE6D35CB8921E0 /* [CP] Check Pods Manifest.lock */,
 				890DF6C526160826002D8AE5 /* Sources */,
 				890DF6C626160826002D8AE5 /* Frameworks */,
 				890DF6C726160826002D8AE5 /* Resources */,
-				CC9BA52668FD7D5F30AC3E4B /* [CP] Embed Pods Frameworks */,
 				8904475C29018AE90088886B /* ShellScript */,
 				895B41C92F759C8100B4DA4C /* Embed Frameworks */,
 				F95AD7964086409CA4391242 /* Copy dSYMs */,
@@ -1484,6 +1482,8 @@
 				894F109D2FEFB51D007B7BF7 /* MPVFramework */,
 				899DAF54306EB00B0066B287 /* VLCFramework */,
 				899DAF5D306EB7BB0066B287 /* VLCFramework */,
+				D6F529145107718446EDC5FC /* FirebaseCrashlytics */,
+				FF7891D7F52FF7F18F0275E7 /* FirebaseCore */,
 			);
 			productName = AniXPlayer;
 			productReference = 890DF6C926160826002D8AE5 /* AniXPlayer.app */;
@@ -1531,6 +1531,7 @@
 				894F107D2FEFA810007B7BF7 /* XCRemoteSwiftPackageReference "YYCategories" */,
 				894F109C2FEFB51C007B7BF7 /* XCRemoteSwiftPackageReference "MPVFramework" */,
 				899DAF5C306EB7BB0066B287 /* XCRemoteSwiftPackageReference "VLCFramework" */,
+				30EEF1E4CC5DE1056EACB936 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			productRefGroup = 890DF6CA26160826002D8AE5 /* Products */;
 			projectDirPath = "";
@@ -1577,50 +1578,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\n\"${PODS_ROOT}/FirebaseCrashlytics/run\"\n";
-		};
-		CC9BA52668FD7D5F30AC3E4B /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			inputPaths = (
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-AniXPlayer/Pods-AniXPlayer-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F5BDEC334CEE6D35CB8921E0 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-AniXPlayer-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\n\n\"${BUILD_DIR%Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
 		};
 		F95AD7964086409CA4391242 /* Copy dSYMs */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1933,7 +1891,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1992,7 +1950,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -2006,7 +1964,6 @@
 		};
 		890DF6DE26160827002D8AE5 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F410B8A741526DF765820021 /* Pods-AniXPlayer.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -2043,7 +2000,6 @@
 		};
 		890DF6DF26160827002D8AE5 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = CF2D5334A2A53D20F8B80E22 /* Pods-AniXPlayer.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -2100,6 +2056,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		30EEF1E4CC5DE1056EACB936 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = exactVersion;
+				version = 12.19.2;
+			};
+		};
 		890A0B2C2CAD624200AE1F6B /* XCRemoteSwiftPackageReference "Color-Picker-for-iOS" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/hayashi311/Color-Picker-for-iOS";
@@ -2344,6 +2308,16 @@
 		89D148742D44E4A700E7FDF5 /* YYCategories */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = YYCategories;
+		};
+		D6F529145107718446EDC5FC /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 30EEF1E4CC5DE1056EACB936 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
+		FF7891D7F52FF7F18F0275E7 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 30EEF1E4CC5DE1056EACB936 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
