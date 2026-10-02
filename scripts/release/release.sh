@@ -64,18 +64,6 @@ if [ -n "$REMOTE" ] && [ "$LOCAL" != "$REMOTE" ]; then
     fi
 fi
 
-# 4. Pod install 检查 (macOS 用 CocoaPods)
-if [ "$PLATFORM" = "mac" ]; then
-    if [ -f "$PLATFORM_DIR/Podfile.lock" ]; then
-        if ! diff "$PLATFORM_DIR/Podfile.lock" "$PLATFORM_DIR/Pods/Manifest.lock" &>/dev/null; then
-            echo "Podfile.lock 和 Manifest.lock 不一致，正在运行 pod install..."
-            cd "$PLATFORM_DIR"
-            pod install
-            cd "$REPO_ROOT"
-        fi
-    fi
-fi
-
 echo "预检通过 ✓"
 echo ""
 

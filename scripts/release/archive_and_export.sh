@@ -63,7 +63,7 @@ fi
 
 echo "=== Archive ==="
 xcodebuild archive \
-    -workspace "$REPO_ROOT/$PLATFORM_DIR/AniXPlayer.xcworkspace" \
+    -project "$REPO_ROOT/$PLATFORM_DIR/AniXPlayer.xcodeproj" \
     -scheme AniXPlayer \
     -configuration Release \
     -archivePath "$ARCHIVE_PATH" \
