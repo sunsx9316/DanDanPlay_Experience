@@ -2,7 +2,7 @@
 
 ## 项目
 
-AniXPlayer（弹弹Play）— 跨平台视频播放器，iOS / tvOS / macOS，Swift + CocoaPods，VLCKit + MPV 双内核。
+AniXPlayer（弹弹Play）— 跨平台视频播放器，iOS / tvOS / macOS，Swift + SPM，VLCKit + MPV 双内核。
 
 **语言：始终使用中文交流。**
 
@@ -40,19 +40,19 @@ AniXPlayer（弹弹Play）— 跨平台视频播放器，iOS / tvOS / macOS，Sw
 
 ```bash
 # iOS 真机（优先用真机，mars.framework 不支持模拟器）
-xcodebuild -workspace iOS/AniXPlayer.xcworkspace -scheme AniXPlayer -configuration Debug -destination 'generic/platform=iOS' build
+xcodebuild -project iOS/AniXPlayer.xcodeproj -scheme AniXPlayer -configuration Debug -destination 'generic/platform=iOS' build
 
 # tvOS 真机
-xcodebuild -workspace tvOS/AniXPlayer.xcworkspace -scheme AniXPlayer -configuration Debug -destination 'generic/platform=tvOS' build
+xcodebuild -project tvOS/AniXPlayer.xcodeproj -scheme AniXPlayer -configuration Debug -destination 'generic/platform=tvOS' build
 ```
 
-- 打开项目用 `.xcworkspace`，不是 `.xcodeproj`
+- 打开/构建用 `.xcodeproj`（依赖由 SPM 随工程解析）
 - 新增/删除文件用 `ruby scripts/xcode_project.rb <platform> add|remove <路径>`，**禁止手动编辑 pbxproj**
-- 更新 Podfile 后运行 `pod install`
+- 首次 clone 后运行 `bash scripts/bootstrap.sh` 安装 Git hooks
 
 ## 关键约束
 
-- **部署目标**: iOS 12.0+ / tvOS 17.6+ / macOS 12.0+
+- **部署目标**: iOS 15.0+ / tvOS 17.6+ / macOS 12.0+
 - **分支**: `develop`（主）、`develop_vlc3_6_0`（VLC 3.6.0 适配）
 - **共享代码**: `Share/` 下代码被三平台共用，修改需验证跨平台兼容性
 - **AppKey**: 需在各平台 `AniXPlayer/` 目录下手动创建 `AppKey.swift`（申请：https://doc.dandanplay.com/open/）

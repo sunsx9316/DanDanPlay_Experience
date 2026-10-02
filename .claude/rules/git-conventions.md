@@ -34,7 +34,7 @@
 - `subtitle` - 字幕相关
 - `ui` - 用户界面
 - `build` - 构建相关
-- `pod` - CocoaPods 依赖
+- `deps` - SPM 依赖
 - `memory` - 内存/性能相关
 
 ## 规则
@@ -58,27 +58,24 @@ Closes #123
 
 ## Git Hook 自动配置
 
-项目使用 `.githooks/` 目录管理 Git hooks，通过 Podfile 自动安装。
+项目使用 `.githooks/` 目录管理 Git hooks，通过 `scripts/bootstrap.sh` 安装。
 
 ### 目录结构
 
 ```
 DanDanPlay_Experience/
 ├── scripts/
+│   ├── bootstrap.sh          # 首次 clone 后的初始化入口
 │   └── install_hooks.sh      # 安装脚本
-├── .githooks/
-│   └── commit-msg            # 提交格式验证
-├── iOS/
-│   └── Podfile               # 调用安装脚本
-└── Mac/
-    └── Podfile
+└── .githooks/
+    └── commit-msg            # 提交格式验证
 ```
 
 ### 工作原理
 
 1. `scripts/install_hooks.sh` 创建 `.git/hooks/commit-msg` 软链接
-2. `Podfile post_install` 调用安装脚本
-3. 用户 `pod install` 后自动生效，无需手动配置
+2. `scripts/bootstrap.sh` 调用安装脚本
+3. 首次 clone 后运行 `bash scripts/bootstrap.sh` 即可生效，无需手动配置
 
 ### 验证方式
 

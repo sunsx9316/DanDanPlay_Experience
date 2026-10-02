@@ -45,13 +45,6 @@ git rev-parse origin/develop
 
 如果本地落后于远程，用 AskUserQuestion 确认是否继续。本地领先（有未推送的提交）是正常的，继续即可。
 
-```bash
-# macOS: 检查 pod install 是否需要
-diff Mac/Podfile.lock Mac/Pods/Manifest.lock &>/dev/null || echo "NEED_POD_INSTALL"
-```
-
-如需 pod install，自动执行 `cd Mac && pod install`。
-
 ### Step 1: 选择发布模式（仅 iOS / tvOS）
 
 iOS / tvOS 有两种发布模式：

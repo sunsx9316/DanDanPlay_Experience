@@ -17,21 +17,21 @@ AniXPlayer 是一款跨平台视频播放器，支持 iOS、tvOS 和 macOS。
 
 | 平台    | 最低版本 | 播放内核         |
 | ----- | ---- | ------------ |
-| iOS   | 12.0 | VLCKit / MPV |
+| iOS   | 15.0 | VLCKit / MPV |
 | tvOS  | 17.6 | VLCKit / MPV |
 | macOS | 12.0 | VLCKit / MPV |
 
 
 ## 快速开始
 
-**环境：** Xcode 16.0+、CocoaPods 1.15+
+**环境：** Xcode 16.3+
 
 以下以 iOS 为例。
 
-### 1. 安装依赖
+### 1. 初始化
 
 ```bash
-cd iOS && pod install
+bash scripts/bootstrap.sh    # 安装 Git hooks
 ```
 
 ### 2. 配置 AppKey
@@ -48,7 +48,7 @@ struct AppKey {
 ### 3. 打开工程
 
 ```bash
-open iOS/AniXPlayer.xcworkspace    # 注意是 .xcworkspace，不是 .xcodeproj
+open iOS/AniXPlayer.xcodeproj
 ```
 
 
