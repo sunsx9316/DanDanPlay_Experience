@@ -1,8 +1,30 @@
 #!/bin/bash
 set -euo pipefail
 
-# 加载环境变量（GITEE_TOKEN 等）
-source ~/.zshrc 2>/dev/null || true
+# 加载环境变量（GITEE_TOKEN / APP_SPECIFIC_PASSWORD 等）
+# 注意: ~/.zshrc 是 zsh 启动文件，用 bash source 会被 oh-my-zsh 的非 zsh 防护逻辑终止整个脚本，
+# 因此交给 zsh 子进程加载，只回捞发行所需的变量
+load_release_env() {
+    [ -f "${ZDOTDIR:-$HOME}/.zshrc" ] || return 0
+    command -v zsh >/dev/null 2>&1 || return 0
+
+    local line key
+    while IFS= read -r line; do
+        case "$line" in
+            __RELEASE_ENV__*=*)
+                line="${line#__RELEASE_ENV__}"
+                key="${line%%=*}"
+                export "$key=${line#*=}"
+                ;;
+        esac
+    done < <(zsh -ic '
+        for key in GITEE_TOKEN APPLE_ID APP_SPECIFIC_PASSWORD APPLE_TEAM_ID ASC_PROFILE UPDATE_REPO_PATH; do
+            value="${(P)key}"
+            [ -n "$value" ] && print -r -- "__RELEASE_ENV__${key}=${value}"
+        done
+    ' 2>/dev/null || true)
+}
+load_release_env
 
 # 发布：DMG + GitHub Release + git tag + 更新仓库
 # 用法: publish.sh <platform> <app_path> <short_version> <build> <changelog_file>
