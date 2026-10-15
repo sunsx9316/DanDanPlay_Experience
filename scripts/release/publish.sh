@@ -152,17 +152,30 @@ elif [ "$PLATFORM" = "ios" ] || [ "$PLATFORM" = "tvos" ]; then
     APPLE_ID="${APPLE_ID:-jimhuang099@gmail.com}"
     ASC_PROFILE="${ASC_PROFILE:-AC_PASSWORD}"
 
-    # 检查 altool keychain 是否已配置（与 notarytool 的 keychain 不共用，需要单独创建）
-    if ! xcrun altool --validate-app -f "$APP_PATH" -t "$PLATFORM" -u "$APPLE_ID" -p "@keychain:${ASC_PROFILE}" --output-format xml &>/dev/null; then
-        echo "错误: altool 验证失败，请先创建 keychain 条目:" >&2
-        echo "  xcrun altool --store-password-in-keychain-item '${ASC_PROFILE}' -u '${APPLE_ID}' -p @env:APP_SPECIFIC_PASSWORD" >&2
-        echo "或手动设置:" >&2
-        echo "  xcrun altool --store-password-in-keychain-item '${ASC_PROFILE}' -u '${APPLE_ID}'" >&2
-        exit 1
+    # 校验凭证（与 notarytool 的 keychain 不共用，需要单独创建）
+    # 优先 keychain：Xcode 17+ 的 altool 读取 keychain 条目可能失效，
+    # 若 keychain 校验失败且环境变量已设置，则回退到 @env:APP_SPECIFIC_PASSWORD
+    ASC_CRED="@keychain:${ASC_PROFILE}"
+    if ! xcrun altool --validate-app -f "$APP_PATH" -t "$PLATFORM" -u "$APPLE_ID" -p "$ASC_CRED" --output-format xml &>/dev/null; then
+        if [ -z "${APP_SPECIFIC_PASSWORD:-}" ]; then
+            echo "错误: altool 验证失败，请先创建 keychain 条目:" >&2
+            echo "  xcrun altool --store-password-in-keychain-item '${ASC_PROFILE}' -u '${APPLE_ID}' -p @env:APP_SPECIFIC_PASSWORD" >&2
+            echo "或手动设置:" >&2
+            echo "  xcrun altool --store-password-in-keychain-item '${ASC_PROFILE}' -u '${APPLE_ID}'" >&2
+            echo "或设置环境变量 APP_SPECIFIC_PASSWORD" >&2
+            exit 1
+        fi
+
+        echo "提示: keychain 凭证 '${ASC_PROFILE}' 校验失败，回退到环境变量 APP_SPECIFIC_PASSWORD" >&2
+        ASC_CRED="@env:APP_SPECIFIC_PASSWORD"
+        if ! xcrun altool --validate-app -f "$APP_PATH" -t "$PLATFORM" -u "$APPLE_ID" -p "$ASC_CRED" --output-format xml; then
+            echo "错误: 使用 APP_SPECIFIC_PASSWORD 验证仍失败" >&2
+            exit 1
+        fi
     fi
 
     echo "=== 上传 App Store Connect ==="
-    xcrun altool --upload-app -f "$APP_PATH" -t "$PLATFORM" -u "$APPLE_ID" -p "@keychain:${ASC_PROFILE}" --output-format xml
+    xcrun altool --upload-app -f "$APP_PATH" -t "$PLATFORM" -u "$APPLE_ID" -p "$ASC_CRED" --output-format xml
 
     # Tag + push 主仓库
     echo "=== Tag 主仓库 ==="
