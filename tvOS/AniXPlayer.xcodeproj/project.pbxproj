@@ -209,6 +209,7 @@
 		D6025411E3066FEDFFEBD87A /* PlayerSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13DD13A96D484FC80C3CEE86 /* PlayerSettingViewController.swift */; };
 		DF529575A6E63200478ADD5B /* UICollectionView+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B62E34E30C6A787ED7E996 /* UICollectionView+Helper.swift */; };
 		E296FB2BA5C4CEBAD390D71F /* fileManager.js in Resources */ = {isa = PBXBuildFile; fileRef = C689D5645CD727D4D42AB2DC /* fileManager.js */; };
+		E2AE28BE59A5220839915639 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C524324650455818A18FE79 /* SceneDelegate.swift */; };
 		E2E37E3F5D0CB5C7F2EF3E0F /* MenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399DD1884E88717F3A0C618E /* MenuTableViewCell.swift */; };
 		E5C041C7C205232819A4BCAF /* TextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63499CADF0AB6CCE09ABED8 /* TextField.swift */; };
 		EE846158C3C1893E43D87DD7 /* FileBrowserViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC90E930AEDDD1D5D5918388 /* FileBrowserViewController.swift */; };
@@ -243,6 +244,7 @@
 /* Begin PBXFileReference section */
 		00DED50E4432C33FED8FA1FF /* BangumiCommentTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BangumiCommentTableViewCell.swift; sourceTree = "<group>"; };
 		084077A321CB5D033CF5CC4E /* TagSearchResultViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagSearchResultViewController.swift; sourceTree = "<group>"; };
+		0C524324650455818A18FE79 /* SceneDelegate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		1234567890ABCDEF123459 /* Helper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helper.swift; sourceTree = "<group>"; };
 		13DD13A96D484FC80C3CEE86 /* PlayerSettingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerSettingViewController.swift; sourceTree = "<group>"; };
 		14083045F48C93C54AFE0E1B /* DanmakuListTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DanmakuListTableViewCell.swift; sourceTree = "<group>"; };
@@ -566,6 +568,7 @@
 				DF45946BF4D8E645856BBBFA /* Vendor */,
 				CCABE78F4458C5717BC3CCB9 /* AppDelegate.swift */,
 				CE01DA07EC91885EC6E9BD0B /* Info.plist */,
+				0C524324650455818A18FE79 /* SceneDelegate.swift */,
 			);
 			path = AniXPlayer;
 			sourceTree = "<group>";
@@ -1527,6 +1530,7 @@
 				20DD9FD4A397E3DEF5D5AC82 /* UIColor+Adaptive.swift in Sources */,
 				24A5D304CEEEC7BE82DB3FDD /* UIFont+Helper.swift in Sources */,
 				1DA8DD2B27323E79A97732F0 /* ANXLogHelper+Swift.swift in Sources */,
+				E2AE28BE59A5220839915639 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
