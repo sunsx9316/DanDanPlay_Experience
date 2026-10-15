@@ -18,7 +18,7 @@ load_release_env() {
                 ;;
         esac
     done < <(zsh -ic '
-        for key in GITEE_TOKEN APPLE_ID APP_SPECIFIC_PASSWORD APPLE_TEAM_ID ASC_PROFILE UPDATE_REPO_PATH; do
+        for key in GITEE_TOKEN APPLE_ID APP_SPECIFIC_PASSWORD APPLE_TEAM_ID UPDATE_REPO_PATH; do
             value="${(P)key}"
             [ -n "$value" ] && print -r -- "__RELEASE_ENV__${key}=${value}"
         done
@@ -149,30 +149,17 @@ elif [ "$PLATFORM" = "ios" ] || [ "$PLATFORM" = "tvos" ]; then
     fi
 
     # App Store Connect 上传凭证（与 Mac 公证共用 Apple ID 和 App 专用密码）
+    # 统一使用环境变量: Xcode 17+ 的 altool 读取 keychain 条目可能失效
     APPLE_ID="${APPLE_ID:-jimhuang099@gmail.com}"
-    ASC_PROFILE="${ASC_PROFILE:-AC_PASSWORD}"
-
-    # 校验凭证（与 notarytool 的 keychain 不共用，需要单独创建）
-    # 优先 keychain：Xcode 17+ 的 altool 读取 keychain 条目可能失效，
-    # 若 keychain 校验失败且环境变量已设置，则回退到 @env:APP_SPECIFIC_PASSWORD
-    ASC_CRED="@keychain:${ASC_PROFILE}"
-    if ! xcrun altool --validate-app -f "$APP_PATH" -t "$PLATFORM" -u "$APPLE_ID" -p "$ASC_CRED" --output-format xml &>/dev/null; then
-        if [ -z "${APP_SPECIFIC_PASSWORD:-}" ]; then
-            echo "错误: altool 验证失败，请先创建 keychain 条目:" >&2
-            echo "  xcrun altool --store-password-in-keychain-item '${ASC_PROFILE}' -u '${APPLE_ID}' -p @env:APP_SPECIFIC_PASSWORD" >&2
-            echo "或手动设置:" >&2
-            echo "  xcrun altool --store-password-in-keychain-item '${ASC_PROFILE}' -u '${APPLE_ID}'" >&2
-            echo "或设置环境变量 APP_SPECIFIC_PASSWORD" >&2
-            exit 1
-        fi
-
-        echo "提示: keychain 凭证 '${ASC_PROFILE}' 校验失败，回退到环境变量 APP_SPECIFIC_PASSWORD" >&2
-        ASC_CRED="@env:APP_SPECIFIC_PASSWORD"
-        if ! xcrun altool --validate-app -f "$APP_PATH" -t "$PLATFORM" -u "$APPLE_ID" -p "$ASC_CRED" --output-format xml; then
-            echo "错误: 使用 APP_SPECIFIC_PASSWORD 验证仍失败" >&2
-            exit 1
-        fi
+    if [ -z "${APP_SPECIFIC_PASSWORD:-}" ]; then
+        echo "错误: 未设置 APP_SPECIFIC_PASSWORD（App 专用密码）" >&2
+        echo "  请在 ~/.zshrc 中设置并 export: export APP_SPECIFIC_PASSWORD=xxxx-xxxx-xxxx-xxxx" >&2
+        exit 1
     fi
+    ASC_CRED="@env:APP_SPECIFIC_PASSWORD"
+
+    echo "=== 校验 App Store Connect 凭证 ==="
+    xcrun altool --validate-app -f "$APP_PATH" -t "$PLATFORM" -u "$APPLE_ID" -p "$ASC_CRED" --output-format xml
 
     echo "=== 上传 App Store Connect ==="
     xcrun altool --upload-app -f "$APP_PATH" -t "$PLATFORM" -u "$APPLE_ID" -p "$ASC_CRED" --output-format xml

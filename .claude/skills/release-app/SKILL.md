@@ -244,12 +244,8 @@ bash scripts/release/publish.sh <ios|tvos> /tmp/export/AniXPlayer.ipa <shortVers
 - Gitee 附件限制 100MB，若 DMG 超限自动跳过上传，仅使用 GitHub 下载
 - `gh release create` 会自动创建并推送 git tag，`publish.sh` 已做幂等处理（tag 存在则跳过）
 - iOS / tvOS 环境前提：`APP_SPECIFIC_PASSWORD` 环境变量（建议写入 `~/.zshrc` 持久化）+ `APPLE_ID`（默认 `jimhuang099@gmail.com`）
-- **Xcode 17 `altool` keychain 兼容性**：`altool --store-password-in-keychain-item` 在 Xcode 17 中可能无法正确读取 keychain 条目，如果 publish.sh 报 keychain 错误，改用 `@env:APP_SPECIFIC_PASSWORD` 直接上传：
-  ```bash
-  xcrun altool --validate-app -f /tmp/export/AniXPlayer.ipa -t <ios|tvos> -u jimhuang099@gmail.com -p "@env:APP_SPECIFIC_PASSWORD"
-  xcrun altool --upload-app -f /tmp/export/AniXPlayer.ipa -t <ios|tvos> -u jimhuang099@gmail.com -p "@env:APP_SPECIFIC_PASSWORD"
-  git tag "<platform>-v<version>-<build>" && git push origin "<platform>-v<version>-<build>"
-  ```
+- iOS / tvOS 上传凭证：`publish.sh` 统一使用 `@env:APP_SPECIFIC_PASSWORD`（Xcode 17+ 的 altool 读取 keychain 条目已不可靠），未设置时脚本会直接报错退出
+- 症状：`publish.sh` 无任何输出且 `exit 1` → `.zshrc` 被 bash `source` 时被 oh-my-zsh 终止，已修复（改用 zsh 子进程回捞变量）
 - macOS 发布会推送到 GitHub Release + Gitee 更新仓库 + git tag
 - iOS / tvOS 发布会上传 `.ipa` 到 App Store Connect + git tag（后续需在 App Store Connect 中完成提审）
 - 如果某步失败，用户可以从失败的那步重来（子脚本可独立运行）
