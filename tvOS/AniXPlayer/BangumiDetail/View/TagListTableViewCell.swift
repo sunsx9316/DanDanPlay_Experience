@@ -6,70 +6,48 @@
 //
 
 import UIKit
+import SnapKit
 
 class TagListTableViewCell: TableViewCell {
 
-    private let tagSpacing: CGFloat = 12
+    private static let horizontalInset: CGFloat = 60
+    private static let verticalInset: CGFloat = 16
 
-    private lazy var flowStackView: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .vertical
-        stack.spacing = tagSpacing
-        stack.alignment = .leading
-        return stack
-    }()
-
-    private var currentTags: [BangumiTag] = []
+    private let flowView = TagFlowView()
 
     var didTouchTagButton: ((BangumiTag) -> Void)?
 
     override var canBecomeFocused: Bool { return false }
 
     override var preferredFocusEnvironments: [UIFocusEnvironment] {
-        return currentTags.isEmpty ? [] : [flowStackView]
-    }
-
-    func update(tags: [BangumiTag]) {
-        currentTags = tags
-        flowStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-
-        guard !tags.isEmpty else { return }
-
-        let sortedTags = tags.sorted { $0.count > $1.count }
-        let maxWidth = UIScreen.main.bounds.width - 120
-
-        var currentRowStack = createRowStack()
-        var currentRowWidth: CGFloat = 0
-
-        for (index, tag) in sortedTags.enumerated() {
-            let button = createTagButton(tag: tag, index: index)
-            let buttonWidth = button.intrinsicContentSize.width + tagSpacing
-
-            if currentRowWidth + buttonWidth > maxWidth, !(currentRowStack.arrangedSubviews.isEmpty) {
-                flowStackView.addArrangedSubview(currentRowStack)
-                currentRowStack = createRowStack()
-                currentRowWidth = 0
-            }
-
-            currentRowStack.addArrangedSubview(button)
-            currentRowWidth += buttonWidth
-        }
-
-        if !currentRowStack.arrangedSubviews.isEmpty {
-            flowStackView.addArrangedSubview(currentRowStack)
-        }
+        return [flowView]
     }
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-        contentView.addSubview(flowStackView)
+        contentView.addSubview(flowView)
+        flowView.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(Self.verticalInset)
+            make.leading.equalToSuperview().offset(Self.horizontalInset)
+            make.trailing.equalToSuperview().offset(-Self.horizontalInset)
+            make.bottom.equalToSuperview().offset(-Self.verticalInset)
+        }
 
-        flowStackView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(16)
-            make.leading.equalToSuperview().offset(60)
-            make.trailing.lessThanOrEqualToSuperview().offset(-60)
-            make.bottom.equalToSuperview().offset(-16)
+        flowView.metrics = .init(horizontalSpacing: 12, verticalSpacing: 12)
+        flowView.configureButton = { button, tag in
+            button.setTitle(tag.name, for: .normal)
+            button.titleLabel?.font = .ddp_small()
+            button.setTitleColor(.mainColor, for: .normal)
+            button.backgroundColor = UIColor.mainColor.withAlphaComponent(0.12)
+            button.layer.borderColor = UIColor.mainColor.withAlphaComponent(0.25).cgColor
+            button.layer.borderWidth = 1
+            button.layer.cornerRadius = 16
+            button.layer.masksToBounds = true
+            button.contentEdgeInsets = UIEdgeInsets(top: 6, left: 16, bottom: 6, right: 16)
+        }
+        flowView.onTagTap = { [weak self] tag in
+            self?.didTouchTagButton?(tag)
         }
     }
 
@@ -77,36 +55,25 @@ class TagListTableViewCell: TableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    // MARK: Private
-
-    private func createRowStack() -> UIStackView {
-        let stack = UIStackView()
-        stack.axis = .horizontal
-        stack.spacing = tagSpacing
-        stack.alignment = .center
-        return stack
+    func update(tags: [BangumiTag]) {
+        flowView.update(tags: tags.sorted { $0.count > $1.count })
     }
 
-    private func createTagButton(tag: BangumiTag, index: Int) -> Button {
-        let button = Button()
-        button.setTitle(tag.name, for: .normal)
-        button.titleLabel?.font = .ddp_small()
-        button.setTitleColor(.mainColor, for: .normal)
-        button.backgroundColor = UIColor.mainColor.withAlphaComponent(0.12)
-        button.layer.borderColor = UIColor.mainColor.withAlphaComponent(0.25).cgColor
-        button.layer.borderWidth = 1
-        button.layer.cornerRadius = 16
-        button.layer.masksToBounds = true
-        button.contentEdgeInsets = UIEdgeInsets(top: 6, left: 16, bottom: 6, right: 16)
-        button.tag = index
-        button.addTarget(self, action: #selector(onTouchTagButton(_:)), for: .primaryActionTriggered)
-        return button
-    }
+    override func systemLayoutSizeFitting(
+        _ targetSize: CGSize,
+        withHorizontalFittingPriority horizontalFittingPriority: UILayoutPriority,
+        verticalFittingPriority: UILayoutPriority
+    ) -> CGSize {
+        guard targetSize.width > 0, targetSize.width < .greatestFiniteMagnitude else {
+            return super.systemLayoutSizeFitting(
+                targetSize,
+                withHorizontalFittingPriority: horizontalFittingPriority,
+                verticalFittingPriority: verticalFittingPriority
+            )
+        }
 
-    @objc private func onTouchTagButton(_ sender: Button) {
-        let sortedTags = currentTags.sorted { $0.count > $1.count }
-        let index = sender.tag
-        guard index < sortedTags.count else { return }
-        didTouchTagButton?(sortedTags[index])
+        let contentWidth = targetSize.width - Self.horizontalInset * 2
+        let height = flowView.heightThatFits(width: contentWidth) + Self.verticalInset * 2
+        return CGSize(width: targetSize.width, height: height)
     }
 }

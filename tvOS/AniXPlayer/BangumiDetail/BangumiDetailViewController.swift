@@ -146,13 +146,12 @@ extension BangumiDetailViewController: UITableViewDataSource {
 
         case .tags:
             let cell = tableView.dequeueCell(class: TagListTableViewCell.self, indexPath: indexPath)
-            if let tags = detail?.tags, !tags.isEmpty {
-                cell.update(tags: tags)
-                cell.didTouchTagButton = { [weak self] tag in
-                    guard let self = self else { return }
-                    let vc = TagSearchResultViewController(tag: tag.name)
-                    self.navigationController?.pushViewController(vc, animated: true)
-                }
+            let tags = detail?.tags ?? []
+            cell.update(tags: tags)
+            cell.didTouchTagButton = { [weak self] tag in
+                guard let self = self else { return }
+                let vc = TagSearchResultViewController(tag: tag.name)
+                self.navigationController?.pushViewController(vc, animated: true)
             }
             return cell
 
