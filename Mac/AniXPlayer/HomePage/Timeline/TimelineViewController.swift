@@ -88,12 +88,18 @@ class TimelineViewController: ViewController {
             let vc = TimelineDayViewController()
             vc.items = dayMap[day] ?? []
             vc.onFavoriteToggle = { [weak self] animeId, isLike in
-                FavoriteNetworkHandle.changeFavorite(animateId: animeId, isLike: isLike) { error in
-                    DispatchQueue.main.async {
-                        if let error = error {
-                            self?.view.show(error: error)
-                        } else {
-                            self?.refreshDataCallBack?()
+                Task { @MainActor [weak self] in
+                    guard let self = self else { return }
+                    guard await LoginGate.shared.ensureAccessToken(presenting: self.view.window) else {
+                        return
+                    }
+                    FavoriteNetworkHandle.changeFavorite(animateId: animeId, isLike: isLike) { [weak self] error in
+                        DispatchQueue.main.async {
+                            if let error = error {
+                                self?.view.show(error: error)
+                            } else {
+                                self?.refreshDataCallBack?()
+                            }
                         }
                     }
                 }

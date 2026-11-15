@@ -66,13 +66,17 @@ class FavoriteViewController: ViewController, NSCollectionViewDataSource, NSColl
 
     override func viewWillAppear() {
         super.viewWillAppear()
-        if Preferences.shared.loginInfo == nil {
-            loginPromptLabel.isHidden = false
-            scrollView.isHidden = true
-        } else {
-            loginPromptLabel.isHidden = true
-            scrollView.isHidden = false
-            fetchData()
+        Task { @MainActor [weak self] in
+            guard let self = self else { return }
+            let isLoggedIn = await SessionStore.shared.isLoggedIn()
+            self.loginPromptLabel.isHidden = isLoggedIn
+            self.scrollView.isHidden = !isLoggedIn
+
+            guard isLoggedIn,
+                  await LoginGate.shared.ensureAccessToken(presenting: self.view.window) else {
+                return
+            }
+            self.fetchData()
         }
     }
 

@@ -98,19 +98,27 @@ class BangumiDetailViewController: ViewController, NSCollectionViewDataSource, N
     }
 
     private func startRefresh() {
-        BangumiNetworkHandle.detail(animateId: animateId) { [weak self] rsp, error in
+        Task { @MainActor [weak self] in
             guard let self = self else { return }
-            DispatchQueue.main.async {
-                if let error = error {
-                    self.view.show(error: error)
-                } else if let detail = rsp?.bangumi {
-                    self.title = detail.animeTitle
-                    // Recompute visible sections
-                    var visible: [SectionType] = [.info, .episodes, .comments]
-                    if !detail.relateds.isEmpty { visible.append(.relateds) }
-                    if !detail.similars.isEmpty { visible.append(.similars) }
-                    self.sections = visible
-                    self.detail = detail
+            guard await LoginGate.shared.ensureAccessToken(presenting: self.view.window) else {
+                self.navigator?.popViewController()
+                return
+            }
+
+            BangumiNetworkHandle.detail(animateId: self.animateId) { [weak self] rsp, error in
+                guard let self = self else { return }
+                DispatchQueue.main.async {
+                    if let error = error {
+                        self.view.show(error: error)
+                    } else if let detail = rsp?.bangumi {
+                        self.title = detail.animeTitle
+                        // Recompute visible sections
+                        var visible: [SectionType] = [.info, .episodes, .comments]
+                        if !detail.relateds.isEmpty { visible.append(.relateds) }
+                        if !detail.similars.isEmpty { visible.append(.similars) }
+                        self.sections = visible
+                        self.detail = detail
+                    }
                 }
             }
         }
@@ -146,12 +154,18 @@ class BangumiDetailViewController: ViewController, NSCollectionViewDataSource, N
             if let detail = detail {
                 item.configure(with: detail)
                 item.onFavoriteToggle = { [weak self] animeId, isLike in
-                    FavoriteNetworkHandle.changeFavorite(animateId: animeId, isLike: isLike) { error in
-                        DispatchQueue.main.async {
-                            if let error = error {
-                                self?.view.show(error: error)
-                            } else {
-                                self?.startRefresh()
+                    Task { @MainActor [weak self] in
+                        guard let self = self else { return }
+                        guard await LoginGate.shared.ensureAccessToken(presenting: self.view.window) else {
+                            return
+                        }
+                        FavoriteNetworkHandle.changeFavorite(animateId: animeId, isLike: isLike) { [weak self] error in
+                            DispatchQueue.main.async {
+                                if let error = error {
+                                    self?.view.show(error: error)
+                                } else {
+                                    self?.startRefresh()
+                                }
                             }
                         }
                     }
@@ -188,12 +202,18 @@ class BangumiDetailViewController: ViewController, NSCollectionViewDataSource, N
                     self?.pushDetail(animateId: animeId)
                 }
                 item.onFavoriteToggle = { [weak self] animeId, isLike in
-                    FavoriteNetworkHandle.changeFavorite(animateId: animeId, isLike: isLike) { error in
-                        DispatchQueue.main.async {
-                            if let error = error {
-                                self?.view.show(error: error)
-                            } else {
-                                self?.startRefresh()
+                    Task { @MainActor [weak self] in
+                        guard let self = self else { return }
+                        guard await LoginGate.shared.ensureAccessToken(presenting: self.view.window) else {
+                            return
+                        }
+                        FavoriteNetworkHandle.changeFavorite(animateId: animeId, isLike: isLike) { [weak self] error in
+                            DispatchQueue.main.async {
+                                if let error = error {
+                                    self?.view.show(error: error)
+                                } else {
+                                    self?.startRefresh()
+                                }
                             }
                         }
                     }

@@ -75,6 +75,13 @@ enum APIError: LocalizedError {
             return false
         }
     }
+
+    var isUnauthorized: Bool {
+        if case .unauthorized = self {
+            return true
+        }
+        return false
+    }
 }
 
 /// OAuth 错误响应：`{"error":"invalid_grant","error_description":"..."}`。

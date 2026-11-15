@@ -148,6 +148,7 @@ actor SessionStore {
         apply(newToken)
         profile = try? await service.fetchProfile(accessToken: newToken.accessToken)
         setState(.loggedIn)
+        notifyChanged()
     }
 
     func logout() async {
@@ -246,7 +247,6 @@ actor SessionStore {
     private func apply(_ token: OAuthToken) {
         self.token = token
         accessTokenHolder.set(token.accessToken)
-        notifyChanged()
     }
 
     private func clearSession() {
@@ -275,8 +275,11 @@ actor SessionStore {
     }
 
     private func setState(_ newState: State) {
+        let changed = state != newState
         state = newState
-        notifyChanged()
+        if changed {
+            notifyChanged()
+        }
     }
 
     private func notifyChanged() {

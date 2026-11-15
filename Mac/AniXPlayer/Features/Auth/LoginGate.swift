@@ -16,7 +16,7 @@ final class LoginGate {
 
     /// 已登录直接返回 true；有 refresh token 先静默恢复；否则弹出登录窗口。
     /// 用户取消返回 false（不抛错）。
-    func ensureLoggedIn(presenting window: NSWindow? = nil) async -> Bool {
+    func ensureLoggedIn(presenting window: NSWindow? = nil, presentLoginWindow: Bool = true) async -> Bool {
         if await SessionStore.shared.isLoggedIn() {
             return true
         }
@@ -29,6 +29,9 @@ final class LoginGate {
             if await SessionStore.shared.restoreIfPossible() {
                 return true
             }
+            guard presentLoginWindow else {
+                return false
+            }
             return await self.presentLoginWindow()
         }
         activeTask = task
@@ -36,6 +39,19 @@ final class LoginGate {
         let result = await task.value
         activeTask = nil
         return result
+    }
+
+    /// 在线请求前使用：确保已登录，并把 access token 刷新到可用状态。
+    func ensureAccessToken(presenting window: NSWindow? = nil) async -> Bool {
+        guard await ensureLoggedIn(presenting: window) else {
+            return false
+        }
+        do {
+            _ = try await SessionStore.shared.validAccessToken()
+            return true
+        } catch {
+            return false
+        }
     }
 
     private func presentLoginWindow() async -> Bool {

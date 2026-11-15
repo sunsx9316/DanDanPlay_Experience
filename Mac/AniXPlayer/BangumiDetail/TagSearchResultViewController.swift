@@ -65,17 +65,26 @@ class TagSearchResultViewController: ViewController, NSTableViewDataSource, NSTa
     private func startRefresh() {
         view.showLoading(statusText: "")
 
-        SearchNetworkHandle.searchByTag(tagName) { [weak self] res, error in
+        Task { @MainActor [weak self] in
             guard let self = self else { return }
-
-            DispatchQueue.main.async {
+            guard await LoginGate.shared.ensureAccessToken(presenting: self.view.window) else {
                 self.view.dismiss(delay: 0)
+                self.navigator?.popViewController()
+                return
+            }
 
-                if let error = error {
-                    self.view.show(error: error)
-                } else {
-                    self.items = res?.bangumis ?? []
-                    self.tableView.reloadData()
+            SearchNetworkHandle.searchByTag(self.tagName) { [weak self] res, error in
+                guard let self = self else { return }
+
+                DispatchQueue.main.async {
+                    self.view.dismiss(delay: 0)
+
+                    if let error = error {
+                        self.view.show(error: error)
+                    } else {
+                        self.items = res?.bangumis ?? []
+                        self.tableView.reloadData()
+                    }
                 }
             }
         }
@@ -91,10 +100,16 @@ class TagSearchResultViewController: ViewController, NSTableViewDataSource, NSTa
         let cell = tableView.dequeueReusableCell(class: TagSearchResultTableViewCell.self)
         cell.configure(with: items[row])
         cell.onFavoriteToggle = { [weak self] animeId, isLike in
-            FavoriteNetworkHandle.changeFavorite(animateId: animeId, isLike: isLike) { error in
-                DispatchQueue.main.async {
-                    if let error = error {
-                        self?.view.show(error: error)
+            Task { @MainActor [weak self] in
+                guard let self = self else { return }
+                guard await LoginGate.shared.ensureAccessToken(presenting: self.view.window) else {
+                    return
+                }
+                FavoriteNetworkHandle.changeFavorite(animateId: animeId, isLike: isLike) { [weak self] error in
+                    DispatchQueue.main.async {
+                        if let error = error {
+                            self?.view.show(error: error)
+                        }
                     }
                 }
             }

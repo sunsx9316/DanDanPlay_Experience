@@ -114,25 +114,34 @@ class BangumiCommentListViewController: ViewController, NSTableViewDataSource, N
     private func loadComments() {
         loadingLabel.isHidden = false
 
-        BangumiNetworkHandle.comments(bangumiId: bangumiId, page: currentPage) { [weak self] res, error in
+        Task { @MainActor [weak self] in
             guard let self = self else { return }
-
-            DispatchQueue.main.async {
+            guard await LoginGate.shared.ensureAccessToken(presenting: self.view.window) else {
                 self.isLoading = false
                 self.loadingLabel.isHidden = true
+                return
+            }
 
-                if let error = error {
-                    self.view.show(error: error)
-                } else if self.currentPage == 0 {
-                    self.comments = res?.comments ?? []
-                    self.hasMore = res?.hasMore ?? false
-                    self.tableView.reloadData()
-                } else if let newComments = res?.comments, !newComments.isEmpty {
-                    self.comments.append(contentsOf: newComments)
-                    self.hasMore = res?.hasMore ?? false
-                    self.tableView.reloadData()
-                } else {
-                    self.hasMore = false
+            BangumiNetworkHandle.comments(bangumiId: self.bangumiId, page: self.currentPage) { [weak self] res, error in
+                guard let self = self else { return }
+
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    self.loadingLabel.isHidden = true
+
+                    if let error = error {
+                        self.view.show(error: error)
+                    } else if self.currentPage == 0 {
+                        self.comments = res?.comments ?? []
+                        self.hasMore = res?.hasMore ?? false
+                        self.tableView.reloadData()
+                    } else if let newComments = res?.comments, !newComments.isEmpty {
+                        self.comments.append(contentsOf: newComments)
+                        self.hasMore = res?.hasMore ?? false
+                        self.tableView.reloadData()
+                    } else {
+                        self.hasMore = false
+                    }
                 }
             }
         }
