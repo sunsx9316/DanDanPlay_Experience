@@ -252,6 +252,7 @@
 		9DE8B428CAFC3A5D26DE9E56 /* DanmakuInputView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54627AC0D74F1F7C3F2CB1D /* DanmakuInputView.swift */; };
 		9DE8B429CAFC3A5D26DE9E57 /* ColorManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B54627AC0D74F1F7C3F2CB1E /* ColorManagementViewController.swift */; };
 		9EB3A42B136EBFC7F7C318AB /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = FF7891D7F52FF7F18F0275E7 /* FirebaseCore */; };
+		9F5B6757DFAFC17B9C6B6DD6 /* TagFlowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12B02F37D11BAE2FDFC2FB0C /* TagFlowView.swift */; };
 		A332B7B988818A7DF6A6C210 /* fileManager.js in Resources */ = {isa = PBXBuildFile; fileRef = BCC270DC364AD0E54876107D /* fileManager.js */; };
 		A94CED4A04A1169D701212A2 /* ANXHUDBarProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3682D199ED83FADCF958B49A /* ANXHUDBarProgressView.swift */; };
 		AA72AB931D94179E273EEC53 /* JellyfinLoginHistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F3DC22C756D2488DE35619F /* JellyfinLoginHistoryViewController.swift */; };
@@ -284,6 +285,7 @@
 
 /* Begin PBXFileReference section */
 		024C86F02C09EEB708EE8FE6 /* UICollectionView+Helper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Helper.swift"; sourceTree = "<group>"; };
+		12B02F37D11BAE2FDFC2FB0C /* TagFlowView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagFlowView.swift; sourceTree = "<group>"; };
 		29DBAB041CE4060BFF661E83 /* UIView+ANXHUD.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIView+ANXHUD.swift"; sourceTree = "<group>"; };
 		2F3DC22C756D2488DE35619F /* JellyfinLoginHistoryViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = JellyfinLoginHistoryViewController.swift; sourceTree = "<group>"; };
 		33165FA2496F48294A218139 /* SnapshotPreviewView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SnapshotPreviewView.swift; sourceTree = "<group>"; };
@@ -570,6 +572,7 @@
 			isa = PBXGroup;
 			children = (
 				95772D104DE398DFA3D735F0 /* TagFlowLayout.swift */,
+				12B02F37D11BAE2FDFC2FB0C /* TagFlowView.swift */,
 			);
 			name = TagFlow;
 			path = TagFlow;
@@ -1834,6 +1837,7 @@
 				5719ACF85A59CD5CE3C620A0 /* SnapshotPreviewView.swift in Sources */,
 				3B1C38BE59C687BFE4602257 /* UIView+Screen.swift in Sources */,
 				47CF4BD13E8BC1D479A4678A /* TagFlowLayout.swift in Sources */,
+				9F5B6757DFAFC17B9C6B6DD6 /* TagFlowView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
