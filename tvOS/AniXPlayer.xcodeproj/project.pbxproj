@@ -221,6 +221,7 @@
 		F6D04BDCB732B91EC584BE02 /* GCDWebDAVServer in Frameworks */ = {isa = PBXBuildFile; productRef = 45E3F22DD157AD3C7F6963ED /* GCDWebDAVServer */; };
 		F75F5DC7360C8F982C90A6C7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCABE78F4458C5717BC3CCB9 /* AppDelegate.swift */; };
 		F8A5034FB6221D25F645A593 /* ImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F0E3E297085ADC0DAABC6F5 /* ImageView.swift */; };
+		F9AE3D41FB7E4A4D6386450B /* TagFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88DE0887883FBFAFE8D7A565 /* TagFlowLayout.swift */; };
 		FE984EA049298734B1EFB124 /* SectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E78C4329EDF01A77D4DED5A6 /* SectionHeaderView.swift */; };
 		FEA0C12F04EF2C4733487E0B /* UIView+HitTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B7D15A2889A7D1B9EA8D26C9 /* UIView+HitTest.swift */; };
 		FED8DAA4CFE275E9D9B231E5 /* TagSearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 084077A321CB5D033CF5CC4E /* TagSearchResultViewController.swift */; };
@@ -293,6 +294,7 @@
 		82CEAF1AA3F8306DB720DB4E /* SearchEpisodeTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SearchEpisodeTableViewCell.swift; sourceTree = "<group>"; };
 		838AF3C49C536CD8B9CDE4A4 /* TimelineViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimelineViewController.swift; sourceTree = "<group>"; };
 		856B94E9029BE2A797691A78 /* BangumiCommentListViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BangumiCommentListViewController.swift; sourceTree = "<group>"; };
+		88DE0887883FBFAFE8D7A565 /* TagFlowLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagFlowLayout.swift; sourceTree = "<group>"; };
 		895153D02FC1DC2D00F75DB7 /* upload.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = upload.html; sourceTree = "<group>"; };
 		895153D12FC1DC2D00F75DB7 /* upload.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = upload.js; sourceTree = "<group>"; };
 		895153D32FC1DC2D00F75DB7 /* HttpServer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpServer.swift; sourceTree = "<group>"; };
@@ -1107,6 +1109,15 @@
 			path = Resource;
 			sourceTree = "<group>";
 		};
+		AD123B303358FDAB2B1B54BE /* TagFlow */ = {
+			isa = PBXGroup;
+			children = (
+				88DE0887883FBFAFE8D7A565 /* TagFlowLayout.swift */,
+			);
+			name = TagFlow;
+			path = TagFlow;
+			sourceTree = "<group>";
+		};
 		AF2D315243C7D4B85D5589DC /* Layout */ = {
 			isa = PBXGroup;
 			children = (
@@ -1156,6 +1167,7 @@
 			children = (
 				002FB3118F257D4A37AD8798 /* ANXHUD */,
 				AF2D315243C7D4B85D5589DC /* Layout */,
+				AD123B303358FDAB2B1B54BE /* TagFlow */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1544,6 +1556,7 @@
 				1DA8DD2B27323E79A97732F0 /* ANXLogHelper+Swift.swift in Sources */,
 				E2AE28BE59A5220839915639 /* SceneDelegate.swift in Sources */,
 				CCB63508BE984F98A9E4CC87 /* UIView+Screen.swift in Sources */,
+				F9AE3D41FB7E4A4D6386450B /* TagFlowLayout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

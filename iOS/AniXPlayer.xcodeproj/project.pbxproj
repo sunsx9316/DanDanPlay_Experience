@@ -17,6 +17,7 @@
 		3B1C38BE59C687BFE4602257 /* UIView+Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C6DEED536BD30EBDB2470A5 /* UIView+Screen.swift */; };
 		3E46109C9932FA7786AB3D2E /* BangumiCommentTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 434257BA70662EB64A5443E9 /* BangumiCommentTableViewCell.swift */; };
 		4668C82485DE85D5196558DF /* TagSearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A8A663C7191014FC70DE5918 /* TagSearchResultViewController.swift */; };
+		47CF4BD13E8BC1D479A4678A /* TagFlowLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95772D104DE398DFA3D735F0 /* TagFlowLayout.swift */; };
 		569C34CC7FC564616505369C /* BangumiCommentListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B41DEBB973AC9764368C85F /* BangumiCommentListViewController.swift */; };
 		5719ACF85A59CD5CE3C620A0 /* SnapshotPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33165FA2496F48294A218139 /* SnapshotPreviewView.swift */; };
 		59BC76D687C645B07724D774 /* FavoriteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0C1A7BACD10629F34BE763 /* FavoriteTableViewCell.swift */; };
@@ -509,6 +510,7 @@
 		92F38CCA0ED39E98C2FE28D3 /* UIColor+Helper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIColor+Helper.swift"; sourceTree = "<group>"; };
 		936B82FA5A6717A50EBDD3E4 /* upload.html */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.html; path = upload.html; sourceTree = "<group>"; };
 		9559CA362F610A59E6361ACD /* UIImage+Helper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIImage+Helper.swift"; sourceTree = "<group>"; };
+		95772D104DE398DFA3D735F0 /* TagFlowLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagFlowLayout.swift; sourceTree = "<group>"; };
 		A2D26BA3A451F45A72262D29 /* TimelineItemTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TimelineItemTableViewCell.swift; sourceTree = "<group>"; };
 		A8A663C7191014FC70DE5918 /* TagSearchResultViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagSearchResultViewController.swift; sourceTree = "<group>"; };
 		AD0C1A7BACD10629F34BE763 /* FavoriteTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FavoriteTableViewCell.swift; sourceTree = "<group>"; };
@@ -564,6 +566,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4B601C861BCD40720823DB5C /* TagFlow */ = {
+			isa = PBXGroup;
+			children = (
+				95772D104DE398DFA3D735F0 /* TagFlowLayout.swift */,
+			);
+			name = TagFlow;
+			path = TagFlow;
+			sourceTree = "<group>";
+		};
 		4B931D6358B535A5F78A3EEF /* Layout */ = {
 			isa = PBXGroup;
 			children = (
@@ -1396,6 +1407,7 @@
 			children = (
 				E57D530116F4C48D325953A0 /* ANXHUD */,
 				4B931D6358B535A5F78A3EEF /* Layout */,
+				4B601C861BCD40720823DB5C /* TagFlow */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1821,6 +1833,7 @@
 				841A102FA6C65EA5DB1BB24F /* UIFont+Helper.swift in Sources */,
 				5719ACF85A59CD5CE3C620A0 /* SnapshotPreviewView.swift in Sources */,
 				3B1C38BE59C687BFE4602257 /* UIView+Screen.swift in Sources */,
+				47CF4BD13E8BC1D479A4678A /* TagFlowLayout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
