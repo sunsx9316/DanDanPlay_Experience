@@ -636,7 +636,8 @@ class MPVView: ANXView {
 
     var screenScale: CGFloat {
 #if os(iOS) || os(tvOS)
-        return UIScreen.main.scale
+        // iPhone Duo 内外屏缩放可能不同，优先取当前窗口所在屏幕
+        return anxScreenScale
 #else
         return NSScreen.main?.backingScaleFactor ?? 2.0
 #endif

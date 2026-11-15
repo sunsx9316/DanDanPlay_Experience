@@ -463,7 +463,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
                         let windowScale: CGFloat
 
                         #if os(iOS) || os(tvOS)
-                        windowScale = window.screen.scale
+                        windowScale = self.mediaView.anxScreenScale
                         #else
                         windowScale = window.backingScaleFactor
                         #endif
@@ -628,7 +628,7 @@ class VLCPlayerWarrper: NSObject, MediaPlayerProtocol {
             if option.key == .subtitleYPosition, let percentage = option.value as? Float {
                 let scaleFactor: CGFloat
                 #if os(iOS) || os(tvOS)
-                scaleFactor = self.mediaView.window?.screen.scale ?? UIScreen.main.scale
+                scaleFactor = self.mediaView.anxScreenScale
                 #else
                 scaleFactor = self.mediaView.window?.backingScaleFactor ?? 1.0
                 #endif

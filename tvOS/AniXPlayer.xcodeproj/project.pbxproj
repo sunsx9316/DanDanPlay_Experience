@@ -205,6 +205,7 @@
 		BE70495B7145AD63341B362C /* TableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BD2EE63F353E4DD9B53D41D /* TableView.swift */; };
 		C4947BAC9248D821B50DC5DC /* SearchResultTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E41150630F5DB33F457E6DE /* SearchResultTableViewCell.swift */; };
 		CC03394FF6EE805DC2666305 /* AnimeListCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = BC287567708140B5CB4E3D2D /* AnimeListCollectionViewCell.swift */; };
+		CCB63508BE984F98A9E4CC87 /* UIView+Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = D686CECAB3B438BA595F006F /* UIView+Screen.swift */; };
 		D0C6D82D25FF394DD2E87B6B /* BangumiDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2803616669F75742C682D87 /* BangumiDetailViewController.swift */; };
 		D6025411E3066FEDFFEBD87A /* PlayerSettingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13DD13A96D484FC80C3CEE86 /* PlayerSettingViewController.swift */; };
 		DF529575A6E63200478ADD5B /* UICollectionView+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B62E34E30C6A787ED7E996 /* UICollectionView+Helper.swift */; };
@@ -441,6 +442,7 @@
 		CE01DA07EC91885EC6E9BD0B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		D393ADEB15AAEF2B3D107731 /* ANXLogHelper+Swift.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "ANXLogHelper+Swift.swift"; sourceTree = "<group>"; };
 		D4BC15B4CE13C5659472F037 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		D686CECAB3B438BA595F006F /* UIView+Screen.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIView+Screen.swift"; sourceTree = "<group>"; };
 		E1EB8F9AD088E4C1B03D57D8 /* UIColor+Adaptive.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIColor+Adaptive.swift"; sourceTree = "<group>"; };
 		E78C4329EDF01A77D4DED5A6 /* SectionHeaderView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SectionHeaderView.swift; sourceTree = "<group>"; };
 		E79B1D4865575714237CEE45 /* FavoriteItemCollectionViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FavoriteItemCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -1105,6 +1107,15 @@
 			path = Resource;
 			sourceTree = "<group>";
 		};
+		AF2D315243C7D4B85D5589DC /* Layout */ = {
+			isa = PBXGroup;
+			children = (
+				D686CECAB3B438BA595F006F /* UIView+Screen.swift */,
+			);
+			name = Layout;
+			path = Layout;
+			sourceTree = "<group>";
+		};
 		BBDBD9156A95A58798B78FE5 /* Main */ = {
 			isa = PBXGroup;
 			children = (
@@ -1144,6 +1155,7 @@
 			isa = PBXGroup;
 			children = (
 				002FB3118F257D4A37AD8798 /* ANXHUD */,
+				AF2D315243C7D4B85D5589DC /* Layout */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1531,6 +1543,7 @@
 				24A5D304CEEEC7BE82DB3FDD /* UIFont+Helper.swift in Sources */,
 				1DA8DD2B27323E79A97732F0 /* ANXLogHelper+Swift.swift in Sources */,
 				E2AE28BE59A5220839915639 /* SceneDelegate.swift in Sources */,
+				CCB63508BE984F98A9E4CC87 /* UIView+Screen.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
