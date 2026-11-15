@@ -163,13 +163,20 @@ class PlayerUIView: UIView {
     
     private weak var _volumeView: VolumeControlView?
     
+    /// 当前窗口所在的屏幕。iPhone Duo 有内外两块屏，不能依赖 UIScreen.main
+    private var currentScreen: UIScreen? {
+        return self.window?.windowScene?.screen
+    }
+    
     private var brightnessView: SliderControlView {
         let brightnessView: SliderControlView
         if let view = self._brightnessView {
             brightnessView = view
         } else {
             brightnessView = SliderControlView(image: UIImage(named: "Player/brightness"))
-            brightnessView.progress = UIScreen.main.brightness
+            if let brightness = self.currentScreen?.brightness {
+                brightnessView.progress = brightness
+            }
             self._brightnessView = brightnessView
         }
         return brightnessView
@@ -447,7 +454,7 @@ class PlayerUIView: UIView {
                 if panType == .brightness {
                     let progressValue = self.brightnessView.progress + diff
                     self.brightnessView.progress = min(max(progressValue, 0), 1)
-                    UIScreen.main.brightness = self.brightnessView.progress
+                    self.currentScreen?.brightness = self.brightnessView.progress
                 } else {
                     let progressValue = self.volumeView.progress + diff
                     self.volumeView.progress = min(max(progressValue, 0), 1)
@@ -486,6 +493,7 @@ class PlayerUIView: UIView {
     
     //MARK: 其他私有方法
     private func setupInit() {
+        self.preservesSuperviewLayoutMargins = true
         
         self.addSubview(self.gestureView)
         self.addSubview(self.topView)

@@ -50,7 +50,7 @@ class PlayerUIBottomView: UIView {
     lazy var danmakuInputButton: Button = {
         let button = Button(type: .custom)
         button.backgroundColor = UIColor(white: 0.2, alpha: 0.6)
-        button.layer.cornerRadius = 18
+        button.layer.cornerRadius = PlayerLayoutMetrics.danmakuInputCornerRadius
         button.setTitle(NSLocalizedString("发个弹幕吧", comment: ""), for: .normal)
         button.setTitleColor(UIColor.lightGray, for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 14)
@@ -86,6 +86,8 @@ class PlayerUIBottomView: UIView {
     }
 
     private func setupInit() {
+        self.preservesSuperviewLayoutMargins = true
+        
         self.addSubview(self.bgView)
         let containerView = UIView()
         containerView.addSubview(self.progressSlider)
@@ -101,44 +103,43 @@ class PlayerUIBottomView: UIView {
         }
 
         containerView.snp.makeConstraints { make in
-            make.leading.equalTo(self.safeAreaLayoutGuide.snp.leading)
-            make.trailing.equalTo(self.safeAreaLayoutGuide.snp.trailing)
+            make.leading.trailing.equalTo(self.safeAreaLayoutGuide)
             make.bottom.equalTo(self.safeAreaLayoutGuide.snp.bottom)
             make.top.equalToSuperview()
         }
 
         self.progressSlider.snp.makeConstraints { make in
             make.top.leading.equalTo(0)
-            make.trailing.equalTo(-10)
+            make.trailing.equalTo(-PlayerLayoutMetrics.barContentInset)
             make.height.equalTo(30)
         }
 
         self.playButton.snp.makeConstraints { make in
             make.leading.equalTo(self.progressSlider)
             make.bottom.equalToSuperview()
-            make.top.equalTo(self.progressSlider.snp.bottom).offset(20)
-            make.width.height.equalTo(50)
+            make.top.equalTo(self.progressSlider.snp.bottom).offset(PlayerLayoutMetrics.playButtonTopOffset)
+            make.width.height.equalTo(PlayerLayoutMetrics.playButtonSize)
         }
 
         self.nextButton.snp.makeConstraints { make in
-            make.leading.equalTo(self.playButton.snp.trailing).offset(20)
+            make.leading.equalTo(self.playButton.snp.trailing).offset(PlayerLayoutMetrics.controlSpacing)
             make.centerY.equalTo(self.playButton)
         }
 
         self.timeLabel.snp.makeConstraints { make in
-            make.leading.equalTo(self.nextButton.snp.trailing).offset(20)
+            make.leading.equalTo(self.nextButton.snp.trailing).offset(PlayerLayoutMetrics.controlSpacing)
             make.centerY.equalTo(self.playButton)
         }
 
         self.danmakuInputButton.snp.makeConstraints { make in
-            make.leading.equalTo(self.timeLabel.snp.trailing).offset(12)
-            make.trailing.equalTo(self.playerListButton.snp.leading).offset(-12)
+            make.leading.equalTo(self.timeLabel.snp.trailing).offset(PlayerLayoutMetrics.danmakuInputSpacing)
+            make.trailing.equalTo(self.playerListButton.snp.leading).offset(-PlayerLayoutMetrics.danmakuInputSpacing)
             make.centerY.equalTo(self.playButton)
-            make.height.equalTo(36)
+            make.height.equalTo(PlayerLayoutMetrics.danmakuInputHeight)
         }
 
         self.playerListButton.snp.makeConstraints { make in
-            make.trailing.equalTo(-10)
+            make.trailing.equalTo(-PlayerLayoutMetrics.barContentInset)
             make.centerY.equalTo(self.playButton)
         }
     }

@@ -61,6 +61,8 @@ class PlayerUITopView: UIView {
     
     private func setupInit() {
         
+        self.preservesSuperviewLayoutMargins = true
+        
         self.addSubview(self.bgView)
         let containerView = UIView()
         containerView.addSubview(self.titleLabel)
@@ -68,7 +70,7 @@ class PlayerUITopView: UIView {
         
         let rightStackView = UIStackView()
         rightStackView.axis = .horizontal
-        rightStackView.spacing = 10
+        rightStackView.spacing = PlayerLayoutMetrics.topBarControlSpacing
         rightStackView.addArrangedSubview(self.resetScaleButton)
         rightStackView.addArrangedSubview(self.settingButton)
         
@@ -77,10 +79,9 @@ class PlayerUITopView: UIView {
         self.addSubview(containerView)
         
         containerView.snp.makeConstraints { make in
-            make.top.equalTo(self.snp.top)
+            make.top.equalTo(self.safeAreaLayoutGuide.snp.top)
             make.bottom.equalToSuperview()
-            make.leading.equalTo(self.safeAreaLayoutGuide.snp.leading)
-            make.trailing.equalTo(self.safeAreaLayoutGuide.snp.trailing)
+            make.leading.trailing.equalTo(self.safeAreaLayoutGuide)
         }
         
         self.bgView.snp.makeConstraints { make in
@@ -88,10 +89,10 @@ class PlayerUITopView: UIView {
         }
         
         self.backButton.snp.makeConstraints { make in
-            make.top.equalTo(20)
-            make.bottom.equalTo(-20)
+            make.top.equalTo(PlayerLayoutMetrics.topBarVerticalPadding)
+            make.bottom.equalTo(-PlayerLayoutMetrics.topBarVerticalPadding)
             make.leading.equalToSuperview()
-            make.width.height.equalTo(30)
+            make.width.height.equalTo(PlayerLayoutMetrics.backButtonSize)
         }
         
         self.titleLabel.snp.makeConstraints { make in
@@ -102,13 +103,13 @@ class PlayerUITopView: UIView {
         
         rightStackView.snp.makeConstraints { make in
             make.trailing.equalToSuperview()
-            make.width.greaterThanOrEqualTo(30)
+            make.width.greaterThanOrEqualTo(PlayerLayoutMetrics.topBarControlMinWidth)
             make.centerY.equalTo(self.backButton)
             make.leading.equalTo(self.titleLabel.snp.trailing).offset(5)
         }
         
         self.settingButton.snp.makeConstraints { make in
-            make.width.greaterThanOrEqualTo(30)
+            make.width.greaterThanOrEqualTo(PlayerLayoutMetrics.topBarControlMinWidth)
         }
     }
     

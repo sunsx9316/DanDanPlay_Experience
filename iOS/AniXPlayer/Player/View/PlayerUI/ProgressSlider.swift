@@ -213,18 +213,44 @@ public class ProgressSlider: UIControl {
     override public func layoutSublayers(of: CALayer) {
         super.layoutSublayers(of:layer)
         updateLayerFrames()
+        updateContentsScale()
+    }
+    
+    override public func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+        
+        if #available(iOS 17.0, *) { return }
+        
+        if previousTraitCollection?.displayScale != traitCollection.displayScale {
+            updateContentsScale()
+        }
     }
     
     fileprivate func initializeLayers() {
         layer.backgroundColor = UIColor.clear.cgColor
         
         trackLayer.slider = self
-        trackLayer.contentsScale = UIScreen.main.scale
         layer.addSublayer(trackLayer)
         
         thumbLayer.slider = self
-        thumbLayer.contentsScale = UIScreen.main.scale
         layer.addSublayer(thumbLayer)
+        
+        if #available(iOS 17.0, *) {
+            registerForTraitChanges([UITraitDisplayScale.self]) { (self: ProgressSlider, _) in
+                self.updateContentsScale()
+            }
+        }
+    }
+    
+    /// 跟随当前所在窗口的屏幕缩放，iPhone Duo 双屏下不能依赖 UIScreen.main
+    private func updateContentsScale() {
+        let displayScale = traitCollection.displayScale
+        guard trackLayer.contentsScale != displayScale || thumbLayer.contentsScale != displayScale else { return }
+        
+        trackLayer.contentsScale = displayScale
+        thumbLayer.contentsScale = displayScale
+        trackLayer.setNeedsDisplay()
+        thumbLayer.setNeedsDisplay()
     }
     
     func updateLayerFrames() {
