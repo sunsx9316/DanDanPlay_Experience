@@ -162,6 +162,8 @@ class PlayerUIView: UIView {
     private weak var _brightnessView: SliderControlView?
     
     private weak var _volumeView: VolumeControlView?
+
+    private var lastReservedRegionResult: PlayerReservedRegionLayout.Result?
     
     /// 当前窗口所在的屏幕。iPhone Duo 有内外两块屏，不能依赖 UIScreen.main
     private var currentScreen: UIScreen? {
@@ -494,6 +496,13 @@ class PlayerUIView: UIView {
     //MARK: 其他私有方法
     private func setupInit() {
         self.preservesSuperviewLayoutMargins = true
+
+        if #available(iOS 27.1, *) {
+            let interaction = UIHingeInteraction { [weak self] _, _ in
+                self?.setNeedsLayout()
+            }
+            addInteraction(interaction)
+        }
         
         self.addSubview(self.gestureView)
         self.addSubview(self.topView)
@@ -537,6 +546,40 @@ class PlayerUIView: UIView {
         reloadResetScaleButton()
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        updateReservedRegionLayoutIfNeeded()
+    }
+
+    private func updateReservedRegionLayoutIfNeeded() {
+        guard #available(iOS 27.1, *) else { return }
+
+        let divisions = reservedRegions(kind: .division).map { $0.frame }
+        let occlusions = reservedRegions(kind: .occlusion).map { $0.frame }
+        let context = PlayerReservedRegionLayout.Context(
+            bounds: bounds,
+            divisionRegions: divisions,
+            occlusionRegions: occlusions,
+            topBarHeight: max(topView.bounds.height, 1),
+            bottomBarHeight: max(bottomView.bounds.height, 1),
+            gap: 8
+        )
+        let result = PlayerReservedRegionLayout.layout(context: context)
+        guard result != lastReservedRegionResult else { return }
+        lastReservedRegionResult = result
+
+        topView.snp.updateConstraints { make in
+            make.top.equalToSuperview().offset(result.topBarOffset)
+            make.leading.equalToSuperview().offset(result.leadingInset)
+            make.trailing.equalToSuperview().offset(-result.trailingInset)
+        }
+        bottomView.snp.updateConstraints { make in
+            make.bottom.equalToSuperview().offset(-result.bottomBarOffset)
+            make.leading.equalToSuperview().offset(result.leadingInset)
+            make.trailing.equalToSuperview().offset(-result.trailingInset)
+        }
+    }
+
     private func suspendTimer() {
         autoHiddenTimer?.fireDate = Date.distantFuture
     }

@@ -23,6 +23,7 @@
 		5719ACF85A59CD5CE3C620A0 /* SnapshotPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33165FA2496F48294A218139 /* SnapshotPreviewView.swift */; };
 		59BC76D687C645B07724D774 /* FavoriteTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD0C1A7BACD10629F34BE763 /* FavoriteTableViewCell.swift */; };
 		5A95F9BEA930AB5D5948511A /* HttpServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D99F379A772AEFC3ED5D64B /* HttpServer.swift */; };
+		65060B43CAA969E7EF9E5F06 /* PlayerReservedRegionLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0389E173595DADBF7BBF007C /* PlayerReservedRegionLayout.swift */; };
 		7384EF4EC738DF3A0695DFD4 /* ANXHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71197F0018F4A2C1B6C341CC /* ANXHUD.swift */; };
 		765432CA78DF5FCC45929AA0 /* TimelineItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D26BA3A451F45A72262D29 /* TimelineItemTableViewCell.swift */; };
 		83B2643A92B04D6BE41DA32C /* BangumiDetailInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE55112B175182B91A24EB57 /* BangumiDetailInfoTableViewCell.swift */; };
@@ -286,6 +287,7 @@
 
 /* Begin PBXFileReference section */
 		024C86F02C09EEB708EE8FE6 /* UICollectionView+Helper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Helper.swift"; sourceTree = "<group>"; };
+		0389E173595DADBF7BBF007C /* PlayerReservedRegionLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlayerReservedRegionLayout.swift; sourceTree = "<group>"; };
 		12B02F37D11BAE2FDFC2FB0C /* TagFlowView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagFlowView.swift; sourceTree = "<group>"; };
 		29DBAB041CE4060BFF661E83 /* UIView+ANXHUD.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIView+ANXHUD.swift"; sourceTree = "<group>"; };
 		2F3DC22C756D2488DE35619F /* JellyfinLoginHistoryViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = JellyfinLoginHistoryViewController.swift; sourceTree = "<group>"; };
@@ -1387,6 +1389,7 @@
 				899E385C280B2F7A00285191 /* ProgressSlider.swift */,
 				33165FA2496F48294A218139 /* SnapshotPreviewView.swift */,
 				D98FD157AE27E29E23E9A0EB /* PlayerLayoutMetrics.swift */,
+				0389E173595DADBF7BBF007C /* PlayerReservedRegionLayout.swift */,
 			);
 			path = PlayerUI;
 			sourceTree = "<group>";
@@ -1842,6 +1845,7 @@
 				9F5B6757DFAFC17B9C6B6DD6 /* TagFlowView.swift in Sources */,
 				1A74ACBD04146E01FA570290 /* PlayerModalNavigationController.swift in Sources */,
 				E70547383D4CFD0869B641A3 /* PlayerLayoutMetrics.swift in Sources */,
+				65060B43CAA969E7EF9E5F06 /* PlayerReservedRegionLayout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
