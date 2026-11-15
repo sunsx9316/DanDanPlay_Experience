@@ -31,8 +31,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private var mediaLibraryWindowController: MediaLibraryWindowController?
 
-    private var loginWindowController: WindowController?
-
     private var homePageWindowController: HomePageNavigationWindowController?
 
     private lazy var mainWindowController: WindowController = {
@@ -54,14 +52,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.mainWindowController.showWindow(nil)
         self.mainWindowController.window?.center()
         
-        self.checkUpdate()
+        if !Self.isRunningUnitTests {
+            self.checkUpdate()
 
-        // 恢复 iCloud 同步（如果之前已开启）
-        if Preferences.shared.icloudSyncEnabled {
-            Preferences.shared.store.startSync()
+            // 恢复 iCloud 同步（如果之前已开启）
+            if Preferences.shared.icloudSyncEnabled {
+                Preferences.shared.store.startSync()
+            }
+
+            // macOS：强制登录 + 纯 Bearer，并清理旧 JWT。
+            MacAuthBootstrap.start()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                MacAuthBootstrap.presentLoginIfNeeded()
+            }
         }
-
-        renewLoginInfo()
 
         NotificationCenter.default.addObserver(
             self,
@@ -109,6 +113,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
         return true
+    }
+
+    /// 单元测试宿主进程：跳过登录窗口、更新检查等启动副作用。
+    private static var isRunningUnitTests: Bool {
+        ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
     }
     
     private func showAppVersionVC(_ info: UpdateInfo) {
@@ -261,43 +270,44 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc private func onUserMenuItemDidClick(_ item: NSMenuItem) {
-        if Preferences.shared.loginInfo != nil {
-            let alert = NSAlert()
-            alert.messageText = NSLocalizedString("提示", comment: "")
-            alert.informativeText = NSLocalizedString("确定退出登录吗？", comment: "")
-            alert.alertStyle = .warning
-            alert.addButton(withTitle: NSLocalizedString("确定", comment: ""))
-            alert.addButton(withTitle: NSLocalizedString("取消", comment: ""))
-            if alert.runModal() == .alertFirstButtonReturn {
-                Preferences.shared.loginInfo = nil
+        Task { @MainActor in
+            if await SessionStore.shared.isLoggedIn() {
+                let alert = NSAlert()
+                alert.messageText = NSLocalizedString("提示", comment: "")
+                alert.informativeText = NSLocalizedString("确定退出登录吗？", comment: "")
+                alert.alertStyle = .warning
+                alert.addButton(withTitle: NSLocalizedString("确定", comment: ""))
+                alert.addButton(withTitle: NSLocalizedString("取消", comment: ""))
+                if alert.runModal() == .alertFirstButtonReturn {
+                    await SessionStore.shared.logout()
+                }
+            } else {
+                _ = await LoginGate.shared.ensureLoggedIn(presenting: self.mainWindowController.window)
             }
-        } else {
-            let vc = LoginViewController()
-            let window = NSWindow(contentViewController: vc)
-            window.styleMask = [.titled, .closable, .miniaturizable]
-            window.isReleasedWhenClosed = false
-            let wc = WindowController(window: window)
-            window.delegate = wc
-            wc.windowWillCloseCallBack = { [weak self] in
-                self?.loginWindowController = nil
-            }
-            wc.showWindow(nil)
-            self.loginWindowController = wc
         }
     }
 
     @objc private func updateUserMenuItem() {
         guard let item = userMenuItem else { return }
-        if let info = Preferences.shared.loginInfo {
-            item.title = info.screenName
-            item.submenu = nil
-            if !info.profileImage.isEmpty {
-                loadAvatar(for: item, from: info.profileImage)
+
+        Task { @MainActor [weak self] in
+            guard let self = self else { return }
+            let isLoggedIn = await SessionStore.shared.isLoggedIn()
+            let profile = await SessionStore.shared.currentProfile()
+
+            if isLoggedIn, let profile = profile {
+                item.title = profile.displayName
+                item.submenu = nil
+                if !profile.profileImage.isEmpty {
+                    self.loadAvatar(for: item, from: profile.profileImage)
+                } else {
+                    item.image = nil
+                }
+            } else {
+                item.title = NSLocalizedString("登录弹弹Play…", comment: "")
+                item.image = nil
+                item.submenu = nil
             }
-        } else {
-            item.title = NSLocalizedString("登录弹弹Play…", comment: "")
-            item.image = nil
-            item.submenu = nil
         }
     }
 
@@ -315,18 +325,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             avatar.unlockFocus()
             DispatchQueue.main.async {
                 item.image = avatar
-            }
-        }
-    }
-
-    private func renewLoginInfo() {
-        guard let loginInfo = Preferences.shared.loginInfo,
-              let tokenExpireTime = loginInfo.tokenExpireTime else { return }
-        if tokenExpireTime < Date() {
-            UserNetworkHandle.renew { loginInfo, _ in
-                if let loginInfo = loginInfo {
-                    Preferences.shared.loginInfo = loginInfo
-                }
             }
         }
     }
