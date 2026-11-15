@@ -64,16 +64,29 @@ struct PlayerReservedRegionLayout {
         )
 
         for region in context.occlusionRegions where !region.isEmpty {
-            if region.intersects(topBarRect) {
-                result.topBarOffset = max(result.topBarOffset, region.maxY - bounds.minY + context.gap)
-            }
-            if region.intersects(bottomBarRect) {
-                result.bottomBarOffset = max(result.bottomBarOffset, bounds.maxY - region.minY + context.gap)
+            let intersectsBars = region.intersects(topBarRect) || region.intersects(bottomBarRect)
+            guard intersectsBars else { continue }
+
+            if region.width < region.height {
+                if region.midX < bounds.midX {
+                    result.leadingInset = max(result.leadingInset, region.maxX - bounds.minX + context.gap)
+                } else {
+                    result.trailingInset = max(result.trailingInset, bounds.maxX - region.minX + context.gap)
+                }
+            } else {
+                if region.intersects(topBarRect) {
+                    result.topBarOffset = max(result.topBarOffset, region.maxY - bounds.minY + context.gap)
+                }
+                if region.intersects(bottomBarRect) {
+                    result.bottomBarOffset = max(result.bottomBarOffset, bounds.maxY - region.minY + context.gap)
+                }
             }
         }
 
-        result.topBarOffset = min(max(0, result.topBarOffset), bounds.height)
-        result.bottomBarOffset = min(max(0, result.bottomBarOffset), bounds.height)
+        let topHeight = max(context.topBarHeight, 0)
+        let bottomHeight = max(context.bottomBarHeight, 0)
+        result.topBarOffset = min(max(0, result.topBarOffset), max(0, bounds.height - topHeight))
+        result.bottomBarOffset = min(max(0, result.bottomBarOffset), max(0, bounds.height - bottomHeight))
         result.leadingInset = min(max(0, result.leadingInset), bounds.width)
         result.trailingInset = min(max(0, result.trailingInset), bounds.width)
 

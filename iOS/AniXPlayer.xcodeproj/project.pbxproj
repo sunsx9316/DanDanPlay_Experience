@@ -247,6 +247,7 @@
 		89FFD12B2D44EB2700428206 /* AppKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD12A2D44EB2700428206 /* AppKey.swift */; };
 		89FFD1312D4B838500428206 /* Launcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD1302D4B838500428206 /* Launcher.swift */; };
 		89FFD1352D4B904000428206 /* SelectedFontViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD1342D4B904000428206 /* SelectedFontViewController.swift */; };
+		8A650C0ECD2FEC527876B42F /* TagCellLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB4848AAC7309F68C4589127 /* TagCellLayout.swift */; };
 		8CC5E781D18C4C83A9F2A6BE /* FolderProgressCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE600170BF1445D9B00A4593 /* FolderProgressCell.swift */; };
 		8FB5BDA2AD126A8CA5BB773E /* UIColor+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92F38CCA0ED39E98C2FE28D3 /* UIColor+Helper.swift */; };
 		9BF17D68F82C52E81117BC9F /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = D6F529145107718446EDC5FC /* FirebaseCrashlytics */; };
@@ -260,6 +261,7 @@
 		AD5424466F396E3C9C540EE8 /* UIView+HitTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 881931A0CECE747F18F94987 /* UIView+HitTest.swift */; };
 		B1B5DB3C092454EBF2CA961B /* UITableView+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDF12E752B121D7B0C457AD6 /* UITableView+Helper.swift */; };
 		BD2AD22A094E8056D1CFF858 /* UserInfoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E521A7201C2263207E9F2ED0 /* UserInfoCell.swift */; };
+		CF200C23E96FB18B415184EE /* PlayerControlPanelLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BDC1105BE439A5F99686B98 /* PlayerControlPanelLayout.swift */; };
 		DE149C417440A30559A0EB3A /* UICollectionView+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 024C86F02C09EEB708EE8FE6 /* UICollectionView+Helper.swift */; };
 		E6BFF6B7DE8D26992BB0F7CC /* UIViewController+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 862D3959ADFE373E8CB21676 /* UIViewController+Helper.swift */; };
 		E70547383D4CFD0869B641A3 /* PlayerLayoutMetrics.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98FD157AE27E29E23E9A0EB /* PlayerLayoutMetrics.swift */; };
@@ -297,6 +299,7 @@
 		3FA8CB89E4570CEBB18E9F5A /* upload.js */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.javascript; path = upload.js; sourceTree = "<group>"; };
 		434257BA70662EB64A5443E9 /* BangumiCommentTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BangumiCommentTableViewCell.swift; sourceTree = "<group>"; };
 		50A643EC22A981E05F95C7D1 /* PlayerModalNavigationController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlayerModalNavigationController.swift; sourceTree = "<group>"; };
+		5BDC1105BE439A5F99686B98 /* PlayerControlPanelLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlayerControlPanelLayout.swift; sourceTree = "<group>"; };
 		65B6EA5EB354CD3E477CF94B /* UIView+Helper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIView+Helper.swift"; sourceTree = "<group>"; };
 		6C6DEED536BD30EBDB2470A5 /* UIView+Screen.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIView+Screen.swift"; sourceTree = "<group>"; };
 		71197F0018F4A2C1B6C341CC /* ANXHUD.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ANXHUD.swift; sourceTree = "<group>"; };
@@ -525,6 +528,7 @@
 		C3DA91DC2CB2BDFC2138D3A3 /* StoreBackend.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = StoreBackend.swift; sourceTree = "<group>"; };
 		D55E9C217C5272A0B0689421 /* UIFont+Helper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UIFont+Helper.swift"; sourceTree = "<group>"; };
 		D98FD157AE27E29E23E9A0EB /* PlayerLayoutMetrics.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlayerLayoutMetrics.swift; sourceTree = "<group>"; };
+		DB4848AAC7309F68C4589127 /* TagCellLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagCellLayout.swift; sourceTree = "<group>"; };
 		DDF12E752B121D7B0C457AD6 /* UITableView+Helper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "UITableView+Helper.swift"; sourceTree = "<group>"; };
 		DE55112B175182B91A24EB57 /* BangumiDetailInfoTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BangumiDetailInfoTableViewCell.swift; sourceTree = "<group>"; };
 		E521A7201C2263207E9F2ED0 /* UserInfoCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = UserInfoCell.swift; sourceTree = "<group>"; };
@@ -577,6 +581,7 @@
 			children = (
 				95772D104DE398DFA3D735F0 /* TagFlowLayout.swift */,
 				12B02F37D11BAE2FDFC2FB0C /* TagFlowView.swift */,
+				DB4848AAC7309F68C4589127 /* TagCellLayout.swift */,
 			);
 			name = TagFlow;
 			path = TagFlow;
@@ -752,6 +757,7 @@
 				890DF76526160B3E002D8AE5 /* PlayerControlAnimater.swift */,
 				890DF76626160B3E002D8AE5 /* View */,
 				50A643EC22A981E05F95C7D1 /* PlayerModalNavigationController.swift */,
+				5BDC1105BE439A5F99686B98 /* PlayerControlPanelLayout.swift */,
 			);
 			path = Player;
 			sourceTree = "<group>";
@@ -1846,6 +1852,8 @@
 				1A74ACBD04146E01FA570290 /* PlayerModalNavigationController.swift in Sources */,
 				E70547383D4CFD0869B641A3 /* PlayerLayoutMetrics.swift in Sources */,
 				65060B43CAA969E7EF9E5F06 /* PlayerReservedRegionLayout.swift in Sources */,
+				8A650C0ECD2FEC527876B42F /* TagCellLayout.swift in Sources */,
+				CF200C23E96FB18B415184EE /* PlayerControlPanelLayout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

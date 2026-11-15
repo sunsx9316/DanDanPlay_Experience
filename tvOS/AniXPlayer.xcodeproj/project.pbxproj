@@ -198,6 +198,7 @@
 		AB8B625667E0CD802F14F42C /* SidePanelAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7051C7C8FEE41D818FB28914 /* SidePanelAnimator.swift */; };
 		ABFF82FB9DC123FF0FFD1AC6 /* ANXHUD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 297D8A487819CF6261358C6F /* ANXHUD.swift */; };
 		AD5F06F38F39DAEA4BE6E77B /* TitleMoreTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89B90EAFE5EF60F7C8B4EBD3 /* TitleMoreTableViewCell.swift */; };
+		AF3066DC8A5B84B05E0D7FC6 /* TagCellLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A63E43232310AF47C8C58998 /* TagCellLayout.swift */; };
 		B1EF5B597AD43B774405AAD2 /* DanmakuInputViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BBD24D4AAE2D8C68FA85C91 /* DanmakuInputViewController.swift */; };
 		B4827C675C9ED72BC6C1F9DF /* ANXHUDRoundProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30B9DF6E7012D5017917BB9D /* ANXHUDRoundProgressView.swift */; };
 		B5617724D36B370DC3DC6678 /* SwitchSettingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E948A9D4B73E79489FF7ECC /* SwitchSettingTableViewCell.swift */; };
@@ -428,6 +429,7 @@
 		9A2D64ECCE906A4811133267 /* MediaLibraryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaLibraryViewController.swift; sourceTree = "<group>"; };
 		A2803616669F75742C682D87 /* BangumiDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BangumiDetailViewController.swift; sourceTree = "<group>"; };
 		A305ABC66B2B0EAD5EF7D337 /* OptionListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OptionListViewController.swift; sourceTree = "<group>"; };
+		A63E43232310AF47C8C58998 /* TagCellLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagCellLayout.swift; sourceTree = "<group>"; };
 		A66F5F0C52C7C8B882B08003 /* Localizable.xcstrings */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
 		AC90E930AEDDD1D5D5918388 /* FileBrowserViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileBrowserViewController.swift; sourceTree = "<group>"; };
 		B028731CD4A13D93F299C6C4 /* SetMainColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetMainColorViewController.swift; sourceTree = "<group>"; };
@@ -1116,6 +1118,7 @@
 			children = (
 				88DE0887883FBFAFE8D7A565 /* TagFlowLayout.swift */,
 				8B42BA05C32A6201DC9F035E /* TagFlowView.swift */,
+				A63E43232310AF47C8C58998 /* TagCellLayout.swift */,
 			);
 			name = TagFlow;
 			path = TagFlow;
@@ -1561,6 +1564,7 @@
 				CCB63508BE984F98A9E4CC87 /* UIView+Screen.swift in Sources */,
 				F9AE3D41FB7E4A4D6386450B /* TagFlowLayout.swift in Sources */,
 				628B63E2DDF887E6B4B0DAA2 /* TagFlowView.swift in Sources */,
+				AF3066DC8A5B84B05E0D7FC6 /* TagCellLayout.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

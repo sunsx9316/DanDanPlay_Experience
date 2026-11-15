@@ -9,12 +9,6 @@ import UIKit
 
 typealias PlayerControlFinishAnimateAction = ((Bool) -> Void)
 
-private enum PlayerControlPanelLayout {
-    static let widthRatio: CGFloat = 0.5
-    static let minWidth: CGFloat = 320
-    static let maxWidth: CGFloat = 420
-}
-
 class PlayerControlAnimater: NSObject, UIViewControllerTransitioningDelegate {
     var didFinishAnimateCallBack: PlayerControlFinishAnimateAction?
     
@@ -57,10 +51,7 @@ extension PlayerControlAnimater {
             
             containerView.addSubview(toVC.view)
             let containerWidth = containerView.bounds.width
-            let width = min(
-                max(containerWidth * PlayerControlPanelLayout.widthRatio, PlayerControlPanelLayout.minWidth),
-                PlayerControlPanelLayout.maxWidth
-            )
+            let width = PlayerControlPanelLayout.width(containerWidth: containerWidth)
             toVC.view.frame = CGRect(x: containerWidth, y: 0, width: width, height: containerView.bounds.height)
             UIView.animate(withDuration: self.transitionDuration(using: transitionContext), delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 9, options: .curveEaseInOut, animations: {
                 toVC.view.frame.origin.x = containerWidth - width

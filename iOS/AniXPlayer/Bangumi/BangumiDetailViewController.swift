@@ -199,6 +199,10 @@ class BangumiDetailViewController: ViewController {
             make.edges.equalToSuperview()
         }
 
+        // contentView 保持 cell 全宽，安全区通过 layoutMargins 进入；
+        // TagFlowView 的高度计算和实际布局使用同一宽度。
+        self.tableView.insetsContentViewsToSafeArea = false
+
         self.tableView.mj_header?.beginRefreshing()
     }
 

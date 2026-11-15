@@ -72,7 +72,12 @@ class TagListTableViewCell: TableViewCell {
             )
         }
 
-        let contentWidth = targetSize.width - Self.horizontalInset * 2
+        let contentWidth = TagCellLayout.contentWidth(
+            targetWidth: targetSize.width,
+            contentViewWidth: contentView.bounds.width,
+            leftMargin: Self.horizontalInset,
+            rightMargin: Self.horizontalInset
+        )
         let height = flowView.heightThatFits(width: contentWidth) + Self.verticalInset * 2
         return CGSize(width: targetSize.width, height: height)
     }

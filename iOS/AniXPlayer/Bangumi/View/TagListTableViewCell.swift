@@ -67,7 +67,12 @@ class TagListTableViewCell: TableViewCell {
         }
 
         let margins = contentView.layoutMargins
-        let contentWidth = targetSize.width - margins.left - margins.right
+        let contentWidth = TagCellLayout.contentWidth(
+            targetWidth: targetSize.width,
+            contentViewWidth: contentView.bounds.width,
+            leftMargin: margins.left,
+            rightMargin: margins.right
+        )
         let height = flowView.heightThatFits(width: contentWidth) + margins.top + margins.bottom
         return CGSize(width: targetSize.width, height: height)
     }

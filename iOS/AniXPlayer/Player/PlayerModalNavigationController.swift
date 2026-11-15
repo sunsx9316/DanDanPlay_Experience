@@ -9,6 +9,22 @@ import UIKit
 
 class PlayerModalNavigationController: NavigationController {
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        if let root = viewControllers.first, root.navigationItem.leftBarButtonItem == nil {
+            root.navigationItem.leftBarButtonItem = UIBarButtonItem(
+                barButtonSystemItem: .close,
+                target: self,
+                action: #selector(closeModal)
+            )
+        }
+    }
+
+    @objc private func closeModal() {
+        dismiss(animated: true)
+    }
+
     override var shouldAutorotate: Bool { true }
 
     override var supportedInterfaceOrientations: UIInterfaceOrientationMask { .landscape }
