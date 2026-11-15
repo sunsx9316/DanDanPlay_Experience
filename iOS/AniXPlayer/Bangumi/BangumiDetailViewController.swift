@@ -81,13 +81,12 @@ extension BangumiDetailViewController: UITableViewDataSource {
             return cell
         case .tags:
             let cell = tableView.dequeueCell(class: TagListTableViewCell.self, indexPath: indexPath)
-            if let tags = self.detail?.tags, !tags.isEmpty {
-                cell.update(tags: tags)
-                cell.didTouchTagButton = { [weak self] tag in
-                    guard let self = self else { return }
-                    let vc = TagSearchResultViewController(tag: tag.name)
-                    self.navigationController?.pushViewController(vc, animated: true)
-                }
+            let tags = self.detail?.tags ?? []
+            cell.update(tags: tags)
+            cell.didTouchTagButton = { [weak self] tag in
+                guard let self = self else { return }
+                let vc = TagSearchResultViewController(tag: tag.name)
+                self.navigationController?.pushViewController(vc, animated: true)
             }
             return cell
         case .episodes:
@@ -172,6 +171,8 @@ class BangumiDetailViewController: ViewController {
 
     private var commentCount = 0
 
+    private var lastTagTableWidth: CGFloat = 0
+
     private var detail: BangumiDetail? {
         didSet {
             self.title = self.detail?.animeTitle
@@ -199,6 +200,17 @@ class BangumiDetailViewController: ViewController {
         }
 
         self.tableView.mj_header?.beginRefreshing()
+    }
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+
+        let width = self.tableView.bounds.width
+        guard width > 0, width != self.lastTagTableWidth else { return }
+
+        self.lastTagTableWidth = width
+        self.tableView.beginUpdates()
+        self.tableView.endUpdates()
     }
 
     // MARK: Private
