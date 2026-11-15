@@ -31,6 +31,31 @@ class MainViewController: UITabBarController {
         viewControllers = [firstViewController, secondViewController, thirdViewController]
 
         renewLoginInfo()
+        updateSidebarPlacement()
+
+        if #available(iOS 17.0, *) {
+            registerForTraitChanges([UITraitHorizontalSizeClass.self]) { (self: MainViewController, _) in
+                self.updateSidebarPlacement()
+            }
+        }
+    }
+
+    override func traitCollectionDidChange(_ previousTraitCollection: UITraitCollection?) {
+        super.traitCollectionDidChange(previousTraitCollection)
+
+        if #available(iOS 17.0, *) { return }
+
+        if previousTraitCollection?.horizontalSizeClass != traitCollection.horizontalSizeClass {
+            updateSidebarPlacement()
+        }
+    }
+
+    private func updateSidebarPlacement() {
+        if #available(iOS 27.0, *) {
+            let isRegularWidth = traitCollection.horizontalSizeClass == .regular
+            mode = isRegularWidth ? .tabSidebar : .tabBar
+            sidebar.preferredPlacement = isRegularWidth ? .sidebar : .automatic
+        }
     }
 
     /// 刷新登录信息
