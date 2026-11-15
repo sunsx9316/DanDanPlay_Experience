@@ -96,7 +96,6 @@ class PlayerViewController: ViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        UIViewController.attemptRotationToDeviceOrientation()
         self.navigationController?.setNavigationBarHidden(true, animated: animated)
     }
 
@@ -310,6 +309,11 @@ class PlayerViewController: ViewController {
     override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
         return .landscapeLeft
     }
+
+    @available(iOS 26.0, *)
+    override var prefersInterfaceOrientationLocked: Bool {
+        return true
+    }
     
     override var prefersHomeIndicatorAutoHidden: Bool {
         if !isViewLoaded {
@@ -483,7 +487,7 @@ class PlayerViewController: ViewController {
 
 extension PlayerViewController: UIPopoverPresentationControllerDelegate {
     func adaptivePresentationStyle(for controller: UIPresentationController, traitCollection: UITraitCollection) -> UIModalPresentationStyle {
-        return UIDevice.current.isPad ? .popover : .none
+        return traitCollection.horizontalSizeClass == .regular ? .popover : .none
     }
 }
 

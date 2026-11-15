@@ -170,20 +170,4 @@ class MediaLibViewController: ViewController {
         self.tableView.reloadData()
     }
 
-    override var shouldAutorotate: Bool {
-        return UIDevice.current.isPad
-    }
-
-    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-        if UIDevice.current.isPad {
-            return .all
-        }
-
-        return .portrait
-    }
-
-    override var preferredInterfaceOrientationForPresentation: UIInterfaceOrientation {
-        return .portrait
-    }
-
 }
