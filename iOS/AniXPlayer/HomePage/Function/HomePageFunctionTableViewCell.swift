@@ -52,7 +52,7 @@ class HomePageFunctionTableViewCell: TableViewCell {
         let collectionView = CollectionView(frame: self.contentView.bounds, collectionViewLayout: layout)
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.isPagingEnabled = true
+        collectionView.isPagingEnabled = false
         collectionView.registerClassCell(class: HomePageFunctionCollectionViewCell.self)
         collectionView.showsVerticalScrollIndicator = false
         collectionView.showsHorizontalScrollIndicator = false

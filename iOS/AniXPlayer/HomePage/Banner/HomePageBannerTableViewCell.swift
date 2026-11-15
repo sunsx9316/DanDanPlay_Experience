@@ -155,12 +155,13 @@ class HomePageBannerTableViewCell: TableViewCell {
         contentView.addSubview(pageControl)
 
         collectionView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.top.bottom.equalToSuperview()
+            make.leading.trailing.equalTo(self.contentView.layoutMarginsGuide)
         }
 
         pageControl.snp.makeConstraints { make in
             make.bottom.equalToSuperview()
-            make.centerX.equalToSuperview()
+            make.centerX.equalTo(self.collectionView)
         }
     }
 

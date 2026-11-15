@@ -54,6 +54,7 @@ class HomePageBannerItemCell: CollectionViewCell {
     }
 
     private func setupUI() {
+        // 横幅是装饰性背景，标题/描述是独立 overlay；Duo 宽屏下允许裁切两侧，不承载关键信息。
         contentView.addSubview(bgImageView)
         contentView.addSubview(titleLabel)
         contentView.addSubview(descLabel)

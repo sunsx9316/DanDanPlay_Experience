@@ -219,7 +219,7 @@ class FileBrowserViewController: ViewController {
         
         self.view.addSubview(self.tableView)
         self.tableView.snp.makeConstraints { (make) in
-            make.edges.equalTo(self.view.safeAreaLayoutGuide.snp.edges)
+            make.edges.equalTo(self.view.safeAreaLayoutGuide)
         }
         
         let showAllItem = UIBarButtonItem(title: NSLocalizedString("显示全部", comment: ""), target: self, action: #selector(showAllFile(_:)))
