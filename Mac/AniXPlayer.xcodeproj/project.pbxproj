@@ -244,16 +244,6 @@
 		F4687B5CDCF48C6C1BB47CC3 /* TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5F4F6E39574907A79982F0 /* TextView.swift */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		89DADA092FD05D1100C71A33 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 89945FDF28CA3BAE009AC640 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 89DAD9DB2FD05C3A00C71A33;
-			remoteInfo = MPVFramework;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
 		89DAD9E72FD05C3A00C71A33 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -1327,7 +1317,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				89DADA0A2FD05D1100C71A33 /* PBXTargetDependency */,
 			);
 			name = AniXPlayer;
 			packageProductDependencies = (
@@ -1675,13 +1664,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		89DADA0A2FD05D1100C71A33 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			targetProxy = 89DADA092FD05D1100C71A33 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		89945FF428CA3BAF009AC640 /* Debug */ = {

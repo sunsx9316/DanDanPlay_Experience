@@ -1,0 +1,17 @@
+//
+//  AppKey.swift.example
+//  AniXPlayer
+//
+//  复制本文件为 AppKey.swift，并填入在 https://doc.dandanplay.com/open/ 申请的凭证。
+//  AppKey.swift 已被 .gitignore 忽略，不要提交真实凭证。
+//
+
+import Foundation
+
+/// 弹弹play 开放平台应用凭证
+struct AppKey {
+    /// 应用 AppId
+    static var appId = "YOUR_APP_ID"
+    /// 应用 AppSecret
+    static var appSec = "YOUR_APP_SECRET"
+}
