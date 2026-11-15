@@ -9,6 +9,12 @@ import UIKit
 
 typealias PlayerControlFinishAnimateAction = ((Bool) -> Void)
 
+private enum PlayerControlPanelLayout {
+    static let widthRatio: CGFloat = 0.5
+    static let minWidth: CGFloat = 320
+    static let maxWidth: CGFloat = 420
+}
+
 class PlayerControlAnimater: NSObject, UIViewControllerTransitioningDelegate {
     var didFinishAnimateCallBack: PlayerControlFinishAnimateAction?
     
@@ -50,10 +56,14 @@ extension PlayerControlAnimater {
             }))
             
             containerView.addSubview(toVC.view)
-            let width = containerView.frame.width * 0.5
-            toVC.view.frame = CGRect(x: containerView.frame.width, y: 0, width: width, height: containerView.frame.height)
+            let containerWidth = containerView.bounds.width
+            let width = min(
+                max(containerWidth * PlayerControlPanelLayout.widthRatio, PlayerControlPanelLayout.minWidth),
+                PlayerControlPanelLayout.maxWidth
+            )
+            toVC.view.frame = CGRect(x: containerWidth, y: 0, width: width, height: containerView.bounds.height)
             UIView.animate(withDuration: self.transitionDuration(using: transitionContext), delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 9, options: .curveEaseInOut, animations: {
-                toVC.view.frame.origin.x = containerView.frame.width - width
+                toVC.view.frame.origin.x = containerWidth - width
             }) { (finished) in
                 transitionContext.completeTransition(finished)
             }
@@ -76,7 +86,7 @@ extension PlayerControlAnimater {
             containerView.addSubview(fromVC.view)
             
             UIView.animate(withDuration: self.transitionDuration(using: transitionContext), delay: 0, usingSpringWithDamping: 1, initialSpringVelocity: 9, options: .curveEaseInOut, animations: {
-                fromVC.view.frame.origin.x = containerView.frame.width
+                fromVC.view.frame.origin.x = containerView.bounds.width
             }) { (finished) in
                 transitionContext.completeTransition(finished)
                 self.didFinishAnimateCallBack?(finished)

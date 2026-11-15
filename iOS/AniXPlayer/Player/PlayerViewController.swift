@@ -454,7 +454,7 @@ class PlayerViewController: ViewController {
         if let parentFile = item?.parentFile {
             let vc = FileBrowserViewController(with: parentFile, selectedFile: item, filterType: type)
             vc.delegate = self
-            let nav = NavigationController(rootViewController: vc)
+            let nav = PlayerModalNavigationController(rootViewController: vc)
             nav.modalPresentationStyle = .custom
             nav.transitioningDelegate = self.animater
             self.present(nav, animated: true, completion: nil)
@@ -739,7 +739,7 @@ extension PlayerViewController: DanmakuSettingViewControllerDelegate {
         }
         
         let vc = FilterDanmakuViewController(danmakuModel: self.danmakuModel)
-        let nav = NavigationController(rootViewController: vc)
+        let nav = PlayerModalNavigationController(rootViewController: vc)
         nav.modalPresentationStyle = .custom
         nav.transitioningDelegate = self.animater
         self.present(nav, animated: true, completion: nil)
@@ -755,7 +755,7 @@ extension PlayerViewController: DanmakuSettingViewControllerDelegate {
         }
 
         let vc = DanmakuListViewController(danmakuModel: self.danmakuModel)
-        let nav = NavigationController(rootViewController: vc)
+        let nav = PlayerModalNavigationController(rootViewController: vc)
         nav.modalPresentationStyle = .custom
         nav.transitioningDelegate = self.animater
         self.present(nav, animated: true, completion: nil)
@@ -771,7 +771,7 @@ extension PlayerViewController: DanmakuSettingViewControllerDelegate {
             vc.showPlayNowItem = false
             vc.delegate = self
             
-            let nav = NavigationController(rootViewController: vc)
+            let nav = PlayerModalNavigationController(rootViewController: vc)
             nav.modalPresentationStyle = .custom
             nav.transitioningDelegate = self.animater
             self.present(nav, animated: true, completion: nil)
@@ -788,7 +788,7 @@ extension PlayerViewController: MediaSettingViewControllerDelegate {
         }
         
         let vc = SelectedFontViewController(mediaModel: self.mediaModel)
-        let nav = NavigationController(rootViewController: vc)
+        let nav = PlayerModalNavigationController(rootViewController: vc)
         nav.modalPresentationStyle = .custom
         nav.transitioningDelegate = self.animater
         self.present(nav, animated: true, completion: nil)

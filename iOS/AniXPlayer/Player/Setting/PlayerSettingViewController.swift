@@ -33,8 +33,6 @@ class PlayerSettingViewController: ViewController {
         segmentedControl.setTitleTextAttributes([.foregroundColor : UIColor.mainColor], for: .selected)
         segmentedControl.layer.borderWidth = 1
         segmentedControl.layer.borderColor = UIColor.textColor.cgColor
-        segmentedControl.setWidth(50, forSegmentAt: 0)
-        segmentedControl.setWidth(50, forSegmentAt: 1)
         return segmentedControl
     }()
     
@@ -118,7 +116,7 @@ class PlayerSettingViewController: ViewController {
         
         self.segmentedControl.snp.makeConstraints { (make) in
             make.top.equalTo(10)
-            make.centerX.equalToSuperview()
+            make.leading.trailing.equalToSuperview().inset(10)
         }
         
         self.segmentedControl.selectedSegmentIndex = 0
