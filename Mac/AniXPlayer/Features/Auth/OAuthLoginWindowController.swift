@@ -68,6 +68,7 @@ final class OAuthLoginWindowController: NSWindowController {
 
         webView.customUserAgent = service.environment.userAgent
         webView.navigationDelegate = self
+        webView.uiDelegate = self
         webView.load(URLRequest(url: authorize.url))
 
         startPolling()
@@ -180,5 +181,26 @@ extension OAuthLoginWindowController: WKNavigationDelegate {
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
         inspectCurrentURL()
+    }
+}
+
+extension OAuthLoginWindowController: WKUIDelegate {
+    /// 第三方登录/注册链接常用 target=_blank；没有这个实现时 WKWebView 会静默丢弃新窗口。
+    func webView(
+        _ webView: WKWebView,
+        createWebViewWith configuration: WKWebViewConfiguration,
+        for navigationAction: WKNavigationAction,
+        windowFeatures: WKWindowFeatures
+    ) -> WKWebView? {
+        guard let url = navigationAction.request.url else {
+            return nil
+        }
+
+        if OAuthCallback.matches(url, redirectURI: transaction.redirectURI) {
+            inspect(url)
+        } else {
+            webView.load(URLRequest(url: url))
+        }
+        return nil
     }
 }
