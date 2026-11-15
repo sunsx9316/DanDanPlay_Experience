@@ -15,6 +15,6 @@ import Foundation
 struct AppKey {
     /// 应用 AppId（macOS 已注册：anixplayermacv1）
     static var appId = "anixplayermacv1"
-    /// 应用 AppSecret：仅旧签名接口需要，本地填写
+    /// 应用 AppSecret：iOS/tvOS 旧签名接口需要；macOS 不使用
     static var appSec = "YOUR_APP_SECRET"
 }

@@ -146,24 +146,37 @@ class NetworkManager {
         self.delete(url: self.baseURL + tmpPath, parameters: parameters, headers: createHeaders(path: tmpPath), complection: complection)
     }
 
+    /// 额外的 Bearer token 提供者（macOS OAuth 使用；默认 nil，不影响 iOS/tvOS）
+    var bearerTokenProvider: (() -> String?)?
+
+    /// 是否发送开放平台应用签名（X-AppId / X-Signature / X-Timestamp）
+    /// - macOS 目标态是「强制登录 + 纯 Bearer」，启动时设为 false；
+    /// - iOS/tvOS 保持默认 true，行为不变。
+    var appSignatureEnabled = true
+
     // 创建请求头
     private func createHeaders(path: String) -> HTTPHeaders {
         var header = HTTPHeaders()
         let version = AppInfoHelper.appVersion
         header.add(.userAgent("dandanplay/ios \(version)"))
-        if let loginInfo = Preferences.shared.loginInfo {
+
+        if let token = bearerTokenProvider?() {
+            header.add(.authorization(bearerToken: token))
+        } else if let loginInfo = Preferences.shared.loginInfo {
             header.add(.authorization(bearerToken: loginInfo.token))
         }
-        
-        let time = Int64(Date().timeIntervalSince1970)
-        let signature = hash(unixTimestamp: time, path: path)
-        header.add(name: "X-AppId", value: AppKey.appId)
-        header.add(name: "X-Signature", value: signature)
-        header.add(name: "X-Timestamp", value: "\(time)")
+
+        if appSignatureEnabled {
+            let time = Int64(Date().timeIntervalSince1970)
+            let signature = hash(unixTimestamp: time, path: path)
+            header.add(name: "X-AppId", value: AppKey.appId)
+            header.add(name: "X-Signature", value: signature)
+            header.add(name: "X-Timestamp", value: "\(time)")
 #if DEBUG
-        // 测试签名（强制启用验证）
-        header.add(name: "X-Auth", value: "1")
+            // 测试签名（强制启用验证）
+            header.add(name: "X-Auth", value: "1")
 #endif
+        }
         return header
     }
     
