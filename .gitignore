@@ -69,3 +69,7 @@ buildServer.json
 tvOS/.build
 iOS/.claude/settings.local.json
 .worktrees/
+
+# External workspace links（敏感代码/测试素材，勿提交）
+/vendor
+/sample
