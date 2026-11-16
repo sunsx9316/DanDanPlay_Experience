@@ -55,6 +55,13 @@ enum AccessibilityID {
         static let queueList = "home.queueList"
     }
 
+    enum History {
+        static let root = "history.root"
+        static let list = "history.list"
+        static let refreshButton = "history.refreshButton"
+        static let statusLabel = "history.statusLabel"
+    }
+
     enum Membership {
         static let window = "membership.window"
         static let statusCard = "membership.statusCard"

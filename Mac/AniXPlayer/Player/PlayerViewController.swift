@@ -73,6 +73,8 @@ class PlayerViewController: ViewController {
     
     private var matchWindowController: WindowController?
 
+    private let playHistoryReporter = PlayHistoryReporter()
+
     private weak var danmakuMenu: NSMenu?
 
     private var sendDanmakuColor: ANXColor = Preferences.shared.sendDanmakuColor
@@ -203,6 +205,7 @@ class PlayerViewController: ViewController {
             guard let self = self else { return }
             
             self.uiView.title = file?.fileName
+            self.playHistoryReporter.reset()
             if file != nil {
                 self.beginActivity()
             } else {
@@ -214,6 +217,12 @@ class PlayerViewController: ViewController {
             guard let self = self else { return }
 
             self.uiView.updateTime()
+            if let episodeId = self.playerModel.currentMatchInfo?.matchId {
+                self.playHistoryReporter.reportIfNeeded(
+                    episodeId: episodeId,
+                    currentTime: timeInfo.currentTime
+                )
+            }
         }).disposed(by: self.disposeBag)
         
         self.mediaModel.context.isPlay.subscribe(onNext: { [weak self] isPlay in
