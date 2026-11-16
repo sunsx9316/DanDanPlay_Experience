@@ -92,7 +92,8 @@ final class PlayHistoryCollectionViewCell: CollectionViewItem {
         let root = NSStackView(views: [posterView, infoStack])
         root.orientation = .vertical
         root.spacing = 8
-        root.alignment = .leading
+        // 让海报与文字撑满瀑布流列宽；否则低分辨率海报会按 intrinsic width 缩成一小块。
+        root.alignment = .width
 
         view.addSubview(root)
         root.snp.makeConstraints { make in

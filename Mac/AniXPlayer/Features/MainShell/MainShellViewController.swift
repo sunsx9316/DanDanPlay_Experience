@@ -297,13 +297,14 @@ final class MainShellViewController: ViewController {
         window.titlebarAppearsTransparent = true
         window.titleVisibility = .hidden
         window.backgroundColor = MainShellPalette.bar
-        window.contentMinSize = NSSize(width: 980, height: 680)
+        window.contentMinSize = NSSize(width: 1000, height: 680)
 
+        // 首次打开/旧版保存的窗口可能偏小；恢复到欢迎页原来的默认宽度。
         let contentSize = window.contentLayoutRect.size
-        if contentSize.width < 980 || contentSize.height < 680 {
+        if contentSize.width < 1100 || contentSize.height < 720 {
             window.setContentSize(NSSize(
-                width: max(contentSize.width, 980),
-                height: max(contentSize.height, 680)
+                width: max(contentSize.width, 1100),
+                height: max(contentSize.height, 720)
             ))
         }
     }

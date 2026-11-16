@@ -309,7 +309,7 @@ private final class MainShellUserAreaView: WelcomeShellTapView {
         }
         snp.makeConstraints { make in
             make.height.equalTo(34)
-            make.width.equalTo(126)
+            make.width.equalTo(150)
         }
 
         setAccessibilityIdentifier(AccessibilityID.MainShell.user)
@@ -337,13 +337,20 @@ private final class MainShellUserAreaView: WelcomeShellTapView {
         if let memberDate = profile?.privileges?.member, memberDate > Date() {
             let formatter = DateFormatter()
             formatter.dateFormat = "yyyy-MM-dd"
+            let days = max(1, Calendar.current.dateComponents([.day], from: Date(), to: memberDate).day ?? 0)
+            // 顶部栏空间有限，展示剩余天数；完整到期日放在 tooltip。
             membershipLabel.text = String(
-                format: NSLocalizedString("会员至 %@", comment: ""),
+                format: NSLocalizedString("会员 %d 天", comment: ""),
+                days
+            )
+            membershipLabel.toolTip = String(
+                format: NSLocalizedString("会员有效期至 %@", comment: ""),
                 formatter.string(from: memberDate)
             )
             membershipLabel.textColor = MainShellPalette.secondaryText
         } else {
             membershipLabel.text = NSLocalizedString("未开通会员", comment: "")
+            membershipLabel.toolTip = nil
             membershipLabel.textColor = MainShellPalette.secondaryText
         }
     }
