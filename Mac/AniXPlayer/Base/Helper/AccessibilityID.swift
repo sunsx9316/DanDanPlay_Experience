@@ -176,6 +176,7 @@ enum AccessibilityID {
         static let danmakuSettingButton = "player.danmakuSettingButton"
         static let mediaSettingButton = "player.mediaSettingButton"
         static let playerListButton = "player.playerListButton"
+        static let moreButton = "player.moreButton"
         static let screenshotButton = "player.screenshotButton"
         static let miniProgressSlider = "player.miniProgressSlider"
         static let backupDanmakuItem = "player.backupDanmakuItem"

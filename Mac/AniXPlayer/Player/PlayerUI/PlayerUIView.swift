@@ -99,6 +99,15 @@ class PlayerUIView: BaseView {
         bottomView.thumbnailButton.addTarget(self, action: #selector(onTouchThumbnailerButton(_:)))
         bottomView.danmakuSettingButton.addTarget(self, action: #selector(onTouchDanmakuButton(_:)))
         bottomView.danmakuConfigButton.addTarget(self, action: #selector(onTouchDanmakuConfigButton(_:)))
+        bottomView.onOverflowAction = { [weak self] action in
+            guard let self = self else { return }
+            switch action {
+            case .mediaSetting:
+                self.delegate?.onTouchMediaSettingButton(playerUIView: self, button: self.bottomView.moreButton)
+            case .danmakuSetting:
+                self.delegate?.onTouchDanmakuSettingButton(playerUIView: self, button: self.bottomView.moreButton)
+            }
+        }
         bottomView.danmakuTextField.delegate = self
         bottomView.progressSlider.addEvent(.mouseUp, action: { [weak self] (sender, _) in
             guard let self = self else { return }

@@ -12,6 +12,16 @@ import SnapKit
 
 class PlayerUIBottomView: BaseView {
 
+    /// 宽度不足时被折叠到「更多」菜单里的操作。
+    /// 「选集」「弹幕配置」「截图」保持在控制条上；右侧最后两个文字入口进菜单。
+    enum OverflowAction: String {
+        case mediaSetting
+        case danmakuSetting
+    }
+
+    /// 「更多」菜单选中回调；由 PlayerUIView 转成现有 delegate 回调。
+    var onOverflowAction: ((OverflowAction) -> Void)?
+
     lazy var progressSlider: PlayerSlider = {
         let slider = PlayerSlider()
         slider.progressHeight = 8
@@ -24,6 +34,7 @@ class PlayerUIBottomView: BaseView {
         button.imagePosition = .imageOnly
         button.image = .init(named: "Player/play")
         button.alternateImage = .init(named: "Player/pause")
+        button.contentTintColor = .white
         return button
     }()
     
@@ -31,6 +42,7 @@ class PlayerUIBottomView: BaseView {
         let button = Button.custom()
         button.imagePosition = .imageOnly
         button.image = NSImage(named: "Player/stop")
+        button.contentTintColor = .white
         return button
     }()
 
@@ -38,6 +50,7 @@ class PlayerUIBottomView: BaseView {
         let button = Button.custom()
         button.imagePosition = .imageOnly
         button.image = NSImage(named: "Player/next")
+        button.contentTintColor = .white
         return button
     }()
     
@@ -51,14 +64,12 @@ class PlayerUIBottomView: BaseView {
         return label
     }()
     
-    lazy var playerListButton: Button = {
-        let button = Button(title: NSLocalizedString("选集", comment: ""), target: nil, action: nil)
-        return button
+    lazy var playerListButton: PlayerControlBarButton = {
+        return PlayerControlBarButton(title: NSLocalizedString("选集", comment: ""))
     }()
     
-    lazy var danmakuSettingButton: Button = {
-        let button = Button(title: NSLocalizedString("弹幕设置", comment: ""), target: nil, action: nil)
-        return button
+    lazy var danmakuSettingButton: PlayerControlBarButton = {
+        return PlayerControlBarButton(title: NSLocalizedString("弹幕设置", comment: ""))
     }()
 
     lazy var danmakuTextField: TextField = {
@@ -76,26 +87,72 @@ class PlayerUIBottomView: BaseView {
         return tf
     }()
 
-    lazy var danmakuConfigButton: Button = {
-        let button = Button(title: NSLocalizedString("弹幕配置", comment: ""), target: nil, action: nil)
-        button.font = .systemFont(ofSize: 12)
-        return button
+    lazy var danmakuConfigButton: PlayerControlBarButton = {
+        return PlayerControlBarButton(title: NSLocalizedString("弹幕配置", comment: ""))
     }()
 
-    lazy var mediaSettingButton: Button = {
-        let button = Button(title: NSLocalizedString("视频设置", comment: ""), target: nil, action: nil)
-        return button
+    lazy var mediaSettingButton: PlayerControlBarButton = {
+        return PlayerControlBarButton(title: NSLocalizedString("视频设置", comment: ""))
     }()
 
-    lazy var thumbnailButton: Button = {
-        let button = Button.custom()
-        button.imagePosition = .imageOnly
-        button.image = NSImage.safeSystemSymbol("camera")
-        button.contentTintColor = .white
-        button.toolTip = NSLocalizedString("截图", comment: "")
-        return button
+    lazy var thumbnailButton: PlayerControlBarButton = {
+        return PlayerControlBarButton(
+            image: NSImage.safeSystemSymbol("camera"),
+            accessibilityLabel: NSLocalizedString("截图", comment: "")
+        )
     }()
-    
+
+    /// 窄窗口下折叠菜单入口。
+    lazy var moreButton: PlayerControlBarButton = {
+        return PlayerControlBarButton(title: NSLocalizedString("更多", comment: ""))
+    }()
+
+    private lazy var inputStack: NSStackView = {
+        let stack = NSStackView()
+        stack.orientation = .horizontal
+        stack.alignment = .centerY
+        stack.spacing = 6
+        stack.detachesHiddenViews = true
+        return stack
+    }()
+
+    private lazy var trailingStack: NSStackView = {
+        let stack = NSStackView()
+        stack.orientation = .horizontal
+        stack.alignment = .centerY
+        stack.distribution = .fill
+        stack.spacing = 2
+        stack.detachesHiddenViews = true
+        return stack
+    }()
+
+    private lazy var overflowMenu: NSMenu = {
+        let menu = NSMenu()
+        menu.autoenablesItems = true
+
+        let mediaItem = NSMenuItem(
+            title: NSLocalizedString("视频设置", comment: ""),
+            action: #selector(handleOverflowMenuItem(_:)),
+            keyEquivalent: ""
+        )
+        mediaItem.target = self
+        mediaItem.representedObject = OverflowAction.mediaSetting.rawValue
+        menu.addItem(mediaItem)
+
+        let danmakuItem = NSMenuItem(
+            title: NSLocalizedString("弹幕设置", comment: ""),
+            action: #selector(handleOverflowMenuItem(_:)),
+            keyEquivalent: ""
+        )
+        danmakuItem.target = self
+        danmakuItem.representedObject = OverflowAction.danmakuSetting.rawValue
+        menu.addItem(danmakuItem)
+
+        return menu
+    }()
+
+    private var isCompactMode = false
+
     private lazy var bgView: BaseView = {
         let bgView = BaseView()
         bgView.bgColor = NSColor(white: 0, alpha: 0.4)
@@ -112,7 +169,11 @@ class PlayerUIBottomView: BaseView {
         self.setupInit()
     }
     
-    
+    override func layout() {
+        super.layout()
+        self.updateCompactModeIfNeeded()
+    }
+
     private func setupInit() {
         self.setAccessibilityIdentifier(AccessibilityID.Player.controls)
         self.progressSlider.setAccessibilityIdentifier(AccessibilityID.Player.progressSlider)
@@ -125,11 +186,35 @@ class PlayerUIBottomView: BaseView {
         self.timeLabel.setAccessibilityIdentifier(AccessibilityID.Player.timeLabel)
         self.danmakuTextField.setAccessibilityIdentifier(AccessibilityID.Player.danmakuTextField)
         self.playerListButton.setAccessibilityIdentifier(AccessibilityID.Player.playerListButton)
+        self.playerListButton.setAccessibilityLabel(NSLocalizedString("选集", comment: ""))
+        self.playerListButton.toolTip = NSLocalizedString("选集", comment: "")
         self.mediaSettingButton.setAccessibilityIdentifier(AccessibilityID.Player.mediaSettingButton)
+        self.mediaSettingButton.setAccessibilityLabel(NSLocalizedString("视频设置", comment: ""))
+        self.mediaSettingButton.toolTip = NSLocalizedString("视频设置", comment: "")
         self.thumbnailButton.setAccessibilityIdentifier(AccessibilityID.Player.screenshotButton)
         self.thumbnailButton.setAccessibilityLabel(NSLocalizedString("截图", comment: ""))
+        self.thumbnailButton.toolTip = NSLocalizedString("截图", comment: "")
         self.danmakuConfigButton.setAccessibilityIdentifier(AccessibilityID.Player.danmakuConfigButton)
+        self.danmakuConfigButton.setAccessibilityLabel(NSLocalizedString("弹幕配置", comment: ""))
+        self.danmakuConfigButton.toolTip = NSLocalizedString("弹幕配置", comment: "")
         self.danmakuSettingButton.setAccessibilityIdentifier(AccessibilityID.Player.danmakuSettingButton)
+        self.danmakuSettingButton.setAccessibilityLabel(NSLocalizedString("弹幕设置", comment: ""))
+        self.danmakuSettingButton.toolTip = NSLocalizedString("弹幕设置", comment: "")
+        self.moreButton.setAccessibilityIdentifier(AccessibilityID.Player.moreButton)
+        self.moreButton.setAccessibilityLabel(NSLocalizedString("更多", comment: ""))
+        self.moreButton.toolTip = NSLocalizedString("更多", comment: "")
+        self.moreButton.target = self
+        self.moreButton.action = #selector(showOverflowMenu(_:))
+
+        self.inputStack.addArrangedSubview(self.danmakuTextField)
+        self.inputStack.addArrangedSubview(self.danmakuConfigButton)
+
+        self.trailingStack.addArrangedSubview(self.playerListButton)
+        self.trailingStack.addArrangedSubview(self.mediaSettingButton)
+        self.trailingStack.addArrangedSubview(self.thumbnailButton)
+        self.trailingStack.addArrangedSubview(self.danmakuSettingButton)
+        self.trailingStack.addArrangedSubview(self.moreButton)
+        self.moreButton.isHidden = true
 
         self.addSubview(self.bgView)
         let containerView = BaseView()
@@ -138,12 +223,8 @@ class PlayerUIBottomView: BaseView {
         containerView.addSubview(self.stopButton)
         containerView.addSubview(self.nextButton)
         containerView.addSubview(self.timeLabel)
-        containerView.addSubview(self.playerListButton)
-        containerView.addSubview(self.mediaSettingButton)
-        containerView.addSubview(self.thumbnailButton)
-        containerView.addSubview(self.danmakuTextField)
-        containerView.addSubview(self.danmakuConfigButton)
-        containerView.addSubview(self.danmakuSettingButton)
+        containerView.addSubview(self.inputStack)
+        containerView.addSubview(self.trailingStack)
         
         self.addSubview(containerView)
         
@@ -189,37 +270,78 @@ class PlayerUIBottomView: BaseView {
         }
 
         self.danmakuTextField.snp.makeConstraints { make in
-            make.centerY.equalTo(self.playButton)
-            make.leading.equalTo(self.timeLabel.snp.trailing).offset(10)
-            make.width.equalTo(130)
+            make.width.equalTo(130).priority(.high)
+            make.width.greaterThanOrEqualTo(80)
             make.height.equalTo(24)
         }
 
-        self.danmakuConfigButton.snp.makeConstraints { make in
+        self.inputStack.snp.makeConstraints { make in
+            make.leading.equalTo(self.timeLabel.snp.trailing).offset(10)
             make.centerY.equalTo(self.playButton)
-            make.leading.equalTo(self.danmakuTextField.snp.trailing).offset(6)
+            make.height.equalTo(26)
         }
 
-        self.playerListButton.snp.makeConstraints { make in
-            make.centerY.equalTo(self.playButton)
-            make.leading.greaterThanOrEqualTo(self.danmakuConfigButton.snp.trailing).offset(15)
-        }
-
-        self.mediaSettingButton.snp.makeConstraints { make in
-            make.centerY.equalTo(self.playButton)
-            make.leading.equalTo(self.playerListButton.snp.trailing).offset(10)
-        }
-
-        self.thumbnailButton.snp.makeConstraints { make in
-            make.centerY.equalTo(self.playButton)
-            make.leading.equalTo(self.mediaSettingButton.snp.trailing).offset(10)
-        }
-
-        self.danmakuSettingButton.snp.makeConstraints { make in
+        self.trailingStack.snp.makeConstraints { make in
             make.trailing.equalTo(-10)
             make.centerY.equalTo(self.playButton)
-            make.leading.equalTo(self.thumbnailButton.snp.trailing).offset(10)
+            make.leading.greaterThanOrEqualTo(self.inputStack.snp.trailing).offset(12)
         }
-        
+    }
+
+    // MARK: - Compact layout
+
+    /// 当「弹幕输入框 + 右侧全部按钮」在首选宽度下放不下时，把两个次要设置入口
+    /// 收进「更多」菜单，避免默认 NSButton 被压缩成不可见。960/1280pt 下仍全部展开。
+    private func updateCompactModeIfNeeded() {
+        guard self.bounds.width > 0, self.inputStack.frame.minX > 0 else { return }
+
+        let shouldCompact = self.requiredWidthForExpandedControls() > self.bounds.width
+        guard shouldCompact != self.isCompactMode else { return }
+
+        self.isCompactMode = shouldCompact
+        self.mediaSettingButton.isHidden = shouldCompact
+        self.danmakuSettingButton.isHidden = shouldCompact
+        self.moreButton.isHidden = !shouldCompact
+        self.needsLayout = true
+    }
+
+    private func requiredWidthForExpandedControls() -> CGFloat {
+        let preferredTextFieldWidth: CGFloat = 130
+
+        let configWidth = self.danmakuConfigButton.intrinsicContentSize.width
+        let inputWidth = preferredTextFieldWidth + self.inputStack.spacing + configWidth
+
+        let trailingButtons = [
+            self.playerListButton,
+            self.mediaSettingButton,
+            self.thumbnailButton,
+            self.danmakuSettingButton
+        ]
+        let trailingSpacing = self.trailingStack.spacing * CGFloat(max(0, trailingButtons.count - 1))
+        let trailingWidth = trailingButtons.reduce(CGFloat(0)) {
+            $0 + $1.intrinsicContentSize.width
+        } + trailingSpacing
+
+        // inputStack 左边距 + 输入区 + 与右侧按钮的间距 + 按钮区 + 右边距 + 一点余量。
+        return self.inputStack.frame.minX + inputWidth + 12 + trailingWidth + 10 + 24
+    }
+
+    // MARK: - Overflow menu
+
+    @objc private func showOverflowMenu(_ sender: NSButton) {
+        // PlayerUIBottomView 使用非翻转坐标；maxY 之上就是控制条上方。
+        let location = NSPoint(x: sender.bounds.midX, y: sender.bounds.maxY + 4)
+        self.overflowMenu.popUp(positioning: nil, at: location, in: sender)
+    }
+
+    @objc private func handleOverflowMenuItem(_ sender: NSMenuItem) {
+        guard let rawValue = sender.representedObject as? String,
+              let action = OverflowAction(rawValue: rawValue) else {
+            return
+        }
+        // 菜单追踪循环结束后再弹 popover，避免 popover 随菜单关闭一起被收起。
+        DispatchQueue.main.async { [weak self] in
+            self?.onOverflowAction?(action)
+        }
     }
 }
