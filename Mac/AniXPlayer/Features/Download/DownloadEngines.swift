@@ -25,6 +25,7 @@ struct DownloadTaskUpdate {
     var errorMessage: String?
     var engineTaskID: String?
     var filePaths: [String]
+    var files: [DownloadFileProgress]
     var isStreaming: Bool
     var streamPath: String?
 }
@@ -41,10 +42,22 @@ protocol DownloadEngine: AnyObject {
 enum DownloadEngineError: LocalizedError {
     case invalidURL(String)
     case btDisabled
+    case btOnboardingRequired(String)
+    case storeUnavailable(String)
     case unsupportedSource(String)
     case directoryUnavailable(String)
     case fileOperation(String)
     case httpStatus(Int)
+
+    /// 添加 sheet 据此显示“打开 BT 设置”而不是死路错误。
+    var requiresBTSetup: Bool {
+        switch self {
+        case .btDisabled, .btOnboardingRequired:
+            return true
+        default:
+            return false
+        }
+    }
 
     var errorDescription: String? {
         switch self {
@@ -52,6 +65,16 @@ enum DownloadEngineError: LocalizedError {
             return String(format: NSLocalizedString("下载地址无效：%@", comment: ""), value)
         case .btDisabled:
             return NSLocalizedString("BT 集成已在设置中关闭，无法添加磁力/种子任务。", comment: "")
+        case .btOnboardingRequired(let message):
+            return String(
+                format: NSLocalizedString("%@ 可点击下方按钮打开 BT 设置。", comment: ""),
+                message
+            )
+        case .storeUnavailable(let message):
+            return String(
+                format: NSLocalizedString("无法写入下载数据库，任务未添加：%@", comment: ""),
+                message
+            )
         case .unsupportedSource(let value):
             return String(format: NSLocalizedString("不支持的下载来源：%@", comment: ""), value)
         case .directoryUnavailable(let path):
@@ -89,6 +112,7 @@ final class HTTPDownloadEngine: NSObject, DownloadEngine, URLSessionDownloadDele
         var sessionTask: URLSessionDownloadTask?
         var pauseRequested = false
         var stopRequested = false
+        var didApplyResponseMetadata = false
         var lastPublished = Date.distantPast
         var lastProgressAt = Date.distantPast
 
@@ -189,6 +213,7 @@ final class HTTPDownloadEngine: NSObject, DownloadEngine, URLSessionDownloadDele
         activity.etaSeconds = nil
         activity.meter.reset()
         activity.lastProgressAt = .distantPast
+        activity.didApplyResponseMetadata = false
 
         let downloadTask: URLSessionDownloadTask
         if let resumeData, !resumeData.isEmpty {
@@ -318,6 +343,7 @@ final class HTTPDownloadEngine: NSObject, DownloadEngine, URLSessionDownloadDele
         lock.lock()
         if let activity = activities[taskID],
            activity.sessionTask?.taskIdentifier == downloadTask.taskIdentifier {
+            applyResponseMetadataIfNeeded(activity, task: downloadTask)
             activity.status = .downloading
             activity.downloadedBytes = totalBytesWritten
             if totalBytesExpectedToWrite > 0 {
@@ -384,6 +410,7 @@ final class HTTPDownloadEngine: NSObject, DownloadEngine, URLSessionDownloadDele
                 ?? response?.suggestedFilename.map { DownloadFileName.sanitize($0) }
                 ?? DownloadFileName.fileName(from: activity.sourceURL)
                 ?? "download"
+            activity.title = Self.displayTitle(fromFileName: preferredName, fallback: activity.title)
             let destination = DownloadFileName.uniqueURL(
                 in: activity.saveDirectory,
                 preferredName: preferredName
@@ -493,7 +520,7 @@ final class HTTPDownloadEngine: NSObject, DownloadEngine, URLSessionDownloadDele
         return DownloadTaskUpdate(
             taskID: activity.taskID,
             kind: .http,
-            title: nil,
+            title: activity.title,
             status: activity.status,
             progress: activity.progress,
             downloadedBytes: activity.downloadedBytes,
@@ -504,9 +531,42 @@ final class HTTPDownloadEngine: NSObject, DownloadEngine, URLSessionDownloadDele
             errorMessage: activity.errorMessage,
             engineTaskID: nil,
             filePaths: activity.filePaths,
+            files: [],
             isStreaming: false,
             streamPath: nil
         )
+    }
+
+    private func applyResponseMetadataIfNeeded(
+        _ activity: Activity,
+        task: URLSessionDownloadTask
+    ) {
+        guard !activity.didApplyResponseMetadata, let response = task.response else {
+            return
+        }
+        activity.didApplyResponseMetadata = true
+
+        let contentDisposition = (response as? HTTPURLResponse)?
+            .value(forHTTPHeaderField: "Content-Disposition")
+        if let name = DownloadFileName.fileName(fromContentDisposition: contentDisposition) {
+            activity.title = Self.displayTitle(fromFileName: name, fallback: activity.title)
+            return
+        }
+        if let suggested = response.suggestedFilename,
+           let name = DownloadFileName.fileName(from: URL(fileURLWithPath: suggested)) {
+            activity.title = Self.displayTitle(fromFileName: name, fallback: activity.title)
+            return
+        }
+        if let finalURL = response.url, finalURL != activity.sourceURL,
+           let name = DownloadFileName.fileName(from: finalURL) {
+            activity.title = Self.displayTitle(fromFileName: name, fallback: activity.title)
+        }
+    }
+
+    private static func displayTitle(fromFileName fileName: String, fallback: String) -> String {
+        let base = ((fileName as NSString).lastPathComponent as NSString).deletingPathExtension
+        let trimmed = base.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? fallback : trimmed
     }
 
     private func deliver(_ updates: [DownloadTaskUpdate]) {
@@ -649,6 +709,17 @@ final class TransmissionRPCEngine: DownloadEngine {
         try await clientSnapshot().remove(ids: [engineID], deleteLocalData: deleteFiles)
     }
 
+    func setFilesWanted(task: DownloadTask, indices: [Int], wanted: Bool) async throws {
+        guard let engineID = engineID(for: task) else {
+            throw TransmissionRPCError.unavailable(TransmissionRPCError.notDetectedMessage)
+        }
+        try await clientSnapshot().setFilesWanted(
+            ids: [engineID],
+            indices: indices,
+            wanted: wanted
+        )
+    }
+
     func refresh(tasks: [DownloadTask]) async throws -> [DownloadTaskUpdate] {
         let pairs: [(DownloadTask, String)] = tasks.compactMap { task in
             guard let engineID = engineID(for: task) else { return nil }
@@ -687,6 +758,7 @@ final class TransmissionRPCEngine: DownloadEngine {
                     ),
                     engineTaskID: engineID,
                     filePaths: task.filePaths,
+                    files: [],
                     isStreaming: false,
                     streamPath: nil
                 )
@@ -831,6 +903,7 @@ final class TransmissionRPCEngine: DownloadEngine {
             errorMessage: errorMessage,
             engineTaskID: engineID,
             filePaths: filePaths,
+            files: torrent.fileProgress,
             isStreaming: !finished && currentConfiguration().sequentialDownload,
             streamPath: streamPath
         )

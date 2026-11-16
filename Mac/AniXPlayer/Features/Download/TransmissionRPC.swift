@@ -124,6 +124,7 @@ struct TransmissionSessionInfo: Equatable {
 }
 
 struct TransmissionTorrentFile: Equatable {
+    var index: Int
     var name: String
     var length: Int64
     var bytesCompleted: Int64
@@ -176,6 +177,19 @@ struct TransmissionTorrent: Equatable {
                 .appendingPathComponent(file.name)
                 .standardizedFileURL
                 .path
+        }
+    }
+
+    var fileProgress: [DownloadFileProgress] {
+        let paths = filePaths
+        return zip(files, paths).map { file, path in
+            DownloadFileProgress(
+                index: file.index,
+                path: path,
+                length: file.length,
+                completedBytes: file.bytesCompleted,
+                isWanted: file.isWanted
+            )
         }
     }
 
@@ -313,6 +327,16 @@ final class TransmissionRPCClient {
         _ = try await call(
             method: "torrent-remove",
             arguments: ["ids": ids, "delete-local-data": deleteLocalData]
+        )
+    }
+
+    /// `files-wanted` / `files-unwanted` 使用 torrent-get files 数组中的索引。
+    func setFilesWanted(ids: [String], indices: [Int], wanted: Bool) async throws {
+        guard !ids.isEmpty, !indices.isEmpty else { return }
+        let key = wanted ? "files-wanted" : "files-unwanted"
+        _ = try await call(
+            method: "torrent-set",
+            arguments: ["ids": ids, key: indices]
         )
     }
 
@@ -496,12 +520,13 @@ extension TransmissionTorrent {
         }
 
         let fileDictionaries = TransmissionRPCClient.array(dictionary, "files") ?? []
-        let files: [TransmissionTorrentFile] = fileDictionaries.compactMap { item in
+        let files: [TransmissionTorrentFile] = fileDictionaries.enumerated().compactMap { index, item in
             guard let file = item as? [String: Any],
                   let fileName = TransmissionRPCClient.string(file, "name") else {
                 return nil
             }
             return TransmissionTorrentFile(
+                index: index,
                 name: fileName,
                 length: TransmissionRPCClient.int64(file, "length") ?? 0,
                 bytesCompleted: TransmissionRPCClient.int64(file, "bytesCompleted") ?? 0,

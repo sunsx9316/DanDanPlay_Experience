@@ -8,18 +8,32 @@
 import Cocoa
 import SnapKit
 
+private struct DownloadDetailFile {
+    let path: String
+    let sizeText: String
+    let progress: Double?
+    let isWanted: Bool?
+    let canToggleWanted: Bool
+    let fileIndex: Int?
+}
+
 final class DownloadViewController: ViewController {
 
     var onPlayFiles: (([File], File) -> Void)?
 
     private let manager: DownloadManager
 
+    private let dropView = DownloadDropView()
     private var displayTasks: [DownloadTask] = []
     private var selectedTaskIDs: Set<UUID> = []
-    private var detailFilePaths: [String] = []
+    private var detailFiles: [DownloadDetailFile] = []
+    private var detailTaskID: UUID?
     private var isRestoringSelection = false
     private var btBannerHeight: NSLayoutConstraint?
     private var notificationToken: NSObjectProtocol?
+    private var pendingPrefillSources: [String] = []
+    private weak var activeAddSheet: DownloadAddSheetViewController?
+    private var isPresentingAddSheet = false
 
     // MARK: Views
 
@@ -100,6 +114,42 @@ final class DownloadViewController: ViewController {
         button.bezelStyle = .texturedRounded
         button.toolTip = NSLocalizedString("刷新", comment: "")
         button.setAccessibilityIdentifier(AccessibilityID.Download.refresh)
+        return button
+    }()
+
+    private lazy var pasteButton: NSButton = {
+        let button = NSButton(
+            image: NSImage.safeSystemSymbol("doc.on.clipboard"),
+            target: self,
+            action: #selector(pasteFromClipboardTapped)
+        )
+        button.bezelStyle = .texturedRounded
+        button.toolTip = NSLocalizedString("从剪贴板添加", comment: "")
+        button.setAccessibilityIdentifier(AccessibilityID.Download.pasteFromClipboard)
+        return button
+    }()
+
+    private lazy var pauseAllButton: NSButton = {
+        let button = NSButton(
+            image: NSImage.safeSystemSymbol("pause.fill"),
+            target: self,
+            action: #selector(pauseAllTapped)
+        )
+        button.bezelStyle = .texturedRounded
+        button.toolTip = NSLocalizedString("全部暂停", comment: "")
+        button.setAccessibilityIdentifier(AccessibilityID.Download.pauseAll)
+        return button
+    }()
+
+    private lazy var resumeAllButton: NSButton = {
+        let button = NSButton(
+            image: NSImage.safeSystemSymbol("play.fill"),
+            target: self,
+            action: #selector(resumeAllTapped)
+        )
+        button.bezelStyle = .texturedRounded
+        button.toolTip = NSLocalizedString("全部继续", comment: "")
+        button.setAccessibilityIdentifier(AccessibilityID.Download.resumeAll)
         return button
     }()
 
@@ -230,13 +280,17 @@ final class DownloadViewController: ViewController {
     // MARK: Lifecycle
 
     override func loadView() {
-        view = NSView(frame: NSRect(x: 0, y: 0, width: 1000, height: 640))
+        dropView.frame = NSRect(x: 0, y: 0, width: 1000, height: 640)
+        view = dropView
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         title = NSLocalizedString("下载中心", comment: "")
         view.setAccessibilityIdentifier(AccessibilityID.Download.root)
+        dropView.onDropSources = { [weak self] sources in
+            self?.acceptDroppedSources(sources)
+        }
 
         setupLayout()
         setupTable()
@@ -256,6 +310,11 @@ final class DownloadViewController: ViewController {
         updateBTBanner()
     }
 
+    override func viewDidAppear() {
+        super.viewDidAppear()
+        presentNextPrefillIfNeeded()
+    }
+
     // MARK: Setup
 
     private func setupLayout() {
@@ -268,6 +327,9 @@ final class DownloadViewController: ViewController {
         view.addSubview(deleteButton)
         view.addSubview(refreshButton)
         view.addSubview(settingsButton)
+        view.addSubview(pasteButton)
+        view.addSubview(pauseAllButton)
+        view.addSubview(resumeAllButton)
         view.addSubview(searchField)
         view.addSubview(filterControl)
         view.addSubview(sortPopup)
@@ -335,6 +397,21 @@ final class DownloadViewController: ViewController {
         }
         refreshButton.snp.makeConstraints { make in
             make.trailing.equalTo(settingsButton.snp.leading).offset(-6)
+            make.centerY.equalTo(addButton)
+            make.width.height.equalTo(28)
+        }
+        pasteButton.snp.makeConstraints { make in
+            make.trailing.equalTo(refreshButton.snp.leading).offset(-6)
+            make.centerY.equalTo(addButton)
+            make.width.height.equalTo(28)
+        }
+        pauseAllButton.snp.makeConstraints { make in
+            make.trailing.equalTo(pasteButton.snp.leading).offset(-6)
+            make.centerY.equalTo(addButton)
+            make.width.height.equalTo(28)
+        }
+        resumeAllButton.snp.makeConstraints { make in
+            make.trailing.equalTo(pauseAllButton.snp.leading).offset(-6)
             make.centerY.equalTo(addButton)
             make.width.height.equalTo(28)
         }
@@ -482,9 +559,13 @@ final class DownloadViewController: ViewController {
     private func setupDetailTable() {
         let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("file"))
         column.title = NSLocalizedString("文件", comment: "")
+        column.width = 600
+        column.minWidth = 240
+        column.resizingMask = [.autoresizingMask]
         detailFileTable.addTableColumn(column)
+        detailFileTable.columnAutoresizingStyle = .lastColumnOnlyAutoresizingStyle
         detailFileTable.headerView = nil
-        detailFileTable.rowHeight = 22
+        detailFileTable.rowHeight = 24
         detailFileTable.dataSource = self
         detailFileTable.delegate = self
         detailFileTable.setAccessibilityIdentifier(AccessibilityID.Download.detailFiles)
@@ -511,7 +592,15 @@ final class DownloadViewController: ViewController {
         btBanner.onRetry = { [weak self] in
             self?.manager.checkBTAvailability()
         }
-        btBanner.onInstall = {
+        btBanner.onSettings = { [weak self] in
+            self?.settingsTapped()
+        }
+        btBanner.onDismiss = { [weak self] in
+            guard let self else { return }
+            self.manager.preferences.setBTOnboardingDismissed(true)
+            self.updateBTBanner()
+        }
+        btBanner.onWebsite = {
             if let url = URL(string: "https://transmissionbt.com/") {
                 NSWorkspace.shared.open(url)
             }
@@ -567,6 +656,10 @@ final class DownloadViewController: ViewController {
             statusLabel.textColor = .systemRed
             statusLabel.stringValue = error
             statusLabel.toolTip = error
+        } else if let notice = manager.lastNoticeMessage {
+            statusLabel.textColor = .controlAccentColor
+            statusLabel.stringValue = notice
+            statusLabel.toolTip = notice
         } else if !manager.preferences.enableBT {
             statusLabel.textColor = .secondaryLabelColor
             statusLabel.stringValue = NSLocalizedString("BT 集成已关闭，仅支持 HTTP/HTTPS 下载", comment: "")
@@ -590,13 +683,13 @@ final class DownloadViewController: ViewController {
     }
 
     private func updateEmptyState() {
-        if let error = manager.storeError {
+        if let error = manager.storeError, manager.tasks.isEmpty {
             emptyStateView.configure(
                 symbolName: "exclamationmark.triangle",
                 title: NSLocalizedString("下载中心无法打开", comment: ""),
                 detail: error.localizedDescription,
-                actionTitle: nil,
-                onAction: nil
+                actionTitle: NSLocalizedString("重试", comment: ""),
+                onAction: { [weak self] in self?.manager.reloadStore() }
             )
             emptyStateView.isHidden = false
             tableScroll.isHidden = true
@@ -607,10 +700,19 @@ final class DownloadViewController: ViewController {
         let isFiltering = !query.trimmedSearchText.isEmpty || query.filter != .all
         let show: Bool
         if manager.tasks.isEmpty {
+            let detail: String
+            if manager.preferences.enableBT, !manager.btState.isAvailable {
+                detail = NSLocalizedString(
+                    "可以添加 HTTP/HTTPS 直链；磁力/种子需要先配置 Transmission RPC（见上方提示或下载设置）。",
+                    comment: ""
+                )
+            } else {
+                detail = NSLocalizedString("添加磁力链接、.torrent 种子或 HTTP/HTTPS 直链开始下载。也可以把链接或种子文件拖到窗口里。", comment: "")
+            }
             emptyStateView.configure(
                 symbolName: "arrow.down.circle",
                 title: NSLocalizedString("还没有下载任务", comment: ""),
-                detail: NSLocalizedString("添加磁力链接、.torrent 种子或 HTTP/HTTPS 直链开始下载。", comment: ""),
+                detail: detail,
                 actionTitle: NSLocalizedString("添加下载…", comment: ""),
                 onAction: { [weak self] in self?.addTapped() }
             )
@@ -640,16 +742,21 @@ final class DownloadViewController: ViewController {
         pauseButton.isEnabled = isEnabled && selected.contains { $0.status.canPause }
         stopButton.isEnabled = isEnabled && selected.contains { $0.status.canStop }
         deleteButton.isEnabled = isEnabled
+        pauseAllButton.isEnabled = manager.tasks.contains { $0.status.canPause }
+        resumeAllButton.isEnabled = manager.tasks.contains { $0.status.canStart }
 
         let single = selected.count == 1 ? selected[0] : nil
         openFolderButton.isEnabled = single != nil
         playButton.isEnabled = selected.contains { task in
-            manager.completedPlaybackURL(for: task) != nil
+            !manager.completedPlaybackURLs(for: task).isEmpty
                 || manager.streamingPlaybackURL(for: task) != nil
         }
 
         if let task = single {
-            if manager.completedPlaybackURL(for: task) != nil {
+            let playableCount = manager.completedPlaybackURLs(for: task).count
+            if playableCount > 1 {
+                playButton.title = NSLocalizedString("播放全部", comment: "")
+            } else if playableCount == 1 {
                 playButton.title = NSLocalizedString("播放", comment: "")
             } else if manager.streamingPlaybackURL(for: task) != nil {
                 playButton.title = NSLocalizedString("播放已下载部分", comment: "")
@@ -664,20 +771,24 @@ final class DownloadViewController: ViewController {
     private func updateDetail() {
         let selected = selectedTasks()
         guard let task = selected.first else {
+            detailTaskID = nil
             detailTitleLabel.stringValue = NSLocalizedString("选择一个任务查看详情", comment: "")
             detailStatusLabel.stringValue = ""
             detailErrorLabel.stringValue = ""
-            detailFilePaths = []
+            detailErrorLabel.isHidden = true
+            detailFiles = []
             detailFileTable.reloadData()
             return
         }
 
         detailTitleLabel.stringValue = task.displayTitle
         detailTitleLabel.toolTip = task.source
+        detailTaskID = task.id
+        let missingFiles = DownloadFileRules.hasMissingFiles(task)
         detailStatusLabel.stringValue = String(
             format: NSLocalizedString("%@ · %@ · %@ · 保存到 %@", comment: ""),
             task.kind.displayName,
-            task.status.displayName,
+            missingFiles ? NSLocalizedString("已完成（文件缺失）", comment: "") : task.status.displayName,
             DownloadFormatting.bytesProgress(
                 downloaded: task.downloadedBytes,
                 total: task.totalBytes
@@ -686,61 +797,139 @@ final class DownloadViewController: ViewController {
         )
         detailStatusLabel.toolTip = task.savePath
 
-        if let error = task.errorMessage, !error.isEmpty {
+        if missingFiles {
+            detailErrorLabel.textColor = .systemOrange
+            detailErrorLabel.stringValue = NSLocalizedString(
+                "下载文件已被移动或删除，无法播放。可在 Finder 中查找或重新下载。",
+                comment: ""
+            )
+            detailErrorLabel.isHidden = false
+        } else if task.status == .completed, !task.filePaths.isEmpty,
+                  manager.completedPlaybackURLs(for: task).isEmpty {
+            detailErrorLabel.textColor = .systemOrange
+            detailErrorLabel.stringValue = NSLocalizedString(
+                "已完成，但没有找到可播放的视频文件。",
+                comment: ""
+            )
+            detailErrorLabel.isHidden = false
+        } else if let error = task.errorMessage, !error.isEmpty {
+            detailErrorLabel.textColor = .systemRed
             detailErrorLabel.stringValue = error
+            detailErrorLabel.toolTip = error
             detailErrorLabel.isHidden = false
         } else {
             detailErrorLabel.stringValue = ""
             detailErrorLabel.isHidden = true
         }
 
-        detailFilePaths = task.filePaths
+        let canToggle = manager.canSelectFiles(for: task)
+        var progressByPath: [String: DownloadFileProgress] = [:]
+        for file in manager.files(for: task) {
+            progressByPath[file.path] = file
+        }
+        detailFiles = task.filePaths.map { path in
+            let live = progressByPath[path]
+            let size = live?.length ?? DownloadFileRules.existingFileSize(at: path) ?? 0
+            let sizeText: String
+            if let live, live.length > 0 {
+                sizeText = DownloadFormatting.bytesProgress(
+                    downloaded: live.completedBytes,
+                    total: live.length
+                )
+            } else {
+                sizeText = size > 0 ? DownloadFormatting.byteCount(size) : "—"
+            }
+            return DownloadDetailFile(
+                path: path,
+                sizeText: sizeText,
+                progress: live?.progress,
+                isWanted: live?.isWanted,
+                canToggleWanted: canToggle && (live != nil),
+                fileIndex: live?.index
+            )
+        }
+        detailFiles.sort {
+            if let left = $0.fileIndex, let right = $1.fileIndex {
+                return left < right
+            }
+            return $0.path.localizedStandardCompare($1.path) == .orderedAscending
+        }
         detailFileTable.reloadData()
     }
 
     private func updateBTBanner() {
         let visible: Bool
-        if !manager.preferences.enableBT {
+        if !manager.preferences.enableBT || manager.preferences.btOnboardingDismissed {
             btBanner.configure(
-                title: NSLocalizedString("BT 集成已关闭", comment: ""),
-                detail: NSLocalizedString("磁力/种子任务不可用；可在下载设置中重新启用。", comment: ""),
+                title: "",
+                detail: "",
+                isChecking: false,
                 showRetry: false,
-                showInstall: false
+                showInstallHelp: false,
+                showSettings: false
             )
             visible = false
         } else {
             switch manager.btState {
             case .available:
+                btBanner.configure(
+                    title: "",
+                    detail: "",
+                    isChecking: false,
+                    showRetry: false,
+                    showInstallHelp: false,
+                    showSettings: false
+                )
                 visible = false
             case .checking:
                 btBanner.configure(
                     title: NSLocalizedString("正在检测 BT 内核…", comment: ""),
-                    detail: NSLocalizedString("磁力/种子任务需要本机 Transmission RPC。", comment: ""),
+                    detail: NSLocalizedString("正在连接 Transmission RPC，磁力/种子任务稍后可用。", comment: ""),
+                    isChecking: true,
                     showRetry: false,
-                    showInstall: true
+                    showInstallHelp: false,
+                    showSettings: true
                 )
                 visible = true
             case .unknown:
                 btBanner.configure(
-                    title: NSLocalizedString("BT 内核状态未知", comment: ""),
-                    detail: NSLocalizedString("点击重试检测，或在下载设置中配置 RPC 地址。", comment: ""),
+                    title: NSLocalizedString("BT 内核尚未检测", comment: ""),
+                    detail: NSLocalizedString("磁力/种子需要本机 transmission-daemon；点击重试检测，或在下载设置中配置 RPC。", comment: ""),
+                    isChecking: false,
                     showRetry: true,
-                    showInstall: true
+                    showInstallHelp: true,
+                    showSettings: true
                 )
                 visible = true
-            case .unavailable:
+            case .unavailable(let message):
                 btBanner.configure(
-                    title: NSLocalizedString("未检测到 BT 内核", comment: ""),
-                    detail: NSLocalizedString("安装：brew install transmission，启动 transmission-daemon 后重试；默认 RPC 为 127.0.0.1:9091。", comment: ""),
+                    title: NSLocalizedString("未检测到可用的 BT 内核", comment: ""),
+                    detail: String(
+                        format: NSLocalizedString("%@ 安装：%@，启动 transmission-daemon 后重试。", comment: ""),
+                        message,
+                        "brew install transmission"
+                    ),
+                    isChecking: false,
                     showRetry: true,
-                    showInstall: true
+                    showInstallHelp: true,
+                    showSettings: true
+                )
+                visible = true
+            case .error(let message):
+                btBanner.configure(
+                    title: NSLocalizedString("BT 内核连接异常", comment: ""),
+                    detail: message,
+                    isChecking: false,
+                    showRetry: true,
+                    showInstallHelp: true,
+                    showSettings: true
                 )
                 visible = true
             }
         }
 
         btBanner.isHidden = !visible
-        btBannerHeight?.constant = visible ? 54 : 0
+        btBannerHeight?.constant = visible ? 92 : 0
     }
 
     // MARK: Selection
@@ -763,11 +952,63 @@ final class DownloadViewController: ViewController {
     // MARK: Actions
 
     @objc private func addTapped() {
+        presentAddSheet(prefillSource: nil)
+    }
+
+    /// 系统入口/通知/剪贴板共用：复用下载窗口并预填添加 sheet。
+    func openAddSheet(prefillSource: String?) {
+        if let prefillSource, !prefillSource.isEmpty {
+            pendingPrefillSources.removeAll { $0 == prefillSource }
+            pendingPrefillSources.insert(prefillSource, at: 0)
+        }
+        presentNextPrefillIfNeeded()
+    }
+
+    func enqueuePrefillSources(_ sources: [String]) {
+        let cleaned = sources
+            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.isEmpty }
+        guard !cleaned.isEmpty else { return }
+        for source in cleaned where !pendingPrefillSources.contains(source) {
+            pendingPrefillSources.append(source)
+        }
+        presentNextPrefillIfNeeded()
+    }
+
+    private func presentNextPrefillIfNeeded() {
+        guard !pendingPrefillSources.isEmpty else { return }
+        guard isViewLoaded, view.window != nil else { return }
+
+        if isPresentingAddSheet {
+            if let sheet = activeAddSheet, let next = pendingPrefillSources.first {
+                pendingPrefillSources.removeFirst()
+                sheet.replacePrefillSource(next)
+            }
+            return
+        }
+
+        let prefill = pendingPrefillSources.removeFirst()
+        presentAddSheet(prefillSource: prefill)
+    }
+
+    private func presentAddSheet(prefillSource: String?) {
+        guard !isPresentingAddSheet else {
+            if let prefillSource, let sheet = activeAddSheet {
+                sheet.replacePrefillSource(prefillSource)
+            }
+            return
+        }
+        guard view.window != nil else {
+            if let prefillSource { pendingPrefillSources.insert(prefillSource, at: 0) }
+            return
+        }
+
         let directory = (try? manager.preferences.ensureDefaultSaveDirectory())
             ?? manager.preferences.defaultSaveDirectoryURL
         let sheet = DownloadAddSheetViewController(
             defaultSavePath: directory.path,
-            defaultBookmark: manager.preferences.defaultSaveBookmark
+            defaultBookmark: manager.preferences.defaultSaveBookmark,
+            prefillSource: prefillSource ?? ""
         )
         sheet.onSubmit = { [weak self] source, savePath, bookmark, completion in
             guard let self else { return }
@@ -777,11 +1018,106 @@ final class DownloadViewController: ViewController {
                 bookmark: bookmark
             ) { result in
                 DispatchQueue.main.async {
-                    completion(result.map { _ in () })
+                    switch result {
+                    case .success(let addResult):
+                        self.revealTask(id: addResult.task.id)
+                        completion(.success(()))
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
                 }
             }
         }
+        sheet.onOpenBTSettings = { [weak self] in
+            self?.settingsTapped()
+        }
+        sheet.onCancel = { [weak self] in
+            self?.pendingPrefillSources.removeAll()
+        }
+        sheet.onDismiss = { [weak self] in
+            guard let self else { return }
+            self.activeAddSheet = nil
+            self.isPresentingAddSheet = false
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
+                self.presentNextPrefillIfNeeded()
+            }
+        }
+
+        activeAddSheet = sheet
+        isPresentingAddSheet = true
         presentAsSheet(sheet)
+    }
+
+    func revealTask(id: UUID) {
+        guard isViewLoaded else { return }
+        searchField.stringValue = ""
+        filterControl.selectedSegment = 0
+        reloadData()
+        guard let index = displayTasks.firstIndex(where: { $0.id == id }) else { return }
+        selectedTaskIDs = [id]
+        tableView.selectRowIndexes(IndexSet(integer: index), byExtendingSelection: false)
+        tableView.scrollRowToVisible(index)
+        updateButtons()
+        updateDetail()
+    }
+
+    @objc private func pasteFromClipboardTapped() {
+        let pasteboard = NSPasteboard.general
+        var rawSources: [String] = []
+        if let string = pasteboard.string(forType: .string), !string.isEmpty {
+            rawSources.append(string)
+        }
+        if let urls = pasteboard.readObjects(forClasses: [NSURL.self], options: nil) as? [URL] {
+            rawSources.append(contentsOf: urls.map { $0.path })
+        }
+        let sources = rawSources.compactMap { prepareDownloadSource(from: $0) }
+        guard !sources.isEmpty else {
+            showAlert(
+                title: NSLocalizedString("剪贴板中没有下载链接", comment: ""),
+                message: NSLocalizedString("请复制磁力链接、.torrent 文件或 HTTP/HTTPS 直链后重试。", comment: "")
+            )
+            return
+        }
+        enqueuePrefillSources(sources)
+    }
+
+    private func acceptDroppedSources(_ rawSources: [String]) {
+        let sources = rawSources.compactMap { prepareDownloadSource(from: $0) }
+        guard !sources.isEmpty else {
+            NSSound.beep()
+            showAlert(
+                title: NSLocalizedString("无法识别拖入的内容", comment: ""),
+                message: NSLocalizedString("支持磁力链接、.torrent 种子文件或 HTTP/HTTPS 直链。", comment: "")
+            )
+            return
+        }
+        enqueuePrefillSources(sources)
+    }
+
+    /// 校验链接；本地 .torrent 先复制到 App 目录，避免沙盒临时授权失效。
+    private func prepareDownloadSource(from rawValue: String) -> String? {
+        let trimmed = rawValue.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return nil }
+
+        if let torrentPath = DownloadTorrentImporter.torrentPath(from: trimmed) {
+            do {
+                return try DownloadTorrentImporter.importTorrent(
+                    at: URL(fileURLWithPath: torrentPath)
+                )
+            } catch {
+                showAlert(
+                    title: NSLocalizedString("无法读取种子文件", comment: ""),
+                    message: error.localizedDescription
+                )
+                return nil
+            }
+        }
+
+        do {
+            return try DownloadSourceParser.parse(trimmed).source
+        } catch {
+            return nil
+        }
     }
 
     @objc private func startTapped() {
@@ -794,6 +1130,14 @@ final class DownloadViewController: ViewController {
 
     @objc private func stopTapped() {
         manager.stop(ids: selectedTasks().map { $0.id })
+    }
+
+    @objc private func pauseAllTapped() {
+        manager.pauseAll()
+    }
+
+    @objc private func resumeAllTapped() {
+        manager.resumeAll()
     }
 
     @objc private func deleteTapped() {
@@ -872,6 +1216,15 @@ final class DownloadViewController: ViewController {
                 enableBT: draft.enableBT,
                 maxConcurrentDownloads: draft.maxConcurrentDownloads
             )
+            self.manager.preferences.setNotificationsEnabled(draft.notificationsEnabled)
+            if draft.notificationsEnabled {
+                DownloadNotifier.shared.requestAuthorizationIfNeeded(
+                    preferences: self.manager.preferences
+                )
+            }
+            if draft.resetBTOnboarding {
+                self.manager.preferences.setBTOnboardingDismissed(false)
+            }
             self.manager.reloadSettings()
         }
         presentAsSheet(sheet)
@@ -893,8 +1246,8 @@ final class DownloadViewController: ViewController {
 
     @objc private func detailFileDoubleClicked() {
         let row = detailFileTable.clickedRow
-        guard row >= 0, row < detailFilePaths.count else { return }
-        playFile(at: detailFilePaths[row])
+        guard row >= 0, row < detailFiles.count else { return }
+        playFile(at: detailFiles[row].path)
     }
 
     @objc private func openFolderTapped() {
@@ -923,9 +1276,25 @@ final class DownloadViewController: ViewController {
         let tasks = selectedTasks()
         guard !tasks.isEmpty else { return }
 
-        let completedURLs = tasks.compactMap { manager.completedPlaybackURL(for: $0) }
+        let completedURLs = tasks.flatMap { manager.completedPlaybackURLs(for: $0) }
         if !completedURLs.isEmpty {
             startPlayback(urls: completedURLs)
+            return
+        }
+
+        if tasks.count == 1, DownloadFileRules.hasMissingFiles(tasks[0]) {
+            showAlert(
+                title: NSLocalizedString("文件缺失", comment: ""),
+                message: NSLocalizedString("下载文件已被移动或删除，无法播放。可在 Finder 中查找或重新下载。", comment: "")
+            )
+            return
+        }
+
+        if tasks.allSatisfy({ $0.status == .completed }) {
+            showAlert(
+                title: NSLocalizedString("没有可播放文件", comment: ""),
+                message: NSLocalizedString("已完成的任务中没有找到可播放的视频文件。", comment: "")
+            )
             return
         }
 
@@ -970,8 +1339,10 @@ final class DownloadViewController: ViewController {
     }
 
     private func startPlayback(urls: [URL]) {
+        var seen = Set<String>()
         let files = urls
             .filter { FileManager.default.fileExists(atPath: $0.path) }
+            .filter { seen.insert($0.standardizedFileURL.path).inserted }
             .map { LocalFile(with: $0) }
         guard let first = files.first else {
             showAlert(
@@ -1029,6 +1400,9 @@ final class DownloadViewController: ViewController {
         case "kind":
             return task.kind.displayName
         case "status":
+            if DownloadFileRules.hasMissingFiles(task) {
+                return NSLocalizedString("已完成（文件缺失）", comment: "")
+            }
             return task.status.displayName
         case "speed":
             let download = DownloadFormatting.speed(task.downloadSpeed)
@@ -1059,7 +1433,7 @@ extension DownloadViewController: NSSearchFieldDelegate {
 extension DownloadViewController: NSTableViewDataSource, NSTableViewDelegate {
 
     func numberOfRows(in tableView: NSTableView) -> Int {
-        tableView === self.tableView ? displayTasks.count : detailFilePaths.count
+        tableView === self.tableView ? displayTasks.count : detailFiles.count
     }
 
     func tableView(
@@ -1068,8 +1442,8 @@ extension DownloadViewController: NSTableViewDataSource, NSTableViewDelegate {
         row: Int
     ) -> NSView? {
         if tableView === detailFileTable {
-            guard row < detailFilePaths.count else { return nil }
-            return detailFileCell(for: detailFilePaths[row], in: detailFileTable)
+            guard row < detailFiles.count else { return nil }
+            return detailFileCell(for: detailFiles[row], in: detailFileTable)
         }
 
         guard row < displayTasks.count, let tableColumn else { return nil }
@@ -1085,19 +1459,28 @@ extension DownloadViewController: NSTableViewDataSource, NSTableViewDelegate {
         cell.textField?.textColor = .labelColor
 
         if identifier == "status" {
-            switch task.status {
-            case .failed:
-                cell.textField?.textColor = .systemRed
-            case .completed:
-                cell.textField?.textColor = .systemGreen
-            case .downloading:
-                cell.textField?.textColor = .controlAccentColor
-            default:
-                cell.textField?.textColor = .secondaryLabelColor
+            if DownloadFileRules.hasMissingFiles(task) {
+                cell.textField?.textColor = .systemOrange
+            } else {
+                switch task.status {
+                case .failed:
+                    cell.textField?.textColor = .systemRed
+                case .completed:
+                    cell.textField?.textColor = .systemGreen
+                case .downloading:
+                    cell.textField?.textColor = .controlAccentColor
+                default:
+                    cell.textField?.textColor = .secondaryLabelColor
+                }
             }
         }
         if identifier == "title" {
             cell.textField?.toolTip = task.source
+        }
+        if identifier == "status" {
+            cell.textField?.toolTip = task.errorMessage?.isEmpty == false
+                ? task.errorMessage
+                : nil
         }
         if identifier == "path" {
             cell.textField?.lineBreakMode = .byTruncatingMiddle
@@ -1148,31 +1531,39 @@ extension DownloadViewController: NSTableViewDataSource, NSTableViewDelegate {
         return cell
     }
 
-    private func detailFileCell(for path: String, in table: NSTableView) -> NSView {
+    private func detailFileCell(for file: DownloadDetailFile, in table: NSTableView) -> NSView {
         let identifier = NSUserInterfaceItemIdentifier("download.cell.file")
-        let cell: NSTableCellView
-        if let reused = table.makeView(withIdentifier: identifier, owner: self) as? NSTableCellView {
+        let cell: DownloadFileCellView
+        if let reused = table.makeView(withIdentifier: identifier, owner: self) as? DownloadFileCellView {
             cell = reused
         } else {
-            cell = NSTableCellView()
+            cell = DownloadFileCellView()
             cell.identifier = identifier
-            let label = NSTextField(labelWithString: "")
-            label.font = .systemFont(ofSize: 11.5)
-            label.lineBreakMode = .byTruncatingMiddle
-            cell.textField = label
-            cell.addSubview(label)
-            label.snp.makeConstraints { make in
-                make.leading.trailing.equalToSuperview().inset(4)
-                make.centerY.equalToSuperview()
-            }
         }
 
-        let size = DownloadFileRules.existingFileSize(at: path)
-        let sizeText = size.map { DownloadFormatting.byteCount($0) } ?? "—"
-        let name = (path as NSString).lastPathComponent
-        cell.textField?.stringValue = "\(name) · \(sizeText)"
-        cell.textField?.toolTip = path
-        cell.textField?.textColor = size == nil ? .tertiaryLabelColor : .labelColor
+        let name = (file.path as NSString).lastPathComponent
+        let exists = DownloadFileRules.existingFileSize(at: file.path) != nil
+        let detailText: String
+        if let progress = file.progress {
+            detailText = "\(DownloadFormatting.percent(progress)) · \(file.sizeText)"
+        } else {
+            detailText = file.sizeText
+        }
+        cell.configure(
+            name: name,
+            detail: detailText,
+            path: file.path,
+            checkboxVisible: file.canToggleWanted,
+            checked: file.isWanted ?? true,
+            textColor: exists ? .labelColor : .tertiaryLabelColor,
+            accessibilityIdentifier: file.fileIndex.map {
+                AccessibilityID.Download.detailFileTogglePrefix + "\($0)"
+            }
+        )
+        cell.onToggle = { [weak self] wanted in
+            guard let self, let taskID = self.detailTaskID else { return }
+            self.manager.setFileWanted(taskID: taskID, path: file.path, wanted: wanted)
+        }
         return cell
     }
 }
@@ -1193,7 +1584,7 @@ extension DownloadViewController: NSMenuDelegate {
                 item.isEnabled = hasSelection && tasks.contains { $0.status.canStop }
             case #selector(playTapped):
                 item.isEnabled = tasks.contains {
-                    manager.completedPlaybackURL(for: $0) != nil
+                    !manager.completedPlaybackURLs(for: $0).isEmpty
                         || manager.streamingPlaybackURL(for: $0) != nil
                 }
             case #selector(openFolderTapped):
@@ -1262,14 +1653,108 @@ private final class DownloadProgressCellView: NSTableCellView {
     }
 }
 
+// MARK: - File cell
+
+private final class DownloadFileCellView: NSTableCellView {
+
+    var onToggle: ((Bool) -> Void)?
+
+    private let checkbox = NSButton(checkboxWithTitle: "", target: nil, action: nil)
+    private let fileIcon = NSImageView()
+    private let nameLabel = NSTextField(labelWithString: "")
+    private let detailLabel = NSTextField(labelWithString: "")
+
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        setup()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setup()
+    }
+
+    private func setup() {
+        checkbox.controlSize = .small
+        checkbox.target = self
+        checkbox.action = #selector(checkboxToggled)
+
+        fileIcon.image = NSImage.safeSystemSymbol("doc")
+        fileIcon.contentTintColor = .tertiaryLabelColor
+        fileIcon.imageScaling = .scaleProportionallyDown
+
+        nameLabel.font = .systemFont(ofSize: 11.5)
+        nameLabel.lineBreakMode = .byTruncatingMiddle
+
+        detailLabel.font = .monospacedDigitSystemFont(ofSize: 10.5, weight: .regular)
+        detailLabel.textColor = .secondaryLabelColor
+        detailLabel.alignment = .right
+        detailLabel.lineBreakMode = .byTruncatingTail
+
+        addSubview(checkbox)
+        addSubview(fileIcon)
+        addSubview(nameLabel)
+        addSubview(detailLabel)
+
+        checkbox.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(2)
+            make.centerY.equalToSuperview()
+            make.width.equalTo(16)
+        }
+        fileIcon.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(2)
+            make.centerY.equalToSuperview()
+            make.width.height.equalTo(14)
+        }
+        nameLabel.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(24)
+            make.trailing.equalTo(detailLabel.snp.leading).offset(-8)
+            make.centerY.equalToSuperview()
+        }
+        detailLabel.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().offset(-4)
+            make.centerY.equalToSuperview()
+            make.width.equalTo(190)
+        }
+        nameLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+    }
+
+    func configure(
+        name: String,
+        detail: String,
+        path: String,
+        checkboxVisible: Bool,
+        checked: Bool,
+        textColor: NSColor,
+        accessibilityIdentifier: String?
+    ) {
+        nameLabel.stringValue = name
+        nameLabel.toolTip = path
+        nameLabel.textColor = textColor
+        detailLabel.stringValue = detail
+        detailLabel.toolTip = detail
+        checkbox.state = checked ? .on : .off
+        checkbox.isHidden = !checkboxVisible
+        fileIcon.isHidden = checkboxVisible
+        checkbox.setAccessibilityIdentifier(accessibilityIdentifier ?? "")
+    }
+
+    @objc private func checkboxToggled() {
+        onToggle?(checkbox.state == .on)
+    }
+}
+
 // MARK: - BT banner
 
 private final class DownloadBTBannerView: NSView {
 
     var onRetry: (() -> Void)?
-    var onInstall: (() -> Void)?
+    var onSettings: (() -> Void)?
+    var onDismiss: (() -> Void)?
+    var onWebsite: (() -> Void)?
 
     private let iconView = ImageView()
+    private let spinner = NSProgressIndicator()
     private let titleLabel = DownloadViewController.makeLabel(
         "",
         font: .systemFont(ofSize: 12, weight: .semibold),
@@ -1281,7 +1766,11 @@ private final class DownloadBTBannerView: NSView {
         color: .secondaryLabelColor
     )
     private let retryButton = NSButton(title: "", target: nil, action: nil)
-    private let installButton = NSButton(title: "", target: nil, action: nil)
+    private let copyButton = NSButton(title: "", target: nil, action: nil)
+    private let websiteButton = NSButton(title: "", target: nil, action: nil)
+    private let settingsButton = NSButton(title: "", target: nil, action: nil)
+    private let dismissButton = NSButton(title: "", target: nil, action: nil)
+    private let buttonStack = NSStackView()
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
@@ -1301,83 +1790,251 @@ private final class DownloadBTBannerView: NSView {
 
         setAccessibilityElement(true)
         setAccessibilityRole(.group)
-        setAccessibilityIdentifier(AccessibilityID.Download.btBanner)
 
         iconView.image = NSImage.safeSystemSymbol("exclamationmark.triangle.fill")
         iconView.contentTintColor = .systemOrange
         iconView.setScaling(.aspectFit)
+        iconView.setAccessibilityElement(false)
 
-        detailLabel.lineBreakMode = .byTruncatingTail
+        spinner.style = .spinning
+        spinner.controlSize = .small
+        spinner.isDisplayedWhenStopped = false
+        spinner.setAccessibilityIdentifier(AccessibilityID.Download.btSpinner)
 
-        retryButton.title = NSLocalizedString("重试检测", comment: "")
-        retryButton.bezelStyle = .rounded
-        retryButton.controlSize = .small
-        retryButton.target = self
-        retryButton.action = #selector(retryTapped)
-        retryButton.setAccessibilityIdentifier(AccessibilityID.Download.btRetry)
+        detailLabel.lineBreakMode = .byWordWrapping
+        detailLabel.maximumNumberOfLines = 2
 
-        installButton.title = NSLocalizedString("安装说明", comment: "")
-        installButton.bezelStyle = .rounded
-        installButton.controlSize = .small
-        installButton.target = self
-        installButton.action = #selector(installTapped)
-        installButton.setAccessibilityIdentifier(AccessibilityID.Download.btInstall)
+        configureButton(
+            retryButton,
+            title: NSLocalizedString("重试检测", comment: ""),
+            action: #selector(retryTapped),
+            identifier: AccessibilityID.Download.btRetry
+        )
+        configureButton(
+            copyButton,
+            title: NSLocalizedString("复制安装命令", comment: ""),
+            action: #selector(copyTapped),
+            identifier: AccessibilityID.Download.btCopyCommand
+        )
+        configureButton(
+            websiteButton,
+            title: NSLocalizedString("Transmission 官网", comment: ""),
+            action: #selector(websiteTapped),
+            identifier: AccessibilityID.Download.btWebsite
+        )
+        configureButton(
+            settingsButton,
+            title: NSLocalizedString("RPC 设置…", comment: ""),
+            action: #selector(settingsTapped),
+            identifier: AccessibilityID.Download.btSettings
+        )
+
+        dismissButton.image = NSImage.safeSystemSymbol("xmark")
+        dismissButton.bezelStyle = .inline
+        dismissButton.isBordered = false
+        dismissButton.controlSize = .small
+        dismissButton.target = self
+        dismissButton.action = #selector(dismissTapped)
+        dismissButton.toolTip = NSLocalizedString("不再提示", comment: "")
+        dismissButton.setAccessibilityIdentifier(AccessibilityID.Download.btDismiss)
+
+        buttonStack.orientation = .horizontal
+        buttonStack.alignment = .centerY
+        buttonStack.spacing = 6
+        [retryButton, copyButton, websiteButton, settingsButton].forEach(buttonStack.addArrangedSubview)
 
         addSubview(iconView)
+        addSubview(spinner)
         addSubview(titleLabel)
         addSubview(detailLabel)
-        addSubview(retryButton)
-        addSubview(installButton)
-
-        setAccessibilityIdentifier(AccessibilityID.Download.btBanner)
+        addSubview(buttonStack)
+        addSubview(dismissButton)
 
         iconView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(12)
-            make.centerY.equalToSuperview()
+            make.top.equalToSuperview().offset(12)
             make.width.height.equalTo(20)
+        }
+        spinner.snp.makeConstraints { make in
+            make.center.equalTo(iconView)
+            make.width.height.equalTo(16)
         }
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(iconView.snp.trailing).offset(8)
-            make.top.equalToSuperview().offset(8)
-            make.trailing.lessThanOrEqualTo(retryButton.snp.leading).offset(-10)
+            make.top.equalToSuperview().offset(10)
+            make.trailing.lessThanOrEqualTo(dismissButton.snp.leading).offset(-8)
         }
         detailLabel.snp.makeConstraints { make in
             make.leading.equalTo(titleLabel)
-            make.trailing.lessThanOrEqualTo(retryButton.snp.leading).offset(-10)
+            make.trailing.equalToSuperview().offset(-12)
             make.top.equalTo(titleLabel.snp.bottom).offset(2)
         }
-        installButton.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().offset(-10)
-            make.centerY.equalToSuperview()
-            make.width.greaterThanOrEqualTo(78)
+        dismissButton.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().offset(-8)
+            make.top.equalToSuperview().offset(8)
+            make.width.height.equalTo(20)
         }
-        retryButton.snp.makeConstraints { make in
-            make.trailing.equalTo(installButton.snp.leading).offset(-6)
-            make.centerY.equalToSuperview()
-            make.width.greaterThanOrEqualTo(78)
+        buttonStack.snp.makeConstraints { make in
+            make.leading.equalTo(titleLabel)
+            make.bottom.equalToSuperview().offset(-8)
+            make.trailing.lessThanOrEqualToSuperview().offset(-10)
         }
-        installButton.setContentHuggingPriority(.required, for: .horizontal)
-        retryButton.setContentHuggingPriority(.required, for: .horizontal)
+
+        titleLabel.setAccessibilityIdentifier(AccessibilityID.Download.btStatusLabel)
+        setAccessibilityIdentifier(AccessibilityID.Download.btBanner)
         detailLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        titleLabel.setAccessibilityIdentifier(AccessibilityID.Download.btStatusLabel)
     }
 
-    func configure(title: String, detail: String, showRetry: Bool, showInstall: Bool) {
+    private func configureButton(
+        _ button: NSButton,
+        title: String,
+        action: Selector,
+        identifier: String
+    ) {
+        button.title = title
+        button.bezelStyle = .rounded
+        button.controlSize = .small
+        button.target = self
+        button.action = action
+        button.setAccessibilityIdentifier(identifier)
+        button.setContentHuggingPriority(.required, for: .horizontal)
+    }
+
+    func configure(
+        title: String,
+        detail: String,
+        isChecking: Bool,
+        showRetry: Bool,
+        showInstallHelp: Bool,
+        showSettings: Bool
+    ) {
         titleLabel.stringValue = title
         detailLabel.stringValue = detail
-        retryButton.isHidden = !showRetry
-        installButton.isHidden = !showInstall
         titleLabel.toolTip = detail
         detailLabel.toolTip = detail
+        retryButton.isHidden = !showRetry
+        copyButton.isHidden = !showInstallHelp
+        websiteButton.isHidden = !showInstallHelp
+        settingsButton.isHidden = !showSettings
+        dismissButton.isHidden = false
+
+        iconView.isHidden = isChecking
+        if isChecking {
+            spinner.startAnimation(nil)
+        } else {
+            spinner.stopAnimation(nil)
+        }
     }
 
     @objc private func retryTapped() {
         onRetry?()
     }
 
-    @objc private func installTapped() {
-        onInstall?()
+    @objc private func copyTapped() {
+        let command = "brew install transmission"
+        NSPasteboard.general.clearContents()
+        NSPasteboard.general.setString(command, forType: .string)
+        detailLabel.stringValue = String(
+            format: NSLocalizedString("已复制安装命令：%@", comment: ""),
+            command
+        )
+    }
+
+    @objc private func websiteTapped() {
+        onWebsite?()
+    }
+
+    @objc private func settingsTapped() {
+        onSettings?()
+    }
+
+    @objc private func dismissTapped() {
+        onDismiss?()
+    }
+}
+
+// MARK: - Drop view
+
+private final class DownloadDropView: NSView {
+
+    var onDropSources: (([String]) -> Void)?
+
+    private var isHighlighted = false {
+        didSet { updateHighlight() }
+    }
+
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        setup()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setup()
+    }
+
+    private func setup() {
+        wantsLayer = true
+        layer?.borderWidth = 2
+        layer?.borderColor = NSColor.clear.cgColor
+        layer?.cornerRadius = 6
+        registerForDraggedTypes([.fileURL, .string, .URL])
+    }
+
+    private func updateHighlight() {
+        layer?.borderColor = isHighlighted
+            ? NSColor.controlAccentColor.withAlphaComponent(0.8).cgColor
+            : NSColor.clear.cgColor
+    }
+
+    private func sources(from draggingInfo: NSDraggingInfo) -> [String] {
+        let pasteboard = draggingInfo.draggingPasteboard
+        var values: [String] = []
+        for item in pasteboard.pasteboardItems ?? [] {
+            if let fileURLString = item.string(forType: .fileURL), !fileURLString.isEmpty {
+                values.append(fileURLString)
+            }
+            if let string = item.string(forType: .string), !string.isEmpty {
+                values.append(string)
+            }
+            if let urlString = item.string(forType: .URL), !urlString.isEmpty {
+                values.append(urlString)
+            }
+        }
+        var seen = Set<String>()
+        return values.filter { seen.insert($0).inserted }
+    }
+
+    override func draggingEntered(_ sender: NSDraggingInfo) -> NSDragOperation {
+        let values = sources(from: sender)
+        guard !values.isEmpty else { return [] }
+        isHighlighted = true
+        return .copy
+    }
+
+    override func draggingUpdated(_ sender: NSDraggingInfo) -> NSDragOperation {
+        sources(from: sender).isEmpty ? [] : .copy
+    }
+
+    override func draggingExited(_ sender: NSDraggingInfo?) {
+        isHighlighted = false
+    }
+
+    override func prepareForDragOperation(_ sender: NSDraggingInfo) -> Bool {
+        !sources(from: sender).isEmpty
+    }
+
+    override func performDragOperation(_ sender: NSDraggingInfo) -> Bool {
+        let values = sources(from: sender)
+        isHighlighted = false
+        guard !values.isEmpty else { return false }
+        onDropSources?(values)
+        return true
+    }
+
+    override func concludeDragOperation(_ sender: NSDraggingInfo?) {
+        isHighlighted = false
     }
 }
 

@@ -123,8 +123,17 @@ final class DownloadTests: XCTestCase {
         XCTAssertEqual(localSource.kind, .torrent)
         XCTAssertEqual(localSource.source, localURL.standardizedFileURL.path)
         XCTAssertEqual(localSource.suggestedTitle, "本地 种子")
+        XCTAssertEqual(localSource.infoHash, "1ade8a1a581f338e4fce4ce784da3f7d03f81f3a")
 
         XCTAssertThrowsError(try DownloadSourceParser.parse("/tmp/does-not-exist-\(UUID().uuidString).torrent"))
+    }
+
+    func testDDPlayURLStyleMagnetPrefixIsRemoved() throws {
+        let hash = String(repeating: "c", count: 40)
+        let source = try DownloadSourceParser.parse("ddplay://magnet:?xt=urn:btih:\(hash)&dn=Test")
+        XCTAssertEqual(source.kind, .magnet)
+        XCTAssertEqual(source.source, "magnet:?xt=urn:btih:\(hash.uppercased())&dn=Test")
+        XCTAssertEqual(source.infoHash, hash)
     }
 
     func testHTTPDirectLinkAndInvalidInput() throws {
@@ -143,6 +152,49 @@ final class DownloadTests: XCTestCase {
         }
     }
 
+    func testBitTorrentInfoHashAndDeduplicationKeys() throws {
+        let data = Data("d8:announce3:foo4:infod4:name4:testee".utf8)
+        let hash = try XCTUnwrap(BitTorrentMetainfo.infoHash(in: data))
+        XCTAssertEqual(hash, "1ade8a1a581f338e4fce4ce784da3f7d03f81f3a")
+
+        let torrentURL = temporaryDirectory.appendingPathComponent("hash.torrent")
+        try data.write(to: torrentURL)
+        let torrentSource = try DownloadSourceParser.parse(torrentURL.path)
+        XCTAssertEqual(torrentSource.infoHash, hash)
+
+        let magnetSource = try DownloadSourceParser.parse("magnet:?xt=urn:btih:\(hash.uppercased())")
+        XCTAssertEqual(
+            DownloadSourceParser.deduplicationKey(for: torrentSource),
+            DownloadSourceParser.deduplicationKey(for: magnetSource)
+        )
+
+        let base32Source = try DownloadSourceParser.parse(
+            "magnet:?xt=urn:btih:DLPIUGSYD4ZY4T6OJTTYJWR7PUB7QHZ2"
+        )
+        XCTAssertEqual(
+            DownloadSourceParser.normalizedInfoHash(base32Source.infoHash),
+            hash
+        )
+
+        var task = makeTask(
+            kind: .magnet,
+            source: magnetSource.source,
+            status: .downloading,
+            engineTaskID: hash
+        )
+        XCTAssertEqual(DownloadSourceParser.deduplicationKey(for: task), "btih:\(hash)")
+        task.kind = .torrent
+        task.source = torrentURL.path
+        XCTAssertEqual(DownloadSourceParser.deduplicationKey(for: task), "btih:\(hash)")
+
+        let http = try DownloadSourceParser.parse("https://example.com/a.mp4")
+        let httpTask = makeTask(kind: .http, source: http.source)
+        XCTAssertEqual(
+            DownloadSourceParser.deduplicationKey(for: httpTask),
+            DownloadSourceParser.deduplicationKey(for: http)
+        )
+    }
+
     // MARK: - State machine
 
     func testValidStateTransitions() {
@@ -150,15 +202,17 @@ final class DownloadTests: XCTestCase {
             (.queued, .downloading),
             (.queued, .paused),
             (.queued, .stopped),
+            (.downloading, .queued),
             (.downloading, .paused),
             (.downloading, .stopped),
             (.downloading, .completed),
             (.downloading, .failed),
             (.paused, .downloading),
             (.paused, .stopped),
+            (.paused, .completed),
             (.stopped, .queued),
             (.stopped, .downloading),
-            (.completed, .queued),
+            (.stopped, .completed),
             (.failed, .queued),
             (.failed, .downloading),
         ]
@@ -169,21 +223,30 @@ final class DownloadTests: XCTestCase {
 
     func testInvalidStateTransitions() {
         let invalid: [(DownloadTaskStatus, DownloadTaskStatus)] = [
+            (.completed, .queued),
             (.completed, .downloading),
             (.completed, .paused),
             (.completed, .failed),
             (.queued, .completed),
-            (.paused, .completed),
-            (.stopped, .completed),
             (.failed, .completed),
-            (.downloading, .queued),
         ]
         for (from, to) in invalid {
             XCTAssertFalse(from.canTransition(to: to), "\(from) -> \(to) 应该非法")
         }
     }
 
+    func testCompletedTaskCannotRestart() {
+        XCTAssertFalse(DownloadTaskStatus.completed.canStart)
+        XCTAssertTrue(DownloadTaskStatus.failed.canStart)
+        XCTAssertTrue(DownloadTaskStatus.paused.canStart)
+        XCTAssertTrue(DownloadTaskStatus.stopped.canStart)
+    }
+
     func testTaskTransitionThrowsAndCompletionResetsFields() throws {
+        var completedTask = makeTask(status: .completed)
+        XCTAssertThrowsError(try completedTask.transition(to: .downloading))
+        XCTAssertEqual(completedTask.status, .completed)
+
         var task = makeTask(
             status: .downloading,
             progress: 0.4,
@@ -194,9 +257,6 @@ final class DownloadTests: XCTestCase {
             eta: 12,
             error: "some error"
         )
-
-        XCTAssertThrowsError(try task.transition(to: .queued))
-        XCTAssertEqual(task.status, .downloading)
 
         try task.transition(to: .completed, at: Date(timeIntervalSince1970: 2_000))
         XCTAssertEqual(task.status, .completed)
@@ -456,9 +516,14 @@ final class DownloadTests: XCTestCase {
         XCTAssertFalse(torrent.isFinished)
         XCTAssertEqual(torrent.downloadedBytes, 1_000)
         XCTAssertEqual(torrent.files.count, 1)
+        XCTAssertEqual(torrent.files[0].index, 0)
         XCTAssertEqual(torrent.files[0].bytesCompleted, 1_000)
         XCTAssertEqual(torrent.files[0].progress, 0.5, accuracy: 0.0001)
         XCTAssertEqual(torrent.filePaths, ["/tmp/downloads/Show/e01.mkv"])
+        XCTAssertEqual(torrent.fileProgress.count, 1)
+        XCTAssertEqual(torrent.fileProgress[0].index, 0)
+        XCTAssertEqual(torrent.fileProgress[0].path, "/tmp/downloads/Show/e01.mkv")
+        XCTAssertEqual(torrent.fileProgress[0].isWanted, true)
     }
 
     func testTransmissionStartStopRemoveArguments() async throws {
@@ -482,6 +547,25 @@ final class DownloadTests: XCTestCase {
         XCTAssertEqual(lastArguments[1]["ids"] as? [String], ["abc"])
         XCTAssertEqual(lastArguments[2]["ids"] as? [String], ["abc"])
         XCTAssertEqual(lastArguments[2]["delete-local-data"] as? Bool, true)
+    }
+
+    func testTransmissionSetFilesWantedArguments() async throws {
+        var captured: [String: Any]?
+        MockURLProtocol.handler = { request in
+            let body = try XCTUnwrap(MockURLProtocol.jsonBody(from: request))
+            XCTAssertEqual(body["method"] as? String, "torrent-set")
+            captured = try XCTUnwrap(body["arguments"] as? [String: Any])
+            return MockURLProtocol.response(for: request, json: [:])
+        }
+
+        let client = makeRPCClient()
+        try await client.setFilesWanted(ids: ["hash"], indices: [0, 2], wanted: true)
+        XCTAssertEqual(captured?["ids"] as? [String], ["hash"])
+        XCTAssertEqual(captured?["files-wanted"] as? [Int], [0, 2])
+        XCTAssertNil(captured?["files-unwanted"])
+
+        try await client.setFilesWanted(ids: ["hash"], indices: [1], wanted: false)
+        XCTAssertEqual(captured?["files-unwanted"] as? [Int], [1])
     }
 
     func testTransmissionSequentialFallbackOnOldServer() async throws {
@@ -654,6 +738,63 @@ final class DownloadTests: XCTestCase {
 
         XCTAssertTrue(DownloadFileRules.isVideoFile(path: "/tmp/Show.MKV"))
         XCTAssertFalse(DownloadFileRules.isVideoFile(path: "/tmp/Show.srt"))
+    }
+
+    func testPlaybackPathsIncludeAllVideosInNaturalOrder() {
+        let task = makeTask(
+            kind: .torrent,
+            status: .completed,
+            filePaths: [
+                "/tmp/Show/episode 10.mkv",
+                "/tmp/Show/episode 2.mkv",
+                "/tmp/Show/episode 1.mkv",
+                "/tmp/Show/readme.srt",
+            ]
+        )
+        let paths = DownloadFileRules.playablePaths(for: task) { _ in 100 * 1024 * 1024 }
+        XCTAssertEqual(paths, [
+            "/tmp/Show/episode 1.mkv",
+            "/tmp/Show/episode 2.mkv",
+            "/tmp/Show/episode 10.mkv",
+        ])
+        XCTAssertEqual(
+            DownloadFileRules.playablePath(for: task) { _ in 100 * 1024 * 1024 },
+            "/tmp/Show/episode 1.mkv"
+        )
+    }
+
+    func testPlaybackFallsBackForFilesWithoutRecognizedExtension() {
+        XCTAssertTrue(
+            DownloadFileRules.isPlayableCandidate(
+                path: "/tmp/Show/video",
+                size: 20 * 1024 * 1024
+            )
+        )
+        XCTAssertFalse(
+            DownloadFileRules.isPlayableCandidate(
+                path: "/tmp/Show/video",
+                size: 1 * 1024 * 1024
+            )
+        )
+        XCTAssertFalse(
+            DownloadFileRules.isPlayableCandidate(
+                path: "/tmp/Show/notes.srt",
+                size: 50 * 1024 * 1024
+            )
+        )
+        XCTAssertTrue(
+            DownloadFileRules.isPlayableCandidate(
+                path: "/tmp/Show/video.bin",
+                size: 20 * 1024 * 1024
+            )
+        )
+    }
+
+    func testMissingCompletedFilesState() {
+        let task = makeTask(kind: .http, status: .completed, filePaths: ["/tmp/a.mp4", "/tmp/b.mkv"])
+        XCTAssertTrue(DownloadFileRules.hasMissingFiles(task) { _ in false })
+        XCTAssertFalse(DownloadFileRules.hasMissingFiles(task) { $0 == "/tmp/a.mp4" })
+        XCTAssertFalse(DownloadFileRules.hasMissingFiles(makeTask(status: .downloading, filePaths: ["/tmp/a.mp4"])) { _ in false })
     }
 
     func testFileNameSanitizeAndUniqueDestination() throws {

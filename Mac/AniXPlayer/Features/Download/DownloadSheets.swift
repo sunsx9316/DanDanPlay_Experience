@@ -15,20 +15,27 @@ final class DownloadAddSheetViewController: ViewController {
 
     /// (source, savePath, bookmark, completion)
     var onSubmit: ((String, String, Data?, @escaping (Result<Void, Error>) -> Void) -> Void)?
+    /// 添加失败且原因是 BT 未配置时，引导用户去设置。
+    var onOpenBTSettings: (() -> Void)?
+    var onCancel: (() -> Void)?
+    var onDismiss: (() -> Void)?
 
     private let sourceField = NSTextField()
     private let savePathLabel = NSTextField(labelWithString: "")
     private let statusLabel = NSTextField(labelWithString: "")
+    private let btSetupButton = NSButton(title: "", target: nil, action: nil)
     private let addButton = NSButton(title: "", target: nil, action: nil)
+    private let cancelButton = NSButton(title: "", target: nil, action: nil)
     private var savePath: String
     private var saveBookmark: Data?
     private var isSubmitting = false
 
-    init(defaultSavePath: String, defaultBookmark: Data?) {
+    init(defaultSavePath: String, defaultBookmark: Data?, prefillSource: String = "") {
         self.savePath = defaultSavePath
         self.saveBookmark = defaultBookmark
+        self.sourceField.stringValue = prefillSource
         super.init()
-        preferredContentSize = NSSize(width: 580, height: 310)
+        preferredContentSize = NSSize(width: 580, height: 350)
     }
 
     required init?(coder: NSCoder) {
@@ -36,7 +43,7 @@ final class DownloadAddSheetViewController: ViewController {
     }
 
     override func loadView() {
-        view = NSView(frame: NSRect(x: 0, y: 0, width: 580, height: 310))
+        view = NSView(frame: NSRect(x: 0, y: 0, width: 580, height: 350))
     }
 
     override func viewDidLoad() {
@@ -44,6 +51,24 @@ final class DownloadAddSheetViewController: ViewController {
         view.setAccessibilityIdentifier(AccessibilityID.Download.addSheet)
         setupLayout()
         updateSavePathLabel()
+        sourceField.becomeFirstResponder()
+    }
+
+    override func viewDidAppear() {
+        super.viewDidAppear()
+        sourceField.becomeFirstResponder()
+    }
+
+    func replacePrefillSource(_ source: String) {
+        sourceField.stringValue = source
+        statusLabel.stringValue = ""
+        btSetupButton.isHidden = true
+        sourceField.becomeFirstResponder()
+    }
+
+    override func viewDidDisappear() {
+        super.viewDidDisappear()
+        onDismiss?()
     }
 
     private func setupLayout() {
@@ -93,16 +118,22 @@ final class DownloadAddSheetViewController: ViewController {
         statusLabel.font = .systemFont(ofSize: 11.5)
         statusLabel.textColor = .systemRed
         statusLabel.lineBreakMode = .byWordWrapping
-        statusLabel.maximumNumberOfLines = 2
+        statusLabel.maximumNumberOfLines = 3
         statusLabel.setAccessibilityIdentifier(AccessibilityID.Download.addSheetStatus)
 
-        let cancelButton = NSButton(
-            title: NSLocalizedString("取消", comment: ""),
-            target: self,
-            action: #selector(cancelTapped)
-        )
+        btSetupButton.title = NSLocalizedString("打开 BT 设置…", comment: "")
+        btSetupButton.bezelStyle = .rounded
+        btSetupButton.controlSize = .small
+        btSetupButton.target = self
+        btSetupButton.action = #selector(btSetupTapped)
+        btSetupButton.isHidden = true
+        btSetupButton.setAccessibilityIdentifier(AccessibilityID.Download.addSheetBTSetup)
+
+        cancelButton.title = NSLocalizedString("取消", comment: "")
         cancelButton.bezelStyle = .rounded
         cancelButton.keyEquivalent = "\u{1b}"
+        cancelButton.target = self
+        cancelButton.action = #selector(cancelTapped)
         cancelButton.setAccessibilityIdentifier(AccessibilityID.Download.addSheetCancel)
 
         addButton.title = NSLocalizedString("添加", comment: "")
@@ -113,7 +144,7 @@ final class DownloadAddSheetViewController: ViewController {
         addButton.setAccessibilityIdentifier(AccessibilityID.Download.addSheetSubmit)
 
         [title, hint, sourceField, chooseTorrentButton, saveTitle, savePathLabel,
-         chooseFolderButton, statusLabel, cancelButton, addButton].forEach(view.addSubview)
+         chooseFolderButton, statusLabel, btSetupButton, cancelButton, addButton].forEach(view.addSubview)
 
         title.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(24)
@@ -157,6 +188,11 @@ final class DownloadAddSheetViewController: ViewController {
             make.trailing.equalToSuperview().offset(-24)
             make.top.equalTo(savePathLabel.snp.bottom).offset(16)
         }
+        btSetupButton.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(24)
+            make.top.equalTo(statusLabel.snp.bottom).offset(8)
+            make.bottom.lessThanOrEqualTo(addButton.snp.top).offset(-8)
+        }
         addButton.snp.makeConstraints { make in
             make.trailing.equalToSuperview().offset(-24)
             make.bottom.equalToSuperview().offset(-18)
@@ -182,8 +218,14 @@ final class DownloadAddSheetViewController: ViewController {
 
         let handle: (NSApplication.ModalResponse) -> Void = { [weak self] response in
             guard response == .OK, let url = panel.url, let self else { return }
-            self.sourceField.stringValue = url.path
-            self.statusLabel.stringValue = ""
+            do {
+                self.sourceField.stringValue = try DownloadTorrentImporter.importTorrent(at: url)
+                self.statusLabel.stringValue = ""
+                self.btSetupButton.isHidden = true
+            } catch {
+                self.statusLabel.textColor = .systemRed
+                self.statusLabel.stringValue = error.localizedDescription
+            }
         }
         if let window = view.window {
             panel.beginSheetModal(for: window, completionHandler: handle)
@@ -215,7 +257,18 @@ final class DownloadAddSheetViewController: ViewController {
     }
 
     @objc private func cancelTapped() {
+        guard !isSubmitting else { return }
+        onCancel?()
         dismiss(self)
+    }
+
+    @objc private func btSetupTapped() {
+        let handler = onOpenBTSettings
+        onCancel?()
+        dismiss(self)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            handler?()
+        }
     }
 
     @objc private func addTapped() {
@@ -230,6 +283,8 @@ final class DownloadAddSheetViewController: ViewController {
 
         isSubmitting = true
         addButton.isEnabled = false
+        cancelButton.isEnabled = false
+        btSetupButton.isHidden = true
         statusLabel.textColor = .secondaryLabelColor
         statusLabel.stringValue = NSLocalizedString("正在添加…", comment: "")
 
@@ -237,12 +292,16 @@ final class DownloadAddSheetViewController: ViewController {
             guard let self else { return }
             self.isSubmitting = false
             self.addButton.isEnabled = true
+            self.cancelButton.isEnabled = true
             switch result {
             case .success:
                 self.dismiss(self)
             case .failure(let error):
                 self.statusLabel.textColor = .systemRed
                 self.statusLabel.stringValue = error.localizedDescription
+                if let engineError = error as? DownloadEngineError, engineError.requiresBTSetup {
+                    self.btSetupButton.isHidden = false
+                }
             }
         }
     }
@@ -277,6 +336,8 @@ struct DownloadSettingsDraft {
     var savePath: String
     var saveBookmark: Data?
     var maxConcurrentDownloads: Int
+    var notificationsEnabled: Bool
+    var resetBTOnboarding: Bool
 }
 
 final class DownloadSettingsSheetViewController: ViewController {
@@ -292,20 +353,28 @@ final class DownloadSettingsSheetViewController: ViewController {
     private let clearPasswordButton = NSButton(title: "", target: nil, action: nil)
     private let httpsCheckbox = NSButton(checkboxWithTitle: "HTTPS", target: nil, action: nil)
     private let sequentialCheckbox = NSButton(checkboxWithTitle: "", target: nil, action: nil)
+    private let testConnectionButton = NSButton(title: "", target: nil, action: nil)
+    private let connectionLabel = NSTextField(labelWithString: "")
+    private let resetOnboardingButton = NSButton(title: "", target: nil, action: nil)
     private let savePathLabel = NSTextField(labelWithString: "")
     private let concurrentPopup = NSPopUpButton()
+    private let notificationsCheckbox = NSButton(checkboxWithTitle: "", target: nil, action: nil)
+    private let notificationHintLabel = NSTextField(labelWithString: "")
+    private let notificationSettingsButton = NSButton(title: "", target: nil, action: nil)
     private let statusLabel = NSTextField(labelWithString: "")
     private var savePath: String
     private var saveBookmark: Data?
     private var clearPassword = false
     private var isSaving = false
+    private var isTesting = false
+    private var resetBTOnboarding = false
 
     init(preferences: DownloadPreferences = .shared) {
         self.preferences = preferences
         self.savePath = preferences.defaultSavePath
         self.saveBookmark = preferences.defaultSaveBookmark
         super.init()
-        preferredContentSize = NSSize(width: 580, height: 470)
+        preferredContentSize = NSSize(width: 600, height: 570)
     }
 
     required init?(coder: NSCoder) {
@@ -313,7 +382,7 @@ final class DownloadSettingsSheetViewController: ViewController {
     }
 
     override func loadView() {
-        view = NSView(frame: NSRect(x: 0, y: 0, width: 580, height: 470))
+        view = NSView(frame: NSRect(x: 0, y: 0, width: 600, height: 570))
     }
 
     override func viewDidLoad() {
@@ -321,6 +390,12 @@ final class DownloadSettingsSheetViewController: ViewController {
         view.setAccessibilityIdentifier(AccessibilityID.Download.settingsSheet)
         setupLayout()
         populate()
+        refreshNotificationAuthorization()
+    }
+
+    override func viewDidAppear() {
+        super.viewDidAppear()
+        refreshNotificationAuthorization()
     }
 
     private func setupLayout() {
@@ -360,6 +435,26 @@ final class DownloadSettingsSheetViewController: ViewController {
         sequentialCheckbox.title = NSLocalizedString("按顺序下载（便于边下边播）", comment: "")
         sequentialCheckbox.setAccessibilityIdentifier(AccessibilityID.Download.settingsSequential)
 
+        testConnectionButton.title = NSLocalizedString("测试连接", comment: "")
+        testConnectionButton.bezelStyle = .rounded
+        testConnectionButton.controlSize = .small
+        testConnectionButton.target = self
+        testConnectionButton.action = #selector(testConnectionTapped)
+        testConnectionButton.setAccessibilityIdentifier(AccessibilityID.Download.settingsTestConnection)
+
+        resetOnboardingButton.title = NSLocalizedString("重新显示 BT 引导", comment: "")
+        resetOnboardingButton.bezelStyle = .inline
+        resetOnboardingButton.isBordered = false
+        resetOnboardingButton.controlSize = .small
+        resetOnboardingButton.target = self
+        resetOnboardingButton.action = #selector(resetOnboardingTapped)
+        resetOnboardingButton.setAccessibilityIdentifier(AccessibilityID.Download.settingsResetBTOnboarding)
+
+        connectionLabel.font = .systemFont(ofSize: 11)
+        connectionLabel.textColor = .secondaryLabelColor
+        connectionLabel.lineBreakMode = .byTruncatingTail
+        connectionLabel.setAccessibilityIdentifier(AccessibilityID.Download.settingsTestResult)
+
         let saveTitle = Self.sectionLabel(NSLocalizedString("默认保存目录", comment: ""))
         savePathLabel.font = .systemFont(ofSize: 11.5)
         savePathLabel.lineBreakMode = .byTruncatingMiddle
@@ -371,7 +466,17 @@ final class DownloadSettingsSheetViewController: ViewController {
             action: #selector(chooseFolderTapped)
         )
         chooseFolderButton.bezelStyle = .rounded
+        chooseFolderButton.controlSize = .small
         chooseFolderButton.setAccessibilityIdentifier(AccessibilityID.Download.settingsChooseFolder)
+
+        let openFolderButton = NSButton(
+            title: NSLocalizedString("打开下载文件夹", comment: ""),
+            target: self,
+            action: #selector(openFolderTapped)
+        )
+        openFolderButton.bezelStyle = .rounded
+        openFolderButton.controlSize = .small
+        openFolderButton.setAccessibilityIdentifier(AccessibilityID.Download.settingsOpenFolder)
 
         let concurrentLabel = Self.makeLabel(
             NSLocalizedString("最大同时下载数", comment: ""),
@@ -380,6 +485,25 @@ final class DownloadSettingsSheetViewController: ViewController {
         )
         concurrentPopup.addItems(withTitles: (1...8).map { "\($0)" })
         concurrentPopup.setAccessibilityIdentifier(AccessibilityID.Download.settingsMaxConcurrent)
+
+        notificationsCheckbox.title = NSLocalizedString("下载完成或失败时显示系统通知", comment: "")
+        notificationsCheckbox.setAccessibilityIdentifier(AccessibilityID.Download.settingsNotifications)
+
+        notificationHintLabel.font = .systemFont(ofSize: 10.5)
+        notificationHintLabel.textColor = .secondaryLabelColor
+        notificationHintLabel.lineBreakMode = .byTruncatingTail
+        notificationHintLabel.setAccessibilityIdentifier(AccessibilityID.Download.settingsNotificationHint)
+
+        notificationSettingsButton.title = NSLocalizedString("打开系统通知设置", comment: "")
+        notificationSettingsButton.bezelStyle = .inline
+        notificationSettingsButton.isBordered = false
+        notificationSettingsButton.controlSize = .small
+        notificationSettingsButton.target = self
+        notificationSettingsButton.action = #selector(openNotificationSettingsTapped)
+        notificationSettingsButton.isHidden = true
+        notificationSettingsButton.setAccessibilityIdentifier(
+            AccessibilityID.Download.settingsOpenNotificationSettings
+        )
 
         statusLabel.font = .systemFont(ofSize: 11.5)
         statusLabel.textColor = .systemRed
@@ -410,9 +534,11 @@ final class DownloadSettingsSheetViewController: ViewController {
             hostLabel, hostField, portLabel, portField,
             userLabel, usernameField, passwordLabel, passwordField,
             clearPasswordButton, httpsCheckbox, sequentialCheckbox,
-            saveTitle, savePathLabel, chooseFolderButton,
-            concurrentLabel, concurrentPopup, statusLabel,
-            cancelButton, saveButton,
+            testConnectionButton, connectionLabel, resetOnboardingButton,
+            saveTitle, savePathLabel, chooseFolderButton, openFolderButton,
+            concurrentLabel, concurrentPopup,
+            notificationsCheckbox, notificationHintLabel, notificationSettingsButton,
+            statusLabel, cancelButton, saveButton,
         ]
         views.forEach(view.addSubview)
 
@@ -487,18 +613,37 @@ final class DownloadSettingsSheetViewController: ViewController {
             make.centerY.equalTo(httpsCheckbox)
         }
 
+        testConnectionButton.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(24)
+            make.top.equalTo(httpsCheckbox.snp.bottom).offset(8)
+        }
+        resetOnboardingButton.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().offset(-24)
+            make.centerY.equalTo(testConnectionButton)
+        }
+        connectionLabel.snp.makeConstraints { make in
+            make.leading.equalTo(testConnectionButton.snp.trailing).offset(10)
+            make.trailing.equalTo(resetOnboardingButton.snp.leading).offset(-10)
+            make.centerY.equalTo(testConnectionButton)
+        }
+        connectionLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+
         saveTitle.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(24)
-            make.top.equalTo(httpsCheckbox.snp.bottom).offset(14)
-        }
-        savePathLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(24)
-            make.trailing.equalTo(chooseFolderButton.snp.leading).offset(-12)
-            make.centerY.equalTo(chooseFolderButton)
+            make.top.equalTo(testConnectionButton.snp.bottom).offset(14)
         }
         chooseFolderButton.snp.makeConstraints { make in
             make.trailing.equalToSuperview().offset(-24)
             make.top.equalTo(saveTitle.snp.bottom).offset(6)
+        }
+        openFolderButton.snp.makeConstraints { make in
+            make.trailing.equalTo(chooseFolderButton.snp.leading).offset(-8)
+            make.centerY.equalTo(chooseFolderButton)
+        }
+        savePathLabel.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(24)
+            make.trailing.equalTo(openFolderButton.snp.leading).offset(-12)
+            make.centerY.equalTo(chooseFolderButton)
         }
         savePathLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
@@ -508,14 +653,28 @@ final class DownloadSettingsSheetViewController: ViewController {
         }
         concurrentPopup.snp.makeConstraints { make in
             make.leading.equalTo(concurrentLabel.snp.trailing).offset(12)
-            make.top.equalTo(chooseFolderButton.snp.bottom).offset(12)
+            make.top.equalTo(openFolderButton.snp.bottom).offset(12)
             make.width.equalTo(80)
+        }
+
+        notificationsCheckbox.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(24)
+            make.top.equalTo(concurrentPopup.snp.bottom).offset(14)
+        }
+        notificationSettingsButton.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().offset(-24)
+            make.centerY.equalTo(notificationsCheckbox)
+        }
+        notificationHintLabel.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(24)
+            make.trailing.equalToSuperview().offset(-24)
+            make.top.equalTo(notificationsCheckbox.snp.bottom).offset(2)
         }
 
         statusLabel.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(24)
             make.trailing.equalToSuperview().offset(-24)
-            make.top.equalTo(concurrentPopup.snp.bottom).offset(12)
+            make.top.equalTo(notificationHintLabel.snp.bottom).offset(10)
         }
         saveButton.snp.makeConstraints { make in
             make.trailing.equalToSuperview().offset(-24)
@@ -538,7 +697,147 @@ final class DownloadSettingsSheetViewController: ViewController {
         httpsCheckbox.state = preferences.rpcUseHTTPS ? .on : .off
         sequentialCheckbox.state = preferences.sequentialDownload ? .on : .off
         concurrentPopup.selectItem(at: max(0, preferences.maxConcurrentDownloads - 1))
+        notificationsCheckbox.state = preferences.notificationsEnabled ? .on : .off
+        notificationsCheckbox.target = self
+        notificationsCheckbox.action = #selector(notificationsToggled)
         updateSavePathLabel()
+    }
+
+    private func refreshNotificationAuthorization() {
+        DownloadNotifier.shared.authorizationStatus { [weak self] status in
+            DispatchQueue.main.async {
+                guard let self else { return }
+                let enabled = self.notificationsCheckbox.state == .on
+                self.notificationSettingsButton.isHidden = true
+                self.notificationHintLabel.textColor = .secondaryLabelColor
+
+                guard enabled else {
+                    self.notificationHintLabel.stringValue = NSLocalizedString("系统通知已关闭。", comment: "")
+                    return
+                }
+                switch status {
+                case .denied:
+                    self.notificationHintLabel.textColor = .systemOrange
+                    self.notificationHintLabel.stringValue = NSLocalizedString(
+                        "系统通知权限被拒绝，请在系统设置中允许 AniXPlayer 通知。",
+                        comment: ""
+                    )
+                    self.notificationSettingsButton.isHidden = false
+                case .notDetermined:
+                    self.notificationHintLabel.stringValue = NSLocalizedString(
+                        "首次添加下载任务时会请求系统通知权限。",
+                        comment: ""
+                    )
+                case .authorized, .provisional, .ephemeral:
+                    self.notificationHintLabel.stringValue = NSLocalizedString(
+                        "下载完成或失败时会显示通知，点击可定位任务。",
+                        comment: ""
+                    )
+                @unknown default:
+                    self.notificationHintLabel.stringValue = ""
+                }
+            }
+        }
+    }
+
+    @objc private func notificationsToggled() {
+        refreshNotificationAuthorization()
+        if notificationsCheckbox.state == .on {
+            DownloadNotifier.shared.requestAuthorizationIfNeeded(preferences: preferences)
+        }
+    }
+
+    @objc private func testConnectionTapped() {
+        guard !isTesting else { return }
+        guard let port = Int(portField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)),
+              (1...65535).contains(port) else {
+            connectionLabel.textColor = .systemRed
+            connectionLabel.stringValue = NSLocalizedString("端口必须是 1–65535 之间的整数", comment: "")
+            portField.becomeFirstResponder()
+            return
+        }
+
+        let password: String
+        if clearPassword {
+            password = passwordField.stringValue
+        } else if !passwordField.stringValue.isEmpty {
+            password = passwordField.stringValue
+        } else {
+            password = preferences.storedRPCPassword()
+        }
+
+        let configuration = TransmissionRPCConfiguration(
+            host: hostField.stringValue,
+            port: port,
+            useHTTPS: httpsCheckbox.state == .on,
+            username: usernameField.stringValue,
+            password: password,
+            sequentialDownload: sequentialCheckbox.state == .on
+        )
+        let client = TransmissionRPCClient(configuration: configuration)
+        let endpoint = "\(configuration.rpcURL.host ?? hostField.stringValue):\(configuration.rpcURL.port ?? port)"
+
+        isTesting = true
+        testConnectionButton.isEnabled = false
+        connectionLabel.textColor = .secondaryLabelColor
+        connectionLabel.stringValue = NSLocalizedString("正在测试连接…", comment: "")
+
+        Task { [weak self] in
+            do {
+                let info = try await client.sessionGet()
+                DispatchQueue.main.async {
+                    guard let self else { return }
+                    self.isTesting = false
+                    self.testConnectionButton.isEnabled = true
+                    self.connectionLabel.textColor = .systemGreen
+                    self.connectionLabel.stringValue = String(
+                        format: NSLocalizedString("已连接 Transmission %@（RPC %d）", comment: ""),
+                        info.version,
+                        info.rpcVersion
+                    )
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    guard let self else { return }
+                    self.isTesting = false
+                    self.testConnectionButton.isEnabled = true
+                    self.connectionLabel.textColor = .systemRed
+                    self.connectionLabel.stringValue = String(
+                        format: NSLocalizedString("连接失败（%@）：%@", comment: ""),
+                        endpoint,
+                        error.localizedDescription
+                    )
+                }
+            }
+        }
+    }
+
+    @objc private func openFolderTapped() {
+        let access = DownloadFileAccess.resolveDirectory(
+            path: savePath,
+            bookmark: saveBookmark
+        )
+        defer { access.securityScopedURL?.stopAccessingSecurityScopedResource() }
+        do {
+            try FileManager.default.createDirectory(
+                at: access.url,
+                withIntermediateDirectories: true
+            )
+            NSWorkspace.shared.open(access.url)
+        } catch {
+            statusLabel.textColor = .systemRed
+            statusLabel.stringValue = error.localizedDescription
+        }
+    }
+
+    @objc private func openNotificationSettingsTapped() {
+        DownloadNotifier.shared.openNotificationSettings()
+    }
+
+    @objc private func resetOnboardingTapped() {
+        resetBTOnboarding = true
+        statusLabel.textColor = .secondaryLabelColor
+        statusLabel.stringValue = NSLocalizedString("保存后将重新显示 BT 未连接引导。", comment: "")
     }
 
     @objc private func clearPasswordTapped() {
@@ -604,7 +903,9 @@ final class DownloadSettingsSheetViewController: ViewController {
             sequentialDownload: sequentialCheckbox.state == .on,
             savePath: savePath,
             saveBookmark: saveBookmark,
-            maxConcurrentDownloads: max(1, concurrentPopup.indexOfSelectedItem + 1)
+            maxConcurrentDownloads: max(1, concurrentPopup.indexOfSelectedItem + 1),
+            notificationsEnabled: notificationsCheckbox.state == .on,
+            resetBTOnboarding: resetBTOnboarding
         )
 
         guard let onSave else { return }
