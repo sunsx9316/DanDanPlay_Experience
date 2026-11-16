@@ -67,6 +67,13 @@ enum AccessibilityID {
         static let list = "trending.list"
     }
 
+    enum History {
+        static let root = "history.root"
+        static let list = "history.list"
+        static let refreshButton = "history.refreshButton"
+        static let statusLabel = "history.statusLabel"
+    }
+
     enum Membership {
         static let window = "membership.window"
         static let statusCard = "membership.statusCard"

@@ -45,6 +45,9 @@ class PlayerModel {
     private(set) lazy var mediaModel = PlayerMediaModel()
     
     private(set) lazy var danmakuModel = PlayerDanmakuModel(mediaContext: self.mediaModel.context)
+
+    /// 当前播放项匹配到的弹幕库信息；播放历史上报使用。
+    private(set) var currentMatchInfo: MatchInfo?
     
     private lazy var disposeBag = DisposeBag()
     
@@ -214,6 +217,7 @@ extension PlayerModel {
     ///   - danmakus: 弹幕
     func startPlay(_ media: File, matchInfo: MatchInfo?, danmakus: DanmakuMapResult) -> Observable<MediaLoadState> {
         ANX.logInfo(.player, "[Player] 开始播放媒体: \(media.fileName), 弹幕数量: \(danmakus.count)")
+        self.currentMatchInfo = matchInfo
         return Observable<MediaLoadState>.create { [weak self] sub in
 
             var isStartPlay = false
