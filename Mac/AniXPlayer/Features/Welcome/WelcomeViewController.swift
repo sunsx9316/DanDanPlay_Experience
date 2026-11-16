@@ -727,7 +727,8 @@ final class WelcomeRecentStore {
         guard !file.url.isSubtitleFile, !file.url.isDanmakuFile else { return }
         guard isPlayableMedia(file) else { return }
 
-        let url = file.url.standardizedFileURL
+        // 解析软链后再去重：同一视频可能通过 worktree/sample 软链或真实路径打开。
+        let url = file.url.resolvingSymlinksInPath().standardizedFileURL
         let path = url.path
         var currentItems = loadItems()
         let existing = currentItems.first(where: { $0.path == path })
@@ -823,9 +824,17 @@ final class WelcomeRecentStore {
               let items = try? JSONDecoder().decode([WelcomeRecentItem].self, from: data) else {
             return []
         }
+        var seen = Set<String>()
         return items
             .filter { Self.isPlayablePath($0.path) }
             .sorted { $0.lastOpened > $1.lastOpened }
+            .filter { item in
+                let resolved = URL(fileURLWithPath: item.path)
+                    .resolvingSymlinksInPath()
+                    .standardizedFileURL
+                    .path
+                return seen.insert(resolved).inserted
+            }
     }
 
     private func persist(_ items: [WelcomeRecentItem]) {
