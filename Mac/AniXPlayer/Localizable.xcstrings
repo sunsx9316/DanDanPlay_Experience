@@ -5868,7 +5868,791 @@
           }
         }
       }
-    }
+    },
+      "导出动图…": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Export Animated Image…"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "导出动图…"
+            }
+          }
+        }
+      },
+      "导出动图": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Export Animated Image"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "导出动图"
+            }
+          }
+        }
+      },
+      "动图导出": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Animated Image Export"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "动图导出"
+            }
+          }
+        }
+      },
+      "开始时间": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Start Time"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "开始时间"
+            }
+          }
+        }
+      },
+      "秒（当前播放位置）": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "s (current playback position)"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "秒（当前播放位置）"
+            }
+          }
+        }
+      },
+      "时长": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Duration"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "时长"
+            }
+          }
+        }
+      },
+      "帧率": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Frame Rate"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "帧率"
+            }
+          }
+        }
+      },
+      "最大宽度": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Max Width"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "最大宽度"
+            }
+          }
+        }
+      },
+      "格式": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Format"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "格式"
+            }
+          }
+        }
+      },
+      "%d 秒": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "%d s"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "%d 秒"
+            }
+          }
+        }
+      },
+      "%d fps": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "%d fps"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "%d fps"
+            }
+          }
+        }
+      },
+      "%d px": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "%d px"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "%d px"
+            }
+          }
+        }
+      },
+      "预计 %d 帧，片段 %.1f 秒，保存到截图目录。": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "About %d frames, %.1f s clip, saved to the screenshot folder."
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "预计 %d 帧，片段 %.1f 秒，保存到截图目录。"
+            }
+          }
+        }
+      },
+      "开始时间无效。": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Invalid start time."
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "开始时间无效。"
+            }
+          }
+        }
+      },
+      "当前位置之后不足 1 秒，请从更早的位置开始。": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Less than 1 second remains. Start earlier in the video."
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "当前位置之后不足 1 秒，请从更早的位置开始。"
+            }
+          }
+        }
+      },
+      "开始导出": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Export"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "开始导出"
+            }
+          }
+        }
+      },
+      "正在导出动图": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Exporting Animated Image"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "正在导出动图"
+            }
+          }
+        }
+      },
+      "正在准备…": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Preparing…"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "正在准备…"
+            }
+          }
+        }
+      },
+      "正在取消…": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Canceling…"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "正在取消…"
+            }
+          }
+        }
+      },
+      "正在截取画面…": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Capturing frames…"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "正在截取画面…"
+            }
+          }
+        }
+      },
+      "正在编码动图…": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Encoding…"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "正在编码动图…"
+            }
+          }
+        }
+      },
+      "即将完成…": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Finishing…"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "即将完成…"
+            }
+          }
+        }
+      },
+      "动图已生成": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Animated Image Ready"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "动图已生成"
+            }
+          }
+        }
+      },
+      "动图预览": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Animated image preview"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "动图预览"
+            }
+          }
+        }
+      },
+      "%@ · %d 帧 · %d fps": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "%@ · %d frames · %d fps"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "%@ · %d 帧 · %d fps"
+            }
+          }
+        }
+      },
+      "在 Finder 中显示": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Show in Finder"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "在 Finder 中显示"
+            }
+          }
+        }
+      },
+      "另存为…": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Save As…"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "另存为…"
+            }
+          }
+        }
+      },
+      "另存动图": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Save Animated Image"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "另存动图"
+            }
+          }
+        }
+      },
+      "已另存为新的动图文件。": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Saved a copy of the animated image."
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "已另存为新的动图文件。"
+            }
+          }
+        }
+      },
+      "另存为失败": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Save As Failed"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "另存为失败"
+            }
+          }
+        }
+      },
+      "好": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "OK"
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "好"
+            }
+          }
+        }
+      },
+      "已取消动图导出。": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Animated image export canceled."
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "已取消动图导出。"
+            }
+          }
+        }
+      },
+      "当前视频暂不支持导出动图": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "This video can't be exported as an animated image."
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "当前视频暂不支持导出动图"
+            }
+          }
+        }
+      },
+      "请先打开视频": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Open a video first."
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "请先打开视频"
+            }
+          }
+        }
+      },
+      "当前视频无法用于动图导出。": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "This video can't be used for animated image export."
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "当前视频无法用于动图导出。"
+            }
+          }
+        }
+      },
+      "无法读取当前视频，可能是不支持的编码格式。": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Can't read this video. The codec may be unsupported."
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "无法读取当前视频，可能是不支持的编码格式。"
+            }
+          }
+        }
+      },
+      "当前位置之后没有足够的视频内容。": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Not enough video remains after the current position."
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "当前位置之后没有足够的视频内容。"
+            }
+          }
+        }
+      },
+      "没有截取到可用画面。": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "No usable frames were captured."
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "没有截取到可用画面。"
+            }
+          }
+        }
+      },
+      "只截取到 %d/%d 帧，已取消导出，未生成动图。": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Only %d of %d frames were captured. Export was canceled and no animated image was created."
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "只截取到 %d/%d 帧，已取消导出，未生成动图。"
+            }
+          }
+        }
+      },
+      "无法创建动图文件，请检查保存目录权限。": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Can't create the animated image file. Check the screenshot folder permission."
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "无法创建动图文件，请检查保存目录权限。"
+            }
+          }
+        }
+      },
+      "动图编码失败。": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Failed to encode the animated image."
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "动图编码失败。"
+            }
+          }
+        }
+      },
+      "当前系统不支持所选动图格式。": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "This system doesn't support the selected animated image format."
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "当前系统不支持所选动图格式。"
+            }
+          }
+        }
+      },
+      "无法创建视频解码器。": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Can't create a video decoder."
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "无法创建视频解码器。"
+            }
+          }
+        }
+      },
+      "无法加载当前视频。": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Can't load this video."
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "无法加载当前视频。"
+            }
+          }
+        }
+      },
+      "加载视频超时，请稍后重试。": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Loading the video timed out. Try again later."
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "加载视频超时，请稍后重试。"
+            }
+          }
+        }
+      },
+      "截取画面超时。": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Capturing frames timed out."
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "截取画面超时。"
+            }
+          }
+        }
+      },
+      "当前视频没有可用的画面。": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "This video has no usable video frames."
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "当前视频没有可用的画面。"
+            }
+          }
+        }
+      },
+      "将视频片段导出为 GIF 动图。": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Export a video clip as a GIF."
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "将视频片段导出为 GIF 动图。"
+            }
+          }
+        }
+      },
+      "当前位置之后没有足够的视频内容": {
+        "localizations": {
+          "en": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "Not enough video remains after the current position."
+            }
+          },
+          "zh-Hans": {
+            "stringUnit": {
+              "state": "translated",
+              "value": "当前位置之后没有足够的视频内容"
+            }
+          }
+        }
+      }
   },
   "version": "1.1"
 }

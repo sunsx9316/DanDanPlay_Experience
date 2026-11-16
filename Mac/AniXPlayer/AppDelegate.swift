@@ -714,7 +714,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             menu.addItem(withTitle: NSLocalizedString("翻译字幕…", comment: ""), action: #selector(showTranslation(_:)), keyEquivalent: "")
             menu.addItem(withTitle: NSLocalizedString("AI 视频总结…", comment: ""), action: #selector(showSummary(_:)), keyEquivalent: "")
             let exportGIFItem = NSMenuItem(
-                title: NSLocalizedString("导出 3 秒动图", comment: ""),
+                title: NSLocalizedString("导出动图…", comment: ""),
                 action: #selector(exportCurrentGIF(_:)),
                 keyEquivalent: ""
             )

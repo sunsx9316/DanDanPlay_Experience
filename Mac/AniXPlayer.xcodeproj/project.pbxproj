@@ -26,13 +26,16 @@
 		1252B53F53EF975FEE3C1F32 /* MembershipAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A04771D8E102468519F59314 /* MembershipAPI.swift */; };
 		1421E238B47F309ACE3FA326 /* SearchUpgradeNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E0D6FF2D550AE57E633D666 /* SearchUpgradeNetworkHandle.swift */; };
 		148D7874FDC28222FA530645 /* BangumiQueueNetworkHandle.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8146A36AA1D79E4EF7AA4E6 /* BangumiQueueNetworkHandle.swift */; };
+		152755FFD49359B6E65706B8 /* GIFExportPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98E9A5EF7A322680D77571EF /* GIFExportPreviewViewController.swift */; };
 		1716C485A1104B2B7A6EABC8 /* LocalLibraryModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = E127C204518FC79593B10854 /* LocalLibraryModels.swift */; };
 		177C9676ABE8D9982C64132E /* MembershipTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41FD4504D724DCDE7D6E23AE /* MembershipTests.swift */; };
 		18576AF37B22E4BCC219EE26 /* APIEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86A0C502F750FC0AF75E83E /* APIEnvironment.swift */; };
 		1877F4B9D1D44979610B43BF /* OAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBDC23F8D2E3FCD78FCD2020 /* OAuthService.swift */; };
 		1AE11813681ED162945D2697 /* MacFeatureLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 973EC51DA7BC1D11C466C5BB /* MacFeatureLauncher.swift */; };
 		1C18E37EBD88EBE613DB0E58 /* LocalLibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9EA0037231F3289D5AE07E78 /* LocalLibraryViewController.swift */; };
+		1C9E4D679B06B0F78F8666E0 /* GIFExportOptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5F202B2C6F7BFD32DA98000 /* GIFExportOptionsViewController.swift */; };
 		1D44D17727674746ACA34E84 /* ServerHostListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F3AEACC0C2438C9D6162A6 /* ServerHostListViewController.swift */; };
+		1D6CE41B29223353EDDCA12E /* GIFExportProgressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 947845858923D9D79E3B995E /* GIFExportProgressViewController.swift */; };
 		1E4D4C57F8CFEFB82B886680 /* MembershipModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E099EF31F98DC5E28B8FE12 /* MembershipModels.swift */; };
 		1F33CCB34C7FFA6EA3B04127 /* SearchUpgradeModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 516A69BC55DE7BFB1289CFD5 /* SearchUpgradeModels.swift */; };
 		1FFFB8AACFC94C02E95C564D /* OnlineHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A135665CE68C7A6AAB53DE7 /* OnlineHTTPClient.swift */; };
@@ -49,7 +52,9 @@
 		2BC296EE31AAD5D360CF5F8D /* SubtitleBatchPlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = B776E639517C23A8B92ED8BF /* SubtitleBatchPlanner.swift */; };
 		2C73CBAB6D89527C2DDD2510 /* MetadataTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D702B6447F11144E68E8F1 /* MetadataTableViewCell.swift */; };
 		2E2FD202ED0009FED5CE66DB /* Slider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F268B6B06684283A4E523C /* Slider.swift */; };
+		3225B56E18F6146931532E23 /* GIFMPVFrameCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 426BB303F5A56DD5F3B9A97A /* GIFMPVFrameCapture.swift */; };
 		3418BAF14910E2138C17BB9B /* SummaryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFB5EC34DE88E072DC41BF2C /* SummaryCache.swift */; };
+		34E10DD335474B9DA151F845 /* GIFExportFlowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50764E17289C1BC25CC6CDB2 /* GIFExportFlowController.swift */; };
 		36842F2B2B5FB391FAC199B2 /* TimelineCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CD9D8801CD6415C20C34C0B /* TimelineCollectionViewCell.swift */; };
 		3848354E49B8A3CAADBB0CE2 /* SummaryTranscriptParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4E58AC70F1AF66B1C7E56C /* SummaryTranscriptParser.swift */; };
 		39F6F5D4CFE74D6B45A0A40B /* SearchWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7477F7E7A4B033159CBB328 /* SearchWindowController.swift */; };
@@ -480,6 +485,7 @@
 		3EDE1E40F8F365CB98AE77BA /* AnimeListItem+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "AnimeListItem+Extensions.swift"; sourceTree = "<group>"; };
 		414F750A55D1C57A085D10A7 /* ServerHostTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ServerHostTableViewCell.swift; sourceTree = "<group>"; };
 		41FD4504D724DCDE7D6E23AE /* MembershipTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MembershipTests.swift; path = AniXPlayerTests/MembershipTests.swift; sourceTree = "<group>"; };
+		426BB303F5A56DD5F3B9A97A /* GIFMPVFrameCapture.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GIFMPVFrameCapture.swift; sourceTree = "<group>"; };
 		43F77C4E05418E0933A7ABFE /* PlayerLaunchViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlayerLaunchViewController.swift; sourceTree = "<group>"; };
 		4529551F7FF820380E1F9F42 /* SearchUpgradeNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SearchUpgradeNetworkHandle.swift; path = ../Share/CocoaShare/Networking/Search/SearchUpgradeNetworkHandle.swift; sourceTree = "<group>"; };
 		4962E95785788A794B420715 /* PlayHistoryTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PlayHistoryTests.swift; path = AniXPlayerTests/PlayHistoryTests.swift; sourceTree = "<group>"; };
@@ -489,6 +495,7 @@
 		4C381844ADED18F1E9210202 /* AccessTokenHolder.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AccessTokenHolder.swift; sourceTree = "<group>"; };
 		4D021EBACA202E6D6AA0847A /* OAuthPKCE.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OAuthPKCE.swift; sourceTree = "<group>"; };
 		4DB7EBBA628DF27F7F48CF49 /* AnimeListCollectionViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AnimeListCollectionViewCell.swift; sourceTree = "<group>"; };
+		50764E17289C1BC25CC6CDB2 /* GIFExportFlowController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GIFExportFlowController.swift; sourceTree = "<group>"; };
 		5115FE4B0D3484C630A5912F /* PlayHistoryWindow.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlayHistoryWindow.swift; sourceTree = "<group>"; };
 		516A69BC55DE7BFB1289CFD5 /* SearchUpgradeModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SearchUpgradeModels.swift; sourceTree = "<group>"; };
 		51B8E548A772A258C5AB2C1F /* LocalLibraryScanner.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LocalLibraryScanner.swift; sourceTree = "<group>"; };
@@ -703,11 +710,13 @@
 		92BB14212F39D0988BBA14F2 /* OAuthLoginWindowController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OAuthLoginWindowController.swift; sourceTree = "<group>"; };
 		931C4442A22089698B1559E2 /* MacAuthBootstrap.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MacAuthBootstrap.swift; sourceTree = "<group>"; };
 		942BA0D21F281805C65C4440 /* DownloadEngines.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DownloadEngines.swift; sourceTree = "<group>"; };
+		947845858923D9D79E3B995E /* GIFExportProgressViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GIFExportProgressViewController.swift; sourceTree = "<group>"; };
 		94C39F18749EFD17D3D81622 /* WelcomeShellTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WelcomeShellTests.swift; path = AniXPlayerTests/WelcomeShellTests.swift; sourceTree = "<group>"; };
 		95A7E9B406247069ED1F28BE /* BangumiDetailDateFormatter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BangumiDetailDateFormatter.swift; sourceTree = "<group>"; };
 		973EC51DA7BC1D11C466C5BB /* MacFeatureLauncher.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MacFeatureLauncher.swift; sourceTree = "<group>"; };
 		980E50F227DD732D9AC20945 /* NSCollectionView+Helper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "NSCollectionView+Helper.swift"; sourceTree = "<group>"; };
 		981D99D6711B20006516E695 /* BangumiDetailEpisodeViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BangumiDetailEpisodeViewController.swift; sourceTree = "<group>"; };
+		98E9A5EF7A322680D77571EF /* GIFExportPreviewViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GIFExportPreviewViewController.swift; sourceTree = "<group>"; };
 		9A10A1070F045F315CE31EDB /* SubtitleTranslationEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SubtitleTranslationEngine.swift; path = AniXPlayer/Features/Translation/SubtitleTranslationEngine.swift; sourceTree = "<group>"; };
 		9B2448C2EE465A385DF06D4C /* FavoriteViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FavoriteViewController.swift; sourceTree = "<group>"; };
 		9E5733BE12C3EC2AB1AFC2FD /* BangumiQueueViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BangumiQueueViewController.swift; sourceTree = "<group>"; };
@@ -730,6 +739,7 @@
 		AF59FB85D6C9BCDC499CA9F9 /* BangumiDetailViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BangumiDetailViewController.swift; sourceTree = "<group>"; };
 		AF5F4F6E39574907A79982F0 /* TextView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TextView.swift; sourceTree = "<group>"; };
 		B1695CC51CA581AC0C86510A /* TransmissionRPC.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TransmissionRPC.swift; path = AniXPlayer/Features/Download/TransmissionRPC.swift; sourceTree = "<group>"; };
+		B5F202B2C6F7BFD32DA98000 /* GIFExportOptionsViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GIFExportOptionsViewController.swift; sourceTree = "<group>"; };
 		B776E639517C23A8B92ED8BF /* SubtitleBatchPlanner.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SubtitleBatchPlanner.swift; sourceTree = "<group>"; };
 		B82F5E7B3769B6409FAEB726 /* MediaLibrarySectionTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MediaLibrarySectionTableViewCell.swift; sourceTree = "<group>"; };
 		B9D702B6447F11144E68E8F1 /* MetadataTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MetadataTableViewCell.swift; sourceTree = "<group>"; };
@@ -1901,6 +1911,11 @@
 			isa = PBXGroup;
 			children = (
 				26F63BF875755033BDC5B40A /* GIFExportService.swift */,
+				426BB303F5A56DD5F3B9A97A /* GIFMPVFrameCapture.swift */,
+				B5F202B2C6F7BFD32DA98000 /* GIFExportOptionsViewController.swift */,
+				947845858923D9D79E3B995E /* GIFExportProgressViewController.swift */,
+				98E9A5EF7A322680D77571EF /* GIFExportPreviewViewController.swift */,
+				50764E17289C1BC25CC6CDB2 /* GIFExportFlowController.swift */,
 			);
 			name = GIFExport;
 			path = GIFExport;
@@ -2486,6 +2501,11 @@
 				6526007F4E214B5504D42903 /* OnlineStreamSniffer.swift in Sources */,
 				DDA79A911A4F4758519E6A2F /* DownloadNotifier.swift in Sources */,
 				3D2D32F025349FE8771575C4 /* DownloadTorrentImporter.swift in Sources */,
+				3225B56E18F6146931532E23 /* GIFMPVFrameCapture.swift in Sources */,
+				1C9E4D679B06B0F78F8666E0 /* GIFExportOptionsViewController.swift in Sources */,
+				1D6CE41B29223353EDDCA12E /* GIFExportProgressViewController.swift in Sources */,
+				152755FFD49359B6E65706B8 /* GIFExportPreviewViewController.swift in Sources */,
+				34E10DD335474B9DA151F845 /* GIFExportFlowController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

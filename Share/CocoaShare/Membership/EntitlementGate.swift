@@ -58,7 +58,7 @@ enum MembershipFeature: String, CaseIterable, Sendable {
         case .backupDanmaku:
             return NSLocalizedString("主弹幕不足时，从关联/备用来源补充并合并弹幕。", comment: "")
         case .gifExport:
-            return NSLocalizedString("将视频片段导出为 GIF、WebP 或 APNG 动图。", comment: "")
+            return NSLocalizedString("将视频片段导出为 GIF 动图。", comment: "")
         case .resmonitor:
             return NSLocalizedString("监控网络、下载与播放状态等运行信息。", comment: "")
         case .batchDanmakuExport:
