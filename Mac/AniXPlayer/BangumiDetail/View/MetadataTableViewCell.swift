@@ -21,7 +21,7 @@ class MetadataTableViewCell: NSTableCellView {
     private let detailField: Label = {
         let tf = Label(labelWithString: "")
         tf.font = .ddp_small()
-        tf.textColor = .subtitleTextColor
+        tf.textColor = .secondaryLabelColor
         tf.lineBreakMode = .byTruncatingTail
         return tf
     }()

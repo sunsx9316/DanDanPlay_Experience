@@ -8,74 +8,181 @@
 import Cocoa
 import SnapKit
 
-class BangumiDetailEpisodeViewController: ViewController, NSTableViewDataSource, NSTableViewDelegate {
+final class BangumiDetailEpisodeViewController: WelcomeShellScrollPageViewController {
 
-    var dataSource: [BangumiEpisode] = [] {
-        didSet {
-            tableView.reloadData()
-        }
+    private struct EpisodeGroup {
+        let title: String
+        let subtitle: String
+        let episodes: [(index: Int, episode: BangumiEpisode)]
     }
 
-    private lazy var tableView: TableView = {
-        let tv = TableView()
-        tv.dataSource = self
-        tv.delegate = self
-        tv.backgroundColor = .backgroundColor
-        tv.headerView = nil
-        let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("episode"))
-        column.width = 500
-        tv.addTableColumn(column)
-        return tv
-    }()
+    private var episodes: [BangumiEpisode] = []
+    private var seasons: [BangumiEpisodeSeason] = []
 
-    private lazy var scrollView: ScrollView<TableView> = {
-        let sv = ScrollView<TableView>()
-        sv.containerView = tableView
-        sv.hasVerticalScroller = true
-        sv.borderType = .noBorder
-        sv.drawsBackground = false
-        return sv
-    }()
+    func configure(episodes: [BangumiEpisode], seasons: [BangumiEpisodeSeason]) {
+        self.episodes = episodes
+        self.seasons = seasons
+        if isViewLoaded {
+            buildContent()
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        view.setAccessibilityIdentifier(AccessibilityID.BangumiDetail.episodeList)
         title = NSLocalizedString("分集信息", comment: "")
-
-        tableView.registerClassCell(class: EpisodeTableViewCell.self)
-
-        view.addSubview(scrollView)
-        scrollView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
+        buildContent()
     }
 
-    // MARK: - NSTableViewDataSource
+    // MARK: - Layout
 
-    func numberOfRows(in tableView: NSTableView) -> Int {
-        return dataSource.count
+    private func buildContent() {
+        contentStack.arrangedSubviews.forEach {
+            contentStack.removeArrangedSubview($0)
+            $0.removeFromSuperview()
+        }
+
+        let header = WelcomeShellPageHeaderView(
+            title: NSLocalizedString("分集信息", comment: ""),
+            subtitle: String(format: NSLocalizedString("共 %d 集", comment: ""), episodes.count)
+        )
+        addFullWidth(header, spacingAfter: 2)
+
+        guard !episodes.isEmpty else {
+            let card = BangumiDetailCardView()
+            let state = WelcomeShellStateView()
+            state.configure(title: NSLocalizedString("暂无剧集信息", comment: ""))
+            card.contentStack.addArrangedSubview(state)
+            addFullWidth(card)
+            layoutContent()
+            return
+        }
+
+        for group in makeGroups() {
+            addFullWidth(makeGroupCard(for: group))
+        }
+        layoutContent()
     }
 
-    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        let cell = tableView.dequeueReusableCell(class: EpisodeTableViewCell.self)
-        let episode = dataSource[row]
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+    private func makeGroupCard(for group: EpisodeGroup) -> NSView {
+        let card = BangumiDetailCardView()
+        card.addStaticHeader(title: group.title, symbolName: "tv")
 
-        var detail = "第\(episode.episodeNumber)集"
-        if let lastWatched = episode.lastWatched {
-            detail += " · " + String(format: NSLocalizedString("上次观看: %@", comment: ""), formatter.string(from: lastWatched))
+        if !group.subtitle.isEmpty {
+            let subtitle = welcomeShellLabel(
+                group.subtitle,
+                font: .systemFont(ofSize: 11.5),
+                color: .secondaryLabelColor
+            )
+            card.contentStack.addArrangedSubview(subtitle)
         }
+
+        for item in group.episodes {
+            let row = BangumiDetailEpisodeRowView()
+            row.configure(
+                episode: item.episode,
+                index: item.index,
+                detail: detailText(for: item.episode),
+                onActivate: nil
+            )
+            row.setAccessibilityIdentifier(
+                "\(AccessibilityID.BangumiDetail.episodeItemPrefix)\(item.episode.episodeId)"
+            )
+            card.contentStack.addArrangedSubview(row)
+        }
+        return card
+    }
+
+    private func makeGroups() -> [EpisodeGroup] {
+        guard !seasons.isEmpty else {
+            return [EpisodeGroup(
+                title: NSLocalizedString("全部剧集", comment: ""),
+                subtitle: "",
+                episodes: episodes.enumerated().map { (index: $0.offset, episode: $0.element) }
+            )]
+        }
+
+        var groups: [EpisodeGroup] = []
+        var assignedEpisodeIndexes = Set<Int>()
+        var consumedEmptySeason = false
+
+        for (index, season) in seasons.enumerated() {
+            let seasonID = season.id.trimmingCharacters(in: .whitespacesAndNewlines)
+            let items: [(Int, BangumiEpisode)]
+            if seasonID.isEmpty {
+                if seasons.count == 1 {
+                    items = episodes.enumerated().map { ($0.offset, $0.element) }
+                } else if !consumedEmptySeason {
+                    consumedEmptySeason = true
+                    items = episodes.enumerated()
+                        .filter { $0.element.seasonId.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+                        .map { ($0.offset, $0.element) }
+                } else {
+                    items = []
+                }
+            } else {
+                items = episodes.enumerated()
+                    .filter { $0.element.seasonId.trimmingCharacters(in: .whitespacesAndNewlines) == seasonID }
+                    .map { ($0.offset, $0.element) }
+            }
+            guard !items.isEmpty else { continue }
+            items.forEach { assignedEpisodeIndexes.insert($0.0) }
+
+            let title = season.name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                ? String(format: NSLocalizedString("第 %d 季", comment: ""), index + 1)
+                : season.name
+            var subtitleParts = [String(
+                format: NSLocalizedString("%d 集", comment: ""),
+                items.count
+            )]
+            if let airDate = season.airDate {
+                subtitleParts.append(String(
+                    format: NSLocalizedString("首播 %@", comment: ""),
+                    BangumiDetailDateFormatter.day.string(from: airDate)
+                ))
+            }
+            groups.append(EpisodeGroup(
+                title: title,
+                subtitle: subtitleParts.joined(separator: " · "),
+                episodes: items
+            ))
+        }
+
+        let remaining = episodes.enumerated()
+            .filter { !assignedEpisodeIndexes.contains($0.offset) }
+            .map { (index: $0.offset, episode: $0.element) }
+        if !remaining.isEmpty {
+            groups.append(EpisodeGroup(
+                title: NSLocalizedString("其他剧集", comment: ""),
+                subtitle: String(format: NSLocalizedString("%d 集", comment: ""), remaining.count),
+                episodes: remaining
+            ))
+        }
+
+        if groups.isEmpty {
+            return [EpisodeGroup(
+                title: NSLocalizedString("全部剧集", comment: ""),
+                subtitle: "",
+                episodes: episodes.enumerated().map { (index: $0.offset, episode: $0.element) }
+            )]
+        }
+        return groups
+    }
+
+    private func detailText(for episode: BangumiEpisode) -> String {
+        var parts: [String] = []
         if let airDate = episode.airDate {
-            detail += " · " + String(format: NSLocalizedString("播出: %@", comment: ""), formatter.string(from: airDate))
+            parts.append(String(
+                format: NSLocalizedString("播出 %@", comment: ""),
+                BangumiDetailDateFormatter.day.string(from: airDate)
+            ))
         }
-
-        cell.configure(title: episode.episodeTitle, detail: detail)
-        return cell
-    }
-
-    func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-        return 50
+        if let lastWatched = episode.lastWatched {
+            parts.append(String(
+                format: NSLocalizedString("上次观看 %@", comment: ""),
+                BangumiDetailDateFormatter.minute.string(from: lastWatched)
+            ))
+        }
+        return parts.joined(separator: "  ·  ")
     }
 }
-

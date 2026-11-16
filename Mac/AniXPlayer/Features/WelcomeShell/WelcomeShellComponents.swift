@@ -277,6 +277,12 @@ final class WelcomeShellCardView: NSView {
 
 class WelcomeShellTapView: NSView {
 
+    private enum KeyCode {
+        static let returnKey: UInt16 = 36
+        static let keypadEnter: UInt16 = 76
+        static let space: UInt16 = 49
+    }
+
     var onClick: (() -> Void)?
     var isTapEnabled = true {
         didSet { updateColors() }
@@ -311,9 +317,42 @@ class WelcomeShellTapView: NSView {
         wantsLayer = true
         layer?.cornerRadius = 9
         layer?.cornerCurve = .continuous
+        focusRingType = .exterior
         setAccessibilityElement(true)
         setAccessibilityRole(.button)
         updateColors()
+    }
+
+    override var acceptsFirstResponder: Bool {
+        return isTapEnabled && isEnabledForTap
+    }
+
+    override var focusRingMaskBounds: NSRect {
+        return bounds
+    }
+
+    override func drawFocusRingMask() {
+        NSBezierPath(roundedRect: bounds.insetBy(dx: 1, dy: 1), xRadius: 9, yRadius: 9).fill()
+    }
+
+    override func becomeFirstResponder() -> Bool {
+        needsDisplay = true
+        return super.becomeFirstResponder()
+    }
+
+    override func resignFirstResponder() -> Bool {
+        needsDisplay = true
+        return super.resignFirstResponder()
+    }
+
+    override func keyDown(with event: NSEvent) {
+        switch event.keyCode {
+        case KeyCode.returnKey, KeyCode.keypadEnter, KeyCode.space:
+            guard isTapEnabled, isEnabledForTap else { return }
+            onClick?()
+        default:
+            super.keyDown(with: event)
+        }
     }
 
     override func updateTrackingAreas() {
@@ -341,6 +380,7 @@ class WelcomeShellTapView: NSView {
 
     override func mouseDown(with event: NSEvent) {
         guard isTapEnabled, isEnabledForTap else { return }
+        window?.makeFirstResponder(self)
         onClick?()
     }
 
@@ -547,6 +587,10 @@ final class WelcomeShellStateView: NSView {
         detailLabel.text = ""
         actionButton.isHidden = true
         actionButton.onClick = nil
+    }
+
+    func setActionAccessibilityIdentifier(_ identifier: String) {
+        actionButton.setAccessibilityIdentifier(identifier)
     }
 }
 
@@ -1092,8 +1136,12 @@ final class WelcomeShellPosterTileView: WelcomeShellTapView {
     private let posterView = ImageView()
     private let ratingBadge = welcomeShellLabel("", font: .systemFont(ofSize: 10, weight: .bold), color: .white, alignment: .center)
     private let favoriteMark = ImageView()
+    private let favoriteActionButton = Button()
     private let titleLabel = welcomeShellLabel("", font: .systemFont(ofSize: 12), color: .labelColor, lines: 2, lineBreakMode: .byWordWrapping)
     private let subtitleLabel = welcomeShellLabel("", font: .systemFont(ofSize: 10.5), color: .secondaryLabelColor)
+
+    private var isFavorited = false
+    private var favoriteToggle: ((Bool) -> Void)?
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
@@ -1119,9 +1167,22 @@ final class WelcomeShellPosterTileView: WelcomeShellTapView {
         favoriteMark.layer?.masksToBounds = true
         updateFavoriteMarkColor()
 
+        favoriteActionButton.bezelStyle = .inline
+        favoriteActionButton.isBordered = false
+        favoriteActionButton.imagePosition = .imageOnly
+        favoriteActionButton.contentTintColor = .mainColor
+        favoriteActionButton.focusRingType = .none
+        favoriteActionButton.wantsLayer = true
+        favoriteActionButton.layer?.cornerRadius = 9
+        favoriteActionButton.layer?.masksToBounds = true
+        favoriteActionButton.isHidden = true
+        favoriteActionButton.addTarget(self, action: #selector(favoriteActionClicked))
+        updateFavoriteMarkColor()
+
         addSubview(posterView)
         posterView.addSubview(ratingBadge)
         addSubview(favoriteMark)
+        addSubview(favoriteActionButton)
         addSubview(titleLabel)
         addSubview(subtitleLabel)
 
@@ -1139,6 +1200,11 @@ final class WelcomeShellPosterTileView: WelcomeShellTapView {
             make.top.equalToSuperview().offset(6)
             make.trailing.equalToSuperview().offset(-6)
             make.width.height.equalTo(18)
+        }
+        favoriteActionButton.snp.makeConstraints { make in
+            make.top.equalToSuperview().offset(5)
+            make.trailing.equalToSuperview().offset(-5)
+            make.width.height.equalTo(22)
         }
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(posterView.snp.bottom).offset(6)
@@ -1162,12 +1228,18 @@ final class WelcomeShellPosterTileView: WelcomeShellTapView {
 
     private func updateFavoriteMarkColor() {
         effectiveAppearance.performAsCurrentDrawingAppearance { [weak self] in
-            self?.favoriteMark.layer?.backgroundColor = NSColor.windowBackgroundColor
-                .withAlphaComponent(0.75).cgColor
+            guard let self = self else { return }
+            let background = NSColor.windowBackgroundColor.withAlphaComponent(0.75).cgColor
+            self.favoriteMark.layer?.backgroundColor = background
+            self.favoriteActionButton.layer?.backgroundColor = background
         }
     }
 
-    func configure(with item: BangumiIntro, showsFavorite: Bool = true) {
+    func configure(
+        with item: BangumiIntro,
+        showsFavorite: Bool = true,
+        favoriteToggle: ((Bool) -> Void)? = nil
+    ) {
         titleLabel.text = item.animeTitle
         if let url = URL(string: item.imageUrl), !item.imageUrl.isEmpty {
             posterView.kf.setImage(with: url)
@@ -1182,7 +1254,12 @@ final class WelcomeShellPosterTileView: WelcomeShellTapView {
             ratingBadge.isHidden = true
         }
 
-        favoriteMark.isHidden = !(showsFavorite && item.isFavorited)
+        isFavorited = item.isFavorited
+        self.favoriteToggle = favoriteToggle
+        favoriteActionButton.isHidden = favoriteToggle == nil
+        favoriteMark.isHidden = favoriteToggle != nil || !(showsFavorite && item.isFavorited)
+        updateFavoriteActionButton()
+
         subtitleLabel.text = item.isOnAir
             ? WelcomeShellDataMapper.weekdayTitle(for: item.airDay)
             : NSLocalizedString("已完结", comment: "")
@@ -1196,6 +1273,26 @@ final class WelcomeShellPosterTileView: WelcomeShellTapView {
         }
         setAccessibilityLabel(parts.joined(separator: "，"))
     }
+
+    func setFavoriteAccessibilityIdentifier(_ identifier: String) {
+        favoriteActionButton.setAccessibilityIdentifier(identifier)
+    }
+
+    private func updateFavoriteActionButton() {
+        let symbolName = isFavorited ? "heart.fill" : "heart"
+        favoriteActionButton.image = NSImage(systemSymbolName: symbolName, accessibilityDescription: nil)
+        favoriteActionButton.toolTip = isFavorited
+            ? NSLocalizedString("取消关注", comment: "")
+            : NSLocalizedString("关注", comment: "")
+        favoriteActionButton.setAccessibilityLabel(favoriteActionButton.toolTip)
+    }
+
+    @objc private func favoriteActionClicked() {
+        let newState = !isFavorited
+        isFavorited = newState
+        updateFavoriteActionButton()
+        favoriteToggle?(newState)
+    }
 }
 
 // MARK: - Poster grid (non-scrolling, used by Overview)
@@ -1203,7 +1300,10 @@ final class WelcomeShellPosterTileView: WelcomeShellTapView {
 final class WelcomeShellPosterGridView: NSView {
 
     var onSelect: ((BangumiIntro) -> Void)?
+    var onFavoriteToggle: ((BangumiIntro, Bool) -> Void)?
     var onHeightChange: (() -> Void)?
+    var itemIdentifierPrefix: String = AccessibilityID.WelcomeShell.overviewScheduleItemPrefix
+    var favoriteIdentifierPrefix: String?
 
     private let rowStack = NSStackView()
     private var items: [BangumiIntro] = []
@@ -1211,7 +1311,7 @@ final class WelcomeShellPosterGridView: NSView {
     private var lastWidth: CGFloat = 0
     private var lastSignature: [Int] = []
     private var lastHeight: CGFloat = -1
-    private let minimumTileWidth: CGFloat = 128
+    var minimumTileWidth: CGFloat = 128
     private let spacing: CGFloat = 12
 
     override init(frame frameRect: NSRect) {
@@ -1282,8 +1382,16 @@ final class WelcomeShellPosterGridView: NSView {
 
             for item in rowItems {
                 let tile = WelcomeShellPosterTileView()
-                tile.configure(with: item)
-                tile.setAccessibilityIdentifier("\(AccessibilityID.WelcomeShell.overviewScheduleItemPrefix)\(item.animeId)")
+                let favoriteToggle: ((Bool) -> Void)? = onFavoriteToggle == nil
+                    ? nil
+                    : { [weak self] isLike in
+                        self?.onFavoriteToggle?(item, isLike)
+                    }
+                tile.configure(with: item, favoriteToggle: favoriteToggle)
+                tile.setAccessibilityIdentifier("\(itemIdentifierPrefix)\(item.animeId)")
+                if let favoriteIdentifierPrefix = favoriteIdentifierPrefix {
+                    tile.setFavoriteAccessibilityIdentifier("\(favoriteIdentifierPrefix)\(item.animeId)")
+                }
                 tile.onClick = { [weak self] in
                     self?.onSelect?(item)
                 }

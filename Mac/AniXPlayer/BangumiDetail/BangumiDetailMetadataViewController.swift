@@ -33,8 +33,10 @@ class BangumiDetailMetadataViewController: ViewController, NSTableViewDataSource
         tv.delegate = self
         tv.backgroundColor = .backgroundColor
         tv.headerView = nil
+        tv.columnAutoresizingStyle = .uniformColumnAutoresizingStyle
         let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("metadata"))
         column.width = 500
+        column.resizingMask = .autoresizingMask
         tv.addTableColumn(column)
         return tv
     }()
@@ -43,6 +45,9 @@ class BangumiDetailMetadataViewController: ViewController, NSTableViewDataSource
         let sv = ScrollView<TableView>()
         sv.containerView = tableView
         sv.hasVerticalScroller = true
+        sv.hasHorizontalScroller = false
+        sv.autohidesScrollers = true
+        sv.horizontalScrollElasticity = .none
         sv.borderType = .noBorder
         sv.drawsBackground = false
         return sv
@@ -50,6 +55,7 @@ class BangumiDetailMetadataViewController: ViewController, NSTableViewDataSource
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.setAccessibilityIdentifier(AccessibilityID.BangumiDetail.metadataPage)
 
         title = NSLocalizedString("作品详情", comment: "")
 
@@ -59,6 +65,11 @@ class BangumiDetailMetadataViewController: ViewController, NSTableViewDataSource
         scrollView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
+    }
+
+    override func viewWillAppear() {
+        super.viewWillAppear()
+        view.window?.title = title ?? NSLocalizedString("作品详情", comment: "")
     }
 
     // MARK: - NSTableViewDataSource
