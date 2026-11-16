@@ -9,7 +9,10 @@ import Foundation
 
 enum MacAuthBootstrap {
     /// 必须在任何在线请求发出前调用。
-    static func start() {
+    ///
+    /// - Parameter restoreSession: 是否从 Keychain 静默恢复会话。
+    ///   播放/UI 冒烟必须传 false，避免无人值守运行时弹出钥匙串授权框。
+    static func start(restoreSession: Bool = true) {
         // macOS 从第一天起「强制登录 + 纯 Bearer」：不发送 X-AppId/X-Signature。
         NetworkManager.shared.bearerTokenProvider = {
             AccessTokenHolder.shared.current()
@@ -20,6 +23,8 @@ enum MacAuthBootstrap {
         if Preferences.shared.loginInfo != nil {
             Preferences.shared.loginInfo = nil
         }
+
+        guard restoreSession else { return }
 
         Task {
             _ = await SessionStore.shared.restoreIfPossible()

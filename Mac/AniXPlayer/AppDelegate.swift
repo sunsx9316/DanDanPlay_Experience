@@ -74,7 +74,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
 
             // macOS：强制登录 + 纯 Bearer，并清理旧 JWT。
-            MacAuthBootstrap.start()
+            // 冒烟模式不读 Keychain，避免无人值守运行时弹出钥匙串授权框。
+            MacAuthBootstrap.start(restoreSession: !PlaybackSmokeRunner.shared.isActive)
             if !PlaybackSmokeRunner.shared.isActive {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
                     MacAuthBootstrap.presentLoginIfNeeded()
