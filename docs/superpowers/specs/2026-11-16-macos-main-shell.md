@@ -36,7 +36,7 @@
 - `titlebarAppearsTransparent = true`
 - `titleVisibility = .hidden`
 - `window.backgroundColor = #1B1B1E`
-- `contentMinSize = 980×680`；仅当当前窗口更小时扩到最小尺寸，不缩小已经更大的窗口。
+- `contentMinSize = 1000×680`；首次打开或旧版保存的窗口小于 1100×720 时扩到 1100×720，不缩小已经更大的窗口。
 
 嵌入的 `WelcomeShellViewController` 使用
 `WelcomeShellViewController(showsSidebar: false, managesWindowSize: false)`，
@@ -78,7 +78,7 @@
 - 顶部栏与「我的」页监听 `.AnixUserLoginStateDidChange`。
 - 登录状态来自 `SessionStore.shared.isLoggedIn()` / `currentProfile()`。
 - 未登录：顶部显示紧凑「登录」按钮，点击走 `LoginGate.shared.ensureLoggedIn`。
-- 已登录：显示头像、昵称、会员到期日；点击用户区打开会员中心。
+- 已登录：显示头像、昵称、会员剩余天数（完整到期日放在 tooltip）；点击用户区打开会员中心。
 - 「我的」页用户卡支持登录、会员中心，并在登录状态变化后刷新。
 - 快捷卡片：我的追番、播放历史、会员中心、全局设置、翻译字幕、AI 视频总结。
   两列布局，窄宽度自动回退单列。
@@ -94,6 +94,12 @@
 
 主窗口关闭时调用 `LocalLibraryViewController.cancelOperations()` 停止媒体库扫描/匹配；
 不停止 `DownloadManager`，下载继续在后台运行。
+
+## 布局修正
+
+- 播放历史的瀑布流卡片改用 `root.alignment = .width`，海报和文字撑满列宽；
+  修复低分辨率海报按 intrinsic width 缩成一小块、同一行卡片宽度不一致的问题。
+- 顶部栏用户区宽度 150pt，会员信息改为「会员 N 天」，避免日期被截断。
 
 ## 刻意保留 / 未做
 
@@ -112,3 +118,9 @@ DERIVED_DATA_PATH=/tmp/anix-dd-main-shell bash scripts/build-mac.sh Debug
 ```
 
 结果：`BUILD SUCCEEDED`。
+
+合并后主工作区验证：
+
+- macOS / iOS / tvOS Debug 全部 `BUILD SUCCEEDED`。
+- macOS 全量单测 224 个通过。
+- 手动截图检查：首页 1100×720、搜索、媒体库、下载、历史、我的；历史海报列宽已修正。
