@@ -18,6 +18,8 @@ protocol DanmakuSettingViewControllerDelegate: AnyObject {
     func filterDanmakuInDanmakuSettingViewController(vc: DanmakuSettingViewController)
 
     func showDanmakuListInDanmakuSettingViewController(vc: DanmakuSettingViewController)
+
+    func backupDanmakuInDanmakuSettingViewController(vc: DanmakuSettingViewController)
 }
 
 class DanmakuSettingViewController: ViewController {
@@ -25,6 +27,9 @@ class DanmakuSettingViewController: ViewController {
     private var dataSource: [DanmakuSettingType] {
         return self.danmakuModel.danmakuSetting.flatMap { $0.dataSource }
     }
+
+    /// 表格第一行固定为「补充弹幕（会员）」入口，其余行沿用原有设置项。
+    private let backupDanmakuRowIndex = 0
     
     private lazy var scrollView: ScrollView<TableView> = {
         let tableView = TableView()
@@ -79,11 +84,15 @@ class DanmakuSettingViewController: ViewController {
 extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSource {
     
     func numberOfRows(in tableView: NSTableView) -> Int {
-        return self.dataSource.count
+        return self.dataSource.count + 1
     }
     
     func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
-        let type = self.dataSource[row]
+        if row == self.backupDanmakuRowIndex {
+            return 40
+        }
+
+        let type = self.dataSource[row - 1]
         switch type {
         case .danmakuFontSize, .danmakuSpeed, .danmakuAlpha, .danmakuDensity:
             return 80
@@ -96,7 +105,14 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
     }
     
     func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        let type = self.dataSource[row]
+        if row == self.backupDanmakuRowIndex {
+            let cell = tableView.dequeueReusableCell(class: TitleTableViewCell.self)
+            cell.label.text = NSLocalizedString("补充弹幕（会员）", comment: "")
+            cell.label.setAccessibilityIdentifier(AccessibilityID.Player.backupDanmakuItem)
+            return cell
+        }
+
+        let type = self.dataSource[row - 1]
         
         switch type {
         case .danmakuAlpha:
@@ -286,7 +302,12 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
 
         tableView.deselectAll(nil)
 
-        let type = self.dataSource[row]
+        if row == self.backupDanmakuRowIndex {
+            self.delegate?.backupDanmakuInDanmakuSettingViewController(vc: self)
+            return
+        }
+
+        let type = self.dataSource[row - 1]
         if type == .loadDanmaku {
             self.delegate?.loadDanmakuFileInDanmakuSettingViewController(vc: self)
         } else if type == .searchDanmaku {

@@ -29,11 +29,13 @@ class CommentNetworkHandle {
     ///   - from: 起始弹幕编号，忽略此编号以前的弹幕。默认值为0
     ///   - withRelated: 是否同时获取关联的第三方弹幕。默认值为true
     ///   - lanConvert: 中文简繁转换
+    ///   - forceRefresh: 跳过本地缓存，强制重新请求（用于会员补充弹幕）
     ///   - completion: 完成回调
     static func getDanmaku(with episodeId: Int,
                            from: Int? = nil,
                            withRelated: Bool = true,
                            lanConvert: LanConvert? = nil,
+                           forceRefresh: Bool = false,
                            completion: @escaping((CommentCollection?, Error?) -> Void)) {
 
         var parameters = [String : String]()
@@ -48,7 +50,8 @@ class CommentNetworkHandle {
         }
 
         let md5Str = ("\(parameters)" as NSString).md5() ?? ""
-        if let data = CacheManager.shared.danmakuCacheWithEpisodeId(episodeId, parametersHash: md5Str) {
+        if !forceRefresh,
+           let data = CacheManager.shared.danmakuCacheWithEpisodeId(episodeId, parametersHash: md5Str) {
             ANX.logInfo(.HTTP, "根据文件下载弹幕 匹配到缓存 episodeId: \(episodeId) md5Str: \(md5Str)")
             let result = Response<CommentCollection>(with: data)
             completion(result.result, nil)

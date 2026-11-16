@@ -41,13 +41,13 @@ class PlayerModel {
     }
     
     lazy var parseMediaState = PublishSubject<Event<MediaLoadState>>()
-    
+
+    /// 当前播放视频的匹配信息；用于补充弹幕、播放历史上报等需要 episodeId 的功能。
+    private(set) var currentMatchInfo: MatchInfo?
+
     private(set) lazy var mediaModel = PlayerMediaModel()
     
     private(set) lazy var danmakuModel = PlayerDanmakuModel(mediaContext: self.mediaModel.context)
-
-    /// 当前播放项匹配到的弹幕库信息；播放历史上报使用。
-    private(set) var currentMatchInfo: MatchInfo?
     
     private lazy var disposeBag = DisposeBag()
     
@@ -104,6 +104,7 @@ extension PlayerModel {
     /// - Parameter media: 视频
     func tryParseMedia(_ media: File) {
         ANX.logInfo(.player, "[Player] 开始解析媒体: \(media.fileName)")
+        self.currentMatchInfo = nil
         _ = self.tryParseMediaOneTime(media).subscribe { [weak self] event in
             guard let self = self else { return }
 

@@ -80,6 +80,11 @@ class PlayerViewController: ViewController {
     private var sendDanmakuColor: ANXColor = Preferences.shared.sendDanmakuColor
     private var sendDanmakuMode: Comment.Mode = .normal
 
+    /// 会员补充弹幕门禁；由集成方注入会员检查/付费墙。默认放行。
+    var backupDanmakuAccessCheck: () async -> Bool = { true }
+
+    private var isLoadingBackupDanmaku = false
+
     // 开始活动以防止系统休眠
     private var activityToken: NSObjectProtocol?
 
@@ -369,6 +374,69 @@ class PlayerViewController: ViewController {
     private func closeMatchWindow() {
         self.matchWindowController?.close()
         self.matchWindowController = nil
+    }
+
+    /// 会员补充弹幕：重新拉取 withRelated 弹幕，去重后喂给渲染器。
+    private func requestBackupDanmaku() {
+        guard !self.isLoadingBackupDanmaku else { return }
+
+        Task { @MainActor [weak self] in
+            guard let self = self else { return }
+
+            guard await self.backupDanmakuAccessCheck() else {
+                ANX.logInfo(.player, "[Player] 补充弹幕：未通过会员门禁")
+                self.view.show(text: NSLocalizedString("补充弹幕是弹弹play会员功能", comment: ""))
+                return
+            }
+
+            guard await LoginGate.shared.ensureAccessToken(presenting: self.view.window) else {
+                return
+            }
+
+            guard let media = self.mediaModel.media,
+                  let matchInfo = self.playerModel.currentMatchInfo ?? self.mediaModel.matchInfo(media: media),
+                  matchInfo.matchId > 0 else {
+                ANX.logInfo(.player, "[Player] 补充弹幕：当前视频没有匹配信息，无法补充")
+                self.view.show(text: NSLocalizedString("当前视频没有匹配到弹幕库，无法补充弹幕", comment: ""))
+                return
+            }
+
+            self.isLoadingBackupDanmaku = true
+            defer { self.isLoadingBackupDanmaku = false }
+
+            self.view.showLoading(statusText: NSLocalizedString("正在补充弹幕…", comment: ""))
+            do {
+                let result = try await BackupDanmakuService.shared.reloadAssociatedDanmaku(
+                    episodeId: matchInfo.matchId,
+                    existing: self.currentDanmakuMap()
+                )
+                _ = self.danmakuModel.setupDanmaku(result.danmakus).subscribe()
+
+                if result.addedCount > 0 {
+                    self.view.show(
+                        text: String(
+                            format: NSLocalizedString("新增 %d 条弹幕", comment: ""),
+                            result.addedCount
+                        )
+                    )
+                } else {
+                    self.view.show(text: NSLocalizedString("没有可补充的弹幕", comment: ""))
+                }
+            } catch {
+                ANX.logError(.player, "[Player] 补充弹幕失败：\(error)")
+                self.view.show(error: error)
+            }
+        }
+    }
+
+    private func currentDanmakuMap() -> DanmakuMapResult {
+        var map = DanmakuMapResult()
+        for entity in self.danmakuModel.danmakuList {
+            let time = entity.rawComment?.time ?? entity.originAppearTime ?? entity.appearTime
+            let bucket = UInt(max(0, time.rounded(.down)))
+            map[bucket, default: []].append(entity)
+        }
+        return map
     }
     
     /// 批量加载文件并开始播放
@@ -893,6 +961,11 @@ extension PlayerViewController: DanmakuSettingViewControllerDelegate {
 
     func showDanmakuListInDanmakuSettingViewController(vc: DanmakuSettingViewController) {
         // Mac 端暂不支持弹幕列表展示
+    }
+
+    func backupDanmakuInDanmakuSettingViewController(vc: DanmakuSettingViewController) {
+        self.dismissPresented()
+        self.requestBackupDanmaku()
     }
 }
 
