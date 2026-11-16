@@ -184,6 +184,7 @@ enum AccessibilityID {
         static let playlistEmptyTitle = "player.playlist.emptyTitle"
         static let emptyState = "player.emptyState"
         static let emptyStateOpenFile = "player.emptyState.openFile"
+        static let moreButton = "player.moreButton"
         static let screenshotButton = "player.screenshotButton"
         static let miniProgressSlider = "player.miniProgressSlider"
         static let backupDanmakuItem = "player.backupDanmakuItem"
