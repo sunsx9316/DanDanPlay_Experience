@@ -108,6 +108,11 @@ class MPVPlayerWrapper: NSObject, MediaPlayerProtocol {
 
             if let item = currentPlayItem,
                 let media = item.createMPVMedia() {
+                // 在线源/防盗链：每次切媒体都重设，空 headers 也要清空旧值。
+                let headerValue = item.httpHeaders
+                    .map { "\($0.key): \($0.value)" }
+                    .joined(separator: "\r\n")
+                mpv?.setProperty(MPV.Property<String>("http-header-fields"), headerValue)
                 mpv?.loadFile(media.url.absoluteString)
             }
         }

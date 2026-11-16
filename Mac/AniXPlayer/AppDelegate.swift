@@ -405,6 +405,56 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
 
+    @objc private func onOpenNetworkStream(_ item: NSMenuItem) {
+        let alert = NSAlert()
+        alert.messageText = NSLocalizedString("打开网络串流", comment: "")
+        alert.informativeText = NSLocalizedString("请输入 http/https/m3u8 视频地址。", comment: "")
+        alert.alertStyle = .informational
+
+        let field = NSTextField(frame: NSRect(x: 0, y: 0, width: 440, height: 24))
+        field.placeholderString = "https://example.com/video.m3u8"
+        alert.accessoryView = field
+        alert.addButton(withTitle: NSLocalizedString("打开", comment: ""))
+        alert.addButton(withTitle: NSLocalizedString("取消", comment: ""))
+
+        guard alert.runModal() == .alertFirstButtonReturn else { return }
+
+        let input = field.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let url = URL(string: input),
+              let scheme = url.scheme?.lowercased(),
+              scheme == "http" || scheme == "https" else {
+            let error = NSAlert()
+            error.messageText = NSLocalizedString("地址无效", comment: "")
+            error.informativeText = NSLocalizedString("只支持 http/https 视频或 m3u8 地址。", comment: "")
+            error.runModal()
+            return
+        }
+
+        let pathName = URLComponents(url: url, resolvingAgainstBaseURL: false)?
+            .path
+            .split(separator: "/")
+            .last
+            .map(String.init)
+        let displayName = (pathName?.isEmpty == false ? pathName! : NSLocalizedString("网络串流", comment: ""))
+        let file = OnlineEpisodeFile(
+            streamURL: url,
+            displayName: displayName,
+            headers: [:],
+            pageURL: nil,
+            sourceName: nil
+        )
+
+        guard let main = mainWindowController.contentViewController as? MainViewController else { return }
+        Task { @MainActor in
+            guard await EntitlementGate.shared.require(
+                .member,
+                feature: .onlinePlayback,
+                presenting: main.view.window
+            ) else { return }
+            main.openLocalFiles([file], startWith: file)
+        }
+    }
+
     @objc private func onOpenNetworkFile(_ item: NSMenuItem) {
         let wc = MediaLibraryWindowController()
         wc.onSelectFile = { [weak self] file, allFiles in
@@ -464,6 +514,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
             let networkFileItem = NSMenuItem(title: NSLocalizedString("打开网络文件...", comment: ""), action: #selector(onOpenNetworkFile(_:)), keyEquivalent: "")
             fileMenu.addItem(networkFileItem)
+
+            fileMenu.addItem(NSMenuItem.separator())
+            fileMenu.addItem(
+                withTitle: NSLocalizedString("打开网络串流…", comment: ""),
+                action: #selector(onOpenNetworkStream(_:)),
+                keyEquivalent: ""
+            )
 
             self.fileMenu = fileMenu
             mainFileMenuItem.submenu = fileMenu

@@ -375,6 +375,7 @@
 		E5E156669BCBB64439F8C6FE /* DownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F503DA4194C15A2D3CD2DCF5 /* DownloadManager.swift */; };
 		E72007265832C2DFA0BDE718 /* FavoriteUserDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1709128859FA1F76853962EF /* FavoriteUserDataService.swift */; };
 		E73F5095FB2A6E52DFA74A53 /* BenefitsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58E1DF4E70DB2A27CA3A724 /* BenefitsTests.swift */; };
+		E7CD12F4E9B28F1412E53A33 /* OnlineEpisodeFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33D565A6ADEB57D260173CD4 /* OnlineEpisodeFile.swift */; };
 		EBDF5DF6C5B6D1A4A4228242 /* TimelineSegmentBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5F570D00E43C92BE7157B48 /* TimelineSegmentBar.swift */; };
 		ED6F05D91951896FD621C683 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690437684CFC51AD0450648C /* APIClient.swift */; };
 		EE70A474CCB26DE17679CC5F /* SubtitleDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD0D50ED0B14914047E291D0 /* SubtitleDocument.swift */; };
@@ -448,6 +449,7 @@
 		30AB502CF4C256584BCBF52A /* AISummaryService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AISummaryService.swift; sourceTree = "<group>"; };
 		33528163DE41F211164F7EC3 /* AccessibilityID.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AccessibilityID.swift; sourceTree = "<group>"; };
 		33834C3AE9021EC082E705F2 /* SubtitleTranslationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SubtitleTranslationTests.swift; path = AniXPlayerTests/SubtitleTranslationTests.swift; sourceTree = "<group>"; };
+		33D565A6ADEB57D260173CD4 /* OnlineEpisodeFile.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OnlineEpisodeFile.swift; sourceTree = "<group>"; };
 		34751F989C6CE9F2C7DDCB19 /* LocalLibraryStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LocalLibraryStore.swift; sourceTree = "<group>"; };
 		369139D050235A467E9363DA /* WelcomeRecentStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WelcomeRecentStore.swift; sourceTree = "<group>"; };
 		36F7C255B009A08B1E2B77CA /* NavigationWindowController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NavigationWindowController.swift; sourceTree = "<group>"; };
@@ -1058,6 +1060,15 @@
 			);
 			name = Welcome;
 			path = Welcome;
+			sourceTree = "<group>";
+		};
+		86293D747040773E80C37AC8 /* Online */ = {
+			isa = PBXGroup;
+			children = (
+				33D565A6ADEB57D260173CD4 /* OnlineEpisodeFile.swift */,
+			);
+			name = Online;
+			path = Online;
 			sourceTree = "<group>";
 		};
 		8917058D28CF6CF10075ECD9 /* PlayerUI */ = {
@@ -1845,6 +1856,7 @@
 				41AB61A6C6F3325C6074A392 /* LocalLibrary */,
 				434C69AA6800AD1DB0E36F8F /* Download */,
 				D7FAFB9F1514A1D8CF7C9B50 /* GIFExport */,
+				86293D747040773E80C37AC8 /* Online */,
 			);
 			name = Features;
 			path = Features;
@@ -2421,6 +2433,7 @@
 				0E5C963A83E8C9E01122A150 /* DownloadViewController.swift in Sources */,
 				6373C33D8D6D68A7A19A9C14 /* DownloadWindowController.swift in Sources */,
 				A02B8AAF9A09A36671A669C5 /* GIFExportService.swift in Sources */,
+				E7CD12F4E9B28F1412E53A33 /* OnlineEpisodeFile.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

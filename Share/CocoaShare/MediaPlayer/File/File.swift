@@ -139,6 +139,12 @@ extension File {
     var bufferInfos: [MediaBufferInfo] {
         return []
     }
+
+    /// 播放该媒体时需要附加的 HTTP 请求头（在线源/防盗链）。
+    /// 本地文件默认返回空；VLC/MPV wrapper 会读取并注入。
+    var httpHeaders: [String: String] {
+        return [:]
+    }
     
     var isCanDelete: Bool {
         if self == Swift.type(of: self).rootFile {
