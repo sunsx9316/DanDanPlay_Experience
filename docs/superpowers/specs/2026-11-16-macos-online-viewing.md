@@ -130,7 +130,7 @@
 
 1. 独立媒体嗅探窗口（`.mediaSniffer` 门禁），支持手动点击播放/登录。
 2. 在线播放列表/自动下一集：保存「剧集页 + 源快照」，切集时重新解析。
-3. 源偏好/置底/收藏、搜索历史 UI（当前已记录但未展示）。
+3. 源偏好/置底/收藏；搜索历史已用 `NSSearchField.recentSearches` 展示，可继续做独立历史面板。
 4. Kazumi API 模式规则（JSONPath/请求体/分页）。
 5. Animeko JSONPath 搜索。
 6. 更完整的请求头转发（本地 GCDWebServer 代理）以覆盖强防盗链源。
