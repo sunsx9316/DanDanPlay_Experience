@@ -28,7 +28,7 @@ final class BangumiDetailHeroView: BangumiDetailCardView {
     private let coverImageView = ImageView()
     private let ratingBadge = Label(labelWithString: "")
     private let topRow = NSStackView()
-    private let infoStack = NSStackView()
+    private let infoStack = BangumiDetailFullWidthStackView()
     private let titleLabel: Label = {
         let label = Label(labelWithString: "")
         label.font = .systemFont(ofSize: 26, weight: .bold)
@@ -80,6 +80,7 @@ final class BangumiDetailHeroView: BangumiDetailCardView {
 
     private var coverWidthConstraint: Constraint?
     private var coverHeightConstraint: Constraint?
+    private var infoWidthConstraint: Constraint?
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
@@ -269,6 +270,9 @@ final class BangumiDetailHeroView: BangumiDetailCardView {
         topRow.snp.makeConstraints { make in
             make.width.equalTo(contentStack)
         }
+        infoStack.snp.makeConstraints { make in
+            self.infoWidthConstraint = make.width.equalTo(topRow).offset(-178).constraint
+        }
 
         tagFlow.onHeightChange = { [weak self] in
             self?.onLayoutChange?()
@@ -295,6 +299,7 @@ final class BangumiDetailHeroView: BangumiDetailCardView {
 
         summaryToggleButton.title = NSLocalizedString("展开", comment: "")
         summaryToggleButton.isBordered = false
+        summaryToggleButton.alignment = .left
         summaryToggleButton.bezelStyle = .inline
         summaryToggleButton.contentTintColor = .mainColor
         summaryToggleButton.font = .systemFont(ofSize: 12, weight: .medium)
@@ -354,6 +359,7 @@ final class BangumiDetailHeroView: BangumiDetailCardView {
         usesCompactCover = compact
         coverWidthConstraint?.update(offset: compact ? 110 : 160)
         coverHeightConstraint?.update(offset: compact ? 154 : 224)
+        infoWidthConstraint?.update(offset: compact ? -128 : -178)
         titleLabel.font = .systemFont(ofSize: compact ? 24 : 26, weight: .bold)
     }
 

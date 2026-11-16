@@ -8,12 +8,24 @@
 import Cocoa
 import SnapKit
 
+/// 垂直 Stack：自动把每个 arrangedSubview 撑满宽度。
+/// macOS 上仅靠 alignment = .width 在嵌套 Stack 里并不总是生效，
+/// 这里用显式宽度约束保证标题/表单/行视图不会被挤到右侧。
+final class BangumiDetailFullWidthStackView: NSStackView {
+
+    override func addArrangedSubview(_ view: NSView) {
+        super.addArrangedSubview(view)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.widthAnchor.constraint(equalTo: widthAnchor).isActive = true
+    }
+}
+
 /// 详情页每一块内容的外壳：统一圆角卡片、16pt 内边距和垂直 Stack。
 class BangumiDetailCardView: NSView {
 
     let cardView = WelcomeShellCardView()
-    let contentStack: NSStackView = {
-        let stack = NSStackView()
+    let contentStack: BangumiDetailFullWidthStackView = {
+        let stack = BangumiDetailFullWidthStackView()
         stack.orientation = .vertical
         stack.alignment = .width
         stack.distribution = .fill

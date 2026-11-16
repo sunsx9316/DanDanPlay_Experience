@@ -12,8 +12,8 @@ final class BangumiDetailMetadataCardView: BangumiDetailCardView {
 
     var onViewAll: (() -> Void)?
 
-    private let fieldsStack: NSStackView = {
-        let stack = NSStackView()
+    private let fieldsStack: BangumiDetailFullWidthStackView = {
+        let stack = BangumiDetailFullWidthStackView()
         stack.orientation = .vertical
         stack.alignment = .width
         stack.spacing = 7
