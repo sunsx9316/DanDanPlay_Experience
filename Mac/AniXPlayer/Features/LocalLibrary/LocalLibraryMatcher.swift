@@ -140,8 +140,11 @@ final class LocalLibraryMatcher {
                             result.failed += 1
                         }
 
-                        // 失败也要写回 isMatched=false，后续可以重试。
-                        try? store.updateMatch(fileId: file.id, outcome: attempt.outcome)
+                        // 未匹配文件失败也写回 isMatched=false，后续可以重试；
+                        // 已匹配文件的手动重匹配失败时保留旧元数据，避免一次网络失败丢匹配。
+                        if attempt.outcome.isMatched || !file.isMatched {
+                            _ = try? store.updateMatch(fileId: file.id, outcome: attempt.outcome)
+                        }
 
                         let done = completionCounter.increment()
                         await MainActor.run {
