@@ -76,22 +76,30 @@ wait_for_element() {
   return 1
 }
 
-echo "1/2 启动页 AX 冒烟..."
+echo "1/2 欢迎壳 AX 冒烟..."
 # 不要传 --state-file：AppKit 会把命令行里的路径当成待打开文件。
 "$BIN" --dump-state >/dev/null 2>&1 &
 APP_PID=$!
-wait_for_element "launch.openButton" 80
+wait_for_element "nav.home" 80
+wait_for_element "nav.announce" 20
+wait_for_element "nav.queue" 20
+wait_for_element "nav.schedule" 20
+wait_for_element "nav.trending" 20
+wait_for_element "nav.recent" 20
+wait_for_element "nav.online" 20
+wait_for_element "overview.openFile" 20
 kill "$APP_PID" 2>/dev/null || true
 wait "$APP_PID" 2>/dev/null || true
 unset APP_PID
-echo "  ✅ launch.openButton"
+echo "  ✅ nav.home / 7 个导航项 / overview.openFile"
 
-echo "2/2 播放器 AX 冒烟..."
+echo "2/2 独立播放器窗口 AX 冒烟..."
 "$BIN" --open "$VIDEO" --play-seconds 30 >/dev/null 2>&1 &
 APP_PID=$!
-wait_for_element "player.playPauseButton" 160
+wait_for_element "player.window" 160
+wait_for_element "player.playPauseButton" 80
 wait_for_element "player.timeLabel" 80
-echo "  ✅ player.playPauseButton / player.timeLabel"
+echo "  ✅ player.window / player.playPauseButton / player.timeLabel"
 kill "$APP_PID" 2>/dev/null || true
 wait "$APP_PID" 2>/dev/null || true
 unset APP_PID

@@ -91,6 +91,9 @@ class PlayerViewController: ViewController {
     // 开始活动以防止系统休眠
     private var activityToken: NSObjectProtocol?
 
+    /// 从“继续播放”打开时指定的进度（0...1）；优先于 HistoryManager 的上次进度。
+    private var pendingSeekProgress: Double?
+
     //MARK: - life cycle
     
     deinit {
@@ -449,7 +452,8 @@ class PlayerViewController: ViewController {
     }
     
     /// 批量加载文件并开始播放
-    func loadFiles(_ files: [File], startWith file: File? = nil) {
+    func loadFiles(_ files: [File], startWith file: File? = nil, progress: Double? = nil) {
+        self.pendingSeekProgress = progress
         if !files.isEmpty {
             self.mediaModel.loadMedias(files)
             self.playerModel.tryParseMedia(file ?? files[0])
@@ -538,7 +542,13 @@ extension PlayerViewController: MatchsViewControllerDelegate {
                 hud.progress = 1
                 hud.labelText = NSLocalizedString("即将开始播放...", comment: "")
 
-                self.showGotoLastWatchTime(lastWatchProgress: lastWatchProgress)
+                if let pendingSeekProgress = self.pendingSeekProgress {
+                    self.pendingSeekProgress = nil
+                    // 用户从“继续播放”明确选择了一个进度：直接跳转，不再弹上次进度提示。
+                    self.seekToProgress(pendingSeekProgress)
+                } else {
+                    self.showGotoLastWatchTime(lastWatchProgress: lastWatchProgress)
+                }
             }
         case .error(let error):
             self.view.dismiss()
@@ -558,6 +568,21 @@ extension PlayerViewController: MatchsViewControllerDelegate {
     }
     
     
+    /// 跳到指定进度（0...1）。播放器时长可能稍后才就绪，最多重试约 5 秒。
+    private func seekToProgress(_ progress: Double, retryTime: Int = 0) {
+        guard self.mediaModel.length > 0 else {
+            if retryTime < 10 {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+                    self?.seekToProgress(progress, retryTime: retryTime + 1)
+                }
+            }
+            return
+        }
+
+        self.playerModel.changePosition(CGFloat(max(0, min(progress, 1))))
+        self.uiView.autoShowControlView()
+    }
+
     /// 显示上次播放进度
     /// - Parameters:
     ///   - lastWatchProgress: 上次播放进度

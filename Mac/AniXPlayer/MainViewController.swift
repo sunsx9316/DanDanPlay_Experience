@@ -15,6 +15,9 @@ class MainViewController: ViewController {
         vc.onOpenFiles = { [weak self] files, startFile in
             self?.showPlayer(with: files, startWith: startFile)
         }
+        vc.onResumeFiles = { [weak self] files, startFile, progress in
+            self?.showPlayer(with: files, startWith: startFile, progress: progress)
+        }
         vc.onOpenNetworkFile = { [weak self] in
             self?.showNetworkFiles()
         }
@@ -47,12 +50,12 @@ class MainViewController: ViewController {
         showLaunch()
     }
 
-    func openNetworkFiles(_ files: [File], startWith file: File) {
-        showPlayer(with: files, startWith: file)
+    func openNetworkFiles(_ files: [File], startWith file: File, progress: Double? = nil) {
+        showPlayer(with: files, startWith: file, progress: progress)
     }
 
-    func openLocalFiles(_ files: [File], startWith file: File?) {
-        showPlayer(with: files, startWith: file)
+    func openLocalFiles(_ files: [File], startWith file: File?, progress: Double? = nil) {
+        showPlayer(with: files, startWith: file, progress: progress)
     }
 
     /// L2 播放冒烟：当前播放器状态；没有播放器时返回 nil。
@@ -70,7 +73,7 @@ class MainViewController: ViewController {
         }
     }
 
-    private func showPlayer(with files: [File], startWith file: File?) {
+    private func showPlayer(with files: [File], startWith file: File?, progress: Double? = nil) {
         if let recentFile = file ?? files.first(where: { $0.url.isFileURL }) {
             WelcomeRecentStore.shared.record(file: recentFile)
         }
@@ -78,7 +81,7 @@ class MainViewController: ViewController {
         // 已有播放器窗口时复用：先保存旧媒体的进度，再在同一窗口加载新文件。
         if let existing = playerWindowController {
             self.rememberCurrentPlayback(for: existing.playerViewController)
-            existing.playerViewController.loadFiles(files, startWith: file)
+            existing.playerViewController.loadFiles(files, startWith: file, progress: progress)
             existing.focusPlayer()
             return
         }
@@ -104,7 +107,7 @@ class MainViewController: ViewController {
         wc.showWindow(nil)
         wc.window?.center()
 
-        vc.loadFiles(files, startWith: file)
+        vc.loadFiles(files, startWith: file, progress: progress)
     }
 
     private func stopAndClosePlayerWindow() {

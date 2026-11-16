@@ -40,5 +40,11 @@ struct Homepage: Decodable {
     
     /// 动画番剧季度列表
     @Default<[BangumiSeason]> var bangumiSeasons: [BangumiSeason]
+
+    /// 本季新番（部分服务端版本返回，作为 shinBangumiList 的补充）
+    @Default<[BangumiIntro]> var shinBangumiOfCurrentSeason: [BangumiIntro]
+
+    /// 上季新番（部分服务端版本返回）
+    @Default<[BangumiIntro]> var shinBangumiOfPreviousSeason: [BangumiIntro]
     
 }
