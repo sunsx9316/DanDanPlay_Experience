@@ -41,7 +41,11 @@ enum AccessibilityID {
         static let pivotPrefix = "mainShell.pivot."
         static let searchRoot = "mainShell.search.root"
         static let accountRoot = "mainShell.account.root"
+        /// 顶栏全局搜索框已由 Now Playing 卡片替代；保留常量供旧脚本/自动化引用。
+        @available(*, deprecated, message: "顶栏搜索框已移除，请使用「搜索」导航或「功能 → 搜索…」。")
         static let searchField = "mainShell.searchField"
+        static let nowPlaying = "mainShell.nowPlaying"
+        static let nowPlayingPlayPause = "mainShell.nowPlaying.playPause"
         static let user = "mainShell.user"
         static let login = "mainShell.login"
         static let settings = "mainShell.settings"

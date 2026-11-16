@@ -282,62 +282,6 @@ private final class MainShellPivotButton: WelcomeShellTapView {
     }
 }
 
-// MARK: - Global search field
-
-private final class MainShellSearchView: NSView {
-
-    let searchField = NSSearchField()
-    var onSubmit: ((String) -> Void)?
-
-    override init(frame frameRect: NSRect) {
-        super.init(frame: frameRect)
-        wantsLayer = true
-        layer?.cornerRadius = 7
-        layer?.cornerCurve = .continuous
-        layer?.backgroundColor = NSColor.white.withAlphaComponent(0.08).cgColor
-        layer?.borderWidth = 1
-        layer?.borderColor = MainShellPalette.hairline.cgColor
-
-        searchField.appearance = NSAppearance(named: .darkAqua)
-        searchField.isBordered = false
-        searchField.drawsBackground = false
-        searchField.focusRingType = .none
-        searchField.font = .systemFont(ofSize: 11.5)
-        searchField.textColor = .white
-        searchField.placeholderAttributedString = NSAttributedString(
-            string: NSLocalizedString("搜索番剧、剧集、标签", comment: ""),
-            attributes: [
-                .foregroundColor: NSColor.white.withAlphaComponent(0.42),
-                .font: NSFont.systemFont(ofSize: 11.5),
-            ]
-        )
-        searchField.sendsSearchStringImmediately = false
-        searchField.target = self
-        searchField.action = #selector(submit)
-        searchField.setAccessibilityIdentifier(AccessibilityID.MainShell.searchField)
-        searchField.setAccessibilityLabel(NSLocalizedString("全局搜索", comment: ""))
-
-        addSubview(searchField)
-        searchField.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(8)
-            make.trailing.equalToSuperview().offset(-6)
-            make.centerY.equalToSuperview()
-        }
-        snp.makeConstraints { make in
-            make.height.equalTo(26)
-        }
-    }
-
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-    @objc private func submit() {
-        let keyword = searchField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
-        onSubmit?(keyword)
-    }
-}
-
 // MARK: - User area
 
 private final class MainShellUserAreaView: WelcomeShellTapView {
@@ -441,7 +385,6 @@ final class MainTopBarView: NSView {
 
     var onSelectSection: ((MainShellSection) -> Void)?
     var onSelectPivot: ((MainShellPivot) -> Void)?
-    var onSubmitSearch: ((String) -> Void)?
     var onLogin: (() -> Void)?
     var onShowMembership: (() -> Void)?
     var onShowSettings: (() -> Void)?
@@ -452,7 +395,7 @@ final class MainTopBarView: NSView {
     private let pivotStack = NSStackView()
     private let navStack = NSStackView()
     private let brandButton = MainShellBrandButton()
-    private let searchView = MainShellSearchView()
+    private let nowPlayingView = NowPlayingCardView()
     private let userArea = MainShellUserAreaView()
     private let loginButton = WelcomeShellTapView()
     private let accountStack = NSStackView()
@@ -521,7 +464,7 @@ final class MainTopBarView: NSView {
             make.height.equalTo(60)
         }
 
-        // 右侧：搜索 + 登录/用户 + 设置
+        // 右侧：正在播放 + 登录/用户 + 设置
         gearButton.normalBackground = .clear
         gearButton.layer?.cornerRadius = 7
         gearButton.toolTip = NSLocalizedString("全局设置", comment: "")
@@ -582,15 +525,23 @@ final class MainTopBarView: NSView {
         accountStack.addArrangedSubview(userArea)
         accountStack.addArrangedSubview(loginButton)
 
-        let rightStack = NSStackView(views: [searchView, accountStack, gearButton])
+        nowPlayingView.onFocus = {
+            PlayerNowPlayingCenter.shared.focusPlayer()
+        }
+        nowPlayingView.onTogglePlay = {
+            PlayerNowPlayingCenter.shared.togglePlayback()
+        }
+
+        let rightStack = NSStackView(views: [nowPlayingView, accountStack, gearButton])
         rightStack.orientation = .horizontal
         rightStack.alignment = .centerY
         rightStack.spacing = 9
+        rightStack.setContentCompressionResistancePriority(.required, for: .horizontal)
         addSubview(rightStack)
 
-        searchView.snp.makeConstraints { make in
-            make.width.equalTo(184).priority(.high)
-            make.width.greaterThanOrEqualTo(140)
+        nowPlayingView.snp.makeConstraints { make in
+            make.width.equalTo(200).priority(.high)
+            make.width.greaterThanOrEqualTo(160)
         }
         rightStack.snp.makeConstraints { make in
             make.trailing.equalToSuperview().offset(-22)
@@ -638,11 +589,21 @@ final class MainTopBarView: NSView {
             make.height.equalTo(1)
         }
 
-        searchView.onSubmit = { [weak self] keyword in
-            guard let self = self else { return }
-            self.window?.makeFirstResponder(nil)
-            self.onSubmitSearch?(keyword)
-        }
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(nowPlayingStateDidChange),
+            name: .playerNowPlayingDidChange,
+            object: nil
+        )
+        nowPlayingView.update(state: PlayerNowPlayingCenter.shared.state)
+    }
+
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+
+    @objc private func nowPlayingStateDidChange() {
+        nowPlayingView.update(state: PlayerNowPlayingCenter.shared.state)
     }
 
     // MARK: Public

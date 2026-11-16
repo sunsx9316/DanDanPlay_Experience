@@ -89,9 +89,6 @@ final class MainShellViewController: ViewController {
         topBar.onSelectPivot = { [weak self] pivot in
             self?.handlePivotSelection(pivot)
         }
-        topBar.onSubmitSearch = { [weak self] keyword in
-            self?.performGlobalSearch(keyword)
-        }
         topBar.onLogin = { [weak self] in
             self?.startLogin()
         }
