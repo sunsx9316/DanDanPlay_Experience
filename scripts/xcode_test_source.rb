@@ -37,7 +37,10 @@ ARGV.each do |arg|
     next
   end
 
-  relative = Pathname.new(absolute).relative_path_from(Pathname.new("#{ROOT}/Mac")).to_s
+  # 相对路径必须以 AniXPlayerTests group 的真实目录为基准；
+  # 共享源码（../../Share/...）也能正确落到仓库内。
+  group_real = group.real_path
+  relative = Pathname.new(absolute).relative_path_from(group_real).to_s
   filename = File.basename(absolute)
 
   file_ref = group.files.find { |f| f.path == relative || f.path == filename }
