@@ -58,6 +58,8 @@ class FavoriteViewController: ViewController, NSCollectionViewDataSource, NSColl
     override func viewDidLoad() {
         super.viewDidLoad()
         title = NSLocalizedString("我的关注", comment: "")
+        view.setAccessibilityIdentifier(AccessibilityID.Favorite.root)
+        collectionView.setAccessibilityIdentifier(AccessibilityID.Favorite.list)
         view.addSubview(scrollView)
         view.addSubview(loginPromptLabel)
         scrollView.snp.makeConstraints { make in make.edges.equalToSuperview() }

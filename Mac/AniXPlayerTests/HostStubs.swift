@@ -27,6 +27,14 @@ extension DateFormatter {
         formatter.timeZone = TimeZone(secondsFromGMT: 8 * 3600)
         return formatter
     }()
+
+    static let anix_YYYY_MM_dd_T_HH_mm_ss_SSSFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = TimeZone(secondsFromGMT: 8 * 3600)
+        return formatter
+    }()
 }
 
 extension Notification.Name {

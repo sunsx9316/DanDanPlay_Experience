@@ -86,6 +86,18 @@ class CommentNetworkHandle {
                             completion: @escaping((SendCommentResponse?, Error?) -> Void)) {
         ANX.logInfo(.HTTP, "发送弹幕 episodeId: \(episodeId), request: \(comment)")
         
+#if os(macOS)
+        Task {
+            do {
+                let response = try await sendComment(episodeId: episodeId, comment: comment)
+                completion(response, nil)
+                ANX.logInfo(.HTTP, "发送弹幕 请求成功, result: \(String(describing: response))")
+            } catch {
+                completion(nil, error)
+                ANX.logInfo(.HTTP, "发送弹幕 请求失败: \(error)")
+            }
+        }
+#else
         var parameters = [String: String]()
         parameters["time"] = "\(comment.time)"
         parameters["mode"] = "\(comment.mode.rawValue)"
@@ -103,5 +115,71 @@ class CommentNetworkHandle {
                 ANX.logInfo(.HTTP, "发送弹幕 请求失败: \(error)")
             }
         }
+#endif
+    }
+
+#if os(macOS)
+    /// macOS：走 Bearer + 401 单次刷新；服务端明确失败时返回可展示的错误。
+    private static func sendComment(episodeId: Int, comment: Comment) async throws -> SendCommentResponse {
+        let environment = APIEnvironment.current()
+        guard let url = environment.makeURL("/comment/\(episodeId)") else {
+            throw APIError.invalidURL
+        }
+
+        let parameters = [
+            "time": "\(comment.time)",
+            "mode": "\(comment.mode.rawValue)",
+            "color": "\(comment.color.anxRgbValue)",
+            "comment": comment.message,
+        ]
+        let body = try JSONEncoder().encode(parameters)
+        let request = APIClient.jsonRequest(
+            url: url,
+            method: .post,
+            body: body,
+            userAgent: environment.userAgent,
+            timeout: environment.timeout
+        )
+
+        let data = try await AuthenticatedAPIClient().send(request)
+        let response = try JSONDecoder().decode(SendCommentResponse.self, from: data)
+        if let cid = response.cid, cid > 0 {
+            return response
+        }
+
+        let errorResponse = try? JSONDecoder().decode(SendCommentErrorResponse.self, from: data)
+        if let errorResponse = errorResponse, !errorResponse.success {
+            throw CommentSendError.server(errorResponse.errorMessage)
+        }
+        throw CommentSendError.server(NSLocalizedString("发送失败", comment: ""))
+    }
+#endif
+}
+
+#if os(macOS)
+private struct SendCommentErrorResponse: Decodable {
+    let success: Bool
+    let errorMessage: String
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        success = (try? container.decodeIfPresent(Bool.self, forKey: .success)) ?? true
+        errorMessage = (try? container.decodeIfPresent(String.self, forKey: .errorMessage)) ?? ""
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case success, errorMessage
     }
 }
+
+private enum CommentSendError: LocalizedError {
+    case server(String)
+
+    var errorDescription: String? {
+        switch self {
+        case .server(let message):
+            return message.isEmpty ? NSLocalizedString("发送失败", comment: "") : message
+        }
+    }
+}
+#endif

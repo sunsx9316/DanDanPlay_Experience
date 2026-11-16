@@ -85,6 +85,31 @@ enum AccessibilityID {
         static let statusLabel = "history.statusLabel"
     }
 
+    enum Favorite {
+        static let root = "favorite.root"
+        static let list = "favorite.list"
+        static let itemPrefix = "favorite.item."
+        static let detailRoot = "favorite.detail.root"
+        static let detailStatusPopup = "favorite.detail.statusPopup"
+        static let detailStatusLabel = "favorite.detail.statusLabel"
+        static let detailRatingPopup = "favorite.detail.ratingPopup"
+        static let detailCommentView = "favorite.detail.commentView"
+        static let detailCommentCountLabel = "favorite.detail.commentCountLabel"
+        static let detailSaveButton = "favorite.detail.saveButton"
+        static let detailClearCommentButton = "favorite.detail.clearCommentButton"
+    }
+
+    enum Queue {
+        static let window = "queue.window"
+        static let root = "queue.root"
+        static let list = "queue.list"
+        static let refreshButton = "queue.refreshButton"
+        static let statusLabel = "queue.statusLabel"
+        static let itemPrefix = "queue.item."
+        static let sectionUnwatched = "queue.section.unwatched"
+        static let sectionFollowed = "queue.section.followed"
+    }
+
     enum Membership {
         static let window = "membership.window"
         static let statusCard = "membership.statusCard"

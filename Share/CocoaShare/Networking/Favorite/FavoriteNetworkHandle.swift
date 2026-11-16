@@ -75,3 +75,33 @@ class FavoriteNetworkHandle {
         }
     }
 }
+
+#if os(macOS)
+extension FavoriteNetworkHandle {
+
+    /// GET /favorite（Bearer + 401 刷新）
+    static func fetchFavorites(onlyOnAir: Bool? = nil) async throws -> [UserFavoriteItem] {
+        try await FavoriteUserDataService().fetchFavorites(onlyOnAir: onlyOnAir)
+    }
+
+    /// POST /favorite（Bearer + 401 刷新）
+    static func updateFavorite(
+        animeId: Int,
+        favoriteStatus: FavoriteStatus? = nil,
+        rating: Int = 0,
+        comment: String? = nil
+    ) async throws {
+        try await FavoriteUserDataService().updateFavorite(
+            animeId: animeId,
+            favoriteStatus: favoriteStatus,
+            rating: rating,
+            comment: comment
+        )
+    }
+
+    /// DELETE /favorite/{animeId}（Bearer + 401 刷新）
+    static func removeFavorite(animeId: Int) async throws {
+        try await FavoriteUserDataService().removeFavorite(animeId: animeId)
+    }
+}
+#endif
