@@ -15,7 +15,7 @@
 | 本地媒体库 | 🟡 MVP（骨架真实） | SQLite、扫描、增量、哈希匹配、海报墙、搜索/筛选、播放都是真的；缺匹配修正、缺失文件管理、剧集分组、缩略图/时长 |
 | 下载中心 | 🟡 MVP（引擎真实） | HTTP 下载、Transmission RPC、任务持久化、暂停/继续/删除都是真的；BT 依赖外部 daemon，缺后台/通知/文件选择/自动下载 |
 | 截图 / GIF | 🟡 截图免费；GIF MVP | 静态截图已有；GIF 已加“导出 3 秒动图”（3s/10fps/480px，会员门禁，本地文件） |
-| 在线观看 | ❌ 仅搜索占位 | 当前只能搜索并打开浏览器；无 animeko/kazumi 源、无解析、无嗅探、无流播放 |
+| 在线观看 | 🟡 阶段 A/B 可用 | Animeko/Kazumi 源配置/缓存、跨源搜索、剧集与直链解析、WKWebView 嗅探兜底、请求头注入、虚拟文件弹幕匹配已实现；动态源成功率有限，独立嗅探窗口/在线播放列表待做 |
 | 用户中心 | 🟡 部分 | 有会员状态/订单/兑换；缺资料编辑、昵称、邮箱/密码入口 |
 | 弹幕生态 | 🟡 部分 | 有发送/过滤/补充弹幕；缺举报、云端过滤、第三方源 |
 | 系统集成 | 🟡 部分 | 文件关联、单实例；缺菜单栏、Now Playing、全局快捷键 |
@@ -23,66 +23,56 @@
 
 ## 2. 在线观看
 
-### 2.1 现状
+### 2.1 现状（2026-11-16 已实现）
 
-- `WelcomeOnlineViewController` 只做关键词搜索、结果列表、剧集列表、浏览器打开/复制链接。
-- 播放器底层（VLC/MPV）本身能打开 http(s) 流，但没有通用「远程 URL File」封装，也没有把 headers/cookies 传给它。
-- 没有 animeko/kazumi 配置读取、缓存、规则解析、网页嗅探。
-- `MembershipFeature.onlinePlayback` 与 `.mediaSniffer` 门禁枚举已存在，但没有业务接线。
-- **已补最小串流基础（2026-11-16）**：
-  - `File.httpHeaders` 默认能力；
-  - `OnlineEpisodeFile`（稳定虚拟 URL、真实 streamURL、请求头、不做文件哈希）；
-  - VLC `http-referrer/http-user-agent/http-cookie`、MPV `http-header-fields` 注入；
-  - 文件菜单「打开网络串流…」可手工输入 http/https/m3u8，走会员门禁后交给现有播放器。
-  - 这还不是在线源搜索，只用于验证流播放/请求头/标题/弹幕匹配失败仍可播放。
+- `WelcomeOnlineViewController` 已重写：源筛选、跨源搜索、结果/剧集、播放、取消、源管理、合规提示。
+- 源配置：
+  - Animeko `css1.json`、Kazumi `index.json + rules`；
+  - 7 天 TTL、强制刷新、单源失败回退缓存、原子写、8 MB 限制；
+  - 缓存在 `Application Support/AniXPlayer/OnlineSources/`；
+  - 默认远端地址可改，App 不内置第三方源。
+- 解析：
+  - Animeko CSS→XPath（`a`/`indexed`、`index-grouped`/`no-channel`）、Kazumi XPath；
+  - 关键词处理、剧集排序/过滤、去重并保留同集备用线路；
+  - `matchVideoUrl`/嵌套 URL/headers/cookies；Kazumi 默认 m3u8/mp4 正则；
+  - 规则失败时按扩展名扫描整页 URL；`player_aaaa.url` 支持 base64 + percent 解码。
+- 播放：
+  - `OnlineEpisodeFile` + `File.httpHeaders` + VLC/MPV 请求头注入；
+  - 播放前 Range 验证，401/403 不交给播放器；
+  - 主线路失败自动尝试备用线路；
+  - 虚拟文件不改本地哈希，`MatchNetworkHandle` 用「作品名 + 剧集名」+ 空 MD5 文件名匹配弹幕，不写空哈希全局缓存。
+- 嗅探：
+  - 离屏 WKWebView + fetch/XHR/setAttribute/video/iframe/performance/内联脚本 hook；
+  - 广告候选降权/丢弃，低分候选不返回；
+  - 默认 12 秒超时，首候选后 4 秒择优。
+- 门禁：搜索登录可用；播放走 `EntitlementGate.require(.member, feature: .onlinePlayback)`。
 
-### 2.2 审计结论（2026-11-16）
+### 2.2 验证与已知限制
 
-- 当前页面是「弹弹play 剧集搜索 + 浏览器搜索页跳转」，不是在线播放；剧集行只打开作品级网页，不解析流。
-- 播放器内核（VLC/MPV）可以接收 http/https/m3u8；现有 Emby/PC/SMB 已经用远程 URL 播放。但缺少通用 `OnlineEpisodeFile`、请求头注入、虚拟文件名/弹幕匹配、在线播放列表重解析。
-- Mac 没有 animeko/kazumi 的模型、缓存、解析、嗅探；WKWebView 仅用于 OAuth。
-- Windows 参考链路：源配置（Animeko `css1.json`；Kazumi `index.json` + rules）→ 多源并行搜索 → 作品/线路/剧集解析（CSS→XPath / XPath）→ WebView2 嗅探 + HTTP 正则回退 → `LoadEvent`（URL + headers + 虚拟文件名）→ VLC/MPV 本地代理注入请求头 → 用「作品名 + 剧集名」空哈希虚拟文件匹配弹幕。
-- Windows 在线观看/嗅探是 **15 次/月试用 + 会员无限**；Mac 目前只有登录检查，没有试用计数；若直接接 `EntitlementGate` 就是纯会员制。
-- 最大风险：WKWebView 没有 WebView2 的全量网络请求拦截能力，`URLProtocol` 也拦不到 WKWebView/VLC/MPV；动态页面嗅探必须用 JS hook + DOM/Performance 扫描重写，成功率低于 Windows。
-- 请求头/ Cookie 不能只塞进 `MPVMedia.options`（当前 wrapper 不读取）；需要给 `File` 增加 header 能力，或在 VLC `addOptions` / MPV `http-header-fields` 中注入，必要时用 GCDWebServer 做本地代理。
-- 弹幕匹配不能用空 MD5 当全局缓存键；要用稳定 `fileId`（源 + 剧集页 URL）/虚拟文件名，并让 `MatchNetworkHandle` 支持无扩展名、空哈希模式。
+已验证：
 
-### 2.3 分阶段实现
+- 应用内加载 28 个源（Animeko 18 / Kazumi 10）；
+- 搜索「葬送的芙莉莲」得到 31 个结果，单源失败隔离；
+- 叽哔动漫/番茄动漫的 m3u8 Range 验证 200，主线路 TLS 失败后自动切换备用线路，播放器成功播放 24:00 视频；
+- 稀饭动漫直链 401，被播放前验证拦截并提示换源；
+- Kazumi 7sefun 搜索/剧集成功，动态播放页嗅探过滤了广告但未拿到真实媒体地址，返回明确失败。
 
-**阶段 A：源配置与搜索/解析（纯网络 + 模型）**
+限制：
 
-1. `OnlineSourceModels`：统一 animeko/kazumi 源；字段对齐 Windows `OnlineMediaSource`。
-2. `OnlineSourceStore`：读取/更新/缓存：
-   - animeko：单一 `css1.json`，7 天 TTL，失败回退本地缓存；
-   - kazumi：`index.json` + `rules/<name>.json`，按版本增量更新；
-   - 缓存目录 `Application Support/AniXPlayer/OnlineSources/`；
-   - 数据源 URL 可配置；默认不内置第三方源，避免分发/合规问题。
-3. `OnlineHTMLResolver`：`XMLDocument(.documentTidyHTML)` + CSS→XPath（移植 Windows 的基础转换器）＋原生 XPath（kazumi）；JSONPath 先支持常用路径。
-4. 搜索、频道/剧集解析、视频地址正则、嵌套 URL、headers/cookies，按 Windows `OnlineMediaResolver` 移植。
-5. 源优先级、并发搜索、请求间隔、超时与失败隔离。
+- WKWebView 无法像 WebView2 一样拿到全部请求头；强防盗链/Cookie 站点可能失败。
+- `blob:`/MSE/DRM、验证码、强反爬站点无法解析。
+- Kazumi API/POST 模式规则、Animeko JSONPath 搜索暂不支持。
+- 没有独立媒体嗅探窗口、在线播放列表/自动下一集/切集重新解析。
+- 搜索结果未做来源收藏/置底；搜索历史已记录但未展示。
+- 当前直接使用远端默认地址；分发前仍需产品/法务确认默认地址策略。
 
-**阶段 B：串流播放**
+### 2.3 后续
 
-1. 新增 `RemoteURLFile: File`：URL、标题、VLC/MPV media、HTTP Range、headers/cookies；禁用文件哈希/删除。
-2. `MainViewController` 增加 `openRemoteURL(...)`；播放器加载后跳过本地文件匹配，使用在线剧集信息加载弹幕。
-3. 失败回退：直链失败 → 嗅探 → 仍失败则打开浏览器。
-
-**阶段 C：WKWebView 嗅探**
-
-1. 离屏 `WKWebView` 加载剧集页，注入脚本捕获：
-   - `performance.getEntriesByType('resource')` 中的 m3u8/mp4；
-   - `fetch`/XHR/`<video>` 的 URL；
-   - 跳转/iframe 嵌套。
-2. 过滤广告/低清/重复 URL，按扩展名与 Content-Type 排序。
-3. 嗅探窗口 UI：地址栏、加载状态、候选流列表、播放/复制。
-4. 动态页面、验证码/反爬给出明确错误，不伪造结果。
-
-**阶段 D：UI 与运营**
-
-- 在线页改造：源筛选、并发搜索、结果/剧集、播放、搜索历史、上次观看。
-- 源管理 sheet：animeko URL、kazumi URL、更新、清缓存、启用/禁用、优先级。
-- 门禁：搜索可登录后开放，播放走 `onlinePlayback` 会员门禁；嗅探走 `mediaSniffer`。
-- 合规提示：第三方源由用户提供/导入，不随 App 分发。
+1. 独立媒体嗅探窗口（`.mediaSniffer`）。
+2. 在线播放列表/自动下一集：保存剧集页 + 源快照，切集时重新解析。
+3. 源偏好/置底/收藏、搜索历史 UI。
+4. Kazumi API 模式、Animeko JSONPath。
+5. 必要时用 GCDWebServer 本地代理转发完整请求头。
 
 ## 3. 下载中心
 

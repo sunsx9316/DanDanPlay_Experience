@@ -1359,6 +1359,7 @@ final class OnlineSourceSettingsViewController: ViewController {
             label.snp.makeConstraints { make in
                 make.width.equalTo(sourceScroll.stack)
             }
+            sourceScroll.layoutContent()
             return
         }
 
@@ -1378,8 +1379,11 @@ final class OnlineSourceSettingsViewController: ViewController {
                 font: .systemFont(ofSize: 11.5, weight: .medium),
                 color: .labelColor
             )
+            let detailText = source.detail.isEmpty
+                ? source.engine.displayName
+                : "\(source.engine.displayName) · \(source.detail)"
             let detail = welcomeShellLabel(
-                "\(source.engine.displayName) · \(source.detail.isEmpty ? source.id : source.detail)",
+                detailText,
                 font: .systemFont(ofSize: 10),
                 color: .tertiaryLabelColor
             )
@@ -1392,6 +1396,7 @@ final class OnlineSourceSettingsViewController: ViewController {
                 make.width.equalTo(sourceScroll.stack)
             }
         }
+        sourceScroll.layoutContent()
     }
 
     @objc private func sourceToggled(_ sender: NSButton) {
