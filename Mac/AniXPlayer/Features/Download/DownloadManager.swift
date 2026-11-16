@@ -208,7 +208,7 @@ final class DownloadManager {
                 completion(.failure(DownloadEngineError.btDisabled))
                 return
             }
-            ensureBTAvailable { [weak self] result in
+            ensureBTAvailable(forceCheck: true) { [weak self] result in
                 guard let self else { return }
                 switch result {
                 case .success:
@@ -372,17 +372,16 @@ final class DownloadManager {
         }
     }
 
-    private func ensureBTAvailable(completion: @escaping (Result<String, Error>) -> Void) {
+    private func ensureBTAvailable(forceCheck: Bool = false, completion: @escaping (Result<String, Error>) -> Void) {
         guard preferences.enableBT else {
             completion(.failure(DownloadEngineError.btDisabled))
             return
         }
-        switch btState {
-        case .available(let version):
+        if !forceCheck, case .available(let version) = btState {
             completion(.success(version))
-        default:
-            checkBTAvailability(completion: completion)
+            return
         }
+        checkBTAvailability(completion: completion)
     }
 
     // MARK: - Starting tasks

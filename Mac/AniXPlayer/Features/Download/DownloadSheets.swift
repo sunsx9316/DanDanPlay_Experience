@@ -587,7 +587,7 @@ final class DownloadSettingsSheetViewController: ViewController {
 
         let password: String?
         if clearPassword {
-            password = ""
+            password = passwordField.stringValue.isEmpty ? "" : passwordField.stringValue
         } else if passwordField.stringValue.isEmpty {
             password = nil
         } else {

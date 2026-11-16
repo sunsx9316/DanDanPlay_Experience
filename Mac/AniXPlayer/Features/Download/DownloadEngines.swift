@@ -776,6 +776,8 @@ final class TransmissionRPCEngine: DownloadEngine {
             status = .failed
         } else if finished {
             status = .completed
+        } else if torrent.status == 6 {
+            status = .completed
         } else if task.status == .paused {
             status = .paused
         } else if task.status == .stopped {
