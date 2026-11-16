@@ -102,7 +102,7 @@ macOS 的启动页不是单纯的品牌欢迎页，而是 Windows 版的「欢�
 - 现已在首版基础上补齐源规则、连续播放、独立媒体嗅探窗口和源置顶；详见
   `2026-11-16-macos-online-viewing.md`。
 - 支持 Animeko CSS→XPath 与 Kazumi XPath 规则；Kazumi 的 API/POST、JSONPath、嵌套/分隔剧集
-  等边界支持见 `2026-11-16-macos-batch-2.md` §4。
+  等边界已补齐，见 `2026-11-16-macos-batch-2.md` §4。
 - 搜索免费；播放走 `.onlinePlayback` 会员门禁，嗅探走 `.mediaSniffer`。
 - 不实现网页内嵌登录、DRM/验证码绕过；解析失败必须明确提示并可重试/换源，不伪造结果。
 
@@ -136,5 +136,5 @@ macOS 的启动页不是单纯的品牌欢迎页，而是 Windows 版的「欢�
 - `PlayerLaunchViewController` 成为薄壳，承载 `WelcomeShellViewController`，保留原有回调语义。
 - 继续播放通过 `onResumeFiles(files:startWith:progress:)` 把最近播放进度传给独立播放器窗口，并在时长就绪后自动跳转；已实测从 15% 续播。
 - AX 冒烟已更新为检查 `nav.home` 与 7 个导航项、`overview.openFile`、`player.window`。
-- 已知限制：公告模型没有日期字段；Kazumi API/POST、JSONPath 等边界支持仍在第二批并行任务中补齐；
-  在线播放的真实源成功率需要手工回归。
+- 已知限制：公告模型没有日期字段；Kazumi API/POST、JSONPath 已补，但 `mgnacg` 这类
+  「API 搜索 + XPath 选集 + sourceTemplate 为空」规则仍无法安全构造详情地址；真实源成功率需要手工回归。

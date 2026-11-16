@@ -1,9 +1,24 @@
 # macOS 第二批并行改进（详情播放 / Kazumi / 弹幕列表 / 播放器控制 / 播放列表 / Now Playing / 会员中心）
 
-> 状态：已批准，按 worktree 并行执行（2026-11-16）
+> 状态：已完成并合并（2026-11-17，win-porting）
 > 范围：仅 macOS；iOS/tvOS 行为保持不变。
 > 参考：Windows `MembershipWindow.xaml`、`CommentListApplet.xaml`、`OnlineMediaResolver.cs`、`KazumiSourceProvider.cs`。
 > 原则：先补用户可见闭环，不做无关重构；不伪造本地文件、在线源或支付结果。
+
+## 0. 完成状态
+
+| # | 任务 | 分支 | 提交 | 结果 |
+|---|---|---|---|---|
+| 1 | 详情页搜索/在线观看 + 媒体库剧集播放 | `feat/detail-play` | `24a8fcc` | ✅ 已合并 |
+| 2 | Kazumi API/POST/JSONPath | `feat/kazumi-api` | `4073bad` | ✅ 已合并 |
+| 3 | 弹幕列表 | `feat/danmaku-list` | `b8cfc76` | ✅ 已合并 |
+| 4 | 播放器右下角按钮可见性 | `feat/player-controls` | `d568863` | ✅ 已合并 |
+| 5 | 首页播放列表打开播放器 | `feat/playlist-entry` | `070ea6d` | ✅ 已合并 |
+| 6 | Now Playing 替代右上角搜索 | `feat/now-playing` | `2322aff` | ✅ 已合并 |
+| 7 | 会员中心按 Windows 重做 | `feat/membership-redesign` | `3a5e234` | ✅ 已合并 |
+| 附 | 弹幕配置颜色空间崩溃 | 主分支 | `b1a847a` | ✅ 已修复 |
+
+最终集成：macOS / iOS / tvOS Debug 全部 `BUILD SUCCEEDED`；`AniXPlayerTests` **260 个通过**。
 
 ## 1. 总目标
 
@@ -331,3 +346,30 @@ Windows `MembershipWindow.xaml`：
 7. 任务 2（Kazumi，独立）
 
 合并时 `project.pbxproj` 冲突统一以当前主分支为底，缺失文件用 `xcode_project.rb add` 重新登记；共享文件冲突逐段保留两边新增逻辑，不整体覆盖。
+
+## 11. 实现结果与已知限制
+
+### 11.1 已完成
+
+- 详情页 Hero 增加「搜索资源」「在线观看」，可从主窗口对应页面预填番剧标题并发起搜索。
+- 详情剧集预览与完整列表支持媒体库按 `animeId + episodeId` 匹配的本地文件播放；多文件选择、缺失/授权检查、主播放器复用。
+- Kazumi 支持 API GET/POST、JSON body、最小 JSONPath、nested/delimited 剧集、`sourceTemplate`、`episodePage`、相对 XPath/union/following-sibling 等；本地 18 条规则可加载。
+- 弹幕列表独立窗口：搜索、时间排序、双击跳转、复制、按文本屏蔽、空态/加载态。
+- 播放器底部文字按钮统一高对比样式；960/1280pt 全可见，窄窗折叠到「更多」。
+- 首页「播放列表」打开/复用播放器并显示列表；无播放器时显示空播放器 + 打开文件入口。
+- 顶栏 Now Playing 替代搜索框，接入系统 Now Playing / 媒体键；搜索保留在功能菜单和搜索页。
+- 会员中心 900×680 双栏重做：渠道卡、时长列表、二维码面板、礼品码、记录 sheet、重复下单/迟到结果防护。
+- 附带修复 `NSColor.anxRgbValue` 对 dynamic/catalog color 直接读分量导致的 macOS 26 崩溃。
+
+### 11.2 仍需手工验收
+
+- 真实 Kazumi 站点的搜索/播放；`mgnacg` 这类「API 搜索 + XPath 选集 + sourceTemplate 为空」的规则会加载但选集报明确错误。
+- 真实微信/支付宝支付、服务端订单轮询、礼品码兑换、会员到期。
+- 真实键盘媒体键/控制中心、Now Playing 封面与上一集/下一集。
+- 详情页媒体库新扫描文件需重新加载详情；多文件菜单长路径可能被系统截断。
+- 弹幕列表暂不支持单条删除、按 userId 屏蔽；模型补齐后再加。
+
+### 11.3 环境备注
+
+- 最终验证时启动 App 遇到 `ANXLogHelper` 在 `Launcher.setupLog` 的 `setxattr` 阻塞，发生在日志初始化、早于本轮 UI 代码；属于本机环境/文件系统问题，建议后续单独排查日志目录。
+- 本轮 UI 截图由各子任务在独立 worktree 中完成；合并提交只做集成构建、260 个单测和冲突复核。

@@ -29,7 +29,8 @@
 - 品牌区在首页时显示同样的 3px 品牌色下划线，点击文字或图标都回到首页。
 - 二级 pivot 32pt 高，11.5pt medium；默认 `#9A9AA1`，悬停/选中白色，选中下方 2px 品牌色。
 - 带 pivot 的顶部栏总高度为 92pt；无 pivot 时为 60pt。右上角 Now Playing 卡片高 30pt，用户区高 30pt。
-- 右上角不再显示全局搜索框；改为 Now Playing（正在播放）卡片，详见本批规格 `2026-11-16-macos-batch-2.md` §8。
+- 右上角不再显示全局搜索框；已改为 Now Playing（正在播放）卡片，接入系统媒体键；
+  搜索保留在「功能 → 搜索…」菜单和「搜索」一级导航，详见 `2026-11-16-macos-batch-2.md` §8。
 - 首页、搜索、我的显示 pivot；媒体库、下载隐藏 pivot，内容区向上填满。
 - 内容背景使用 `NSColor.windowBackgroundColor`，随系统外观切换更新。
 

@@ -162,8 +162,8 @@
 
 - macOS Debug 编译通过（`DERIVED_DATA_PATH=/tmp/anix-dd-online bash scripts/build-mac.sh Debug`，BUILD SUCCEEDED）。
 - 本次改动按编译验证；未执行联网/UI 功能测试。
-- 2026-11-16 第二批：Kazumi API/POST/JSONPath 边界支持正在并行实现，未完成前源管理页仍可能
-  跳过部分 API 规则；不得把未支持规则静默当作“无结果”。
+- 2026-11-16 第二批：Kazumi API/POST/JSONPath 边界已补；源管理页会列出未加载规则及原因。
+  本地 18 条规则可加载；`mgnacg` 这类缺少详情页模板的规则仍会给明确错误，不伪造结果。
 - 既有验收（阶段 A/B）：
   - 应用内加载 28 个源（Animeko 18 / Kazumi 10）。
   - 搜索「葬送的芙莉莲」：31 个结果，28 个源参与，6 个源失败；失败按源隔离。
@@ -173,7 +173,7 @@
 
 ## 9. 后续
 
-1. Kazumi API/POST 模式规则（JSONPath/请求体/分页）：已进入第二批并行任务，规格见
+1. Kazumi API/POST 模式规则（JSONPath/请求体/分页）：已完成，规格与结果见
    `2026-11-16-macos-batch-2.md` §4；覆盖 `searchMode/chapterMode = api`、GET/POST、
    delimited/nested 剧集、sourceTemplate 与 episodePage。
 2. Animeko JSONPath 搜索。
