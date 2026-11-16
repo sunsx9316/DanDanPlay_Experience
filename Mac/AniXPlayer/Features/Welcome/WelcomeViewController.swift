@@ -694,13 +694,6 @@ private final class WelcomeRootView: NSView {
 
 // MARK: - WelcomeRecentItem / Store
 
-struct WelcomeRecentItem: Codable {
-    let path: String
-    let lastOpened: TimeInterval
-    let progress: Double?
-    let bookmark: Data?
-}
-
 extension Notification.Name {
     static let welcomeRecentPlaybackDidChange = Notification.Name("WelcomeRecentPlaybackDidChange")
 }
@@ -712,7 +705,7 @@ final class WelcomeRecentStore {
     static let shared = WelcomeRecentStore()
 
     private let defaultsKey = "AniXPlayer.Welcome.RecentPlaybacks"
-    private let maximumCount = 4
+    private let maximumCount = 10
     private var heldScopedPaths = Set<String>()
 
     private init() {}

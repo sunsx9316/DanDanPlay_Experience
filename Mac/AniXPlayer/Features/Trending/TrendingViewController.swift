@@ -10,6 +10,9 @@ import SnapKit
 
 final class TrendingViewController: ViewController {
 
+    /// 内嵌到欢迎页外壳时使用：由外层打开详情窗口；不设置时保留 navigator push 旧路径。
+    var onSelectAnime: ((Int) -> Void)?
+
     private var mode: TrendingMetricMode = .hot
     private var period = "week"
     private var scope = "current-season"
@@ -210,6 +213,11 @@ final class TrendingViewController: ViewController {
         startRefresh()
     }
 
+    /// 登录状态变化后由外层刷新一次。
+    func refreshAfterLoginStateChange() {
+        startRefresh()
+    }
+
     // MARK: - Data
 
     private func startRefresh() {
@@ -316,6 +324,10 @@ extension TrendingViewController: NSCollectionViewDelegate {
         guard let indexPath = indexPaths.first, indexPath.item < items.count else { return }
         collectionView.deselectItems(at: indexPaths)
         let item = items[indexPath.item]
+        if let onSelectAnime = onSelectAnime {
+            onSelectAnime(item.animeId)
+            return
+        }
         let vc = BangumiDetailViewController(animateId: item.animeId)
         navigator?.pushViewController(vc)
     }
