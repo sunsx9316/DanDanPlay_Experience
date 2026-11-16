@@ -130,7 +130,16 @@ final class WelcomeShellOnlineResultRowView: WelcomeShellTapView {
         }
         sourceLabel.text = parts.joined(separator: " · ")
         titleLabel.text = subject.title
-        detailLabel.text = subject.url.host ?? subject.url.absoluteString
+        if let url = subject.url {
+            detailLabel.text = url.host ?? url.absoluteString
+        } else if let token = subject.sourceToken, !token.isEmpty {
+            detailLabel.text = String(
+                format: NSLocalizedString("站点内部条目 %@", comment: ""),
+                token
+            )
+        } else {
+            detailLabel.text = subject.sourceName
+        }
         setAccessibilityLabel("\(subject.sourceName)，\(subject.title)")
         updateSelectedStyle()
     }
@@ -257,7 +266,11 @@ final class WelcomeShellOnlineEpisodeRowView: NSView {
 
     func configure(episode: OnlineEpisode, subject: OnlineSubject, index: Int) {
         titleLabel.text = episode.title
-        subtitleLabel.text = episode.url.host ?? subject.sourceName
+        if let roadName = episode.roadName, !roadName.isEmpty {
+            subtitleLabel.text = "\(roadName) · \(episode.url.host ?? subject.sourceName)"
+        } else {
+            subtitleLabel.text = episode.url.host ?? subject.sourceName
+        }
         setAccessibilityLabel("\(subject.title)，\(episode.title)")
         playButton.setAccessibilityIdentifier("\(AccessibilityID.WelcomeShell.onlineEpisodePlay).\(index)")
         openButton.setAccessibilityIdentifier("\(AccessibilityID.WelcomeShell.onlineEpisodeOpen).\(index)")
@@ -289,6 +302,7 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
     private let entitlementGate = EntitlementGate.shared
 
     private var allSources: [OnlineMediaSource] = []
+    private var skippedRules: [OnlineSkippedSourceRule] = []
     private var subjects: [OnlineSubject] = []
     private var episodes: [OnlineEpisode] = []
     private var selectedIndex = 0
@@ -624,7 +638,7 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
         loadSourcesTask = Task { @MainActor [weak self] in
             guard let self = self else { return }
             do {
-                let sources = try await self.service.loadSources(
+                let result = try await self.service.loadSourceResult(
                     forceRefresh: forceRefresh,
                     progress: { message in
                         DispatchQueue.main.async { [weak self] in
@@ -633,7 +647,8 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
                     }
                 )
                 guard !Task.isCancelled else { return }
-                self.allSources = sources
+                self.allSources = result.sources
+                self.skippedRules = result.skippedRules
                 self.updateSourceSummary()
                 if let action {
                     action()
@@ -643,6 +658,7 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
             } catch {
                 guard !Task.isCancelled else { return }
                 self.allSources = []
+                self.skippedRules = []
                 self.updateSourceSummary()
                 self.showState(
                     title: NSLocalizedString("在线源加载失败", comment: ""),
@@ -658,17 +674,39 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
 
     private func updateSourceSummary() {
         guard !allSources.isEmpty else {
-            summaryLabel.text = NSLocalizedString("没有可用的在线源", comment: "")
+            summaryLabel.text = skippedRules.isEmpty
+                ? NSLocalizedString("没有可用的在线源", comment: "")
+                : String(
+                    format: NSLocalizedString("没有可用的在线源 · %d 条规则未加载", comment: ""),
+                    skippedRules.count
+                )
+            summaryLabel.toolTip = skippedRuleSummary()
             return
         }
         let animekoCount = allSources.filter { $0.engine == .animeko }.count
         let kazumiCount = allSources.filter { $0.engine == .kazumi }.count
-        summaryLabel.text = String(
+        var text = String(
             format: NSLocalizedString("已加载 %d 个源（Animeko %d / Kazumi %d）", comment: ""),
             allSources.count,
             animekoCount,
             kazumiCount
         )
+        if !skippedRules.isEmpty {
+            text += String(
+                format: NSLocalizedString(" · %d 条规则未加载", comment: ""),
+                skippedRules.count
+            )
+        }
+        summaryLabel.text = text
+        summaryLabel.toolTip = skippedRuleSummary()
+    }
+
+    private func skippedRuleSummary() -> String? {
+        guard !skippedRules.isEmpty else { return nil }
+        return skippedRules
+            .prefix(6)
+            .map { "\($0.name)：\($0.reason)" }
+            .joined(separator: "\n")
     }
 
     private var selectedEngine: OnlineSourceEngine? {
@@ -724,6 +762,20 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
             return
         }
         guard !allSources.isEmpty else {
+            if !skippedRules.isEmpty {
+                showState(
+                    title: NSLocalizedString("没有可用的在线源", comment: ""),
+                    detail: String(
+                        format: NSLocalizedString("以下规则未加载：\n%@", comment: ""),
+                        skippedRuleSummary() ?? ""
+                    ),
+                    actionTitle: NSLocalizedString("源管理", comment: ""),
+                    onAction: { [weak self] in
+                        self?.showSourceSettings()
+                    }
+                )
+                return
+            }
             showState(title: NSLocalizedString("正在加载在线源…", comment: ""))
             loadSources(forceRefresh: false) { [weak self] in
                 self?.startSearch()
@@ -785,11 +837,26 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
                     self.rebuildEpisodes()
                     self.setContentVisible(false)
                     let failureDetail = self.failureSummary(outcome.failures)
+                    let skippedDetail = self.skippedRuleSummary() ?? ""
+                    let detail: String
+                    if !failureDetail.isEmpty && !skippedDetail.isEmpty {
+                        detail = failureDetail + "\n" + String(
+                            format: NSLocalizedString("另有以下规则未加载：\n%@", comment: ""),
+                            skippedDetail
+                        )
+                    } else if !failureDetail.isEmpty {
+                        detail = failureDetail
+                    } else if !skippedDetail.isEmpty {
+                        detail = String(
+                            format: NSLocalizedString("没有结果；以下规则未加载：\n%@", comment: ""),
+                            skippedDetail
+                        )
+                    } else {
+                        detail = NSLocalizedString("换一个关键词，或检查源是否可用", comment: "")
+                    }
                     self.showState(
                         title: NSLocalizedString("没有找到相关作品", comment: ""),
-                        detail: failureDetail.isEmpty
-                            ? NSLocalizedString("换一个关键词，或检查源是否可用", comment: "")
-                            : failureDetail,
+                        detail: detail,
                         actionTitle: NSLocalizedString("源管理", comment: ""),
                         onAction: { [weak self] in
                             self?.showSourceSettings()
@@ -1231,7 +1298,10 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
     private func showSourceSettings() {
         sourceSettingsPanel?.close()
 
-        let controller = OnlineSourceSettingsViewController(sources: allSources)
+        let controller = OnlineSourceSettingsViewController(
+            sources: allSources,
+            skippedRules: skippedRules
+        )
         controller.onSourcesChanged = { [weak self] sources in
             guard let self = self else { return }
             self.allSources = sources
@@ -1296,6 +1366,7 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
 final class OnlineSourceSettingsViewController: ViewController {
 
     private var sources: [OnlineMediaSource]
+    private var skippedRules: [OnlineSkippedSourceRule]
     var onSourcesChanged: (([OnlineMediaSource]) -> Void)?
     var onPinsChanged: (() -> Void)?
 
@@ -1318,8 +1389,9 @@ final class OnlineSourceSettingsViewController: ViewController {
     private lazy var resetButton = WelcomeShellClosureButton(title: NSLocalizedString("恢复默认地址", comment: ""))
     private lazy var clearButton = WelcomeShellClosureButton(title: NSLocalizedString("清空缓存", comment: ""))
 
-    init(sources: [OnlineMediaSource]) {
+    init(sources: [OnlineMediaSource], skippedRules: [OnlineSkippedSourceRule] = []) {
         self.sources = sources
+        self.skippedRules = skippedRules
         super.init()
     }
 
@@ -1576,14 +1648,38 @@ final class OnlineSourceSettingsViewController: ViewController {
     private func updateStatus(_ message: String? = nil) {
         if let message {
             statusLabel.text = message
+            statusLabel.toolTip = message
             return
         }
         let enabled = sources.filter { OnlineSourcePreferences.isSourceEnabled($0.id) }.count
-        statusLabel.text = String(
+        let apiSourceCount = sources.filter {
+            $0.kazumiAPI?.isSearchAPI == true || $0.kazumiAPI?.isChapterAPI == true
+        }.count
+        var text = String(
             format: NSLocalizedString("共 %d 个源，已启用 %d 个", comment: ""),
             sources.count,
             enabled
         )
+        if apiSourceCount > 0 {
+            text += String(
+                format: NSLocalizedString(" · API 模式 %d 个", comment: ""),
+                apiSourceCount
+            )
+        }
+        if !skippedRules.isEmpty {
+            text += String(
+                format: NSLocalizedString(" · %d 条规则未加载", comment: ""),
+                skippedRules.count
+            )
+            text += "\n" + skippedRules
+                .prefix(2)
+                .map { "\($0.name)：\($0.reason)" }
+                .joined(separator: "\n")
+        }
+        statusLabel.text = text
+        statusLabel.toolTip = skippedRules.isEmpty
+            ? text
+            : skippedRules.map { "\($0.name)：\($0.reason)" }.joined(separator: "\n")
     }
 
     private func setBusy(_ busy: Bool) {
@@ -1626,7 +1722,7 @@ final class OnlineSourceSettingsViewController: ViewController {
             do {
                 await self.sourceStore.updateURLs(animeko: animeko, kazumi: kazumi)
                 // 保留旧缓存用于网络失败回退；需要强制重下时用户可点“清空缓存”。
-                let loaded = try await self.service.loadSources(
+                let loaded = try await self.service.loadSourceResult(
                     forceRefresh: true,
                     progress: { message in
                         DispatchQueue.main.async { [weak self] in
@@ -1634,14 +1730,12 @@ final class OnlineSourceSettingsViewController: ViewController {
                         }
                     }
                 )
-                self.sources = loaded
+                self.sources = loaded.sources
+                self.skippedRules = loaded.skippedRules
                 self.rebuildSourceList()
-                self.updateStatus(String(
-                    format: NSLocalizedString("刷新完成，共 %d 个源。", comment: ""),
-                    loaded.count
-                ))
+                self.updateStatus()
                 self.setBusy(false)
-                self.onSourcesChanged?(loaded)
+                self.onSourcesChanged?(loaded.sources)
             } catch {
                 self.setBusy(false)
                 self.updateStatus(String(
@@ -1659,6 +1753,7 @@ final class OnlineSourceSettingsViewController: ViewController {
             guard let self = self else { return }
             await self.sourceStore.clearCache()
             self.sources = []
+            self.skippedRules = []
             self.rebuildSourceList()
             self.setBusy(false)
             self.updateStatus(NSLocalizedString("缓存已清空，点击“保存并刷新”重新下载。", comment: ""))

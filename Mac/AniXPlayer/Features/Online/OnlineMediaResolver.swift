@@ -13,7 +13,12 @@ final class OnlineMediaResolver {
 
     static let shared = OnlineMediaResolver()
 
-    private init() {}
+    private let httpClient: OnlineHTTPClient
+
+    /// 测试可注入带 StubURLProtocol 的 HTTP 客户端。
+    init(httpClient: OnlineHTTPClient = .shared) {
+        self.httpClient = httpClient
+    }
 
     // MARK: - Search
 
@@ -21,12 +26,32 @@ final class OnlineMediaResolver {
         let prepared = preparedKeyword(keyword, source: source)
         guard !prepared.isEmpty else { return [] }
 
+        switch source.engine {
+        case .animeko:
+            return try await searchAnimeko(source: source, keyword: prepared)
+        case .kazumi:
+            if source.kazumiAPI?.isSearchAPI == true {
+                return try await searchKazumiAPI(source: source, keyword: prepared)
+            }
+            return try await searchKazumiXPath(
+                source: source,
+                keyword: prepared,
+                usePost: source.kazumiAPI?.usePost ?? false
+            )
+        }
+    }
+
+    private func searchAnimeko(
+        source: OnlineMediaSource,
+        keyword: String
+    ) async throws -> [OnlineSubject] {
         let template = source.searchURL
+        let encoded = Self.percentEncodedKeyword(keyword)
         let urlString: String
         if template.contains("{keyword}") {
-            urlString = template.replacingOccurrences(of: "{keyword}", with: prepared)
+            urlString = template.replacingOccurrences(of: "{keyword}", with: encoded)
         } else if template.contains("@keyword") {
-            urlString = template.replacingOccurrences(of: "@keyword", with: prepared)
+            urlString = template.replacingOccurrences(of: "@keyword", with: encoded)
         } else {
             urlString = template
         }
@@ -35,7 +60,7 @@ final class OnlineMediaResolver {
             throw OnlinePlaybackError.invalidURL(urlString)
         }
 
-        let response = try await OnlineHTTPClient.shared.get(
+        let response = try await httpClient.get(
             url,
             headers: source.requestHeaders(pageURL: url)
         )
@@ -43,13 +68,118 @@ final class OnlineMediaResolver {
             html: response.text,
             baseURL: source.baseURL ?? response.finalURL
         )
+        return parseAnimekoSearch(source: source, document: document, response: response)
+    }
 
-        switch source.engine {
-        case .animeko:
-            return parseAnimekoSearch(source: source, document: document, response: response)
-        case .kazumi:
-            return parseKazumiSearch(source: source, document: document, response: response)
+    private func searchKazumiXPath(
+        source: OnlineMediaSource,
+        keyword: String,
+        usePost: Bool
+    ) async throws -> [OnlineSubject] {
+        guard !source.searchURL.isEmpty else {
+            throw OnlinePlaybackError.unsupportedRule(
+                NSLocalizedString("该规则没有可用的搜索地址。", comment: "")
+            )
         }
+
+        let encoded = Self.percentEncodedKeyword(keyword)
+        let expanded = source.searchURL
+            .replacingOccurrences(of: "@keyword", with: encoded)
+            .replacingOccurrences(of: "{keyword}", with: encoded)
+        guard let templateURL = URL(string: expanded), templateURL.host != nil else {
+            throw OnlinePlaybackError.invalidURL(expanded)
+        }
+
+        let response: OnlineHTTPResponse
+        if usePost {
+            // Kazumi 旧规则：usePost=true 时把 searchURL 的 query 作为表单 body，
+            // 请求地址去掉 query。这样 @keyword 仍由 URLComponents 正确编码。
+            guard var components = URLComponents(
+                url: templateURL,
+                resolvingAgainstBaseURL: false
+            ) else {
+                throw OnlinePlaybackError.invalidURL(expanded)
+            }
+            let queryItems = components.queryItems ?? []
+            components.query = nil
+            guard let postURL = components.url else {
+                throw OnlinePlaybackError.invalidURL(expanded)
+            }
+            var form = URLComponents()
+            form.queryItems = queryItems
+            let body = (form.percentEncodedQuery ?? "").data(using: .utf8)
+            response = try await httpClient.request(
+                method: "POST",
+                url: postURL,
+                headers: source.requestHeaders(pageURL: postURL),
+                body: body,
+                contentType: "application/x-www-form-urlencoded; charset=utf-8"
+            )
+        } else {
+            response = try await httpClient.get(
+                templateURL,
+                headers: source.requestHeaders(pageURL: templateURL)
+            )
+        }
+
+        guard !source.kazumiSearchList.isEmpty else {
+            throw OnlinePlaybackError.unsupportedRule(
+                NSLocalizedString("该规则缺少 searchList，无法解析搜索结果。", comment: "")
+            )
+        }
+
+        let base = source.baseURL ?? response.finalURL
+        let document = try OnlineHTMLDocument(html: response.text, baseURL: base)
+        return parseKazumiSearch(source: source, document: document)
+    }
+
+    private func searchKazumiAPI(
+        source: OnlineMediaSource,
+        keyword: String
+    ) async throws -> [OnlineSubject] {
+        guard let config = source.kazumiAPI?.search else {
+            throw OnlinePlaybackError.unsupportedRule(
+                NSLocalizedString("该规则使用 API 搜索，但缺少 searchApiConfig。", comment: "")
+            )
+        }
+
+        let prepared = try KazumiAPIRequestBuilder.makeRequest(
+            config: config.request,
+            variables: ["keyword": .string(keyword)],
+            baseHeaders: source.requestHeaders(pageURL: source.baseURL),
+            baseURL: source.baseURL
+        )
+        let response = try await httpClient.request(
+            method: prepared.method,
+            url: prepared.url,
+            headers: prepared.headers,
+            body: prepared.body,
+            contentType: prepared.contentType
+        )
+
+        let base = source.baseURL
+            ?? OnlineHTMLDocument.origin(of: response.finalURL)
+            ?? response.finalURL
+        let items = try KazumiAPISearchParser.parse(
+            text: response.text,
+            config: config,
+            baseURL: base
+        )
+
+        var subjects: [OnlineSubject] = []
+        var seen = Set<String>()
+        for item in items {
+            let subject = OnlineSubject(
+                source: source,
+                title: item.name,
+                url: item.url,
+                sourceToken: item.source
+            )
+            guard seen.insert(subject.identityKey).inserted else { continue }
+            subjects.append(subject)
+            if subjects.count >= 100 { break }
+        }
+        return subjects
     }
 
     private func parseAnimekoSearch(
@@ -102,13 +232,19 @@ final class OnlineMediaResolver {
         return byURL.values
             .filter { !$0.0.isEmpty }
             .prefix(100)
-            .map { OnlineSubject(source: source, title: $0.0, url: $0.1) }
+            .map {
+                OnlineSubject(
+                    source: source,
+                    title: $0.0,
+                    url: $0.1,
+                    sourceToken: $0.1.absoluteString
+                )
+            }
     }
 
     private func parseKazumiSearch(
         source: OnlineMediaSource,
-        document: OnlineHTMLDocument,
-        response: OnlineHTTPResponse
+        document: OnlineHTMLDocument
     ) -> [OnlineSubject] {
         let containers = document.nodes(xpath: source.kazumiSearchList)
         var items: [(String, URL)] = []
@@ -120,14 +256,13 @@ final class OnlineMediaResolver {
 
             var href: URL?
             for node in linkNodes {
-                guard let element = node as? XMLElement else { continue }
-                if let value = document.href(of: element) {
+                if let value = document.href(of: node) {
                     href = value
                     break
                 }
             }
-            if href == nil, let element = container as? XMLElement {
-                href = document.href(of: element)
+            if href == nil {
+                href = document.href(of: container)
             }
 
             guard let href else { continue }
@@ -139,27 +274,105 @@ final class OnlineMediaResolver {
         return items
             .filter { seen.insert($0.1.absoluteString).inserted && !$0.0.isEmpty }
             .prefix(100)
-            .map { OnlineSubject(source: source, title: $0.0, url: $0.1) }
+            .map {
+                OnlineSubject(
+                    source: source,
+                    title: $0.0,
+                    url: $0.1,
+                    sourceToken: $0.1.absoluteString
+                )
+            }
     }
 
     // MARK: - Episodes
 
     func loadEpisodes(source: OnlineMediaSource, subject: OnlineSubject) async throws -> [OnlineEpisode] {
-        let response = try await OnlineHTTPClient.shared.get(
-            subject.url,
-            headers: source.requestHeaders(pageURL: subject.url)
-        )
-        let document = try OnlineHTMLDocument(
-            html: response.text,
-            baseURL: source.baseURL ?? response.finalURL
-        )
-
         switch source.engine {
         case .animeko:
-            return parseAnimekoEpisodes(source: source, document: document, pageURL: response.finalURL, subject: subject)
+            guard let url = subject.url else {
+                throw OnlinePlaybackError.unsupportedRule(
+                    NSLocalizedString("该条目没有可用的作品页地址。", comment: "")
+                )
+            }
+            let response = try await httpClient.get(
+                url,
+                headers: source.requestHeaders(pageURL: url)
+            )
+            let document = try OnlineHTMLDocument(
+                html: response.text,
+                baseURL: source.baseURL ?? response.finalURL
+            )
+            return parseAnimekoEpisodes(
+                source: source,
+                document: document,
+                pageURL: response.finalURL,
+                subject: subject
+            )
         case .kazumi:
-            return parseKazumiEpisodes(source: source, document: document, pageURL: response.finalURL)
+            if source.kazumiAPI?.isChapterAPI == true {
+                return try await loadKazumiAPIEpisodes(source: source, subject: subject)
+            }
+            guard let url = subject.url else {
+                throw OnlinePlaybackError.unsupportedRule(
+                    NSLocalizedString(
+                        "该规则使用站点内部条目 ID，但选集模式为 XPath，缺少详情页地址；当前组合暂不支持。",
+                        comment: ""
+                    )
+                )
+            }
+            let response = try await httpClient.get(
+                url,
+                headers: source.requestHeaders(pageURL: url)
+            )
+            let document = try OnlineHTMLDocument(
+                html: response.text,
+                baseURL: source.baseURL ?? response.finalURL
+            )
+            return parseKazumiEpisodes(source: source, document: document)
         }
+    }
+
+    private func loadKazumiAPIEpisodes(
+        source: OnlineMediaSource,
+        subject: OnlineSubject
+    ) async throws -> [OnlineEpisode] {
+        guard let config = source.kazumiAPI?.chapter else {
+            throw OnlinePlaybackError.unsupportedRule(
+                NSLocalizedString("该规则使用 API 选集，但缺少 chapterApiConfig。", comment: "")
+            )
+        }
+        guard let token = subject.sourceToken, !token.isEmpty else {
+            throw OnlinePlaybackError.unsupportedRule(
+                NSLocalizedString("该规则使用 API 选集，但搜索结果没有来源标识。", comment: "")
+            )
+        }
+
+        let prepared = try KazumiAPIRequestBuilder.makeRequest(
+            config: config.request,
+            variables: ["source": .string(token)],
+            baseHeaders: source.requestHeaders(pageURL: subject.url),
+            baseURL: source.baseURL
+        )
+        let response = try await httpClient.request(
+            method: prepared.method,
+            url: prepared.url,
+            headers: prepared.headers,
+            body: prepared.body,
+            contentType: prepared.contentType
+        )
+
+        let base = source.baseURL
+            ?? OnlineHTMLDocument.origin(of: response.finalURL)
+            ?? response.finalURL
+        let episodes = try KazumiAPIChapterParser.parse(
+            text: response.text,
+            config: config,
+            source: token,
+            baseURL: base
+        )
+        var seen = Set<String>()
+        let unique = episodes.filter { seen.insert($0.url.absoluteString).inserted }
+        return sortEpisodes(unique)
     }
 
     private func parseAnimekoEpisodes(
@@ -197,17 +410,16 @@ final class OnlineMediaResolver {
 
     private func parseKazumiEpisodes(
         source: OnlineMediaSource,
-        document: OnlineHTMLDocument,
-        pageURL: URL
+        document: OnlineHTMLDocument
     ) -> [OnlineEpisode] {
-        var nodes: [XMLElement] = []
+        var nodes: [XMLNode] = []
         let roads = document.nodes(xpath: source.kazumiChapterRoads)
         for road in roads {
             let result = document.nodes(xpath: source.kazumiChapterResult, in: road)
-            nodes.append(contentsOf: result.compactMap { $0 as? XMLElement })
+            nodes.append(contentsOf: result)
         }
         if nodes.isEmpty {
-            nodes = document.nodes(xpath: source.kazumiChapterResult).compactMap { $0 as? XMLElement }
+            nodes = document.nodes(xpath: source.kazumiChapterResult)
         }
 
         var items: [(String, URL)] = []
@@ -215,7 +427,7 @@ final class OnlineMediaResolver {
             guard let href = document.href(of: node) else { continue }
             var title = document.text(of: node)
             // Kazumi 官方会去掉剧集名中的所有空白。
-            title = title.replacingOccurrences(of: " ", with: "")
+            title = title.components(separatedBy: .whitespacesAndNewlines).joined()
             if title.isEmpty {
                 title = String(
                     format: NSLocalizedString("第 %d 集", comment: ""),
@@ -313,7 +525,8 @@ final class OnlineMediaResolver {
                 title: first.title,
                 url: first.url,
                 sort: first.sort,
-                alternateURLs: group.dropFirst().map(\.url)
+                alternateURLs: group.dropFirst().map(\.url),
+                roadName: first.roadName
             )
         }
     }
@@ -327,7 +540,7 @@ final class OnlineMediaResolver {
         for _ in 0..<4 {
             guard visited.insert(currentURL.absoluteString).inserted else { break }
 
-            let response = try await OnlineHTTPClient.shared.get(
+            let response = try await httpClient.get(
                 currentURL,
                 headers: source.requestHeaders(pageURL: currentURL)
             )
@@ -393,9 +606,14 @@ final class OnlineMediaResolver {
                 character.isLetter || character.isNumber || character == " "
             })
         }
-        value = value.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !value.isEmpty else { return "" }
-        return value.addingPercentEncoding(withAllowedCharacters: .alphanumerics) ?? value
+        return value.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private static func percentEncodedKeyword(_ raw: String) -> String {
+        let allowed = CharacterSet(
+            charactersIn: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~"
+        )
+        return raw.addingPercentEncoding(withAllowedCharacters: allowed) ?? raw
     }
 
     // MARK: - Helpers

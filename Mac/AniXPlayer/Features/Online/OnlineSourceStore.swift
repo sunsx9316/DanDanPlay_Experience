@@ -202,6 +202,18 @@ enum OnlineSourcePaths {
 struct OnlineSourceLoadResult {
     let sources: [OnlineMediaSource]
     let warnings: [String]
+    /// Kazumi 规则解析失败/暂不支持的原因；源管理页需要显示，避免规则静默消失。
+    let skippedRules: [OnlineSkippedSourceRule]
+
+    init(
+        sources: [OnlineMediaSource],
+        warnings: [String],
+        skippedRules: [OnlineSkippedSourceRule] = []
+    ) {
+        self.sources = sources
+        self.warnings = warnings
+        self.skippedRules = skippedRules
+    }
 }
 
 // MARK: - Store
@@ -212,6 +224,7 @@ actor OnlineSourceStore {
 
     private let cacheLifetime: TimeInterval = 7 * 24 * 60 * 60
     private var memoryCache: [OnlineMediaSource] = []
+    private var memorySkippedRules: [OnlineSkippedSourceRule] = []
 
     private init() {}
 
@@ -226,7 +239,11 @@ actor OnlineSourceStore {
         progress: ((String) -> Void)? = nil
     ) async throws -> OnlineSourceLoadResult {
         if !forceRefresh, !memoryCache.isEmpty, isCacheFresh() {
-            return OnlineSourceLoadResult(sources: memoryCache, warnings: [])
+            return OnlineSourceLoadResult(
+                sources: memoryCache,
+                warnings: [],
+                skippedRules: memorySkippedRules
+            )
         }
 
         try? OnlineSourcePaths.ensureDirectories()
@@ -247,20 +264,37 @@ actor OnlineSourceStore {
         sources = sources.reversed().filter { seen.insert($0.id).inserted }.reversed()
 
         if sources.isEmpty {
-            throw OnlinePlaybackError.noSources
+            let skippedRules = kazumiResult.skippedRules
+            if skippedRules.isEmpty {
+                throw OnlinePlaybackError.noSources
+            }
+            memoryCache = []
+            memorySkippedRules = skippedRules
+            return OnlineSourceLoadResult(
+                sources: [],
+                warnings: warnings,
+                skippedRules: skippedRules
+            )
         }
 
         memoryCache = sources
-        return OnlineSourceLoadResult(sources: sources, warnings: warnings)
+        memorySkippedRules = kazumiResult.skippedRules
+        return OnlineSourceLoadResult(
+            sources: sources,
+            warnings: warnings,
+            skippedRules: kazumiResult.skippedRules
+        )
     }
 
     func clearCache() {
         memoryCache = []
+        memorySkippedRules = []
         try? FileManager.default.removeItem(at: OnlineSourcePaths.root)
     }
 
     func clearKazumiCache() {
         memoryCache = memoryCache.filter { $0.engine != .kazumi }
+        memorySkippedRules = []
         try? FileManager.default.removeItem(at: OnlineSourcePaths.kazumiDirectory)
     }
 
@@ -293,6 +327,7 @@ actor OnlineSourceStore {
     private struct EngineResult {
         let sources: [OnlineMediaSource]
         let warning: String?
+        var skippedRules: [OnlineSkippedSourceRule] = []
     }
 
     private func loadAnimeko(forceRefresh: Bool, progress: ((String) -> Void)?) async -> EngineResult {
@@ -362,23 +397,32 @@ actor OnlineSourceStore {
         let cacheFresh = isFresh(indexURL)
 
         if !forceRefresh, cacheFresh {
-            let sources = Self.parseKazumiRules()
-            if !sources.isEmpty {
-                return EngineResult(sources: sources, warning: nil)
+            let parsed = Self.parseKazumiRules()
+            if !parsed.sources.isEmpty {
+                return EngineResult(
+                    sources: parsed.sources,
+                    warning: nil,
+                    skippedRules: parsed.skippedRules
+                )
             }
         }
 
         progress?(NSLocalizedString("正在更新 Kazumi 源索引…", comment: ""))
         let baseURLString = OnlineSourcePreferences.kazumiURL
         guard let baseURL = URL(string: baseURLString), baseURL.host != nil else {
-            let sources = Self.parseKazumiRules()
-            if !sources.isEmpty {
+            let parsed = Self.parseKazumiRules()
+            if !parsed.sources.isEmpty {
                 return EngineResult(
-                    sources: sources,
-                    warning: NSLocalizedString("Kazumi 源地址无效，已使用本地缓存。", comment: "")
+                    sources: parsed.sources,
+                    warning: NSLocalizedString("Kazumi 源地址无效，已使用本地缓存。", comment: ""),
+                    skippedRules: parsed.skippedRules
                 )
             }
-            return EngineResult(sources: [], warning: NSLocalizedString("Kazumi 源地址无效。", comment: ""))
+            return EngineResult(
+                sources: [],
+                warning: NSLocalizedString("Kazumi 源地址无效。", comment: ""),
+                skippedRules: parsed.skippedRules
+            )
         }
 
         var remoteWarning: String?
@@ -431,13 +475,20 @@ actor OnlineSourceStore {
         }
 
         Self.removeUnknownKazumiRules(entries: entries)
-        let sources = Self.parseKazumiRules()
-        if sources.isEmpty, let remoteWarning {
-            return EngineResult(sources: [], warning: remoteWarning)
+        let parsed = Self.parseKazumiRules()
+        if parsed.sources.isEmpty, let remoteWarning {
+            return EngineResult(
+                sources: [],
+                warning: remoteWarning,
+                skippedRules: parsed.skippedRules
+            )
         }
         return EngineResult(
-            sources: sources,
-            warning: sources.isEmpty ? NSLocalizedString("Kazumi 没有可用规则。", comment: "") : remoteWarning
+            sources: parsed.sources,
+            warning: parsed.sources.isEmpty
+                ? NSLocalizedString("Kazumi 没有可用规则。", comment: "")
+                : remoteWarning,
+            skippedRules: parsed.skippedRules
         )
     }
 
@@ -536,105 +587,45 @@ actor OnlineSourceStore {
         }
     }
 
-    private static func parseKazumiRules() -> [OnlineMediaSource] {
+    private static func parseKazumiRules() -> (
+        sources: [OnlineMediaSource],
+        skippedRules: [OnlineSkippedSourceRule]
+    ) {
         guard let files = try? FileManager.default.contentsOfDirectory(
             at: OnlineSourcePaths.kazumiRulesDirectory,
             includingPropertiesForKeys: nil
         ) else {
-            return []
+            return ([], [])
         }
 
         var sources: [OnlineMediaSource] = []
+        var skipped: [OnlineSkippedSourceRule] = []
         for file in files.sorted(by: { $0.lastPathComponent < $1.lastPathComponent }) {
-            guard file.pathExtension.lowercased() == "json",
-                  let data = try? Data(contentsOf: file),
-                  let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-                  let source = parseKazumiRule(object, index: sources.count) else {
+            guard file.pathExtension.lowercased() == "json" else { continue }
+            let fallbackName = file.deletingPathExtension().lastPathComponent
+            guard let data = try? Data(contentsOf: file) else {
+                skipped.append(OnlineSkippedSourceRule(
+                    name: fallbackName,
+                    reason: NSLocalizedString("规则文件无法读取。", comment: "")
+                ))
                 continue
             }
-            sources.append(source)
+            guard let object = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                skipped.append(OnlineSkippedSourceRule(
+                    name: fallbackName,
+                    reason: NSLocalizedString("规则文件不是有效 JSON。", comment: "")
+                ))
+                continue
+            }
+
+            switch KazumiRuleParser.parse(object, index: sources.count) {
+            case .loaded(let source):
+                sources.append(source)
+            case .skipped(let name, let reason):
+                skipped.append(OnlineSkippedSourceRule(name: name, reason: reason))
+            }
         }
-        return sources
-    }
-
-    private static func parseKazumiRule(_ rule: [String: Any], index: Int) -> OnlineMediaSource? {
-        let name = (rule["name"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        let searchURL = (rule["searchURL"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
-        let searchList = (rule["searchList"] as? String) ?? ""
-        let searchName = (rule["searchName"] as? String) ?? ""
-        let searchResult = (rule["searchResult"] as? String) ?? ""
-        let chapterRoads = (rule["chapterRoads"] as? String) ?? ""
-        let chapterResult = (rule["chapterResult"] as? String) ?? ""
-
-        guard !name.isEmpty,
-              !searchURL.isEmpty,
-              !searchList.isEmpty,
-              !searchResult.isEmpty,
-              !chapterRoads.isEmpty,
-              !chapterResult.isEmpty else {
-            return nil
-        }
-
-        // Windows 版同样跳过 POST 与 API 模式规则。
-        if (rule["usePost"] as? Bool) == true { return nil }
-        if (rule["searchMode"] as? String)?.lowercased() == "api" { return nil }
-        if (rule["chapterMode"] as? String)?.lowercased() == "api" { return nil }
-
-        let baseURL = (rule["baseURL"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines)
-        let referer = (rule["referer"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines)
-        let userAgent = (rule["userAgent"] as? String)?.trimmingCharacters(in: .whitespacesAndNewlines)
-
-        var detail = "Kazumi 规则"
-        if let version = rule["version"] as? String, !version.isEmpty {
-            detail += " · v\(version)"
-        }
-        if ((rule["antiCrawlerConfig"] as? [String: Any])?["enabled"] as? Bool) == true {
-            detail += NSLocalizedString(" · 站点有反爬验证，可能无法搜索", comment: "")
-        }
-
-        var headers: [String: String] = [:]
-        if let referer, !referer.isEmpty {
-            headers["Referer"] = referer
-        }
-        if let userAgent, !userAgent.isEmpty {
-            headers["User-Agent"] = userAgent
-        }
-
-        return OnlineMediaSource(
-            id: "kazumi:\(name)",
-            engine: .kazumi,
-            name: name,
-            detail: detail,
-            iconURL: nil,
-            tier: 100 + index,
-            searchURL: searchURL,
-            rawBaseURL: baseURL,
-            searchUseOnlyFirstWord: false,
-            searchRemoveSpecial: false,
-            userAgent: (userAgent?.isEmpty == false ? userAgent! : OnlineHTTPClient.defaultUserAgent),
-            referer: referer?.nilIfEmpty,
-            cookies: "",
-            subjectFormat: "xpath",
-            subjectSelectLists: "",
-            subjectSelectNames: "",
-            subjectSelectLinks: "",
-            preferShorterName: false,
-            channelFormat: "no-channel",
-            selectEpisodeLists: "",
-            selectEpisodesFromList: "",
-            selectEpisodes: "",
-            matchEpisodeSortFromName: "",
-            showAllEpisodes: false,
-            enableNestedURL: true,
-            matchNestedURL: "",
-            matchVideoURL: "",
-            addHeadersToVideo: headers,
-            kazumiSearchList: searchList,
-            kazumiSearchName: searchName,
-            kazumiSearchResult: searchResult,
-            kazumiChapterRoads: chapterRoads,
-            kazumiChapterResult: chapterResult
-        )
+        return (sources, skipped)
     }
 
     // MARK: File helpers

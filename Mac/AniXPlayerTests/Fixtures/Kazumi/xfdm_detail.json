@@ -1,0 +1,18 @@
+{
+  "sources": [
+    {
+      "name": "线路1",
+      "episodes": [
+        { "id": "ep-1", "title": "第1话" },
+        { "id": "ep-2", "title": "第2话" }
+      ]
+    },
+    {
+      "name": "线路2",
+      "episodes": [
+        { "id": "ep-1-alt", "title": "第1话" },
+        { "id": "ep-2-alt", "title": "第2话" }
+      ]
+    }
+  ]
+}

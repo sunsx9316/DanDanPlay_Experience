@@ -79,15 +79,23 @@ struct OnlineMediaSource: Identifiable, Equatable {
     let kazumiChapterRoads: String
     let kazumiChapterResult: String
 
+    /// Kazumi API 模式配置；nil 表示纯 XPath 规则（或 Animeko 源）。
+    /// 使用 var + 默认值让既有 Animeko 构造调用无需改动。
+    var kazumiAPI: KazumiAPIProfile? = nil
+
     var isKazumi: Bool {
         return engine == .kazumi
     }
 
     var baseURL: URL? {
-        if let rawBaseURL, let url = URL(string: rawBaseURL), url.host != nil {
-            return url
+        guard let rawBaseURL,
+              let url = URL(string: rawBaseURL),
+              let scheme = url.scheme?.lowercased(),
+              scheme == "http" || scheme == "https",
+              url.host != nil else {
+            return nil
         }
-        return nil
+        return KazumiURL.normalizedBase(url) ?? url
     }
 
     /// 搜索/剧集页请求使用的基础请求头。
@@ -165,16 +173,41 @@ struct OnlineSubject: Identifiable, Equatable {
     let engine: OnlineSourceEngine
     let tier: Int
     let title: String
-    let url: URL
+    /// 作品详情页地址。API 规则 sourceTemplate 为空时可能为 nil。
+    let url: URL?
+    /// 站点内部 ID/令牌；API 选集请求的 `@source` 使用它。
+    let sourceToken: String?
 
-    init(source: OnlineMediaSource, title: String, url: URL) {
-        self.id = "\(source.id)|\(url.absoluteString)"
+    init(source: OnlineMediaSource, title: String, url: URL?, sourceToken: String? = nil) {
+        let token = sourceToken?.trimmingCharacters(in: .whitespacesAndNewlines)
+        let normalizedToken = (token?.isEmpty == false) ? token : nil
+        let identity: String
+        if let url {
+            identity = url.absoluteString
+        } else if let normalizedToken {
+            identity = "token:\(normalizedToken)"
+        } else {
+            identity = "title:\(title)"
+        }
+        self.id = "\(source.id)|\(identity)"
         self.sourceID = source.id
         self.sourceName = source.name
         self.engine = source.engine
         self.tier = source.tier
         self.title = title
         self.url = url
+        self.sourceToken = normalizedToken
+    }
+
+    /// 合并搜索结果时用于去重；token-only 条目不会伪造 URL。
+    var identityKey: String {
+        if let url {
+            return url.absoluteString
+        }
+        if let sourceToken {
+            return "\(sourceID)|token:\(sourceToken)"
+        }
+        return "\(sourceID)|title:\(title)"
     }
 }
 
@@ -186,13 +219,22 @@ struct OnlineEpisode: Identifiable, Equatable {
     let sort: Double?
     /// 同一集在其他线路的页面地址；主线路解析失败时依次尝试。
     let alternateURLs: [URL]
+    /// API 选集返回的线路名称；XPath 规则通常为 nil。
+    let roadName: String?
 
-    init(title: String, url: URL, sort: Double?, alternateURLs: [URL] = []) {
+    init(
+        title: String,
+        url: URL,
+        sort: Double?,
+        alternateURLs: [URL] = [],
+        roadName: String? = nil
+    ) {
         self.id = url.absoluteString
         self.title = title
         self.url = url
         self.sort = sort
         self.alternateURLs = alternateURLs
+        self.roadName = roadName
     }
 }
 
