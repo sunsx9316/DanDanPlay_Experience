@@ -41,7 +41,7 @@ class BangumiCommentTableViewCell: NSTableCellView {
     private lazy var sourceLabel: Label = {
         let label = Label(labelWithString: "")
         label.font = .ddp_small()
-        label.textColor = .subtitleTextColor
+        label.textColor = .tertiaryLabelColor
         label.setContentHuggingPriority(.defaultHigh, for: .horizontal)
         return label
     }()
@@ -52,6 +52,8 @@ class BangumiCommentTableViewCell: NSTableCellView {
         label.textColor = .textColor
         label.lineBreakMode = .byWordWrapping
         label.maximumNumberOfLines = 0
+        label.cell?.wraps = true
+        label.cell?.isScrollable = false
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return label
     }()
@@ -59,7 +61,7 @@ class BangumiCommentTableViewCell: NSTableCellView {
     private lazy var timeLabel: Label = {
         let label = Label(labelWithString: "")
         label.font = .ddp_small()
-        label.textColor = .subtitleTextColor
+        label.textColor = .tertiaryLabelColor
         return label
     }()
 
@@ -104,6 +106,7 @@ class BangumiCommentTableViewCell: NSTableCellView {
             make.top.equalTo(commentTextLabel.snp.bottom).offset(6)
             make.leading.equalToSuperview().offset(15)
             make.trailing.equalToSuperview().offset(-15)
+            make.bottom.equalToSuperview().offset(-10)
         }
     }
 
@@ -112,8 +115,11 @@ class BangumiCommentTableViewCell: NSTableCellView {
     }
 
     func update(comment: BangumiComment) {
-        if !comment.imageUrl.isEmpty {
-            avatarImageView.kf.setImage(with: URL(string: comment.imageUrl))
+        avatarImageView.kf.cancelDownloadTask()
+        avatarImageView.image = NSImage.safeSystemSymbol("person.crop.circle.fill")
+        avatarImageView.contentTintColor = .tertiaryLabelColor
+        if !comment.imageUrl.isEmpty, let url = URL(string: comment.imageUrl) {
+            avatarImageView.kf.setImage(with: url)
         }
 
         userNameLabel.text = comment.userName
@@ -135,8 +141,16 @@ class BangumiCommentTableViewCell: NSTableCellView {
 
         if let updatedTime = comment.updatedTime {
             timeLabel.text = dateFormatter.string(from: updatedTime)
+            timeLabel.isHidden = false
         } else {
-            timeLabel.text = nil
+            timeLabel.text = ""
+            timeLabel.isHidden = true
         }
+
+        setAccessibilityLabel([
+            comment.userName,
+            comment.source,
+            comment.text
+        ].filter { !$0.isEmpty }.joined(separator: "，"))
     }
 }

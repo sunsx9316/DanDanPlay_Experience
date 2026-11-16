@@ -244,7 +244,7 @@ class TagSearchResultTableViewCell: NSTableCellView {
         ratingLabel.isHidden = rating <= 0
 
         statusLabel.text = item.isOnAir ? NSLocalizedString("连载中", comment: "") : NSLocalizedString("已完结", comment: "")
-        statusLabel.textColor = item.isOnAir ? .mainColor : .subtitleTextColor
+        statusLabel.textColor = item.isOnAir ? .mainColor : .secondaryLabelColor
 
         let symbolName = item.isFavorited ? "heart.fill" : "heart"
         favoriteButton.image = NSImage(systemSymbolName: symbolName, accessibilityDescription: nil)

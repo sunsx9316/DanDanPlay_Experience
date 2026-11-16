@@ -1,14 +1,14 @@
 //
-//  DetailUserDataCollectionViewCell.swift
+//  BangumiDetailTrackingCardView.swift
 //  AniXPlayer
 //
-//  macOS：番剧详情中的追番状态 / 评分 / 短评编辑。
+//  macOS：番剧详情的追番状态 / 评分 / 短评编辑卡片。
 //
 
 import Cocoa
 import SnapKit
 
-final class DetailUserDataCollectionViewCell: CollectionViewItem, NSTextViewDelegate {
+final class BangumiDetailTrackingCardView: BangumiDetailCardView, NSTextViewDelegate {
 
     struct Edit {
         /// nil 表示不修改状态。
@@ -41,24 +41,7 @@ final class DetailUserDataCollectionViewCell: CollectionViewItem, NSTextViewDele
         static let remove = 3
     }
 
-    private lazy var card: BaseView = {
-        let view = BaseView()
-        view.wantsLayer = true
-        view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
-        view.layer?.cornerRadius = 10
-        view.layer?.borderWidth = 1
-        view.layer?.borderColor = NSColor.separatorColor.withAlphaComponent(0.35).cgColor
-        return view
-    }()
-
-    private lazy var statusTitleLabel: Label = {
-        let label = Label(labelWithString: NSLocalizedString("追番状态", comment: ""))
-        label.font = .ddp_small()
-        label.textColor = .subtitleTextColor
-        return label
-    }()
-
-    private lazy var statusPopup: NSPopUpButton = {
+    private let statusPopup: NSPopUpButton = {
         let popup = NSPopUpButton()
         popup.addItem(withTitle: NSLocalizedString("未关注", comment: ""))
         popup.item(at: 0)?.tag = StatusTag.none
@@ -73,30 +56,21 @@ final class DetailUserDataCollectionViewCell: CollectionViewItem, NSTextViewDele
         popup.item(at: 2)?.tag = StatusTag.finished
         popup.item(at: 3)?.tag = StatusTag.abandoned
         popup.item(at: 4)?.tag = StatusTag.remove
-        popup.target = self
-        popup.action = #selector(statusChanged)
         popup.setAccessibilityIdentifier(AccessibilityID.Favorite.detailStatusPopup)
         return popup
     }()
 
-    private lazy var currentStatusLabel: Label = {
+    private let currentStatusLabel: Label = {
         let label = Label(labelWithString: "")
-        label.font = .ddp_small()
-        label.textColor = .subtitleTextColor
+        label.font = .systemFont(ofSize: 12)
+        label.textColor = .secondaryLabelColor
         label.lineBreakMode = .byTruncatingTail
         label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         label.setAccessibilityIdentifier(AccessibilityID.Favorite.detailStatusLabel)
         return label
     }()
 
-    private lazy var ratingTitleLabel: Label = {
-        let label = Label(labelWithString: NSLocalizedString("我的评分", comment: ""))
-        label.font = .ddp_small()
-        label.textColor = .subtitleTextColor
-        return label
-    }()
-
-    private lazy var ratingPopup: NSPopUpButton = {
+    private let ratingPopup: NSPopUpButton = {
         let popup = NSPopUpButton()
         popup.addItem(withTitle: NSLocalizedString("未评分", comment: ""))
         popup.item(at: 0)?.tag = 0
@@ -104,22 +78,13 @@ final class DetailUserDataCollectionViewCell: CollectionViewItem, NSTextViewDele
             popup.addItem(withTitle: String(format: NSLocalizedString("%d 分", comment: ""), score))
             popup.item(at: score)?.tag = score
         }
-        popup.target = self
-        popup.action = #selector(ratingChanged)
         popup.setAccessibilityIdentifier(AccessibilityID.Favorite.detailRatingPopup)
         return popup
     }()
 
-    private lazy var commentTitleLabel: Label = {
-        let label = Label(labelWithString: NSLocalizedString("短评", comment: ""))
-        label.font = .ddp_small()
-        label.textColor = .subtitleTextColor
-        return label
-    }()
-
-    private lazy var commentTextView: NSTextView = {
+    private let commentTextView: NSTextView = {
         let textView = NSTextView()
-        textView.font = .ddp_small()
+        textView.font = .systemFont(ofSize: 12.5)
         textView.textColor = .textColor
         textView.drawsBackground = false
         textView.isRichText = false
@@ -132,159 +97,55 @@ final class DetailUserDataCollectionViewCell: CollectionViewItem, NSTextViewDele
         textView.textContainerInset = NSSize(width: 4, height: 4)
         textView.textContainer?.containerSize = NSSize(width: 0, height: CGFloat.greatestFiniteMagnitude)
         textView.textContainer?.widthTracksTextView = true
-        textView.delegate = self
         textView.setAccessibilityIdentifier(AccessibilityID.Favorite.detailCommentView)
         return textView
     }()
 
-    private lazy var commentScrollView: ScrollView<NSTextView> = {
-        let scrollView = ScrollView<NSTextView>(containerView: commentTextView)
-        scrollView.hasVerticalScroller = true
-        scrollView.hasHorizontalScroller = false
-        scrollView.borderType = .bezelBorder
-        scrollView.drawsBackground = false
-        return scrollView
-    }()
-
-    private lazy var commentCountLabel: Label = {
+    private let commentScrollView: ScrollView<NSTextView>
+    private let commentCountLabel: Label = {
         let label = Label(labelWithString: "")
-        label.font = .ddp_small()
-        label.textColor = .subtitleTextColor
+        label.font = .systemFont(ofSize: 11)
+        label.textColor = .secondaryLabelColor
         label.alignment = .right
         label.setAccessibilityIdentifier(AccessibilityID.Favorite.detailCommentCountLabel)
         return label
     }()
-
-    private lazy var saveButton: Button = {
-        let button = Button(title: NSLocalizedString("保存", comment: ""), target: self, action: #selector(saveClicked))
-        button.setAccessibilityIdentifier(AccessibilityID.Favorite.detailSaveButton)
-        return button
+    private let saveButton = Button()
+    private let clearCommentButton = Button()
+    private let hintLabel: Label = {
+        let label = Label(labelWithString: "")
+        label.font = .systemFont(ofSize: 11.5)
+        label.textColor = .secondaryLabelColor
+        label.maximumNumberOfLines = 2
+        label.lineBreakMode = .byWordWrapping
+        label.cell?.wraps = true
+        label.setAccessibilityIdentifier("detail.tracking.hint")
+        return label
     }()
 
-    private lazy var clearCommentButton: Button = {
-        let button = Button(title: NSLocalizedString("清空短评", comment: ""), target: self, action: #selector(clearCommentClicked))
-        button.setAccessibilityIdentifier(AccessibilityID.Favorite.detailClearCommentButton)
-        return button
-    }()
-
-    override func loadView() {
-        view = NSView()
-        view.setAccessibilityIdentifier(AccessibilityID.Favorite.detailRoot)
+    override init(frame frameRect: NSRect) {
+        self.commentScrollView = ScrollView<NSTextView>(containerView: NSTextView())
+        super.init(frame: frameRect)
+        commentScrollView.containerView = commentTextView
+        setup()
     }
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        view.addSubview(card)
-        card.addSubview(statusTitleLabel)
-        card.addSubview(statusPopup)
-        card.addSubview(currentStatusLabel)
-        card.addSubview(ratingTitleLabel)
-        card.addSubview(ratingPopup)
-        card.addSubview(commentTitleLabel)
-        card.addSubview(commentScrollView)
-        card.addSubview(commentCountLabel)
-        card.addSubview(clearCommentButton)
-        card.addSubview(saveButton)
-
-        card.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(20)
-            make.top.equalToSuperview().offset(8)
-            make.bottom.equalToSuperview().offset(-8)
-        }
-
-        statusTitleLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(12)
-            make.top.equalToSuperview().offset(12)
-        }
-
-        statusPopup.snp.makeConstraints { make in
-            make.leading.equalTo(statusTitleLabel.snp.trailing).offset(8)
-            make.centerY.equalTo(statusTitleLabel)
-            make.width.equalTo(100)
-        }
-
-        currentStatusLabel.snp.makeConstraints { make in
-            make.leading.equalTo(statusPopup.snp.trailing).offset(8)
-            make.centerY.equalTo(statusTitleLabel)
-            make.trailing.lessThanOrEqualToSuperview().offset(-12)
-        }
-
-        ratingTitleLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(12)
-            make.top.equalTo(statusTitleLabel.snp.bottom).offset(10)
-        }
-
-        ratingPopup.snp.makeConstraints { make in
-            make.leading.equalTo(ratingTitleLabel.snp.trailing).offset(8)
-            make.centerY.equalTo(ratingTitleLabel)
-            make.width.equalTo(90)
-        }
-
-        saveButton.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().offset(-12)
-            make.centerY.equalTo(ratingTitleLabel)
-        }
-
-        clearCommentButton.snp.makeConstraints { make in
-            make.trailing.equalTo(saveButton.snp.leading).offset(-8)
-            make.centerY.equalTo(ratingTitleLabel)
-        }
-
-        commentTitleLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(12)
-            make.top.equalTo(ratingTitleLabel.snp.bottom).offset(10)
-            make.width.equalTo(56)
-        }
-
-        commentScrollView.snp.makeConstraints { make in
-            make.leading.equalTo(commentTitleLabel.snp.trailing).offset(4)
-            make.top.equalTo(commentTitleLabel)
-            make.trailing.equalTo(commentCountLabel.snp.leading).offset(-8)
-            make.bottom.equalToSuperview().offset(-12)
-        }
-
-        commentCountLabel.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().offset(-12)
-            make.centerY.equalTo(commentScrollView)
-            make.width.equalTo(52)
-        }
-
-        clearCommentButton.setContentCompressionResistancePriority(.required, for: .horizontal)
-        saveButton.setContentCompressionResistancePriority(.required, for: .horizontal)
-        ratingTitleLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
-        ratingPopup.setContentCompressionResistancePriority(.required, for: .horizontal)
-        commentCountLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
-    }
-
-    override func viewDidLayout() {
-        super.viewDidLayout()
-        let contentSize = commentScrollView.contentSize
-        guard contentSize.width > 0 else { return }
-        if commentTextView.frame.width != contentSize.width {
-            commentTextView.frame = NSRect(
-                x: 0,
-                y: 0,
-                width: contentSize.width,
-                height: max(commentTextView.frame.height, contentSize.height)
-            )
-        }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
     func configure(with item: BangumiDetail) {
         detail = item
         pendingStatus = nil
         pendingRemove = false
-        let rating = Int(item.userRating.rounded())
-        selectedRating = rating
+        selectedRating = Int(item.userRating.rounded())
         serverComment = item.comment
 
         currentStatusLabel.text = statusDescription(for: item)
         statusPopup.selectItem(withTag: statusTag(for: item))
-
-        ratingPopup.selectItem(withTag: rating)
+        ratingPopup.selectItem(withTag: selectedRating)
         // 服务端不支持通过 rating=0 清空评分，已评分的作品不再提供“未评分”选项。
-        ratingPopup.item(at: 0)?.isEnabled = rating == 0
+        ratingPopup.item(at: 0)?.isEnabled = selectedRating == 0
 
         commentTextView.string = item.comment
         updateCommentCount()
@@ -297,6 +158,108 @@ final class DetailUserDataCollectionViewCell: CollectionViewItem, NSTextViewDele
             commentTextView.string = String(commentTextView.string.prefix(FavoriteUserDataService.maxCommentLength))
         }
         updateCommentCount()
+    }
+
+    override func layout() {
+        super.layout()
+        let contentSize = commentScrollView.contentSize
+        guard contentSize.width > 0 else { return }
+        if commentTextView.frame.width != contentSize.width {
+            commentTextView.frame = NSRect(
+                x: 0,
+                y: 0,
+                width: contentSize.width,
+                height: max(commentTextView.frame.height, contentSize.height)
+            )
+        }
+    }
+
+    // MARK: - Setup
+
+    private func setup() {
+        setAccessibilityIdentifier(AccessibilityID.Favorite.detailRoot)
+        let header = addStaticHeader(
+            title: NSLocalizedString("我的追番", comment: ""),
+            symbolName: "heart.text.square"
+        )
+        header.setAccessibilityIdentifier(AccessibilityID.BangumiDetail.tracking)
+
+        statusPopup.addTarget(self, action: #selector(statusChanged))
+        ratingPopup.addTarget(self, action: #selector(ratingChanged))
+        saveButton.addTarget(self, action: #selector(saveClicked))
+        clearCommentButton.addTarget(self, action: #selector(clearCommentClicked))
+        commentTextView.delegate = self
+
+        saveButton.title = NSLocalizedString("保存", comment: "")
+        saveButton.bezelStyle = .rounded
+        saveButton.setAccessibilityIdentifier(AccessibilityID.Favorite.detailSaveButton)
+        clearCommentButton.title = NSLocalizedString("清空短评", comment: "")
+        clearCommentButton.bezelStyle = .rounded
+        clearCommentButton.setAccessibilityIdentifier(AccessibilityID.Favorite.detailClearCommentButton)
+
+        commentScrollView.hasVerticalScroller = true
+        commentScrollView.hasHorizontalScroller = false
+        commentScrollView.borderType = .bezelBorder
+        commentScrollView.drawsBackground = false
+        commentScrollView.snp.makeConstraints { make in
+            make.height.equalTo(78)
+        }
+
+        let statusTitle = makeRowTitle(NSLocalizedString("追番状态", comment: ""))
+        statusPopup.snp.makeConstraints { make in
+            make.width.equalTo(112)
+        }
+        let statusRow = NSStackView(views: [statusTitle, statusPopup, currentStatusLabel])
+        statusRow.orientation = .horizontal
+        statusRow.alignment = .centerY
+        statusRow.spacing = 8
+
+        let ratingTitle = makeRowTitle(NSLocalizedString("我的评分", comment: ""))
+        ratingPopup.snp.makeConstraints { make in
+            make.width.equalTo(90)
+        }
+        let ratingRow = NSStackView(views: [ratingTitle, ratingPopup])
+        ratingRow.orientation = .horizontal
+        ratingRow.alignment = .centerY
+        ratingRow.spacing = 8
+
+        let commentTitle = makeRowTitle(NSLocalizedString("短评", comment: ""))
+        let commentSpacer = NSView()
+        commentSpacer.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        let commentHeaderRow = NSStackView(views: [commentTitle, commentSpacer, commentCountLabel])
+        commentHeaderRow.orientation = .horizontal
+        commentHeaderRow.alignment = .centerY
+        commentHeaderRow.spacing = 8
+
+        let spacer = NSView()
+        spacer.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        let actionRow = NSStackView(views: [spacer, clearCommentButton, saveButton])
+        actionRow.orientation = .horizontal
+        actionRow.alignment = .centerY
+        actionRow.spacing = 8
+
+        contentStack.addArrangedSubview(statusRow)
+        contentStack.addArrangedSubview(ratingRow)
+        contentStack.addArrangedSubview(commentHeaderRow)
+        contentStack.addArrangedSubview(commentScrollView)
+        contentStack.addArrangedSubview(hintLabel)
+        contentStack.addArrangedSubview(actionRow)
+        contentStack.setCustomSpacing(12, after: commentScrollView)
+        contentStack.setCustomSpacing(8, after: hintLabel)
+
+        updateEditingState()
+    }
+
+    private func makeRowTitle(_ title: String) -> Label {
+        let label = Label(labelWithString: title)
+        label.font = .systemFont(ofSize: 12)
+        label.textColor = .secondaryLabelColor
+        label.setContentHuggingPriority(.required, for: .horizontal)
+        label.setContentCompressionResistancePriority(.required, for: .horizontal)
+        label.snp.makeConstraints { make in
+            make.width.equalTo(64)
+        }
+        return label
     }
 
     // MARK: - Actions
@@ -340,7 +303,7 @@ final class DetailUserDataCollectionViewCell: CollectionViewItem, NSTextViewDele
 
         let edit = Edit(status: status, rating: rating, comment: comment, shouldRemove: false)
         guard !edit.isEmpty else {
-            view.show(text: NSLocalizedString("没有需要保存的修改", comment: ""))
+            window?.contentViewController?.view.show(text: NSLocalizedString("没有需要保存的修改", comment: ""))
             return
         }
         onSave?(edit)
@@ -354,11 +317,22 @@ final class DetailUserDataCollectionViewCell: CollectionViewItem, NSTextViewDele
     // MARK: - Private
 
     private func updateEditingState() {
-        let canEditDetails = detail?.isFavorited == true && !pendingRemove
+        let isFavorited = detail?.isFavorited == true
+        let canEditDetails = isFavorited && !pendingRemove
+
         ratingPopup.isEnabled = canEditDetails
         commentTextView.isEditable = canEditDetails
         clearCommentButton.isEnabled = canEditDetails
             && !serverComment.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+        saveButton.isEnabled = canEditDetails || pendingStatus != nil || pendingRemove
+
+        if pendingRemove {
+            hintLabel.text = NSLocalizedString("保存后将取消关注，评分和短评将无法编辑。", comment: "")
+        } else if isFavorited {
+            hintLabel.text = NSLocalizedString("修改状态、评分或短评后点击保存生效。", comment: "")
+        } else {
+            hintLabel.text = NSLocalizedString("选择「关注」「看完」或「抛弃」并保存后，即可评分和撰写短评。", comment: "")
+        }
     }
 
     private func updateCommentCount() {
@@ -366,7 +340,7 @@ final class DetailUserDataCollectionViewCell: CollectionViewItem, NSTextViewDele
         commentCountLabel.text = "\(count)/\(FavoriteUserDataService.maxCommentLength)"
         commentCountLabel.textColor = count >= FavoriteUserDataService.maxCommentLength
             ? .systemRed
-            : .subtitleTextColor
+            : .secondaryLabelColor
     }
 
     private func statusTag(for detail: BangumiDetail) -> Int {
