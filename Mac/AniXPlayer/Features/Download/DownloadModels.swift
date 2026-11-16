@@ -6,7 +6,9 @@
 //  本文件不依赖 AppKit，直接编入单元测试 target。
 //
 
+import CryptoKit
 import Foundation
+import UniformTypeIdentifiers
 
 // MARK: - Kind / Status
 
@@ -74,9 +76,11 @@ enum DownloadTaskStatus: String, Codable, CaseIterable {
 
     var canStart: Bool {
         switch self {
-        case .paused, .stopped, .failed, .completed:
+        case .paused, .stopped, .failed:
             return true
-        case .queued, .downloading:
+        case .queued, .downloading, .completed:
+            // 已完成的任务可能对应已写入磁盘的文件；再次开始会生成第二份文件，
+            // 因此必须显式删除或重新添加，绝不静默重启。
             return false
         }
     }
@@ -91,7 +95,8 @@ enum DownloadTaskStatus: String, Codable, CaseIterable {
              (.queued, .stopped),
              (.queued, .failed):
             return true
-        case (.downloading, .paused),
+        case (.downloading, .queued),
+             (.downloading, .paused),
              (.downloading, .stopped),
              (.downloading, .completed),
              (.downloading, .failed):
@@ -99,13 +104,13 @@ enum DownloadTaskStatus: String, Codable, CaseIterable {
         case (.paused, .queued),
              (.paused, .downloading),
              (.paused, .stopped),
+             (.paused, .completed),
              (.paused, .failed):
             return true
         case (.stopped, .queued),
              (.stopped, .downloading),
+             (.stopped, .completed),
              (.stopped, .failed):
-            return true
-        case (.completed, .queued):
             return true
         case (.failed, .queued),
              (.failed, .downloading),
@@ -234,6 +239,25 @@ struct DownloadTask: Equatable, Identifiable {
     }
 }
 
+// MARK: - Per-file progress
+
+/// BT 任务的单文件状态。来自 Transmission `torrent-get` 的 `files` 字段，
+/// 仅保存在内存中（重启后在下次轮询时恢复），不需要数据库迁移。
+struct DownloadFileProgress: Equatable {
+    /// Transmission files 数组中的索引，用于 `torrent-set`。
+    var index: Int
+    var path: String
+    var length: Int64
+    var completedBytes: Int64
+    var isWanted: Bool
+
+    var progress: Double {
+        guard length > 0 else { return 0 }
+        return min(max(Double(completedBytes) / Double(length), 0), 1)
+    }
+}
+
+
 // MARK: - Source parsing
 
 struct DownloadSource: Equatable {
@@ -289,8 +313,10 @@ enum DownloadSourceParser {
         var raw = rawValue.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !raw.isEmpty else { throw DownloadSourceError.empty }
 
-        // 弹弹play 自定义协议：ddplay:magnet:?xt=...
-        if raw.lowercased().hasPrefix("ddplay:magnet:") {
+        // 弹弹play 自定义协议：ddplay:magnet:?xt=... 或 ddplay://magnet:?xt=...
+        if raw.lowercased().hasPrefix("ddplay://magnet:") {
+            raw = String(raw.dropFirst("ddplay://".count))
+        } else if raw.lowercased().hasPrefix("ddplay:magnet:") {
             raw = String(raw.dropFirst("ddplay:".count))
         }
 
@@ -391,7 +417,7 @@ enum DownloadSourceParser {
             kind: .magnet,
             source: normalized,
             suggestedTitle: title,
-            infoHash: rawHash.lowercased()
+            infoHash: normalizedInfoHash(rawHash) ?? rawHash.lowercased()
         )
     }
 
@@ -431,7 +457,13 @@ enum DownloadSourceParser {
             throw DownloadSourceError.missingTorrentFile(standardized)
         }
         let title = torrentTitle(fromFileName: ((standardized as NSString).lastPathComponent as NSString).deletingPathExtension)
-        return DownloadSource(kind: .torrent, source: standardized, suggestedTitle: title, infoHash: nil)
+        let infoHash = BitTorrentMetainfo.infoHash(atPath: standardized)
+        return DownloadSource(
+            kind: .torrent,
+            source: standardized,
+            suggestedTitle: title,
+            infoHash: infoHash?.lowercased()
+        )
     }
 
     private static func torrentTitle(fromFileName name: String) -> String {
@@ -449,6 +481,181 @@ enum DownloadSourceParser {
             return host
         }
         return NSLocalizedString("下载任务", comment: "")
+    }
+}
+
+// MARK: - Torrent metadata
+
+/// 极简 bencode 扫描器：只用于提取顶层 `info` 字典的原始字节并计算 SHA-1 信息哈希。
+/// 不解析文件名、不下载种子，仅用于添加任务时去重。
+enum BitTorrentMetainfo {
+
+    static func infoHash(atPath path: String) -> String? {
+        guard let data = try? Data(contentsOf: URL(fileURLWithPath: path)) else {
+            return nil
+        }
+        return infoHash(in: data)
+    }
+
+    static func infoHash(in data: Data) -> String? {
+        guard !data.isEmpty else { return nil }
+        let bytes = [UInt8](data)
+        guard bytes[0] == UInt8(ascii: "d") else { return nil }
+
+        var index = 1
+        while index < bytes.count, bytes[index] != UInt8(ascii: "e") {
+            guard let (key, keyEnd) = parseByteString(bytes, at: index) else { return nil }
+            let valueStart = keyEnd
+            guard let valueEnd = skipValue(bytes, at: valueStart, depth: 0) else { return nil }
+            if key == Array("info".utf8) {
+                let infoBytes = Data(bytes[valueStart..<valueEnd])
+                let digest = Insecure.SHA1.hash(data: infoBytes)
+                return digest.map { String(format: "%02x", $0) }.joined()
+            }
+            index = valueEnd
+        }
+        return nil
+    }
+
+    private static func parseByteString(_ bytes: [UInt8], at start: Int) -> ([UInt8], Int)? {
+        var index = start
+        var length = 0
+        var digits = 0
+        while index < bytes.count, bytes[index] >= UInt8(ascii: "0"), bytes[index] <= UInt8(ascii: "9") {
+            length = length * 10 + Int(bytes[index] - UInt8(ascii: "0"))
+            digits += 1
+            index += 1
+            if digits > 9 || length > bytes.count { return nil }
+        }
+        guard digits > 0, index < bytes.count, bytes[index] == UInt8(ascii: ":") else {
+            return nil
+        }
+        index += 1
+        guard index + length <= bytes.count else { return nil }
+        return (Array(bytes[index..<(index + length)]), index + length)
+    }
+
+    private static func skipValue(_ bytes: [UInt8], at start: Int, depth: Int) -> Int? {
+        guard depth < 64, start < bytes.count else { return nil }
+
+        switch bytes[start] {
+        case UInt8(ascii: "i"):
+            var index = start + 1
+            while index < bytes.count, bytes[index] != UInt8(ascii: "e") {
+                index += 1
+            }
+            return index < bytes.count ? index + 1 : nil
+
+        case UInt8(ascii: "l"):
+            var index = start + 1
+            while index < bytes.count, bytes[index] != UInt8(ascii: "e") {
+                guard let next = skipValue(bytes, at: index, depth: depth + 1) else { return nil }
+                index = next
+            }
+            return index < bytes.count ? index + 1 : nil
+
+        case UInt8(ascii: "d"):
+            var index = start + 1
+            while index < bytes.count, bytes[index] != UInt8(ascii: "e") {
+                guard let (_, keyEnd) = parseByteString(bytes, at: index),
+                      let next = skipValue(bytes, at: keyEnd, depth: depth + 1) else {
+                    return nil
+                }
+                index = next
+            }
+            return index < bytes.count ? index + 1 : nil
+
+        default:
+            return parseByteString(bytes, at: start)?.1
+        }
+    }
+}
+
+// MARK: - Deduplication
+
+extension DownloadSourceParser {
+
+    /// 任务去重键：磁力/种子优先使用 info hash；HTTP 与种子 URL 使用规范化来源。
+    static func deduplicationKey(for source: DownloadSource) -> String {
+        if let hash = normalizedInfoHash(source.infoHash) {
+            return "btih:" + hash
+        }
+        switch source.kind {
+        case .magnet:
+            return "magnet:" + source.source
+        case .http:
+            return "url:" + source.source
+        case .torrent:
+            if source.source.lowercased().hasPrefix("http://")
+                || source.source.lowercased().hasPrefix("https://") {
+                return "url:" + source.source
+            }
+            return "torrent:" + URL(fileURLWithPath: source.source).standardizedFileURL.path
+        }
+    }
+
+    /// 已有任务的去重键。BT 任务在引擎接管后 `engineTaskID` 即 info hash。
+    static func deduplicationKey(for task: DownloadTask) -> String? {
+        if let hash = normalizedInfoHash(magnetInfoHash(in: task.source))
+            ?? normalizedInfoHash(task.engineTaskID) {
+            return "btih:" + hash
+        }
+        switch task.kind {
+        case .magnet:
+            return "magnet:" + task.source
+        case .http:
+            return "url:" + task.source
+        case .torrent:
+            if task.source.lowercased().hasPrefix("http://")
+                || task.source.lowercased().hasPrefix("https://") {
+                return "url:" + task.source
+            }
+            if let hash = BitTorrentMetainfo.infoHash(atPath: task.source) {
+                return "btih:" + hash.lowercased()
+            }
+            return "torrent:" + URL(fileURLWithPath: task.source).standardizedFileURL.path
+        }
+    }
+
+    static func normalizedInfoHash(_ value: String?) -> String? {
+        guard let raw = value?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !raw.isEmpty else {
+            return nil
+        }
+        if raw.count == 40,
+           raw.unicodeScalars.allSatisfy({
+               CharacterSet(charactersIn: "0123456789abcdefABCDEF").contains($0)
+           }) {
+            return raw.lowercased()
+        }
+        if raw.count == 32 {
+            return base32InfoHashToHex(raw)
+        }
+        return nil
+    }
+
+    /// Magnet 允许 btih 使用 32 位 Base32；统一转成 40 位十六进制用于去重。
+    private static func base32InfoHashToHex(_ value: String) -> String? {
+        let alphabet = Array("ABCDEFGHIJKLMNOPQRSTUVWXYZ234567")
+        var lookup: [Character: UInt32] = [:]
+        for (index, character) in alphabet.enumerated() {
+            lookup[character] = UInt32(index)
+        }
+
+        var buffer: UInt32 = 0
+        var bitCount = 0
+        var bytes: [UInt8] = []
+        for character in value.uppercased() {
+            guard let digit = lookup[character] else { return nil }
+            buffer = (buffer << 5) | digit
+            bitCount += 5
+            if bitCount >= 8 {
+                bitCount -= 8
+                bytes.append(UInt8((buffer >> UInt32(bitCount)) & 0xFF))
+            }
+        }
+        guard bytes.count == 20 else { return nil }
+        return bytes.map { String(format: "%02x", $0) }.joined()
     }
 }
 
@@ -626,8 +833,40 @@ enum DownloadFileRules {
     /// BT 边下边播的最小文件大小：20 MB。
     static let minimumStreamingBytes: Int64 = 20 * 1024 * 1024
 
+    /// 没有可识别扩展名时的兜底大小。大于该值且不是文本/图片等已知类型时，认为可能是视频。
+    static let fallbackPlayableBytes: Int64 = 10 * 1024 * 1024
+
+    private static let nonPlayableExtensions: Set<String> = [
+        "srt", "ass", "ssa", "sub", "idx", "nfo", "txt", "pdf", "json", "xml",
+        "html", "htm", "torrent", "jpg", "jpeg", "png", "gif", "webp", "bmp", "heic",
+    ]
+
     static func isVideoFile(path: String) -> Bool {
         videoExtensions.contains((path as NSString).pathExtension.lowercased())
+    }
+
+    /// 已完成文件是否值得尝试播放：扩展名、UTType 或大小兜底。
+    static func isPlayableCandidate(path: String, size: Int64?) -> Bool {
+        if isVideoFile(path: path) { return true }
+
+        let ext = (path as NSString).pathExtension.lowercased()
+        if nonPlayableExtensions.contains(ext) { return false }
+        if !ext.isEmpty, let type = UTType(filenameExtension: ext) {
+            if type.conforms(to: .movie)
+                || type.conforms(to: .video)
+                || type.conforms(to: .audiovisualContent) {
+                return true
+            }
+            if type.conforms(to: .text)
+                || type.conforms(to: .image)
+                || type.conforms(to: .audio) {
+                return false
+            }
+            return (size ?? 0) >= fallbackPlayableBytes
+        }
+
+        // 无扩展名或系统不认识的扩展名：只按大小兜底。
+        return (size ?? 0) >= fallbackPlayableBytes
     }
 
     static func existingFileSize(at path: String) -> Int64? {
@@ -654,13 +893,31 @@ enum DownloadFileRules {
             .0
     }
 
-    /// 完成任务取最大的已存在视频；未完成 BT 任务仅在文件 >20MB 时返回路径。
+    /// 完成任务的播放列表：所有存在的视频文件，按自然文件名/集数顺序排列（从第一集开始）。
+    static func playablePaths(
+        for task: DownloadTask,
+        sizeAtPath: (String) -> Int64? = { existingFileSize(at: $0) }
+    ) -> [String] {
+        guard task.status == .completed else { return [] }
+        var seen = Set<String>()
+        return task.filePaths
+            .filter { seen.insert($0).inserted }
+            .compactMap { path -> (String, Int64)? in
+                guard let size = sizeAtPath(path), size > 0 else { return nil }
+                return (path, size)
+            }
+            .filter { isPlayableCandidate(path: $0.0, size: $0.1) }
+            .map { $0.0 }
+            .sorted { $0.localizedStandardCompare($1) == .orderedAscending }
+    }
+
+    /// 完成任务取第一个可播放文件；未完成 BT 任务仅在文件 >20MB 时返回路径。
     static func playablePath(
         for task: DownloadTask,
         sizeAtPath: (String) -> Int64? = { existingFileSize(at: $0) }
     ) -> String? {
         if task.status == .completed {
-            return preferredFile(in: task.filePaths, sizeAtPath: sizeAtPath)
+            return playablePaths(for: task, sizeAtPath: sizeAtPath).first
         }
         guard task.isBitTorrent, task.status != .failed else { return nil }
 
@@ -673,6 +930,15 @@ enum DownloadFileRules {
             }
         }
         return nil
+    }
+
+    /// 已完成任务的文件是否全部消失（被移动/删除）。
+    static func hasMissingFiles(
+        _ task: DownloadTask,
+        fileExists: (String) -> Bool = { FileManager.default.fileExists(atPath: $0) }
+    ) -> Bool {
+        guard task.status == .completed, !task.filePaths.isEmpty else { return false }
+        return task.filePaths.allSatisfy { !fileExists($0) }
     }
 }
 

@@ -76,6 +76,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         // 下载中心在后台继续下载：启动时恢复未完成任务（测试/冒烟模式跳过副作用）。
         if !Self.isRunningUnitTests && !PlaybackSmokeRunner.isSmokeInvocation {
+            DownloadNotifier.shared.activate()
+            DownloadNotifier.shared.onSelectTask = { [weak self] taskID in
+                Task { @MainActor in
+                    self?.presentDownloadCenterWindow(selectingTaskID: taskID)
+                }
+            }
             DownloadManager.shared.bootstrap()
         }
 
@@ -189,9 +195,35 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func deliverOpenURLs(_ urls: [URL]) {
+        var downloadSources: [String] = []
+        var playerURLs: [URL] = []
+
+        for url in urls {
+            if let source = downloadSource(from: url) {
+                downloadSources.append(source)
+                continue
+            }
+            let scheme = url.scheme?.lowercased() ?? ""
+            if scheme == "magnet" || scheme == "ddplay" {
+                // 已注册的下载协议但不是可识别的下载链接：不要交给播放器。
+                continue
+            }
+            if url.isFileURL, url.pathExtension.lowercased() == "torrent" {
+                continue
+            }
+            playerURLs.append(url)
+        }
+
+        if !downloadSources.isEmpty {
+            Task { @MainActor in
+                self.presentDownloadCenterWindow(prefillSources: downloadSources)
+            }
+        }
+
+        guard !playerURLs.isEmpty else { return }
         guard let mainVC = mainWindowController.contentViewController as? MainViewController else { return }
 
-        let files = expandLocalFiles(urls)
+        let files = expandLocalFiles(playerURLs)
         let videoFiles = files.filter { !$0.url.isSubtitleFile && !$0.url.isDanmakuFile }
 
         guard !videoFiles.isEmpty else {
@@ -202,6 +234,46 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         mainWindowController.window?.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
         mainVC.openLocalFiles(videoFiles, startWith: nil)
+    }
+
+    /// 系统入口：magnet:/ddplay: 预填添加 sheet；本地 .torrent 先复制到 App 目录。
+    private func downloadSource(from url: URL) -> String? {
+        let scheme = url.scheme?.lowercased() ?? ""
+        if scheme == "magnet" || scheme == "ddplay" {
+            let absolute = url.absoluteString
+            if scheme == "ddplay" {
+                let lower = absolute.lowercased()
+                guard lower.hasPrefix("ddplay:magnet:")
+                    || lower.hasPrefix("ddplay://magnet:") else {
+                    return nil
+                }
+            }
+            do {
+                return try DownloadSourceParser.parse(absolute).source
+            } catch {
+                presentOpenError(error.localizedDescription)
+                return nil
+            }
+        }
+
+        if url.isFileURL, url.pathExtension.lowercased() == "torrent" {
+            do {
+                return try DownloadTorrentImporter.importTorrent(at: url)
+            } catch {
+                presentOpenError(error.localizedDescription)
+                return nil
+            }
+        }
+        return nil
+    }
+
+    private func presentOpenError(_ message: String) {
+        let alert = NSAlert()
+        alert.messageText = NSLocalizedString("无法打开下载链接", comment: "")
+        alert.informativeText = message
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: NSLocalizedString("好", comment: ""))
+        alert.runModal()
     }
 
     /// 把文件夹展开成子文件；与 NSOpenPanel 的行为保持一致。
@@ -344,30 +416,85 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
-    @MainActor private func presentDownloadCenterWindow() {
-        DownloadManager.shared.bootstrap()
+    @objc private func addDownloadFromClipboard(_ item: NSMenuItem) {
+        let pasteboard = NSPasteboard.general
+        var rawValues: [String] = []
+        if let string = pasteboard.string(forType: .string), !string.isEmpty {
+            rawValues.append(string)
+        }
+        if let urls = pasteboard.readObjects(forClasses: [NSURL.self], options: nil) as? [URL] {
+            rawValues.append(contentsOf: urls.map { $0.path })
+        }
 
-        if let wc = downloadWindowController {
-            wc.window?.makeKeyAndOrderFront(nil)
-            NSApp.activate(ignoringOtherApps: true)
+        var sources: [String] = []
+        for raw in rawValues {
+            if let path = DownloadTorrentImporter.torrentPath(from: raw),
+               let imported = try? DownloadTorrentImporter.importTorrent(
+                   at: URL(fileURLWithPath: path)
+               ) {
+                sources.append(imported)
+            } else if let parsed = try? DownloadSourceParser.parse(raw) {
+                sources.append(parsed.source)
+            }
+        }
+        guard !sources.isEmpty else {
+            presentOpenError(NSLocalizedString(
+                "剪贴板中没有可识别的磁力链接、种子文件或下载地址。",
+                comment: ""
+            ))
             return
         }
 
-        let wc = DownloadWindowController()
-        wc.onPlayFiles = { [weak self] files, startFile in
-            guard let self,
-                  let mainVC = self.mainWindowController.contentViewController as? MainViewController else {
-                return
+        Task { @MainActor in
+            self.presentDownloadCenterWindow(prefillSources: sources)
+        }
+    }
+
+    @objc private func pauseAllDownloads(_ item: NSMenuItem) {
+        DownloadManager.shared.pauseAll()
+    }
+
+    @objc private func resumeAllDownloads(_ item: NSMenuItem) {
+        DownloadManager.shared.resumeAll()
+    }
+
+    @MainActor private func presentDownloadCenterWindow(
+        selectingTaskID: UUID? = nil,
+        prefillSources: [String] = []
+    ) {
+        DownloadManager.shared.bootstrap()
+
+        let wc: DownloadWindowController
+        if let existing = downloadWindowController {
+            wc = existing
+        } else {
+            let created = DownloadWindowController()
+            created.onPlayFiles = { [weak self] files, startFile in
+                guard let self,
+                      let mainVC = self.mainWindowController.contentViewController as? MainViewController else {
+                    return
+                }
+                self.mainWindowController.window?.makeKeyAndOrderFront(nil)
+                NSApp.activate(ignoringOtherApps: true)
+                mainVC.openLocalFiles(files, startWith: startFile)
             }
-            self.mainWindowController.window?.makeKeyAndOrderFront(nil)
-            NSApp.activate(ignoringOtherApps: true)
-            mainVC.openLocalFiles(files, startWith: startFile)
+            created.windowWillCloseCallBack = { [weak self] in
+                self?.downloadWindowController = nil
+            }
+            created.showWindow(nil)
+            downloadWindowController = created
+            wc = created
         }
-        wc.windowWillCloseCallBack = { [weak self] in
-            self?.downloadWindowController = nil
+
+        wc.window?.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+
+        if let selectingTaskID {
+            wc.revealTask(id: selectingTaskID)
         }
-        wc.showWindow(nil)
-        downloadWindowController = wc
+        if !prefillSources.isEmpty {
+            wc.presentAddSheet(prefillSources: prefillSources)
+        }
     }
 
     @objc private func showBangumiQueue(_ item: NSMenuItem) {
@@ -550,7 +677,36 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             menu.addItem(withTitle: NSLocalizedString("搜索…", comment: ""), action: #selector(showSearch(_:)), keyEquivalent: "")
             menu.addItem(withTitle: NSLocalizedString("播放历史", comment: ""), action: #selector(showPlayHistory(_:)), keyEquivalent: "")
             menu.addItem(withTitle: NSLocalizedString("本地媒体库…", comment: ""), action: #selector(showLocalLibrary(_:)), keyEquivalent: "")
-            menu.addItem(withTitle: NSLocalizedString("下载中心…", comment: ""), action: #selector(showDownloadCenter(_:)), keyEquivalent: "")
+            let downloadItem = NSMenuItem(
+                title: NSLocalizedString("下载中心…", comment: ""),
+                action: #selector(showDownloadCenter(_:)),
+                keyEquivalent: ""
+            )
+            downloadItem.identifier = NSUserInterfaceItemIdentifier(AccessibilityID.Download.menuOpen)
+            menu.addItem(downloadItem)
+            let clipboardDownloadItem = NSMenuItem(
+                title: NSLocalizedString("从剪贴板添加下载…", comment: ""),
+                action: #selector(addDownloadFromClipboard(_:)),
+                keyEquivalent: ""
+            )
+            clipboardDownloadItem.identifier = NSUserInterfaceItemIdentifier(
+                AccessibilityID.Download.menuFromClipboard
+            )
+            menu.addItem(clipboardDownloadItem)
+            let pauseAllItem = NSMenuItem(
+                title: NSLocalizedString("全部暂停下载", comment: ""),
+                action: #selector(pauseAllDownloads(_:)),
+                keyEquivalent: ""
+            )
+            pauseAllItem.identifier = NSUserInterfaceItemIdentifier(AccessibilityID.Download.menuPauseAll)
+            menu.addItem(pauseAllItem)
+            let resumeAllItem = NSMenuItem(
+                title: NSLocalizedString("全部继续下载", comment: ""),
+                action: #selector(resumeAllDownloads(_:)),
+                keyEquivalent: ""
+            )
+            resumeAllItem.identifier = NSUserInterfaceItemIdentifier(AccessibilityID.Download.menuResumeAll)
+            menu.addItem(resumeAllItem)
             menu.addItem(withTitle: NSLocalizedString("我的追番", comment: ""), action: #selector(showBangumiQueue(_:)), keyEquivalent: "")
             menu.addItem(NSMenuItem.separator())
             menu.addItem(withTitle: NSLocalizedString("全局设置", comment: ""), action: #selector(onGlobalSettingItemDidClick(_:)), keyEquivalent: ",")

@@ -235,6 +235,8 @@ final class DownloadPreferences {
         static let rpcUseHTTPS = "download.rpcUseHTTPS"
         static let sequentialDownload = "download.sequentialDownload"
         static let maxConcurrent = "download.maxConcurrent"
+        static let notificationsEnabled = "download.notificationsEnabled"
+        static let btOnboardingDismissed = "download.btOnboardingDismissed"
     }
 
     private let defaults: UserDefaults
@@ -251,15 +253,16 @@ final class DownloadPreferences {
     // MARK: Directory
 
     static var systemDefaultDirectory: URL {
-        let base = FileManager.default.urls(
-            for: .applicationSupportDirectory,
+        // 新安装默认放在用户可见的 ~/Downloads/AniXPlayer。
+        // App Sandbox 通过 com.apple.security.files.downloads.read-write 授予访问；
+        // 已有任务使用各自持久化的 savePath，不会被迁移。
+        let downloads = FileManager.default.urls(
+            for: .downloadsDirectory,
             in: .userDomainMask
         ).first ?? URL(fileURLWithPath: NSHomeDirectory())
-            .appendingPathComponent("Library/Application Support", isDirectory: true)
-
-        return base
-            .appendingPathComponent("AniXPlayer", isDirectory: true)
             .appendingPathComponent("Downloads", isDirectory: true)
+
+        return downloads.appendingPathComponent("AniXPlayer", isDirectory: true)
     }
 
     var defaultSavePath: String {
@@ -338,6 +341,25 @@ final class DownloadPreferences {
     var maxConcurrentDownloads: Int {
         let value = defaults.integer(forKey: Key.maxConcurrent)
         return (1...8).contains(value) ? value : 3
+    }
+
+    var notificationsEnabled: Bool {
+        if defaults.object(forKey: Key.notificationsEnabled) == nil {
+            return true
+        }
+        return defaults.bool(forKey: Key.notificationsEnabled)
+    }
+
+    func setNotificationsEnabled(_ enabled: Bool) {
+        defaults.set(enabled, forKey: Key.notificationsEnabled)
+    }
+
+    var btOnboardingDismissed: Bool {
+        defaults.bool(forKey: Key.btOnboardingDismissed)
+    }
+
+    func setBTOnboardingDismissed(_ dismissed: Bool) {
+        defaults.set(dismissed, forKey: Key.btOnboardingDismissed)
     }
 
     var rpcConfiguration: TransmissionRPCConfiguration {

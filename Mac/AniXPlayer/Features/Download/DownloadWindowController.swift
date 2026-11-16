@@ -43,6 +43,21 @@ final class DownloadWindowController: NavigationWindowController {
         fatalError("init(coder:) has not been implemented")
     }
 
+    func presentAddSheet(prefillSource: String?) {
+        _ = downloadViewController.view
+        downloadViewController.openAddSheet(prefillSource: prefillSource)
+    }
+
+    func presentAddSheet(prefillSources: [String]) {
+        _ = downloadViewController.view
+        downloadViewController.enqueuePrefillSources(prefillSources)
+    }
+
+    func revealTask(id: UUID) {
+        _ = downloadViewController.view
+        downloadViewController.revealTask(id: id)
+    }
+
     override func windowWillClose(_ notification: Notification) {
         super.windowWillClose(notification)
     }

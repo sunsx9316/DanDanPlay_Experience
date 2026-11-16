@@ -340,6 +340,7 @@
 		BC03AEE02B14A9B9A678EF09 /* BangumiDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF59FB85D6C9BCDC499CA9F9 /* BangumiDetailViewController.swift */; };
 		BC326EEB8D6BEA7423CD363F /* WaterfallLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8A8164DCC940C4A0D30911F /* WaterfallLayout.swift */; };
 		C175F9BF83B83E20AD7B7CA9 /* OAuthCoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A0BCB8A7E54E3293AC2A7D5 /* OAuthCoreTests.swift */; };
+		C1A9DC8E6B5515121A8C2FC0 /* DownloadTorrentImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D49BF2EEE8C05D3E1EE3737 /* DownloadTorrentImporter.swift */; };
 		C2AFFF468FEBD0A774835FA0 /* Decodable+Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8ED047D2023B42D7E46ED40A /* Decodable+Utils.swift */; };
 		C2F224791F9AC3CF687642C3 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = 1D9AD1CEA582F1B3A2D9944B /* FirebaseCrashlytics */; };
 		C420511C48C1CBD7A53C096E /* DetailCommentsRowCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C639E245FD3AB68244354E2D /* DetailCommentsRowCollectionViewCell.swift */; };
@@ -375,6 +376,7 @@
 		E5E156669BCBB64439F8C6FE /* DownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F503DA4194C15A2D3CD2DCF5 /* DownloadManager.swift */; };
 		E72007265832C2DFA0BDE718 /* FavoriteUserDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1709128859FA1F76853962EF /* FavoriteUserDataService.swift */; };
 		E73F5095FB2A6E52DFA74A53 /* BenefitsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A58E1DF4E70DB2A27CA3A724 /* BenefitsTests.swift */; };
+		E76D4A3FB36485463F0F94A1 /* DownloadNotifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38291224EAFB22CAFF0B4181 /* DownloadNotifier.swift */; };
 		E7CD12F4E9B28F1412E53A33 /* OnlineEpisodeFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33D565A6ADEB57D260173CD4 /* OnlineEpisodeFile.swift */; };
 		EBDF5DF6C5B6D1A4A4228242 /* TimelineSegmentBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5F570D00E43C92BE7157B48 /* TimelineSegmentBar.swift */; };
 		ED6F05D91951896FD621C683 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 690437684CFC51AD0450648C /* APIClient.swift */; };
@@ -454,6 +456,7 @@
 		369139D050235A467E9363DA /* WelcomeRecentStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WelcomeRecentStore.swift; sourceTree = "<group>"; };
 		36F7C255B009A08B1E2B77CA /* NavigationWindowController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = NavigationWindowController.swift; sourceTree = "<group>"; };
 		376CCD553AEA9354F5BE803A /* UserDataTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UserDataTests.swift; path = AniXPlayerTests/UserDataTests.swift; sourceTree = "<group>"; };
+		38291224EAFB22CAFF0B4181 /* DownloadNotifier.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DownloadNotifier.swift; sourceTree = "<group>"; };
 		3838DF9EFCB15D049F79E622 /* PlayHistoryModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlayHistoryModels.swift; sourceTree = "<group>"; };
 		38EE18FEFE6CDC513777D40E /* BackupDanmakuMerge.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BackupDanmakuMerge.swift; sourceTree = "<group>"; };
 		39644821F354300D5378F538 /* TimelineViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TimelineViewController.swift; sourceTree = "<group>"; };
@@ -492,6 +495,7 @@
 		6A76FFEEE40D1E29125D33B0 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.0.sdk/System/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		6B297DD4BF5B02EBAB9F61B7 /* SubtitleBatchPlanner.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SubtitleBatchPlanner.swift; path = AniXPlayer/Features/Translation/SubtitleBatchPlanner.swift; sourceTree = "<group>"; };
 		6B620BBF547D448E1079FFFF /* SearchUpgradedViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SearchUpgradedViewController.swift; sourceTree = "<group>"; };
+		6D49BF2EEE8C05D3E1EE3737 /* DownloadTorrentImporter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DownloadTorrentImporter.swift; sourceTree = "<group>"; };
 		6E0D6FF2D550AE57E633D666 /* SearchUpgradeNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SearchUpgradeNetworkHandle.swift; sourceTree = "<group>"; };
 		70B8E5B0C6EF68249D97700E /* FavoriteUserDataService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FavoriteUserDataService.swift; path = ../Share/CocoaShare/Networking/Favorite/FavoriteUserDataService.swift; sourceTree = "<group>"; };
 		71324DC046A2F831C1F4A03A /* TagSearchResultViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TagSearchResultViewController.swift; sourceTree = "<group>"; };
@@ -978,6 +982,8 @@
 				BE64C56DBEC7C545E7DBCCF2 /* DownloadSheets.swift */,
 				ABB1B339AFFF066C3A6E4B79 /* DownloadViewController.swift */,
 				9F55BF172222F1FBD82555C8 /* DownloadWindowController.swift */,
+				38291224EAFB22CAFF0B4181 /* DownloadNotifier.swift */,
+				6D49BF2EEE8C05D3E1EE3737 /* DownloadTorrentImporter.swift */,
 			);
 			name = Download;
 			path = Download;
@@ -2434,6 +2440,8 @@
 				6373C33D8D6D68A7A19A9C14 /* DownloadWindowController.swift in Sources */,
 				A02B8AAF9A09A36671A669C5 /* GIFExportService.swift in Sources */,
 				E7CD12F4E9B28F1412E53A33 /* OnlineEpisodeFile.swift in Sources */,
+				E76D4A3FB36485463F0F94A1 /* DownloadNotifier.swift in Sources */,
+				C1A9DC8E6B5515121A8C2FC0 /* DownloadTorrentImporter.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
