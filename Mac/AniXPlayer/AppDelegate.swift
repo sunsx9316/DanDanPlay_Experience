@@ -33,6 +33,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private var localLibraryWindowController: LocalLibraryWindowController?
 
+    private var downloadWindowController: DownloadWindowController?
+
     private var homePageWindowController: HomePageNavigationWindowController?
 
     private var playHistoryWindowController: PlayHistoryNavigationWindowController?
@@ -70,6 +72,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         )
         Task { @MainActor in
             MacFeatureLauncher.installEntitlements()
+        }
+
+        // 下载中心在后台继续下载：启动时恢复未完成任务（测试/冒烟模式跳过副作用）。
+        if !Self.isRunningUnitTests && !PlaybackSmokeRunner.isSmokeInvocation {
+            DownloadManager.shared.bootstrap()
         }
 
         if !Self.isRunningUnitTests {
@@ -326,6 +333,38 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         localLibraryWindowController = wc
     }
 
+    @objc private func showDownloadCenter(_ item: NSMenuItem) {
+        Task { @MainActor in
+            self.presentDownloadCenterWindow()
+        }
+    }
+
+    @MainActor private func presentDownloadCenterWindow() {
+        DownloadManager.shared.bootstrap()
+
+        if let wc = downloadWindowController {
+            wc.window?.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            return
+        }
+
+        let wc = DownloadWindowController()
+        wc.onPlayFiles = { [weak self] files, startFile in
+            guard let self,
+                  let mainVC = self.mainWindowController.contentViewController as? MainViewController else {
+                return
+            }
+            self.mainWindowController.window?.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            mainVC.openLocalFiles(files, startWith: startFile)
+        }
+        wc.windowWillCloseCallBack = { [weak self] in
+            self?.downloadWindowController = nil
+        }
+        wc.showWindow(nil)
+        downloadWindowController = wc
+    }
+
     @objc private func showBangumiQueue(_ item: NSMenuItem) {
         Task { @MainActor in
             self.presentBangumiQueueWindow()
@@ -449,6 +488,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             menu.addItem(withTitle: NSLocalizedString("搜索…", comment: ""), action: #selector(showSearch(_:)), keyEquivalent: "")
             menu.addItem(withTitle: NSLocalizedString("播放历史", comment: ""), action: #selector(showPlayHistory(_:)), keyEquivalent: "")
             menu.addItem(withTitle: NSLocalizedString("本地媒体库…", comment: ""), action: #selector(showLocalLibrary(_:)), keyEquivalent: "")
+            menu.addItem(withTitle: NSLocalizedString("下载中心…", comment: ""), action: #selector(showDownloadCenter(_:)), keyEquivalent: "")
             menu.addItem(withTitle: NSLocalizedString("我的追番", comment: ""), action: #selector(showBangumiQueue(_:)), keyEquivalent: "")
             menu.addItem(NSMenuItem.separator())
             menu.addItem(withTitle: NSLocalizedString("全局设置", comment: ""), action: #selector(onGlobalSettingItemDidClick(_:)), keyEquivalent: ",")
