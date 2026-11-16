@@ -34,13 +34,13 @@ private final class MainShellTopBarDragView: NSView {
 
 // MARK: - Brand / home button
 
-/// 「弹弹play」品牌区同时是首页入口，相当于 Windows 版左侧 LinkGroup 的组标题。
+/// 「AniXPlayer」品牌区同时是首页入口，相当于 Windows 版左侧 LinkGroup 的组标题。
 private final class MainShellBrandButton: WelcomeShellTapView {
 
     private let iconView = ImageView()
     private let titleLabel = welcomeShellLabel(
-        "弹弹play",
-        font: .systemFont(ofSize: 16, weight: .bold),
+        "AniXPlayer",
+        font: .systemFont(ofSize: 15.5, weight: .bold),
         color: .white
     )
     private let versionLabel = welcomeShellLabel(
@@ -48,7 +48,7 @@ private final class MainShellBrandButton: WelcomeShellTapView {
             let version = AppInfoHelper.appVersion
             return version.isEmpty ? "" : "v" + version
         }(),
-        font: .systemFont(ofSize: 9.5),
+        font: .systemFont(ofSize: 9),
         color: MainShellPalette.secondaryText
     )
     private let underline = NSView()
@@ -83,10 +83,10 @@ private final class MainShellBrandButton: WelcomeShellTapView {
         iconView.snp.makeConstraints { make in
             make.leading.equalToSuperview()
             make.centerY.equalToSuperview()
-            make.width.height.equalTo(32)
+            make.width.height.equalTo(28)
         }
         textStack.snp.makeConstraints { make in
-            make.leading.equalTo(iconView.snp.trailing).offset(10)
+            make.leading.equalTo(iconView.snp.trailing).offset(9)
             make.trailing.equalToSuperview()
             make.centerY.equalToSuperview()
         }
@@ -96,7 +96,7 @@ private final class MainShellBrandButton: WelcomeShellTapView {
             make.height.equalTo(3)
         }
         snp.makeConstraints { make in
-            make.height.equalTo(74)
+            make.height.equalTo(60)
         }
 
         setAccessibilityIdentifier(AccessibilityID.MainShell.navHome)
@@ -144,7 +144,7 @@ private final class MainShellNavButton: WelcomeShellTapView {
         self.section = section
         self.titleLabel = welcomeShellLabel(
             section.title,
-            font: .systemFont(ofSize: 13, weight: .semibold),
+            font: .systemFont(ofSize: 12.5, weight: .semibold),
             color: MainShellPalette.navNormal,
             alignment: .center
         )
@@ -168,8 +168,8 @@ private final class MainShellNavButton: WelcomeShellTapView {
             make.height.equalTo(3)
         }
         snp.makeConstraints { make in
-            make.height.equalTo(74)
-            make.width.greaterThanOrEqualTo(54)
+            make.height.equalTo(60)
+            make.width.greaterThanOrEqualTo(52)
         }
 
         setAccessibilityIdentifier(section.accessibilityID)
@@ -183,7 +183,7 @@ private final class MainShellNavButton: WelcomeShellTapView {
 
     override var intrinsicContentSize: NSSize {
         let width = ceil(titleLabel.intrinsicContentSize.width) + 24
-        return NSSize(width: max(54, width), height: 74)
+        return NSSize(width: max(52, width), height: 60)
     }
 
     override func mouseEntered(with event: NSEvent) {
@@ -246,7 +246,7 @@ private final class MainShellPivotButton: WelcomeShellTapView {
             make.height.equalTo(2)
         }
         snp.makeConstraints { make in
-            make.height.equalTo(38)
+            make.height.equalTo(32)
         }
 
         setAccessibilityIdentifier(pivot.accessibilityID)
@@ -260,7 +260,7 @@ private final class MainShellPivotButton: WelcomeShellTapView {
 
     override var intrinsicContentSize: NSSize {
         let width = ceil(titleLabel.intrinsicContentSize.width) + 4
-        return NSSize(width: width, height: 38)
+        return NSSize(width: width, height: 32)
     }
 
     override func mouseEntered(with event: NSEvent) {
@@ -302,13 +302,13 @@ private final class MainShellSearchView: NSView {
         searchField.isBordered = false
         searchField.drawsBackground = false
         searchField.focusRingType = .none
-        searchField.font = .systemFont(ofSize: 12)
+        searchField.font = .systemFont(ofSize: 11.5)
         searchField.textColor = .white
         searchField.placeholderAttributedString = NSAttributedString(
             string: NSLocalizedString("搜索番剧、剧集、标签", comment: ""),
             attributes: [
                 .foregroundColor: NSColor.white.withAlphaComponent(0.42),
-                .font: NSFont.systemFont(ofSize: 12),
+                .font: NSFont.systemFont(ofSize: 11.5),
             ]
         )
         searchField.sendsSearchStringImmediately = false
@@ -324,7 +324,7 @@ private final class MainShellSearchView: NSView {
             make.centerY.equalToSuperview()
         }
         snp.makeConstraints { make in
-            make.height.equalTo(28)
+            make.height.equalTo(26)
         }
     }
 
@@ -361,7 +361,7 @@ private final class MainShellUserAreaView: WelcomeShellTapView {
 
         avatarView.setScaling(.aspectFit)
         avatarView.wantsLayer = true
-        avatarView.layer?.cornerRadius = 14
+        avatarView.layer?.cornerRadius = 13
         avatarView.layer?.masksToBounds = true
         avatarView.layer?.backgroundColor = NSColor.mainColor.withAlphaComponent(0.18).cgColor
         avatarView.contentTintColor = .mainColor
@@ -373,19 +373,19 @@ private final class MainShellUserAreaView: WelcomeShellTapView {
         avatarView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(2)
             make.centerY.equalToSuperview()
-            make.width.height.equalTo(28)
+            make.width.height.equalTo(26)
         }
         nameLabel.snp.makeConstraints { make in
             make.leading.equalTo(avatarView.snp.trailing).offset(8)
             make.trailing.equalToSuperview().offset(-6)
-            make.top.equalToSuperview().offset(4)
+            make.top.equalToSuperview().offset(3)
         }
         membershipLabel.snp.makeConstraints { make in
             make.leading.trailing.equalTo(nameLabel)
-            make.top.equalTo(nameLabel.snp.bottom).offset(1)
+            make.top.equalTo(nameLabel.snp.bottom).offset(0.5)
         }
         snp.makeConstraints { make in
-            make.height.equalTo(34)
+            make.height.equalTo(30)
             make.width.equalTo(150)
         }
 
@@ -462,7 +462,7 @@ final class MainTopBarView: NSView {
     private var pivotItems: [MainShellPivot] = []
 
     var preferredHeight: CGFloat {
-        return pivotRow.isHidden ? 74 : 112
+        return pivotRow.isHidden ? 60 : 92
     }
 
     override init(frame frameRect: NSRect) {
@@ -487,7 +487,7 @@ final class MainTopBarView: NSView {
         addSubview(primaryBackground)
         primaryBackground.snp.makeConstraints { make in
             make.top.leading.trailing.equalToSuperview()
-            make.height.equalTo(74)
+            make.height.equalTo(60)
         }
 
         // 品牌区同时是首页入口。
@@ -516,9 +516,9 @@ final class MainTopBarView: NSView {
             navStack.addArrangedSubview(button)
         }
         navStack.snp.makeConstraints { make in
-            make.leading.equalTo(brandButton.snp.trailing).offset(26)
+            make.leading.equalTo(brandButton.snp.trailing).offset(24)
             make.centerY.equalTo(primaryBackground)
-            make.height.equalTo(74)
+            make.height.equalTo(60)
         }
 
         // 右侧：搜索 + 登录/用户 + 设置
@@ -531,16 +531,16 @@ final class MainTopBarView: NSView {
             self?.onShowSettings?()
         }
         let gearIcon = ImageView()
-        gearIcon.image = welcomeShellSymbol("gearshape", pointSize: 15, weight: .medium)
+        gearIcon.image = welcomeShellSymbol("gearshape", pointSize: 14, weight: .medium)
         gearIcon.contentTintColor = MainShellPalette.navNormal
         gearIcon.setScaling(.aspectFit)
         gearButton.addSubview(gearIcon)
         gearIcon.snp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.width.height.equalTo(18)
+            make.width.height.equalTo(16)
         }
         gearButton.snp.makeConstraints { make in
-            make.width.height.equalTo(28)
+            make.width.height.equalTo(26)
         }
 
         loginButton.normalBackground = NSColor.white.withAlphaComponent(0.06)
@@ -556,7 +556,7 @@ final class MainTopBarView: NSView {
         }
         let loginLabel = welcomeShellLabel(
             NSLocalizedString("登录", comment: ""),
-            font: .systemFont(ofSize: 12, weight: .semibold),
+            font: .systemFont(ofSize: 11.5, weight: .semibold),
             color: .white,
             alignment: .center
         )
@@ -566,8 +566,8 @@ final class MainTopBarView: NSView {
             make.centerY.equalToSuperview()
         }
         loginButton.snp.makeConstraints { make in
-            make.width.equalTo(62)
-            make.height.equalTo(28)
+            make.width.equalTo(58)
+            make.height.equalTo(26)
         }
 
         userArea.isHidden = true
@@ -585,11 +585,11 @@ final class MainTopBarView: NSView {
         let rightStack = NSStackView(views: [searchView, accountStack, gearButton])
         rightStack.orientation = .horizontal
         rightStack.alignment = .centerY
-        rightStack.spacing = 10
+        rightStack.spacing = 9
         addSubview(rightStack)
 
         searchView.snp.makeConstraints { make in
-            make.width.equalTo(190).priority(.high)
+            make.width.equalTo(184).priority(.high)
             make.width.greaterThanOrEqualTo(140)
         }
         rightStack.snp.makeConstraints { make in
@@ -606,7 +606,7 @@ final class MainTopBarView: NSView {
         pivotRow.snp.makeConstraints { make in
             make.top.equalTo(primaryBackground.snp.bottom)
             make.leading.trailing.equalToSuperview()
-            make.height.equalTo(38)
+            make.height.equalTo(32)
         }
 
         pivotBackground.wantsLayer = true
@@ -623,7 +623,7 @@ final class MainTopBarView: NSView {
         pivotStack.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(86)
             make.centerY.equalToSuperview()
-            make.height.equalTo(38)
+            make.height.equalTo(32)
         }
         pivotRow.isHidden = true
 

@@ -8589,22 +8589,6 @@
         }
       }
     },
-    "从 res.dandanplay.net 搜索动画、漫画、音乐等资源": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Search anime, manga, music and more on res.dandanplay.net"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "从 res.dandanplay.net 搜索动画、漫画、音乐等资源"
-          }
-        }
-      }
-    },
     "搜索资源名称、字幕组或关键词": {
       "localizations": {
         "en": {
@@ -9209,6 +9193,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "还没有播放历史"
+          }
+        }
+      }
+    },
+    "搜索动画、漫画、音乐等资源": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search anime, manga, music and more"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜索动画、漫画、音乐等资源"
           }
         }
       }

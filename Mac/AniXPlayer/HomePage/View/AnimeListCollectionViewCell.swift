@@ -41,7 +41,8 @@ class AnimeListCollectionViewCell: CollectionViewItem {
 
     lazy var imgView: ImageView = {
         let iv = ImageView()
-        iv.setScaling(.aspectFit)
+        // 海报统一填满固定比例的格子，避免不同尺寸的源图让网格看起来大小不一。
+        iv.setScaling(.aspectFill)
         iv.wantsLayer = true
         iv.layer?.cornerRadius = 6
         iv.layer?.masksToBounds = true
@@ -196,7 +197,8 @@ class AnimeListCollectionViewCell: CollectionViewItem {
         let rootStack = NSStackView(views: [posterContainer, infoStackView])
         rootStack.orientation = .vertical
         rootStack.spacing = 8
-        rootStack.alignment = .leading
+        // 格子宽度由布局决定；海报和信息都撑满列宽，保证每张海报尺寸一致。
+        rootStack.alignment = .width
 
         view.addSubview(rootStack)
 

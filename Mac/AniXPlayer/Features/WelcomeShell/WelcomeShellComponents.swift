@@ -514,6 +514,9 @@ final class WelcomeShellCardHeaderView: NSView {
             ))
         }
         button.attributedTitle = attributed
+        button.cell?.wraps = false
+        button.cell?.isScrollable = true
+        button.cell?.lineBreakMode = .byTruncatingTail
         button.setAccessibilityIdentifier(identifier)
         button.setAccessibilityLabel(hint.map { "\(title)，\($0)" } ?? title)
 
@@ -523,13 +526,15 @@ final class WelcomeShellCardHeaderView: NSView {
         button.snp.makeConstraints { make in
             make.leading.centerY.equalToSuperview()
             make.trailing.lessThanOrEqualTo(trailingStack.snp.leading).offset(-10)
+            make.height.lessThanOrEqualTo(28)
         }
         button.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        button.setContentCompressionResistancePriority(.required, for: .vertical)
         trailingStack.snp.makeConstraints { make in
             make.trailing.centerY.equalToSuperview()
         }
         snp.makeConstraints { make in
-            make.height.equalTo(34)
+            make.height.equalTo(32)
         }
     }
 
@@ -622,24 +627,15 @@ final class WelcomeShellActionTileView: WelcomeShellTapView {
     init(title: String, symbolName: String, identifier: String, emphasized: Bool = false) {
         self.titleLabel = welcomeShellLabel(
             title,
-            font: .systemFont(ofSize: 13, weight: .semibold),
-            color: .labelColor,
-            alignment: .center
+            font: .systemFont(ofSize: 12.5, weight: .medium),
+            color: emphasized ? .mainColor : .labelColor
         )
         super.init(frame: .zero)
 
-        normalBackgroundProvider = {
-            emphasized
-                ? NSColor.mainColor.withAlphaComponent(0.12)
-                : NSColor.controlBackgroundColor.withAlphaComponent(0.65)
-        }
-        borderColorProvider = {
-            NSColor.separatorColor.withAlphaComponent(0.35)
-        }
-        layer?.cornerRadius = 10
-        layer?.borderWidth = 1
+        normalBackgroundProvider = { .clear }
+        layer?.cornerRadius = 5
 
-        iconView.image = welcomeShellSymbol(symbolName, pointSize: 22, weight: .medium)
+        iconView.image = welcomeShellSymbol(symbolName, pointSize: 14, weight: .medium)
         iconView.contentTintColor = .mainColor
         iconView.setScaling(.aspectFit)
 
@@ -647,13 +643,17 @@ final class WelcomeShellActionTileView: WelcomeShellTapView {
         addSubview(titleLabel)
 
         iconView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(16)
-            make.centerX.equalToSuperview()
-            make.width.height.equalTo(26)
+            make.leading.equalToSuperview()
+            make.centerY.equalToSuperview()
+            make.width.height.equalTo(16)
         }
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(iconView.snp.bottom).offset(8)
-            make.leading.trailing.equalToSuperview().inset(8)
+            make.leading.equalTo(iconView.snp.trailing).offset(6)
+            make.trailing.equalToSuperview()
+            make.centerY.equalToSuperview()
+        }
+        snp.makeConstraints { make in
+            make.height.equalTo(30)
         }
 
         setAccessibilityIdentifier(identifier)
@@ -715,28 +715,20 @@ final class WelcomeShellContinueCardView: WelcomeShellTapView {
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
-        normalBackgroundProvider = {
-            NSColor.controlBackgroundColor.withAlphaComponent(0.65)
-        }
-        borderColorProvider = {
-            NSColor.separatorColor.withAlphaComponent(0.35)
-        }
-        layer?.borderWidth = 1
+        normalBackgroundProvider = { .clear }
 
         thumbnail.wantsLayer = true
-        thumbnail.layer?.cornerRadius = 8
+        thumbnail.layer?.cornerRadius = 7
         thumbnail.layer?.cornerCurve = .continuous
-        thumbnail.layer?.backgroundColor = NSColor.mainColor.withAlphaComponent(0.12).cgColor
-        thumbnail.layer?.borderWidth = 1
-        thumbnail.layer?.borderColor = NSColor.mainColor.withAlphaComponent(0.20).cgColor
+        thumbnail.layer?.backgroundColor = NSColor.mainColor.withAlphaComponent(0.10).cgColor
 
-        playIcon.image = welcomeShellSymbol("play.fill", pointSize: 18, weight: .semibold)
+        playIcon.image = welcomeShellSymbol("play.fill", pointSize: 16, weight: .semibold)
         playIcon.contentTintColor = .mainColor
         playIcon.setScaling(.aspectFit)
         thumbnail.addSubview(playIcon)
         playIcon.snp.makeConstraints { make in
             make.center.equalToSuperview()
-            make.width.height.equalTo(18)
+            make.width.height.equalTo(16)
         }
 
         addSubview(thumbnail)
@@ -746,12 +738,12 @@ final class WelcomeShellContinueCardView: WelcomeShellTapView {
 
         thumbnail.snp.makeConstraints { make in
             make.leading.centerY.equalToSuperview()
-            make.width.height.equalTo(52)
+            make.width.height.equalTo(42)
         }
         titleLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(12)
+            make.top.equalToSuperview().offset(5)
             make.leading.equalTo(thumbnail.snp.trailing).offset(10)
-            make.trailing.equalToSuperview().offset(-10)
+            make.trailing.equalToSuperview().offset(-6)
         }
         detailLabel.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(3)
@@ -759,11 +751,11 @@ final class WelcomeShellContinueCardView: WelcomeShellTapView {
         }
         progressBar.snp.makeConstraints { make in
             make.leading.trailing.equalTo(titleLabel)
-            make.bottom.equalToSuperview().offset(-11)
+            make.bottom.equalToSuperview().offset(-7)
             make.height.equalTo(3)
         }
         snp.makeConstraints { make in
-            make.height.equalTo(80)
+            make.height.equalTo(62)
         }
     }
 
@@ -879,13 +871,7 @@ final class WelcomeShellQueueCardView: WelcomeShellTapView {
 
     override init(frame frameRect: NSRect) {
         super.init(frame: frameRect)
-        normalBackgroundProvider = {
-            NSColor.controlBackgroundColor.withAlphaComponent(0.55)
-        }
-        borderColorProvider = {
-            NSColor.separatorColor.withAlphaComponent(0.35)
-        }
-        layer?.borderWidth = 1
+        normalBackgroundProvider = { .clear }
 
         posterView.setScaling(.aspectFill)
         posterView.wantsLayer = true
@@ -900,13 +886,13 @@ final class WelcomeShellQueueCardView: WelcomeShellTapView {
         addSubview(descriptionLabel)
 
         posterView.snp.makeConstraints { make in
-            make.leading.top.bottom.equalToSuperview().inset(6)
+            make.leading.top.bottom.equalToSuperview()
             make.width.equalTo(posterView.snp.height).multipliedBy(0.72)
         }
         titleLabel.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(9)
+            make.top.equalToSuperview().offset(4)
             make.leading.equalTo(posterView.snp.trailing).offset(10)
-            make.trailing.equalToSuperview().offset(-10)
+            make.trailing.equalToSuperview().offset(-4)
         }
         episodeLabel.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(3)
@@ -915,10 +901,10 @@ final class WelcomeShellQueueCardView: WelcomeShellTapView {
         descriptionLabel.snp.makeConstraints { make in
             make.top.equalTo(episodeLabel.snp.bottom).offset(2)
             make.leading.trailing.equalTo(titleLabel)
-            make.bottom.lessThanOrEqualToSuperview().offset(-8)
+            make.bottom.lessThanOrEqualToSuperview().offset(-4)
         }
         snp.makeConstraints { make in
-            make.height.equalTo(86)
+            make.height.equalTo(76)
         }
     }
 
@@ -1395,7 +1381,7 @@ final class WelcomeShellPosterGridView: NSView {
             let row = NSStackView()
             row.orientation = .horizontal
             row.alignment = .top
-            row.distribution = .fillEqually
+            row.distribution = .fill
             row.spacing = spacing
 
             for item in rowItems {
@@ -1426,6 +1412,16 @@ final class WelcomeShellPosterGridView: NSView {
                     row.addArrangedSubview(spacer)
                     spacer.snp.makeConstraints { make in
                         make.height.equalTo(tileHeight)
+                    }
+                }
+            }
+
+            // fillEqually 会被长标题和无 intrinsic size 的占位视图影响。
+            // 显式等宽才能保证最后一行与上一行的海报、文字区域完全一致。
+            if let firstColumn = row.arrangedSubviews.first {
+                for column in row.arrangedSubviews.dropFirst() {
+                    column.snp.makeConstraints { make in
+                        make.width.equalTo(firstColumn)
                     }
                 }
             }

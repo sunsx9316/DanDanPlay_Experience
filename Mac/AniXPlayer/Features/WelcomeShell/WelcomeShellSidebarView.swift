@@ -200,7 +200,7 @@ final class WelcomeShellSidebarView: NSVisualEffectView {
         brandIcon.setScaling(.aspectFit)
 
         let brandTitle = welcomeShellLabel(
-            AppInfoHelper.appDisplayName.isEmpty ? "弹弹play" : AppInfoHelper.appDisplayName,
+            AppInfoHelper.appDisplayName.isEmpty ? "AniXPlayer" : AppInfoHelper.appDisplayName,
             font: .systemFont(ofSize: 15, weight: .bold),
             color: .labelColor
         )

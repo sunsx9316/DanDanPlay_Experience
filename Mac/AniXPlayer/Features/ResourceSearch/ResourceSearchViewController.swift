@@ -40,7 +40,7 @@ final class ResourceSearchViewController: ViewController {
 
     private lazy var subtitleLabel: Label = {
         return welcomeShellLabel(
-            NSLocalizedString("从 res.dandanplay.net 搜索动画、漫画、音乐等资源", comment: ""),
+            NSLocalizedString("搜索动画、漫画、音乐等资源", comment: ""),
             font: .systemFont(ofSize: 12),
             color: .secondaryLabelColor
         )

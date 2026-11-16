@@ -46,7 +46,8 @@ final class PlayHistoryCollectionViewCell: CollectionViewItem {
 
     private lazy var posterView: ImageView = {
         let view = ImageView()
-        view.setScaling(.aspectFit)
+        // 统一按 1.4 比例裁切填充，避免不同封面比例导致格子视觉大小不一致。
+        view.setScaling(.aspectFill)
         view.wantsLayer = true
         view.layer?.cornerRadius = 6
         view.layer?.masksToBounds = true

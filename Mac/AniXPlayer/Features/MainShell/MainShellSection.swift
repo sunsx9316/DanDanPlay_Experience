@@ -14,7 +14,7 @@ enum MainShellSection: Int, CaseIterable {
     case download
     case account
 
-    /// 顶部一级导航。首页由左侧「弹弹play」品牌区承担，不再重复显示。
+    /// 顶部一级导航。首页由左侧「AniXPlayer」品牌区承担，不再重复显示。
     static let primaryNavigation: [MainShellSection] = [.search, .library, .download, .account]
 
     var title: String {
