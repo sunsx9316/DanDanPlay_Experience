@@ -110,6 +110,7 @@ class PlayerViewController: ViewController {
     deinit {
         self.closeMatchWindow()
         self.closeDanmakuListWindow()
+        PlayerNowPlayingCenter.shared.deactivate(owner: self)
     }
 
     override func viewWillDisappear() {
@@ -159,6 +160,7 @@ class PlayerViewController: ViewController {
 
         self.bindModel()
         self.uiView.autoShowControlView()
+        self.registerNowPlayingActions()
     }
     
     override func mouseMoved(with event: NSEvent) {
@@ -217,7 +219,100 @@ class PlayerViewController: ViewController {
     /// 停止播放；独立播放器窗口关闭时调用。
     func stopPlayback() {
         gifExportFlow?.cancelAndDismiss()
+        PlayerNowPlayingCenter.shared.clear()
         mediaModel.stop()
+    }
+
+    // MARK: - Now Playing
+
+    private func registerNowPlayingActions() {
+        PlayerNowPlayingCenter.shared.activate(
+            owner: self,
+            actions: PlayerNowPlayingCenter.Actions(
+                play: { [weak self] in
+                    self?.mediaModel.play()
+                },
+                pause: { [weak self] in
+                    self?.mediaModel.pause()
+                },
+                togglePlay: { [weak self] in
+                    self?.mediaModel.changePlayState()
+                },
+                seek: { [weak self] progress in
+                    guard let self = self, self.mediaModel.media != nil else { return }
+                    self.playerModel.changePosition(CGFloat(max(0, min(progress, 1))))
+                    self.uiView.autoShowControlView()
+                },
+                next: { [weak self] in
+                    self?.playAdjacentNowPlayingMedia(offset: 1)
+                },
+                previous: { [weak self] in
+                    self?.playAdjacentNowPlayingMedia(offset: -1)
+                },
+                focus: { [weak self] in
+                    self?.focusFromNowPlaying()
+                }
+            )
+        )
+        refreshNowPlayingMetadata()
+    }
+
+    /// 把当前媒体、匹配信息和播放列表位置同步到顶栏与系统 Now Playing。
+    private func refreshNowPlayingMetadata() {
+        guard let file = mediaModel.media else {
+            PlayerNowPlayingCenter.shared.clear()
+            return
+        }
+
+        let matchInfo = playerModel.currentMatchInfo ?? mediaModel.matchInfo(media: file)
+        let title = matchInfo?.matchDesc ?? file.fileName
+
+        let subtitle: String
+        if matchInfo != nil {
+            subtitle = file.fileName
+        } else if let sourceFileName = file.sourceFileName, !sourceFileName.isEmpty {
+            subtitle = sourceFileName
+        } else {
+            let parent = file.url.deletingLastPathComponent().lastPathComponent
+            subtitle = parent == "/" ? "" : parent
+        }
+
+        let playList = mediaModel.playList
+        let index = playList.firstIndex(where: { $0 == file })
+
+        PlayerNowPlayingCenter.shared.updateMedia(
+            title: title,
+            subtitle: subtitle,
+            artworkURL: file.coverImageURL,
+            duration: mediaModel.length,
+            position: mediaModel.currentTime,
+            isPlaying: mediaModel.isPlaying,
+            canGoNext: index.map { $0 < playList.count - 1 } ?? false,
+            canGoPrevious: index.map { $0 > 0 } ?? false
+        )
+    }
+
+    private func playAdjacentNowPlayingMedia(offset: Int) {
+        let playList = mediaModel.playList
+        guard let current = mediaModel.media,
+              let index = playList.firstIndex(where: { $0 == current }) else { return }
+
+        let targetIndex = index + offset
+        guard playList.indices.contains(targetIndex) else { return }
+
+        let media = playList[targetIndex]
+        ANX.logInfo(.player, "[Player] 系统媒体键切换: \(media.fileName)")
+        playerModel.tryParseMedia(media)
+    }
+
+    private func focusFromNowPlaying() {
+        guard let window = view.window else { return }
+        if window.isMiniaturized {
+            window.deminiaturize(nil)
+        }
+        window.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+        _ = window.makeFirstResponder(self)
     }
 
     //MARK: - Private
@@ -249,6 +344,7 @@ class PlayerViewController: ViewController {
             self.onMediaChanged?(file)
             OnlinePlaybackSession.shared.playerDidChange(file: file, player: self)
             self.playHistoryReporter.reset()
+            self.refreshNowPlayingMetadata()
             if file != nil {
                 self.beginActivity()
             } else {
@@ -260,6 +356,10 @@ class PlayerViewController: ViewController {
             guard let self = self else { return }
 
             self.uiView.updateTime()
+            PlayerNowPlayingCenter.shared.updateTime(
+                position: timeInfo.currentTime,
+                duration: timeInfo.totalTime
+            )
             if let episodeId = self.playerModel.currentMatchInfo?.matchId {
                 self.playHistoryReporter.reportIfNeeded(
                     episodeId: episodeId,
@@ -272,6 +372,7 @@ class PlayerViewController: ViewController {
             guard let self = self else { return }
             
             self.uiView.isPlay = isPlay
+            PlayerNowPlayingCenter.shared.updatePlayback(isPlaying: isPlay)
         }).disposed(by: self.disposeBag)
         
 //        self.mediaModel.context.buffer.subscribe(onNext: { [weak self] bufferInfos in
@@ -318,6 +419,7 @@ class PlayerViewController: ViewController {
         
         self.mediaModel.context.playList.subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
+            self.refreshNowPlayingMetadata()
         }).disposed(by: self.disposeBag)
     }
     
@@ -643,6 +745,8 @@ extension PlayerViewController: MatchsViewControllerDelegate {
 
                 self.isLoadingDanmaku = false
                 self.refreshDanmakuListWindow()
+                // 匹配信息此时已就绪，用番剧/剧集名刷新正在播放卡片与系统媒体信息。
+                self.refreshNowPlayingMetadata()
 
                 if let pendingSeekProgress = self.pendingSeekProgress {
                     self.pendingSeekProgress = nil
