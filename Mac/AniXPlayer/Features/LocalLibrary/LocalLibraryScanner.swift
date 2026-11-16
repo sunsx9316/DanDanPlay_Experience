@@ -74,6 +74,9 @@ final class LocalLibraryScanner {
         let item: LocalLibraryScanItem
     }
 
+    /// 单个文件的哈希等待上限。原先 120 秒会让网络卷/损坏文件长时间卡住取消。
+    static let hashTimeout: TimeInterval = 20
+
     private func performScan(
         folders: [LocalLibraryFolder],
         progress: @escaping (LocalLibraryScanProgress) -> Void
@@ -82,6 +85,8 @@ final class LocalLibraryScanner {
         var accesses: [FolderAccess] = []
         var jobs: [ScanJob] = []
         var enumeratedFolderIds: Set<Int64> = []
+        var enumeratedPaths: [Int64: Set<String>] = [:]
+        var seenPaths: Set<String> = []
 
         for folder in folders {
             if isCancelled {
@@ -93,16 +98,34 @@ final class LocalLibraryScanner {
             accesses.append(access)
 
             do {
-                let items = try LocalLibraryScanRules.enumerateVideoFiles(in: access.url)
+                let items = try LocalLibraryScanRules.enumerateVideoFiles(
+                    in: access.url,
+                    shouldCancel: { [weak self] in self?.isCancelled ?? false }
+                )
                 enumeratedFolderIds.insert(folder.id)
-                jobs.append(contentsOf: items.map { ScanJob(folder: folder, item: $0) })
+                enumeratedPaths[folder.id] = Set(items.map(\.path))
+                for item in items where !seenPaths.contains(item.path) {
+                    seenPaths.insert(item.path)
+                    jobs.append(ScanJob(folder: folder, item: item))
+                }
+            } catch is CancellationError {
+                summary.cancelled = true
+                break
             } catch {
                 summary.failed += 1
+                let message = error.localizedDescription
+                summary.folderFailures.append(
+                    LocalLibraryScanFailure(
+                        folderId: folder.id,
+                        folderPath: folder.path,
+                        message: message
+                    )
+                )
                 if summary.errorMessage == nil {
                     summary.errorMessage = String(
                         format: NSLocalizedString("无法读取文件夹「%@」：%@", comment: ""),
                         folder.name,
-                        error.localizedDescription
+                        message
                     )
                 }
             }
@@ -134,7 +157,7 @@ final class LocalLibraryScanner {
 
         report(nil, force: true)
 
-        for job in jobs {
+        scanLoop: for job in jobs {
             if isCancelled {
                 summary.cancelled = true
                 break
@@ -151,16 +174,28 @@ final class LocalLibraryScanner {
                 modifiedAt: job.item.modifiedAt
             ) else {
                 summary.unchanged += 1
+                if isCancelled {
+                    summary.cancelled = true
+                    break
+                }
                 continue
             }
 
             var hash: String?
-            let hashResult = Self.hashForFile(at: URL(fileURLWithPath: path))
+            let hashResult = Self.hashForFile(
+                at: URL(fileURLWithPath: path),
+                timeout: Self.hashTimeout,
+                isCancelled: { [weak self] in self?.isCancelled ?? false }
+            )
             switch hashResult {
             case .success(let value):
                 hash = value
                 summary.hashed += 1
             case .failure(let error):
+                if error is CancellationError {
+                    summary.cancelled = true
+                    break scanLoop
+                }
                 summary.failed += 1
                 if summary.errorMessage == nil {
                     summary.errorMessage = String(
@@ -171,6 +206,11 @@ final class LocalLibraryScanner {
                 }
             }
 
+            if isCancelled {
+                summary.cancelled = true
+                break
+            }
+
             let file = LocalLibraryFile.makeScanned(
                 folderId: job.folder.id,
                 path: path,
@@ -178,7 +218,7 @@ final class LocalLibraryScanner {
                 fileSize: job.item.fileSize,
                 modifiedAt: job.item.modifiedAt,
                 hash: hash,
-                existingId: existing?.id,
+                existing: existing,
                 now: Date()
             )
 
@@ -199,7 +239,7 @@ final class LocalLibraryScanner {
 
         // 已完整枚举的文件夹：DB 中存在但磁盘上已消失的记录标记为 missing。
         for folder in folders where enumeratedFolderIds.contains(folder.id) {
-            let paths = Set(jobs.filter { $0.folder.id == folder.id }.map { $0.item.path })
+            let paths = enumeratedPaths[folder.id] ?? []
             if let count = try? store.markMissing(folderId: folder.id, keepingPaths: paths), count > 0 {
                 summary.markedMissing += count
             }
@@ -257,39 +297,81 @@ final class LocalLibraryScanner {
     /// 递归枚举视频文件；跳过隐藏文件、包内容和非常规文件。
     static func enumerateVideoFiles(
         in root: URL,
-        fileManager: FileManager = .default
+        fileManager: FileManager = .default,
+        shouldCancel: (() -> Bool)? = nil
     ) throws -> [LocalLibraryScanItem] {
-        try LocalLibraryScanRules.enumerateVideoFiles(in: root, fileManager: fileManager)
+        try LocalLibraryScanRules.enumerateVideoFiles(
+            in: root,
+            fileManager: fileManager,
+            shouldCancel: shouldCancel
+        )
     }
 
     // MARK: - Hash
 
     /// 前 16MB 的 MD5；复用 LocalFile 的实现，保持与播放器匹配参数一致。
-    static func hashForFile(at url: URL) -> Result<String, Error> {
+    /// 等待期间每 0.1 秒检查取消，避免一个慢文件让扫描无法停止。
+    static func hashForFile(
+        at url: URL,
+        timeout: TimeInterval = 20,
+        isCancelled: () -> Bool = { false }
+    ) -> Result<String, Error> {
+        if isCancelled() {
+            return .failure(CancellationError())
+        }
+
         let file = LocalFile(with: url)
         let semaphore = DispatchSemaphore(value: 0)
-        let lock = NSLock()
-        var output: Result<String, Error> = .failure(
-            NSError(
-                domain: "LocalLibraryScanner",
-                code: -1,
-                userInfo: [NSLocalizedDescriptionKey: NSLocalizedString("哈希计算超时", comment: "")]
-            )
-        )
+        let box = LocalLibraryHashBox()
 
         file.getFileHashWithProgress(nil) { result in
-            lock.lock()
-            output = result
-            lock.unlock()
+            box.set(result)
             semaphore.signal()
         }
 
-        if semaphore.wait(timeout: .now() + 120) == .timedOut {
-            return output
+        let deadline = Date().addingTimeInterval(max(0.1, timeout))
+        while true {
+            if semaphore.wait(timeout: .now() + 0.1) == .success {
+                break
+            }
+            if isCancelled() {
+                return .failure(CancellationError())
+            }
+            if Date() >= deadline {
+                return .failure(
+                    NSError(
+                        domain: "LocalLibraryScanner",
+                        code: -1,
+                        userInfo: [NSLocalizedDescriptionKey: NSLocalizedString("哈希计算超时", comment: "")]
+                    )
+                )
+            }
         }
 
+        return box.value
+    }
+}
+
+/// 哈希回调与超时/取消路径可能并发访问；用锁保护结果。
+private final class LocalLibraryHashBox {
+    private let lock = NSLock()
+    private var stored: Result<String, Error> = .failure(
+        NSError(
+            domain: "LocalLibraryScanner",
+            code: -2,
+            userInfo: [NSLocalizedDescriptionKey: NSLocalizedString("哈希计算失败", comment: "")]
+        )
+    )
+
+    func set(_ result: Result<String, Error>) {
+        lock.lock()
+        stored = result
+        lock.unlock()
+    }
+
+    var value: Result<String, Error> {
         lock.lock()
         defer { lock.unlock() }
-        return output
+        return stored
     }
 }

@@ -24,22 +24,40 @@ final class LocalLibraryViewController: ViewController {
 
     var onPlayFiles: (([File], File) -> Void)?
 
+    private static let sortDefaultsKey = "LocalLibrary.sort"
+    private static let showMissingDefaultsKey = "LocalLibrary.showMissing"
+
     private let store: LocalLibraryStore?
     private let storeError: Error?
     private lazy var scanner: LocalLibraryScanner? = store.map { LocalLibraryScanner(store: $0) }
     private lazy var matcher: LocalLibraryMatcher? = store.map { LocalLibraryMatcher(store: $0) }
+    private lazy var thumbnailProvider = LocalLibraryThumbnailProvider(store: store)
 
     private var folders: [LocalLibraryFolder] = []
     private var files: [LocalLibraryFile] = []
+    private var cards: [LocalLibraryCard] = []
     private var counts: [Int64: Int] = [:]
     private var statistics = LocalLibraryStatistics()
     private var selectedFolderId: Int64?
-    private var selectedFileId: Int64?
+    private var selectedCardIds: Set<String> = []
 
     private var isScanning = false
     private var isMatching = false
     private var reloadGeneration = 0
     private var searchWorkItem: DispatchWorkItem?
+
+    private var showMissing: Bool {
+        get { UserDefaults.standard.bool(forKey: Self.showMissingDefaultsKey) }
+        set { UserDefaults.standard.set(newValue, forKey: Self.showMissingDefaultsKey) }
+    }
+
+    private var currentSort: LocalLibrarySort {
+        get {
+            let raw = UserDefaults.standard.string(forKey: Self.sortDefaultsKey) ?? ""
+            return LocalLibrarySort(rawValue: raw) ?? .title
+        }
+        set { UserDefaults.standard.set(newValue.rawValue, forKey: Self.sortDefaultsKey) }
+    }
 
     // MARK: Views
 
@@ -103,6 +121,55 @@ final class LocalLibraryViewController: ViewController {
         return button
     }()
 
+    private lazy var playButton: NSButton = {
+        let button = NSButton(
+            title: NSLocalizedString("播放", comment: ""),
+            target: self,
+            action: #selector(playSelectionTapped)
+        )
+        button.bezelStyle = .rounded
+        button.isEnabled = false
+        button.setAccessibilityIdentifier(AccessibilityID.LocalLibrary.play)
+        return button
+    }()
+
+    private lazy var matchCorrectionButton: NSButton = {
+        let button = NSButton(
+            title: NSLocalizedString("匹配修正…", comment: ""),
+            target: self,
+            action: #selector(matchCorrectionTapped)
+        )
+        button.bezelStyle = .rounded
+        button.isEnabled = false
+        button.setAccessibilityIdentifier(AccessibilityID.LocalLibrary.matchCorrection)
+        return button
+    }()
+
+    private lazy var moreButton: NSButton = {
+        let button = NSButton(
+            image: NSImage.safeSystemSymbol("ellipsis.circle"),
+            target: self,
+            action: #selector(moreTapped)
+        )
+        button.isBordered = false
+        button.bezelStyle = .inline
+        button.toolTip = NSLocalizedString("更多批量操作", comment: "")
+        button.setAccessibilityIdentifier(AccessibilityID.LocalLibrary.more)
+        return button
+    }()
+
+    private let moreMenu = NSMenu()
+
+    private lazy var sortPopup: NSPopUpButton = {
+        let popup = NSPopUpButton()
+        popup.addItems(withTitles: LocalLibrarySort.allCases.map(\.displayName))
+        popup.selectItem(at: LocalLibrarySort.allCases.firstIndex(of: currentSort) ?? 0)
+        popup.target = self
+        popup.action = #selector(sortChanged)
+        popup.setAccessibilityIdentifier(AccessibilityID.LocalLibrary.sort)
+        return popup
+    }()
+
     private let summaryLabel = LocalLibraryViewController.makeLabel(
         "",
         font: .systemFont(ofSize: 11),
@@ -163,19 +230,24 @@ final class LocalLibraryViewController: ViewController {
         return layout
     }()
 
-    private lazy var collectionView: CollectionView = {
-        let view = CollectionView()
+    private lazy var collectionView: LocalLibraryCollectionView = {
+        let view = LocalLibraryCollectionView()
         view.collectionViewLayout = waterfallLayout
         view.registerItem(class: LocalLibraryCollectionViewCell.self)
         view.dataSource = self
         view.delegate = self
         view.isSelectable = true
+        view.allowsMultipleSelection = true
+        view.allowsEmptySelection = true
         view.backgroundColors = [.clear]
+        view.onDoubleClick = { [weak self] indexPath in
+            self?.activateCard(at: indexPath)
+        }
         view.setAccessibilityIdentifier(AccessibilityID.LocalLibrary.grid)
         return view
     }()
 
-    private lazy var gridScroll: ScrollView<CollectionView> = {
+    private lazy var gridScroll: ScrollView<LocalLibraryCollectionView> = {
         let scroll = ScrollView(containerView: collectionView)
         scroll.hasVerticalScroller = true
         scroll.hasHorizontalScroller = false
@@ -193,7 +265,7 @@ final class LocalLibraryViewController: ViewController {
     )
 
     private let bottomInfoLabel = LocalLibraryViewController.makeLabel(
-        NSLocalizedString("点击海报开始播放", comment: ""),
+        NSLocalizedString("单击选择，双击播放或打开剧集；按住 ⌘ 可多选", comment: ""),
         font: .systemFont(ofSize: 11),
         color: .tertiaryLabelColor
     )
@@ -235,6 +307,7 @@ final class LocalLibraryViewController: ViewController {
 
         setupLayout()
         setupSidebar()
+        rebuildMoreMenu()
         reloadData()
     }
 
@@ -264,8 +337,12 @@ final class LocalLibraryViewController: ViewController {
         view.addSubview(addFolderButton)
         view.addSubview(scanButton)
         view.addSubview(rematchButton)
+        view.addSubview(playButton)
+        view.addSubview(matchCorrectionButton)
+        view.addSubview(moreButton)
         view.addSubview(searchField)
         view.addSubview(filterControl)
+        view.addSubview(sortPopup)
         view.addSubview(summaryLabel)
         view.addSubview(separator)
         view.addSubview(sidebarTitleLabel)
@@ -286,8 +363,21 @@ final class LocalLibraryViewController: ViewController {
             make.leading.equalToSuperview().offset(20)
             make.top.equalToSuperview().offset(18)
         }
-        rematchButton.snp.makeConstraints { make in
+        moreButton.snp.makeConstraints { make in
             make.trailing.equalToSuperview().offset(-20)
+            make.centerY.equalTo(titleLabel)
+            make.width.height.equalTo(24)
+        }
+        matchCorrectionButton.snp.makeConstraints { make in
+            make.trailing.equalTo(moreButton.snp.leading).offset(-8)
+            make.centerY.equalTo(titleLabel)
+        }
+        playButton.snp.makeConstraints { make in
+            make.trailing.equalTo(matchCorrectionButton.snp.leading).offset(-8)
+            make.centerY.equalTo(titleLabel)
+        }
+        rematchButton.snp.makeConstraints { make in
+            make.trailing.equalTo(playButton.snp.leading).offset(-8)
             make.centerY.equalTo(titleLabel)
         }
         scanButton.snp.makeConstraints { make in
@@ -302,15 +392,20 @@ final class LocalLibraryViewController: ViewController {
         searchField.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(20)
             make.top.equalTo(titleLabel.snp.bottom).offset(14)
-            make.width.equalTo(270)
+            make.width.equalTo(220)
         }
         filterControl.snp.makeConstraints { make in
             make.leading.equalTo(searchField.snp.trailing).offset(10)
             make.centerY.equalTo(searchField)
-            make.width.equalTo(230)
+            make.width.equalTo(292)
+        }
+        sortPopup.snp.makeConstraints { make in
+            make.leading.equalTo(filterControl.snp.trailing).offset(8)
+            make.centerY.equalTo(searchField)
+            make.width.equalTo(112)
         }
         summaryLabel.snp.makeConstraints { make in
-            make.leading.greaterThanOrEqualTo(filterControl.snp.trailing).offset(12)
+            make.leading.greaterThanOrEqualTo(sortPopup.snp.trailing).offset(12)
             make.trailing.equalToSuperview().offset(-20)
             make.centerY.equalTo(searchField)
         }
@@ -430,7 +525,8 @@ final class LocalLibraryViewController: ViewController {
         let index = max(0, min(filterControl.selectedSegment, LocalLibraryFilter.allCases.count - 1))
         query.filter = LocalLibraryFilter.allCases[index]
         query.folderId = selectedFolderId
-        query.sort = .title
+        query.sort = currentSort
+        query.includesMissing = showMissing || query.filter == .missing
         return query
     }
 
@@ -473,21 +569,33 @@ final class LocalLibraryViewController: ViewController {
         counts = snapshot.counts
         files = snapshot.files
         statistics = snapshot.statistics
+        cards = LocalLibraryGrouping.cards(from: snapshot.files, sort: currentSort)
+        thumbnailProvider.updateFolders(snapshot.folders)
 
         if let selectedFolderId, !folders.contains(where: { $0.id == selectedFolderId }) {
             self.selectedFolderId = nil
         }
-        if let selectedFileId, !files.contains(where: { $0.id == selectedFileId }) {
-            self.selectedFileId = nil
-        }
+        let availableCardIds = Set(cards.map(\.id))
+        selectedCardIds.formIntersection(availableCardIds)
 
         rebuildSidebar()
         collectionView.reloadData()
+        restoreSelection()
         updateSummary()
         updateEmptyState()
         updateBottomInfo()
+        updateActionAvailability()
         layoutSidebar()
         layoutGrid()
+    }
+
+    private func restoreSelection() {
+        let indexPaths = Set(cards.enumerated().compactMap { index, card -> IndexPath? in
+            selectedCardIds.contains(card.id) ? IndexPath(item: index, section: 0) : nil
+        })
+        if !indexPaths.isEmpty {
+            collectionView.selectItems(at: indexPaths, scrollPosition: [])
+        }
     }
 
     private func rebuildSidebar() {
@@ -546,6 +654,7 @@ final class LocalLibraryViewController: ViewController {
 
     private func rebuildFolderMenu() {
         folderMenu.removeAllItems()
+        folderMenu.autoenablesItems = false
 
         let addItem = NSMenuItem(
             title: NSLocalizedString("添加文件夹…", comment: ""),
@@ -553,6 +662,7 @@ final class LocalLibraryViewController: ViewController {
             keyEquivalent: ""
         )
         addItem.target = self
+        addItem.isEnabled = !isScanning && !isMatching
         folderMenu.addItem(addItem)
 
         guard !folders.isEmpty else {
@@ -576,16 +686,23 @@ final class LocalLibraryViewController: ViewController {
             )
             item.target = self
             item.tag = Int(folder.id)
+            item.isEnabled = !isScanning && !isMatching
+            item.setAccessibilityIdentifier("\(AccessibilityID.LocalLibrary.removeFolderPrefix)\(folder.id)")
             folderMenu.addItem(item)
         }
     }
 
     private func updateSummary() {
         summaryLabel.stringValue = String(
-            format: NSLocalizedString("共 %d 个视频 · 已匹配 %d · 未匹配 %d", comment: ""),
+            format: NSLocalizedString("共 %d 个视频 · 已匹配 %d · 未匹配 %d · 缺失 %d", comment: ""),
             statistics.totalCount,
             statistics.matchedCount,
-            statistics.unmatchedCount
+            statistics.unmatchedCount,
+            statistics.missingCount
+        )
+        summaryLabel.toolTip = summaryLabel.stringValue + " · " + NSLocalizedString(
+            "缺失记录只存在于数据库中，可筛选后清理。",
+            comment: ""
         )
     }
 
@@ -622,7 +739,9 @@ final class LocalLibraryViewController: ViewController {
                 emptyStateView.configure(
                     symbolName: "magnifyingglass",
                     title: NSLocalizedString("没有符合条件的视频", comment: ""),
-                    detail: NSLocalizedString("尝试清空搜索词或切换筛选条件。", comment: ""),
+                    detail: query.filter == .missing
+                        ? NSLocalizedString("当前范围没有缺失记录。", comment: "")
+                        : NSLocalizedString("尝试清空搜索词或切换筛选条件。", comment: ""),
                     actionTitle: nil,
                     onAction: nil
                 )
@@ -646,13 +765,51 @@ final class LocalLibraryViewController: ViewController {
     }
 
     private func updateBottomInfo() {
-        if let selectedFileId, let file = files.first(where: { $0.id == selectedFileId }) {
-            bottomInfoLabel.stringValue = "\(file.path) · \(file.sizeText) · \(file.matchStatusText)"
-            bottomInfoLabel.toolTip = file.path
+        let selected = selectedCards()
+        if selected.count == 1, let card = selected.first {
+            switch card {
+            case .group(let group):
+                let missing = group.missingCount > 0
+                    ? " · " + String(format: NSLocalizedString("缺失 %d 集", comment: ""), group.missingCount)
+                    : ""
+                bottomInfoLabel.stringValue = String(
+                    format: NSLocalizedString("%@ · %d 集 · %@%@", comment: ""),
+                    group.animeTitle,
+                    group.episodeCount,
+                    group.sizeText,
+                    missing
+                )
+                bottomInfoLabel.toolTip = group.primaryFile?.path
+            case .file(let file):
+                bottomInfoLabel.stringValue = detailText(for: file)
+                bottomInfoLabel.toolTip = file.path
+            }
+        } else if selected.count > 1 {
+            let fileCount = selected.reduce(0) { $0 + $1.files.count }
+            bottomInfoLabel.stringValue = String(
+                format: NSLocalizedString("已选择 %d 项（%d 个文件）", comment: ""),
+                selected.count,
+                fileCount
+            )
+            bottomInfoLabel.toolTip = nil
         } else {
-            bottomInfoLabel.stringValue = NSLocalizedString("点击海报开始播放", comment: "")
+            bottomInfoLabel.stringValue = NSLocalizedString(
+                "单击选择，双击播放或打开剧集；按住 ⌘ 可多选",
+                comment: ""
+            )
             bottomInfoLabel.toolTip = nil
         }
+    }
+
+    private func detailText(for file: LocalLibraryFile) -> String {
+        var parts = [file.path, file.sizeText, file.matchStatusText]
+        if file.isMissing {
+            parts.append(NSLocalizedString("缺失", comment: ""))
+        }
+        if !file.mediaMetadata.isEmpty {
+            parts.append(file.mediaMetadata.displayText)
+        }
+        return parts.joined(separator: " · ")
     }
 
     private func renderStoreError() {
@@ -682,6 +839,338 @@ final class LocalLibraryViewController: ViewController {
         reloadData()
     }
 
+    @objc private func sortChanged() {
+        let index = max(0, min(sortPopup.indexOfSelectedItem, LocalLibrarySort.allCases.count - 1))
+        currentSort = LocalLibrarySort.allCases[index]
+        reloadData()
+    }
+
+    @objc private func moreTapped() {
+        moreMenu.popUp(
+            positioning: nil,
+            at: NSPoint(x: moreButton.bounds.width, y: moreButton.bounds.height + 4),
+            in: moreButton
+        )
+    }
+
+    // MARK: Selection / batch actions
+
+    private func selectedCards() -> [LocalLibraryCard] {
+        cards.filter { selectedCardIds.contains($0.id) }
+    }
+
+    private func updateActionAvailability() {
+        let selected = selectedCards()
+        let playable = selected.contains { card in
+            card.files.contains(where: { !$0.isMissing })
+        }
+        playButton.isEnabled = playable
+        matchCorrectionButton.isEnabled = !selected.isEmpty && !isScanning && !isMatching
+        rematchButton.isEnabled = !isScanning
+
+        for item in moreMenu.items {
+            switch item.tag {
+            case 1:
+                item.isEnabled = !selected.isEmpty && !isScanning && !isMatching
+            case 2:
+                item.isEnabled = playable && !isScanning && !isMatching
+            case 3:
+                item.isEnabled = !selected.isEmpty && !isScanning && !isMatching
+            case 4:
+                item.isEnabled = statistics.missingCount > 0 && !isScanning && !isMatching
+            case 6:
+                item.isEnabled = selected.contains { $0.files.contains(where: \.isMatched) }
+                    && !isScanning && !isMatching
+            default:
+                break
+            }
+        }
+    }
+
+    private func rebuildMoreMenu() {
+        moreMenu.removeAllItems()
+        moreMenu.autoenablesItems = false
+
+        let rematchItem = NSMenuItem(
+            title: NSLocalizedString("重新匹配所选", comment: ""),
+            action: #selector(rematchSelectedTapped),
+            keyEquivalent: ""
+        )
+        rematchItem.target = self
+        rematchItem.tag = 1
+        rematchItem.setAccessibilityIdentifier(AccessibilityID.LocalLibrary.rematchSelected)
+        moreMenu.addItem(rematchItem)
+
+        let clearMatchItem = NSMenuItem(
+            title: NSLocalizedString("取消匹配所选…", comment: ""),
+            action: #selector(clearSelectedMatchTapped),
+            keyEquivalent: ""
+        )
+        clearMatchItem.target = self
+        clearMatchItem.tag = 6
+        clearMatchItem.setAccessibilityIdentifier(AccessibilityID.LocalLibrary.clearMatchSelected)
+        moreMenu.addItem(clearMatchItem)
+
+        let revealItem = NSMenuItem(
+            title: NSLocalizedString("在 Finder 中显示", comment: ""),
+            action: #selector(revealSelectedTapped),
+            keyEquivalent: ""
+        )
+        revealItem.target = self
+        revealItem.tag = 2
+        revealItem.setAccessibilityIdentifier(AccessibilityID.LocalLibrary.revealSelected)
+        moreMenu.addItem(revealItem)
+
+        let removeItem = NSMenuItem(
+            title: NSLocalizedString("移出媒体库…", comment: ""),
+            action: #selector(removeSelectedTapped),
+            keyEquivalent: ""
+        )
+        removeItem.target = self
+        removeItem.tag = 3
+        removeItem.setAccessibilityIdentifier(AccessibilityID.LocalLibrary.removeSelected)
+        moreMenu.addItem(removeItem)
+
+        moreMenu.addItem(NSMenuItem.separator())
+
+        let cleanItem = NSMenuItem(
+            title: NSLocalizedString("清理缺失记录…", comment: ""),
+            action: #selector(cleanMissingTapped),
+            keyEquivalent: ""
+        )
+        cleanItem.target = self
+        cleanItem.tag = 4
+        cleanItem.setAccessibilityIdentifier(AccessibilityID.LocalLibrary.cleanMissing)
+        moreMenu.addItem(cleanItem)
+
+        let showMissingItem = NSMenuItem(
+            title: NSLocalizedString("在列表中显示缺失文件", comment: ""),
+            action: #selector(toggleShowMissingTapped),
+            keyEquivalent: ""
+        )
+        showMissingItem.target = self
+        showMissingItem.tag = 5
+        showMissingItem.setAccessibilityIdentifier(AccessibilityID.LocalLibrary.showMissing)
+        showMissingItem.state = showMissing ? .on : .off
+        moreMenu.addItem(showMissingItem)
+
+        updateActionAvailability()
+    }
+
+    @objc private func toggleShowMissingTapped() {
+        showMissing.toggle()
+        rebuildMoreMenu()
+        reloadData()
+    }
+
+    @objc private func rematchSelectedTapped() {
+        let selectedFiles = selectedCards().flatMap(\.files)
+        guard !selectedFiles.isEmpty else { return }
+        guard !isScanning else { return }
+        startMatching(files: selectedFiles)
+    }
+
+    @objc private func clearSelectedMatchTapped() {
+        let selectedFiles = selectedCards().flatMap(\.files).filter(\.isMatched)
+        guard !selectedFiles.isEmpty else { return }
+
+        let alert = NSAlert()
+        alert.messageText = String(
+            format: NSLocalizedString("取消所选 %d 个文件的匹配？", comment: ""),
+            selectedFiles.count
+        )
+        alert.informativeText = NSLocalizedString(
+            "会清空这些文件的番剧、剧集和海报信息；文件本身不会被删除。",
+            comment: ""
+        )
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: NSLocalizedString("取消匹配", comment: ""))
+        alert.addButton(withTitle: NSLocalizedString("不取消", comment: ""))
+
+        let handle: (NSApplication.ModalResponse) -> Void = { [weak self] response in
+            guard response == .alertFirstButtonReturn, let self, let store = self.store else { return }
+            var failed = 0
+            for file in selectedFiles {
+                do {
+                    _ = try store.clearMatch(fileId: file.id)
+                } catch {
+                    failed += 1
+                }
+            }
+            if failed > 0 {
+                self.showStatus(
+                    String(format: NSLocalizedString("有 %d 个文件取消失败", comment: ""), failed),
+                    isError: true
+                )
+            } else {
+                self.showStatus(String(
+                    format: NSLocalizedString("已取消 %d 个文件的匹配", comment: ""),
+                    selectedFiles.count
+                ))
+            }
+            self.reloadData()
+        }
+
+        if let window = view.window {
+            alert.beginSheetModal(for: window, completionHandler: handle)
+        } else {
+            handle(alert.runModal())
+        }
+    }
+
+    @objc private func revealSelectedTapped() {
+        let urls = selectedCards()
+            .flatMap(\.files)
+            .filter { !$0.isMissing }
+            .map(\.fileURL)
+        guard !urls.isEmpty else {
+            showStatus(NSLocalizedString("所选文件已缺失，无法在 Finder 中显示。", comment: ""), isError: true)
+            return
+        }
+        NSWorkspace.shared.activateFileViewerSelecting(urls)
+    }
+
+    @objc private func removeSelectedTapped() {
+        let selected = selectedCards()
+        let fileIds = selected.flatMap(\.files).map(\.id)
+        guard !fileIds.isEmpty else { return }
+
+        let alert = NSAlert()
+        alert.messageText = String(
+            format: NSLocalizedString("从媒体库移除所选 %d 个文件？", comment: ""),
+            fileIds.count
+        )
+        alert.informativeText = NSLocalizedString("只会删除媒体库索引，不会删除磁盘上的文件。", comment: "")
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: NSLocalizedString("移除", comment: ""))
+        alert.addButton(withTitle: NSLocalizedString("取消", comment: ""))
+
+        let handle: (NSApplication.ModalResponse) -> Void = { [weak self] response in
+            guard response == .alertFirstButtonReturn, let self, let store = self.store else { return }
+            do {
+                let removed = try store.deleteFiles(ids: fileIds)
+                self.selectedCardIds.removeAll()
+                self.showStatus(String(
+                    format: NSLocalizedString("已从媒体库移除 %d 个文件", comment: ""),
+                    removed
+                ))
+                self.reloadData()
+            } catch {
+                self.showStatus(error.localizedDescription, isError: true)
+            }
+        }
+
+        if let window = view.window {
+            alert.beginSheetModal(for: window, completionHandler: handle)
+        } else {
+            handle(alert.runModal())
+        }
+    }
+
+    @objc private func cleanMissingTapped() {
+        guard let store else { return }
+        let folderId = selectedFolderId
+        let count = (try? store.missingCount(folderId: folderId)) ?? 0
+        guard count > 0 else {
+            showStatus(NSLocalizedString("当前范围没有缺失记录", comment: ""))
+            return
+        }
+
+        let alert = NSAlert()
+        alert.messageText = String(
+            format: NSLocalizedString("清理 %d 条缺失记录？", comment: ""),
+            count
+        )
+        alert.informativeText = NSLocalizedString(
+            "只会删除媒体库中的缺失索引，不会影响磁盘文件。以后重新扫描仍可恢复。",
+            comment: ""
+        )
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: NSLocalizedString("清理", comment: ""))
+        alert.addButton(withTitle: NSLocalizedString("取消", comment: ""))
+
+        let handle: (NSApplication.ModalResponse) -> Void = { [weak self] response in
+            guard response == .alertFirstButtonReturn, let self else { return }
+            do {
+                let removed = try store.deleteMissingFiles(folderId: folderId)
+                self.selectedCardIds.removeAll()
+                self.showStatus(String(
+                    format: NSLocalizedString("已清理 %d 条缺失记录", comment: ""),
+                    removed
+                ))
+                self.reloadData()
+            } catch {
+                self.showStatus(error.localizedDescription, isError: true)
+            }
+        }
+
+        if let window = view.window {
+            alert.beginSheetModal(for: window, completionHandler: handle)
+        } else {
+            handle(alert.runModal())
+        }
+    }
+
+    @objc private func playSelectionTapped() {
+        let selected = selectedCards()
+        guard !selected.isEmpty else {
+            showStatus(NSLocalizedString("请先选择要播放的视频", comment: ""))
+            return
+        }
+        if selected.count == 1, let card = selected.first {
+            activate(card: card)
+            return
+        }
+        let orderedFiles = selected.flatMap { card in
+            card.files.filter { !$0.isMissing }
+        }
+        guard let start = orderedFiles.first else {
+            showStatus(NSLocalizedString("所选文件均已缺失，无法播放。", comment: ""), isError: true)
+            return
+        }
+        play(files: orderedFiles, start: start)
+    }
+
+    @objc private func matchCorrectionTapped() {
+        guard let store else { return }
+        let targets = selectedCards().flatMap(\.files)
+        guard !targets.isEmpty else {
+            showStatus(NSLocalizedString("请先选择要修正的条目", comment: ""))
+            return
+        }
+        let editor = LocalLibraryMatchEditorViewController(store: store, targets: targets)
+        editor.onApplied = { [weak self] in
+            self?.reloadData()
+        }
+        presentAsSheet(editor)
+    }
+
+    private func activateCard(at indexPath: IndexPath) {
+        guard indexPath.item >= 0, indexPath.item < cards.count else { return }
+        activate(card: cards[indexPath.item])
+    }
+
+    private func activate(card: LocalLibraryCard) {
+        switch card {
+        case .group(let group):
+            showEpisodeList(for: group)
+        case .file(let file):
+            guard !file.isMissing else {
+                showStatus(NSLocalizedString("文件已缺失，无法播放。", comment: ""), isError: true)
+                return
+            }
+            play(files: [file], start: file)
+        }
+    }
+
+    private func showEpisodeList(for group: LocalLibraryAnimeGroup) {
+        let sheet = LocalLibraryEpisodeListViewController(group: group)
+        sheet.onPlay = { [weak self] files, start in
+            self?.play(files: files, start: start)
+        }
+        presentAsSheet(sheet)
+    }
+
     @objc private func folderMenuTapped() {
         folderMenu.popUp(
             positioning: nil,
@@ -701,6 +1190,14 @@ final class LocalLibraryViewController: ViewController {
 
     @objc private func addFolderTapped() {
         guard let store else { return }
+        guard !isScanning else {
+            showStatus(NSLocalizedString("扫描进行中，请稍后再添加文件夹。", comment: ""))
+            return
+        }
+        guard !isMatching else {
+            showStatus(NSLocalizedString("匹配进行中，请稍后再添加文件夹。", comment: ""))
+            return
+        }
 
         let panel = NSOpenPanel()
         panel.title = NSLocalizedString("选择媒体库文件夹", comment: "")
@@ -713,9 +1210,53 @@ final class LocalLibraryViewController: ViewController {
 
         let handle: (NSApplication.ModalResponse) -> Void = { [weak self] response in
             guard response == .OK, let self else { return }
+            self.addFolders(urls: panel.urls, store: store)
+        }
+
+        if let window = view.window {
+            panel.beginSheetModal(for: window, completionHandler: handle)
+        } else {
+            handle(panel.runModal())
+        }
+    }
+
+    private func addFolders(urls: [URL], store: LocalLibraryStore) {
+        var conflicts: [(name: String, detail: String)] = []
+        var consideredPaths = folders.map(\.path)
+
+        for url in urls {
+            let path = url.standardizedFileURL.path
+            let overlaps = LocalLibraryFolderRules.overlaps(newPath: path, existingPaths: consideredPaths)
+                .filter { $0.relationship != .same }
+            consideredPaths.append(path)
+            guard !overlaps.isEmpty else { continue }
+            let detail = overlaps.map { overlap -> String in
+                let existingName = LocalLibraryFormatting.folderName(for: overlap.path)
+                switch overlap.relationship {
+                case .newIsAncestor:
+                    return String(
+                        format: NSLocalizedString("包含已有文件夹「%@」", comment: ""),
+                        existingName
+                    )
+                case .newIsDescendant:
+                    return String(
+                        format: NSLocalizedString("位于已有文件夹「%@」内", comment: ""),
+                        existingName
+                    )
+                case .same:
+                    return existingName
+                case .none:
+                    return existingName
+                }
+            }.joined(separator: "；")
+            conflicts.append((url.lastPathComponent, detail))
+        }
+
+        let performAdd = { [weak self] in
+            guard let self else { return }
             var addedAny = false
             var lastError: Error?
-            for url in panel.urls {
+            for url in urls {
                 do {
                     let bookmark = (try? url.bookmarkData(
                         options: [.withSecurityScope],
@@ -745,6 +1286,119 @@ final class LocalLibraryViewController: ViewController {
             }
         }
 
+        guard !conflicts.isEmpty else {
+            performAdd()
+            return
+        }
+
+        let alert = NSAlert()
+        alert.messageText = NSLocalizedString("文件夹与已有媒体库重叠", comment: "")
+        let detailLines = conflicts.map { "\($0.name)：\($0.detail)" }.joined(separator: "\n")
+        alert.informativeText = String(
+            format: NSLocalizedString(
+                "%@\n\n重叠范围内的视频只保留首次入库的文件夹归属，不会重复计数；移除其中一个文件夹也不会删除另一个文件夹的索引。是否仍然添加？",
+                comment: ""
+            ),
+            detailLines
+        )
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: NSLocalizedString("仍然添加", comment: ""))
+        alert.addButton(withTitle: NSLocalizedString("取消", comment: ""))
+
+        let handle: (NSApplication.ModalResponse) -> Void = { response in
+            guard response == .alertFirstButtonReturn else { return }
+            performAdd()
+        }
+
+        if let window = view.window {
+            alert.beginSheetModal(for: window, completionHandler: handle)
+        } else {
+            handle(alert.runModal())
+        }
+    }
+
+    private func presentFolderAccessAlert(for failure: LocalLibraryScanFailure) {
+        guard let folder = folders.first(where: { $0.id == failure.folderId }) else { return }
+        let alert = NSAlert()
+        alert.messageText = String(
+            format: NSLocalizedString("无法访问媒体库文件夹「%@」", comment: ""),
+            folder.name
+        )
+        alert.informativeText = String(
+            format: NSLocalizedString(
+                "%@\n\n可能是文件夹已移动或访问权限失效。重新选择该文件夹即可更新授权。",
+                comment: ""
+            ),
+            failure.message
+        )
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: NSLocalizedString("重新选择文件夹…", comment: ""))
+        alert.addButton(withTitle: NSLocalizedString("稍后", comment: ""))
+
+        let handle: (NSApplication.ModalResponse) -> Void = { [weak self] response in
+            guard response == .alertFirstButtonReturn else { return }
+            self?.rechooseFolder(folder)
+        }
+
+        if let window = view.window {
+            alert.beginSheetModal(for: window, completionHandler: handle)
+        } else {
+            handle(alert.runModal())
+        }
+    }
+
+    private func rechooseFolder(_ folder: LocalLibraryFolder) {
+        guard let store else { return }
+        let panel = NSOpenPanel()
+        panel.title = String(
+            format: NSLocalizedString("重新选择「%@」", comment: ""),
+            folder.name
+        )
+        panel.message = NSLocalizedString("请选择原来的媒体库文件夹，以更新访问授权。", comment: "")
+        panel.prompt = NSLocalizedString("授权", comment: "")
+        panel.directoryURL = folder.fileURL
+        panel.canChooseFiles = false
+        panel.canChooseDirectories = true
+        panel.allowsMultipleSelection = false
+        panel.canCreateDirectories = false
+
+        let handle: (NSApplication.ModalResponse) -> Void = { [weak self] response in
+            guard response == .OK, let self, let url = panel.url else { return }
+            let selectedPath = url.standardizedFileURL.path
+            guard selectedPath == folder.path else {
+                self.showStatus(
+                    String(
+                        format: NSLocalizedString("请选择原文件夹：%@", comment: ""),
+                        folder.path
+                    ),
+                    isError: true
+                )
+                return
+            }
+            let bookmark = (try? url.bookmarkData(
+                options: [.withSecurityScope],
+                includingResourceValuesForKeys: nil,
+                relativeTo: nil
+            )) ?? (try? url.bookmarkData(
+                options: [],
+                includingResourceValuesForKeys: nil,
+                relativeTo: nil
+            ))
+            do {
+                try store.updateFolderBookmark(id: folder.id, bookmark: bookmark)
+                if let index = self.folders.firstIndex(where: { $0.id == folder.id }) {
+                    self.folders[index].bookmark = bookmark
+                }
+                self.showStatus(NSLocalizedString("已更新文件夹授权，正在重新扫描…", comment: ""))
+                self.reloadData { [weak self] in
+                    guard let self, !self.isScanning else { return }
+                    self.startScan()
+                }
+            } catch {
+                self.showStatus(error.localizedDescription, isError: true)
+            }
+        }
+
         if let window = view.window {
             panel.beginSheetModal(for: window, completionHandler: handle)
         } else {
@@ -753,6 +1407,14 @@ final class LocalLibraryViewController: ViewController {
     }
 
     private func confirmRemove(folder: LocalLibraryFolder) {
+        guard !isScanning else {
+            showStatus(NSLocalizedString("扫描进行中，请稍后再移除文件夹。", comment: ""))
+            return
+        }
+        guard !isMatching else {
+            showStatus(NSLocalizedString("匹配进行中，请稍后再移除文件夹。", comment: ""))
+            return
+        }
         let alert = NSAlert()
         alert.messageText = String(
             format: NSLocalizedString("移除媒体库文件夹「%@」？", comment: ""),
@@ -796,6 +1458,10 @@ final class LocalLibraryViewController: ViewController {
             showStatus(NSLocalizedString("正在取消扫描…", comment: ""))
             return
         }
+        guard !isMatching else {
+            showStatus(NSLocalizedString("匹配进行中，请稍后再扫描。", comment: ""))
+            return
+        }
 
         if folders.isEmpty {
             addFolderTapped()
@@ -806,7 +1472,11 @@ final class LocalLibraryViewController: ViewController {
     }
 
     private func startScan() {
-        guard let scanner, !folders.isEmpty else { return }
+        guard let scanner, !folders.isEmpty, !scanner.isScanning else { return }
+        guard !isMatching else {
+            showStatus(NSLocalizedString("匹配进行中，请稍后再扫描。", comment: ""))
+            return
+        }
 
         isScanning = true
         scanButton.title = NSLocalizedString("取消扫描", comment: "")
@@ -817,6 +1487,8 @@ final class LocalLibraryViewController: ViewController {
         progressIndicator.doubleValue = 0
         showStatus(NSLocalizedString("正在准备扫描…", comment: ""))
         updateEmptyState()
+        updateActionAvailability()
+        rebuildFolderMenu()
         bottomInfoLabel.stringValue = NSLocalizedString("扫描在后台进行，可以继续浏览已索引的视频。", comment: "")
 
         scanner.startScan(
@@ -849,9 +1521,9 @@ final class LocalLibraryViewController: ViewController {
         rematchButton.isEnabled = true
         progressIndicator.isHidden = true
         progressIndicator.doubleValue = 0
+        rebuildFolderMenu()
 
-        if let error = summary.errorMessage {
-            showStatus(error, isError: true)
+        if let error = summary.errorMessage {            showStatus(error, isError: true)
         } else if summary.cancelled {
             showStatus(NSLocalizedString("已取消扫描", comment: ""))
         } else {
@@ -864,9 +1536,15 @@ final class LocalLibraryViewController: ViewController {
             ))
         }
 
-        reloadData()
+        reloadData { [weak self] in
+            guard let self else { return }
+            self.updateActionAvailability()
+            if let failure = summary.folderFailures.first {
+                self.presentFolderAccessAlert(for: failure)
+            }
+        }
 
-        if !summary.cancelled {
+        if !summary.cancelled && summary.folderFailures.isEmpty {
             autoMatchUnmatched()
         }
     }
@@ -881,6 +1559,7 @@ final class LocalLibraryViewController: ViewController {
             showStatus(NSLocalizedString("正在停止匹配…", comment: ""))
             return
         }
+        guard !isScanning else { return }
 
         guard let store else { return }
         DispatchQueue.global(qos: .userInitiated).async {
@@ -913,9 +1592,13 @@ final class LocalLibraryViewController: ViewController {
 
         isMatching = true
         rematchButton.title = NSLocalizedString("停止匹配", comment: "")
+        scanButton.isEnabled = false
+        addFolderButton.isEnabled = false
         progressIndicator.isHidden = false
         progressIndicator.isIndeterminate = false
         progressIndicator.doubleValue = 0
+        updateActionAvailability()
+        rebuildFolderMenu()
         showStatus(
             automatic
                 ? String(format: NSLocalizedString("正在自动匹配 %d 个文件…", comment: ""), files.count)
@@ -938,8 +1621,12 @@ final class LocalLibraryViewController: ViewController {
                 self.isMatching = false
                 self.rematchButton.title = NSLocalizedString("重新匹配", comment: "")
                 self.rematchButton.isEnabled = true
+                self.scanButton.isEnabled = true
+                self.addFolderButton.isEnabled = true
                 self.progressIndicator.isHidden = true
                 self.progressIndicator.doubleValue = 0
+                self.updateActionAvailability()
+                self.rebuildFolderMenu()
 
                 if summary.cancelled {
                     self.showStatus(NSLocalizedString("已停止匹配", comment: ""))
@@ -962,19 +1649,64 @@ final class LocalLibraryViewController: ViewController {
 
     // MARK: Playback
 
-    private func play(file: LocalLibraryFile) {
-        let existingFiles = files.filter { FileManager.default.fileExists(atPath: $0.path) }
-        guard let startFile = existingFiles.first(where: { $0.id == file.id }) else {
-            showStatus(
-                String(format: NSLocalizedString("文件不存在或已移动：%@", comment: ""), file.path),
-                isError: true
-            )
+    private func play(files: [LocalLibraryFile], start: LocalLibraryFile) {
+        guard start.id > 0 else { return }
+        guard let folder = folders.first(where: { $0.id == start.folderId }) else {
+            showStatus(NSLocalizedString("找不到该文件所属的媒体库文件夹", comment: ""), isError: true)
             return
         }
 
-        let playable = existingFiles.map { LocalFile(with: $0.fileURL) }
-        let start = LocalFile(with: startFile.fileURL)
-        onPlayFiles?(playable, start)
+        // 播放前只检查当前文件；不要在主线程对整页文件做 fileExists。
+        guard LocalLibraryFolderAccess.shared.ensureAccess(folder: folder) else {
+            presentFileAccessAlert(for: start, folder: folder)
+            return
+        }
+
+        guard FileManager.default.fileExists(atPath: start.path) else {
+            _ = try? store?.setMissing(fileId: start.id, isMissing: true)
+            showStatus(
+                String(format: NSLocalizedString("文件不存在或已移动：%@", comment: ""), start.path),
+                isError: true
+            )
+            reloadData()
+            return
+        }
+
+        let playableFiles = files.filter { !$0.isMissing && $0.id > 0 }
+        guard let startIndex = playableFiles.firstIndex(where: { $0.id == start.id }) else {
+            showStatus(NSLocalizedString("文件已缺失，无法播放。", comment: ""), isError: true)
+            return
+        }
+
+        let playable = playableFiles.map { LocalFile(with: $0.fileURL) }
+        onPlayFiles?(playable, playable[startIndex])
+    }
+
+    private func presentFileAccessAlert(for file: LocalLibraryFile, folder: LocalLibraryFolder) {
+        let alert = NSAlert()
+        alert.messageText = NSLocalizedString("无法访问视频文件", comment: "")
+        alert.informativeText = String(
+            format: NSLocalizedString(
+                "%@\n\n文件夹「%@」的访问权限可能已失效。重新选择文件夹即可更新授权。",
+                comment: ""
+            ),
+            file.path,
+            folder.name
+        )
+        alert.alertStyle = .warning
+        alert.addButton(withTitle: NSLocalizedString("重新选择文件夹…", comment: ""))
+        alert.addButton(withTitle: NSLocalizedString("取消", comment: ""))
+
+        let handle: (NSApplication.ModalResponse) -> Void = { [weak self] response in
+            guard response == .alertFirstButtonReturn else { return }
+            self?.rechooseFolder(folder)
+        }
+
+        if let window = view.window {
+            alert.beginSheetModal(for: window, completionHandler: handle)
+        } else {
+            handle(alert.runModal())
+        }
     }
 
     // MARK: Helpers
@@ -1011,7 +1743,7 @@ extension LocalLibraryViewController: NSSearchFieldDelegate {
 
 extension LocalLibraryViewController: NSCollectionViewDataSource {
     func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
-        files.count
+        cards.count
     }
 
     func collectionView(
@@ -1019,22 +1751,41 @@ extension LocalLibraryViewController: NSCollectionViewDataSource {
         itemForRepresentedObjectAt indexPath: IndexPath
     ) -> NSCollectionViewItem {
         let cell = collectionView.dequeueItem(class: LocalLibraryCollectionViewCell.self, for: indexPath)
-        guard indexPath.item < files.count else { return cell }
-        let file = files[indexPath.item]
-        cell.update(with: file)
-        cell.view.setAccessibilityIdentifier("\(AccessibilityID.LocalLibrary.itemPrefix)\(file.id)")
-        cell.view.setAccessibilityLabel("\(file.displayTitle)，\(file.displayEpisodeTitle)，\(file.matchStatusText)")
+        guard indexPath.item < cards.count else { return cell }
+        let card = cards[indexPath.item]
+        cell.update(with: card, provider: thumbnailProvider)
+        switch card {
+        case .group(let group):
+            cell.view.setAccessibilityIdentifier("\(AccessibilityID.LocalLibrary.groupPrefix)\(group.animeId)")
+            cell.view.setAccessibilityLabel(
+                "\(group.animeTitle)，\(group.episodeCount) 集，\(group.sizeText)"
+            )
+        case .file(let file):
+            cell.view.setAccessibilityIdentifier("\(AccessibilityID.LocalLibrary.itemPrefix)\(file.id)")
+            cell.view.setAccessibilityLabel(
+                "\(file.displayTitle)，\(file.displayEpisodeTitle)，\(file.matchStatusText)"
+            )
+        }
         return cell
     }
 }
 
 extension LocalLibraryViewController: NSCollectionViewDelegate {
     func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
-        guard let indexPath = indexPaths.first, indexPath.item < files.count else { return }
-        let file = files[indexPath.item]
-        selectedFileId = file.id
+        syncSelection()
+    }
+
+    func collectionView(_ collectionView: NSCollectionView, didDeselectItemsAt indexPaths: Set<IndexPath>) {
+        syncSelection()
+    }
+
+    private func syncSelection() {
+        selectedCardIds = Set(collectionView.selectionIndexPaths.compactMap { indexPath in
+            guard indexPath.item >= 0, indexPath.item < cards.count else { return nil }
+            return cards[indexPath.item].id
+        })
         updateBottomInfo()
-        play(file: file)
+        updateActionAvailability()
     }
 }
 
@@ -1045,6 +1796,22 @@ extension LocalLibraryViewController: WaterfallLayoutDelegate {
         itemWidth: CGFloat
     ) -> CGFloat {
         LocalLibraryCollectionViewCell.estimatedHeight(for: itemWidth)
+    }
+}
+
+// MARK: - Collection view
+
+private final class LocalLibraryCollectionView: CollectionView {
+
+    var onDoubleClick: ((IndexPath) -> Void)?
+
+    override func mouseDown(with event: NSEvent) {
+        let point = convert(event.locationInWindow, from: nil)
+        let indexPath = indexPathForItem(at: point)
+        super.mouseDown(with: event)
+        if event.clickCount == 2, let indexPath {
+            onDoubleClick?(indexPath)
+        }
     }
 }
 
@@ -1199,6 +1966,15 @@ private final class LocalLibraryCollectionViewCell: CollectionViewItem {
     private let subtitleLabel: Label
     private let infoLabel: Label
 
+    private weak var provider: LocalLibraryThumbnailProvider?
+    private var thumbnailToken: UUID?
+    private var cardID: String?
+    private var infoPrefix = ""
+
+    override var isSelected: Bool {
+        didSet { updateSelectionAppearance() }
+    }
+
     override init(nibName nibNameOrNil: NSNib.Name?, bundle nibBundleOrNil: Bundle?) {
         placeholderExtension = Label(labelWithString: "")
         titleLabel = Label(labelWithString: "")
@@ -1222,8 +1998,14 @@ private final class LocalLibraryCollectionViewCell: CollectionViewItem {
 
     override func prepareForReuse() {
         super.prepareForReuse()
+        if let thumbnailToken {
+            provider?.cancel(thumbnailToken)
+        }
+        thumbnailToken = nil
+        thumbnailGeneration += 1
         posterView.kf.cancelDownloadTask()
         posterView.image = nil
+        cardID = nil
         view.toolTip = nil
     }
 
@@ -1269,6 +2051,7 @@ private final class LocalLibraryCollectionViewCell: CollectionViewItem {
 
         infoLabel.font = .systemFont(ofSize: 10)
         infoLabel.textColor = .tertiaryLabelColor
+        infoLabel.lineBreakMode = .byTruncatingTail
 
         view.addSubview(posterContainer)
         posterContainer.addSubview(placeholderView)
@@ -1321,16 +2104,52 @@ private final class LocalLibraryCollectionViewCell: CollectionViewItem {
             make.leading.trailing.equalTo(view).inset(1)
             make.bottom.lessThanOrEqualTo(view)
         }
+        updateSelectionAppearance()
     }
 
-    func update(with file: LocalLibraryFile) {
+    func update(with card: LocalLibraryCard, provider: LocalLibraryThumbnailProvider) {
+        self.provider = provider
+        cardID = card.id
+
+        if let thumbnailToken {
+            provider.cancel(thumbnailToken)
+        }
+        thumbnailToken = nil
+        thumbnailGeneration += 1
         posterView.kf.cancelDownloadTask()
         posterView.image = nil
+        titleLabel.textColor = .labelColor
+        subtitleLabel.textColor = .secondaryLabelColor
+        posterContainer.alphaValue = 1
+        placeholderExtension.isHidden = false
+        placeholderView.isHidden = false
+
+        switch card {
+        case .group(let group):
+            configureGroup(group, provider: provider)
+        case .file(let file):
+            configureFile(file, provider: provider)
+        }
+        updateSelectionAppearance()
+    }
+
+    private func configureFile(_ file: LocalLibraryFile, provider: LocalLibraryThumbnailProvider) {
         placeholderExtension.stringValue = file.fileExtension
         titleLabel.stringValue = file.displayTitle
         subtitleLabel.stringValue = file.displayEpisodeTitle
-        infoLabel.stringValue = "\(file.sizeText) · \(file.matchStatusText)"
+        infoPrefix = "\(file.sizeText)"
+        infoLabel.stringValue = composeInfo(file.mediaMetadata)
         view.toolTip = file.path
+
+        if file.isMissing {
+            badge.stringValue = NSLocalizedString("缺失", comment: "")
+            badge.layer?.backgroundColor = NSColor.systemRed.withAlphaComponent(0.82).cgColor
+            placeholderIcon.image = NSImage.safeSystemSymbol("exclamationmark.triangle")
+            posterContainer.alphaValue = 0.55
+            titleLabel.textColor = .secondaryLabelColor
+            subtitleLabel.textColor = .tertiaryLabelColor
+            return
+        }
 
         if file.isMatched {
             badge.stringValue = NSLocalizedString("已匹配", comment: "")
@@ -1345,6 +2164,78 @@ private final class LocalLibraryCollectionViewCell: CollectionViewItem {
         if let url = file.displayImageURL {
             posterView.kf.setImage(with: url)
         }
+        requestThumbnail(for: file, provider: provider)
+    }
+
+    private func configureGroup(_ group: LocalLibraryAnimeGroup, provider: LocalLibraryThumbnailProvider) {
+        let primary = group.primaryFile
+        placeholderExtension.stringValue = primary?.fileExtension ?? "VIDEO"
+        titleLabel.stringValue = group.animeTitle
+        subtitleLabel.stringValue = String(
+            format: NSLocalizedString("%d 集 · %@", comment: ""),
+            group.episodeCount,
+            group.sizeText
+        )
+        infoPrefix = ""
+        infoLabel.stringValue = group.mediaMetadata.displayText
+        view.toolTip = primary?.path
+
+        if group.missingCount > 0 {
+            badge.stringValue = String(
+                format: NSLocalizedString("缺失 %d", comment: ""),
+                group.missingCount
+            )
+            badge.layer?.backgroundColor = NSColor.systemRed.withAlphaComponent(0.82).cgColor
+            posterContainer.alphaValue = 0.72
+        } else {
+            badge.stringValue = NSLocalizedString("剧集", comment: "")
+            badge.layer?.backgroundColor = NSColor.systemTeal.withAlphaComponent(0.82).cgColor
+        }
+        placeholderIcon.image = NSImage.safeSystemSymbol("film.stack")
+
+        if let url = group.displayImageURL {
+            posterView.kf.setImage(with: url)
+        }
+        if let primary, !primary.isMissing {
+            requestThumbnail(for: primary, provider: provider)
+        }
+    }
+
+    private var thumbnailGeneration = 0
+
+    private func requestThumbnail(for file: LocalLibraryFile, provider: LocalLibraryThumbnailProvider) {
+        thumbnailGeneration += 1
+        let generation = thumbnailGeneration
+        let expectedCardID = cardID
+        let token = provider.request(for: file) { [weak self] result in
+            guard let self,
+                  self.thumbnailGeneration == generation,
+                  self.cardID == expectedCardID else { return }
+            if let image = result.image {
+                self.posterView.kf.cancelDownloadTask()
+                self.posterView.image = image
+            }
+            self.infoLabel.stringValue = self.composeInfo(result.metadata)
+        }
+        thumbnailToken = token
+    }
+
+    private func composeInfo(_ metadata: LocalLibraryMediaMetadata) -> String {
+        var parts: [String] = []
+        if !infoPrefix.isEmpty {
+            parts.append(infoPrefix)
+        }
+        if !metadata.isEmpty {
+            parts.append(metadata.displayText)
+        }
+        return parts.joined(separator: " · ")
+    }
+
+    private func updateSelectionAppearance() {
+        posterContainer.layer?.borderWidth = isSelected ? 2 : 0
+        posterContainer.layer?.borderColor = isSelected
+            ? NSColor.controlAccentColor.cgColor
+            : nil
     }
 }
 

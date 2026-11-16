@@ -32,7 +32,7 @@ private let localLibrarySQLiteTransient = unsafeBitCast(-1, to: sqlite3_destruct
 private let localLibraryFileColumns = """
     id, folderId, path, fileName, fileSize, modifiedAt, hash, \
     animeId, episodeId, animeTitle, episodeTitle, imageUrl, type, \
-    isMatched, isMissing, lastScannedAt
+    isMatched, isMissing, lastScannedAt, duration, width, height
     """
 
 final class LocalLibraryStore {
@@ -121,21 +121,34 @@ final class LocalLibraryStore {
                 type TEXT,
                 isMatched INTEGER NOT NULL DEFAULT 0,
                 isMissing INTEGER NOT NULL DEFAULT 0,
-                lastScannedAt REAL NOT NULL DEFAULT 0
+                lastScannedAt REAL NOT NULL DEFAULT 0,
+                duration REAL,
+                width INTEGER,
+                height INTEGER
             )
             """)
 
         try execute("CREATE UNIQUE INDEX IF NOT EXISTS idx_local_library_files_path ON files(path)")
         try execute("CREATE INDEX IF NOT EXISTS idx_local_library_files_folder ON files(folderId)")
         try execute("CREATE INDEX IF NOT EXISTS idx_local_library_files_matched ON files(isMatched)")
+        try execute("CREATE INDEX IF NOT EXISTS idx_local_library_files_missing ON files(isMissing)")
 
-        // 兼容早期内部测试库：缺少 isMissing 时补齐列。
+        // 兼容早期内部测试库：缺少列时补齐。
         if !hasColumn(table: "files", column: "isMissing") {
             try execute("ALTER TABLE files ADD COLUMN isMissing INTEGER NOT NULL DEFAULT 0")
         }
+        if !hasColumn(table: "files", column: "duration") {
+            try execute("ALTER TABLE files ADD COLUMN duration REAL")
+        }
+        if !hasColumn(table: "files", column: "width") {
+            try execute("ALTER TABLE files ADD COLUMN width INTEGER")
+        }
+        if !hasColumn(table: "files", column: "height") {
+            try execute("ALTER TABLE files ADD COLUMN height INTEGER")
+        }
 
-        if try intValue("PRAGMA user_version") < 1 {
-            try execute("PRAGMA user_version = 1")
+        if try intValue("PRAGMA user_version") < 2 {
+            try execute("PRAGMA user_version = 2")
         }
     }
 
@@ -234,14 +247,18 @@ final class LocalLibraryStore {
         if value.id == 0, let existing {
             value.id = existing.id
         }
+        // 同一路径可能被父/子文件夹同时扫描；folderId 只认首次归属。
+        if let existing {
+            value.folderId = existing.folderId
+        }
 
         if value.id == 0 {
             let statement = try prepare("""
                 INSERT INTO files(
                     folderId, path, fileName, fileSize, modifiedAt, hash,
                     animeId, episodeId, animeTitle, episodeTitle, imageUrl, type,
-                    isMatched, isMissing, lastScannedAt
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    isMatched, isMissing, lastScannedAt, duration, width, height
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """)
             defer { sqlite3_finalize(statement) }
             bindFileValues(statement, file: value, startIndex: 1)
@@ -252,12 +269,12 @@ final class LocalLibraryStore {
                 UPDATE files SET
                     folderId = ?, path = ?, fileName = ?, fileSize = ?, modifiedAt = ?, hash = ?,
                     animeId = ?, episodeId = ?, animeTitle = ?, episodeTitle = ?, imageUrl = ?, type = ?,
-                    isMatched = ?, isMissing = ?, lastScannedAt = ?
+                    isMatched = ?, isMissing = ?, lastScannedAt = ?, duration = ?, width = ?, height = ?
                 WHERE id = ?
                 """)
             defer { sqlite3_finalize(statement) }
             bindFileValues(statement, file: value, startIndex: 1)
-            bind(statement, 16, value.id)
+            bind(statement, 19, value.id)
             try stepDone(statement)
         }
 
@@ -304,15 +321,20 @@ final class LocalLibraryStore {
         var conditions: [String] = []
         var bindings: [SQLiteValue] = []
 
-        if !query.includesMissing {
-            conditions.append("isMissing = 0")
+        switch query.filter {
+        case .missing:
+            conditions.append("isMissing = 1")
+        case .all, .matched, .unmatched:
+            if !query.includesMissing {
+                conditions.append("isMissing = 0")
+            }
         }
         if let folderId = query.folderId {
             conditions.append("folderId = ?")
             bindings.append(.int64(folderId))
         }
         switch query.filter {
-        case .all:
+        case .all, .missing:
             break
         case .matched:
             conditions.append("isMatched = 1")
@@ -368,31 +390,86 @@ final class LocalLibraryStore {
         defer { lock.unlock() }
 
         if case .matched(let info) = outcome {
-            let statement = try prepare("""
-                UPDATE files SET isMatched = 1, animeId = ?, episodeId = ?, animeTitle = ?,
-                    episodeTitle = ?, imageUrl = ?, type = ?
-                WHERE id = ?
-                """)
-            defer { sqlite3_finalize(statement) }
-            bind(statement, 1, Int64(info.animeId))
-            bind(statement, 2, Int64(info.episodeId))
-            bind(statement, 3, info.animeTitle)
-            bind(statement, 4, info.episodeTitle)
-            bind(statement, 5, info.imageUrl)
-            bind(statement, 6, info.type)
-            bind(statement, 7, fileId)
-            try stepDone(statement)
-        } else {
-            let statement = try prepare("""
-                UPDATE files SET isMatched = 0, animeId = NULL, episodeId = NULL, animeTitle = NULL,
-                    episodeTitle = NULL, imageUrl = NULL, type = NULL
-                WHERE id = ?
-                """)
-            defer { sqlite3_finalize(statement) }
-            bind(statement, 1, fileId)
-            try stepDone(statement)
+            return try applyMatchUnlocked(fileId: fileId, info: info)
         }
+        return try clearMatchUnlocked(fileId: fileId)
+    }
 
+    /// 手动匹配：直接写入用户选择的番剧/剧集。
+    @discardableResult
+    func applyManualMatch(fileId: Int64, info: LocalLibraryMatchInfo) throws -> LocalLibraryFile? {
+        lock.lock()
+        defer { lock.unlock() }
+        return try applyMatchUnlocked(fileId: fileId, info: info)
+    }
+
+    /// 取消匹配：清空番剧/剧集/标题/图片/类型。
+    @discardableResult
+    func clearMatch(fileId: Int64) throws -> LocalLibraryFile? {
+        lock.lock()
+        defer { lock.unlock() }
+        return try clearMatchUnlocked(fileId: fileId)
+    }
+
+    private func applyMatchUnlocked(fileId: Int64, info: LocalLibraryMatchInfo) throws -> LocalLibraryFile? {
+        let statement = try prepare("""
+            UPDATE files SET isMatched = 1, animeId = ?, episodeId = ?, animeTitle = ?,
+                episodeTitle = ?, imageUrl = ?, type = ?
+            WHERE id = ?
+            """)
+        defer { sqlite3_finalize(statement) }
+        bind(statement, 1, Int64(info.animeId))
+        bind(statement, 2, Int64(info.episodeId))
+        bind(statement, 3, info.animeTitle)
+        bind(statement, 4, info.episodeTitle)
+        bind(statement, 5, info.imageUrl)
+        bind(statement, 6, info.type)
+        bind(statement, 7, fileId)
+        try stepDone(statement)
+        return try fileUnlocked(id: fileId)
+    }
+
+    private func clearMatchUnlocked(fileId: Int64) throws -> LocalLibraryFile? {
+        let statement = try prepare("""
+            UPDATE files SET isMatched = 0, animeId = NULL, episodeId = NULL, animeTitle = NULL,
+                episodeTitle = NULL, imageUrl = NULL, type = NULL
+            WHERE id = ?
+            """)
+        defer { sqlite3_finalize(statement) }
+        bind(statement, 1, fileId)
+        try stepDone(statement)
+        return try fileUnlocked(id: fileId)
+    }
+
+    /// 写入后台探测到的时长/分辨率；nil 表示该项探测失败。
+    @discardableResult
+    func updateMediaMetadata(
+        fileId: Int64,
+        duration: Double?,
+        width: Int?,
+        height: Int?
+    ) throws -> LocalLibraryFile? {
+        lock.lock()
+        defer { lock.unlock() }
+        let statement = try prepare("UPDATE files SET duration = ?, width = ?, height = ? WHERE id = ?")
+        defer { sqlite3_finalize(statement) }
+        bind(statement, 1, duration)
+        bind(statement, 2, width.map { Int64($0) })
+        bind(statement, 3, height.map { Int64($0) })
+        bind(statement, 4, fileId)
+        try stepDone(statement)
+        return try fileUnlocked(id: fileId)
+    }
+
+    @discardableResult
+    func setMissing(fileId: Int64, isMissing: Bool) throws -> LocalLibraryFile? {
+        lock.lock()
+        defer { lock.unlock() }
+        let statement = try prepare("UPDATE files SET isMissing = ? WHERE id = ?")
+        defer { sqlite3_finalize(statement) }
+        bind(statement, 1, Int64(isMissing ? 1 : 0))
+        bind(statement, 2, fileId)
+        try stepDone(statement)
         return try fileUnlocked(id: fileId)
     }
 
@@ -446,6 +523,51 @@ final class LocalLibraryStore {
         bind(statement, 1, folderId)
         try stepDone(statement)
         return count
+    }
+
+    /// 从索引中移除指定记录，不删除磁盘文件。
+    @discardableResult
+    func deleteFiles(ids: [Int64]) throws -> Int {
+        guard !ids.isEmpty else { return 0 }
+        lock.lock()
+        defer { lock.unlock() }
+        // Int64 由本模块生成，直接拼接占位值可同时用于 COUNT 和 DELETE。
+        let placeholders = ids.map(String.init).joined(separator: ",")
+        let count = try intValue("SELECT COUNT(*) FROM files WHERE id IN (\(placeholders))")
+        let statement = try prepare("DELETE FROM files WHERE id IN (\(placeholders))")
+        defer { sqlite3_finalize(statement) }
+        try stepDone(statement)
+        return count
+    }
+
+    /// 只删除缺失记录；folderId 为 nil 时清理整个媒体库。
+    @discardableResult
+    func deleteMissingFiles(folderId: Int64? = nil) throws -> Int {
+        lock.lock()
+        defer { lock.unlock() }
+        let whereClause = folderId == nil ? "isMissing = 1" : "isMissing = 1 AND folderId = ?"
+        let count: Int
+        let delete: OpaquePointer
+        if let folderId {
+            count = try intValue("SELECT COUNT(*) FROM files WHERE isMissing = 1 AND folderId = \(folderId)")
+            delete = try prepare("DELETE FROM files WHERE \(whereClause)")
+            bind(delete, 1, folderId)
+        } else {
+            count = try intValue("SELECT COUNT(*) FROM files WHERE isMissing = 1")
+            delete = try prepare("DELETE FROM files WHERE \(whereClause)")
+        }
+        defer { sqlite3_finalize(delete) }
+        try stepDone(delete)
+        return count
+    }
+
+    func missingCount(folderId: Int64? = nil) throws -> Int {
+        lock.lock()
+        defer { lock.unlock() }
+        if let folderId {
+            return try intValue("SELECT COUNT(*) FROM files WHERE isMissing = 1 AND folderId = \(folderId)")
+        }
+        return try intValue("SELECT COUNT(*) FROM files WHERE isMissing = 1")
     }
 
     // MARK: - Statistics
@@ -574,7 +696,12 @@ final class LocalLibraryStore {
             type: string(statement, 12),
             isMatched: sqlite3_column_int(statement, 13) != 0,
             isMissing: sqlite3_column_int(statement, 14) != 0,
-            lastScannedAt: date(statement, 15)
+            lastScannedAt: date(statement, 15),
+            duration: sqlite3_column_type(statement, 16) != SQLITE_NULL
+                ? sqlite3_column_double(statement, 16)
+                : nil,
+            pixelWidth: optionalInt(statement, 17),
+            pixelHeight: optionalInt(statement, 18)
         )
     }
 
@@ -594,7 +721,10 @@ final class LocalLibraryStore {
         bind(statement, index, file.type); index += 1
         bind(statement, index, Int64(file.isMatched ? 1 : 0)); index += 1
         bind(statement, index, Int64(file.isMissing ? 1 : 0)); index += 1
-        bind(statement, index, file.lastScannedAt.timeIntervalSince1970)
+        bind(statement, index, file.lastScannedAt.timeIntervalSince1970); index += 1
+        bind(statement, index, file.duration); index += 1
+        bind(statement, index, file.pixelWidth.map { Int64($0) }); index += 1
+        bind(statement, index, file.pixelHeight.map { Int64($0) })
     }
 
     private func orderClause(for sort: LocalLibrarySort) -> String {
@@ -714,6 +844,14 @@ final class LocalLibraryStore {
 
     private func bind(_ statement: OpaquePointer, _ index: Int32, _ value: Double) {
         sqlite3_bind_double(statement, index, value)
+    }
+
+    private func bind(_ statement: OpaquePointer, _ index: Int32, _ value: Double?) {
+        if let value {
+            sqlite3_bind_double(statement, index, value)
+        } else {
+            sqlite3_bind_null(statement, index)
+        }
     }
 
     private func bind(_ statement: OpaquePointer, _ index: Int32, _ value: Data?) {

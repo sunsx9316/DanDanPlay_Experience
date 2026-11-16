@@ -45,9 +45,34 @@ struct LocalLibraryFile: Equatable {
     var isMatched: Bool
     var isMissing: Bool
     var lastScannedAt: Date
+    /// 由 AVFoundation 在后台探测；不支持的编码保持 nil。
+    var duration: Double?
+    var pixelWidth: Int?
+    var pixelHeight: Int?
 
     var fileURL: URL {
         URL(fileURLWithPath: path)
+    }
+
+    var mediaMetadata: LocalLibraryMediaMetadata {
+        LocalLibraryMediaMetadata(duration: duration, width: pixelWidth, height: pixelHeight)
+    }
+
+    /// 文件名、大小、修改时间和哈希都未变化时，重扫应保留匹配结果。
+    /// 哈希计算失败（nil）不视为内容变化：宁可保留旧匹配，也不要因网络卷/临时错误丢元数据。
+    func hasSameScannedContent(
+        fileSize: Int64,
+        modifiedAt: Date,
+        hash: String?,
+        tolerance: TimeInterval = 1
+    ) -> Bool {
+        guard self.fileSize == fileSize else { return false }
+        guard abs(self.modifiedAt.timeIntervalSince1970 - modifiedAt.timeIntervalSince1970) <= tolerance else {
+            return false
+        }
+        guard let hash else { return true }
+        guard let existingHash = self.hash else { return true }
+        return existingHash == hash
     }
 
     var fileExtension: String {
@@ -90,26 +115,39 @@ struct LocalLibraryFile: Equatable {
         fileSize: Int64,
         modifiedAt: Date,
         hash: String?,
-        existingId: Int64?,
+        existing: LocalLibraryFile?,
         now: Date
     ) -> LocalLibraryFile {
-        LocalLibraryFile(
-            id: existingId ?? 0,
-            folderId: folderId,
+        let keepsMatch = existing?.hasSameScannedContent(
+            fileSize: fileSize,
+            modifiedAt: modifiedAt,
+            hash: hash
+        ) ?? false
+        // 哈希计算失败但大小/mtime 未变时保留旧哈希，避免下次扫描丢失匹配依据。
+        let resolvedHash = (keepsMatch && hash == nil) ? existing?.hash : hash
+
+        return LocalLibraryFile(
+            id: existing?.id ?? 0,
+            // 同一路径可能同时落在父/子文件夹的扫描范围里；保留首次入库的归属，
+            // 避免嵌套文件夹互相覆盖导致计数和移除行为不稳定。
+            folderId: existing?.folderId ?? folderId,
             path: path,
             fileName: fileName,
             fileSize: fileSize,
             modifiedAt: modifiedAt,
-            hash: hash,
-            animeId: nil,
-            episodeId: nil,
-            animeTitle: nil,
-            episodeTitle: nil,
-            imageUrl: nil,
-            type: nil,
-            isMatched: false,
+            hash: resolvedHash,
+            animeId: keepsMatch ? existing?.animeId : nil,
+            episodeId: keepsMatch ? existing?.episodeId : nil,
+            animeTitle: keepsMatch ? existing?.animeTitle : nil,
+            episodeTitle: keepsMatch ? existing?.episodeTitle : nil,
+            imageUrl: keepsMatch ? existing?.imageUrl : nil,
+            type: keepsMatch ? existing?.type : nil,
+            isMatched: keepsMatch ? (existing?.isMatched ?? false) : false,
             isMissing: false,
-            lastScannedAt: now
+            lastScannedAt: now,
+            duration: keepsMatch ? existing?.duration : nil,
+            pixelWidth: keepsMatch ? existing?.pixelWidth : nil,
+            pixelHeight: keepsMatch ? existing?.pixelHeight : nil
         )
     }
 }
@@ -120,12 +158,14 @@ enum LocalLibraryFilter: String, CaseIterable {
     case all
     case matched
     case unmatched
+    case missing
 
     var displayName: String {
         switch self {
         case .all: return NSLocalizedString("全部", comment: "")
         case .matched: return NSLocalizedString("已匹配", comment: "")
         case .unmatched: return NSLocalizedString("未匹配", comment: "")
+        case .missing: return NSLocalizedString("缺失", comment: "")
         }
     }
 }
@@ -163,14 +203,16 @@ struct LocalLibraryQuery: Equatable {
 enum LocalLibraryQueryLogic {
 
     static func matches(_ file: LocalLibraryFile, query: LocalLibraryQuery) -> Bool {
-        if !query.includesMissing && file.isMissing {
+        if query.filter == .missing {
+            guard file.isMissing else { return false }
+        } else if !query.includesMissing && file.isMissing {
             return false
         }
         if let folderId = query.folderId, file.folderId != folderId {
             return false
         }
         switch query.filter {
-        case .all:
+        case .all, .missing:
             break
         case .matched:
             guard file.isMatched else { return false }
@@ -254,6 +296,12 @@ struct LocalLibraryScanProgress: Equatable {
     }
 }
 
+struct LocalLibraryScanFailure: Equatable {
+    var folderId: Int64
+    var folderPath: String
+    var message: String
+}
+
 struct LocalLibraryScanSummary: Equatable {
     var added: Int = 0
     var updated: Int = 0
@@ -263,6 +311,7 @@ struct LocalLibraryScanSummary: Equatable {
     var failed: Int = 0
     var cancelled: Bool = false
     var errorMessage: String?
+    var folderFailures: [LocalLibraryScanFailure] = []
 }
 
 struct LocalLibraryScanItem: Equatable {
@@ -310,6 +359,8 @@ enum LocalLibraryScanRules {
     ) -> Bool {
         guard let existing else { return true }
         if existing.isMissing { return true }
+        // 首次哈希失败（nil）时下次扫描重试，避免永久无法匹配。
+        if existing.hash == nil { return true }
         if existing.fileSize != fileSize { return true }
         if abs(existing.modifiedAt.timeIntervalSince1970 - modifiedAt.timeIntervalSince1970) > tolerance {
             return true
@@ -318,9 +369,12 @@ enum LocalLibraryScanRules {
     }
 
     /// 递归枚举视频文件；跳过隐藏文件、包内容和非常规文件。
+    /// `shouldCancel` 会在每个目录项之间检查；取消时抛出 `CancellationError`，
+    /// 让调用方不要把“用户取消”误判为“文件夹为空”。
     static func enumerateVideoFiles(
         in root: URL,
-        fileManager: FileManager = .default
+        fileManager: FileManager = .default,
+        shouldCancel: (() -> Bool)? = nil
     ) throws -> [LocalLibraryScanItem] {
         let keys: [URLResourceKey] = [
             .isRegularFileKey, .isHiddenKey, .isPackageKey,
@@ -341,6 +395,9 @@ enum LocalLibraryScanRules {
 
         var result: [LocalLibraryScanItem] = []
         for case let url as URL in enumerator {
+            if shouldCancel?() == true {
+                throw CancellationError()
+            }
             let values = try? url.resourceValues(forKeys: Set(keys))
             if values?.isRegularFile != true { continue }
             if values?.isHidden == true { continue }
@@ -360,6 +417,10 @@ enum LocalLibraryScanRules {
             )
         }
 
+        if shouldCancel?() == true {
+            throw CancellationError()
+        }
+
         // 完全没有可读文件且枚举过程中出现过错误时，向上报告；
         // 避免把“没有权限”误判成“文件夹已清空”并把所有记录标为 missing。
         if result.isEmpty, let enumerationError {
@@ -367,6 +428,242 @@ enum LocalLibraryScanRules {
         }
 
         return result.sorted { $0.path.localizedStandardCompare($1.path) == .orderedAscending }
+    }
+}
+
+// MARK: - Folder relationships
+
+/// 新添加的媒体库文件夹与既有文件夹的包含关系。
+enum LocalLibraryFolderRelationship: Equatable {
+    case none
+    case same
+    /// 新文件夹是既有文件夹的父目录（包含既有文件夹）。
+    case newIsAncestor
+    /// 新文件夹位于既有文件夹内部。
+    case newIsDescendant
+}
+
+enum LocalLibraryFolderRules {
+
+    static func relationship(newPath: String, existingPath: String) -> LocalLibraryFolderRelationship {
+        let new = normalized(newPath)
+        let existing = normalized(existingPath)
+        guard !new.isEmpty, !existing.isEmpty else { return .none }
+        if new == existing { return .same }
+        if isDescendant(existing, of: new) { return .newIsAncestor }
+        if isDescendant(new, of: existing) { return .newIsDescendant }
+        return .none
+    }
+
+    /// 返回所有重叠的既有路径及关系；空数组表示没有重叠。
+    static func overlaps(
+        newPath: String,
+        existingPaths: [String]
+    ) -> [(path: String, relationship: LocalLibraryFolderRelationship)] {
+        existingPaths.compactMap { existing in
+            let relationship = relationship(newPath: newPath, existingPath: existing)
+            guard relationship != .none else { return nil }
+            return (existing, relationship)
+        }
+    }
+
+    static func normalized(_ path: String) -> String {
+        URL(fileURLWithPath: path).standardizedFileURL.path
+    }
+
+    private static func isDescendant(_ path: String, of ancestor: String) -> Bool {
+        if ancestor == "/" {
+            return path != "/" && path.hasPrefix("/")
+        }
+        return path.hasPrefix(ancestor + "/")
+    }
+}
+
+// MARK: - Episode grouping
+
+struct LocalLibraryAnimeGroup: Equatable {
+    var animeId: Int
+    var animeTitle: String
+    var imageUrl: String?
+    var type: String?
+    /// 已按集数/标题排序。
+    var files: [LocalLibraryFile]
+
+    var episodeCount: Int { files.count }
+    var missingCount: Int { files.filter(\.isMissing).count }
+    var totalSize: Int64 { files.reduce(0) { $0 + $1.fileSize } }
+    var sizeText: String { LocalLibraryFormatting.fileSize(totalSize) }
+
+    var primaryFile: LocalLibraryFile? {
+        files.first(where: { !$0.isMissing }) ?? files.first
+    }
+
+    var mediaMetadata: LocalLibraryMediaMetadata {
+        primaryFile?.mediaMetadata ?? LocalLibraryMediaMetadata()
+    }
+
+    var displayImageURL: URL? {
+        if let imageUrl, !imageUrl.isEmpty, imageUrl != "Unknown", let url = URL(string: imageUrl) {
+            return url
+        }
+        return files.compactMap(\.displayImageURL).first
+    }
+}
+
+enum LocalLibraryCard: Equatable {
+    case group(LocalLibraryAnimeGroup)
+    case file(LocalLibraryFile)
+
+    var id: String {
+        switch self {
+        case .group(let group):
+            return "anime-\(group.animeId)"
+        case .file(let file):
+            return "file-\(file.id)"
+        }
+    }
+
+    var files: [LocalLibraryFile] {
+        switch self {
+        case .group(let group): return group.files
+        case .file(let file): return [file]
+        }
+    }
+
+    var primaryFile: LocalLibraryFile? {
+        files.first
+    }
+
+    var sortTitle: String {
+        switch self {
+        case .group(let group): return group.animeTitle
+        case .file(let file): return file.displayTitle
+        }
+    }
+
+    var isMissing: Bool {
+        files.allSatisfy(\.isMissing)
+    }
+}
+
+enum LocalLibraryGrouping {
+
+    /// 已匹配且 animeId 相同的文件合并为一张卡；未匹配文件保持独立。
+    static func cards(from files: [LocalLibraryFile], sort: LocalLibrarySort) -> [LocalLibraryCard] {
+        var grouped: [Int: [LocalLibraryFile]] = [:]
+        var individuals: [LocalLibraryFile] = []
+
+        for file in files {
+            if file.isMatched, let animeId = file.animeId, animeId > 0 {
+                grouped[animeId, default: []].append(file)
+            } else {
+                individuals.append(file)
+            }
+        }
+
+        var cards: [LocalLibraryCard] = []
+        for (animeId, groupFiles) in grouped {
+            let ordered = orderedEpisodes(groupFiles)
+            let first = ordered[0]
+            let title = groupFiles
+                .compactMap(\.animeTitle)
+                .first(where: { !$0.isEmpty }) ?? first.displayTitle
+            let imageUrl = groupFiles
+                .compactMap(\.imageUrl)
+                .first(where: { !$0.isEmpty && $0 != "Unknown" })
+            let type = groupFiles.compactMap(\.type).first(where: { !$0.isEmpty })
+            cards.append(
+                .group(
+                    LocalLibraryAnimeGroup(
+                        animeId: animeId,
+                        animeTitle: title,
+                        imageUrl: imageUrl,
+                        type: type,
+                        files: ordered
+                    )
+                )
+            )
+        }
+        cards.append(contentsOf: individuals.map { .file($0) })
+        return sortedCards(cards, by: sort)
+    }
+
+    /// 第2话应排在第10话之前；无法解析集数时退回标题/路径排序。
+    static func orderedEpisodes(_ files: [LocalLibraryFile]) -> [LocalLibraryFile] {
+        var numbers: [String: Double?] = [:]
+        for file in files {
+            numbers[file.path] = episodeNumber(from: file.episodeTitle ?? file.fileName)
+        }
+        return files.sorted { lhs, rhs in
+            let lhsNumber = numbers[lhs.path] ?? nil
+            let rhsNumber = numbers[rhs.path] ?? nil
+
+            switch (lhsNumber, rhsNumber) {
+            case let (lhsNumber?, rhsNumber?) where lhsNumber != rhsNumber:
+                return lhsNumber < rhsNumber
+            case (nil, .some):
+                return false
+            case (.some, nil):
+                return true
+            default:
+                break
+            }
+
+            let lhsTitle = (lhs.episodeTitle.flatMap { $0.isEmpty ? nil : $0 }) ?? lhs.fileName
+            let rhsTitle = (rhs.episodeTitle.flatMap { $0.isEmpty ? nil : $0 }) ?? rhs.fileName
+            let result = lhsTitle.localizedStandardCompare(rhsTitle)
+            if result != .orderedSame {
+                return result == .orderedAscending
+            }
+            return lhs.path.localizedStandardCompare(rhs.path) == .orderedAscending
+        }
+    }
+
+    private static let episodePatterns: [NSRegularExpression] = [
+        #"(?i)\bS\d+\s*E(\d+(?:\.\d+)?)\b"#,
+        #"第\s*(\d+(?:\.\d+)?)\s*[话話集]"#,
+        #"(?i)\b(?:EP|E)\s*(\d+(?:\.\d+)?)\b"#,
+        #"(\d+(?:\.\d+)?)"#,
+    ].compactMap { try? NSRegularExpression(pattern: $0) }
+
+    /// 支持「第12话」「EP03」「S02E05」以及纯数字；解析失败返回 nil。
+    static func episodeNumber(from text: String) -> Double? {
+        let range = NSRange(text.startIndex..<text.endIndex, in: text)
+        for regex in episodePatterns {
+            guard let match = regex.firstMatch(in: text, range: range), match.numberOfRanges > 1,
+                  let valueRange = Range(match.range(at: 1), in: text) else {
+                continue
+            }
+            if let value = Double(text[valueRange]) {
+                return value
+            }
+        }
+        return nil
+    }
+
+    static func sortedCards(_ cards: [LocalLibraryCard], by sort: LocalLibrarySort) -> [LocalLibraryCard] {
+        cards.sorted { lhs, rhs in
+            switch sort {
+            case .title:
+                let result = lhs.sortTitle.localizedStandardCompare(rhs.sortTitle)
+                if result != .orderedSame { return result == .orderedAscending }
+            case .fileName:
+                let leftName = lhs.primaryFile?.fileName ?? ""
+                let rightName = rhs.primaryFile?.fileName ?? ""
+                let result = leftName.localizedStandardCompare(rightName)
+                if result != .orderedSame { return result == .orderedAscending }
+            case .fileSize:
+                if lhs.files.reduce(0, { $0 + $1.fileSize }) != rhs.files.reduce(0, { $0 + $1.fileSize }) {
+                    return lhs.files.reduce(0, { $0 + $1.fileSize }) > rhs.files.reduce(0, { $0 + $1.fileSize })
+                }
+            case .path:
+                let leftPath = lhs.primaryFile?.path ?? ""
+                let rightPath = rhs.primaryFile?.path ?? ""
+                let result = leftPath.localizedStandardCompare(rightPath)
+                if result != .orderedSame { return result == .orderedAscending }
+            }
+            return lhs.id.localizedStandardCompare(rhs.id) == .orderedAscending
+        }
     }
 }
 
@@ -445,6 +742,39 @@ enum LocalLibraryMatchEvaluator {
     }
 }
 
+// MARK: - Media metadata
+
+struct LocalLibraryMediaMetadata: Equatable {
+    var duration: Double?
+    var width: Int?
+    var height: Int?
+
+    var isEmpty: Bool {
+        durationText == nil && resolutionText == nil
+    }
+
+    var displayText: String {
+        [durationText, resolutionText]
+            .compactMap { $0 }
+            .joined(separator: " · ")
+    }
+
+    var durationText: String? {
+        guard let duration, duration.isFinite, duration > 0 else { return nil }
+        return LocalLibraryFormatting.duration(duration)
+    }
+
+    var resolutionText: String? {
+        guard let width, let height, width > 0, height > 0 else { return nil }
+        let shortSide = min(width, height)
+        let longSide = max(width, height)
+        if shortSide >= 2000 { return "4K" }
+        if shortSide >= 1000 { return "1080p" }
+        if shortSide >= 700 { return "720p" }
+        return "\(width)×\(height)"
+    }
+}
+
 // MARK: - Formatting
 
 enum LocalLibraryFormatting {
@@ -456,5 +786,16 @@ enum LocalLibraryFormatting {
     static func folderName(for path: String) -> String {
         let last = (path as NSString).lastPathComponent
         return last.isEmpty ? path : last
+    }
+
+    static func duration(_ seconds: Double) -> String {
+        let total = max(0, Int(seconds.rounded()))
+        let hours = total / 3600
+        let minutes = (total % 3600) / 60
+        let secs = total % 60
+        if hours > 0 {
+            return String(format: "%d:%02d:%02d", hours, minutes, secs)
+        }
+        return String(format: "%d:%02d", minutes, secs)
     }
 }

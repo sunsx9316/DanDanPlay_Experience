@@ -1,35 +1,226 @@
 {
   "sourceLanguage": "en",
   "strings": {
-    "← 返回": {
-      "extractionState": "stale",
+    "%@\n\n可能是文件夹已移动或访问权限失效。重新选择该文件夹即可更新授权。": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "← Back"
+            "value": "%@\n\nThe folder may have moved or access may have expired. Select the folder again to renew access."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "← 返回"
+            "value": "%@\n\n可能是文件夹已移动或访问权限失效。重新选择该文件夹即可更新授权。"
           }
         }
       }
     },
-    "⭐ %.1f": {
+    "%@\n\n文件夹「%@」的访问权限可能已失效。重新选择文件夹即可更新授权。": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "⭐ %.1f"
+            "value": "%@\n\nAccess to folder “%@” may have expired. Choose the folder again to renew access."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "⭐ %.1f"
+            "value": "%@\n\n文件夹「%@」的访问权限可能已失效。重新选择文件夹即可更新授权。"
+          }
+        }
+      }
+    },
+    "%@\n\n重叠范围内的视频只保留首次入库的文件夹归属，不会重复计数；移除其中一个文件夹也不会删除另一个文件夹的索引。是否仍然添加？": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@\n\nVideos in the overlapping range keep the folder they were first added under and are not counted twice. Removing either folder does not delete the other folder’s entries. Add anyway?"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@\n\n重叠范围内的视频只保留首次入库的文件夹归属，不会重复计数；移除其中一个文件夹也不会删除另一个文件夹的索引。是否仍然添加？"
+          }
+        }
+      }
+    },
+    "%@ · %d 帧 · %d fps": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · %d frames · %d fps"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · %d 帧 · %d fps"
+          }
+        }
+      }
+    },
+    "%@ · %d 集 · %@%@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · %d episodes · %@%@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ · %d 集 · %@%@"
+          }
+        }
+      }
+    },
+    "%@更新": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updates on %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@更新"
+          }
+        }
+      }
+    },
+    "%d fps": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d fps"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d fps"
+          }
+        }
+      }
+    },
+    "%d px": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d px"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d px"
+          }
+        }
+      }
+    },
+    "%d 分": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d points"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d 分"
+          }
+        }
+      }
+    },
+    "%d 季": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d seasons"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d 季"
+          }
+        }
+      }
+    },
+    "%d 秒": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d s"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d 秒"
+          }
+        }
+      }
+    },
+    "%d 集": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d episodes"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d 集"
+          }
+        }
+      }
+    },
+    "%d 集 · %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d episodes · %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d 集 · %@"
+          }
+        }
+      }
+    },
+    "%d 集 · %@%@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d episodes · %@%@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d 集 · %@%@"
           }
         }
       }
@@ -82,6 +273,38 @@
         }
       }
     },
+    "16:10": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "16:10"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "16:10"
+          }
+        }
+      }
+    },
+    "16:9": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "16:9"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "16:9"
+          }
+        }
+      }
+    },
     "2/3屏": {
       "localizations": {
         "en": {
@@ -110,38 +333,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "4:3"
-          }
-        }
-      }
-    },
-    "16:9": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "16:9"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "16:9"
-          }
-        }
-      }
-    },
-    "16:10": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "16:10"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "16:10"
           }
         }
       }
@@ -210,23 +401,6 @@
         }
       }
     },
-    "Gitee 下载": {
-      "extractionState": "stale",
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gitee Download"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gitee 下载"
-          }
-        }
-      }
-    },
     "GitHub 下载": {
       "extractionState": "stale",
       "localizations": {
@@ -244,28 +418,19 @@
         }
       }
     },
-    "iCloud 同步": {
+    "Gitee 下载": {
+      "extractionState": "stale",
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "iCloud Sync"
-          }
-        }
-      }
-    },
-    "iCloud 同步冲突": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "iCloud Sync Conflict"
+            "value": "Gitee Download"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "iCloud 同步冲突"
+            "value": "Gitee 下载"
           }
         }
       }
@@ -335,6 +500,65 @@
         }
       }
     },
+    "iCloud 同步": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud Sync"
+          }
+        }
+      }
+    },
+    "iCloud 同步冲突": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud Sync Conflict"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "iCloud 同步冲突"
+          }
+        }
+      }
+    },
+    "← 返回": {
+      "extractionState": "stale",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "← Back"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "← 返回"
+          }
+        }
+      }
+    },
+    "⭐ %.1f": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⭐ %.1f"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "⭐ %.1f"
+          }
+        }
+      }
+    },
     "上传": {
       "extractionState": "stale",
       "localizations": {
@@ -348,6 +572,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "上传"
+          }
+        }
+      }
+    },
+    "上次观看 %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Last watched %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "上次观看 %@"
           }
         }
       }
@@ -428,6 +668,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "下载本地弹幕..."
+          }
+        }
+      }
+    },
+    "不取消": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Keep matches"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不取消"
           }
         }
       }
@@ -545,6 +801,86 @@
         }
       }
     },
+    "仍然添加": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add anyway"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "仍然添加"
+          }
+        }
+      }
+    },
+    "从媒体库移除所选 %d 个文件？": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove %d selected files from the library?"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "从媒体库移除所选 %d 个文件？"
+          }
+        }
+      }
+    },
+    "会清空这些文件的番剧、剧集和海报信息；文件本身不会被删除。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This clears the anime, episode, and poster information for these files. The files themselves are not deleted."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "会清空这些文件的番剧、剧集和海报信息；文件本身不会被删除。"
+          }
+        }
+      }
+    },
+    "位于已有文件夹「%@」内": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Is inside existing folder “%@”"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "位于已有文件夹「%@」内"
+          }
+        }
+      }
+    },
+    "作品 ID": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Work ID"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "作品 ID"
+          }
+        }
+      }
+    },
     "作品详情": {
       "localizations": {
         "en": {
@@ -557,6 +893,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "作品详情"
+          }
+        }
+      }
+    },
+    "作品详情为空": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No detail data"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "作品详情为空"
+          }
+        }
+      }
+    },
+    "作品资料": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Details"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "作品资料"
           }
         }
       }
@@ -609,6 +977,22 @@
         }
       }
     },
+    "保存后将取消关注，评分和短评将无法编辑。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saving will unfavorite this title. Rating and comment become read-only."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "保存后将取消关注，评分和短评将无法编辑。"
+          }
+        }
+      }
+    },
     "保存文件失败": {
       "localizations": {
         "en": {
@@ -637,6 +1021,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "保存需要退出App，是否退出？"
+          }
+        }
+      }
+    },
+    "修改状态、评分或短评后点击保存生效。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Change status, rating or comment, then save."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "修改状态、评分或短评后点击保存生效。"
           }
         }
       }
@@ -673,6 +1073,22 @@
         }
       }
     },
+    "全部剧集": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All episodes"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "全部剧集"
+          }
+        }
+      }
+    },
     "全部显示": {
       "localizations": {
         "en": {
@@ -689,6 +1105,54 @@
         }
       }
     },
+    "全部标签": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All tags"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "全部标签"
+          }
+        }
+      }
+    },
+    "共 %d 个视频 · 已匹配 %d · 未匹配 %d · 缺失 %d": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d videos · %d matched · %d unmatched · %d missing"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "共 %d 个视频 · 已匹配 %d · 未匹配 %d · 缺失 %d"
+          }
+        }
+      }
+    },
+    "共 %d 集": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d episodes"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "共 %d 集"
+          }
+        }
+      }
+    },
     "关于": {
       "localizations": {
         "en": {
@@ -701,6 +1165,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "关于"
+          }
+        }
+      }
+    },
+    "关注": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Favorite"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "关注"
           }
         }
       }
@@ -749,6 +1229,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "关闭则手动关联"
+          }
+        }
+      }
+    },
+    "其他剧集": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Other episodes"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "其他剧集"
           }
         }
       }
@@ -882,6 +1378,22 @@
         }
       }
     },
+    "剧集": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Episodes"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "剧集"
+          }
+        }
+      }
+    },
     "剪切": {
       "localizations": {
         "en": {
@@ -926,6 +1438,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "加载中..."
+          }
+        }
+      }
+    },
+    "加载失败": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed to load"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "加载失败"
           }
         }
       }
@@ -1026,6 +1554,134 @@
         }
       }
     },
+    "加载视频超时，请稍后重试。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading the video timed out. Try again later."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "加载视频超时，请稍后重试。"
+          }
+        }
+      }
+    },
+    "动图导出": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Animated Image Export"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "动图导出"
+          }
+        }
+      }
+    },
+    "动图已生成": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Animated Image Ready"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "动图已生成"
+          }
+        }
+      }
+    },
+    "动图编码失败。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed to encode the animated image."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "动图编码失败。"
+          }
+        }
+      }
+    },
+    "动图预览": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Animated image preview"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "动图预览"
+          }
+        }
+      }
+    },
+    "包含已有文件夹「%@」": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Contains existing folder “%@”"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "包含已有文件夹「%@」"
+          }
+        }
+      }
+    },
+    "匹配修正": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Match correction"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "匹配修正"
+          }
+        }
+      }
+    },
+    "匹配修正…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Match correction…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "匹配修正…"
+          }
+        }
+      }
+    },
     "匹配到多个结果": {
       "localizations": {
         "en": {
@@ -1038,6 +1694,102 @@
           "stringUnit": {
             "state": "translated",
             "value": "匹配到多个结果"
+          }
+        }
+      }
+    },
+    "匹配进行中，请稍后再扫描。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Matching is running. Scan after it finishes."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "匹配进行中，请稍后再扫描。"
+          }
+        }
+      }
+    },
+    "匹配进行中，请稍后再添加文件夹。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Matching is running. Add folders after it finishes."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "匹配进行中，请稍后再添加文件夹。"
+          }
+        }
+      }
+    },
+    "匹配进行中，请稍后再移除文件夹。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Matching is running. Remove folders after it finishes."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "匹配进行中，请稍后再移除文件夹。"
+          }
+        }
+      }
+    },
+    "单击选择，双击播放或打开剧集；按住 ⌘ 可多选": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Click to select; double-click to play or open episodes; hold ⌘ to select multiple"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "单击选择，双击播放或打开剧集；按住 ⌘ 可多选"
+          }
+        }
+      }
+    },
+    "单击选择，双击播放；按住 ⌘ 可多选": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Click to select, double-click to play; hold ⌘ to select multiple"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "单击选择，双击播放；按住 ⌘ 可多选"
+          }
+        }
+      }
+    },
+    "即将完成…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finishing…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "即将完成…"
           }
         }
       }
@@ -1234,6 +1986,166 @@
         }
       }
     },
+    "取消关注": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unfavorite"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "取消关注"
+          }
+        }
+      }
+    },
+    "取消匹配": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear match"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "取消匹配"
+          }
+        }
+      }
+    },
+    "取消匹配所选…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear match for selected…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "取消匹配所选…"
+          }
+        }
+      }
+    },
+    "取消所选 %d 个文件的匹配？": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear matches for %d selected files?"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "取消所选 %d 个文件的匹配？"
+          }
+        }
+      }
+    },
+    "另存为…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save As…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "另存为…"
+          }
+        }
+      }
+    },
+    "另存为失败": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save As Failed"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "另存为失败"
+          }
+        }
+      }
+    },
+    "另存动图": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save Animated Image"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "另存动图"
+          }
+        }
+      }
+    },
+    "只会删除媒体库中的缺失索引，不会影响磁盘文件。以后重新扫描仍可恢复。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only missing library index entries are removed. Files on disk are not affected. They can be restored by scanning again."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "只会删除媒体库中的缺失索引，不会影响磁盘文件。以后重新扫描仍可恢复。"
+          }
+        }
+      }
+    },
+    "只会删除媒体库索引，不会删除磁盘上的文件。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only library index entries are removed. Files on disk are not deleted."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "只会删除媒体库索引，不会删除磁盘上的文件。"
+          }
+        }
+      }
+    },
+    "只截取到 %d/%d 帧，已取消导出，未生成动图。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Only %d of %d frames were captured. Export was canceled and no animated image was created."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "只截取到 %d/%d 帧，已取消导出，未生成动图。"
+          }
+        }
+      }
+    },
     "可选子路径，如 video/": {
       "extractionState": "stale",
       "localizations": {
@@ -1320,7 +2232,55 @@
         }
       }
     },
+    "哈希计算失败": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hash calculation failed"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "哈希计算失败"
+          }
+        }
+      }
+    },
     "图片编码失败": {},
+    "在 Finder 中显示": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show in Finder"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在 Finder 中显示"
+          }
+        }
+      }
+    },
+    "在列表中显示缺失文件": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show missing files in list"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在列表中显示缺失文件"
+          }
+        }
+      }
+    },
     "地址": {
       "localizations": {
         "en": {
@@ -1397,6 +2357,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "复制弹幕"
+          }
+        }
+      }
+    },
+    "好": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "好"
           }
         }
       }
@@ -1723,6 +2699,38 @@
         }
       }
     },
+    "导出动图": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export Animated Image"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "导出动图"
+          }
+        }
+      }
+    },
+    "导出动图…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export Animated Image…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "导出动图…"
+          }
+        }
+      }
+    },
     "将.xlog文件提供给开发者": {
       "localizations": {
         "en": {
@@ -1752,6 +2760,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "将在下次播放时生效"
+          }
+        }
+      }
+    },
+    "将视频片段导出为 GIF 动图。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export a video clip as a GIF."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "将视频片段导出为 GIF 动图。"
           }
         }
       }
@@ -1804,18 +2828,34 @@
         }
       }
     },
-    "已保存：%@": {
+    "展开": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Saved: %@"
+            "value": "Show more"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "已保存：%@"
+            "value": "展开"
+          }
+        }
+      }
+    },
+    "已从媒体库移除 %d 个文件": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Removed %d files from the library"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已从媒体库移除 %d 个文件"
           }
         }
       }
@@ -1833,6 +2873,118 @@
           "stringUnit": {
             "state": "translated",
             "value": "已保存到相册"
+          }
+        }
+      }
+    },
+    "已保存：%@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved: %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已保存：%@"
+          }
+        }
+      }
+    },
+    "已全部观看": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All watched"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已全部观看"
+          }
+        }
+      }
+    },
+    "已关注": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Favorited"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已关注"
+          }
+        }
+      }
+    },
+    "已加载 %d 集，请选择剧集": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d episodes loaded. Choose an episode."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已加载 %d 集，请选择剧集"
+          }
+        }
+      }
+    },
+    "已取消 %d 个文件的匹配": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cleared matches for %d files"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已取消 %d 个文件的匹配"
+          }
+        }
+      }
+    },
+    "已取消动图导出。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Animated image export canceled."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已取消动图导出。"
+          }
+        }
+      }
+    },
+    "已另存为新的动图文件。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Saved a copy of the animated image."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已另存为新的动图文件。"
           }
         }
       }
@@ -1863,6 +3015,22 @@
         }
       }
     },
+    "已抛弃": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dropped"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已抛弃"
+          }
+        }
+      }
+    },
     "已是最新版本": {
       "localizations": {
         "en": {
@@ -1875,6 +3043,102 @@
           "stringUnit": {
             "state": "translated",
             "value": "已是最新版本"
+          }
+        }
+      }
+    },
+    "已更新": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Updated"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已更新"
+          }
+        }
+      }
+    },
+    "已更新文件夹授权，正在重新扫描…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Folder access updated. Rescanning…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已更新文件夹授权，正在重新扫描…"
+          }
+        }
+      }
+    },
+    "已清理 %d 条缺失记录": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cleaned %d missing records"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已清理 %d 条缺失记录"
+          }
+        }
+      }
+    },
+    "已看完": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Completed"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已看完"
+          }
+        }
+      }
+    },
+    "已选择 %d 项（%d 个文件）": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d selected (%d files)"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已选择 %d 项（%d 个文件）"
+          }
+        }
+      }
+    },
+    "帧率": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Frame Rate"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "帧率"
           }
         }
       }
@@ -1896,6 +3160,22 @@
         }
       }
     },
+    "应用匹配": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apply match"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "应用匹配"
+          }
+        }
+      }
+    },
     "开启": {
       "localizations": {
         "en": {
@@ -1908,6 +3188,54 @@
           "stringUnit": {
             "state": "translated",
             "value": "开启"
+          }
+        }
+      }
+    },
+    "开始导出": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "开始导出"
+          }
+        }
+      }
+    },
+    "开始时间": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start Time"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "开始时间"
+          }
+        }
+      }
+    },
+    "开始时间无效。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid start time."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "开始时间无效。"
           }
         }
       }
@@ -2249,6 +3577,214 @@
         }
       }
     },
+    "当前位置之后不足 1 秒，请从更早的位置开始。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Less than 1 second remains. Start earlier in the video."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "当前位置之后不足 1 秒，请从更早的位置开始。"
+          }
+        }
+      }
+    },
+    "当前位置之后没有足够的视频内容": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not enough video remains after the current position."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "当前位置之后没有足够的视频内容"
+          }
+        }
+      }
+    },
+    "当前位置之后没有足够的视频内容。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not enough video remains after the current position."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "当前位置之后没有足够的视频内容。"
+          }
+        }
+      }
+    },
+    "当前文件尚未匹配，可搜索番剧手动修正。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This file is not matched. Search for an anime to correct it manually."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "当前文件尚未匹配，可搜索番剧手动修正。"
+          }
+        }
+      }
+    },
+    "当前系统不支持所选动图格式。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This system doesn't support the selected animated image format."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "当前系统不支持所选动图格式。"
+          }
+        }
+      }
+    },
+    "当前范围没有缺失记录": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No missing records in this range"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "当前范围没有缺失记录"
+          }
+        }
+      }
+    },
+    "当前范围没有缺失记录。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "There are no missing records in this range."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "当前范围没有缺失记录。"
+          }
+        }
+      }
+    },
+    "当前视频无法用于动图导出。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This video can't be used for animated image export."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "当前视频无法用于动图导出。"
+          }
+        }
+      }
+    },
+    "当前视频暂不支持导出动图": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This video can't be exported as an animated image."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "当前视频暂不支持导出动图"
+          }
+        }
+      }
+    },
+    "当前视频没有可用的画面。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This video has no usable video frames."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "当前视频没有可用的画面。"
+          }
+        }
+      }
+    },
+    "当前：%@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Current: %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "当前：%@"
+          }
+        }
+      }
+    },
+    "当前：%@ · %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Current: %@ · %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "当前：%@ · %@"
+          }
+        }
+      }
+    },
+    "当前：未关注": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Current: Not favorited"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "当前：未关注"
+          }
+        }
+      }
+    },
     "快速匹配弹幕": {
       "localizations": {
         "en": {
@@ -2313,6 +3849,54 @@
         }
       }
     },
+    "我的评分": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "My rating"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "我的评分"
+          }
+        }
+      }
+    },
+    "我的追番": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "My tracking"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "我的追番"
+          }
+        }
+      }
+    },
+    "截取画面超时。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Capturing frames timed out."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "截取画面超时。"
+          }
+        }
+      }
+    },
     "截图": {
       "localizations": {
         "en": {
@@ -2325,6 +3909,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "截图"
+          }
+        }
+      }
+    },
+    "截图保存位置": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Screenshot Location"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "截图保存位置"
           }
         }
       }
@@ -2374,6 +3974,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "截图失败"
+          }
+        }
+      }
+    },
+    "所选文件均已缺失，无法播放。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "All selected files are missing and cannot be played."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "所选文件均已缺失，无法播放。"
+          }
+        }
+      }
+    },
+    "所选文件已缺失，无法在 Finder 中显示。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The selected files are missing and cannot be shown in Finder."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "所选文件已缺失，无法在 Finder 中显示。"
           }
         }
       }
@@ -2459,6 +4091,86 @@
         }
       }
     },
+    "扫描进行中，请稍后再添加文件夹。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A scan is running. Add folders after it finishes."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "扫描进行中，请稍后再添加文件夹。"
+          }
+        }
+      }
+    },
+    "扫描进行中，请稍后再移除文件夹。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "A scan is running. Remove folders after it finishes."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "扫描进行中，请稍后再移除文件夹。"
+          }
+        }
+      }
+    },
+    "找不到该文件所属的媒体库文件夹": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The library folder for this file could not be found"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "找不到该文件所属的媒体库文件夹"
+          }
+        }
+      }
+    },
+    "找到 %d 个番剧，请选择": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d anime found. Choose one."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "找到 %d 个番剧，请选择"
+          }
+        }
+      }
+    },
+    "抛弃": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Drop"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "抛弃"
+          }
+        }
+      }
+    },
     "拖拽文件或文件夹到此处上传": {
       "extractionState": "stale",
       "localizations": {
@@ -2488,6 +4200,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "拷贝"
+          }
+        }
+      }
+    },
+    "授权": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Authorize"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "授权"
           }
         }
       }
@@ -2524,6 +4252,38 @@
         }
       }
     },
+    "搜索": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜索"
+          }
+        }
+      }
+    },
+    "搜索 Bangumi 番剧，选择番剧和剧集后写入媒体库。只显示真实搜索结果。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search Bangumi for an anime, choose an anime and episode, then save it to the library. Only real search results are shown."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜索 Bangumi 番剧，选择番剧和剧集后写入媒体库。只显示真实搜索结果。"
+          }
+        }
+      }
+    },
     "搜索弹幕": {
       "localizations": {
         "en": {
@@ -2552,6 +4312,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "搜索更多弹幕"
+          }
+        }
+      }
+    },
+    "搜索番剧标题…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search anime title…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜索番剧标题…"
           }
         }
       }
@@ -2588,6 +4364,22 @@
         }
       }
     },
+    "播出 %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aired %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "播出 %@"
+          }
+        }
+      }
+    },
     "播出: %@": {
       "localizations": {
         "en": {
@@ -2600,6 +4392,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "播出: %@"
+          }
+        }
+      }
+    },
+    "播放": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "播放"
+          }
+        }
+      }
+    },
+    "播放全部": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play all"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "播放全部"
           }
         }
       }
@@ -2734,6 +4558,38 @@
         }
       }
     },
+    "收起": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Show less"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "收起"
+          }
+        }
+      }
+    },
+    "放送": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Broadcast"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "放送"
+          }
+        }
+      }
+    },
     "文件": {
       "localizations": {
         "en": {
@@ -2762,6 +4618,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "文件名"
+          }
+        }
+      }
+    },
+    "文件夹与已有媒体库重叠": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Folder overlaps an existing library"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文件夹与已有媒体库重叠"
+          }
+        }
+      }
+    },
+    "文件已缺失，无法播放。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The file is missing and cannot be played."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文件已缺失，无法播放。"
           }
         }
       }
@@ -2862,6 +4750,118 @@
         }
       }
     },
+    "无法保存截图": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unable to Save Screenshot"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法保存截图"
+          }
+        }
+      }
+    },
+    "无法创建动图文件，请检查保存目录权限。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Can't create the animated image file. Check the screenshot folder permission."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法创建动图文件，请检查保存目录权限。"
+          }
+        }
+      }
+    },
+    "无法创建视频解码器。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Can't create a video decoder."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法创建视频解码器。"
+          }
+        }
+      }
+    },
+    "无法加载当前视频。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Can't load this video."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法加载当前视频。"
+          }
+        }
+      }
+    },
+    "无法访问媒体库文件夹「%@」": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cannot access library folder “%@”"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法访问媒体库文件夹「%@」"
+          }
+        }
+      }
+    },
+    "无法访问视频文件": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cannot access video file"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法访问视频文件"
+          }
+        }
+      }
+    },
+    "无法读取当前视频，可能是不支持的编码格式。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Can't read this video. The codec may be unsupported."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法读取当前视频，可能是不支持的编码格式。"
+          }
+        }
+      }
+    },
     "日志": {
       "localizations": {
         "en": {
@@ -2874,6 +4874,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "日志"
+          }
+        }
+      }
+    },
+    "时长": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Duration"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "时长"
           }
         }
       }
@@ -2922,6 +4938,166 @@
           "stringUnit": {
             "state": "translated",
             "value": "暂不更新"
+          }
+        }
+      }
+    },
+    "暂无关联作品": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No related titles"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "暂无关联作品"
+          }
+        }
+      }
+    },
+    "暂无剧集信息": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No episode information"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "暂无剧集信息"
+          }
+        }
+      }
+    },
+    "暂无标签": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No tags"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "暂无标签"
+          }
+        }
+      }
+    },
+    "暂无相似作品": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No similar titles"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "暂无相似作品"
+          }
+        }
+      }
+    },
+    "暂无简介": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No synopsis"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "暂无简介"
+          }
+        }
+      }
+    },
+    "暂无评分": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No rating"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "暂无评分"
+          }
+        }
+      }
+    },
+    "更多批量操作": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "More batch actions"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "更多批量操作"
+          }
+        }
+      }
+    },
+    "最大宽度": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Max Width"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "最大宽度"
+          }
+        }
+      }
+    },
+    "最新短评": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Latest comments"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "最新短评"
+          }
+        }
+      }
+    },
+    "有 %d 个文件取消失败": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed to clear %d files"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "有 %d 个文件取消失败"
           }
         }
       }
@@ -2985,6 +5161,22 @@
         }
       }
     },
+    "未关注": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not favorited"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未关注"
+          }
+        }
+      }
+    },
     "未匹配到弹幕": {
       "localizations": {
         "en": {
@@ -3033,6 +5225,22 @@
         }
       }
     },
+    "未评分": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Not rated"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未评分"
+          }
+        }
+      }
+    },
     "本地文件": {
       "localizations": {
         "en": {
@@ -3045,6 +5253,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "本地文件"
+          }
+        }
+      }
+    },
+    "查看全部": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "View all"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查看全部"
+          }
+        }
+      }
+    },
+    "查看剧集": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "View episodes"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "查看剧集"
           }
         }
       }
@@ -3078,6 +5318,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "根路径"
+          }
+        }
+      }
+    },
+    "格式": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Format"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "格式"
           }
         }
       }
@@ -3178,6 +5434,246 @@
         }
       }
     },
+    "正在准备…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preparing…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在准备…"
+          }
+        }
+      }
+    },
+    "正在加载作品详情…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading title details…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在加载作品详情…"
+          }
+        }
+      }
+    },
+    "正在加载剧集…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading episodes…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在加载剧集…"
+          }
+        }
+      }
+    },
+    "正在加载更多短评…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading more comments…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在加载更多短评…"
+          }
+        }
+      }
+    },
+    "正在加载短评…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loading comments…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在加载短评…"
+          }
+        }
+      }
+    },
+    "正在取消…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Canceling…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在取消…"
+          }
+        }
+      }
+    },
+    "正在导出动图": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exporting Animated Image"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在导出动图"
+          }
+        }
+      }
+    },
+    "正在截取画面…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Capturing frames…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在截取画面…"
+          }
+        }
+      }
+    },
+    "正在搜索…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Searching…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在搜索…"
+          }
+        }
+      }
+    },
+    "正在编码动图…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Encoding…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在编码动图…"
+          }
+        }
+      }
+    },
+    "没有截取到可用画面。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No usable frames were captured."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有截取到可用画面。"
+          }
+        }
+      }
+    },
+    "没有找到番剧，请尝试其他关键词": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No anime found. Try another keyword."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有找到番剧，请尝试其他关键词"
+          }
+        }
+      }
+    },
+    "没有权限保存到当前目录，请重新选择保存位置。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No permission to save to the current folder. Please choose another location."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有权限保存到当前目录，请重新选择保存位置。"
+          }
+        }
+      }
+    },
+    "没有读取到剧集": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No episodes were returned"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有读取到剧集"
+          }
+        }
+      }
+    },
+    "没有需要保存的修改": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nothing to save"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有需要保存的修改"
+          }
+        }
+      }
+    },
     "注册用户": {
       "extractionState": "stale",
       "localizations": {
@@ -3261,6 +5757,70 @@
         }
       }
     },
+    "清理": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clean"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "清理"
+          }
+        }
+      }
+    },
+    "清理 %d 条缺失记录？": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clean %d missing records?"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "清理 %d 条缺失记录？"
+          }
+        }
+      }
+    },
+    "清理缺失记录…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clean missing records…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "清理缺失记录…"
+          }
+        }
+      }
+    },
+    "清空短评": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Clear comment"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "清空短评"
+          }
+        }
+      }
+    },
     "清除播放记录": {
       "localizations": {
         "en": {
@@ -3325,6 +5885,22 @@
         }
       }
     },
+    "滚动": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scroll"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "滚动"
+          }
+        }
+      }
+    },
     "满屏": {
       "localizations": {
         "en": {
@@ -3341,18 +5917,18 @@
         }
       }
     },
-    "滚动": {
+    "状态": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Scroll"
+            "value": "Status"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "滚动"
+            "value": "状态"
           }
         }
       }
@@ -3405,6 +5981,22 @@
         }
       }
     },
+    "番剧": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anime"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "番剧"
+          }
+        }
+      }
+    },
     "登录": {
       "localizations": {
         "en": {
@@ -3449,6 +6041,54 @@
           "stringUnit": {
             "state": "translated",
             "value": "登录历史"
+          }
+        }
+      }
+    },
+    "登录后才能搜索番剧": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in to search anime"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "登录后才能搜索番剧"
+          }
+        }
+      }
+    },
+    "登录后查看作品详情": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in to view title details"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "登录后查看作品详情"
+          }
+        }
+      }
+    },
+    "登录后查看短评": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in to view comments"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "登录后查看短评"
           }
         }
       }
@@ -3517,6 +6157,22 @@
         }
       }
     },
+    "目标文件": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Target file"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "目标文件"
+          }
+        }
+      }
+    },
     "直接播放": {
       "localizations": {
         "en": {
@@ -3545,6 +6201,54 @@
           "stringUnit": {
             "state": "translated",
             "value": "相似作品"
+          }
+        }
+      }
+    },
+    "看完": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Completed"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "看完"
+          }
+        }
+      }
+    },
+    "短评": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Comment"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "短评"
+          }
+        }
+      }
+    },
+    "短评加载失败": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed to load comments"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "短评加载失败"
           }
         }
       }
@@ -3661,18 +6365,130 @@
         }
       }
     },
-    "视频设置": {
+    "社区": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Video Settings"
+            "value": "Community"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "视频设置"
+            "value": "社区"
+          }
+        }
+      }
+    },
+    "秒（当前播放位置）": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "s (current playback position)"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "秒（当前播放位置）"
+          }
+        }
+      }
+    },
+    "移出媒体库…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remove from library…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "移出媒体库…"
+          }
+        }
+      }
+    },
+    "稍后": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Later"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "稍后"
+          }
+        }
+      }
+    },
+    "站点评分": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Source ratings"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "站点评分"
+          }
+        }
+      }
+    },
+    "第 %d 季": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Season %d"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "第 %d 季"
+          }
+        }
+      }
+    },
+    "第%@集": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Episode %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "第%@集"
+          }
+        }
+      }
+    },
+    "类型": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Type"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "类型"
           }
         }
       }
@@ -3689,6 +6505,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "粘贴"
+          }
+        }
+      }
+    },
+    "继续观看 · 从第 %@ 集开始": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continue from episode %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "继续观看 · 从第 %@ 集开始"
           }
         }
       }
@@ -3721,6 +6553,70 @@
           "stringUnit": {
             "state": "translated",
             "value": "编辑"
+          }
+        }
+      }
+    },
+    "缺失": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Missing"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "缺失"
+          }
+        }
+      }
+    },
+    "缺失 %d": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d missing"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "缺失 %d"
+          }
+        }
+      }
+    },
+    "缺失 %d 集": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d missing"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "缺失 %d 集"
+          }
+        }
+      }
+    },
+    "缺失记录只存在于数据库中，可筛选后清理。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Missing records exist only in the database and can be filtered and cleaned up."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "缺失记录只存在于数据库中，可筛选后清理。"
           }
         }
       }
@@ -3918,6 +6814,22 @@
         }
       }
     },
+    "视频设置": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Video Settings"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "视频设置"
+          }
+        }
+      }
+    },
     "解析中…": {
       "localizations": {
         "en": {
@@ -3982,6 +6894,70 @@
         }
       }
     },
+    "评分": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rating"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "评分"
+          }
+        }
+      }
+    },
+    "评分 %.1f": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rating %.1f"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "评分 %.1f"
+          }
+        }
+      }
+    },
+    "评分 %d": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rating %d"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "评分 %d"
+          }
+        }
+      }
+    },
+    "该番剧没有可匹配的剧集": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This anime has no episodes available for matching"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "该番剧没有可匹配的剧集"
+          }
+        }
+      }
+    },
     "语言": {
       "localizations": {
         "en": {
@@ -4010,6 +6986,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "语言切换已生效，退出后将以新语言启动"
+          }
+        }
+      }
+    },
+    "请先打开视频": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open a video first."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请先打开视频"
           }
         }
       }
@@ -4046,6 +7038,38 @@
         }
       }
     },
+    "请先选择要修正的条目": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select an item to correct first"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请先选择要修正的条目"
+          }
+        }
+      }
+    },
+    "请先选择要播放的视频": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select a video to play first"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请先选择要播放的视频"
+          }
+        }
+      }
+    },
     "请求域名": {
       "localizations": {
         "en": {
@@ -4078,6 +7102,22 @@
         }
       }
     },
+    "请输入搜索关键词": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter a search keyword"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请输入搜索关键词"
+          }
+        }
+      }
+    },
     "请输入用户名": {
       "localizations": {
         "en": {
@@ -4090,6 +7130,38 @@
           "stringUnit": {
             "state": "translated",
             "value": "请输入用户名"
+          }
+        }
+      }
+    },
+    "请选择原文件夹：%@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose the original folder: %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请选择原文件夹：%@"
+          }
+        }
+      }
+    },
+    "请选择原来的媒体库文件夹，以更新访问授权。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose the original library folder to renew access."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请选择原来的媒体库文件夹，以更新访问授权。"
           }
         }
       }
@@ -4206,6 +7278,54 @@
         }
       }
     },
+    "输入番剧标题开始搜索": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Enter an anime title to start searching"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "输入番剧标题开始搜索"
+          }
+        }
+      }
+    },
+    "还有 %d 个标签": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d more tags"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "还有 %d 个标签"
+          }
+        }
+      }
+    },
+    "还没有短评": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No comments yet"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "还没有短评"
+          }
+        }
+      }
+    },
     "连接": {
       "localizations": {
         "en": {
@@ -4287,6 +7407,22 @@
         }
       }
     },
+    "追番状态": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tracking status"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "追番状态"
+          }
+        }
+      }
+    },
     "追番队列": {
       "localizations": {
         "en": {
@@ -4336,6 +7472,38 @@
         }
       }
     },
+    "选择": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择"
+          }
+        }
+      }
+    },
+    "选择「关注」「看完」或「抛弃」并保存后，即可评分和撰写短评。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Favorite, complete or drop this title and save to rate and comment."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择「关注」「看完」或「抛弃」并保存后，即可评分和撰写短评。"
+          }
+        }
+      }
+    },
     "选择文件": {
       "extractionState": "stale",
       "localizations": {
@@ -4366,6 +7534,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "选择文件夹"
+          }
+        }
+      }
+    },
+    "选择文件夹…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose Folder…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择文件夹…"
           }
         }
       }
@@ -4434,6 +7618,54 @@
         }
       }
     },
+    "重新匹配所选": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rematch selected"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重新匹配所选"
+          }
+        }
+      }
+    },
+    "重新选择「%@」": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose “%@” again"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重新选择「%@」"
+          }
+        }
+      }
+    },
+    "重新选择文件夹…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose folder again…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "重新选择文件夹…"
+          }
+        }
+      }
+    },
     "重试": {
       "localizations": {
         "en": {
@@ -4482,6 +7714,22 @@
         }
       }
     },
+    "随机弹幕颜色": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Random Danmaku Color"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "随机弹幕颜色"
+          }
+        }
+      }
+    },
     "隐藏": {
       "localizations": {
         "en": {
@@ -4514,22 +7762,6 @@
         }
       }
     },
-    "随机弹幕颜色": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Random Danmaku Color"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "随机弹幕颜色"
-          }
-        }
-      }
-    },
     "集数": {
       "localizations": {
         "en": {
@@ -4558,6 +7790,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "需要指定视频弹幕列表，才能发弹幕哟~"
+          }
+        }
+      }
+    },
+    "需要登录": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sign in required"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "需要登录"
           }
         }
       }
@@ -4636,6 +7884,38 @@
         }
       }
     },
+    "预计 %d 帧，片段 %.1f 秒，保存到截图目录。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "About %d frames, %.1f s clip, saved to the screenshot folder."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "预计 %d 帧，片段 %.1f 秒，保存到截图目录。"
+          }
+        }
+      }
+    },
+    "首播 %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Premiered %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "首播 %@"
+          }
+        }
+      }
+    },
     "首选播放内核": {
       "extractionState": "stale",
       "localizations": {
@@ -4684,1975 +7964,7 @@
           }
         }
       }
-    },
-    "截图保存位置": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Screenshot Location"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "截图保存位置"
-          }
-        }
-      }
-    },
-    "选择文件夹…": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Choose Folder…"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "选择文件夹…"
-          }
-        }
-      }
-    },
-    "选择": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Choose"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "选择"
-          }
-        }
-      }
-    },
-    "无法保存截图": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Unable to Save Screenshot"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "无法保存截图"
-          }
-        }
-      }
-    },
-    "没有权限保存到当前目录，请重新选择保存位置。": {
-      "localizations": {
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "No permission to save to the current folder. Please choose another location."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "没有权限保存到当前目录，请重新选择保存位置。"
-          }
-        }
-      }
-    },
-    "%@更新" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Updates on %@"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@更新"
-          }
-        }
-      }
-    },
-    "%d 分" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%d points"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%d 分"
-          }
-        }
-      }
-    },
-    "%d 季" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%d seasons"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%d 季"
-          }
-        }
-      }
-    },
-    "%d 集" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%d episodes"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%d 集"
-          }
-        }
-      }
-    },
-    "上次观看 %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Last watched %@"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "上次观看 %@"
-          }
-        }
-      }
-    },
-    "作品 ID" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Work ID"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "作品 ID"
-          }
-        }
-      }
-    },
-    "作品详情为空" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No detail data"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "作品详情为空"
-          }
-        }
-      }
-    },
-    "作品资料" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Details"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "作品资料"
-          }
-        }
-      }
-    },
-    "保存后将取消关注，评分和短评将无法编辑。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Saving will unfavorite this title. Rating and comment become read-only."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "保存后将取消关注，评分和短评将无法编辑。"
-          }
-        }
-      }
-    },
-    "修改状态、评分或短评后点击保存生效。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Change status, rating or comment, then save."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "修改状态、评分或短评后点击保存生效。"
-          }
-        }
-      }
-    },
-    "全部剧集" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All episodes"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "全部剧集"
-          }
-        }
-      }
-    },
-    "全部标签" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All tags"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "全部标签"
-          }
-        }
-      }
-    },
-    "共 %d 集" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%d episodes"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "共 %d 集"
-          }
-        }
-      }
-    },
-    "关注" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Favorite"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "关注"
-          }
-        }
-      }
-    },
-    "其他剧集" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Other episodes"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "其他剧集"
-          }
-        }
-      }
-    },
-    "剧集" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Episodes"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "剧集"
-          }
-        }
-      }
-    },
-    "加载失败" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Failed to load"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "加载失败"
-          }
-        }
-      }
-    },
-    "取消关注" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Unfavorite"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "取消关注"
-          }
-        }
-      }
-    },
-    "展开" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show more"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "展开"
-          }
-        }
-      }
-    },
-    "已全部观看" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All watched"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "已全部观看"
-          }
-        }
-      }
-    },
-    "已关注" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Favorited"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "已关注"
-          }
-        }
-      }
-    },
-    "已抛弃" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Dropped"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "已抛弃"
-          }
-        }
-      }
-    },
-    "已更新" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Updated"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "已更新"
-          }
-        }
-      }
-    },
-    "已看完" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Completed"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "已看完"
-          }
-        }
-      }
-    },
-    "当前：%@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Current: %@"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "当前：%@"
-          }
-        }
-      }
-    },
-    "当前：未关注" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Current: Not favorited"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "当前：未关注"
-          }
-        }
-      }
-    },
-    "我的评分" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "My rating"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "我的评分"
-          }
-        }
-      }
-    },
-    "我的追番" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "My tracking"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "我的追番"
-          }
-        }
-      }
-    },
-    "抛弃" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Drop"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "抛弃"
-          }
-        }
-      }
-    },
-    "播出 %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Aired %@"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "播出 %@"
-          }
-        }
-      }
-    },
-    "收起" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show less"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "收起"
-          }
-        }
-      }
-    },
-    "放送" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Broadcast"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "放送"
-          }
-        }
-      }
-    },
-    "暂无关联作品" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No related titles"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "暂无关联作品"
-          }
-        }
-      }
-    },
-    "暂无剧集信息" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No episode information"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "暂无剧集信息"
-          }
-        }
-      }
-    },
-    "暂无标签" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No tags"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "暂无标签"
-          }
-        }
-      }
-    },
-    "暂无相似作品" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No similar titles"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "暂无相似作品"
-          }
-        }
-      }
-    },
-    "暂无简介" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No synopsis"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "暂无简介"
-          }
-        }
-      }
-    },
-    "暂无评分" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No rating"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "暂无评分"
-          }
-        }
-      }
-    },
-    "最新短评" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Latest comments"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "最新短评"
-          }
-        }
-      }
-    },
-    "未关注" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not favorited"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "未关注"
-          }
-        }
-      }
-    },
-    "未评分" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Not rated"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "未评分"
-          }
-        }
-      }
-    },
-    "查看全部" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "View all"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "查看全部"
-          }
-        }
-      }
-    },
-    "查看剧集" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "View episodes"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "查看剧集"
-          }
-        }
-      }
-    },
-    "正在加载作品详情…" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Loading title details…"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "正在加载作品详情…"
-          }
-        }
-      }
-    },
-    "正在加载更多短评…" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Loading more comments…"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "正在加载更多短评…"
-          }
-        }
-      }
-    },
-    "正在加载短评…" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Loading comments…"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "正在加载短评…"
-          }
-        }
-      }
-    },
-    "没有需要保存的修改" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Nothing to save"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "没有需要保存的修改"
-          }
-        }
-      }
-    },
-    "清空短评" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Clear comment"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "清空短评"
-          }
-        }
-      }
-    },
-    "状态" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Status"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "状态"
-          }
-        }
-      }
-    },
-    "登录后查看作品详情" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sign in to view title details"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "登录后查看作品详情"
-          }
-        }
-      }
-    },
-    "登录后查看短评" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sign in to view comments"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "登录后查看短评"
-          }
-        }
-      }
-    },
-    "看完" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Completed"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "看完"
-          }
-        }
-      }
-    },
-    "短评" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Comment"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "短评"
-          }
-        }
-      }
-    },
-    "短评加载失败" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Failed to load comments"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "短评加载失败"
-          }
-        }
-      }
-    },
-    "社区" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Community"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "社区"
-          }
-        }
-      }
-    },
-    "站点评分" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Source ratings"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "站点评分"
-          }
-        }
-      }
-    },
-    "第 %d 季" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Season %d"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "第 %d 季"
-          }
-        }
-      }
-    },
-    "第%@集" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Episode %@"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "第%@集"
-          }
-        }
-      }
-    },
-    "类型" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Type"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "类型"
-          }
-        }
-      }
-    },
-    "继续观看 · 从第 %@ 集开始" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Continue from episode %@"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "继续观看 · 从第 %@ 集开始"
-          }
-        }
-      }
-    },
-    "评分" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rating"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "评分"
-          }
-        }
-      }
-    },
-    "评分 %.1f" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rating %.1f"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "评分 %.1f"
-          }
-        }
-      }
-    },
-    "评分 %d" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Rating %d"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "评分 %d"
-          }
-        }
-      }
-    },
-    "还有 %d 个标签" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%d more tags"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "还有 %d 个标签"
-          }
-        }
-      }
-    },
-    "还没有短评" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No comments yet"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "还没有短评"
-          }
-        }
-      }
-    },
-    "追番状态" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tracking status"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "追番状态"
-          }
-        }
-      }
-    },
-    "选择「关注」「看完」或「抛弃」并保存后，即可评分和撰写短评。" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Favorite, complete or drop this title and save to rate and comment."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "选择「关注」「看完」或「抛弃」并保存后，即可评分和撰写短评。"
-          }
-        }
-      }
-    },
-    "需要登录" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sign in required"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "需要登录"
-          }
-        }
-      }
-    },
-    "首播 %@" : {
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Premiered %@"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "首播 %@"
-          }
-        }
-      }
-    },
-      "导出动图…": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Export Animated Image…"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "导出动图…"
-            }
-          }
-        }
-      },
-      "导出动图": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Export Animated Image"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "导出动图"
-            }
-          }
-        }
-      },
-      "动图导出": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Animated Image Export"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "动图导出"
-            }
-          }
-        }
-      },
-      "开始时间": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Start Time"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "开始时间"
-            }
-          }
-        }
-      },
-      "秒（当前播放位置）": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "s (current playback position)"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "秒（当前播放位置）"
-            }
-          }
-        }
-      },
-      "时长": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Duration"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "时长"
-            }
-          }
-        }
-      },
-      "帧率": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Frame Rate"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "帧率"
-            }
-          }
-        }
-      },
-      "最大宽度": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Max Width"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "最大宽度"
-            }
-          }
-        }
-      },
-      "格式": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Format"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "格式"
-            }
-          }
-        }
-      },
-      "%d 秒": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "%d s"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "%d 秒"
-            }
-          }
-        }
-      },
-      "%d fps": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "%d fps"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "%d fps"
-            }
-          }
-        }
-      },
-      "%d px": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "%d px"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "%d px"
-            }
-          }
-        }
-      },
-      "预计 %d 帧，片段 %.1f 秒，保存到截图目录。": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "About %d frames, %.1f s clip, saved to the screenshot folder."
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "预计 %d 帧，片段 %.1f 秒，保存到截图目录。"
-            }
-          }
-        }
-      },
-      "开始时间无效。": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Invalid start time."
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "开始时间无效。"
-            }
-          }
-        }
-      },
-      "当前位置之后不足 1 秒，请从更早的位置开始。": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Less than 1 second remains. Start earlier in the video."
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "当前位置之后不足 1 秒，请从更早的位置开始。"
-            }
-          }
-        }
-      },
-      "开始导出": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Export"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "开始导出"
-            }
-          }
-        }
-      },
-      "正在导出动图": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Exporting Animated Image"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "正在导出动图"
-            }
-          }
-        }
-      },
-      "正在准备…": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Preparing…"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "正在准备…"
-            }
-          }
-        }
-      },
-      "正在取消…": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Canceling…"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "正在取消…"
-            }
-          }
-        }
-      },
-      "正在截取画面…": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Capturing frames…"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "正在截取画面…"
-            }
-          }
-        }
-      },
-      "正在编码动图…": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Encoding…"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "正在编码动图…"
-            }
-          }
-        }
-      },
-      "即将完成…": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Finishing…"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "即将完成…"
-            }
-          }
-        }
-      },
-      "动图已生成": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Animated Image Ready"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "动图已生成"
-            }
-          }
-        }
-      },
-      "动图预览": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Animated image preview"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "动图预览"
-            }
-          }
-        }
-      },
-      "%@ · %d 帧 · %d fps": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "%@ · %d frames · %d fps"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "%@ · %d 帧 · %d fps"
-            }
-          }
-        }
-      },
-      "在 Finder 中显示": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Show in Finder"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "在 Finder 中显示"
-            }
-          }
-        }
-      },
-      "另存为…": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Save As…"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "另存为…"
-            }
-          }
-        }
-      },
-      "另存动图": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Save Animated Image"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "另存动图"
-            }
-          }
-        }
-      },
-      "已另存为新的动图文件。": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Saved a copy of the animated image."
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "已另存为新的动图文件。"
-            }
-          }
-        }
-      },
-      "另存为失败": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Save As Failed"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "另存为失败"
-            }
-          }
-        }
-      },
-      "好": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "OK"
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "好"
-            }
-          }
-        }
-      },
-      "已取消动图导出。": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Animated image export canceled."
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "已取消动图导出。"
-            }
-          }
-        }
-      },
-      "当前视频暂不支持导出动图": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "This video can't be exported as an animated image."
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "当前视频暂不支持导出动图"
-            }
-          }
-        }
-      },
-      "请先打开视频": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Open a video first."
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "请先打开视频"
-            }
-          }
-        }
-      },
-      "当前视频无法用于动图导出。": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "This video can't be used for animated image export."
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "当前视频无法用于动图导出。"
-            }
-          }
-        }
-      },
-      "无法读取当前视频，可能是不支持的编码格式。": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Can't read this video. The codec may be unsupported."
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "无法读取当前视频，可能是不支持的编码格式。"
-            }
-          }
-        }
-      },
-      "当前位置之后没有足够的视频内容。": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Not enough video remains after the current position."
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "当前位置之后没有足够的视频内容。"
-            }
-          }
-        }
-      },
-      "没有截取到可用画面。": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "No usable frames were captured."
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "没有截取到可用画面。"
-            }
-          }
-        }
-      },
-      "只截取到 %d/%d 帧，已取消导出，未生成动图。": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Only %d of %d frames were captured. Export was canceled and no animated image was created."
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "只截取到 %d/%d 帧，已取消导出，未生成动图。"
-            }
-          }
-        }
-      },
-      "无法创建动图文件，请检查保存目录权限。": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Can't create the animated image file. Check the screenshot folder permission."
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "无法创建动图文件，请检查保存目录权限。"
-            }
-          }
-        }
-      },
-      "动图编码失败。": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Failed to encode the animated image."
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "动图编码失败。"
-            }
-          }
-        }
-      },
-      "当前系统不支持所选动图格式。": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "This system doesn't support the selected animated image format."
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "当前系统不支持所选动图格式。"
-            }
-          }
-        }
-      },
-      "无法创建视频解码器。": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Can't create a video decoder."
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "无法创建视频解码器。"
-            }
-          }
-        }
-      },
-      "无法加载当前视频。": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Can't load this video."
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "无法加载当前视频。"
-            }
-          }
-        }
-      },
-      "加载视频超时，请稍后重试。": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Loading the video timed out. Try again later."
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "加载视频超时，请稍后重试。"
-            }
-          }
-        }
-      },
-      "截取画面超时。": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Capturing frames timed out."
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "截取画面超时。"
-            }
-          }
-        }
-      },
-      "当前视频没有可用的画面。": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "This video has no usable video frames."
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "当前视频没有可用的画面。"
-            }
-          }
-        }
-      },
-      "将视频片段导出为 GIF 动图。": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Export a video clip as a GIF."
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "将视频片段导出为 GIF 动图。"
-            }
-          }
-        }
-      },
-      "当前位置之后没有足够的视频内容": {
-        "localizations": {
-          "en": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "Not enough video remains after the current position."
-            }
-          },
-          "zh-Hans": {
-            "stringUnit": {
-              "state": "translated",
-              "value": "当前位置之后没有足够的视频内容"
-            }
-          }
-        }
-      }
+    }
   },
   "version": "1.1"
 }
