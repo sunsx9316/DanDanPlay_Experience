@@ -30,6 +30,7 @@ enum AccessibilityID {
     }
 
     enum Player {
+        static let window = "player.window"
         static let root = "player.root"
         static let mediaView = "player.mediaView"
         static let danmakuCanvas = "player.danmakuCanvas"
@@ -149,5 +150,29 @@ enum AccessibilityID {
         static let titleField = "summary.titleField"
         static let videoSubtitleField = "summary.videoSubtitleField"
         static let quotaLabel = "summary.quotaLabel"
+    }
+
+    enum Search {
+        static let window = "search.window"
+        static let root = "search.root"
+        static let searchField = "search.searchField"
+        static let modeControl = "search.modeControl"
+        static let searchButton = "search.searchButton"
+        static let episodeField = "search.episodeField"
+        static let hintLabel = "search.hintLabel"
+        static let summaryLabel = "search.summaryLabel"
+        static let advancedPanel = "search.advancedPanel"
+        static let typePopup = "search.typePopup"
+        static let yearPopup = "search.yearPopup"
+        static let monthPopup = "search.monthPopup"
+        static let minRatingPopup = "search.minRatingPopup"
+        static let maxRatingPopup = "search.maxRatingPopup"
+        static let sortPopup = "search.sortPopup"
+        static let tagsField = "search.tagsField"
+        static let restrictedPopup = "search.restrictedPopup"
+        static let sourcePopup = "search.sourcePopup"
+        static let resultsTable = "search.resultsTable"
+        static let statusLabel = "search.statusLabel"
+        static let loadingIndicator = "search.loadingIndicator"
     }
 }

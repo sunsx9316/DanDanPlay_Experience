@@ -35,6 +35,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private var playHistoryWindowController: PlayHistoryNavigationWindowController?
 
+    private var searchWindowController: SearchWindowController?
+
     private var pendingOpenURLs: [URL] = []
 
     private var didFinishLaunching = false
@@ -282,13 +284,27 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         playHistoryWindowController = wc
     }
 
+    @objc private func showSearch(_ item: NSMenuItem) {
+        Task { @MainActor in
+            if let wc = self.searchWindowController {
+                wc.window?.makeKeyAndOrderFront(nil)
+                return
+            }
+            let wc = SearchWindowController()
+            wc.windowWillCloseCallBack = { [weak self] in
+                self?.searchWindowController = nil
+            }
+            wc.showWindow(nil)
+            self.searchWindowController = wc
+        }
+    }
+
     @objc private func onOpenNetworkFile(_ item: NSMenuItem) {
         let wc = MediaLibraryWindowController()
         wc.onSelectFile = { [weak self] file, allFiles in
             guard let self = self,
                   let mainVC = self.mainWindowController.contentViewController as? MainViewController else { return }
             mainVC.openNetworkFiles(allFiles, startWith: file)
-            self.mainWindowController.window?.makeKeyAndOrderFront(nil)
             NSApp.activate(ignoringOtherApps: true)
         }
         wc.windowWillCloseCallBack = { [weak self] in
@@ -368,6 +384,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let menu = NSMenu(title: NSLocalizedString("功能", comment: ""))
 
             menu.addItem(withTitle: NSLocalizedString("主页", comment: ""), action: #selector(showHomePage(_:)), keyEquivalent: "")
+            menu.addItem(withTitle: NSLocalizedString("搜索…", comment: ""), action: #selector(showSearch(_:)), keyEquivalent: "")
             menu.addItem(withTitle: NSLocalizedString("播放历史", comment: ""), action: #selector(showPlayHistory(_:)), keyEquivalent: "")
             menu.addItem(NSMenuItem.separator())
             menu.addItem(withTitle: NSLocalizedString("全局设置", comment: ""), action: #selector(onGlobalSettingItemDidClick(_:)), keyEquivalent: ",")

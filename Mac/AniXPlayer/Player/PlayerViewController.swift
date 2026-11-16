@@ -16,6 +16,9 @@ class PlayerViewController: ViewController {
 
     var onStopCallBack: (() -> Void)?
 
+    /// 当前媒体变化（独立播放器窗口用于同步标题）。
+    var onMediaChanged: ((File?) -> Void)?
+
     private lazy var dragView: DragView = {
         let view = DragView()
         view.dragFilesCallBack = { [weak self] urls in
@@ -193,6 +196,11 @@ class PlayerViewController: ViewController {
         return mediaModel.media
     }
 
+    /// 停止播放；独立播放器窗口关闭时调用。
+    func stopPlayback() {
+        mediaModel.stop()
+    }
+
     //MARK: - Private
     private func bindModel() {
 
@@ -215,6 +223,7 @@ class PlayerViewController: ViewController {
             guard let self = self else { return }
             
             self.uiView.title = file?.fileName
+            self.onMediaChanged?(file)
             self.playHistoryReporter.reset()
             if file != nil {
                 self.beginActivity()
@@ -859,8 +868,9 @@ extension PlayerViewController: PlayerUIViewDelegate, NSMenuDelegate {
 
     func onTouchStopButton(playerUIView: PlayerUIView) {
         ANX.logInfo(.player, "[Player] 点击停止按钮")
-        self.mediaModel.stop()
+        // 先回调保存进度，再停止播放（stop 可能清空位置）。
         onStopCallBack?()
+        self.mediaModel.stop()
     }
 
     func onTouchNextButton(playerUIView: PlayerUIView) {

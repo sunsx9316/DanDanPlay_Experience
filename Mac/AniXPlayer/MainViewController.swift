@@ -30,7 +30,7 @@ class MainViewController: ViewController {
         return vc
     }()
 
-    private var playerVC: PlayerViewController?
+    private var playerWindowController: PlayerWindowController?
 
     private var homePageWindowController: HomePageNavigationWindowController?
 
@@ -57,7 +57,7 @@ class MainViewController: ViewController {
 
     /// L2 播放冒烟：当前播放器状态；没有播放器时返回 nil。
     var currentPlaybackSnapshot: PlaybackSnapshot? {
-        return playerVC?.playbackSnapshot()
+        return playerWindowController?.playerViewController.playbackSnapshot()
     }
 
     // MARK: - Private
@@ -75,6 +75,14 @@ class MainViewController: ViewController {
             WelcomeRecentStore.shared.record(file: recentFile)
         }
 
+        // 已有播放器窗口时复用：先保存旧媒体的进度，再在同一窗口加载新文件。
+        if let existing = playerWindowController {
+            self.rememberCurrentPlayback(for: existing.playerViewController)
+            existing.playerViewController.loadFiles(files, startWith: file)
+            existing.focusPlayer()
+            return
+        }
+
         let vc = PlayerViewController()
         vc.backupDanmakuAccessCheck = { [weak self] in
             await EntitlementGate.shared.require(
@@ -84,33 +92,36 @@ class MainViewController: ViewController {
             )
         }
         vc.onStopCallBack = { [weak self] in
-            self?.rememberCurrentPlayback()
-            self?.hidePlayer()
+            self?.stopAndClosePlayerWindow()
         }
 
-        addChild(vc)
-        view.addSubview(vc.view)
-        vc.view.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+        let wc = PlayerWindowController(playerViewController: vc)
+        wc.onClose = { [weak self] in
+            self?.playerWindowDidClose()
         }
 
-        launchVC.view.removeFromSuperview()
-        launchVC.removeFromParent()
+        playerWindowController = wc
+        wc.showWindow(nil)
+        wc.window?.center()
 
-        playerVC = vc
-        view.window?.makeFirstResponder(vc)
         vc.loadFiles(files, startWith: file)
     }
 
-    private func hidePlayer() {
-        playerVC?.view.removeFromSuperview()
-        playerVC?.removeFromParent()
-        playerVC = nil
-
-        showLaunch()
+    private func stopAndClosePlayerWindow() {
+        guard let wc = playerWindowController else { return }
+        self.rememberCurrentPlayback(for: wc.playerViewController)
+        wc.close()
     }
 
-    private func rememberCurrentPlayback() {
+    private func playerWindowDidClose() {
+        self.rememberCurrentPlayback(for: playerWindowController?.playerViewController)
+        playerWindowController = nil
+
+        // 欢迎页仍留在主窗口；播完/停止后把焦点还给主窗口。
+        self.view.window?.makeKeyAndOrderFront(nil)
+    }
+
+    private func rememberCurrentPlayback(for playerVC: PlayerViewController?) {
         guard let playerVC = playerVC,
               let file = playerVC.currentMediaFile else { return }
 
@@ -138,7 +149,6 @@ class MainViewController: ViewController {
         wc.onSelectFile = { [weak self] file, allFiles in
             guard let self = self else { return }
             self.openNetworkFiles(allFiles, startWith: file)
-            self.view.window?.makeKeyAndOrderFront(nil)
             NSApp.activate(ignoringOtherApps: true)
         }
         wc.windowWillCloseCallBack = { [weak self] in
