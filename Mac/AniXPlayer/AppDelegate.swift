@@ -37,6 +37,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private var bangumiQueueWindowController: BangumiQueueNavigationWindowController?
 
+    private var searchWindowController: SearchWindowController?
+
     private var pendingOpenURLs: [URL] = []
 
     private var didFinishLaunching = false
@@ -153,6 +155,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private func handleOpenURLs(_ urls: [URL]) {
         guard !urls.isEmpty else { return }
+
+        // L2 冒烟自己负责打开 --open 指定的文件；AppKit 会把 --state-file 等
+        // 参数后的路径也当成“待打开文档”，必须丢弃，否则会先创建播放器装错文件。
+        guard !PlaybackSmokeRunner.isSmokeInvocation else { return }
+
         ANX.logInfo(.UI, "[App] 打开外部文件: \(urls.map { $0.lastPathComponent })")
 
         if didFinishLaunching {
@@ -166,6 +173,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         guard !pendingOpenURLs.isEmpty else { return }
         let urls = pendingOpenURLs
         pendingOpenURLs.removeAll()
+
+        // 冒烟模式不处理 AppKit 的待打开文档（可能包含 --state-file 的路径）。
+        guard !PlaybackSmokeRunner.isSmokeInvocation else { return }
         deliverOpenURLs(urls)
     }
 
@@ -303,13 +313,28 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         bangumiQueueWindowController = wc
     }
 
+    @objc private func showSearch(_ item: NSMenuItem) {
+        Task { @MainActor in
+            if let wc = self.searchWindowController {
+                wc.window?.makeKeyAndOrderFront(nil)
+                return
+            }
+            let wc = SearchWindowController()
+            wc.windowWillCloseCallBack = { [weak self] in
+                self?.searchWindowController = nil
+            }
+            wc.showWindow(nil)
+            self.searchWindowController = wc
+        }
+    }
+
+
     @objc private func onOpenNetworkFile(_ item: NSMenuItem) {
         let wc = MediaLibraryWindowController()
         wc.onSelectFile = { [weak self] file, allFiles in
             guard let self = self,
                   let mainVC = self.mainWindowController.contentViewController as? MainViewController else { return }
             mainVC.openNetworkFiles(allFiles, startWith: file)
-            self.mainWindowController.window?.makeKeyAndOrderFront(nil)
             NSApp.activate(ignoringOtherApps: true)
         }
         wc.windowWillCloseCallBack = { [weak self] in
@@ -389,6 +414,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let menu = NSMenu(title: NSLocalizedString("功能", comment: ""))
 
             menu.addItem(withTitle: NSLocalizedString("主页", comment: ""), action: #selector(showHomePage(_:)), keyEquivalent: "")
+            menu.addItem(withTitle: NSLocalizedString("搜索…", comment: ""), action: #selector(showSearch(_:)), keyEquivalent: "")
             menu.addItem(withTitle: NSLocalizedString("播放历史", comment: ""), action: #selector(showPlayHistory(_:)), keyEquivalent: "")
             menu.addItem(withTitle: NSLocalizedString("我的追番", comment: ""), action: #selector(showBangumiQueue(_:)), keyEquivalent: "")
             menu.addItem(NSMenuItem.separator())

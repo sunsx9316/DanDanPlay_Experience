@@ -26,6 +26,13 @@ final class PlaybackSmokeRunner {
 
     private(set) var isActive = false
 
+    /// 非隔离的快速判断：AppDelegate 在打开外部文档时用它过滤命令行参数。
+    nonisolated static var isSmokeInvocation: Bool {
+        CommandLine.arguments.contains { argument in
+            ["--open", "--play-seconds", "--dump-state", "--exit"].contains(argument)
+        }
+    }
+
     private init() {}
 
     func start(mainViewController: MainViewController?) {
