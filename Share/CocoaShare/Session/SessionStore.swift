@@ -4,7 +4,7 @@
 //
 //  macOS only：登录会话状态机。
 //
-//  - access token 只在内存；refresh token 只进 Keychain；
+//  - access token 只在内存；refresh token 进 Keychain（Release）或本地文件（Debug）；
 //  - refresh 单飞：并发请求共享同一个刷新 Task；
 //  - refresh_token 轮换：Keychain 写入失败视为会话失效（避免旧 token 已失效但本地还在用新 token）。
 //
@@ -48,7 +48,7 @@ actor SessionStore {
 
     init(
         service: OAuthServicing = OAuthService(),
-        tokenStore: RefreshTokenStore = KeychainRefreshTokenStore(),
+        tokenStore: RefreshTokenStore = RefreshTokenStoreFactory.makeDefault(),
         accessTokenHolder: AccessTokenHolder = .shared
     ) {
         self.service = service

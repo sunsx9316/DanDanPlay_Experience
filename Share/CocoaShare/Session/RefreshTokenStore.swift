@@ -15,6 +15,7 @@ protocol RefreshTokenStore {
 
 enum RefreshTokenStoreError: LocalizedError {
     case keychain(status: OSStatus, operation: String)
+    case file(operation: String, reason: String)
 
     var errorDescription: String? {
         switch self {
@@ -24,6 +25,12 @@ enum RefreshTokenStoreError: LocalizedError {
                 format: NSLocalizedString("无法安全保存登录信息（%@，%@），请检查钥匙串权限", comment: ""),
                 operation,
                 message
+            )
+        case .file(let operation, let reason):
+            return String(
+                format: NSLocalizedString("无法保存登录信息（%@，%@）", comment: ""),
+                operation,
+                reason
             )
         }
     }

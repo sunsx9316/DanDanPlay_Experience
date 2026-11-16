@@ -126,7 +126,7 @@ Mac/AniXPlayer/Features/Summary/
 
 XCUITest 暂缓：证书已有，但登录成功路径受验证码阻断，且 macOS 视频/自绘控件断言弱、启动慢。等发布签名/公证流水线时再补。
 
-播放/UI 冒烟通过 `MacAuthBootstrap.start(restoreSession: false)` 跳过 Keychain 会话恢复，因此不会弹钥匙串授权框。手工运行未签名 Debug App 仍可能弹框，这是构建身份频繁变化导致的；需要稳定签名才能彻底避免。
+播放/UI 冒烟通过 `MacAuthBootstrap.start(restoreSession: false)` 跳过会话恢复，因此不会弹钥匙串授权框。手工运行未签名 Debug App 也不再默认弹框：macOS Debug 默认使用 `FileRefreshTokenStore`（沙盒内 0600 文件），Release 才用 Keychain。可用 `ANIX_TOKEN_STORE=keychain` 强制恢复 Keychain 行为。
 
 ## 5. 未完成与后续
 
