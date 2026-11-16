@@ -13,7 +13,7 @@
 | 搜索 / 番剧详情 | 🟡 详情布局待重做 | 高级搜索、标签、剧集、收藏/评分/短评已有；详情页视觉与信息层级乱 |
 | 播放 / 弹幕 | 🟡 基础完成 | 本地/网络文件、VLC/MPV、弹幕拉取/发送/过滤、静态截图；缺 GIF、命名播放列表、串流封装 |
 | 本地媒体库 | 🟡 MVP（骨架真实） | SQLite、扫描、增量、哈希匹配、海报墙、搜索/筛选、播放都是真的；缺匹配修正、缺失文件管理、剧集分组、缩略图/时长 |
-| 下载中心 | 🟡 MVP（引擎真实） | HTTP 下载、Transmission RPC、任务持久化、暂停/继续/删除都是真的；BT 依赖外部 daemon，缺后台/通知/文件选择/自动下载 |
+| 下载中心 | 🟡 基础能力完善 | HTTP/Transmission/SQLite 真实；系统入口、BT 引导、通知、队列/去重、文件选择、多文件顺序播放已补；仍依赖外部 daemon，缺后台下载/RSS/边下边播 |
 | 截图 / GIF | 🟡 截图免费；GIF MVP | 静态截图已有；GIF 已加“导出 3 秒动图”（3s/10fps/480px，会员门禁，本地文件） |
 | 在线观看 | 🟡 阶段 A/B 可用 | Animeko/Kazumi 源配置/缓存、跨源搜索、剧集与直链解析、WKWebView 嗅探兜底、请求头注入、虚拟文件弹幕匹配已实现；动态源成功率有限，独立嗅探窗口/在线播放列表待做 |
 | 用户中心 | 🟡 部分 | 有会员状态/订单/兑换；缺资料编辑、昵称、邮箱/密码入口 |
@@ -76,34 +76,36 @@
 
 ## 3. 下载中心
 
-### 3.1 现状
-
-不是纯壳，引擎/数据库/主流程都是真的：
+### 3.1 现状（2026-11-16 基础完善）
 
 - HTTP：真实 `URLSessionDownloadTask`，进度/速度/ETA、2xx 校验、文件名冲突、暂停/续传/停止/删除。
-- BT：真实 Transmission JSON-RPC（session/torrent-add/get/start/stop/remove、409 重试、magnet/metainfo），未检测到 daemon 时明确提示且不落库。
+- BT：真实 Transmission JSON-RPC（session/torrent-add/get/start/stop/remove、409 重试、magnet/metainfo、files-wanted/unwanted），未检测到 daemon 时不落库。
 - SQLite 持久化、启动恢复、添加/设置 sheet、完成文件播放、窗口中关闭继续下载。
+- 系统入口：`magnet:`/`ddplay:`/`.torrent`；AppDelegate 打开/复用下载中心并预填；拖拽/剪贴板添加。
+- BT 引导：检测/重试/复制安装命令/官网/RPC 设置/测试连接。
+- 通知：完成/失败、点击定位任务、Dock badge、开关。
+- 队列：HTTP+BT 统一并发、全部暂停/继续、按 infohash/hash/URL 去重。
+- 状态：完成不可重启、缺失文件状态、HTTP 标题更新、无变化不刷 UI、多文件自然顺序播放、启动/暂停/删除竞态防护。
+- 默认目录 `~/Downloads/AniXPlayer`；新增 `download.*` AX 标识。
 
-### 3.2 关键缺口（审计补充）
+### 3.2 仍待处理
 
-1. **BT 开箱不可用**：依赖外部 `transmission-daemon`；没有内置引擎，也没有一键安装/启动/连接测试。发布前必须决策：外部 daemon 第一等公民，或捆绑 libtorrent/Transmission。
-2. **HTTP 退出 App 即停止**：普通 URLSession，不是 background session；重启后从头下载。UI 必须明确说明，或做 background session/helper。
-3. **无系统入口**：未注册 `magnet:`/`ddplay:`/`.torrent`，浏览器磁力链接、Finder 种子文件无法直接进 App。
-4. **无完成/失败通知**：窗口关闭后用户不知道结果；无 Dock badge/声音。
-5. **BT 文件选择缺失**：RPC 解析了 `isWanted` 但未使用；不能选文件、看单文件进度、设优先级。
-6. **队列不公平**：最大并发只约束 HTTP；所有 BT 任务同时 start；无优先级/全局暂停。
-7. **边下边播是 best-effort**：只打开已存在且 >20MB 的文件，没有本地 Range 代理/piece 感知；多文件只播最大文件，不按剧集顺序。
-8. **状态/竞态**：BT 的暂停/停止都是 `torrent-stop`；`sequentialDownload` 被旧版拒绝后仍可能显示 streaming；completed 任务可再次开始；启动/暂停/删除存在短竞态。
-9. **无自动下载/RSS/资源规则**；无任务重命名/复制源/历史。
-10. **默认保存目录在隐藏的 Application Support**，不适合普通用户。
+1. **BT 开箱不可用**：仍依赖外部 `transmission-daemon`；没有内置引擎。发布前必须决策：外部 daemon 第一等公民，或捆绑 libtorrent/Transmission。
+2. **HTTP 退出 App 即停止**：普通 URLSession，不是 background session；重启后从头下载。UI 已说明，但未做 background session/helper。
+3. **边下边播仍不做**：没有本地 Range 代理/piece 感知；多文件播放已按自然顺序，但不是边下边播。
+4. **无 RSS/自动下载/资源节点规则**；无任务重命名/复制源/历史。
+5. **BT 文件选择只有 wanted/unwanted**，没有单文件优先级；做种/分享率策略未做。
+6. **远程 Transmission** 的播放/Finder 路径映射未处理。
+7. **远程 `.torrent` URL** 在 daemon 返回 hash 前只按 URL 去重。
+8. 真实 Transmission/BT 尚未联调；随机崩溃/网络异常恢复仍需真实环境验证。
 
 ### 3.3 建议顺序
 
-1. BT 策略与首次使用引导（检测/安装/启动/连接测试/登录启动）。
-2. 系统入口 + 队列/状态正确性 + 完成通知。
-3. 文件选择、播放顺序、真实边下边播（或移除该承诺）。
-4. 后台下载、错误恢复/重试、默认目录迁移。
-5. RSS/自动下载/资源节点。
+1. 真实 Transmission/BT 联调（转发端口、队列、文件选择、断线重连）。
+2. HTTP background session/helper（或明确产品限制）。
+3. RSS/自动下载/资源节点。
+4. 做种/分享率/限速/任务重命名/历史。
+5. BT 内核捆绑决策（GPL/体积/签名/公证）。
 
 ## 4. 本地媒体库
 
@@ -189,12 +191,14 @@
 | 顺序 | 工作 | 理由 |
 |---|---|---|
 | ✅ | 截图/GIF MVP（会员） | 已完成 3 秒 GIF；后续补选项/WebP/APNG/无头 MPV |
-| ✅ | 番剧详情页首轮 | header/追番卡片/间距/关联列数已改；完整 stack 重做与加载态仍待做 |
-| 1 | 在线观看阶段 A/B | 源配置→解析→串流，先直链后嗅探；最大缺口 |
-| 2 | 媒体库体验补齐 | 已有骨架，补匹配修正/缺失/分组/缩略图 |
-| 3 | 下载中心补齐 | 先补 BT 引导/系统入口/通知/队列；BT 内核单独立项 |
-| 4 | 在线观看阶段 C/D | WKWebView 嗅探、源管理、合规 |
-| 5 | 详情页完整重做 | stack 卡片、加载/错误态、490pt 窗口、AX |
+| ✅ | 在线观看阶段 A/B | Animeko/Kazumi 源配置、缓存、搜索、剧集、直链、备用线路、播放验证、虚拟文件弹幕匹配 |
+| ✅ | 在线观看自动嗅探 | WKWebView JS hook 兜底；广告候选过滤；独立嗅探窗口仍待做 |
+| ✅ | 番剧详情页重做 | Stack 卡片、hero、元数据、追番、剧集、社区、加载/错误态、AX |
+| ✅ | 下载中心基础完善 | 系统入口、BT 引导、通知、队列/去重、文件选择、多文件播放 |
+| 1 | 媒体库体验补齐 | 已有骨架，补匹配修正/缺失/分组/缩略图 |
+| 2 | 在线观看 C/D | 独立嗅探窗口、播放列表/下一集、Kazumi API 模式、必要时本地代理 |
+| 3 | GIF 硬化 | 无头 MPV 抓帧、选项/进度/取消/预览、WebP/APNG 文案 |
+| 4 | 下载中心深水区 | 真实 Transmission 联调、后台下载、RSS/自动下载、BT 内核决策 |
 | ➖ | 远程访问 / 投屏 | 暂不做 |
 
 ## 8. 验收边界
