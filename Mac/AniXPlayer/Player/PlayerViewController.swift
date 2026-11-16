@@ -91,6 +91,7 @@ class PlayerViewController: ViewController {
 
     private var isLoadingBackupDanmaku = false
     private var isExportingGIF = false
+    private var gifExportFlow: GIFExportFlowController?
 
     // 开始活动以防止系统休眠
     private var activityToken: NSObjectProtocol?
@@ -106,7 +107,9 @@ class PlayerViewController: ViewController {
 
     override func viewWillDisappear() {
         super.viewWillDisappear()
-        
+
+        self.gifExportFlow?.cancelAndDismiss()
+
         if self.mediaModel.isPlaying {
             self.playerModel.mediaModel.pause()
         }
@@ -205,6 +208,7 @@ class PlayerViewController: ViewController {
 
     /// 停止播放；独立播放器窗口关闭时调用。
     func stopPlayback() {
+        gifExportFlow?.cancelAndDismiss()
         mediaModel.stop()
     }
 
@@ -228,7 +232,9 @@ class PlayerViewController: ViewController {
 
         self.mediaModel.context.media.subscribe(onNext: { [weak self] file in
             guard let self = self else { return }
-            
+
+            // 切换媒体时取消正在进行的动图导出，避免抓到上一个视频或卡住进度 sheet。
+            self.gifExportFlow?.cancelAndDismiss()
             self.uiView.title = file?.fileName
             self.onMediaChanged?(file)
             self.playHistoryReporter.reset()
@@ -656,18 +662,22 @@ extension PlayerViewController: PlayerUIViewDataSource {
 // MARK: - PlayerUIViewDelegate
 extension PlayerViewController: PlayerUIViewDelegate, NSMenuDelegate {
 
-    /// 会员动图导出：从当前播放位置截取 3 秒 GIF。
-    /// 首版只支持 AVFoundation 能解码的本地文件；远程流会明确提示。
+    /// 会员动图导出：先展示选项 sheet，再抓帧/编码，支持进度与取消。
+    /// 本地文件优先 AVFoundation；其它/失败时回退无头 MPV；在线源使用 MPV 与 httpHeaders。
     func exportGIF() {
         guard !isExportingGIF else { return }
-        guard let item = mediaModel.media, item.url.isFileURL else {
-            self.view.show(text: NSLocalizedString("当前视频不是本地文件，暂不支持导出动图", comment: ""))
+        guard let item = mediaModel.media else {
+            self.view.show(text: NSLocalizedString("请先打开视频", comment: ""))
+            return
+        }
+        guard item.createMPVMedia() != nil else {
+            self.view.show(text: NSLocalizedString("当前视频暂不支持导出动图", comment: ""))
             return
         }
 
         let startTime = mediaModel.currentTime
         let duration = mediaModel.length
-        guard duration > 0, startTime < duration - 0.5 else {
+        guard duration > 0, startTime < duration - GIFExportConfiguration.minimumClipDuration else {
             self.view.show(text: NSLocalizedString("当前位置之后没有足够的视频内容", comment: ""))
             return
         }
@@ -681,26 +691,24 @@ extension PlayerViewController: PlayerUIViewDelegate, NSMenuDelegate {
                 return
             }
 
-            self.view.show(text: NSLocalizedString("正在导出动图…", comment: ""))
-            GIFExportService().export(
-                videoURL: item.url,
-                startTime: startTime,
-                configuration: .default,
-                progress: { _ in }
-            ) { [weak self] result in
-                guard let self = self else { return }
+            // 门禁/付费墙期间用户可能已经切换媒体。
+            guard let current = self.mediaModel.media, current === item else {
                 self.isExportingGIF = false
-
-                switch result {
-                case .success(let url):
-                    ANX.logInfo(.player, "[Player] 动图已保存: \(url.path)")
-                    self.view.show(text: NSLocalizedString("动图已保存", comment: ""))
-                    NSWorkspace.shared.activateFileViewerSelecting([url])
-                case .failure(let error):
-                    ANX.logError(.player, "[Player] 动图导出失败: \(error)")
-                    self.view.show(error: error)
-                }
+                return
             }
+
+            let flow = GIFExportFlowController(
+                host: self,
+                file: item,
+                startTime: startTime,
+                mediaDuration: duration
+            )
+            flow.onFinish = { [weak self] in
+                self?.gifExportFlow = nil
+                self?.isExportingGIF = false
+            }
+            self.gifExportFlow = flow
+            flow.start()
         }
     }
 

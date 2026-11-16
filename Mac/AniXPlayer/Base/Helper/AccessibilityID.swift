@@ -139,6 +139,26 @@ enum AccessibilityID {
         static let miniProgressSlider = "player.miniProgressSlider"
         static let backupDanmakuItem = "player.backupDanmakuItem"
         static let exportGIFItem = "player.exportGIFItem"
+
+        // 动图导出：选项 / 进度 / 预览
+        static let gifExportOptionsWindow = "player.gifExport.optionsWindow"
+        static let gifExportStartTimeField = "player.gifExport.startTimeField"
+        static let gifExportDurationControl = "player.gifExport.durationControl"
+        static let gifExportFPSControl = "player.gifExport.fpsControl"
+        static let gifExportWidthControl = "player.gifExport.widthControl"
+        static let gifExportFormatPopup = "player.gifExport.formatPopup"
+        static let gifExportEstimateLabel = "player.gifExport.estimateLabel"
+        static let gifExportConfirmButton = "player.gifExport.confirmButton"
+        static let gifExportCancelButton = "player.gifExport.cancelButton"
+        static let gifExportProgressWindow = "player.gifExport.progressWindow"
+        static let gifExportProgressIndicator = "player.gifExport.progressIndicator"
+        static let gifExportProgressLabel = "player.gifExport.progressLabel"
+        static let gifExportProgressCancelButton = "player.gifExport.progressCancelButton"
+        static let gifExportPreviewWindow = "player.gifExport.previewWindow"
+        static let gifExportPreviewImageView = "player.gifExport.previewImageView"
+        static let gifExportRevealButton = "player.gifExport.revealButton"
+        static let gifExportSaveAsButton = "player.gifExport.saveAsButton"
+        static let gifExportDoneButton = "player.gifExport.doneButton"
     }
 
     enum Login {
