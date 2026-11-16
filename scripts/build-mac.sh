@@ -8,11 +8,13 @@ set -euo pipefail
 #   bash scripts/build-mac.sh Release      # Release 编译（不签名）
 #   bash scripts/build-mac.sh Debug --resolve  # 先解析 SPM 依赖
 #   bash scripts/build-mac.sh Debug --clean-spm # 清理本项目 SPM artifacts 后编译
+#   DERIVED_DATA_PATH=/tmp/anix-dd-feature bash scripts/build-mac.sh Debug
 #
 # 说明:
 #   - 默认 CODE_SIGNING_ALLOWED=NO，仅验证编译；
 #   - 要运行 App/登录/网络，请用 Xcode 打开工程并配置签名；
-#   - AppKey.swift 缺失时会从 .example 复制一份占位文件（不会覆盖已有文件）。
+#   - AppKey.swift 缺失时会从 .example 复制一份占位文件（不会覆盖已有文件）；
+#   - 并行 worktree 建议设置 DERIVED_DATA_PATH，避免 xcodebuild 抢锁。
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PROJECT="$ROOT/Mac/AniXPlayer.xcodeproj"
@@ -31,6 +33,11 @@ for arg in "$@"; do
     *) echo "未知参数: $arg"; exit 1 ;;
   esac
 done
+
+DERIVED_ARGS=()
+if [ -n "${DERIVED_DATA_PATH:-}" ]; then
+  DERIVED_ARGS+=("-derivedDataPath" "$DERIVED_DATA_PATH")
+fi
 
 if [ ! -f "$APPKEY" ]; then
   if [ -f "$APPKEY_EXAMPLE" ]; then
@@ -58,5 +65,6 @@ xcodebuild \
   -scheme AniXPlayer \
   -configuration "$CONFIG" \
   -destination 'platform=macOS' \
+  "${DERIVED_ARGS[@]}" \
   CODE_SIGNING_ALLOWED=NO \
   build
