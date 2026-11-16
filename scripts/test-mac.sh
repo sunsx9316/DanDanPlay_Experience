@@ -41,7 +41,7 @@ if [ -n "${DERIVED_DATA_PATH:-}" ]; then
 fi
 
 echo "运行 macOS 单元测试 ($CONFIG)..."
-if [ ${#ONLY_ARGS[@]} -gt 0 ]; then
+if [ ${#ONLY_ARGS[@]} -gt 0 ] && [ ${#DERIVED_ARGS[@]} -gt 0 ]; then
   xcodebuild test \
     -project "$ROOT/Mac/AniXPlayer.xcodeproj" \
     -scheme AniXPlayerTests \
@@ -51,13 +51,30 @@ if [ ${#ONLY_ARGS[@]} -gt 0 ]; then
     CODE_SIGNING_ALLOWED=NO \
     CODE_SIGNING_REQUIRED=NO \
     "${ONLY_ARGS[@]}"
-else
+elif [ ${#ONLY_ARGS[@]} -gt 0 ]; then
+  xcodebuild test \
+    -project "$ROOT/Mac/AniXPlayer.xcodeproj" \
+    -scheme AniXPlayerTests \
+    -configuration "$CONFIG" \
+    -destination 'platform=macOS' \
+    CODE_SIGNING_ALLOWED=NO \
+    CODE_SIGNING_REQUIRED=NO \
+    "${ONLY_ARGS[@]}"
+elif [ ${#DERIVED_ARGS[@]} -gt 0 ]; then
   xcodebuild test \
     -project "$ROOT/Mac/AniXPlayer.xcodeproj" \
     -scheme AniXPlayerTests \
     -configuration "$CONFIG" \
     -destination 'platform=macOS' \
     "${DERIVED_ARGS[@]}" \
+    CODE_SIGNING_ALLOWED=NO \
+    CODE_SIGNING_REQUIRED=NO
+else
+  xcodebuild test \
+    -project "$ROOT/Mac/AniXPlayer.xcodeproj" \
+    -scheme AniXPlayerTests \
+    -configuration "$CONFIG" \
+    -destination 'platform=macOS' \
     CODE_SIGNING_ALLOWED=NO \
     CODE_SIGNING_REQUIRED=NO
 fi

@@ -60,11 +60,21 @@ if [ "$RESOLVE" = "1" ]; then
 fi
 
 echo "编译 macOS ($CONFIG)..."
-xcodebuild \
-  -project "$PROJECT" \
-  -scheme AniXPlayer \
-  -configuration "$CONFIG" \
-  -destination 'platform=macOS' \
-  "${DERIVED_ARGS[@]}" \
-  CODE_SIGNING_ALLOWED=NO \
-  build
+if [ ${#DERIVED_ARGS[@]} -gt 0 ]; then
+  xcodebuild \
+    -project "$PROJECT" \
+    -scheme AniXPlayer \
+    -configuration "$CONFIG" \
+    -destination 'platform=macOS' \
+    "${DERIVED_ARGS[@]}" \
+    CODE_SIGNING_ALLOWED=NO \
+    build
+else
+  xcodebuild \
+    -project "$PROJECT" \
+    -scheme AniXPlayer \
+    -configuration "$CONFIG" \
+    -destination 'platform=macOS' \
+    CODE_SIGNING_ALLOWED=NO \
+    build
+fi
