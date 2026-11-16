@@ -37,6 +37,7 @@ enum AccessibilityID {
         static let playerListButton = "player.playerListButton"
         static let screenshotButton = "player.screenshotButton"
         static let miniProgressSlider = "player.miniProgressSlider"
+        static let backupDanmakuItem = "player.backupDanmakuItem"
     }
 
     enum Login {
@@ -85,5 +86,12 @@ enum AccessibilityID {
         static let generateButton = "summary.generateButton"
         static let copyButton = "summary.copyButton"
         static let statusLabel = "summary.statusLabel"
+        static let videoField = "summary.videoField"
+        static let chooseVideoButton = "summary.chooseVideoButton"
+        static let subtitleField = "summary.subtitleField"
+        static let chooseSubtitleButton = "summary.chooseSubtitleButton"
+        static let titleField = "summary.titleField"
+        static let videoSubtitleField = "summary.videoSubtitleField"
+        static let quotaLabel = "summary.quotaLabel"
     }
 }
