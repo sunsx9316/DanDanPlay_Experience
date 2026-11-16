@@ -99,14 +99,12 @@ class FavoriteViewController: ViewController, NSCollectionViewDataSource, NSColl
     }
 
     private func fetchData() {
-        FavoriteNetworkHandle.getFavoriteList { [weak self] rsp, error in
+        Task { @MainActor [weak self] in
             guard let self = self else { return }
-            DispatchQueue.main.async {
-                if let error = error {
-                    self.view.show(error: error)
-                } else if let list = rsp?.favorites {
-                    self.dataList = list
-                }
+            do {
+                self.dataList = try await FavoriteNetworkHandle.fetchFavorites()
+            } catch {
+                self.view.show(error: error)
             }
         }
     }
@@ -122,13 +120,25 @@ class FavoriteViewController: ViewController, NSCollectionViewDataSource, NSColl
         let model = dataList[indexPath.item]
         item.configure(with: model)
         item.onFavoriteToggle = { [weak self] animeId, isLike in
-            FavoriteNetworkHandle.changeFavorite(animateId: animeId, isLike: isLike) { error in
-                DispatchQueue.main.async {
-                    if let error = error {
-                        self?.view.show(error: error)
+            Task { @MainActor [weak self] in
+                guard let self = self else { return }
+                guard await LoginGate.shared.ensureAccessToken(presenting: self.view.window) else {
+                    return
+                }
+                do {
+                    if isLike {
+                        try await FavoriteNetworkHandle.updateFavorite(
+                            animeId: animeId,
+                            favoriteStatus: .favorited
+                        )
                     } else {
-                        self?.fetchData()
+                        try await FavoriteNetworkHandle.removeFavorite(animeId: animeId)
                     }
+                    self.fetchData()
+                } catch {
+                    self.view.show(error: error)
+                    // 失败时恢复服务端状态，避免爱心按钮保留乐观更新。
+                    self.fetchData()
                 }
             }
         }
