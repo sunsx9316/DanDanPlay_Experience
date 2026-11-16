@@ -270,6 +270,14 @@ class HomePageViewController: ViewController {
             self.navigator?.pushViewController(vc)
         }
 
+        addFunctionButton(
+            imageName: "chart.bar.fill",
+            name: NSLocalizedString("排行榜", comment: ""),
+            identifier: AccessibilityID.Home.trendingButton
+        ) { [weak self] in
+            self?.navigator?.pushViewController(TrendingViewController())
+        }
+
         if isLoggedIn {
             addFunctionButton(
                 imageName: "heart.fill",

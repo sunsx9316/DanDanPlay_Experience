@@ -53,6 +53,18 @@ enum AccessibilityID {
         static let favoritesButton = "home.favoritesButton"
         static let queueHeader = "home.queueHeader"
         static let queueList = "home.queueList"
+        static let trendingButton = "home.trendingButton"
+    }
+
+    enum Trending {
+        static let root = "trending.root"
+        static let categoryControl = "trending.categoryControl"
+        static let periodPopup = "trending.periodPopup"
+        static let scopePopup = "trending.scopePopup"
+        static let refreshButton = "trending.refreshButton"
+        static let summaryLabel = "trending.summaryLabel"
+        static let statusLabel = "trending.statusLabel"
+        static let list = "trending.list"
     }
 
     enum Membership {
