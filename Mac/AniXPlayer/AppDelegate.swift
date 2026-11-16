@@ -31,9 +31,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private var mediaLibraryWindowController: MediaLibraryWindowController?
 
-    private var loginWindowController: WindowController?
-
     private var homePageWindowController: HomePageNavigationWindowController?
+
+    private var pendingOpenURLs: [URL] = []
+
+    private var didFinishLaunching = false
 
     private lazy var mainWindowController: WindowController = {
         let mainVC = MainViewController()
@@ -53,15 +55,30 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.setupMenu()
         self.mainWindowController.showWindow(nil)
         self.mainWindowController.window?.center()
-        
-        self.checkUpdate()
 
-        // 恢复 iCloud 同步（如果之前已开启）
-        if Preferences.shared.icloudSyncEnabled {
-            Preferences.shared.store.startSync()
+        // L2 播放冒烟入口（仅 Debug）：必须在登录弹窗/更新检查之前启动。
+        PlaybackSmokeRunner.shared.start(
+            mainViewController: self.mainWindowController.contentViewController as? MainViewController
+        )
+
+        if !Self.isRunningUnitTests {
+            if !PlaybackSmokeRunner.shared.isActive {
+                self.checkUpdate()
+            }
+
+            // 恢复 iCloud 同步（如果之前已开启）
+            if Preferences.shared.icloudSyncEnabled {
+                Preferences.shared.store.startSync()
+            }
+
+            // macOS：强制登录 + 纯 Bearer，并清理旧 JWT。
+            MacAuthBootstrap.start()
+            if !PlaybackSmokeRunner.shared.isActive {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                    MacAuthBootstrap.presentLoginIfNeeded()
+                }
+            }
         }
-
-        renewLoginInfo()
 
         NotificationCenter.default.addObserver(
             self,
@@ -76,6 +93,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             name: .AnixUserLoginStateDidChange,
             object: nil
         )
+
+        didFinishLaunching = true
+        processPendingOpenURLs()
     }
 
     @objc private func showConflictAlert() {
@@ -109,6 +129,89 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
         return true
+    }
+
+    // MARK: - Open Files
+
+    /// 双击视频 / `open -a AniXPlayer.app video.mp4` 的入口。
+    func application(_ sender: NSApplication, openFiles filenames: [String]) {
+        handleOpenURLs(filenames.map { URL(fileURLWithPath: $0) })
+        sender.reply(toOpenOrPrint: .success)
+    }
+
+    func application(_ application: NSApplication, open urls: [URL]) {
+        handleOpenURLs(urls)
+    }
+
+    private func handleOpenURLs(_ urls: [URL]) {
+        guard !urls.isEmpty else { return }
+        ANX.logInfo(.UI, "[App] 打开外部文件: \(urls.map { $0.lastPathComponent })")
+
+        if didFinishLaunching {
+            deliverOpenURLs(urls)
+        } else {
+            pendingOpenURLs.append(contentsOf: urls)
+        }
+    }
+
+    private func processPendingOpenURLs() {
+        guard !pendingOpenURLs.isEmpty else { return }
+        let urls = pendingOpenURLs
+        pendingOpenURLs.removeAll()
+        deliverOpenURLs(urls)
+    }
+
+    private func deliverOpenURLs(_ urls: [URL]) {
+        guard let mainVC = mainWindowController.contentViewController as? MainViewController else { return }
+
+        let files = expandLocalFiles(urls)
+        let videoFiles = files.filter { !$0.url.isSubtitleFile && !$0.url.isDanmakuFile }
+
+        guard !videoFiles.isEmpty else {
+            mainVC.view.show(text: NSLocalizedString("请先打开视频文件", comment: ""))
+            return
+        }
+
+        mainWindowController.window?.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+        mainVC.openLocalFiles(videoFiles, startWith: nil)
+    }
+
+    /// 把文件夹展开成子文件；与 NSOpenPanel 的行为保持一致。
+    private func expandLocalFiles(_ urls: [URL]) -> [File] {
+        var files: [File] = []
+        var directories: [File] = []
+
+        for url in urls {
+            let file = LocalFile(with: url)
+            if file.type == .folder {
+                directories.append(file)
+            } else {
+                files.append(file)
+            }
+        }
+
+        guard !directories.isEmpty else {
+            return files
+        }
+
+        let group = DispatchGroup()
+        for directory in directories {
+            group.enter()
+            LocalFile.fileManager.contentsOfDirectory(at: directory, filterType: .all) { result in
+                if case .success(let children) = result {
+                    files.append(contentsOf: children)
+                }
+                group.leave()
+            }
+        }
+        _ = group.wait(timeout: .distantFuture)
+        return files
+    }
+
+    /// 单元测试宿主进程：跳过登录窗口、更新检查等启动副作用。
+    private static var isRunningUnitTests: Bool {
+        ProcessInfo.processInfo.environment["XCTestConfigurationFilePath"] != nil
     }
     
     private func showAppVersionVC(_ info: UpdateInfo) {
@@ -261,43 +364,44 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc private func onUserMenuItemDidClick(_ item: NSMenuItem) {
-        if Preferences.shared.loginInfo != nil {
-            let alert = NSAlert()
-            alert.messageText = NSLocalizedString("提示", comment: "")
-            alert.informativeText = NSLocalizedString("确定退出登录吗？", comment: "")
-            alert.alertStyle = .warning
-            alert.addButton(withTitle: NSLocalizedString("确定", comment: ""))
-            alert.addButton(withTitle: NSLocalizedString("取消", comment: ""))
-            if alert.runModal() == .alertFirstButtonReturn {
-                Preferences.shared.loginInfo = nil
+        Task { @MainActor in
+            if await SessionStore.shared.isLoggedIn() {
+                let alert = NSAlert()
+                alert.messageText = NSLocalizedString("提示", comment: "")
+                alert.informativeText = NSLocalizedString("确定退出登录吗？", comment: "")
+                alert.alertStyle = .warning
+                alert.addButton(withTitle: NSLocalizedString("确定", comment: ""))
+                alert.addButton(withTitle: NSLocalizedString("取消", comment: ""))
+                if alert.runModal() == .alertFirstButtonReturn {
+                    await SessionStore.shared.logout()
+                }
+            } else {
+                _ = await LoginGate.shared.ensureLoggedIn(presenting: self.mainWindowController.window)
             }
-        } else {
-            let vc = LoginViewController()
-            let window = NSWindow(contentViewController: vc)
-            window.styleMask = [.titled, .closable, .miniaturizable]
-            window.isReleasedWhenClosed = false
-            let wc = WindowController(window: window)
-            window.delegate = wc
-            wc.windowWillCloseCallBack = { [weak self] in
-                self?.loginWindowController = nil
-            }
-            wc.showWindow(nil)
-            self.loginWindowController = wc
         }
     }
 
     @objc private func updateUserMenuItem() {
         guard let item = userMenuItem else { return }
-        if let info = Preferences.shared.loginInfo {
-            item.title = info.screenName
-            item.submenu = nil
-            if !info.profileImage.isEmpty {
-                loadAvatar(for: item, from: info.profileImage)
+
+        Task { @MainActor [weak self] in
+            guard let self = self else { return }
+            let isLoggedIn = await SessionStore.shared.isLoggedIn()
+            let profile = await SessionStore.shared.currentProfile()
+
+            if isLoggedIn, let profile = profile {
+                item.title = profile.displayName
+                item.submenu = nil
+                if !profile.profileImage.isEmpty {
+                    self.loadAvatar(for: item, from: profile.profileImage)
+                } else {
+                    item.image = nil
+                }
+            } else {
+                item.title = NSLocalizedString("登录弹弹Play…", comment: "")
+                item.image = nil
+                item.submenu = nil
             }
-        } else {
-            item.title = NSLocalizedString("登录弹弹Play…", comment: "")
-            item.image = nil
-            item.submenu = nil
         }
     }
 
@@ -315,18 +419,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             avatar.unlockFocus()
             DispatchQueue.main.async {
                 item.image = avatar
-            }
-        }
-    }
-
-    private func renewLoginInfo() {
-        guard let loginInfo = Preferences.shared.loginInfo,
-              let tokenExpireTime = loginInfo.tokenExpireTime else { return }
-        if tokenExpireTime < Date() {
-            UserNetworkHandle.renew { loginInfo, _ in
-                if let loginInfo = loginInfo {
-                    Preferences.shared.loginInfo = loginInfo
-                }
             }
         }
     }

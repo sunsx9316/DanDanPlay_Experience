@@ -27,11 +27,21 @@ class MainViewController: ViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = AppInfoHelper.appDisplayName
+        view.setAccessibilityIdentifier(AccessibilityID.Launch.root)
         showLaunch()
     }
 
     func openNetworkFiles(_ files: [File], startWith file: File) {
         showPlayer(with: files, startWith: file)
+    }
+
+    func openLocalFiles(_ files: [File], startWith file: File?) {
+        showPlayer(with: files, startWith: file)
+    }
+
+    /// L2 播放冒烟：当前播放器状态；没有播放器时返回 nil。
+    var currentPlaybackSnapshot: PlaybackSnapshot? {
+        return playerVC?.playbackSnapshot()
     }
 
     // MARK: - Private

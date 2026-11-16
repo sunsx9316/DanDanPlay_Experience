@@ -36,7 +36,8 @@ class PlayerUITopView: BaseView {
     }
     
     private func setupInit() {
-        
+        self.titleLabel.setAccessibilityIdentifier(AccessibilityID.Player.titleLabel)
+
         self.addSubview(self.bgView)
         let containerView = BaseView()
         containerView.addSubview(self.titleLabel)

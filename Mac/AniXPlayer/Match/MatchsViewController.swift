@@ -223,26 +223,34 @@ class MatchsViewController: ViewController {
     }
 
     private func requestData(completion: @escaping(() -> Void)) {
-        MatchNetworkHandle.match(with: file) { (_) in
-
-        } completion: { [weak self] (collection, error) in
-
-            guard let self = self else {
+        Task { @MainActor [weak self] in
+            guard let self = self else { return }
+            guard await LoginGate.shared.ensureAccessToken(presenting: self.view.window) else {
+                completion()
                 return
             }
 
-            if let collection = collection {
-                DispatchQueue.main.async {
-                    let items = type(of: self).converCollection(collection)
-                    self.dataSource = items
-                    self.outlineView.reloadData()
-                    self.expandAllItems()
-                    completion()
+            MatchNetworkHandle.match(with: self.file) { (_) in
+
+            } completion: { [weak self] (collection, error) in
+
+                guard let self = self else {
+                    return
                 }
-            } else if let error = error {
-                DispatchQueue.main.async {
-                    self.view.show(error: error)
-                    completion()
+
+                if let collection = collection {
+                    DispatchQueue.main.async {
+                        let items = type(of: self).converCollection(collection)
+                        self.dataSource = items
+                        self.outlineView.reloadData()
+                        self.expandAllItems()
+                        completion()
+                    }
+                } else if let error = error {
+                    DispatchQueue.main.async {
+                        self.view.show(error: error)
+                        completion()
+                    }
                 }
             }
         }

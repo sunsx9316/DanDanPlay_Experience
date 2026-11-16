@@ -75,20 +75,27 @@ class SearchViewController: ViewController {
             return
         }
 
-        SearchNetworkHandle.searchWithKeyword(text) { [weak self] (result, error) in
-
+        Task { @MainActor [weak self] in
             guard let self = self else { return }
-
-            if let error = error {
-                DispatchQueue.main.async {
-                    self.view.show(error: error)
-                }
+            guard await LoginGate.shared.ensureAccessToken(presenting: self.view.window) else {
                 return
             }
 
-            DispatchQueue.main.async {
-                self.dataSource = result?.collection ?? []
-                self.outlineView.reloadData()
+            SearchNetworkHandle.searchWithKeyword(text) { [weak self] (result, error) in
+
+                guard let self = self else { return }
+
+                if let error = error {
+                    DispatchQueue.main.async {
+                        self.view.show(error: error)
+                    }
+                    return
+                }
+
+                DispatchQueue.main.async {
+                    self.dataSource = result?.collection ?? []
+                    self.outlineView.reloadData()
+                }
             }
         }
     }

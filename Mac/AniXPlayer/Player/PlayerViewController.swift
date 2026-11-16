@@ -104,6 +104,9 @@ class PlayerViewController: ViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.wantsLayer = true
+        self.view.setAccessibilityIdentifier(AccessibilityID.Player.root)
+        self.mediaModel.mediaView.setAccessibilityIdentifier(AccessibilityID.Player.mediaView)
+        self.danmakuCanvas.setAccessibilityIdentifier(AccessibilityID.Player.danmakuCanvas)
         self.view.addSubview(self.dragView)
         self.dragView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -165,6 +168,19 @@ class PlayerViewController: ViewController {
         }
     }
     
+    /// L2 播放冒烟：读取当前播放状态。
+    func playbackSnapshot() -> PlaybackSnapshot {
+        let media = mediaModel.media
+        return PlaybackSnapshot(
+            title: media?.fileName,
+            duration: max(mediaModel.length, 0),
+            position: max(mediaModel.currentTime, 0),
+            isPlaying: mediaModel.isPlaying,
+            danmakuCount: danmakuModel.danmakuList.count,
+            playerReady: media != nil && mediaModel.length > 0
+        )
+    }
+
     //MARK: - Private
     private func bindModel() {
 
@@ -725,36 +741,25 @@ extension PlayerViewController: PlayerUIViewDelegate, NSMenuDelegate {
             return
         }
 
-        guard Preferences.shared.loginInfo != nil else {
-            let alert = NSAlert()
-            alert.messageText = NSLocalizedString("未登录", comment: "")
-            alert.informativeText = NSLocalizedString("发送弹幕需要登录账号，是否前往登录？", comment: "")
-            alert.addButton(withTitle: NSLocalizedString("去登录", comment: ""))
-            alert.addButton(withTitle: NSLocalizedString("取消", comment: ""))
-            alert.alertStyle = .warning
-            if alert.runModal() == .alertFirstButtonReturn {
-                let loginVC = LoginViewController()
-                let window = NSWindow(contentViewController: loginVC)
-                window.styleMask = [.titled, .closable, .miniaturizable]
-                window.isReleasedWhenClosed = false
-                let wc = NSWindowController(window: window)
-                wc.showWindow(nil)
+        Task { @MainActor [weak self] in
+            guard let self = self else { return }
+            guard await LoginGate.shared.ensureAccessToken(presenting: self.view.window) else {
+                return
             }
-            return
-        }
 
-        var comment = Comment()
-        comment.message = text
-        comment.mode = sendDanmakuMode
-        comment.color = sendDanmakuColor
-        comment.time = mediaModel.currentTime
+            var comment = Comment()
+            comment.message = text
+            comment.mode = self.sendDanmakuMode
+            comment.color = self.sendDanmakuColor
+            comment.time = self.mediaModel.currentTime
 
-        ANX.logInfo(.player, "[Player] 发送弹幕: \"\(text)\" mode=\(comment.mode) color=\(comment.color)")
-        danmakuModel.sendDanmaku(matchId: matchId, danmaku: comment) { [weak self] success, msg in
-            DispatchQueue.main.async {
-                self?.view.show(text: msg ?? "")
-                if success {
-                    textField.stringValue = ""
+            ANX.logInfo(.player, "[Player] 发送弹幕: \"\(text)\" mode=\(comment.mode) color=\(comment.color)")
+            self.danmakuModel.sendDanmaku(matchId: matchId, danmaku: comment) { [weak self] success, msg in
+                DispatchQueue.main.async {
+                    self?.view.show(text: msg ?? "")
+                    if success {
+                        textField.stringValue = ""
+                    }
                 }
             }
         }

@@ -114,6 +114,23 @@ class PlayerUIBottomView: BaseView {
     
     
     private func setupInit() {
+        self.setAccessibilityIdentifier(AccessibilityID.Player.controls)
+        self.progressSlider.setAccessibilityIdentifier(AccessibilityID.Player.progressSlider)
+        self.playButton.setAccessibilityIdentifier(AccessibilityID.Player.playPauseButton)
+        self.playButton.setAccessibilityLabel(NSLocalizedString("播放/暂停", comment: ""))
+        self.stopButton.setAccessibilityIdentifier(AccessibilityID.Player.stopButton)
+        self.stopButton.setAccessibilityLabel(NSLocalizedString("停止", comment: ""))
+        self.nextButton.setAccessibilityIdentifier(AccessibilityID.Player.nextButton)
+        self.nextButton.setAccessibilityLabel(NSLocalizedString("下一个", comment: ""))
+        self.timeLabel.setAccessibilityIdentifier(AccessibilityID.Player.timeLabel)
+        self.danmakuTextField.setAccessibilityIdentifier(AccessibilityID.Player.danmakuTextField)
+        self.playerListButton.setAccessibilityIdentifier(AccessibilityID.Player.playerListButton)
+        self.mediaSettingButton.setAccessibilityIdentifier(AccessibilityID.Player.mediaSettingButton)
+        self.thumbnailButton.setAccessibilityIdentifier(AccessibilityID.Player.screenshotButton)
+        self.thumbnailButton.setAccessibilityLabel(NSLocalizedString("截图", comment: ""))
+        self.danmakuConfigButton.setAccessibilityIdentifier(AccessibilityID.Player.danmakuConfigButton)
+        self.danmakuSettingButton.setAccessibilityIdentifier(AccessibilityID.Player.danmakuSettingButton)
+
         self.addSubview(self.bgView)
         let containerView = BaseView()
         containerView.addSubview(self.progressSlider)

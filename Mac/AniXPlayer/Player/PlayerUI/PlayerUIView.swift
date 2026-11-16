@@ -398,6 +398,8 @@ class PlayerUIView: BaseView {
 
     //MARK: 其他私有方法
     private func setupInit() {
+        self.setAccessibilityIdentifier(AccessibilityID.Player.root)
+        self.miniProgressSlider.setAccessibilityIdentifier(AccessibilityID.Player.miniProgressSlider)
 
         self.addSubview(self.topView)
         self.addSubview(self.bottomView)

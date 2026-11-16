@@ -11,6 +11,8 @@ import Kingfisher
 
 class HomePageViewController: ViewController {
 
+    private var isLoggedIn = false
+
     private var dataSource: Homepage? {
         didSet {
             updateBanner()
@@ -94,6 +96,12 @@ class HomePageViewController: ViewController {
         super.viewDidLoad()
 
         title = NSLocalizedString("主页", comment: "")
+        view.setAccessibilityIdentifier(AccessibilityID.Home.root)
+        bannerCarrier.setAccessibilityIdentifier(AccessibilityID.Home.banner)
+        pageControl.setAccessibilityIdentifier(AccessibilityID.Home.pageIndicator)
+        functionStackView.setAccessibilityIdentifier(AccessibilityID.Home.functionArea)
+        queueSectionHeader.setAccessibilityIdentifier(AccessibilityID.Home.queueHeader)
+        queueCollectionView.setAccessibilityIdentifier(AccessibilityID.Home.queueList)
 
         view.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
@@ -196,14 +204,32 @@ class HomePageViewController: ViewController {
     }
 
     @objc private func startRefresh() {
-        HomePageNetworkHandle.homePage { [weak self] homePage, error in
+        Task { @MainActor [weak self] in
             guard let self = self else { return }
 
-            DispatchQueue.main.async {
-                if let error = error {
-                    self.view.show(error: error)
-                } else {
-                    self.dataSource = homePage
+            self.isLoggedIn = await SessionStore.shared.isLoggedIn()
+            self.reloadFunctionItems()
+
+            // 未登录时保持空态；登录成功后会通过通知再次刷新。
+            guard self.isLoggedIn else {
+                self.dataSource = nil
+                return
+            }
+
+            guard await LoginGate.shared.ensureAccessToken(presenting: self.view.window) else {
+                self.dataSource = nil
+                return
+            }
+
+            HomePageNetworkHandle.homePage { [weak self] homePage, error in
+                guard let self = self else { return }
+
+                DispatchQueue.main.async {
+                    if let error = error {
+                        self.view.show(error: error)
+                    } else {
+                        self.dataSource = homePage
+                    }
                 }
             }
         }
@@ -228,10 +254,12 @@ class HomePageViewController: ViewController {
 
     private func reloadFunctionItems() {
         functionStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
+        functionActions.removeAll()
 
         addFunctionButton(
             imageName: "calendar",
-            name: NSLocalizedString("新番时间表", comment: "")
+            name: NSLocalizedString("新番时间表", comment: ""),
+            identifier: AccessibilityID.Home.timelineButton
         ) { [weak self] in
             guard let self = self else { return }
             let vc = TimelineViewController()
@@ -242,10 +270,11 @@ class HomePageViewController: ViewController {
             self.navigator?.pushViewController(vc)
         }
 
-        if Preferences.shared.loginInfo != nil {
+        if isLoggedIn {
             addFunctionButton(
                 imageName: "heart.fill",
-                name: NSLocalizedString("我的关注", comment: "")
+                name: NSLocalizedString("我的关注", comment: ""),
+                identifier: AccessibilityID.Home.favoritesButton
             ) { [weak self] in
                 guard let self = self else { return }
                 let vc = FavoriteViewController()
@@ -254,8 +283,10 @@ class HomePageViewController: ViewController {
         }
     }
 
-    private func addFunctionButton(imageName: String, name: String, action: @escaping () -> Void) {
+    private func addFunctionButton(imageName: String, name: String, identifier: String, action: @escaping () -> Void) {
         let container = NSView()
+        container.setAccessibilityIdentifier(identifier)
+        container.setAccessibilityLabel(name)
 
         let iconView = ImageView()
         iconView.image = NSImage(systemSymbolName: imageName, accessibilityDescription: nil)
