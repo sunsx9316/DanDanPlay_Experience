@@ -289,14 +289,14 @@ final class WelcomeViewController: ViewController {
             detail: NSLocalizedString("剧情摘要与关键看点", comment: ""),
             symbolName: "sparkles",
             identifier: AccessibilityID.Launch.featureSummary,
-            badge: NSLocalizedString("即将支持", comment: "")
+            badge: NSLocalizedString("会员", comment: "")
         )
         let membershipCard = makeFeatureCard(
             title: NSLocalizedString("会员补充弹幕", comment: ""),
             detail: NSLocalizedString("会员专属与云端同步", comment: ""),
             symbolName: "crown.fill",
             identifier: AccessibilityID.Launch.featureMembership,
-            badge: NSLocalizedString("即将支持", comment: "")
+            badge: NSLocalizedString("会员", comment: "")
         )
 
         [danmakuCard, summaryCard, membershipCard].forEach { card in

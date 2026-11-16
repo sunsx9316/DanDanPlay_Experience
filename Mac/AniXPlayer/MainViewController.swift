@@ -24,8 +24,9 @@ class MainViewController: ViewController {
         vc.onShowSettings = { [weak self] in
             self?.showSettings()
         }
-        // 会员中心暂未接入 macOS 端，保留可选回调，欢迎页会显示为禁用状态。
-        vc.onShowMembership = nil
+        vc.onShowMembership = {
+            MacFeatureLauncher.showMembership()
+        }
         return vc
     }()
 
@@ -75,6 +76,13 @@ class MainViewController: ViewController {
         }
 
         let vc = PlayerViewController()
+        vc.backupDanmakuAccessCheck = { [weak self] in
+            await EntitlementGate.shared.require(
+                .member,
+                feature: .backupDanmaku,
+                presenting: self?.view.window
+            )
+        }
         vc.onStopCallBack = { [weak self] in
             self?.rememberCurrentPlayback()
             self?.hidePlayer()

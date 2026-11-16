@@ -62,6 +62,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         PlaybackSmokeRunner.shared.start(
             mainViewController: self.mainWindowController.contentViewController as? MainViewController
         )
+        Task { @MainActor in
+            MacFeatureLauncher.installEntitlements()
+        }
 
         if !Self.isRunningUnitTests {
             if !PlaybackSmokeRunner.shared.isActive {
@@ -245,6 +248,27 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         homePageWindowController = wc
     }
 
+    @objc private func showMembership(_ item: NSMenuItem) {
+        let window = self.mainWindowController.window
+        Task { @MainActor in
+            MacFeatureLauncher.showMembership(presenting: window)
+        }
+    }
+
+    @objc private func showTranslation(_ item: NSMenuItem) {
+        let window = self.mainWindowController.window
+        Task { @MainActor in
+            MacFeatureLauncher.showTranslation(presenting: window)
+        }
+    }
+
+    @objc private func showSummary(_ item: NSMenuItem) {
+        let window = self.mainWindowController.window
+        Task { @MainActor in
+            MacFeatureLauncher.showSummary(presenting: window)
+        }
+    }
+
     @objc private func showPlayHistory(_ item: NSMenuItem) {
         if let wc = playHistoryWindowController {
             wc.window?.makeKeyAndOrderFront(nil)
@@ -347,6 +371,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             menu.addItem(withTitle: NSLocalizedString("播放历史", comment: ""), action: #selector(showPlayHistory(_:)), keyEquivalent: "")
             menu.addItem(NSMenuItem.separator())
             menu.addItem(withTitle: NSLocalizedString("全局设置", comment: ""), action: #selector(onGlobalSettingItemDidClick(_:)), keyEquivalent: ",")
+            menu.addItem(withTitle: NSLocalizedString("会员中心", comment: ""), action: #selector(showMembership(_:)), keyEquivalent: "")
+            menu.addItem(withTitle: NSLocalizedString("翻译字幕…", comment: ""), action: #selector(showTranslation(_:)), keyEquivalent: "")
+            menu.addItem(withTitle: NSLocalizedString("AI 视频总结…", comment: ""), action: #selector(showSummary(_:)), keyEquivalent: "")
 
             menu.addItem(NSMenuItem.separator())
 

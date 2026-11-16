@@ -22,6 +22,7 @@
 		177C9676ABE8D9982C64132E /* MembershipTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41FD4504D724DCDE7D6E23AE /* MembershipTests.swift */; };
 		18576AF37B22E4BCC219EE26 /* APIEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86A0C502F750FC0AF75E83E /* APIEnvironment.swift */; };
 		1877F4B9D1D44979610B43BF /* OAuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBDC23F8D2E3FCD78FCD2020 /* OAuthService.swift */; };
+		1AE11813681ED162945D2697 /* MacFeatureLauncher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 973EC51DA7BC1D11C466C5BB /* MacFeatureLauncher.swift */; };
 		1D44D17727674746ACA34E84 /* ServerHostListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4F3AEACC0C2438C9D6162A6 /* ServerHostListViewController.swift */; };
 		1E4D4C57F8CFEFB82B886680 /* MembershipModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E099EF31F98DC5E28B8FE12 /* MembershipModels.swift */; };
 		202EEB642E2B618C2A1CD3E4 /* SubtitleTranslationAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8021E70B53C2B1B31F0F8E8 /* SubtitleTranslationAPI.swift */; };
@@ -579,6 +580,7 @@
 		91DA94659E65B95A816B4C39 /* OAuthCallback.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OAuthCallback.swift; sourceTree = "<group>"; };
 		92BB14212F39D0988BBA14F2 /* OAuthLoginWindowController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OAuthLoginWindowController.swift; sourceTree = "<group>"; };
 		931C4442A22089698B1559E2 /* MacAuthBootstrap.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MacAuthBootstrap.swift; sourceTree = "<group>"; };
+		973EC51DA7BC1D11C466C5BB /* MacFeatureLauncher.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MacFeatureLauncher.swift; sourceTree = "<group>"; };
 		980E50F227DD732D9AC20945 /* NSCollectionView+Helper.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "NSCollectionView+Helper.swift"; sourceTree = "<group>"; };
 		981D99D6711B20006516E695 /* BangumiDetailEpisodeViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BangumiDetailEpisodeViewController.swift; sourceTree = "<group>"; };
 		9A10A1070F045F315CE31EDB /* SubtitleTranslationEngine.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SubtitleTranslationEngine.swift; path = AniXPlayer/Features/Translation/SubtitleTranslationEngine.swift; sourceTree = "<group>"; };
@@ -1632,6 +1634,7 @@
 				94F4C43E70E62A15325EDDF8 /* Summary */,
 				4229771A65DADA128FBE56EF /* Danmaku */,
 				2F90A70995248BB0C288A7AC /* Membership */,
+				EA47F6ED1E84F7E7C221DCAD /* App */,
 			);
 			name = Features;
 			path = Features;
@@ -1671,6 +1674,15 @@
 				AC6408B453261481CFC21616 /* OS X */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EA47F6ED1E84F7E7C221DCAD /* App */ = {
+			isa = PBXGroup;
+			children = (
+				973EC51DA7BC1D11C466C5BB /* MacFeatureLauncher.swift */,
+			);
+			name = App;
+			path = App;
 			sourceTree = "<group>";
 		};
 		ED701DCBEE1FD3A91E9182ED /* HomePage */ = {
@@ -2128,6 +2140,7 @@
 				9A9866DCC8544D4EB5B08F08 /* MembershipAPI.swift in Sources */,
 				1E4D4C57F8CFEFB82B886680 /* MembershipModels.swift in Sources */,
 				E2ADDA211E9D63735645F5BF /* MembershipStore.swift in Sources */,
+				1AE11813681ED162945D2697 /* MacFeatureLauncher.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
