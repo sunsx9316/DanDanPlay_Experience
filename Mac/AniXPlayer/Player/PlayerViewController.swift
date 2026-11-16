@@ -104,6 +104,9 @@ class PlayerViewController: ViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.wantsLayer = true
+        self.view.setAccessibilityIdentifier(AccessibilityID.Player.root)
+        self.mediaModel.mediaView.setAccessibilityIdentifier(AccessibilityID.Player.mediaView)
+        self.danmakuCanvas.setAccessibilityIdentifier(AccessibilityID.Player.danmakuCanvas)
         self.view.addSubview(self.dragView)
         self.dragView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
@@ -165,6 +168,19 @@ class PlayerViewController: ViewController {
         }
     }
     
+    /// L2 播放冒烟：读取当前播放状态。
+    func playbackSnapshot() -> PlaybackSnapshot {
+        let media = mediaModel.media
+        return PlaybackSnapshot(
+            title: media?.fileName,
+            duration: max(mediaModel.length, 0),
+            position: max(mediaModel.currentTime, 0),
+            isPlaying: mediaModel.isPlaying,
+            danmakuCount: danmakuModel.danmakuList.count,
+            playerReady: media != nil && mediaModel.length > 0
+        )
+    }
+
     //MARK: - Private
     private func bindModel() {
 

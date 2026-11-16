@@ -60,6 +60,8 @@ final class OAuthLoginWindowController: NSWindowController {
         window.minSize = NSSize(width: 400, height: 560)
         window.isReleasedWhenClosed = false
         window.contentView = webView
+        webView.setAccessibilityIdentifier(AccessibilityID.Login.webView)
+        webView.setAccessibilityLabel(NSLocalizedString("登录页面", comment: ""))
 
         super.init(window: window)
 

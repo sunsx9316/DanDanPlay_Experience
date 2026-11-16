@@ -55,9 +55,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         self.setupMenu()
         self.mainWindowController.showWindow(nil)
         self.mainWindowController.window?.center()
-        
+
+        // L2 播放冒烟入口（仅 Debug）：必须在登录弹窗/更新检查之前启动。
+        PlaybackSmokeRunner.shared.start(
+            mainViewController: self.mainWindowController.contentViewController as? MainViewController
+        )
+
         if !Self.isRunningUnitTests {
-            self.checkUpdate()
+            if !PlaybackSmokeRunner.shared.isActive {
+                self.checkUpdate()
+            }
 
             // 恢复 iCloud 同步（如果之前已开启）
             if Preferences.shared.icloudSyncEnabled {
@@ -66,8 +73,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
             // macOS：强制登录 + 纯 Bearer，并清理旧 JWT。
             MacAuthBootstrap.start()
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-                MacAuthBootstrap.presentLoginIfNeeded()
+            if !PlaybackSmokeRunner.shared.isActive {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                    MacAuthBootstrap.presentLoginIfNeeded()
+                }
             }
         }
 

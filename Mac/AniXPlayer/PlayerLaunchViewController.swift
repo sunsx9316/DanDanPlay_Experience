@@ -44,6 +44,10 @@ class PlayerLaunchViewController: ViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = AppInfoHelper.appDisplayName
+        self.view.setAccessibilityIdentifier(AccessibilityID.Launch.root)
+        self.dragView.setAccessibilityIdentifier(AccessibilityID.Launch.dragArea)
+        self.openButton.setAccessibilityIdentifier(AccessibilityID.Launch.openButton)
+        self.openButton.setAccessibilityLabel(NSLocalizedString("打开或拖入文件", comment: ""))
 
         self.view.addSubview(dragView)
         self.view.addSubview(openButton)

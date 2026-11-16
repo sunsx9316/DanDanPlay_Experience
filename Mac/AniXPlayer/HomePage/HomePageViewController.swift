@@ -96,6 +96,12 @@ class HomePageViewController: ViewController {
         super.viewDidLoad()
 
         title = NSLocalizedString("主页", comment: "")
+        view.setAccessibilityIdentifier(AccessibilityID.Home.root)
+        bannerCarrier.setAccessibilityIdentifier(AccessibilityID.Home.banner)
+        pageControl.setAccessibilityIdentifier(AccessibilityID.Home.pageIndicator)
+        functionStackView.setAccessibilityIdentifier(AccessibilityID.Home.functionArea)
+        queueSectionHeader.setAccessibilityIdentifier(AccessibilityID.Home.queueHeader)
+        queueCollectionView.setAccessibilityIdentifier(AccessibilityID.Home.queueList)
 
         view.addSubview(scrollView)
         scrollView.snp.makeConstraints { make in
@@ -252,7 +258,8 @@ class HomePageViewController: ViewController {
 
         addFunctionButton(
             imageName: "calendar",
-            name: NSLocalizedString("新番时间表", comment: "")
+            name: NSLocalizedString("新番时间表", comment: ""),
+            identifier: AccessibilityID.Home.timelineButton
         ) { [weak self] in
             guard let self = self else { return }
             let vc = TimelineViewController()
@@ -266,7 +273,8 @@ class HomePageViewController: ViewController {
         if isLoggedIn {
             addFunctionButton(
                 imageName: "heart.fill",
-                name: NSLocalizedString("我的关注", comment: "")
+                name: NSLocalizedString("我的关注", comment: ""),
+                identifier: AccessibilityID.Home.favoritesButton
             ) { [weak self] in
                 guard let self = self else { return }
                 let vc = FavoriteViewController()
@@ -275,8 +283,10 @@ class HomePageViewController: ViewController {
         }
     }
 
-    private func addFunctionButton(imageName: String, name: String, action: @escaping () -> Void) {
+    private func addFunctionButton(imageName: String, name: String, identifier: String, action: @escaping () -> Void) {
         let container = NSView()
+        container.setAccessibilityIdentifier(identifier)
+        container.setAccessibilityLabel(name)
 
         let iconView = ImageView()
         iconView.image = NSImage(systemSymbolName: imageName, accessibilityDescription: nil)
