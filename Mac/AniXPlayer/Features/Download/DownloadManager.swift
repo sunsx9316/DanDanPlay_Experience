@@ -61,6 +61,9 @@ final class DownloadManager {
     private var refreshTimer: Timer?
     private var isBootstrapped = false
     private var isRefreshing = false
+    /// 启动后正在接管 background URLSession 遗留任务；完成前不启动 queued 任务，避免重复下载。
+    private var isRestoringBackgroundTasks = false
+    private var backgroundReconcileToken: UUID?
     private var startingTaskIDs: Set<UUID> = []
     /// 每次启动生成一个 token；暂停/停止/删除后，迟到的引擎回调据此判断是否还应生效。
     private var startTokens: [UUID: UUID] = [:]
@@ -119,6 +122,7 @@ final class DownloadManager {
         recoverInterruptedTasks()
         startRefreshTimer()
         updateDockBadge()
+        beginBackgroundReconcile()
         notifyChange()
 
         if !preferences.enableBT {
@@ -128,7 +132,6 @@ final class DownloadManager {
         } else {
             checkBTAvailability()
         }
-        startQueuedTasksIfNeeded()
     }
 
     func reloadStore() {
@@ -137,11 +140,32 @@ final class DownloadManager {
             tasks = try store.allTasks().map(Self.normalizedTask)
             storeError = nil
             pruneTransientState()
+            beginBackgroundReconcile()
             notifyChange()
-            startQueuedTasksIfNeeded()
         } catch {
             storeError = error
             notifyChange()
+        }
+    }
+
+    /// 让 HTTP 引擎接管 App 退出期间仍在运行的后台任务；完成后再启动排队任务。
+    private func beginBackgroundReconcile() {
+        let token = UUID()
+        backgroundReconcileToken = token
+        isRestoringBackgroundTasks = true
+        httpEngine.registerKnownTasks(tasks)
+        httpEngine.reconcileBackgroundTasks { [weak self] updates in
+            guard let self else { return }
+            self.onMain {
+                guard self.backgroundReconcileToken == token else { return }
+                self.backgroundReconcileToken = nil
+                self.isRestoringBackgroundTasks = false
+                if !updates.isEmpty {
+                    self.apply(updates: updates)
+                }
+                self.startQueuedTasksIfNeeded()
+                self.notifyChange()
+            }
         }
     }
 
@@ -206,8 +230,9 @@ final class DownloadManager {
             task.downloadSpeed = 0
             task.uploadSpeed = 0
             task.etaSeconds = nil
-            if task.kind == .http {
-                // URLSession 的临时文件不会跨进程保留，重启后从零开始。
+            if task.kind == .http, !HTTPDownloadEngine.hasResumeData(for: task.id) {
+                // 没有 resumeData 时 URLSession 只能从零开始；
+                // 若 background session 仍在运行，随后的 reconcile 会用系统任务恢复进度。
                 task.progress = 0
                 task.downloadedBytes = 0
             }
@@ -274,31 +299,31 @@ final class DownloadManager {
             }
         }
 
-        let key = DownloadSourceParser.deduplicationKey(for: safeParsed)
-        if let existing = tasks.first(where: {
-            DownloadSourceParser.deduplicationKey(for: $0) == key
-        }) {
-            setLastNotice(String(
-                format: NSLocalizedString("「%@」已经在下载列表中，已定位到现有任务。", comment: ""),
-                existing.displayTitle
-            ))
-            notifyChange()
-            completion(.success(DownloadAddResult(task: existing, isDuplicate: true)))
-            return
-        }
-
         let normalizedSavePath = URL(fileURLWithPath: savePath, isDirectory: true)
             .standardizedFileURL
             .path
 
-        func insertTask() {
+        func insertOrFocus(_ source: DownloadSource) {
+            let key = DownloadSourceParser.deduplicationKey(for: source)
+            if let existing = tasks.first(where: {
+                DownloadSourceParser.deduplicationKey(for: $0) == key
+            }) {
+                setLastNotice(String(
+                    format: NSLocalizedString("「%@」已经在下载列表中，已定位到现有任务。", comment: ""),
+                    existing.displayTitle
+                ))
+                notifyChange()
+                completion(.success(DownloadAddResult(task: existing, isDuplicate: true)))
+                return
+            }
+
             let task = DownloadTask(
-                kind: safeParsed.kind,
-                source: safeParsed.source,
-                title: safeParsed.suggestedTitle,
+                kind: source.kind,
+                source: source.source,
+                title: source.suggestedTitle,
                 savePath: normalizedSavePath,
                 status: .queued,
-                engineTaskID: safeParsed.infoHash,
+                engineTaskID: source.infoHash,
                 savePathBookmark: bookmark
             )
 
@@ -319,6 +344,14 @@ final class DownloadManager {
             startTask(task)
         }
 
+        func prepareForInsert(_ source: DownloadSource) {
+            // 远程 .torrent 在 daemon 返回 hash 前先抓取种子计算 info hash，
+            // 让同一内容与磁力/本地种子任务共享去重键；抓取失败则回退到 URL 去重。
+            resolveTorrentInfoHash(for: source) { resolved in
+                insertOrFocus(resolved)
+            }
+        }
+
         if safeParsed.kind.isBitTorrent {
             guard preferences.enableBT else {
                 let error = DownloadEngineError.btDisabled
@@ -330,7 +363,7 @@ final class DownloadManager {
                 guard let self else { return }
                 switch result {
                 case .success:
-                    insertTask()
+                    prepareForInsert(safeParsed)
                 case .failure(let error):
                     let setupError = DownloadEngineError.btOnboardingRequired(
                         error.localizedDescription
@@ -340,7 +373,62 @@ final class DownloadManager {
                 }
             }
         } else {
-            insertTask()
+            prepareForInsert(safeParsed)
+        }
+    }
+
+    /// 只对“远程 .torrent URL 且尚未知 info hash”的来源下载种子计算 hash，避免额外请求本地种子。
+    private func resolveTorrentInfoHash(
+        for source: DownloadSource,
+        completion: @escaping (DownloadSource) -> Void
+    ) {
+        let lower = source.source.lowercased()
+        guard source.kind == .torrent,
+              source.infoHash == nil,
+              lower.hasPrefix("http://") || lower.hasPrefix("https://") else {
+            completion(source)
+            return
+        }
+
+        Task {
+            let hash = await Self.fetchRemoteTorrentInfoHash(source.source)
+            DispatchQueue.main.async {
+                guard let hash else {
+                    completion(source)
+                    return
+                }
+                completion(DownloadSource(
+                    kind: source.kind,
+                    source: source.source,
+                    suggestedTitle: source.suggestedTitle,
+                    infoHash: hash
+                ))
+            }
+        }
+    }
+
+    private static func fetchRemoteTorrentInfoHash(_ source: String) async -> String? {
+        guard let url = URL(string: source) else { return nil }
+        var request = URLRequest(url: url)
+        request.timeoutInterval = 15
+        request.cachePolicy = .reloadIgnoringLocalCacheData
+        let configuration = URLSessionConfiguration.ephemeral
+        configuration.timeoutIntervalForRequest = 15
+        configuration.timeoutIntervalForResource = 30
+        let session = URLSession(configuration: configuration)
+        defer { session.finishTasksAndInvalidate() }
+
+        do {
+            let (data, response) = try await session.data(for: request)
+            guard let http = response as? HTTPURLResponse,
+                  (200..<300).contains(http.statusCode),
+                  !data.isEmpty,
+                  data.count <= 20 * 1024 * 1024 else {
+                return nil
+            }
+            return BitTorrentMetainfo.infoHash(in: data)
+        } catch {
+            return nil
         }
     }
 
@@ -473,6 +561,9 @@ final class DownloadManager {
         guard !removing.isEmpty else { return }
 
         for task in removing {
+            if task.kind == .http {
+                httpEngine.forget(taskID: task.id)
+            }
             let engine = engine(for: task)
             Task { [weak self] in
                 do {
@@ -504,9 +595,40 @@ final class DownloadManager {
 
     // MARK: - Playback
 
+    /// 远程 Transmission → 本机挂载路径；空前缀或非 BT 任务时原样返回。
+    func localPath(for path: String, task: DownloadTask) -> String {
+        guard task.kind.isBitTorrent else { return path }
+        return DownloadPathMapping.map(
+            path,
+            remotePrefix: preferences.remotePathPrefix,
+            localPrefix: preferences.localPathPrefix
+        )
+    }
+
+    func localPath(for path: String, taskID: UUID) -> String {
+        guard let task = tasks.first(where: { $0.id == taskID }) else { return path }
+        return localPath(for: path, task: task)
+    }
+
+    func localSavePath(for task: DownloadTask) -> String {
+        localPath(for: task.savePath, task: task)
+    }
+
+    func localFilePaths(for task: DownloadTask) -> [String] {
+        task.filePaths.map { localPath(for: $0, task: task) }
+    }
+
+    func hasMissingFiles(for task: DownloadTask) -> Bool {
+        var mapped = task
+        mapped.filePaths = localFilePaths(for: task)
+        return DownloadFileRules.hasMissingFiles(mapped)
+    }
+
     /// 完成任务的完整播放列表（自然顺序，从第一集开始）。
     func completedPlaybackURLs(for task: DownloadTask) -> [URL] {
-        DownloadFileRules.playablePaths(for: task)
+        var mapped = task
+        mapped.filePaths = localFilePaths(for: task)
+        return DownloadFileRules.playablePaths(for: mapped)
             .map { URL(fileURLWithPath: $0) }
     }
 
@@ -516,9 +638,14 @@ final class DownloadManager {
 
     /// BT 未完成任务：文件已存在且 >20MB 时允许 best-effort 播放。
     func streamingPlaybackURL(for task: DownloadTask) -> URL? {
+        var mapped = task
+        mapped.filePaths = localFilePaths(for: task)
+        if let streamPath = task.streamPath {
+            mapped.streamPath = localPath(for: streamPath, task: task)
+        }
         guard task.isBitTorrent,
               task.status != .completed,
-              let path = DownloadFileRules.playablePath(for: task) else {
+              let path = DownloadFileRules.playablePath(for: mapped) else {
             return nil
         }
         return URL(fileURLWithPath: path)
@@ -643,7 +770,7 @@ final class DownloadManager {
     }
 
     private func startQueuedTasksIfNeeded() {
-        guard isBootstrapped else { return }
+        guard isBootstrapped, !isRestoringBackgroundTasks else { return }
 
         var slots = max(0, preferences.maxConcurrentDownloads - occupiedSlotIDs().count)
         guard slots > 0 else { return }
@@ -664,7 +791,7 @@ final class DownloadManager {
     }
 
     private func startTask(_ task: DownloadTask) {
-        guard isBootstrapped else { return }
+        guard isBootstrapped, !isRestoringBackgroundTasks else { return }
         guard !startingTaskIDs.contains(task.id) else { return }
         guard let current = tasks.first(where: { $0.id == task.id }),
               current.status == .queued else {
@@ -977,6 +1104,12 @@ final class DownloadManager {
                 // BT 已关闭时，忽略仍在途的 daemon 回调，避免把刚暂停的任务重新激活。
                 continue
             }
+            if (old.status == .paused || old.status == .stopped),
+               controlTokens[old.id] != nil,
+               update.status == .downloading {
+                // 暂停/停止操作尚未被引擎确认时，忽略迟到的“下载中”回调。
+                continue
+            }
             var task = old
             let oldStatus = old.status
 
@@ -1166,6 +1299,52 @@ final class DownloadManager {
                     if var current = self.taskFiles[taskID],
                        let currentIndex = current.firstIndex(where: { $0.path == path }) {
                         current[currentIndex].isWanted = original.isWanted
+                        self.taskFiles[taskID] = current
+                    }
+                    self.setLastError(error.localizedDescription)
+                    self.notifyChange()
+                }
+            }
+        }
+    }
+
+    func canChangeFilePriority(for task: DownloadTask) -> Bool {
+        canSelectFiles(for: task)
+    }
+
+    func setFilePriority(taskID: UUID, path: String, priority: TransmissionFilePriority) {
+        guard let task = tasks.first(where: { $0.id == taskID }),
+              task.kind.isBitTorrent,
+              task.status != .completed,
+              preferences.enableBT,
+              btState.isAvailable else {
+            setLastError(NSLocalizedString("BT 内核不可用，无法修改文件优先级。", comment: ""))
+            notifyChange()
+            return
+        }
+        guard var files = taskFiles[taskID],
+              let index = files.firstIndex(where: { $0.path == path }) else {
+            return
+        }
+
+        let original = files[index]
+        files[index].priority = priority.rawValue
+        taskFiles[taskID] = files
+        notifyChange()
+
+        Task { [weak self] in
+            guard let self else { return }
+            do {
+                try await self.btEngine.setFilePriority(
+                    task: task,
+                    indices: [original.index],
+                    priority: priority
+                )
+            } catch {
+                self.onMain {
+                    if var current = self.taskFiles[taskID],
+                       let currentIndex = current.firstIndex(where: { $0.path == path }) {
+                        current[currentIndex].priority = original.priority
                         self.taskFiles[taskID] = current
                     }
                     self.setLastError(error.localizedDescription)

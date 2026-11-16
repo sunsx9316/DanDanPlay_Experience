@@ -123,16 +123,66 @@ struct TransmissionSessionInfo: Equatable {
     var downloadDirectory: String?
 }
 
+enum TransmissionFilePriority: Int, CaseIterable, Equatable {
+    case low = -1
+    case normal = 0
+    case high = 1
+
+    var rpcKey: String {
+        switch self {
+        case .low:
+            return "priority-low"
+        case .normal:
+            return "priority-normal"
+        case .high:
+            return "priority-high"
+        }
+    }
+
+    var displayName: String {
+        switch self {
+        case .low:
+            return NSLocalizedString("低", comment: "")
+        case .normal:
+            return NSLocalizedString("普通", comment: "")
+        case .high:
+            return NSLocalizedString("高", comment: "")
+        }
+    }
+}
+
 struct TransmissionTorrentFile: Equatable {
     var index: Int
     var name: String
     var length: Int64
     var bytesCompleted: Int64
     var isWanted: Bool
+    var priority: Int
 
     var progress: Double {
         guard length > 0 else { return 0 }
         return min(max(Double(bytesCompleted) / Double(length), 0), 1)
+    }
+}
+
+/// 全局限速与做种分享率（Transmission `session-set`）。0 表示不限制。
+struct TransmissionTransferLimits: Equatable {
+    var downloadKBps: Int
+    var uploadKBps: Int
+    var seedRatio: Double
+
+    var arguments: [String: Any] {
+        let download = max(0, downloadKBps)
+        let upload = max(0, uploadKBps)
+        let ratio = max(0, seedRatio)
+        return [
+            "speed-limit-down": download,
+            "speed-limit-down-enabled": download > 0,
+            "speed-limit-up": upload,
+            "speed-limit-up-enabled": upload > 0,
+            "seedRatioLimit": ratio,
+            "seedRatioLimited": ratio > 0,
+        ]
     }
 }
 
@@ -188,7 +238,8 @@ struct TransmissionTorrent: Equatable {
                 path: path,
                 length: file.length,
                 completedBytes: file.bytesCompleted,
-                isWanted: file.isWanted
+                isWanted: file.isWanted,
+                priority: file.priority
             )
         }
     }
@@ -246,6 +297,11 @@ final class TransmissionRPCClient {
             rpcVersion: rpcVersion,
             downloadDirectory: Self.string(args, "download-dir")
         )
+    }
+
+    /// 应用全局下载/上传限速与做种分享率。只有 RPC 成功返回才视为成功。
+    func sessionSet(limits: TransmissionTransferLimits) async throws {
+        _ = try await call(method: "session-set", arguments: limits.arguments)
     }
 
     /// `source` 为磁力链接；`.torrent` 使用 metainfo 版本。
@@ -337,6 +393,19 @@ final class TransmissionRPCClient {
         _ = try await call(
             method: "torrent-set",
             arguments: ["ids": ids, key: indices]
+        )
+    }
+
+    /// `priority-high` / `priority-normal` / `priority-low` 使用 files 数组索引。
+    func setFilePriorities(
+        ids: [String],
+        indices: [Int],
+        priority: TransmissionFilePriority
+    ) async throws {
+        guard !ids.isEmpty, !indices.isEmpty else { return }
+        _ = try await call(
+            method: "torrent-set",
+            arguments: ["ids": ids, priority.rpcKey: indices]
         )
     }
 
@@ -530,7 +599,8 @@ extension TransmissionTorrent {
                 name: fileName,
                 length: TransmissionRPCClient.int64(file, "length") ?? 0,
                 bytesCompleted: TransmissionRPCClient.int64(file, "bytesCompleted") ?? 0,
-                isWanted: TransmissionRPCClient.bool(file, "isWanted") ?? true
+                isWanted: TransmissionRPCClient.bool(file, "isWanted") ?? true,
+                priority: TransmissionRPCClient.int(file, "priority") ?? 0
             )
         }
 

@@ -15,6 +15,19 @@ private struct DownloadDetailFile {
     let isWanted: Bool?
     let canToggleWanted: Bool
     let fileIndex: Int?
+    let priority: Int
+    let canChangePriority: Bool
+
+    var priorityDisplayName: String {
+        switch priority {
+        case 1:
+            return NSLocalizedString("高", comment: "")
+        case -1:
+            return NSLocalizedString("低", comment: "")
+        default:
+            return NSLocalizedString("普通", comment: "")
+        }
+    }
 }
 
 final class DownloadViewController: ViewController {
@@ -165,6 +178,18 @@ final class DownloadViewController: ViewController {
         return button
     }()
 
+    private lazy var rssButton: NSButton = {
+        let button = NSButton(
+            image: NSImage.safeSystemSymbol("dot.radiowaves.left.and.right"),
+            target: self,
+            action: #selector(rssTapped)
+        )
+        button.bezelStyle = .texturedRounded
+        button.toolTip = NSLocalizedString("RSS 订阅…", comment: "")
+        button.setAccessibilityIdentifier(AccessibilityID.Download.rss)
+        return button
+    }()
+
     private lazy var searchField: NSSearchField = {
         let field = NSSearchField()
         field.placeholderString = NSLocalizedString("搜索任务…", comment: "")
@@ -260,6 +285,42 @@ final class DownloadViewController: ViewController {
         return menu
     }()
 
+    private lazy var detailFileContextMenu: NSMenu = {
+        let menu = NSMenu()
+        let priorityItem = NSMenuItem(
+            title: NSLocalizedString("文件优先级", comment: ""),
+            action: nil,
+            keyEquivalent: ""
+        )
+        let submenu = NSMenu()
+        let priorities: [(TransmissionFilePriority, String)] = [
+            (.high, AccessibilityID.Download.detailFilePriorityHigh),
+            (.normal, AccessibilityID.Download.detailFilePriorityNormal),
+            (.low, AccessibilityID.Download.detailFilePriorityLow),
+        ]
+        for (priority, identifier) in priorities {
+            let item = NSMenuItem(
+                title: priority.displayName,
+                action: #selector(detailFilePriorityTapped(_:)),
+                keyEquivalent: ""
+            )
+            item.target = self
+            item.representedObject = priority.rawValue
+            item.identifier = NSUserInterfaceItemIdentifier(identifier)
+            submenu.addItem(item)
+        }
+        priorityItem.submenu = submenu
+        menu.addItem(priorityItem)
+        menu.addItem(NSMenuItem.separator())
+        menu.addItem(
+            withTitle: NSLocalizedString("播放该文件", comment: ""),
+            action: #selector(playDetailFileFromMenu),
+            keyEquivalent: ""
+        )
+        menu.items.last?.target = self
+        return menu
+    }()
+
     // MARK: Init
 
     init(manager: DownloadManager = .shared) {
@@ -330,6 +391,7 @@ final class DownloadViewController: ViewController {
         view.addSubview(pasteButton)
         view.addSubview(pauseAllButton)
         view.addSubview(resumeAllButton)
+        view.addSubview(rssButton)
         view.addSubview(searchField)
         view.addSubview(filterControl)
         view.addSubview(sortPopup)
@@ -412,6 +474,11 @@ final class DownloadViewController: ViewController {
         }
         resumeAllButton.snp.makeConstraints { make in
             make.trailing.equalTo(pauseAllButton.snp.leading).offset(-6)
+            make.centerY.equalTo(addButton)
+            make.width.height.equalTo(28)
+        }
+        rssButton.snp.makeConstraints { make in
+            make.trailing.equalTo(resumeAllButton.snp.leading).offset(-6)
             make.centerY.equalTo(addButton)
             make.width.height.equalTo(28)
         }
@@ -571,6 +638,8 @@ final class DownloadViewController: ViewController {
         detailFileTable.setAccessibilityIdentifier(AccessibilityID.Download.detailFiles)
         detailFileTable.target = self
         detailFileTable.doubleAction = #selector(detailFileDoubleClicked)
+        detailFileTable.menu = detailFileContextMenu
+        detailFileContextMenu.delegate = self
 
         detailFileScroll.hasVerticalScroller = true
         detailFileScroll.autohidesScrollers = true
@@ -784,7 +853,7 @@ final class DownloadViewController: ViewController {
         detailTitleLabel.stringValue = task.displayTitle
         detailTitleLabel.toolTip = task.source
         detailTaskID = task.id
-        let missingFiles = DownloadFileRules.hasMissingFiles(task)
+        let missingFiles = manager.hasMissingFiles(for: task)
         detailStatusLabel.stringValue = String(
             format: NSLocalizedString("%@ · %@ · %@ · 保存到 %@", comment: ""),
             task.kind.displayName,
@@ -823,13 +892,15 @@ final class DownloadViewController: ViewController {
         }
 
         let canToggle = manager.canSelectFiles(for: task)
+        let canChangePriority = manager.canChangeFilePriority(for: task)
         var progressByPath: [String: DownloadFileProgress] = [:]
         for file in manager.files(for: task) {
             progressByPath[file.path] = file
         }
         detailFiles = task.filePaths.map { path in
             let live = progressByPath[path]
-            let size = live?.length ?? DownloadFileRules.existingFileSize(at: path) ?? 0
+            let localPath = manager.localPath(for: path, task: task)
+            let size = live?.length ?? DownloadFileRules.existingFileSize(at: localPath) ?? 0
             let sizeText: String
             if let live, live.length > 0 {
                 sizeText = DownloadFormatting.bytesProgress(
@@ -845,7 +916,9 @@ final class DownloadViewController: ViewController {
                 progress: live?.progress,
                 isWanted: live?.isWanted,
                 canToggleWanted: canToggle && (live != nil),
-                fileIndex: live?.index
+                fileIndex: live?.index,
+                priority: live?.priority ?? 0,
+                canChangePriority: canChangePriority && (live != nil)
             )
         }
         detailFiles.sort {
@@ -1183,8 +1256,24 @@ final class DownloadViewController: ViewController {
         }
     }
 
+    @objc private func rssTapped() {
+        let sheet = DownloadRSSSheetViewController(manager: manager)
+        presentAsSheet(sheet)
+    }
+
+    private func presentLimitsSheet() {
+        let sheet = DownloadLimitsSheetViewController(manager: manager)
+        sheet.onSaved = { [weak self] in
+            self?.reloadData()
+        }
+        presentAsSheet(sheet)
+    }
+
     @objc private func settingsTapped() {
         let sheet = DownloadSettingsSheetViewController(preferences: manager.preferences)
+        sheet.onOpenAdvanced = { [weak self] in
+            self?.presentLimitsSheet()
+        }
         sheet.onSave = { [weak self] draft in
             guard let self else { return }
             let access = DownloadFileAccess.resolveDirectory(
@@ -1250,23 +1339,49 @@ final class DownloadViewController: ViewController {
         playFile(at: detailFiles[row].path)
     }
 
+    @objc private func playDetailFileFromMenu() {
+        let row = detailFileTable.clickedRow >= 0
+            ? detailFileTable.clickedRow
+            : detailFileTable.selectedRow
+        guard row >= 0, row < detailFiles.count else { return }
+        playFile(at: detailFiles[row].path)
+    }
+
+    @objc private func detailFilePriorityTapped(_ sender: NSMenuItem) {
+        let row = detailFileTable.clickedRow >= 0
+            ? detailFileTable.clickedRow
+            : detailFileTable.selectedRow
+        guard row >= 0, row < detailFiles.count,
+              let rawPriority = sender.representedObject as? Int,
+              let priority = TransmissionFilePriority(rawValue: rawPriority),
+              let taskID = detailTaskID else {
+            return
+        }
+        let file = detailFiles[row]
+        guard file.canChangePriority else { return }
+        manager.setFilePriority(taskID: taskID, path: file.path, priority: priority)
+    }
+
     @objc private func openFolderTapped() {
         selectClickedRowIfNeeded()
         guard let task = selectedTasks().first else { return }
 
-        let existingFile = task.filePaths.first { FileManager.default.fileExists(atPath: $0) }
+        let existingFile = manager.localFilePaths(for: task).first {
+            FileManager.default.fileExists(atPath: $0)
+        }
         if let existingFile {
             NSWorkspace.shared.activateFileViewerSelecting([URL(fileURLWithPath: existingFile)])
             return
         }
 
-        let directory = URL(fileURLWithPath: task.savePath, isDirectory: true)
+        let localSavePath = manager.localSavePath(for: task)
+        let directory = URL(fileURLWithPath: localSavePath, isDirectory: true)
         if FileManager.default.fileExists(atPath: directory.path) {
             NSWorkspace.shared.open(directory)
         } else {
             showAlert(
                 title: NSLocalizedString("目录不存在", comment: ""),
-                message: task.savePath
+                message: localSavePath
             )
         }
     }
@@ -1282,7 +1397,7 @@ final class DownloadViewController: ViewController {
             return
         }
 
-        if tasks.count == 1, DownloadFileRules.hasMissingFiles(tasks[0]) {
+        if tasks.count == 1, manager.hasMissingFiles(for: tasks[0]) {
             showAlert(
                 title: NSLocalizedString("文件缺失", comment: ""),
                 message: NSLocalizedString("下载文件已被移动或删除，无法播放。可在 Finder 中查找或重新下载。", comment: "")
@@ -1355,14 +1470,15 @@ final class DownloadViewController: ViewController {
     }
 
     private func playFile(at path: String) {
-        guard FileManager.default.fileExists(atPath: path) else {
+        let localPath = detailTaskID.map { manager.localPath(for: path, taskID: $0) } ?? path
+        guard FileManager.default.fileExists(atPath: localPath) else {
             showAlert(
                 title: NSLocalizedString("文件不存在", comment: ""),
-                message: path
+                message: localPath
             )
             return
         }
-        let file = LocalFile(with: URL(fileURLWithPath: path))
+        let file = LocalFile(with: URL(fileURLWithPath: localPath))
         onPlayFiles?([file], file)
     }
 
@@ -1400,7 +1516,7 @@ final class DownloadViewController: ViewController {
         case "kind":
             return task.kind.displayName
         case "status":
-            if DownloadFileRules.hasMissingFiles(task) {
+            if manager.hasMissingFiles(for: task) {
                 return NSLocalizedString("已完成（文件缺失）", comment: "")
             }
             return task.status.displayName
@@ -1459,7 +1575,7 @@ extension DownloadViewController: NSTableViewDataSource, NSTableViewDelegate {
         cell.textField?.textColor = .labelColor
 
         if identifier == "status" {
-            if DownloadFileRules.hasMissingFiles(task) {
+            if manager.hasMissingFiles(for: task) {
                 cell.textField?.textColor = .systemOrange
             } else {
                 switch task.status {
@@ -1542,12 +1658,18 @@ extension DownloadViewController: NSTableViewDataSource, NSTableViewDelegate {
         }
 
         let name = (file.path as NSString).lastPathComponent
-        let exists = DownloadFileRules.existingFileSize(at: file.path) != nil
+        let localPath = detailTaskID.map {
+            manager.localPath(for: file.path, taskID: $0)
+        } ?? file.path
+        let exists = DownloadFileRules.existingFileSize(at: localPath) != nil
+        let priorityPrefix = file.fileIndex == nil
+            ? ""
+            : "\(file.priorityDisplayName) · "
         let detailText: String
         if let progress = file.progress {
-            detailText = "\(DownloadFormatting.percent(progress)) · \(file.sizeText)"
+            detailText = "\(priorityPrefix)\(DownloadFormatting.percent(progress)) · \(file.sizeText)"
         } else {
-            detailText = file.sizeText
+            detailText = "\(priorityPrefix)\(file.sizeText)"
         }
         cell.configure(
             name: name,
@@ -1572,6 +1694,24 @@ extension DownloadViewController: NSTableViewDataSource, NSTableViewDelegate {
 
 extension DownloadViewController: NSMenuDelegate {
     func menuNeedsUpdate(_ menu: NSMenu) {
+        if menu === detailFileContextMenu {
+            let row = detailFileTable.clickedRow >= 0
+                ? detailFileTable.clickedRow
+                : detailFileTable.selectedRow
+            let file = row >= 0 && row < detailFiles.count ? detailFiles[row] : nil
+            for item in menu.items {
+                if item.submenu != nil {
+                    item.isEnabled = file?.canChangePriority == true
+                    item.submenu?.items.forEach {
+                        $0.isEnabled = file?.canChangePriority == true
+                    }
+                } else if !item.isSeparatorItem {
+                    item.isEnabled = file != nil
+                }
+            }
+            return
+        }
+
         let tasks = selectedTasks()
         let hasSelection = !tasks.isEmpty
         for item in menu.items where !item.isSeparatorItem {

@@ -492,6 +492,7 @@ final class DownloadTests: XCTestCase {
                                     "length": 2_000,
                                     "bytesCompleted": 1_000,
                                     "isWanted": true,
+                                    "priority": 1,
                                 ]
                             ],
                         ]
@@ -524,6 +525,7 @@ final class DownloadTests: XCTestCase {
         XCTAssertEqual(torrent.fileProgress[0].index, 0)
         XCTAssertEqual(torrent.fileProgress[0].path, "/tmp/downloads/Show/e01.mkv")
         XCTAssertEqual(torrent.fileProgress[0].isWanted, true)
+        XCTAssertEqual(torrent.fileProgress[0].priority, 1)
     }
 
     func testTransmissionStartStopRemoveArguments() async throws {
@@ -566,6 +568,76 @@ final class DownloadTests: XCTestCase {
 
         try await client.setFilesWanted(ids: ["hash"], indices: [1], wanted: false)
         XCTAssertEqual(captured?["files-unwanted"] as? [Int], [1])
+    }
+
+    func testTransmissionSetFilePriorityArguments() async throws {
+        var captured: [[String: Any]] = []
+        MockURLProtocol.handler = { request in
+            let body = try XCTUnwrap(MockURLProtocol.jsonBody(from: request))
+            captured.append(try XCTUnwrap(body["arguments"] as? [String: Any]))
+            return MockURLProtocol.response(for: request, json: [:])
+        }
+
+        let client = makeRPCClient()
+        try await client.setFilePriorities(
+            ids: ["hash"],
+            indices: [0, 2],
+            priority: .high
+        )
+        try await client.setFilePriorities(
+            ids: ["hash"],
+            indices: [1],
+            priority: .normal
+        )
+        try await client.setFilePriorities(
+            ids: ["hash"],
+            indices: [3],
+            priority: .low
+        )
+
+        XCTAssertEqual(captured[0]["priority-high"] as? [Int], [0, 2])
+        XCTAssertNil(captured[0]["priority-normal"])
+        XCTAssertEqual(captured[1]["priority-normal"] as? [Int], [1])
+        XCTAssertEqual(captured[2]["priority-low"] as? [Int], [3])
+        for arguments in captured {
+            XCTAssertEqual(arguments["ids"] as? [String], ["hash"])
+        }
+    }
+
+    func testTransmissionSessionSetLimitArguments() async throws {
+        var captured: [String: Any]?
+        MockURLProtocol.handler = { request in
+            let body = try XCTUnwrap(MockURLProtocol.jsonBody(from: request))
+            XCTAssertEqual(body["method"] as? String, "session-set")
+            captured = try XCTUnwrap(body["arguments"] as? [String: Any])
+            return MockURLProtocol.response(for: request, json: [:])
+        }
+
+        let client = makeRPCClient()
+        try await client.sessionSet(
+            limits: TransmissionTransferLimits(
+                downloadKBps: 512,
+                uploadKBps: 128,
+                seedRatio: 1.5
+            )
+        )
+        XCTAssertEqual(captured?["speed-limit-down"] as? Int, 512)
+        XCTAssertEqual(captured?["speed-limit-down-enabled"] as? Bool, true)
+        XCTAssertEqual(captured?["speed-limit-up"] as? Int, 128)
+        XCTAssertEqual(captured?["speed-limit-up-enabled"] as? Bool, true)
+        XCTAssertEqual(captured?["seedRatioLimit"] as? Double, 1.5)
+        XCTAssertEqual(captured?["seedRatioLimited"] as? Bool, true)
+
+        try await client.sessionSet(
+            limits: TransmissionTransferLimits(
+                downloadKBps: 0,
+                uploadKBps: 0,
+                seedRatio: 0
+            )
+        )
+        XCTAssertEqual(captured?["speed-limit-down-enabled"] as? Bool, false)
+        XCTAssertEqual(captured?["speed-limit-up-enabled"] as? Bool, false)
+        XCTAssertEqual(captured?["seedRatioLimited"] as? Bool, false)
     }
 
     func testTransmissionSequentialFallbackOnOldServer() async throws {
@@ -820,6 +892,264 @@ final class DownloadTests: XCTestCase {
         XCTAssertEqual(DownloadFileName.fileName(fromContentDisposition: header), "动画 01.mkv")
         let encodedHeader = "attachment; filename*=UTF-8''%E5%8A%A8%E7%94%BB%2001.mkv"
         XCTAssertEqual(DownloadFileName.fileName(fromContentDisposition: encodedHeader), "动画 01.mkv")
+    }
+
+    // MARK: - RSS
+
+    func testRSS2FeedParsing() throws {
+        let xml = """
+        <?xml version="1.0" encoding="UTF-8"?>
+        <rss version="2.0">
+          <channel>
+            <title>测试订阅 &amp; 动画</title>
+            <item>
+              <title>第 01 集 1080p</title>
+              <link>https://example.com/episode/1</link>
+              <enclosure url="https://cdn.example.com/ep01.torrent" length="123456" type="application/x-bittorrent" />
+              <guid>ep-01</guid>
+              <pubDate>Mon, 16 Nov 2026 10:30:00 GMT</pubDate>
+            </item>
+            <item>
+              <title>第 02 集 720p</title>
+              <link>https://example.com/episode/2</link>
+            </item>
+          </channel>
+        </rss>
+        """
+
+        let result = try RSSFeedParser.parse(data: Data(xml.utf8))
+        XCTAssertEqual(result.title, "测试订阅 & 动画")
+        XCTAssertEqual(result.items.count, 2)
+
+        let first = try XCTUnwrap(result.items.first)
+        XCTAssertEqual(first.id, "guid:ep-01")
+        XCTAssertEqual(first.title, "第 01 集 1080p")
+        XCTAssertEqual(first.linkURL, "https://example.com/episode/1")
+        XCTAssertEqual(first.enclosureURL, "https://cdn.example.com/ep01.torrent")
+        XCTAssertEqual(first.sizeBytes, 123456)
+        XCTAssertEqual(
+            first.publishedAt,
+            ISO8601DateFormatter().date(from: "2026-11-16T10:30:00Z")
+        )
+        XCTAssertEqual(first.manualDownloadURL, "https://cdn.example.com/ep01.torrent")
+        XCTAssertEqual(first.autoDownloadURL, "https://cdn.example.com/ep01.torrent")
+
+        let second = result.items[1]
+        XCTAssertEqual(second.manualDownloadURL, "https://example.com/episode/2")
+        XCTAssertNil(second.autoDownloadURL)
+    }
+
+    func testAtomFeedParsing() throws {
+        let xml = """
+        <?xml version="1.0" encoding="utf-8"?>
+        <feed xmlns="http://www.w3.org/2005/Atom">
+          <title>Atom 动画</title>
+          <entry>
+            <title>第 02 集</title>
+            <link rel="alternate" href="https://example.com/episode/2" />
+            <link rel="enclosure" href="https://cdn.example.com/ep02.mp4" length="999" type="video/mp4" />
+            <id>tag:example.com,2026:ep2</id>
+            <published>2026-11-15T12:00:00Z</published>
+          </entry>
+        </feed>
+        """
+
+        let result = try RSSFeedParser.parse(data: Data(xml.utf8))
+        XCTAssertEqual(result.title, "Atom 动画")
+        let item = try XCTUnwrap(result.items.first)
+        XCTAssertEqual(item.title, "第 02 集")
+        XCTAssertEqual(item.linkURL, "https://example.com/episode/2")
+        XCTAssertEqual(item.enclosureURL, "https://cdn.example.com/ep02.mp4")
+        XCTAssertEqual(item.sizeBytes, 999)
+        XCTAssertEqual(
+            item.publishedAt,
+            ISO8601DateFormatter().date(from: "2026-11-15T12:00:00Z")
+        )
+        XCTAssertTrue(item.id.hasPrefix("guid:"))
+    }
+
+    func testRSSParserRejectsMalformedAndUnsupportedDocuments() {
+        XCTAssertThrowsError(try RSSFeedParser.parse(data: Data("<rss><channel><item>".utf8)))
+        XCTAssertThrowsError(try RSSFeedParser.parse(data: Data())) { error in
+            XCTAssertEqual(error as? RSSFeedError, .invalidXML("内容为空"))
+        }
+        XCTAssertThrowsError(try RSSFeedParser.parse(data: Data("<html><body>no feed</body></html>".utf8))) { error in
+            XCTAssertEqual(error as? RSSFeedError, .unsupportedFormat)
+        }
+    }
+
+    func testRSSKeywordFilters() {
+        XCTAssertTrue(RSSKeywordFilter.matches(title: "Show 1080p", keywords: []))
+        XCTAssertTrue(RSSKeywordFilter.matches(title: "Show 1080p", keywords: ["1080P"]))
+        XCTAssertTrue(RSSKeywordFilter.matches(title: "动画 简中", keywords: ["1080p", "简中"]))
+        XCTAssertFalse(RSSKeywordFilter.matches(title: "Show 720p", keywords: ["1080p"]))
+        XCTAssertEqual(
+            RSSKeywordFilter.parse("1080p, 简中；1080p\nBDRip"),
+            ["1080p", "简中", "BDRip"]
+        )
+    }
+
+    func testRSSAutoDownloadSelectionAndSeenIDs() {
+        let date = Date(timeIntervalSince1970: 2_000)
+        let matching = RSSFeedItem(
+            id: "guid:new",
+            title: "Show 1080p 第 3 集",
+            linkURL: "https://example.com/3",
+            enclosureURL: "https://cdn.example.com/3.torrent",
+            publishedAt: date,
+            sizeBytes: 100
+        )
+        let seen = RSSFeedItem(
+            id: "guid:seen",
+            title: "Show 1080p 第 2 集",
+            linkURL: nil,
+            enclosureURL: "https://cdn.example.com/2.torrent",
+            publishedAt: date.addingTimeInterval(-10),
+            sizeBytes: 100
+        )
+        let noEnclosure = RSSFeedItem(
+            id: "link:page",
+            title: "Show 1080p 第 4 集",
+            linkURL: "https://example.com/4",
+            enclosureURL: nil,
+            publishedAt: date.addingTimeInterval(-20),
+            sizeBytes: nil
+        )
+        let nonMatching = RSSFeedItem(
+            id: "guid:720",
+            title: "Show 720p 第 5 集",
+            linkURL: nil,
+            enclosureURL: "https://cdn.example.com/5.torrent",
+            publishedAt: date.addingTimeInterval(-30),
+            sizeBytes: 100
+        )
+        let items = [matching, seen, noEnclosure, nonMatching]
+
+        var subscription = RSSFeedSubscription(
+            title: "Feed",
+            url: "https://example.com/feed.xml",
+            isAutoDownloadEnabled: true,
+            keywordFilters: ["1080p"],
+            seenItemIDs: ["guid:seen"]
+        )
+        XCTAssertEqual(
+            RSSAutoDownload.itemsToAutoDownload(items: items, subscription: subscription).map { $0.id },
+            ["guid:new"]
+        )
+
+        subscription.isAutoDownloadEnabled = false
+        XCTAssertTrue(RSSAutoDownload.itemsToAutoDownload(items: items, subscription: subscription).isEmpty)
+
+        subscription.isAutoDownloadEnabled = true
+        subscription.keywordFilters = []
+        let updated = RSSAutoDownload.updatedSeenItemIDs(
+            existing: subscription.seenItemIDs,
+            items: items
+        )
+        XCTAssertEqual(Set(updated), Set(items.map { $0.id }))
+        XCTAssertTrue(updated.contains("guid:seen"))
+    }
+
+    func testRSSAutoDownloadCapsPerRefresh() {
+        let items = (0..<30).map { index in
+            RSSFeedItem(
+                id: "guid:\(index)",
+                title: "Show 1080p \(index)",
+                linkURL: nil,
+                enclosureURL: "https://cdn.example.com/\(index).torrent",
+                publishedAt: Date(timeIntervalSince1970: TimeInterval(index)),
+                sizeBytes: 1
+            )
+        }
+        let subscription = RSSFeedSubscription(
+            title: "Feed",
+            url: "https://example.com/feed.xml",
+            isAutoDownloadEnabled: true
+        )
+        let selected = RSSAutoDownload.itemsToAutoDownload(items: items, subscription: subscription)
+        XCTAssertEqual(selected.count, RSSAutoDownload.maximumItemsPerRefresh)
+        XCTAssertEqual(selected.first?.id, "guid:29")
+    }
+
+    func testRSSFeedStoreRoundTrip() throws {
+        let suiteName = "DownloadTests.RSS.\(UUID().uuidString)"
+        let defaults = try XCTUnwrap(UserDefaults(suiteName: suiteName))
+        defaults.removePersistentDomain(forName: suiteName)
+        defer { defaults.removePersistentDomain(forName: suiteName) }
+
+        let store = RSSFeedStore(defaults: defaults, key: "feeds")
+        XCTAssertTrue(store.feeds().isEmpty)
+
+        let feed = RSSFeedSubscription(
+            title: "动画订阅",
+            url: "https://example.com/feed.xml",
+            isAutoDownloadEnabled: true,
+            keywordFilters: ["1080p"],
+            seenItemIDs: ["guid:1"]
+        )
+        store.save([feed])
+        XCTAssertEqual(store.feeds(), [feed])
+    }
+
+    // MARK: - Remote path mapping
+
+    func testRemotePathMapping() {
+        XCTAssertEqual(
+            DownloadPathMapping.map(
+                "/downloads/Show/e01.mkv",
+                remotePrefix: "/downloads",
+                localPrefix: "/Volumes/Media"
+            ),
+            "/Volumes/Media/Show/e01.mkv"
+        )
+        XCTAssertEqual(
+            DownloadPathMapping.map(
+                "/downloads",
+                remotePrefix: "/downloads/",
+                localPrefix: "/Volumes/Media/"
+            ),
+            "/Volumes/Media"
+        )
+        XCTAssertEqual(
+            DownloadPathMapping.map(
+                "/downloads2/Show/e01.mkv",
+                remotePrefix: "/downloads",
+                localPrefix: "/Volumes/Media"
+            ),
+            "/downloads2/Show/e01.mkv"
+        )
+        XCTAssertEqual(
+            DownloadPathMapping.map(
+                "/local/Show/e01.mkv",
+                remotePrefix: "",
+                localPrefix: "/Volumes/Media"
+            ),
+            "/local/Show/e01.mkv"
+        )
+        XCTAssertEqual(
+            DownloadPathMapping.map(
+                "/downloads/Show/e01.mkv",
+                remotePrefix: "/downloads",
+                localPrefix: ""
+            ),
+            "/downloads/Show/e01.mkv"
+        )
+        XCTAssertEqual(
+            DownloadPathMapping.map(
+                "/downloads/Show/e01.mkv",
+                remotePrefix: "/",
+                localPrefix: "/Volumes/Media"
+            ),
+            "/Volumes/Media/downloads/Show/e01.mkv"
+        )
+        XCTAssertEqual(
+            DownloadPathMapping.map(
+                paths: ["/downloads/a.mkv", "/other/b.mkv"],
+                remotePrefix: "/downloads",
+                localPrefix: "/Volumes/Media"
+            ),
+            ["/Volumes/Media/a.mkv", "/other/b.mkv"]
+        )
     }
 
     // MARK: - RPC helpers

@@ -343,6 +343,8 @@ struct DownloadSettingsDraft {
 final class DownloadSettingsSheetViewController: ViewController {
 
     var onSave: ((DownloadSettingsDraft) throws -> Void)?
+    /// 关闭设置 sheet 后打开限速/远程路径 sheet。
+    var onOpenAdvanced: (() -> Void)?
 
     private let preferences: DownloadPreferences
     private let enableBTCheckbox = NSButton(checkboxWithTitle: "", target: nil, action: nil)
@@ -356,6 +358,7 @@ final class DownloadSettingsSheetViewController: ViewController {
     private let testConnectionButton = NSButton(title: "", target: nil, action: nil)
     private let connectionLabel = NSTextField(labelWithString: "")
     private let resetOnboardingButton = NSButton(title: "", target: nil, action: nil)
+    private let advancedButton = NSButton(title: "", target: nil, action: nil)
     private let savePathLabel = NSTextField(labelWithString: "")
     private let concurrentPopup = NSPopUpButton()
     private let notificationsCheckbox = NSButton(checkboxWithTitle: "", target: nil, action: nil)
@@ -374,7 +377,7 @@ final class DownloadSettingsSheetViewController: ViewController {
         self.savePath = preferences.defaultSavePath
         self.saveBookmark = preferences.defaultSaveBookmark
         super.init()
-        preferredContentSize = NSSize(width: 600, height: 570)
+        preferredContentSize = NSSize(width: 600, height: 600)
     }
 
     required init?(coder: NSCoder) {
@@ -382,7 +385,7 @@ final class DownloadSettingsSheetViewController: ViewController {
     }
 
     override func loadView() {
-        view = NSView(frame: NSRect(x: 0, y: 0, width: 600, height: 570))
+        view = NSView(frame: NSRect(x: 0, y: 0, width: 600, height: 600))
     }
 
     override func viewDidLoad() {
@@ -449,6 +452,17 @@ final class DownloadSettingsSheetViewController: ViewController {
         resetOnboardingButton.target = self
         resetOnboardingButton.action = #selector(resetOnboardingTapped)
         resetOnboardingButton.setAccessibilityIdentifier(AccessibilityID.Download.settingsResetBTOnboarding)
+
+        advancedButton.title = NSLocalizedString("限速与远程路径…", comment: "")
+        advancedButton.bezelStyle = .rounded
+        advancedButton.controlSize = .small
+        advancedButton.target = self
+        advancedButton.action = #selector(advancedTapped)
+        advancedButton.toolTip = NSLocalizedString(
+            "使用已保存的 Transmission RPC 设置；如需新地址请先保存。",
+            comment: ""
+        )
+        advancedButton.setAccessibilityIdentifier(AccessibilityID.Download.limitsAdvanced)
 
         connectionLabel.font = .systemFont(ofSize: 11)
         connectionLabel.textColor = .secondaryLabelColor
@@ -535,6 +549,7 @@ final class DownloadSettingsSheetViewController: ViewController {
             userLabel, usernameField, passwordLabel, passwordField,
             clearPasswordButton, httpsCheckbox, sequentialCheckbox,
             testConnectionButton, connectionLabel, resetOnboardingButton,
+            advancedButton,
             saveTitle, savePathLabel, chooseFolderButton, openFolderButton,
             concurrentLabel, concurrentPopup,
             notificationsCheckbox, notificationHintLabel, notificationSettingsButton,
@@ -628,9 +643,14 @@ final class DownloadSettingsSheetViewController: ViewController {
         }
         connectionLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
 
+        advancedButton.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(24)
+            make.top.equalTo(testConnectionButton.snp.bottom).offset(8)
+        }
+
         saveTitle.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(24)
-            make.top.equalTo(testConnectionButton.snp.bottom).offset(14)
+            make.top.equalTo(advancedButton.snp.bottom).offset(14)
         }
         chooseFolderButton.snp.makeConstraints { make in
             make.trailing.equalToSuperview().offset(-24)
@@ -838,6 +858,14 @@ final class DownloadSettingsSheetViewController: ViewController {
         resetBTOnboarding = true
         statusLabel.textColor = .secondaryLabelColor
         statusLabel.stringValue = NSLocalizedString("保存后将重新显示 BT 未连接引导。", comment: "")
+    }
+
+    @objc private func advancedTapped() {
+        let handler = onOpenAdvanced
+        dismiss(self)
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            handler?()
+        }
     }
 
     @objc private func clearPasswordTapped() {

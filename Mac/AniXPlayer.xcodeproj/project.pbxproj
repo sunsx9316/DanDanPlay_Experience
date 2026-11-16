@@ -13,6 +13,7 @@
 		02A0FD5F9562D427B7826B7F /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = A3AA9A3FA14C3122587A5922 /* FirebaseCore */; };
 		02AC4DBEF60354C3890EB6C4 /* ANXHUDMac.swift in Sources */ = {isa = PBXBuildFile; fileRef = 69B07E7849E19C357B3C5D7F /* ANXHUDMac.swift */; };
 		06B1C96D8FCD158BBF046345 /* DownloadModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CFFC59FE85D022F583AFA5 /* DownloadModels.swift */; };
+		07AFDA13036F3823ADBE2F78 /* DownloadRSS.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F0A0FE53C3CA139D4F71D4B /* DownloadRSS.swift */; };
 		0A949F4782A7C25EF44EAC3C /* RefreshTokenStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCB65B00EB79D4503269564 /* RefreshTokenStore.swift */; };
 		0C4744CB0D61E2D1661E348F /* SubtitleTranslationModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = C787990ED1C329E2D291529A /* SubtitleTranslationModels.swift */; };
 		0CE64C720146CF81C2BC6004 /* TestSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AAB9E83431753AB408E9028 /* TestSupport.swift */; };
@@ -49,6 +50,7 @@
 		2BC296EE31AAD5D360CF5F8D /* SubtitleBatchPlanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = B776E639517C23A8B92ED8BF /* SubtitleBatchPlanner.swift */; };
 		2C73CBAB6D89527C2DDD2510 /* MetadataTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9D702B6447F11144E68E8F1 /* MetadataTableViewCell.swift */; };
 		2E2FD202ED0009FED5CE66DB /* Slider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23F268B6B06684283A4E523C /* Slider.swift */; };
+		2F286F05F3B7ADD687BA8C4D /* DownloadLimitsSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8BB391265CBB14B4E4949C7 /* DownloadLimitsSheet.swift */; };
 		3418BAF14910E2138C17BB9B /* SummaryCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFB5EC34DE88E072DC41BF2C /* SummaryCache.swift */; };
 		36842F2B2B5FB391FAC199B2 /* TimelineCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CD9D8801CD6415C20C34C0B /* TimelineCollectionViewCell.swift */; };
 		3848354E49B8A3CAADBB0CE2 /* SummaryTranscriptParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4E58AC70F1AF66B1C7E56C /* SummaryTranscriptParser.swift */; };
@@ -298,8 +300,10 @@
 		89FFD12F2D45137300428206 /* NSColor+Helper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD12E2D45137300428206 /* NSColor+Helper.swift */; };
 		89FFD1332D4B83BD00428206 /* Launcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 89FFD1322D4B83BD00428206 /* Launcher.swift */; };
 		8BBB313D142467A8FE7835B2 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A21C25D75800DCFBE788056 /* APIError.swift */; };
+		8DC03D6243DEE630ED49FE48 /* DownloadRSSSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B7ADCDCC9E6C3C91542A366 /* DownloadRSSSheet.swift */; };
 		8E0439F750C6F63A175F306F /* OAuthPKCE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D021EBACA202E6D6AA0847A /* OAuthPKCE.swift */; };
 		8E419CE788CC81E88C432CCA /* PlayerLaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F77C4E05418E0933A7ABFE /* PlayerLaunchViewController.swift */; };
+		8E6FBA497A6ADAB03BF2329E /* DownloadRSS.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA647336C98F605282253BD1 /* DownloadRSS.swift */; };
 		8EBC72BB5AAB50C3AF366FA5 /* TagSearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71324DC046A2F831C1F4A03A /* TagSearchResultViewController.swift */; };
 		916D561E0220BDE4FCBC2C06 /* APIEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86A0C502F750FC0AF75E83E /* APIEnvironment.swift */; };
 		92227612092D7B5A6E594289 /* TransmissionRPC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ECD311C6DBAD4EF73F4A791 /* TransmissionRPC.swift */; };
@@ -444,6 +448,7 @@
 		16F438CA98BA71416FEEF503 /* SubtitleOrderTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SubtitleOrderTableViewCell.swift; sourceTree = "<group>"; };
 		1709128859FA1F76853962EF /* FavoriteUserDataService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FavoriteUserDataService.swift; sourceTree = "<group>"; };
 		19C1D0136BEE454311CE9195 /* LoginGate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LoginGate.swift; sourceTree = "<group>"; };
+		1B7ADCDCC9E6C3C91542A366 /* DownloadRSSSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DownloadRSSSheet.swift; sourceTree = "<group>"; };
 		1BCD9CE3D1A0839A75F3F5F4 /* CheckBox.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CheckBox.swift; sourceTree = "<group>"; };
 		1C93AE49E146272D1D514652 /* HostStubs.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = HostStubs.swift; path = AniXPlayerTests/HostStubs.swift; sourceTree = "<group>"; };
 		1E099EF31F98DC5E28B8FE12 /* MembershipModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MembershipModels.swift; sourceTree = "<group>"; };
@@ -498,6 +503,7 @@
 		5E5EE7208088777BA3E641D6 /* SubtitleTranslationModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SubtitleTranslationModels.swift; sourceTree = "<group>"; };
 		5EB77CA199BDCE951307D631 /* DownloadStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DownloadStore.swift; path = AniXPlayer/Features/Download/DownloadStore.swift; sourceTree = "<group>"; };
 		5F01082668DBA5AC67CEE7D3 /* BangumiDetailTagPopoverViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BangumiDetailTagPopoverViewController.swift; sourceTree = "<group>"; };
+		5F0A0FE53C3CA139D4F71D4B /* DownloadRSS.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DownloadRSS.swift; sourceTree = "<group>"; };
 		6011D8366E5CFB501130468E /* MatchsTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MatchsTableViewCell.swift; sourceTree = "<group>"; };
 		6011D91EE35EE11465A33665 /* SummaryModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SummaryModels.swift; sourceTree = "<group>"; };
 		60F1D2761CD71118B03A45EA /* LocalLibraryMatcher.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LocalLibraryMatcher.swift; sourceTree = "<group>"; };
@@ -763,6 +769,7 @@
 		D940FF8F8054F4744B7B6219 /* TrendingNetworkHandle.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TrendingNetworkHandle.swift; sourceTree = "<group>"; };
 		DA01E266285E5EC946524D3D /* TimelineDayViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TimelineDayViewController.swift; sourceTree = "<group>"; };
 		DA49AEA86DD1F3498C39B1B0 /* EntitlementGate.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = EntitlementGate.swift; sourceTree = "<group>"; };
+		DA647336C98F605282253BD1 /* DownloadRSS.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DownloadRSS.swift; path = AniXPlayer/Features/Download/DownloadRSS.swift; sourceTree = "<group>"; };
 		DEE81841357FA9377CE65F3E /* TrendingModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TrendingModels.swift; sourceTree = "<group>"; };
 		DF01B60C98F6AACBAADB4AAA /* TrendingViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TrendingViewController.swift; sourceTree = "<group>"; };
 		E127C204518FC79593B10854 /* LocalLibraryModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LocalLibraryModels.swift; path = AniXPlayer/Features/LocalLibrary/LocalLibraryModels.swift; sourceTree = "<group>"; };
@@ -786,6 +793,7 @@
 		F8461FECAB445207E6F8B442 /* FileRefreshTokenStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FileRefreshTokenStoreTests.swift; path = AniXPlayerTests/FileRefreshTokenStoreTests.swift; sourceTree = "<group>"; };
 		F86A0C502F750FC0AF75E83E /* APIEnvironment.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = APIEnvironment.swift; sourceTree = "<group>"; };
 		F878B678C48B2EBAC57FDE8F /* WelcomeScheduleViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WelcomeScheduleViewController.swift; sourceTree = "<group>"; };
+		F8BB391265CBB14B4E4949C7 /* DownloadLimitsSheet.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DownloadLimitsSheet.swift; sourceTree = "<group>"; };
 		F9B8A0239053DD8D43F7A024 /* BangumiDetailCommunityCardView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BangumiDetailCommunityCardView.swift; sourceTree = "<group>"; };
 		FBDC23F8D2E3FCD78FCD2020 /* OAuthService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OAuthService.swift; sourceTree = "<group>"; };
 		FCBE01C58043461C971F7664 /* SetMainColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetMainColorViewController.swift; sourceTree = "<group>"; };
@@ -926,6 +934,7 @@
 				C0CFFC59FE85D022F583AFA5 /* DownloadModels.swift */,
 				5EB77CA199BDCE951307D631 /* DownloadStore.swift */,
 				B1695CC51CA581AC0C86510A /* TransmissionRPC.swift */,
+				DA647336C98F605282253BD1 /* DownloadRSS.swift */,
 			);
 			name = AniXPlayerTests;
 			sourceTree = "<group>";
@@ -1006,6 +1015,9 @@
 				9F55BF172222F1FBD82555C8 /* DownloadWindowController.swift */,
 				75C8BB585408F5DE1DF0D28E /* DownloadNotifier.swift */,
 				0E40F11216A6BB5C63420499 /* DownloadTorrentImporter.swift */,
+				5F0A0FE53C3CA139D4F71D4B /* DownloadRSS.swift */,
+				1B7ADCDCC9E6C3C91542A366 /* DownloadRSSSheet.swift */,
+				F8BB391265CBB14B4E4949C7 /* DownloadLimitsSheet.swift */,
 			);
 			name = Download;
 			path = Download;
@@ -2486,6 +2498,9 @@
 				6526007F4E214B5504D42903 /* OnlineStreamSniffer.swift in Sources */,
 				DDA79A911A4F4758519E6A2F /* DownloadNotifier.swift in Sources */,
 				3D2D32F025349FE8771575C4 /* DownloadTorrentImporter.swift in Sources */,
+				07AFDA13036F3823ADBE2F78 /* DownloadRSS.swift in Sources */,
+				8DC03D6243DEE630ED49FE48 /* DownloadRSSSheet.swift in Sources */,
+				2F286F05F3B7ADD687BA8C4D /* DownloadLimitsSheet.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2552,6 +2567,7 @@
 				06B1C96D8FCD158BBF046345 /* DownloadModels.swift in Sources */,
 				D9F08B4F7A60DFA4627BD789 /* DownloadStore.swift in Sources */,
 				BB586AA60600ED3A9727BD01 /* TransmissionRPC.swift in Sources */,
+				8E6FBA497A6ADAB03BF2329E /* DownloadRSS.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

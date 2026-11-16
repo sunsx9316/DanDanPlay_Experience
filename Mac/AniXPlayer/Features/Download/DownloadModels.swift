@@ -250,6 +250,24 @@ struct DownloadFileProgress: Equatable {
     var length: Int64
     var completedBytes: Int64
     var isWanted: Bool
+    /// Transmission 文件优先级：-1 低、0 普通、1 高。
+    var priority: Int
+
+    init(
+        index: Int,
+        path: String,
+        length: Int64,
+        completedBytes: Int64,
+        isWanted: Bool,
+        priority: Int = 0
+    ) {
+        self.index = index
+        self.path = path
+        self.length = length
+        self.completedBytes = completedBytes
+        self.isWanted = isWanted
+        self.priority = priority
+    }
 
     var progress: Double {
         guard length > 0 else { return 0 }
@@ -656,6 +674,61 @@ extension DownloadSourceParser {
         }
         guard bytes.count == 20 else { return nil }
         return bytes.map { String(format: "%02x", $0) }.joined()
+    }
+}
+
+// MARK: - Remote path mapping
+
+/// 远程 Transmission 的文件路径映射：remotePrefix → localPrefix。
+/// 空前缀表示不映射，保持本地 Transmission 行为不变。纯逻辑，便于单测。
+enum DownloadPathMapping {
+
+    static func map(
+        _ path: String,
+        remotePrefix: String,
+        localPrefix: String
+    ) -> String {
+        let remote = normalizedPrefix(remotePrefix)
+        let local = normalizedPrefix(localPrefix)
+        guard !remote.isEmpty, !local.isEmpty else { return path }
+
+        let standardizedPath = (path as NSString).standardizingPath
+        let standardizedRemote = (remote as NSString).standardizingPath
+        guard !standardizedRemote.isEmpty else { return path }
+
+        let suffix: String
+        if standardizedRemote == "/" {
+            guard standardizedPath.hasPrefix("/") else { return path }
+            suffix = standardizedPath
+        } else if standardizedPath == standardizedRemote {
+            suffix = ""
+        } else if standardizedPath.hasPrefix(standardizedRemote + "/") {
+            suffix = String(standardizedPath.dropFirst(standardizedRemote.count))
+        } else {
+            return path
+        }
+
+        let expandedLocal = (local as NSString).expandingTildeInPath
+        let candidate = expandedLocal + suffix
+        return (candidate as NSString).standardizingPath
+    }
+
+    static func map(
+        paths: [String],
+        remotePrefix: String,
+        localPrefix: String
+    ) -> [String] {
+        paths.map { map($0, remotePrefix: remotePrefix, localPrefix: localPrefix) }
+    }
+
+    private static func normalizedPrefix(_ value: String) -> String {
+        let trimmed = value.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return "" }
+        var normalized = (trimmed as NSString).standardizingPath
+        while normalized.count > 1, normalized.hasSuffix("/") {
+            normalized.removeLast()
+        }
+        return normalized
     }
 }
 
