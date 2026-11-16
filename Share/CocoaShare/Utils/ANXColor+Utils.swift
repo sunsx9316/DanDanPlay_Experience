@@ -42,9 +42,14 @@ public extension ANXColor {
         var b: CGFloat = 0
 
         #if os(macOS)
-        r = self.redComponent
-        g = self.greenComponent
-        b = self.blueComponent
+        // NSColor 可能是 catalog/dynamic/pattern color，直接读 redComponent 在部分 macOS
+        // 版本会抛 color-space 异常。先转换到 sRGB，再读取分量；转换失败返回黑色。
+        guard let rgb = self.usingColorSpace(.sRGB) ?? self.usingColorSpace(.deviceRGB) else {
+            return 0
+        }
+        r = rgb.redComponent
+        g = rgb.greenComponent
+        b = rgb.blueComponent
         #else
         self.getRed(&r, green: &g, blue: &b, alpha: nil)
         #endif
