@@ -122,7 +122,7 @@ Mac/AniXPlayer/Features/Summary/
 | L3 | 启动页/播放器 AX 可达性 | `bash scripts/mac-ui-smoke.sh` |
 | 手工 | 真实登录、真实小额支付、真实 AI 调用 | 发布前验收 |
 
-当前结果（2026-11-16）：99 个单测通过；L2 播放冒烟、AX/CGEvent UI 冒烟通过；macOS Debug/Release、iOS/tvOS Debug 全部 BUILD SUCCEEDED。
+当前结果（2026-11-16）：192 个单测通过；L2 播放冒烟、AX/CGEvent UI 冒烟通过；macOS Debug/Release、iOS/tvOS Debug 全部 BUILD SUCCEEDED。
 
 XCUITest 暂缓：证书已有，但登录成功路径受验证码阻断，且 macOS 视频/自绘控件断言弱、启动慢。等发布签名/公证流水线时再补。
 
