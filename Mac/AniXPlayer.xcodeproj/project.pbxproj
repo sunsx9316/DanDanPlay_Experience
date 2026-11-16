@@ -340,6 +340,7 @@
 		B3749F38B92E905D1DE6CA0E /* SearchUpgradeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C31C92E58408F30DFDE92F71 /* SearchUpgradeTests.swift */; };
 		B5A0C071AA044D8096B5FC15 /* BangumiCommentListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D296E92397224899E748A6C /* BangumiCommentListViewController.swift */; };
 		B5B0F08538936DE7B76CD997 /* CollectionViewItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7949B8C389D4592B988347CF /* CollectionViewItem.swift */; };
+		B688CC0D90F6298E0240C2B5 /* OnlinePlaybackSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6BA59AFC24302D8B25E9D5D /* OnlinePlaybackSession.swift */; };
 		B6BF5B7F28F54B4DB7CD684D /* SetMainColorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FCBE01C58043461C971F7664 /* SetMainColorViewController.swift */; };
 		B88954593CE21B1F4EA602C1 /* MediaLibraryItemTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0C1F8865D8110193B5FCB0 /* MediaLibraryItemTableViewCell.swift */; };
 		B8C26635B2AA73D3A51F8754 /* LocalLibraryMatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60F1D2761CD71118B03A45EA /* LocalLibraryMatcher.swift */; };
@@ -397,6 +398,7 @@
 		F4687B5CDCF48C6C1BB47CC3 /* TextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5F4F6E39574907A79982F0 /* TextView.swift */; };
 		F541E98A48A44F883F9BE813 /* AccessibilityID.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33528163DE41F211164F7EC3 /* AccessibilityID.swift */; };
 		F7002FE3E8481F3BA550A70A /* LocalLibraryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2927587DD372C5CE0508B5CC /* LocalLibraryStore.swift */; };
+		F7183D9D0B0E993F1E3A3318 /* OnlineSnifferWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FC6B4B530008930D9D506355 /* OnlineSnifferWindowController.swift */; };
 		F9585D24C1028BBD5BCD742D /* FileRefreshTokenStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DAC50DA9F3A1300E298C719 /* FileRefreshTokenStore.swift */; };
 		F9E1E2CDDCBC9DD09AA30CC5 /* KeychainRefreshTokenStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2ABBEFC1150946611D19AA9F /* KeychainRefreshTokenStore.swift */; };
 		FA0132B28E2CDE1FFD2F6158 /* PlayHistoryModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3838DF9EFCB15D049F79E622 /* PlayHistoryModels.swift */; };
@@ -730,6 +732,7 @@
 		AF59FB85D6C9BCDC499CA9F9 /* BangumiDetailViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BangumiDetailViewController.swift; sourceTree = "<group>"; };
 		AF5F4F6E39574907A79982F0 /* TextView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TextView.swift; sourceTree = "<group>"; };
 		B1695CC51CA581AC0C86510A /* TransmissionRPC.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TransmissionRPC.swift; path = AniXPlayer/Features/Download/TransmissionRPC.swift; sourceTree = "<group>"; };
+		B6BA59AFC24302D8B25E9D5D /* OnlinePlaybackSession.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OnlinePlaybackSession.swift; sourceTree = "<group>"; };
 		B776E639517C23A8B92ED8BF /* SubtitleBatchPlanner.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SubtitleBatchPlanner.swift; sourceTree = "<group>"; };
 		B82F5E7B3769B6409FAEB726 /* MediaLibrarySectionTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MediaLibrarySectionTableViewCell.swift; sourceTree = "<group>"; };
 		B9D702B6447F11144E68E8F1 /* MetadataTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MetadataTableViewCell.swift; sourceTree = "<group>"; };
@@ -788,6 +791,7 @@
 		F878B678C48B2EBAC57FDE8F /* WelcomeScheduleViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WelcomeScheduleViewController.swift; sourceTree = "<group>"; };
 		F9B8A0239053DD8D43F7A024 /* BangumiDetailCommunityCardView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BangumiDetailCommunityCardView.swift; sourceTree = "<group>"; };
 		FBDC23F8D2E3FCD78FCD2020 /* OAuthService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OAuthService.swift; sourceTree = "<group>"; };
+		FC6B4B530008930D9D506355 /* OnlineSnifferWindowController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OnlineSnifferWindowController.swift; sourceTree = "<group>"; };
 		FCBE01C58043461C971F7664 /* SetMainColorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SetMainColorViewController.swift; sourceTree = "<group>"; };
 		FD9C66E7E612A942A645F366 /* DownloadStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DownloadStore.swift; sourceTree = "<group>"; };
 		FFB361E3666E4A6E203B936F /* MembershipStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MembershipStore.swift; sourceTree = "<group>"; };
@@ -1101,6 +1105,8 @@
 				077BE196170044F459AF2C65 /* OnlineSourceModels.swift */,
 				AA1825470C090DE382F2CE6F /* OnlineSourceStore.swift */,
 				3412A089262A5DA38C39E926 /* OnlineStreamSniffer.swift */,
+				B6BA59AFC24302D8B25E9D5D /* OnlinePlaybackSession.swift */,
+				FC6B4B530008930D9D506355 /* OnlineSnifferWindowController.swift */,
 			);
 			name = Online;
 			path = Online;
@@ -2486,6 +2492,8 @@
 				6526007F4E214B5504D42903 /* OnlineStreamSniffer.swift in Sources */,
 				DDA79A911A4F4758519E6A2F /* DownloadNotifier.swift in Sources */,
 				3D2D32F025349FE8771575C4 /* DownloadTorrentImporter.swift in Sources */,
+				B688CC0D90F6298E0240C2B5 /* OnlinePlaybackSession.swift in Sources */,
+				F7183D9D0B0E993F1E3A3318 /* OnlineSnifferWindowController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

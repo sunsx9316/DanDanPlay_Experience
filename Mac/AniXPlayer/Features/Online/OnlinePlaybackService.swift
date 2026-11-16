@@ -5,6 +5,7 @@
 //  macOS：在线观看的搜索编排与播放准备。
 //
 
+import ANXLog
 import Foundation
 
 final class OnlinePlaybackService {
@@ -81,8 +82,14 @@ final class OnlinePlaybackService {
         var failures: [String: String] = [:]
         var subjects: [OnlineSubject] = []
         var seen = Set<String>()
+        let pinnedSourceIDs = Set(OnlineSourcePreferences.pinnedSourceIDs)
 
         for result in results.sorted(by: { lhs, rhs in
+            let lhsPinned = pinnedSourceIDs.contains(lhs.source.id)
+            let rhsPinned = pinnedSourceIDs.contains(rhs.source.id)
+            if lhsPinned != rhsPinned {
+                return lhsPinned
+            }
             if lhs.source.tier != rhs.source.tier {
                 return lhs.source.tier < rhs.source.tier
             }
@@ -116,6 +123,98 @@ final class OnlinePlaybackService {
 
     // MARK: - Playback
 
+    /// 连续播放预取的后续集数（不含当前集）。
+    static let continuousLookahead = 2
+
+    /// 预取结果：当前集 + 已解析的后续集。
+    struct OnlinePlaylistPreparation {
+        let files: [OnlineEpisodeFile]
+        /// 因解析失败被跳过的后续集数。
+        let skippedCount: Int
+        /// 已尝试过的最后一集下标，供播放器继续向后追加。
+        let lastScannedIndex: Int
+    }
+
+    /// 解析当前集以及后续 1...lookahead 集。
+    ///
+    /// - 当前集失败会抛错（由调用方提示）。
+    /// - 后续集失败会跳过并继续更后面的剧集，不伪造地址。
+    /// - 只有 `lookahead > 0` 时才会启用播放中的继续追加。
+    func preparePlaylist(
+        source: OnlineMediaSource,
+        subject: OnlineSubject,
+        episodes: [OnlineEpisode],
+        startIndex: Int,
+        lookahead: Int,
+        progress: ((String) -> Void)? = nil
+    ) async throws -> OnlinePlaylistPreparation {
+        guard startIndex >= 0, startIndex < episodes.count else {
+            throw OnlinePlaybackError.videoNotFound(subject.url)
+        }
+
+        await OnlinePlaybackSession.shared.end()
+
+        let currentFile = try await preparePlayback(
+            source: source,
+            subject: subject,
+            episode: episodes[startIndex],
+            progress: progress
+        )
+
+        var files = [currentFile]
+        var skipped = 0
+        var lastScanned = startIndex
+        let additional = max(0, min(lookahead, 3))
+        var index = startIndex + 1
+        // 跳过失败剧集也要有上限，避免首次播放被整季失败拖住。
+        var scanBudget = additional + 3
+
+        while additional > 0,
+              files.count <= additional,
+              index < episodes.count,
+              scanBudget > 0 {
+            try Task.checkCancellation()
+            scanBudget -= 1
+            let episode = episodes[index]
+            progress?(String(
+                format: NSLocalizedString("正在准备连续播放 %d/%d：%@", comment: ""),
+                files.count + 1,
+                additional + 1,
+                episode.title
+            ))
+            do {
+                let file = try await preparePlayback(
+                    source: source,
+                    subject: subject,
+                    episode: episode,
+                    progress: nil
+                )
+                files.append(file)
+            } catch {
+                skipped += 1
+                ANX.logInfo(.player, "[Online] 跳过无法解析的后续剧集：\(episode.title) \(error.localizedDescription)")
+            }
+            lastScanned = index
+            index += 1
+        }
+
+        if additional > 0 {
+            try Task.checkCancellation()
+            await OnlinePlaybackSession.shared.begin(
+                source: source,
+                subject: subject,
+                episodes: episodes,
+                lastScannedIndex: lastScanned
+            )
+        }
+
+        return OnlinePlaylistPreparation(
+            files: files,
+            skippedCount: skipped,
+            lastScannedIndex: lastScanned
+        )
+    }
+
     func preparePlayback(
         source: OnlineMediaSource,
         subject: OnlineSubject,
@@ -142,7 +241,7 @@ final class OnlinePlaybackService {
                 )
                 let match = try await resolveMedia(source: source, episode: candidate, progress: progress)
                 progress?(NSLocalizedString("正在验证视频源…", comment: ""))
-                try await validateStream(match)
+                try await validateStream(url: match.url, headers: match.headers)
                 resolvedMatch = match
                 break
             } catch {
@@ -166,12 +265,13 @@ final class OnlinePlaybackService {
     }
 
     /// 播放前做一次 Range 探测，避免把 401/403 的防盗链地址交给播放器后黑屏。
-    private func validateStream(_ match: OnlineMediaMatch) async throws {
-        var request = URLRequest(url: match.url)
+    /// 独立「媒体嗅探」窗口也复用此验证。
+    func validateStream(url: URL, headers: [String: String]) async throws {
+        var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.timeoutInterval = 12
         request.setValue("bytes=0-1023", forHTTPHeaderField: "Range")
-        for (key, value) in match.headers {
+        for (key, value) in headers {
             request.setValue(value, forHTTPHeaderField: key)
         }
 
@@ -179,16 +279,27 @@ final class OnlinePlaybackService {
             let (_, response) = try await URLSession.shared.data(for: request)
             guard let http = response as? HTTPURLResponse else { return }
             if http.statusCode == 401 || http.statusCode == 403 {
-                throw OnlinePlaybackError.streamUnavailable(http.statusCode, match.url)
+                throw OnlinePlaybackError.streamUnavailable(http.statusCode, url)
             }
             guard (200..<400).contains(http.statusCode) else {
-                throw OnlinePlaybackError.streamUnavailable(http.statusCode, match.url)
+                throw OnlinePlaybackError.streamUnavailable(http.statusCode, url)
             }
         } catch let error as OnlinePlaybackError {
             throw error
         } catch {
-            throw OnlinePlaybackError.streamUnavailable(-1, match.url)
+            throw OnlinePlaybackError.streamUnavailable(-1, url)
         }
+    }
+
+    /// 嗅探窗口默认请求头：UA + 页面同源 Referer。
+    static func defaultStreamHeaders(pageURL: URL) -> [String: String] {
+        var headers: [String: String] = [
+            "User-Agent": OnlineHTTPClient.defaultUserAgent
+        ]
+        if let scheme = pageURL.scheme, let host = pageURL.host {
+            headers["Referer"] = "\(scheme)://\(host)/"
+        }
+        return headers
     }
 
     /// 先走 HTTP + 规则解析（快）；失败后再用 WKWebView 嗅探动态播放页。

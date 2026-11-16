@@ -12,6 +12,7 @@ import AppKit
 enum MacFeatureLauncher {
     private static var translationWindowController: TranslationWindowController?
     private static var summaryWindowController: SummaryWindowController?
+    private static var onlineSnifferWindowController: OnlineSnifferWindowController?
 
     /// 把 LoginGate 和会员中心注册到 EntitlementGate（幂等）。
     static func installEntitlements() {
@@ -61,5 +62,44 @@ enum MacFeatureLauncher {
         })
         summaryWindowController = controller
         controller.showWindow()
+    }
+
+    /// 独立媒体嗅探窗口。单例复用；打开前走 `.mediaSniffer` 会员门禁。
+    static func showMediaSniffer(
+        presenting: NSWindow? = nil,
+        initialURL: URL? = nil,
+        onPlay: ((OnlineEpisodeFile) -> Void)? = nil
+    ) {
+        installEntitlements()
+
+        let controller: OnlineSnifferWindowController
+        if let existing = onlineSnifferWindowController {
+            controller = existing
+        } else {
+            controller = OnlineSnifferWindowController(accessCheck: { window in
+                await EntitlementGate.shared.require(
+                    .member,
+                    feature: .mediaSniffer,
+                    presenting: presenting ?? NSApp.keyWindow ?? window
+                )
+            })
+            onlineSnifferWindowController = controller
+        }
+        if let onPlay {
+            controller.onPlay = onPlay
+        }
+        controller.present(initialURL: initialURL)
+    }
+
+    /// 媒体嗅探窗口的默认播放出口：找到主窗口的播放器并打开在线文件。
+    static func playOnlineFile(_ file: OnlineEpisodeFile) {
+        guard let mainViewController = NSApp.windows
+            .lazy
+            .compactMap({ $0.contentViewController as? MainViewController })
+            .first else {
+            return
+        }
+        NSApp.activate(ignoringOtherApps: true)
+        mainViewController.openLocalFiles([file], startWith: file)
     }
 }

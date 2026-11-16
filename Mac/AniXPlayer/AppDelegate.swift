@@ -531,6 +531,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    @objc private func showMediaSniffer(_ item: NSMenuItem) {
+        let window = self.mainWindowController.window
+        Task { @MainActor in
+            MacFeatureLauncher.showMediaSniffer(presenting: window) { file in
+                MacFeatureLauncher.playOnlineFile(file)
+            }
+        }
+    }
+
 
     @objc private func onOpenNetworkStream(_ item: NSMenuItem) {
         let alert = NSAlert()
@@ -675,6 +684,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
             menu.addItem(withTitle: NSLocalizedString("主页", comment: ""), action: #selector(showHomePage(_:)), keyEquivalent: "")
             menu.addItem(withTitle: NSLocalizedString("搜索…", comment: ""), action: #selector(showSearch(_:)), keyEquivalent: "")
+            let mediaSnifferItem = NSMenuItem(
+                title: NSLocalizedString("媒体嗅探…", comment: ""),
+                action: #selector(showMediaSniffer(_:)),
+                keyEquivalent: ""
+            )
+            mediaSnifferItem.identifier = NSUserInterfaceItemIdentifier(AccessibilityID.OnlineSniffer.menuOpen)
+            menu.addItem(mediaSnifferItem)
             menu.addItem(withTitle: NSLocalizedString("播放历史", comment: ""), action: #selector(showPlayHistory(_:)), keyEquivalent: "")
             menu.addItem(withTitle: NSLocalizedString("本地媒体库…", comment: ""), action: #selector(showLocalLibrary(_:)), keyEquivalent: "")
             let downloadItem = NSMenuItem(

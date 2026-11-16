@@ -231,6 +231,7 @@ class PlayerViewController: ViewController {
             
             self.uiView.title = file?.fileName
             self.onMediaChanged?(file)
+            OnlinePlaybackSession.shared.playerDidChange(file: file, player: self)
             self.playHistoryReporter.reset()
             if file != nil {
                 self.beginActivity()
@@ -462,6 +463,12 @@ class PlayerViewController: ViewController {
             self.mediaModel.loadMedias(files)
             self.playerModel.tryParseMedia(file ?? files[0])
         }
+    }
+
+    /// 在线连续播放：把后续剧集追加到播放列表，不打断当前播放。
+    func appendFiles(_ files: [File]) {
+        guard !files.isEmpty else { return }
+        self.mediaModel.loadMedias(files)
     }
 
     @objc private func pickFile() {

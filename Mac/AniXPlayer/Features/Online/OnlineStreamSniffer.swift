@@ -18,6 +18,95 @@ import AppKit
 import Foundation
 import WebKit
 
+/// 自动嗅探与独立「媒体嗅探」窗口共用的判定逻辑。
+enum OnlineStreamSnifferSupport {
+
+    static let messageHandlerName = "anixMedia"
+
+    /// 把 JS 报告的地址转成绝对的 http/https URL。
+    static func normalize(_ raw: String, relativeTo baseURL: URL) -> URL? {
+        var value = raw
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .replacingOccurrences(of: "\\/", with: "/")
+            .replacingOccurrences(of: "&amp;", with: "&")
+        if value.hasPrefix("//") {
+            value = "\(baseURL.scheme ?? "https"):" + value
+        }
+        guard let url = URL(string: value, relativeTo: baseURL)?.absoluteURL else {
+            return nil
+        }
+        guard let scheme = url.scheme?.lowercased(), scheme == "http" || scheme == "https" else {
+            return nil
+        }
+        return url
+    }
+
+    static func isVideoURL(_ url: URL) -> Bool {
+        let path = url.path.lowercased()
+        if path.hasSuffix(".m3u8") || path.hasSuffix(".mp4")
+            || path.hasSuffix(".flv") || path.hasSuffix(".mkv") {
+            return true
+        }
+        let full = url.absoluteString.lowercased()
+        return full.contains(".m3u8?")
+            || full.contains(".mp4?")
+            || full.contains(".flv?")
+            || full.contains(".mkv?")
+    }
+
+    /// 候选分数：m3u8 优先，广告/占位视频降权，跨域 CDN 略加分。
+    static func score(url: URL, pageURL: URL) -> Int {
+        let path = url.path.lowercased()
+        let full = url.absoluteString.lowercased()
+        var score = 0
+        if path.hasSuffix(".m3u8") || full.contains(".m3u8?") {
+            score += 100
+        } else if path.hasSuffix(".mp4") || full.contains(".mp4?") {
+            score += 60
+        } else if path.hasSuffix(".flv") || full.contains(".flv?") {
+            score += 40
+        } else if path.hasSuffix(".mkv") || full.contains(".mkv?") {
+            score += 30
+        }
+
+        let negative = [
+            "ad/", "ads/", "ads", "advert", "banner", "logo", "cover",
+            "preview", "trailer", "sample", "doubleclick", "googlesyndication",
+            "amazon-adsystem", "huawei", "tvc-"
+        ]
+        if negative.contains(where: { full.contains($0) }) {
+            score -= 80
+        }
+        let positive = ["play", "video", "stream", "index", "hls", "media"]
+        if positive.contains(where: { full.contains($0) }) {
+            score += 20
+        }
+        if let pageHost = pageURL.host, let host = url.host, host != pageHost {
+            score += 10
+        }
+        return score
+    }
+
+    /// 部分站点把真正的播放页放在 `player_aaaa.url` 里，并用 JS 解码/跳转。
+    /// 这里还原出脚本里的原始值（base64 + 多次 percent 解码）。
+    static func decodedEmbeddedPlayerValue(_ raw: String) -> String {
+        var value = raw
+            .replacingOccurrences(of: "\\/", with: "/")
+            .replacingOccurrences(of: "&amp;", with: "&")
+
+        if !value.contains("%"), !value.lowercased().hasPrefix("http"),
+           let data = Data(base64Encoded: value, options: .ignoreUnknownCharacters),
+           let decoded = String(data: data, encoding: .utf8) {
+            value = decoded
+        }
+        for _ in 0..<3 {
+            guard let decoded = value.removingPercentEncoding, decoded != value else { break }
+            value = decoded
+        }
+        return value
+    }
+}
+
 @MainActor
 final class OnlineStreamSniffer {
 
@@ -26,6 +115,11 @@ final class OnlineStreamSniffer {
     private var activeSession: OnlineStreamSnifferSession?
 
     private init() {}
+
+    /// 独立「媒体嗅探」窗口复用同一套 JS hook。
+    static var mediaHookScript: String {
+        return OnlineStreamSnifferSession.hookScript
+    }
 
     func sniff(
         pageURL: URL,
@@ -95,7 +189,7 @@ private final class OnlineStreamSnifferSession: NSObject, WKScriptMessageHandler
             injectionTime: .atDocumentStart,
             forMainFrameOnly: false
         ))
-        controller.add(self, name: "anixMedia")
+        controller.add(self, name: OnlineStreamSnifferSupport.messageHandlerName)
         configuration.userContentController = controller
 
         let webView = WKWebView(frame: NSRect(x: 0, y: 0, width: 2, height: 2), configuration: configuration)
@@ -226,7 +320,7 @@ private final class OnlineStreamSnifferSession: NSObject, WKScriptMessageHandler
         _ userContentController: WKUserContentController,
         didReceive message: WKScriptMessage
     ) {
-        guard message.name == "anixMedia",
+        guard message.name == OnlineStreamSnifferSupport.messageHandlerName,
               let body = message.body as? [String: Any],
               let raw = body["url"] as? String else {
             return
@@ -241,10 +335,11 @@ private final class OnlineStreamSnifferSession: NSObject, WKScriptMessageHandler
 
     private func consider(raw: String) {
         guard !isFinished else { return }
-        guard let url = normalize(raw), isVideoURL(url) else { return }
+        guard let url = OnlineStreamSnifferSupport.normalize(raw, relativeTo: pageURL),
+              OnlineStreamSnifferSupport.isVideoURL(url) else { return }
         guard seenCandidates.insert(url.absoluteString).inserted else { return }
 
-        let score = score(for: url)
+        let score = OnlineStreamSnifferSupport.score(url: url, pageURL: pageURL)
         NSLog("[OnlineSniffer] candidate %@ score=%d", url.absoluteString, score)
         // 分数过低的多半是页面广告/占位视频；宁可失败也不要播放广告。
         guard score >= 40 else { return }
@@ -297,7 +392,9 @@ private final class OnlineStreamSnifferSession: NSObject, WKScriptMessageHandler
         if let webView = webView {
             webView.stopLoading()
             webView.navigationDelegate = nil
-            webView.configuration.userContentController.removeScriptMessageHandler(forName: "anixMedia")
+            webView.configuration.userContentController.removeScriptMessageHandler(
+                forName: OnlineStreamSnifferSupport.messageHandlerName
+            )
         }
         window?.orderOut(nil)
         window?.contentView = nil
@@ -309,23 +406,11 @@ private final class OnlineStreamSnifferSession: NSObject, WKScriptMessageHandler
     /// 部分站点把真正的播放页放在 `player_aaaa.url` 里，并用 JS 解码/跳转。
     /// 这里主动解码并跟随一次，避免离屏 WebView 因脚本/点击逻辑没有触发。
     private func followEmbeddedPlayer(_ raw: String) {
-        var value = raw
-            .replacingOccurrences(of: "\\/", with: "/")
-            .replacingOccurrences(of: "&amp;", with: "&")
-
-        // 部分站点把播放页 URL 先 base64，再 percent-encode（例如 7sefun）。
-        if !value.contains("%"), !value.lowercased().hasPrefix("http"),
-           let data = Data(base64Encoded: value, options: .ignoreUnknownCharacters),
-           let decoded = String(data: data, encoding: .utf8) {
-            value = decoded
-        }
-        for _ in 0..<3 {
-            guard let decoded = value.removingPercentEncoding, decoded != value else { break }
-            value = decoded
-        }
-        guard let url = normalize(value), url.absoluteString != pageURL.absoluteString else { return }
+        let value = OnlineStreamSnifferSupport.decodedEmbeddedPlayerValue(raw)
+        guard let url = OnlineStreamSnifferSupport.normalize(value, relativeTo: pageURL),
+              url.absoluteString != pageURL.absoluteString else { return }
         guard followedPlayerURLs.insert(url.absoluteString).inserted else { return }
-        if isVideoURL(url) {
+        if OnlineStreamSnifferSupport.isVideoURL(url) {
             consider(raw: url.absoluteString)
             return
         }
@@ -336,73 +421,9 @@ private final class OnlineStreamSnifferSession: NSObject, WKScriptMessageHandler
         webView?.load(request)
     }
 
-    // MARK: URL
-
-    private func normalize(_ raw: String) -> URL? {
-        var value = raw
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-            .replacingOccurrences(of: "\\/", with: "/")
-            .replacingOccurrences(of: "&amp;", with: "&")
-        if value.hasPrefix("//") {
-            value = "\(pageURL.scheme ?? "https"):" + value
-        }
-        guard let url = URL(string: value, relativeTo: pageURL)?.absoluteURL else {
-            return nil
-        }
-        guard let scheme = url.scheme?.lowercased(), scheme == "http" || scheme == "https" else {
-            return nil
-        }
-        return url
-    }
-
-    private func isVideoURL(_ url: URL) -> Bool {
-        let path = url.path.lowercased()
-        if path.hasSuffix(".m3u8") || path.hasSuffix(".mp4")
-            || path.hasSuffix(".flv") || path.hasSuffix(".mkv") {
-            return true
-        }
-        let full = url.absoluteString.lowercased()
-        return full.contains(".m3u8?")
-            || full.contains(".mp4?")
-            || full.contains(".flv?")
-            || full.contains(".mkv?")
-    }
-
-    private func score(for url: URL) -> Int {
-        let path = url.path.lowercased()
-        let full = url.absoluteString.lowercased()
-        var score = 0
-        if path.hasSuffix(".m3u8") || full.contains(".m3u8?") {
-            score += 100
-        } else if path.hasSuffix(".mp4") || full.contains(".mp4?") {
-            score += 60
-        } else if path.hasSuffix(".flv") || full.contains(".flv?") {
-            score += 40
-        } else if path.hasSuffix(".mkv") || full.contains(".mkv?") {
-            score += 30
-        }
-
-        let negative = [
-            "ad/", "ads/", "ads", "advert", "banner", "logo", "cover",
-            "preview", "trailer", "sample", "doubleclick", "googlesyndication",
-            "amazon-adsystem", "huawei", "tvc-"
-        ]
-        if negative.contains(where: { full.contains($0) }) {
-            score -= 80
-        }
-        let positive = ["play", "video", "stream", "index", "hls", "media"]
-        if positive.contains(where: { full.contains($0) }) {
-            score += 20
-        }
-        if let pageHost = pageURL.host, let host = url.host, host != pageHost {
-            score += 10
-        }
-        return score
-    }
-
     // MARK: JS hook
 
-    private static let hookScript = #"""
+    static let hookScript = #"""
     (function () {
       if (window.__anixMediaHooked) { return; }
       window.__anixMediaHooked = true;

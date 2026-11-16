@@ -22,8 +22,10 @@ enum OnlineSourcePreferences {
         static let animekoURL = "online.source.animekoURL"
         static let kazumiURL = "online.source.kazumiURL"
         static let disabledSources = "online.source.disabled"
+        static let pinnedSources = "online.source.pinned"
         static let searchHistory = "online.source.searchHistory"
         static let dismissedCompliance = "online.source.dismissedCompliance"
+        static let continuousPlayback = "online.playback.continuous"
     }
 
     /// Windows 版默认值；只作为可配置地址，不随 App 分发配置内容。
@@ -76,6 +78,40 @@ enum OnlineSourcePreferences {
         UserDefaults.standard.removeObject(forKey: Key.disabledSources)
     }
 
+    /// 置顶/收藏的源；搜索时优先展示这些源的结果。
+    static var pinnedSourceIDs: [String] {
+        get { UserDefaults.standard.stringArray(forKey: Key.pinnedSources) ?? [] }
+        set {
+            var unique: [String] = []
+            for id in newValue where !id.isEmpty && !unique.contains(id) {
+                unique.append(id)
+            }
+            UserDefaults.standard.set(unique, forKey: Key.pinnedSources)
+        }
+    }
+
+    static func isSourcePinned(_ id: String) -> Bool {
+        return pinnedSourceIDs.contains(id)
+    }
+
+    static func setSource(_ id: String, pinned: Bool) {
+        var values = pinnedSourceIDs
+        if pinned {
+            if !values.contains(id) {
+                values.insert(id, at: 0)
+            }
+        } else {
+            values.removeAll { $0 == id }
+        }
+        pinnedSourceIDs = values
+    }
+
+    static func toggleSourcePinned(_ id: String) -> Bool {
+        let newValue = !isSourcePinned(id)
+        setSource(id, pinned: newValue)
+        return newValue
+    }
+
     static var searchHistory: [String] {
         get { UserDefaults.standard.stringArray(forKey: Key.searchHistory) ?? [] }
         set {
@@ -94,6 +130,17 @@ enum OnlineSourcePreferences {
     static var dismissedCompliance: Bool {
         get { UserDefaults.standard.bool(forKey: Key.dismissedCompliance) }
         set { UserDefaults.standard.set(newValue, forKey: Key.dismissedCompliance) }
+    }
+
+    /// 默认开启连续播放；关闭时只解析当前集。
+    static var continuousPlayback: Bool {
+        get {
+            if UserDefaults.standard.object(forKey: Key.continuousPlayback) == nil {
+                return true
+            }
+            return UserDefaults.standard.bool(forKey: Key.continuousPlayback)
+        }
+        set { UserDefaults.standard.set(newValue, forKey: Key.continuousPlayback) }
     }
 }
 
