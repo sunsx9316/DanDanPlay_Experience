@@ -33,6 +33,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private var homePageWindowController: HomePageNavigationWindowController?
 
+    private var pendingOpenURLs: [URL] = []
+
+    private var didFinishLaunching = false
+
     private lazy var mainWindowController: WindowController = {
         let mainVC = MainViewController()
         let wc = WindowController()
@@ -80,6 +84,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             name: .AnixUserLoginStateDidChange,
             object: nil
         )
+
+        didFinishLaunching = true
+        processPendingOpenURLs()
     }
 
     @objc private func showConflictAlert() {
@@ -113,6 +120,84 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
         return true
+    }
+
+    // MARK: - Open Files
+
+    /// 双击视频 / `open -a AniXPlayer.app video.mp4` 的入口。
+    func application(_ sender: NSApplication, openFiles filenames: [String]) {
+        handleOpenURLs(filenames.map { URL(fileURLWithPath: $0) })
+        sender.reply(toOpenOrPrint: .success)
+    }
+
+    func application(_ application: NSApplication, open urls: [URL]) {
+        handleOpenURLs(urls)
+    }
+
+    private func handleOpenURLs(_ urls: [URL]) {
+        guard !urls.isEmpty else { return }
+        ANX.logInfo(.UI, "[App] 打开外部文件: \(urls.map { $0.lastPathComponent })")
+
+        if didFinishLaunching {
+            deliverOpenURLs(urls)
+        } else {
+            pendingOpenURLs.append(contentsOf: urls)
+        }
+    }
+
+    private func processPendingOpenURLs() {
+        guard !pendingOpenURLs.isEmpty else { return }
+        let urls = pendingOpenURLs
+        pendingOpenURLs.removeAll()
+        deliverOpenURLs(urls)
+    }
+
+    private func deliverOpenURLs(_ urls: [URL]) {
+        guard let mainVC = mainWindowController.contentViewController as? MainViewController else { return }
+
+        let files = expandLocalFiles(urls)
+        let videoFiles = files.filter { !$0.url.isSubtitleFile && !$0.url.isDanmakuFile }
+
+        guard !videoFiles.isEmpty else {
+            mainVC.view.show(text: NSLocalizedString("请先打开视频文件", comment: ""))
+            return
+        }
+
+        mainWindowController.window?.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+        mainVC.openLocalFiles(videoFiles, startWith: nil)
+    }
+
+    /// 把文件夹展开成子文件；与 NSOpenPanel 的行为保持一致。
+    private func expandLocalFiles(_ urls: [URL]) -> [File] {
+        var files: [File] = []
+        var directories: [File] = []
+
+        for url in urls {
+            let file = LocalFile(with: url)
+            if file.type == .folder {
+                directories.append(file)
+            } else {
+                files.append(file)
+            }
+        }
+
+        guard !directories.isEmpty else {
+            return files
+        }
+
+        let group = DispatchGroup()
+        for directory in directories {
+            group.enter()
+            LocalFile.fileManager.contentsOfDirectory(at: directory, filterType: .all) { result in
+                if case .success(let children) = result {
+                    files.append(contentsOf: children)
+                }
+                group.leave()
+            }
+        }
+        _ = group.wait(timeout: .distantFuture)
+        return files
     }
 
     /// 单元测试宿主进程：跳过登录窗口、更新检查等启动副作用。

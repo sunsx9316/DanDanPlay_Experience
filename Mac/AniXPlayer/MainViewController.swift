@@ -34,6 +34,10 @@ class MainViewController: ViewController {
         showPlayer(with: files, startWith: file)
     }
 
+    func openLocalFiles(_ files: [File], startWith file: File?) {
+        showPlayer(with: files, startWith: file)
+    }
+
     // MARK: - Private
 
     private func showLaunch() {
