@@ -26,14 +26,19 @@ final class MembershipWindowController: NSWindowController {
 
     private static var activeController: MembershipWindowController?
 
-    init(feature: MembershipFeature?) {
+    convenience init(feature: MembershipFeature?) {
+        self.init(feature: feature, viewModel: MembershipViewModel(feature: feature))
+    }
+
+    init(feature: MembershipFeature?, viewModel: MembershipViewModel) {
         self.feature = feature
-        self.viewModel = MembershipViewModel(feature: feature)
+        self.viewModel = viewModel
         self.membershipViewController = MembershipViewController(viewModel: viewModel)
 
+        // 900×680 固定窗口，与 Windows 版 MembershipWindow 对齐。
         let window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 760, height: 680),
-            styleMask: [.titled, .closable, .miniaturizable, .resizable],
+            contentRect: NSRect(x: 0, y: 0, width: 900, height: 680),
+            styleMask: [.titled, .closable],
             backing: .buffered,
             defer: false
         )
@@ -41,12 +46,12 @@ final class MembershipWindowController: NSWindowController {
         window.isReleasedWhenClosed = false
         window.identifier = NSUserInterfaceItemIdentifier(AccessibilityID.Membership.window)
         window.contentViewController = membershipViewController
+
         // 设置 contentViewController 时 AppKit 会按内容 fittingSize 收缩窗口；
-        // 会员页没有强宽度约束，会被压到 200pt。内容侧再加了 >=720 的宽度约束，
-        // 这里同步限制内容尺寸，并用 setContentSize 作为其他系统版本的兜底。
-        window.contentMinSize = NSSize(width: 720, height: 628)
-        window.minSize = NSSize(width: 720, height: 660)
-        window.setContentSize(NSSize(width: 760, height: 680))
+        // 这里同时锁定内容尺寸，避免不同系统版本把固定窗口压小。
+        window.contentMinSize = NSSize(width: 900, height: 680)
+        window.contentMaxSize = NSSize(width: 900, height: 680)
+        window.setContentSize(NSSize(width: 900, height: 680))
         window.center()
 
         super.init(window: window)

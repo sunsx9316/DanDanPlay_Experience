@@ -64,6 +64,7 @@ private func makeUserInfoJSON(member: String, resmonitor: String? = nil) -> Data
 private final class MockMembershipAPI: MembershipAPIServing {
     var userInfo: MembershipUserInfo
     var fetchUserInfoCallCount = 0
+    var createOrderCallCount = 0
     var intro: MembershipIntro = MembershipIntro(markdown: "# 会员")
     var orderHistory: [MembershipOrderHistoryItem] = []
     var redeemHistory: [RedeemHistoryItem] = []
@@ -82,7 +83,9 @@ private final class MockMembershipAPI: MembershipAPIServing {
     func fetchIntro() async throws -> MembershipIntro { intro }
 
     func createOrder(providerId: String, itemId: String) async throws -> MembershipOrder {
-        MembershipOrder(orderId: "order-1", orderToken: "token-1", url: "https://example.com/pay")
+        createOrderCallCount += 1
+        if let error = error { throw error }
+        return MembershipOrder(orderId: "order-1", orderToken: "token-1", url: "https://example.com/pay")
     }
 
     func fetchQRCode(orderId: String, orderToken: String) async throws -> MembershipQRCode {
@@ -676,5 +679,72 @@ final class MembershipPromoCodeTests: XCTestCase {
             "ABCDEFGHIJKLMNOPQRST"
         )
         XCTAssertEqual(MembershipPromoCode.maxLength, 20)
+    }
+}
+
+// MARK: - 支付表单防重复下单
+
+@MainActor
+final class MembershipViewModelPaymentGuardTests: XCTestCase {
+    private func makeViewModel() async throws -> (MembershipViewModel, MockMembershipAPI) {
+        let info = try JSONDecoder().decode(
+            MembershipUserInfo.self,
+            from: makeUserInfoJSON(member: "2026-12-31T16:00:00Z")
+        )
+        let api = MockMembershipAPI(userInfo: info)
+        let store = MembershipStore(
+            api: api,
+            isLoggedIn: { true },
+            now: { fixedNow }
+        )
+        _ = try await store.refresh(force: true)
+
+        let viewModel = MembershipViewModel(
+            feature: nil,
+            api: api,
+            store: store,
+            now: { fixedNow }
+        )
+        viewModel.begin()
+        return (viewModel, api)
+    }
+
+    func testRepeatedStartPaymentCreatesOneOrder() async throws {
+        let (viewModel, api) = try await makeViewModel()
+        XCTAssertNotNil(viewModel.selectedItem)
+
+        viewModel.startPayment()
+        viewModel.startPayment()
+        XCTAssertEqual(viewModel.paymentState, .creating)
+
+        var waited = 0
+        while api.createOrderCallCount == 0 && waited < 100 {
+            try await Task.sleep(nanoseconds: 10_000_000)
+            waited += 1
+        }
+        XCTAssertEqual(api.createOrderCallCount, 1)
+        viewModel.stopAll()
+    }
+
+    func testChangingSelectionReturnsToFormAndIgnoresLatePaymentResult() async throws {
+        let (viewModel, api) = try await makeViewModel()
+        XCTAssertNotNil(viewModel.selectedItem)
+
+        viewModel.startPayment()
+        XCTAssertEqual(viewModel.paymentState, .creating)
+
+        var waited = 0
+        while api.createOrderCallCount == 0 && waited < 100 {
+            try await Task.sleep(nanoseconds: 10_000_000)
+            waited += 1
+        }
+
+        viewModel.selectItem(id: "wechat12m")
+        XCTAssertEqual(viewModel.paymentState, .idle)
+        XCTAssertEqual(viewModel.selectedItem?.id, "wechat12m")
+
+        try await Task.sleep(nanoseconds: 100_000_000)
+        XCTAssertEqual(viewModel.paymentState, .idle)
+        viewModel.stopAll()
     }
 }
