@@ -92,13 +92,17 @@ final class WelcomeShellViewController: ViewController {
     var onShowHomePage: (() -> Void)?
     var onShowSettings: (() -> Void)?
     var onShowMembership: (() -> Void)?
+    /// 页面因内部路由（例如“查看时间表”）变化时同步给嵌入方。
+    var onPageChange: ((WelcomeShellPage) -> Void)?
 
     // MARK: Views
 
+    private let showsSidebar: Bool
+    private let managesWindowSize: Bool
     private let sidebar = WelcomeShellSidebarView()
     private let contentContainer = NSView()
     private var currentChild: NSViewController?
-    private var currentPage: WelcomeShellPage = .overview
+    private(set) var selectedPage: WelcomeShellPage = .overview
     private var didApplyWindowMinimum = false
 
     private lazy var rootView: WelcomeShellRootView = {
@@ -110,6 +114,18 @@ final class WelcomeShellViewController: ViewController {
     }()
 
     // MARK: Lifecycle
+
+    init(showsSidebar: Bool = true, managesWindowSize: Bool = true) {
+        self.showsSidebar = showsSidebar
+        self.managesWindowSize = managesWindowSize
+        super.init()
+    }
+
+    required init?(coder: NSCoder) {
+        self.showsSidebar = true
+        self.managesWindowSize = true
+        super.init(coder: coder)
+    }
 
     override func loadView() {
         self.view = rootView
@@ -123,7 +139,7 @@ final class WelcomeShellViewController: ViewController {
         updateBackgroundColors()
 
         sidebar.onSelectPage = { [weak self] page in
-            self?.showPage(page)
+            self?.selectPage(page)
         }
         sidebar.onLogin = { [weak self] in
             self?.startLogin()
@@ -135,17 +151,24 @@ final class WelcomeShellViewController: ViewController {
             self?.onShowSettings?()
         }
 
-        view.addSubview(sidebar)
-        view.addSubview(contentContainer)
         contentContainer.wantsLayer = true
+        if showsSidebar {
+            view.addSubview(sidebar)
+            view.addSubview(contentContainer)
 
-        sidebar.snp.makeConstraints { make in
-            make.top.leading.bottom.equalToSuperview()
-            make.width.equalTo(200)
-        }
-        contentContainer.snp.makeConstraints { make in
-            make.top.trailing.bottom.equalToSuperview()
-            make.leading.equalTo(sidebar.snp.trailing).offset(1)
+            sidebar.snp.makeConstraints { make in
+                make.top.leading.bottom.equalToSuperview()
+                make.width.equalTo(200)
+            }
+            contentContainer.snp.makeConstraints { make in
+                make.top.trailing.bottom.equalToSuperview()
+                make.leading.equalTo(sidebar.snp.trailing).offset(1)
+            }
+        } else {
+            view.addSubview(contentContainer)
+            contentContainer.snp.makeConstraints { make in
+                make.edges.equalToSuperview()
+            }
         }
 
         NotificationCenter.default.addObserver(
@@ -155,7 +178,7 @@ final class WelcomeShellViewController: ViewController {
             object: nil
         )
 
-        showPage(.overview)
+        selectPage(.overview)
         refreshSidebarSession()
     }
 
@@ -171,7 +194,7 @@ final class WelcomeShellViewController: ViewController {
     override func viewDidAppear() {
         super.viewDidAppear()
 
-        guard !didApplyWindowMinimum, let window = self.view.window else { return }
+        guard managesWindowSize, !didApplyWindowMinimum, let window = self.view.window else { return }
         didApplyWindowMinimum = true
 
         window.contentMinSize = NSSize(width: 900, height: 620)
@@ -190,16 +213,23 @@ final class WelcomeShellViewController: ViewController {
         openLocalFiles()
     }
 
+    func selectPage(_ page: WelcomeShellPage, scheduleSearchText: String? = nil) {
+        showPage(page, scheduleSearchText: scheduleSearchText)
+    }
+
     // MARK: Private - pages
 
     private func showPage(_ page: WelcomeShellPage, scheduleSearchText: String? = nil) {
-        let samePage = currentPage == page && currentChild != nil
+        let samePage = selectedPage == page && currentChild != nil
         if samePage {
             if let schedule = currentChild as? WelcomeScheduleViewController,
                let searchText = scheduleSearchText {
                 schedule.applyExternalSearch(searchText)
             }
-            sidebar.select(page)
+            if showsSidebar {
+                sidebar.select(page)
+            }
+            onPageChange?(page)
             return
         }
 
@@ -214,9 +244,12 @@ final class WelcomeShellViewController: ViewController {
             make.edges.equalToSuperview()
         }
         currentChild = vc
-        currentPage = page
-        sidebar.select(page)
+        selectedPage = page
+        if showsSidebar {
+            sidebar.select(page)
+        }
         title = AppInfoHelper.appDisplayName
+        onPageChange?(page)
 
         if let scrollPage = vc as? WelcomeShellScrollPageViewController {
             scrollPage.scrollToTop()
@@ -265,6 +298,7 @@ final class WelcomeShellViewController: ViewController {
     // MARK: Private - session
 
     private func refreshSidebarSession() {
+        guard showsSidebar else { return }
         let session = SessionStore.shared
         Task { @MainActor [weak self] in
             guard let self = self else { return }

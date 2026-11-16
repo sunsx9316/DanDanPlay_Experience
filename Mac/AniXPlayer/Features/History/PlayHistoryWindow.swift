@@ -121,6 +121,9 @@ final class PlayHistoryCollectionViewCell: CollectionViewItem {
 
 final class PlayHistoryViewController: ViewController {
 
+    /// 由 MainShell 注入：打开作品详情（不占用 navigator）。
+    var onOpenDetail: ((Int) -> Void)?
+
     private var items: [PlayHistoryItem] = []
     private var refreshTask: Task<Void, Never>?
 
@@ -288,7 +291,11 @@ extension PlayHistoryViewController: NSCollectionViewDelegate {
         guard let indexPath = indexPaths.first, indexPath.item < items.count else { return }
         collectionView.deselectItems(at: indexPaths)
         let item = items[indexPath.item]
-        navigator?.pushViewController(BangumiDetailViewController(animateId: item.animeId))
+        if let onOpenDetail = onOpenDetail {
+            onOpenDetail(item.animeId)
+        } else {
+            navigator?.pushViewController(BangumiDetailViewController(animateId: item.animeId))
+        }
     }
 }
 

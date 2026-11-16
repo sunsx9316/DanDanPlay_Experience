@@ -10,8 +10,8 @@ import SnapKit
 
 class MainViewController: ViewController {
 
-    private lazy var launchVC: PlayerLaunchViewController = {
-        let vc = PlayerLaunchViewController()
+    private lazy var shellVC: MainShellViewController = {
+        let vc = MainShellViewController()
         vc.onOpenFiles = { [weak self] files, startFile in
             self?.showPlayer(with: files, startWith: startFile)
         }
@@ -21,33 +21,39 @@ class MainViewController: ViewController {
         vc.onOpenNetworkFile = { [weak self] in
             self?.showNetworkFiles()
         }
-        vc.onShowHomePage = { [weak self] in
-            self?.showHomePage()
-        }
         vc.onShowSettings = { [weak self] in
             self?.showSettings()
         }
         vc.onShowMembership = {
             MacFeatureLauncher.showMembership()
         }
+        vc.onPlayFiles = { [weak self] files, startFile in
+            self?.showPlayer(with: files, startWith: startFile)
+        }
         return vc
     }()
 
     private var playerWindowController: PlayerWindowController?
 
-    private var homePageWindowController: HomePageNavigationWindowController?
-
     private var mediaLibraryWindowController: MediaLibraryWindowController?
 
     override func loadView() {
-        self.view = .init(frame: .init(x: 0, y: 0, width: 800, height: 600))
+        self.view = .init(frame: .init(x: 0, y: 0, width: 980, height: 680))
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = AppInfoHelper.appDisplayName
         view.setAccessibilityIdentifier(AccessibilityID.Launch.root)
-        showLaunch()
+        showShell()
+    }
+
+    /// 菜单/其他窗口切回主窗口指定分区。
+    func showMainSection(_ section: MainShellSection) {
+        _ = view
+        shellVC.select(section)
+        view.window?.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
     }
 
     func openNetworkFiles(_ files: [File], startWith file: File, progress: Double? = nil) {
@@ -74,10 +80,10 @@ class MainViewController: ViewController {
 
     // MARK: - Private
 
-    private func showLaunch() {
-        addChild(launchVC)
-        view.addSubview(launchVC.view)
-        launchVC.view.snp.makeConstraints { make in
+    private func showShell() {
+        addChild(shellVC)
+        view.addSubview(shellVC.view)
+        shellVC.view.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
     }
@@ -180,22 +186,6 @@ class MainViewController: ViewController {
         }
         wc.showWindow(nil)
         mediaLibraryWindowController = wc
-    }
-
-    private func showHomePage() {
-        if let wc = homePageWindowController {
-            wc.window?.makeKeyAndOrderFront(nil)
-            return
-        }
-
-        let homeVC = HomePageViewController()
-        let wc = HomePageNavigationWindowController(rootViewController: homeVC)
-        homeVC.navigator = wc
-        wc.windowWillCloseCallBack = { [weak self] in
-            self?.homePageWindowController = nil
-        }
-        wc.showWindow(nil)
-        homePageWindowController = wc
     }
 
     private func showSettings() {

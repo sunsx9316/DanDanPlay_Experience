@@ -35,8 +35,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private var downloadWindowController: DownloadWindowController?
 
-    private var homePageWindowController: HomePageNavigationWindowController?
-
     private var playHistoryWindowController: PlayHistoryNavigationWindowController?
 
     private var bangumiQueueWindowController: BangumiQueueNavigationWindowController?
@@ -327,18 +325,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @objc private func showHomePage(_ item: NSMenuItem) {
-        if let wc = homePageWindowController {
-            wc.window?.makeKeyAndOrderFront(nil)
-            return
+        mainWindowController.window?.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+        if let mainVC = mainWindowController.contentViewController as? MainViewController {
+            mainVC.showMainSection(.home)
         }
-        let homeVC = HomePageViewController()
-        let wc = HomePageNavigationWindowController(rootViewController: homeVC)
-        homeVC.navigator = wc
-        wc.windowWillCloseCallBack = { [weak self] in
-            self?.homePageWindowController = nil
-        }
-        wc.showWindow(nil)
-        homePageWindowController = wc
     }
 
     @objc private func showMembership(_ item: NSMenuItem) {
