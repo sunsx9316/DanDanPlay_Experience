@@ -12,6 +12,7 @@ final class BangumiDetailEpisodesCardView: BangumiDetailCardView {
 
     var onViewAll: (() -> Void)?
     var onActivateEpisode: (() -> Void)?
+    var onPlayLocalEpisode: ((BangumiEpisode, [LocalLibraryFile], NSView) -> Void)?
     var onLayoutChange: (() -> Void)?
 
     private let previewHintLabel: Label = {
@@ -41,7 +42,10 @@ final class BangumiDetailEpisodesCardView: BangumiDetailCardView {
         setup()
     }
 
-    func configure(with item: BangumiDetail) {
+    func configure(
+        with item: BangumiDetail,
+        localFilesByEpisode: [Int: [LocalLibraryFile]] = [:]
+    ) {
         rowsStack.arrangedSubviews.forEach {
             rowsStack.removeArrangedSubview($0)
             $0.removeFromSuperview()
@@ -81,11 +85,16 @@ final class BangumiDetailEpisodesCardView: BangumiDetailCardView {
         var index = startIndex
         while index < endIndex {
             let episode = item.episodes[index]
+            let localFiles = localFilesByEpisode[episode.episodeId] ?? []
             let row = BangumiDetailEpisodeRowView()
             row.configure(
                 episode: episode,
                 index: index,
                 detail: detailText(for: episode),
+                localFileCount: onPlayLocalEpisode == nil ? 0 : localFiles.count,
+                onPlayLocal: { [weak self] sourceView in
+                    self?.onPlayLocalEpisode?(episode, localFiles, sourceView)
+                },
                 onActivate: { [weak self] in
                     self?.onActivateEpisode?()
                 }
@@ -190,6 +199,10 @@ final class BangumiDetailEpisodeRowView: WelcomeShellTapView {
         return label
     }()
 
+    private let localPlayButton = WelcomeShellClosureButton(title: NSLocalizedString("本地", comment: ""))
+
+    private var localPlayWidthConstraint: Constraint?
+    private var onPlayLocal: ((NSView) -> Void)?
     private var onActivate: (() -> Void)?
 
     override init(frame frameRect: NSRect) {
@@ -211,7 +224,9 @@ final class BangumiDetailEpisodeRowView: WelcomeShellTapView {
         episode: BangumiEpisode,
         index: Int,
         detail: String,
-        onActivate: (() -> Void)?
+        localFileCount: Int = 0,
+        onPlayLocal: ((NSView) -> Void)? = nil,
+        onActivate: (() -> Void)? = nil
     ) {
         let number = episode.episodeNumber.trimmingCharacters(in: .whitespacesAndNewlines)
         let displayNumber = number.isEmpty ? "\(index + 1)" : number
@@ -221,8 +236,17 @@ final class BangumiDetailEpisodeRowView: WelcomeShellTapView {
         detailLabel.text = detail
         detailLabel.isHidden = detail.isEmpty
 
+        self.onPlayLocal = onPlayLocal
+        updateLocalPlayButton(
+            count: localFileCount,
+            episodeId: episode.episodeId,
+            displayNumber: displayNumber
+        )
+
         self.onActivate = onActivate
-        isTapEnabled = onActivate != nil
+        // 没有整行跳转时仍要让「本地」按钮可点击：WelcomeShellTapView 在
+        // isTapEnabled == false 时会把整个子视图树的 hitTest 交给上层。
+        isTapEnabled = onActivate != nil || (localFileCount > 0 && onPlayLocal != nil)
         onClick = onActivate
         if onActivate != nil {
             setAccessibilityRole(.button)
@@ -242,23 +266,69 @@ final class BangumiDetailEpisodeRowView: WelcomeShellTapView {
         addSubview(numberBadge)
         addSubview(titleLabel)
         addSubview(detailLabel)
+        addSubview(localPlayButton)
+
+        localPlayButton.bezelStyle = .rounded
+        localPlayButton.controlSize = .small
+        localPlayButton.font = .systemFont(ofSize: 11, weight: .medium)
+        localPlayButton.image = welcomeShellSymbol("play.fill", pointSize: 9, weight: .semibold)
+        localPlayButton.imagePosition = .imageLeading
+        localPlayButton.contentTintColor = .mainColor
+        localPlayButton.setContentHuggingPriority(.required, for: .horizontal)
+        localPlayButton.setContentCompressionResistancePriority(.required, for: .horizontal)
+        localPlayButton.isHidden = true
+        localPlayButton.onClick = { [weak self] in
+            guard let self = self else { return }
+            self.onPlayLocal?(self.localPlayButton)
+        }
 
         numberBadge.snp.makeConstraints { make in
             make.leading.top.equalToSuperview().offset(4)
             make.width.equalTo(64)
             make.height.equalTo(20)
         }
+        localPlayButton.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().offset(-6)
+            make.centerY.equalToSuperview()
+            make.height.equalTo(20)
+            localPlayWidthConstraint = make.width.equalTo(0).constraint
+        }
         titleLabel.snp.makeConstraints { make in
             make.leading.equalTo(numberBadge.snp.trailing).offset(10)
             make.top.equalToSuperview().offset(3)
-            make.trailing.equalToSuperview().offset(-6)
+            make.trailing.equalTo(localPlayButton.snp.leading).offset(-8)
         }
         detailLabel.snp.makeConstraints { make in
-            make.leading.trailing.equalTo(titleLabel)
+            make.leading.equalTo(titleLabel)
+            make.trailing.equalTo(localPlayButton.snp.leading).offset(-8)
             make.top.equalTo(titleLabel.snp.bottom).offset(2)
             make.bottom.equalToSuperview().offset(-5)
         }
         updateBadgeColor()
+    }
+
+    private func updateLocalPlayButton(count: Int, episodeId: Int, displayNumber: String) {
+        guard count > 0 else {
+            localPlayButton.isHidden = true
+            localPlayWidthConstraint?.update(offset: 0)
+            localPlayButton.setAccessibilityIdentifier(nil)
+            needsLayout = true
+            return
+        }
+
+        localPlayButton.isHidden = false
+        localPlayWidthConstraint?.update(offset: 72)
+        localPlayButton.toolTip = count > 1
+            ? String(format: NSLocalizedString("播放本地文件（%d 个）", comment: ""), count)
+            : NSLocalizedString("播放本地文件", comment: "")
+        localPlayButton.setAccessibilityLabel(String(
+            format: NSLocalizedString("播放本地文件：第%@集", comment: ""),
+            displayNumber
+        ))
+        localPlayButton.setAccessibilityIdentifier(
+            "\(AccessibilityID.BangumiDetail.episodeLocalPlayPrefix)\(episodeId)"
+        )
+        needsLayout = true
     }
 
     private func updateBadgeColor() {

@@ -57,6 +57,53 @@ final class WelcomeDetailPresenter {
     }
 }
 
+// MARK: - Detail actions
+
+/// 详情页来自独立窗口（甚至旧搜索窗口），不持有主窗口的导航对象。
+/// 统一通过 NSApp 查找主窗口；主窗口已被关闭时让 AppDelegate 重新创建。
+@MainActor
+enum BangumiDetailMainShellRouter {
+
+    enum Destination {
+        case resourceSearch
+        case online
+    }
+
+    @discardableResult
+    static func open(_ destination: Destination, keyword: String) -> Bool {
+        let trimmed = keyword.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return false }
+        guard let mainViewController = activateMainWindow() else { return false }
+
+        switch destination {
+        case .resourceSearch:
+            mainViewController.openResourceSearch(keyword: trimmed)
+        case .online:
+            mainViewController.openOnlineSearch(keyword: trimmed)
+        }
+        return true
+    }
+
+    static func activateMainWindow() -> MainViewController? {
+        if let mainViewController = mainViewController() {
+            NSApp.activate(ignoringOtherApps: true)
+            mainViewController.view.window?.makeKeyAndOrderFront(nil)
+            return mainViewController
+        }
+
+        NSApp.activate(ignoringOtherApps: true)
+        (NSApp.delegate as? AppDelegate)?.activateMainWindow()
+        return mainViewController()
+    }
+
+    private static func mainViewController() -> MainViewController? {
+        NSApp.windows
+            .lazy
+            .compactMap { $0.contentViewController as? MainViewController }
+            .first
+    }
+}
+
 @MainActor
 final class WelcomeQueueWindowPresenter {
     static let shared = WelcomeQueueWindowPresenter()

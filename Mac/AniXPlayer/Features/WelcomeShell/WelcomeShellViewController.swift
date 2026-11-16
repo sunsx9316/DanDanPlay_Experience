@@ -217,6 +217,12 @@ final class WelcomeShellViewController: ViewController {
         showPage(page, scheduleSearchText: scheduleSearchText)
     }
 
+    /// 外部入口：切到在线观看并自动搜索指定关键词。
+    func applyExternalOnlineSearch(_ keyword: String) {
+        showPage(.online)
+        (currentChild as? WelcomeOnlineViewController)?.applyExternalSearch(keyword)
+    }
+
     // MARK: Private - pages
 
     private func showPage(_ page: WelcomeShellPage, scheduleSearchText: String? = nil) {

@@ -64,6 +64,22 @@ class MainViewController: ViewController {
         showPlayer(with: files, startWith: file, progress: progress)
     }
 
+    /// 详情页「搜索资源」：切到搜索分区并预填番剧标题。
+    func openResourceSearch(keyword: String) {
+        _ = view
+        shellVC.openResourceSearch(keyword: keyword)
+        view.window?.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
+    /// 详情页「在线观看」：切到首页在线观看并预填番剧标题。
+    func openOnlineSearch(keyword: String) {
+        _ = view
+        shellVC.openOnlineSearch(keyword: keyword)
+        view.window?.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
     /// 菜单入口：对当前播放器导出 GIF；没有播放器时给出提示。
     func exportCurrentPlayerGIF() {
         guard let player = playerWindowController?.playerViewController else {

@@ -929,6 +929,182 @@
         }
       }
     },
+    "在主窗口中在线观看该作品": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Watch this title online in the main window"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在主窗口中在线观看该作品"
+          }
+        }
+      }
+    },
+    "在主窗口中搜索该作品资源": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search this title's resources in the main window"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "在主窗口中搜索该作品资源"
+          }
+        }
+      }
+    },
+    "媒体库文件夹的访问权限已失效，请在媒体库中重新授权。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Access to the library folder has expired. Re-authorize it in the local library."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "媒体库文件夹的访问权限已失效，请在媒体库中重新授权。"
+          }
+        }
+      }
+    },
+    "本地": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Local"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "本地"
+          }
+        }
+      }
+    },
+    "搜索资源": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search Resources"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜索资源"
+          }
+        }
+      }
+    },
+    "播放本地文件": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play Local File"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "播放本地文件"
+          }
+        }
+      }
+    },
+    "播放本地文件（%d 个）": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play Local File (%d)"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "播放本地文件（%d 个）"
+          }
+        }
+      }
+    },
+    "播放本地文件：第%@集": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play local file: episode %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "播放本地文件：第%@集"
+          }
+        }
+      }
+    },
+    "文件不存在或已移动：%@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The file is missing or has moved: %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "文件不存在或已移动：%@"
+          }
+        }
+      }
+    },
+    "无法打开主窗口，请从「搜索」或「首页」重新进入。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cannot open the main window. Try again from Search or Home."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "无法打开主窗口，请从「搜索」或「首页」重新进入。"
+          }
+        }
+      }
+    },
+    "没有可播放的本地文件。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No playable local file."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有可播放的本地文件。"
+          }
+        }
+      }
+    },
     "使用 iCloud 数据": {
       "localizations": {
         "en": {

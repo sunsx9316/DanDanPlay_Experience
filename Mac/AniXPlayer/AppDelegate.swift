@@ -56,6 +56,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         return wc
     }()
 
+    /// 从详情页等独立窗口回到主窗口；主窗口不存在时重新创建。
+    @MainActor
+    func activateMainWindow() {
+        _ = mainWindowController
+        mainWindowController.showWindow(nil)
+        mainWindowController.window?.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+    }
+
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         
         Launcher.launch()

@@ -215,6 +215,18 @@ final class ResourceSearchViewController: ViewController {
         view.window?.makeFirstResponder(searchField)
     }
 
+    /// 外部入口（详情页等）：预填关键词并立即搜索。
+    func applyExternalSearch(_ keyword: String) {
+        _ = view
+        let trimmed = keyword.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else {
+            focusSearchField()
+            return
+        }
+        searchField.stringValue = trimmed
+        performSearch()
+    }
+
     // MARK: Setup
 
     private func setupLayout() {

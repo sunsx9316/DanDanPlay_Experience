@@ -77,6 +77,18 @@ final class MainSearchSectionViewController: ViewController {
         bangumiSearchViewController.applyExternalSearch(keyword)
     }
 
+    /// 详情页等外部入口：指定子页面并自动搜索。
+    func applyExternalSearch(_ keyword: String, page: MainSearchPage) {
+        _ = view
+        showPage(page, focusSearch: false)
+        switch page {
+        case .resource:
+            resourceSearchViewController.applyExternalSearch(keyword)
+        case .bangumi:
+            bangumiSearchViewController.applyExternalSearch(keyword)
+        }
+    }
+
     // MARK: Private
 
     private func showPage(_ page: MainSearchPage, focusSearch: Bool) {

@@ -220,6 +220,79 @@ final class LocalLibraryTests: XCTestCase {
         XCTAssertEqual(result.first?.folderId, folderB.id)
     }
 
+    func testMatchedFilesQueryByAnimeAndEpisodeExcludesMissing() throws {
+        let folder = try store.addFolder(path: "/tmp/LocalLibrary/DetailPlay", bookmark: nil)
+        let first = try store.saveFile(makeFile(
+            path: "/tmp/LocalLibrary/DetailPlay/01-a.mkv",
+            folderId: folder.id
+        ))
+        let second = try store.saveFile(makeFile(
+            path: "/tmp/LocalLibrary/DetailPlay/01-b.mkv",
+            folderId: folder.id
+        ))
+        let nextEpisode = try store.saveFile(makeFile(
+            path: "/tmp/LocalLibrary/DetailPlay/02.mkv",
+            folderId: folder.id
+        ))
+        let missing = try store.saveFile(makeFile(
+            path: "/tmp/LocalLibrary/DetailPlay/01-missing.mkv",
+            folderId: folder.id
+        ))
+        let otherAnime = try store.saveFile(makeFile(
+            path: "/tmp/LocalLibrary/DetailPlay/01-other-anime.mkv",
+            folderId: folder.id
+        ))
+
+        let firstEpisode = LocalLibraryMatchInfo(
+            animeId: 100,
+            episodeId: 200,
+            animeTitle: "测试番剧",
+            episodeTitle: "第1话",
+            imageUrl: nil,
+            type: "tvseries"
+        )
+        let secondEpisode = LocalLibraryMatchInfo(
+            animeId: 100,
+            episodeId: 201,
+            animeTitle: "测试番剧",
+            episodeTitle: "第2话",
+            imageUrl: nil,
+            type: "tvseries"
+        )
+        let otherAnimeInfo = LocalLibraryMatchInfo(
+            animeId: 101,
+            episodeId: 200,
+            animeTitle: "另一部番剧",
+            episodeTitle: "第1话",
+            imageUrl: nil,
+            type: "tvseries"
+        )
+
+        _ = try store.applyManualMatch(fileId: first.id, info: firstEpisode)
+        _ = try store.applyManualMatch(fileId: second.id, info: firstEpisode)
+        _ = try store.applyManualMatch(fileId: nextEpisode.id, info: secondEpisode)
+        _ = try store.applyManualMatch(fileId: missing.id, info: firstEpisode)
+        _ = try store.applyManualMatch(fileId: otherAnime.id, info: otherAnimeInfo)
+        _ = try store.setMissing(fileId: missing.id, isMissing: true)
+
+        let exact = try store.matchedFiles(animeId: 100, episodeId: 200)
+        XCTAssertEqual(exact.map(\.fileName), ["01-a.mkv", "01-b.mkv"])
+        XCTAssertFalse(exact.contains { $0.isMissing })
+
+        let allAnime = try store.matchedFiles(animeId: 100)
+        XCTAssertEqual(allAnime.map(\.fileName), ["01-a.mkv", "01-b.mkv", "02.mkv"])
+        XCTAssertEqual(allAnime.compactMap(\.episodeId), [200, 200, 201])
+        XCTAssertFalse(allAnime.contains { $0.isMissing })
+
+        XCTAssertTrue(try store.matchedFiles(animeId: 999, episodeId: 200).isEmpty)
+
+        // 查询必须保持只读：统计与缺失状态不因播放入口查询而变化。
+        let statisticsBefore = try store.statistics()
+        _ = try store.matchedFiles(animeId: 100, episodeId: 200)
+        XCTAssertEqual(try store.statistics(), statisticsBefore)
+        XCTAssertTrue(try XCTUnwrap(store.file(id: missing.id)).isMissing)
+    }
+
     // MARK: - Query logic (pure)
 
     func testQueryLogicSearchFilterAndSort() {

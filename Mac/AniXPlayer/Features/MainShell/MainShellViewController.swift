@@ -149,6 +149,23 @@ final class MainShellViewController: ViewController {
         homeViewController.selectPage(page)
     }
 
+    /// 详情页「搜索资源」入口：切换到资源搜索子页并自动搜索。
+    func openResourceSearch(keyword: String) {
+        _ = view
+        select(.search)
+        searchSectionViewController?.applyExternalSearch(keyword, page: .resource)
+        syncPivotSelection()
+    }
+
+    /// 详情页「在线观看」入口：切换到首页在线观看并自动搜索。
+    func openOnlineSearch(keyword: String) {
+        _ = view
+        select(.home)
+        homeViewController.selectPage(.online)
+        homeViewController.applyExternalOnlineSearch(keyword)
+        syncPivotSelection()
+    }
+
     // MARK: Section switching
 
     private func handlePrimarySelection(_ section: MainShellSection) {

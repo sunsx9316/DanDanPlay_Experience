@@ -16,6 +16,8 @@ final class BangumiDetailViewController: WelcomeShellScrollPageViewController {
     private var hasLoadedComments = false
     private var isLoadingComments = false
     private var commentsRequestID = 0
+    private var localFilesByEpisode: [Int: [LocalLibraryFile]] = [:]
+    private let localPlayback = BangumiDetailLocalPlayback()
 
     private let stateView = BangumiDetailPageStateView()
     private let heroView = BangumiDetailHeroView()
@@ -71,6 +73,12 @@ final class BangumiDetailViewController: WelcomeShellScrollPageViewController {
         heroView.onFavoriteToggle = { [weak self] animeId, isLike in
             self?.toggleFavorite(animeId: animeId, isLike: isLike)
         }
+        heroView.onTapResourceSearch = { [weak self] in
+            self?.openResourceSearch()
+        }
+        heroView.onTapOnline = { [weak self] in
+            self?.openOnlinePlayback()
+        }
         heroView.onTapMetadata = { [weak self] in
             self?.pushMetadata()
         }
@@ -94,6 +102,9 @@ final class BangumiDetailViewController: WelcomeShellScrollPageViewController {
         }
         episodesCard.onActivateEpisode = { [weak self] in
             self?.pushEpisodeList()
+        }
+        episodesCard.onPlayLocalEpisode = { [weak self] _, files, sourceView in
+            self?.playLocalFiles(files, from: sourceView)
         }
         episodesCard.onLayoutChange = { [weak self] in
             self?.layoutContent()
@@ -162,10 +173,12 @@ final class BangumiDetailViewController: WelcomeShellScrollPageViewController {
         title = detail.animeTitle
         view.window?.title = detail.animeTitle
 
+        localFilesByEpisode = localPlayback.filesByEpisode(animeId: detail.animeId)
+
         heroView.configure(with: detail)
         metadataCard.configure(with: detail)
         trackingCard.configure(with: detail)
-        episodesCard.configure(with: detail)
+        episodesCard.configure(with: detail, localFilesByEpisode: localFilesByEpisode)
         communityCard.configure(with: detail)
 
         stateView.hide()
@@ -337,6 +350,26 @@ final class BangumiDetailViewController: WelcomeShellScrollPageViewController {
 
     // MARK: - Navigation
 
+    private func openResourceSearch() {
+        guard let keyword = detail?.animeTitle else { return }
+        guard BangumiDetailMainShellRouter.open(.resourceSearch, keyword: keyword) else {
+            view.show(text: NSLocalizedString("无法打开主窗口，请从「搜索」或「首页」重新进入。", comment: ""))
+            return
+        }
+    }
+
+    private func openOnlinePlayback() {
+        guard let keyword = detail?.animeTitle else { return }
+        guard BangumiDetailMainShellRouter.open(.online, keyword: keyword) else {
+            view.show(text: NSLocalizedString("无法打开主窗口，请从「搜索」或「首页」重新进入。", comment: ""))
+            return
+        }
+    }
+
+    private func playLocalFiles(_ files: [LocalLibraryFile], from sourceView: NSView) {
+        localPlayback.play(files: files, from: sourceView, hostView: view)
+    }
+
     private func pushDetail(animateId: Int) {
         let vc = BangumiDetailViewController(animateId: animateId)
         navigator?.pushViewController(vc)
@@ -352,7 +385,12 @@ final class BangumiDetailViewController: WelcomeShellScrollPageViewController {
     private func pushEpisodeList() {
         guard let detail = detail else { return }
         let vc = BangumiDetailEpisodeViewController()
-        vc.configure(episodes: detail.episodes, seasons: detail.seasons)
+        vc.configure(
+            episodes: detail.episodes,
+            seasons: detail.seasons,
+            localFilesByEpisode: localFilesByEpisode,
+            localPlayback: localPlayback
+        )
         navigator?.pushViewController(vc)
     }
 
@@ -368,5 +406,111 @@ final class BangumiDetailViewController: WelcomeShellScrollPageViewController {
         scrollView.contentView.scroll(to: NSPoint(x: 0, y: targetY))
         scrollView.reflectScrolledClipView(scrollView.contentView)
         scrollView.flashScrollers()
+    }
+}
+
+// MARK: - Local playback
+
+/// 详情页的媒体库播放入口。
+/// 只读查询匹配文件，播放前检查文件夹授权与磁盘文件，
+/// 最终复用主窗口已有的播放器路径。
+@MainActor
+final class BangumiDetailLocalPlayback: NSObject {
+
+    private let store: LocalLibraryStore?
+    private var pendingFiles: [LocalLibraryFile] = []
+    private weak var pendingHostView: NSView?
+
+    init(store: LocalLibraryStore? = nil) {
+        self.store = store ?? (try? LocalLibraryStore())
+        super.init()
+    }
+
+    /// 返回 animeId 下按剧集分组的可播放文件；查询失败时返回空字典。
+    func filesByEpisode(animeId: Int) -> [Int: [LocalLibraryFile]] {
+        guard let store = store, animeId > 0 else { return [:] }
+        guard let files = try? store.matchedFiles(animeId: animeId) else { return [:] }
+        let grouped = Dictionary(grouping: files) { $0.episodeId ?? 0 }
+        return grouped.filter { $0.key > 0 }
+    }
+
+    func play(files: [LocalLibraryFile], from sourceView: NSView, hostView: NSView) {
+        let playable = files.filter { $0.id > 0 && !$0.isMissing }
+        guard !playable.isEmpty else {
+            hostView.show(text: NSLocalizedString("没有可播放的本地文件。", comment: ""))
+            return
+        }
+
+        if playable.count == 1 {
+            play(playable[0], hostView: hostView)
+            return
+        }
+
+        pendingFiles = playable
+        pendingHostView = hostView
+
+        let menu = NSMenu()
+        menu.autoenablesItems = false
+        for (index, file) in playable.enumerated() {
+            let item = NSMenuItem(
+                title: "\(file.fileName) — \(file.path)",
+                action: #selector(playMenuItem(_:)),
+                keyEquivalent: ""
+            )
+            item.target = self
+            item.tag = index
+            item.toolTip = file.path
+            menu.addItem(item)
+        }
+        menu.popUp(
+            positioning: nil,
+            at: NSPoint(x: 0, y: sourceView.bounds.maxY + 4),
+            in: sourceView
+        )
+    }
+
+    @objc private func playMenuItem(_ sender: NSMenuItem) {
+        guard pendingFiles.indices.contains(sender.tag) else { return }
+        let file = pendingFiles[sender.tag]
+        let hostView = pendingHostView
+        pendingFiles = []
+        pendingHostView = nil
+        play(file, hostView: hostView)
+    }
+
+    private func play(_ file: LocalLibraryFile, hostView: NSView?) {
+        guard let hostView = hostView ?? NSApp.keyWindow?.contentView else { return }
+        guard let store = store else {
+            hostView.show(text: NSLocalizedString("没有可播放的本地文件。", comment: ""))
+            return
+        }
+        guard let folder = (try? store.folder(id: file.folderId)) ?? nil else {
+            hostView.show(text: NSLocalizedString("找不到该文件所属的媒体库文件夹", comment: ""))
+            return
+        }
+        guard LocalLibraryFolderAccess.shared.ensureAccess(folder: folder) else {
+            hostView.show(text: NSLocalizedString(
+                "媒体库文件夹的访问权限已失效，请在媒体库中重新授权。",
+                comment: ""
+            ))
+            return
+        }
+        guard FileManager.default.fileExists(atPath: file.path) else {
+            hostView.show(text: String(
+                format: NSLocalizedString("文件不存在或已移动：%@", comment: ""),
+                file.path
+            ))
+            return
+        }
+        guard let mainViewController = BangumiDetailMainShellRouter.activateMainWindow() else {
+            hostView.show(text: NSLocalizedString(
+                "无法打开主窗口，请从「搜索」或「首页」重新进入。",
+                comment: ""
+            ))
+            return
+        }
+
+        let playerFile = LocalFile(with: file.fileURL)
+        mainViewController.openLocalFiles([playerFile], startWith: playerFile)
     }
 }

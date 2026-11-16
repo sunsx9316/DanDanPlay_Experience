@@ -313,6 +313,36 @@ final class LocalLibraryStore {
         return readFiles(statement)
     }
 
+    /// 只读查询：某部番剧下所有已匹配且未缺失的文件。
+    /// 供详情页显示本地播放入口；不会触发扫描，也不会改写匹配数据。
+    func matchedFiles(animeId: Int) throws -> [LocalLibraryFile] {
+        lock.lock()
+        defer { lock.unlock() }
+        let statement = try prepare("""
+            SELECT \(localLibraryFileColumns) FROM files
+            WHERE isMatched = 1 AND isMissing = 0 AND animeId = ?
+            ORDER BY episodeId ASC, fileName COLLATE NOCASE ASC, path COLLATE NOCASE ASC
+            """)
+        defer { sqlite3_finalize(statement) }
+        bind(statement, 1, Int64(animeId))
+        return readFiles(statement)
+    }
+
+    /// 只读查询：指定番剧 + 剧集下所有已匹配且未缺失的文件。
+    func matchedFiles(animeId: Int, episodeId: Int) throws -> [LocalLibraryFile] {
+        lock.lock()
+        defer { lock.unlock() }
+        let statement = try prepare("""
+            SELECT \(localLibraryFileColumns) FROM files
+            WHERE isMatched = 1 AND isMissing = 0 AND animeId = ? AND episodeId = ?
+            ORDER BY fileName COLLATE NOCASE ASC, path COLLATE NOCASE ASC
+            """)
+        defer { sqlite3_finalize(statement) }
+        bind(statement, 1, Int64(animeId))
+        bind(statement, 2, Int64(episodeId))
+        return readFiles(statement)
+    }
+
     /// 搜索 / 筛选 / 排序查询（SQL 版本）。
     func files(query: LocalLibraryQuery) throws -> [LocalLibraryFile] {
         lock.lock()

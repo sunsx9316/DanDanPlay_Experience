@@ -12,6 +12,8 @@ import Kingfisher
 final class BangumiDetailHeroView: BangumiDetailCardView {
 
     var onFavoriteToggle: ((Int, Bool) -> Void)?
+    var onTapResourceSearch: (() -> Void)?
+    var onTapOnline: (() -> Void)?
     var onTapMetadata: (() -> Void)?
     var onTapEpisodes: (() -> Void)?
     var onLayoutChange: (() -> Void)?
@@ -75,6 +77,8 @@ final class BangumiDetailHeroView: BangumiDetailCardView {
     private let summaryToggleButton = Button()
     private let actionRow = NSStackView()
     private let favoriteButton = WelcomeShellClosureButton()
+    private let resourceSearchButton = WelcomeShellClosureButton(title: NSLocalizedString("搜索资源", comment: ""))
+    private let onlineButton = WelcomeShellClosureButton(title: NSLocalizedString("在线观看", comment: ""))
     private let metadataButton = WelcomeShellClosureButton(title: NSLocalizedString("作品资料", comment: ""))
     private let episodesButton = WelcomeShellClosureButton(title: NSLocalizedString("查看剧集", comment: ""))
 
@@ -317,6 +321,30 @@ final class BangumiDetailHeroView: BangumiDetailCardView {
             self?.favoriteClicked()
         }
 
+        resourceSearchButton.bezelStyle = .rounded
+        resourceSearchButton.image = welcomeShellSymbol("magnifyingglass", pointSize: 12, weight: .medium)
+        resourceSearchButton.imagePosition = .imageLeading
+        resourceSearchButton.contentTintColor = .mainColor
+        resourceSearchButton.font = .systemFont(ofSize: 12, weight: .medium)
+        resourceSearchButton.toolTip = NSLocalizedString("在主窗口中搜索该作品资源", comment: "")
+        resourceSearchButton.setAccessibilityIdentifier(AccessibilityID.BangumiDetail.heroResourceSearch)
+        resourceSearchButton.setAccessibilityLabel(NSLocalizedString("搜索资源", comment: ""))
+        resourceSearchButton.onClick = { [weak self] in
+            self?.onTapResourceSearch?()
+        }
+
+        onlineButton.bezelStyle = .rounded
+        onlineButton.image = welcomeShellSymbol("play.rectangle.on.rectangle", pointSize: 12, weight: .medium)
+        onlineButton.imagePosition = .imageLeading
+        onlineButton.contentTintColor = .mainColor
+        onlineButton.font = .systemFont(ofSize: 12, weight: .medium)
+        onlineButton.toolTip = NSLocalizedString("在主窗口中在线观看该作品", comment: "")
+        onlineButton.setAccessibilityIdentifier(AccessibilityID.BangumiDetail.heroOnline)
+        onlineButton.setAccessibilityLabel(NSLocalizedString("在线观看", comment: ""))
+        onlineButton.onClick = { [weak self] in
+            self?.onTapOnline?()
+        }
+
         metadataButton.bezelStyle = .rounded
         metadataButton.image = welcomeShellSymbol("info.circle", pointSize: 12, weight: .medium)
         metadataButton.imagePosition = .imageLeading
@@ -341,7 +369,7 @@ final class BangumiDetailHeroView: BangumiDetailCardView {
         actionRow.alignment = .centerY
         actionRow.distribution = .fill
         actionRow.spacing = 8
-        [favoriteButton, metadataButton, episodesButton].forEach { button in
+        [favoriteButton, resourceSearchButton, onlineButton, metadataButton, episodesButton].forEach { button in
             button.setContentHuggingPriority(.required, for: .horizontal)
             button.setContentCompressionResistancePriority(.required, for: .horizontal)
             actionRow.addArrangedSubview(button)

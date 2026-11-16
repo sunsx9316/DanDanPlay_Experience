@@ -18,10 +18,19 @@ final class BangumiDetailEpisodeViewController: WelcomeShellScrollPageViewContro
 
     private var episodes: [BangumiEpisode] = []
     private var seasons: [BangumiEpisodeSeason] = []
+    private var localFilesByEpisode: [Int: [LocalLibraryFile]] = [:]
+    private var localPlayback: BangumiDetailLocalPlayback?
 
-    func configure(episodes: [BangumiEpisode], seasons: [BangumiEpisodeSeason]) {
+    func configure(
+        episodes: [BangumiEpisode],
+        seasons: [BangumiEpisodeSeason],
+        localFilesByEpisode: [Int: [LocalLibraryFile]] = [:],
+        localPlayback: BangumiDetailLocalPlayback? = nil
+    ) {
         self.episodes = episodes
         self.seasons = seasons
+        self.localFilesByEpisode = localFilesByEpisode
+        self.localPlayback = localPlayback
         if isViewLoaded {
             buildContent()
         }
@@ -78,11 +87,21 @@ final class BangumiDetailEpisodeViewController: WelcomeShellScrollPageViewContro
         }
 
         for item in group.episodes {
+            let localFiles = localFilesByEpisode[item.episode.episodeId] ?? []
             let row = BangumiDetailEpisodeRowView()
             row.configure(
                 episode: item.episode,
                 index: item.index,
                 detail: detailText(for: item.episode),
+                localFileCount: localPlayback == nil ? 0 : localFiles.count,
+                onPlayLocal: { [weak self] sourceView in
+                    guard let self = self else { return }
+                    self.localPlayback?.play(
+                        files: localFiles,
+                        from: sourceView,
+                        hostView: self.view
+                    )
+                },
                 onActivate: nil
             )
             row.setAccessibilityIdentifier(

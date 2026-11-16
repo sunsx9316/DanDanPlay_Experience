@@ -449,6 +449,20 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
         episodesScroll.layoutContent()
     }
 
+    // MARK: Public
+
+    /// 外部入口（详情页等）：预填关键词并立即搜索。
+    func applyExternalSearch(_ keyword: String) {
+        _ = view
+        let trimmed = keyword.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else {
+            view.window?.makeFirstResponder(searchField)
+            return
+        }
+        searchField.stringValue = trimmed
+        startSearch()
+    }
+
     // MARK: Layout
 
     private func setupLayout() {
