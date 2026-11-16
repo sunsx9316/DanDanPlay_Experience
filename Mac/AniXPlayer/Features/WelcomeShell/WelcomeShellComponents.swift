@@ -39,6 +39,10 @@ func welcomeShellSymbol(_ name: String, pointSize: CGFloat, weight: NSFont.Weigh
 }
 
 private func welcomeShellRelativeDate(_ date: Date) -> String {
+    // RelativeDateTimeFormatter 对“刚刚”会输出“0秒后”，这里直接归一化。
+    if abs(Date().timeIntervalSince(date)) < 60 {
+        return NSLocalizedString("刚刚", comment: "")
+    }
     let formatter = RelativeDateTimeFormatter()
     formatter.unitsStyle = .short
     return formatter.localizedString(for: date, relativeTo: Date())
@@ -711,7 +715,14 @@ final class WelcomeShellContinueCardView: WelcomeShellTapView {
         let folder = ((item.path as NSString).deletingLastPathComponent as NSString).lastPathComponent
         var parts: [String] = []
         if !folder.isEmpty { parts.append(folder) }
-        if let progress = item.progress, progress > 0.01 {
+        if let positionText = WelcomeShellDataMapper.playbackPositionText(
+            position: item.position,
+            duration: item.duration
+        ) {
+            parts.append(positionText)
+            progressBar.progress = item.progress ?? 0
+            progressBar.isHidden = false
+        } else if let progress = item.progress, progress > 0.01 {
             parts.append(String(format: NSLocalizedString("已观看 %d%%", comment: ""), Int(round(progress * 100))))
             progressBar.progress = progress
             progressBar.isHidden = false
@@ -1049,7 +1060,14 @@ final class WelcomeShellRecentRowView: WelcomeShellTapView {
         subtitleLabel.text = folder
         dateLabel.text = welcomeShellRelativeDate(Date(timeIntervalSince1970: item.lastOpened))
 
-        if let progress = item.progress, progress > 0.01 {
+        if let positionText = WelcomeShellDataMapper.playbackPositionText(
+            position: item.position,
+            duration: item.duration
+        ) {
+            progressBar.progress = item.progress ?? 0
+            progressBar.isHidden = false
+            dateLabel.text = positionText + " · " + welcomeShellRelativeDate(Date(timeIntervalSince1970: item.lastOpened))
+        } else if let progress = item.progress, progress > 0.01 {
             progressBar.progress = progress
             progressBar.isHidden = false
             dateLabel.text = String(

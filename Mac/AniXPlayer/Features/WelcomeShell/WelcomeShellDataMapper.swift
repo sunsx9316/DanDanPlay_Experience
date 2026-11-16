@@ -15,6 +15,25 @@ struct WelcomeRecentItem: Codable, Equatable {
     let lastOpened: TimeInterval
     let progress: Double?
     let bookmark: Data?
+    /// 已播秒数与总时长；旧记录没有这两个字段，解码为 nil。
+    let position: Double?
+    let duration: Double?
+
+    init(
+        path: String,
+        lastOpened: TimeInterval,
+        progress: Double?,
+        bookmark: Data?,
+        position: Double? = nil,
+        duration: Double? = nil
+    ) {
+        self.path = path
+        self.lastOpened = lastOpened
+        self.progress = progress
+        self.bookmark = bookmark
+        self.position = position
+        self.duration = duration
+    }
 }
 
 // MARK: - Schedule
@@ -70,6 +89,26 @@ enum WelcomeShellDataMapper {
     static func currentAirDay(now: Date = Date(), calendar: Calendar = .current) -> Int {
         let weekday = calendar.component(.weekday, from: now) // 1 = Sunday
         return (weekday - 1) % 7
+    }
+
+    /// “播放到 12:34”文案；没有精确秒数时返回 nil，由调用方回退到百分比。
+    static func playbackPositionText(position: Double?, duration: Double?) -> String? {
+        guard let position = position,
+              let duration = duration,
+              duration > 0,
+              position > 1 else { return nil }
+
+        let total = Int(position.rounded())
+        let hours = total / 3600
+        let minutes = (total % 3600) / 60
+        let seconds = total % 60
+        let timeText: String
+        if hours > 0 {
+            timeText = String(format: "%d:%02d:%02d", hours, minutes, seconds)
+        } else {
+            timeText = String(format: "%02d:%02d", minutes, seconds)
+        }
+        return String(format: NSLocalizedString("播放到 %@", comment: ""), timeText)
     }
 
     static func weekdayTitle(for airDay: Int) -> String {

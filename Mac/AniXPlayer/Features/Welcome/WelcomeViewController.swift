@@ -714,7 +714,7 @@ final class WelcomeRecentStore {
         return loadItems()
     }
 
-    func record(file: File, progress: Double? = nil) {
+    func record(file: File, progress: Double? = nil, position: Double? = nil, duration: Double? = nil) {
         guard file is LocalFile else { return }
         guard file.url.isFileURL, file.type == .file else { return }
         guard !file.url.isSubtitleFile, !file.url.isDanmakuFile else { return }
@@ -736,7 +736,9 @@ final class WelcomeRecentStore {
             path: path,
             lastOpened: Date().timeIntervalSince1970,
             progress: progress ?? existing?.progress,
-            bookmark: bookmark ?? existing?.bookmark
+            bookmark: bookmark ?? existing?.bookmark,
+            position: position ?? existing?.position,
+            duration: duration ?? existing?.duration
         )
 
         currentItems.removeAll(where: { $0.path == path })

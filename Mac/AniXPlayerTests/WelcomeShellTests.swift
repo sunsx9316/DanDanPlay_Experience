@@ -245,6 +245,30 @@ final class WelcomeShellTests: XCTestCase {
         XCTAssertEqual(result.map(\.lastOpened), [4, 3, 2])
     }
 
+    func testPlaybackPositionTextUsesMinutesOrHours() {
+        XCTAssertTrue(
+            WelcomeShellDataMapper.playbackPositionText(position: 65, duration: 100)?.hasSuffix("01:05") == true
+        )
+        XCTAssertTrue(
+            WelcomeShellDataMapper.playbackPositionText(position: 754, duration: 2700)?.hasSuffix("12:34") == true
+        )
+        XCTAssertTrue(
+            WelcomeShellDataMapper.playbackPositionText(position: 3661, duration: 7200)?.hasSuffix("1:01:01") == true
+        )
+        XCTAssertNil(WelcomeShellDataMapper.playbackPositionText(position: nil, duration: 100))
+        XCTAssertNil(WelcomeShellDataMapper.playbackPositionText(position: 10, duration: 0))
+    }
+
+    func testRecentItemDecodesLegacyRecordWithoutPosition() throws {
+        let json = """
+        {"path":"/tmp/a.mp4","lastOpened":100,"progress":0.5,"bookmark":null}
+        """.data(using: .utf8)!
+        let item = try JSONDecoder().decode(WelcomeRecentItem.self, from: json)
+        XCTAssertEqual(item.progress, 0.5)
+        XCTAssertNil(item.position)
+        XCTAssertNil(item.duration)
+    }
+
     // MARK: - Queue mapping
 
     func testQueueCardsMapBothIntroModels() throws {

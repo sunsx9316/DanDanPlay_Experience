@@ -137,7 +137,12 @@ class MainViewController: ViewController {
         } else {
             progress = nil
         }
-        WelcomeRecentStore.shared.record(file: file, progress: progress)
+        WelcomeRecentStore.shared.record(
+            file: file,
+            progress: progress,
+            position: snapshot.duration > 0 ? snapshot.position : nil,
+            duration: snapshot.duration > 0 ? snapshot.duration : nil
+        )
     }
 
     // MARK: - Welcome shortcuts
