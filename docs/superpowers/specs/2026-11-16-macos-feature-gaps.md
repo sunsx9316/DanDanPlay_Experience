@@ -29,6 +29,12 @@
 - 播放器底层（VLC/MPV）本身能打开 http(s) 流，但没有通用「远程 URL File」封装，也没有把 headers/cookies 传给它。
 - 没有 animeko/kazumi 配置读取、缓存、规则解析、网页嗅探。
 - `MembershipFeature.onlinePlayback` 与 `.mediaSniffer` 门禁枚举已存在，但没有业务接线。
+- **已补最小串流基础（2026-11-16）**：
+  - `File.httpHeaders` 默认能力；
+  - `OnlineEpisodeFile`（稳定虚拟 URL、真实 streamURL、请求头、不做文件哈希）；
+  - VLC `http-referrer/http-user-agent/http-cookie`、MPV `http-header-fields` 注入；
+  - 文件菜单「打开网络串流…」可手工输入 http/https/m3u8，走会员门禁后交给现有播放器。
+  - 这还不是在线源搜索，只用于验证流播放/请求头/标题/弹幕匹配失败仍可播放。
 
 ### 2.2 审计结论（2026-11-16）
 
