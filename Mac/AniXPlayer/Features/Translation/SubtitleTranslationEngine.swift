@@ -233,7 +233,8 @@ final class SubtitleTranslationEngine {
     ) {
         outcome.usage += response.usage
         if let countRemain = response.countRemain {
-            outcome.countRemain = countRemain
+            // 多批并发时完成顺序不确定；取最小值，避免额度已耗尽却显示旧余额。
+            outcome.countRemain = outcome.countRemain.map { min($0, countRemain) } ?? countRemain
         }
 
         for (source, translated) in response.translation {
