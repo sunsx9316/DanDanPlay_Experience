@@ -38,10 +38,15 @@ final class MembershipWindowController: NSWindowController {
             defer: false
         )
         window.title = NSLocalizedString("弹弹play 会员", comment: "")
-        window.minSize = NSSize(width: 720, height: 660)
         window.isReleasedWhenClosed = false
         window.identifier = NSUserInterfaceItemIdentifier(AccessibilityID.Membership.window)
         window.contentViewController = membershipViewController
+        // 设置 contentViewController 时 AppKit 会按内容 fittingSize 收缩窗口；
+        // 会员页没有强宽度约束，会被压到 200pt。内容侧再加了 >=720 的宽度约束，
+        // 这里同步限制内容尺寸，并用 setContentSize 作为其他系统版本的兜底。
+        window.contentMinSize = NSSize(width: 720, height: 628)
+        window.minSize = NSSize(width: 720, height: 660)
+        window.setContentSize(NSSize(width: 760, height: 680))
         window.center()
 
         super.init(window: window)

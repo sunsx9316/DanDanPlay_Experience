@@ -115,6 +115,9 @@ final class MembershipViewController: NSViewController {
         }
         self.view = root
 
+        // 防止窗口按 fittingSize 收缩到 200pt：会员页内容没有天然的最小宽度。
+        root.widthAnchor.constraint(greaterThanOrEqualToConstant: 720).isActive = true
+
         buildStatusCard()
         buildSegmentedControl()
         buildPayView()
