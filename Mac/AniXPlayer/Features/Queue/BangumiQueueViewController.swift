@@ -186,6 +186,9 @@ final class BangumiQueueSectionHeaderView: NSView {
 
 final class BangumiQueueViewController: ViewController {
 
+    /// 由 MainShell 注入：打开作品详情（不占用 navigator）。
+    var onOpenDetail: ((Int) -> Void)?
+
     private var sections: [BangumiQueueSectionModel] = []
     private var refreshTask: Task<Void, Never>?
 
@@ -374,7 +377,11 @@ final class BangumiQueueViewController: ViewController {
     }
 
     private func pushDetail(animeId: Int) {
-        navigator?.pushViewController(BangumiDetailViewController(animateId: animeId))
+        if let onOpenDetail = onOpenDetail {
+            onOpenDetail(animeId)
+        } else {
+            navigator?.pushViewController(BangumiDetailViewController(animateId: animeId))
+        }
     }
 }
 

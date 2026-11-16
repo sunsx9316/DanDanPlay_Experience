@@ -156,6 +156,9 @@ final class SearchUpgradeResultCellView: NSView {
 
 final class SearchUpgradedViewController: ViewController {
 
+    /// 由 MainShell 注入：打开作品详情（不占用 navigator）。
+    var onOpenDetail: ((Int) -> Void)?
+
     private enum SearchMode: Int, CaseIterable {
         case anime = 0
         case episodes = 1
@@ -455,6 +458,30 @@ final class SearchUpgradedViewController: ViewController {
 
     override func viewDidAppear() {
         super.viewDidAppear()
+        view.window?.makeFirstResponder(searchField)
+    }
+
+    // MARK: - External entry
+
+    /// 顶部全局搜索：确保页面加载后切到「动画」并执行搜索。
+    func applyExternalSearch(_ keyword: String) {
+        _ = view
+
+        if mode != .anime {
+            mode = .anime
+            modeControl.selectedSegment = SearchMode.anime.rawValue
+            updateModeUI()
+            clearResults()
+            showInitialState()
+        }
+
+        searchField.stringValue = keyword
+        view.window?.makeFirstResponder(searchField)
+        startSearch()
+    }
+
+    func focusSearchField() {
+        _ = view
         view.window?.makeFirstResponder(searchField)
     }
 
@@ -944,6 +971,10 @@ extension SearchUpgradedViewController: NSOutlineViewDelegate {
 
         guard node.animeId > 0 else { return }
         ANX.logInfo(.UI, "[SearchUpgrade] 打开作品详情 animeId=\(node.animeId)")
-        navigator?.pushViewController(BangumiDetailViewController(animateId: node.animeId))
+        if let onOpenDetail = onOpenDetail {
+            onOpenDetail(node.animeId)
+        } else {
+            navigator?.pushViewController(BangumiDetailViewController(animateId: node.animeId))
+        }
     }
 }

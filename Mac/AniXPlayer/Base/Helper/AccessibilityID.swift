@@ -29,6 +29,24 @@ enum AccessibilityID {
         static let featureMembership = "launch.featureMembership"
     }
 
+    /// 主窗口一体化外壳（顶部导航）。
+    enum MainShell {
+        static let root = "mainShell.root"
+        static let topBar = "mainShell.topBar"
+        static let navHome = "mainShell.nav.home"
+        static let navSearch = "mainShell.nav.search"
+        static let navLibrary = "mainShell.nav.library"
+        static let navDownload = "mainShell.nav.download"
+        static let navHistory = "mainShell.nav.history"
+        static let navAccount = "mainShell.nav.account"
+        static let pivotPrefix = "mainShell.pivot."
+        static let searchField = "mainShell.searchField"
+        static let user = "mainShell.user"
+        static let login = "mainShell.login"
+        static let settings = "mainShell.settings"
+        static let accountCardPrefix = "mainShell.accountCard."
+    }
+
     /// Windows 式欢迎页外壳（P5）。
     enum WelcomeShell {
         static let root = "welcomeShell.root"
