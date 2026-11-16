@@ -53,8 +53,19 @@ bash scripts/build-mac.sh Release
 bash scripts/test-mac.sh
 bash scripts/test-mac.sh Debug --only AniXPlayerTests/OAuthPKCETests
 
+# 把测试源加入 AniXPlayerTests target（共享源码也可以）
+ruby scripts/xcode_test_source.rb Mac/AniXPlayerTests/MyTests.swift
+ruby scripts/xcode_test_source.rb Share/CocoaShare/Models/MyModel.swift
+
+# L2 播放冒烟：打开->播放 3 秒->断言进度/弹幕->退出
+bash scripts/playback-smoke.sh
+
 # 三平台回归编译（改共享代码后必须跑）
 bash scripts/build-all-platforms.sh
+
+# 并行 worktree 构建时用独立 DerivedData，避免抢锁
+DERIVED_DATA_PATH=/tmp/anix-dd-feature bash scripts/build-mac.sh Debug
+DERIVED_DATA_PATH=/tmp/anix-dd-feature bash scripts/test-mac.sh
 ```
 
 - 打开/构建用 `.xcodeproj`（依赖由 SPM 随工程解析）
@@ -73,7 +84,7 @@ bash scripts/build-all-platforms.sh
   - 改过共享文件后必须跑 `bash scripts/build-all-platforms.sh`。
 - **AppKey**: 三平台共用同一路径 `Share/CocoaShare/Networking/AppKey.swift`（不是各平台 `AniXPlayer/` 目录）。模板为同目录 `AppKey.swift.example`；`AppKey.swift` 已被 `.gitignore` 忽略，勿提交真实凭证。
 - **执行计划/待办**: 用 OpenChamber Project knowledge（`openchamber_knowledge`），主项目 projectId 为 `path_L1VzZXJzL2thZWRlaS9jb2RlL2RhbmRhbnBsYXk`。worktree 会话默认按目录生成新 projectId，**必须显式传这个主 projectId** 才能共享同一份计划。不要把执行计划提交到仓库。
-- **单元测试**: `bash scripts/test-mac.sh`。测试 target 为 `AniXPlayerTests`（**无宿主**，不启动 App、不需要签名）；OAuth/网络/会话源码直接编进测试 target。新增被测源码时需同时加入该 target 的 Sources；UI 测试以后单独建 XCUITest target。
+- **单元测试**: `bash scripts/test-mac.sh`。测试 target 为 `AniXPlayerTests`（**无宿主**，不启动 App、不需要签名）；OAuth/网络/会话源码直接编进测试 target。新增被测源码时用 `ruby scripts/xcode_test_source.rb <path>` 加入该 target 的 Sources。XCUITest 暂缓（证书已有，但 altcha 阻断登录成功路径），当前用 L2 播放冒烟 + AX/CGEvent 脚本覆盖；关键控件统一使用 `Mac/AniXPlayer/Base/Helper/AccessibilityID.swift` 里的 identifier。
 - **文档分层**: 原始调研/Windows 分析留在仓库外 `/Users/kaedei/code/dandanplay/docs`；稳定、脱敏的设计结论放仓库 `docs/superpowers/specs/`；一次性结论放 PR 描述。
 - **敏感代码/外部软链**: `DandanClientCore`（约 500MB，敏感）不提交、不搬入仓库；通过 `vendor/DandanClientCore`（ignored 软链）访问。`sample/` 同理。`git clean -xdf` 会删 ignored 内容，用软链可避免误删真实源码。
 - **Worktree**: 只用 `git -C DanDanPlay_Experience worktree ...` CLI。项目根目录 `/Users/kaedei/code/dandanplay` 不是 git 仓库，OpenCode/OpenChamber 的 worktree 工具按会话目录识别仓库；实测在此布局下 `worktree_create` 失败、`worktree_list` 返回空。新建 worktree 时显式基于 `win-porting`，建完后执行 `bash scripts/setup-worktree.sh` 软链 `vendor/DandanClientCore`、`sample` 和 `AppKey.swift`；父目录 `docs/` 用绝对路径。
