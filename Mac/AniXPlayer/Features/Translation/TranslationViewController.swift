@@ -20,6 +20,7 @@ final class TranslationViewController: ViewController {
     private var lastUsage: SubtitleServiceUsageResponse?
     private var translationTask: Task<Void, Never>?
     private var isBusy = false
+    private var didLoadRemoteState = false
 
     // MARK: - Views
 
@@ -226,6 +227,19 @@ final class TranslationViewController: ViewController {
         setupLayout()
         updateUsageLabel()
         updateControlState()
+    }
+
+    override func viewDidAppear() {
+        super.viewDidAppear()
+
+        // 窗口首次出现时预取服务列表与额度，避免下拉框停留在「默认」，
+        // 也让用户在选择文件前就能看到本月剩余额度。
+        guard !didLoadRemoteState else { return }
+        didLoadRemoteState = true
+        Task { [weak self] in
+            await self?.refreshServices()
+            await self?.refreshUsage()
+        }
     }
 
     // MARK: - Layout
@@ -581,8 +595,6 @@ final class TranslationViewController: ViewController {
             return
         }
 
-        let serviceID = selectedServiceID
-        let serviceName = selectedServiceName
         let fromCode = selectedFromCode
         let toCode = selectedToCode
         let fileName = selectedDocument.sourceURL.lastPathComponent
@@ -621,10 +633,17 @@ final class TranslationViewController: ViewController {
         }
 
         // 登录/门禁通过后再刷新服务与额度，失败均不阻塞翻译。
-        Task { [weak self] in
-            await self?.refreshServices()
-            await self?.refreshUsage()
+        // 必须等刷新完成后再取 serviceID，否则会继续使用内置的「默认」服务。
+        await refreshServices()
+        await refreshUsage()
+
+        if Task.isCancelled {
+            setStatus(NSLocalizedString("已取消翻译", comment: ""))
+            return
         }
+
+        let serviceID = selectedServiceID
+        let serviceName = selectedServiceName
 
         let plan = SubtitleBatchPlanner.plan(
             texts: pendingTexts,

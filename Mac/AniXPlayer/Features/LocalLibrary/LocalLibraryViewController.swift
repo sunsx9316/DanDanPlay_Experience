@@ -1280,44 +1280,46 @@ private final class LocalLibraryCollectionViewCell: CollectionViewItem {
         view.addSubview(subtitleLabel)
         view.addSubview(infoLabel)
 
+        // 显式绑定父视图，避免集合视图复用/重建时视图尚未挂载导致
+        // SnapKit `equalToSuperview` 的 fatalError（本地媒体库曾因此闪退）。
         posterContainer.snp.makeConstraints { make in
-            make.top.leading.trailing.equalToSuperview()
+            make.top.leading.trailing.equalTo(view)
             make.height.equalTo(posterContainer.snp.width).multipliedBy(1.4)
         }
         placeholderView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.edges.equalTo(posterContainer)
         }
         posterView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.edges.equalTo(posterContainer)
         }
         placeholderIcon.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
-            make.centerY.equalToSuperview().offset(-8)
+            make.centerX.equalTo(placeholderView)
+            make.centerY.equalTo(placeholderView).offset(-8)
             make.width.height.equalTo(34)
         }
         placeholderExtension.snp.makeConstraints { make in
-            make.centerX.equalToSuperview()
+            make.centerX.equalTo(placeholderView)
             make.top.equalTo(placeholderIcon.snp.bottom).offset(6)
-            make.leading.trailing.equalToSuperview().inset(6)
+            make.leading.trailing.equalTo(placeholderView).inset(6)
         }
         badge.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(6)
-            make.bottom.equalToSuperview().offset(-6)
+            make.leading.equalTo(posterContainer).offset(6)
+            make.bottom.equalTo(posterContainer).offset(-6)
             make.height.equalTo(17)
             make.width.greaterThanOrEqualTo(44)
         }
         titleLabel.snp.makeConstraints { make in
             make.top.equalTo(posterContainer.snp.bottom).offset(6)
-            make.leading.trailing.equalToSuperview().inset(1)
+            make.leading.trailing.equalTo(view).inset(1)
         }
         subtitleLabel.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(2)
-            make.leading.trailing.equalToSuperview().inset(1)
+            make.leading.trailing.equalTo(view).inset(1)
         }
         infoLabel.snp.makeConstraints { make in
             make.top.equalTo(subtitleLabel.snp.bottom).offset(3)
-            make.leading.trailing.equalToSuperview().inset(1)
-            make.bottom.lessThanOrEqualToSuperview()
+            make.leading.trailing.equalTo(view).inset(1)
+            make.bottom.lessThanOrEqualTo(view)
         }
     }
 
