@@ -1,6 +1,6 @@
 # macOS 下载中心 MVP 设计（P7）
 
-> 状态：MVP + 基础能力完善已合并 win-porting（2026-11-16）
+> 状态：MVP + 基础能力完善已合并 win-porting；深度完善（后台下载/RSS/优先级/限速/路径映射）已实现（2026-11-16）
 > 范围：macOS；iOS/tvOS 不变。
 > 背景：Windows 使用 MonoTorrent + DLBT.dll；macOS 没有可直接复用的 BT 内核。
 
@@ -19,6 +19,8 @@
 - 内置 BT 内核、DHT/PT 私人种子优化、做种策略、RSS 自动下载。
 - 网页嗅探、云盘离线下载、远程下载服务器管理。
 - 边下边播/本地 Range 代理（2026-11-16 明确延后）。
+
+> 2026-11-16 深度完善已补 RSS/自动下载（MVP）、BT 单文件优先级、限速/分享率与远程路径映射；边下边播仍不做。
 
 ## 2. 引擎策略
 
@@ -115,11 +117,11 @@ DownloadTask
 
 仍未做：
 
-- 边下边播/本地 Range 代理；
-- RSS/自动下载、内置 BT 内核、退出 App 后 HTTP 后台下载；
-- BT 单文件优先级、做种/分享率策略；
-- 远程 Transmission 的播放/Finder 路径映射；
-- 远程 `.torrent` URL 在 daemon 返回 hash 前只按 URL 去重。
+- 边下边播/本地 Range 代理（继续显式延后）；
+- 内置 BT 内核（仍依赖外部 transmission-daemon）；
+- App 被系统/用户结束后由 macOS 自动重新拉起并继续 HTTP 下载（当前需用户再次启动 App 才会接管后台任务）；
+- RSS 资源站点规则/网页嗅探、任务重命名/历史、做种状态专属 UI；
+- 远程 `.torrent` URL 的 hash 预取失败时仍回退到 URL 去重（见第 10 节）。
 
 ## 6. 边下边播
 
@@ -154,3 +156,52 @@ DownloadTask
 - 2026-11-16 基础完善：系统入口、BT 引导、通知、队列/去重、缺失文件、文件选择、多文件顺序播放、默认目录与 UI 状态。
 - 验证：DownloadTests 30 个通过；macOS/iOS/tvOS Debug 构建通过；应用内 HTTP 512KB 下载完成、任务详情/删除正常；`open magnet:...` 可打开并预填添加 sheet；BT 未安装时提示与引导正常。
 - 限制：真实 Transmission/BT 未联调；App 退出后 HTTP 任务不后台继续；未实现边下边播；发布前仍需决定是否捆绑 BT 内核。
+
+## 10. 深度完善（2026-11-16）
+
+### 10.1 HTTP 后台下载
+
+- HTTP 引擎改用 `URLSessionConfiguration.background(withIdentifier:)`（标识为 `bundleID + ".download.http"`）。关闭下载窗口后任务继续；App 运行时由后台 session 接管。
+- 启动时先登记 SQLite 中的任务，再创建后台 session 并 `getAllTasks`：
+  - 系统里仍在运行的任务按 `taskDescription`（任务 UUID）重新映射为下载中，不重复启动；
+  - App 退出期间已完成的任务，通过 `knownTasks` 快照补建 Activity，移动临时文件并只发一次完成通知；
+  - 数据库已删除的遗留任务取消并清理。
+- 进度、暂停/继续/停止/删除、resumeData 持久化与清理保持原有语义；后台 session 下 resumeData 仍受 macOS 版本限制（macOS 14+ 使用 `cancel(byProducingResumeData:)`）。
+- 限制：macOS 没有 iOS 式的后台启动回调；用户退出 App 后系统可继续传输，但必须手动再次启动 App 才会 reconcile 任务。强制退出/系统重启会中断；不做 helper 进程或捆绑下载器。
+
+### 10.2 RSS / 自动下载（MVP）
+
+- 新增 `DownloadRSS.swift`：RSS 2.0（`item/title/link/enclosure url/length/pubDate/guid`）与 Atom（`entry/title/link href/published`）解析，使用 Foundation `XMLParser`；无第三方依赖。
+- 订阅字段：标题、URL、自动下载开关、可选关键词过滤；持久化到 `UserDefaults`（`download.rss.feeds`）。
+- 下载中心工具栏新增“RSS 订阅…” sheet：
+  - feed 列表、添加/删除、刷新、关键词编辑；
+  - 条目列表显示标题/日期/大小，支持“下载所选”、双击下载；
+  - 加载中/空订阅/空条目/解析或网络错误都有明确状态；
+  - 自动下载默认关闭；启用后刷新时只添加“未见过 + 关键词匹配 + 有 enclosure”的条目，单次最多 20 条，避免首次订阅灌满队列。
+- 手动下载优先 enclosure，没有时回退 link；自动下载只用 enclosure，不抓网页/不内置资源站规则。
+
+### 10.3 BT 单文件优先级
+
+- `torrent-get` 读取 `files[].priority`；`DownloadFileProgress.priority` 仅内存保存。
+- `TransmissionRPCClient.setFilePriorities(ids:indices:priority:)` 发送 `torrent-set` 的 `priority-high` / `priority-normal` / `priority-low`。
+- 详情文件表右键菜单设置高/普通/低优先级；wanted/unwanted 复选框保持不变。优先级修改失败会回滚并显示错误。
+
+### 10.4 限速、做种分享率与远程路径映射
+
+- 新增 `DownloadLimitsSheetViewController`（下载设置 → “限速与远程路径…”）：
+  - 全局下载/上传限速（KB/s，0 不限）与做种分享率（0 不启用）；
+  - “应用到 Transmission”通过 `session-set` 实时生效，成功/失败都有明确文案；未配置 daemon 或 BT 关闭时不会假装成功；
+  - 保存只记住设置，应用按钮才修改 daemon。
+- 远程路径映射：远程前缀 → 本地前缀（如 `/downloads` → `/Users/me/Downloads`），用于远程 Transmission 任务的“播放”和“在 Finder 中显示”；前缀为空时原样返回，本地 Transmission 行为不变。
+- 纯逻辑 `DownloadPathMapping` 有单元测试覆盖边界（前缀相等、子路径、组件边界、空前缀、根前缀）。
+
+### 10.5 远程 `.torrent` 去重
+
+- 对远程 `.torrent` URL，在确认 daemon 可用后先抓取（≤20MB，15 秒超时）并计算 info hash，再与磁力/本地种子任务共享 `btih:` 去重键。
+- 抓取失败或非 bencode 时回退到原有 URL 去重，不阻塞添加；代价是成功添加时 daemon 可能再次下载同一个 `.torrent` 文件。
+
+### 10.6 验证与剩余
+
+- DownloadTests 40 个通过（新增 RSS 解析/筛选/自动下载选择/持久化、路径映射、文件优先级与 `session-set` 参数）。
+- macOS Debug 构建通过；未运行真实 RSS/Transmission 网络或 UI 功能测试。
+- 仍延后：边下边播/本地 Range 代理、内置 BT 内核、RSS 资源站规则、做种状态专属 UI、App 自动重启后的后台任务接管。

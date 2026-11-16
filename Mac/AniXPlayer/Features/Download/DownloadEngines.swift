@@ -128,30 +128,160 @@ final class HTTPDownloadEngine: NSObject, DownloadEngine, URLSessionDownloadDele
     private let lock = NSLock()
     private var activities: [UUID: Activity] = [:]
     private let delegateQueue: OperationQueue
-    private var session: URLSession!
+    private var session: URLSession?
+    /// App 启动时从 SQLite 注册的任务快照。后台 session 在 App 退出期间完成的任务
+    /// 可能在 reconcile 之前就回调 delegate，需要用这里的保存目录/标题恢复。
+    private var knownTasks: [UUID: DownloadTask] = [:]
 
     override init() {
         delegateQueue = OperationQueue()
         delegateQueue.maxConcurrentOperationCount = 1
         delegateQueue.name = "com.anixplayer.download.http"
         super.init()
-
-        let configuration = URLSessionConfiguration.default
-        configuration.timeoutIntervalForRequest = 30
-        configuration.timeoutIntervalForResource = 7 * 24 * 3600
-        configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
-        configuration.httpShouldSetCookies = false
-        session = URLSession(configuration: configuration, delegate: self, delegateQueue: delegateQueue)
     }
 
     deinit {
-        session.invalidateAndCancel()
+        session?.invalidateAndCancel()
+    }
+
+    /// macOS 后台下载标识必须稳定；同一进程内同标识只能存在一个 session。
+    static var backgroundSessionIdentifier: String {
+        let bundleID = Bundle.main.bundleIdentifier ?? "com.anixplayer.mac.AniXPlayer"
+        return bundleID + ".download.http"
     }
 
     var activeCount: Int {
         lock.lock()
         defer { lock.unlock() }
         return activities.values.filter { $0.status == .downloading && $0.sessionTask != nil }.count
+    }
+
+    // MARK: Background session
+
+    /// 在创建 URLSession 之前登记当前任务，供 App 重启后恢复后台任务映射。
+    func registerKnownTasks(_ tasks: [DownloadTask]) {
+        lock.lock()
+        knownTasks = Dictionary(uniqueKeysWithValues: tasks.map { ($0.id, $0) })
+        lock.unlock()
+    }
+
+    func forget(taskID: UUID) {
+        lock.lock()
+        knownTasks.removeValue(forKey: taskID)
+        lock.unlock()
+    }
+
+    /// 重建 background session 并接管上一个进程遗留的任务。
+    /// 完成回调在主线程；`updates` 用于让管理器把“仍在后台运行”的任务恢复为下载中。
+    func reconcileBackgroundTasks(completion: @escaping ([DownloadTaskUpdate]) -> Void) {
+        let session = ensureSession()
+        session.getAllTasks { [weak self] sessionTasks in
+            guard let self else {
+                DispatchQueue.main.async { completion([]) }
+                return
+            }
+
+            var updates: [DownloadTaskUpdate] = []
+            var orphanTasks: [URLSessionTask] = []
+
+            self.lock.lock()
+            for sessionTask in sessionTasks {
+                guard let downloadTask = sessionTask as? URLSessionDownloadTask,
+                      let taskID = self.taskID(from: sessionTask) else {
+                    continue
+                }
+
+                if let known = self.knownTasks[taskID] {
+                    if known.status == .completed || known.status == .failed {
+                        orphanTasks.append(sessionTask)
+                        continue
+                    }
+                    if known.status == .paused || known.status == .stopped {
+                        orphanTasks.append(sessionTask)
+                        continue
+                    }
+                    if self.activities[taskID] == nil {
+                        let activity = self.makeActivity(for: known, downloadTask: downloadTask)
+                        activity.status = .downloading
+                        activity.downloadedBytes = max(0, downloadTask.countOfBytesReceived)
+                        activity.totalBytes = max(0, downloadTask.countOfBytesExpectedToReceive)
+                        if activity.totalBytes > 0 {
+                            activity.progress = min(
+                                max(Double(activity.downloadedBytes) / Double(activity.totalBytes), 0),
+                                1
+                            )
+                        }
+                        activity.sessionTask = downloadTask
+                        self.activities[taskID] = activity
+                        updates.append(self.makeUpdate(activity))
+                    }
+                } else {
+                    // 数据库里已经没有这个任务（例如删除后进程退出）：取消遗留后台下载。
+                    orphanTasks.append(sessionTask)
+                }
+            }
+            self.lock.unlock()
+
+            orphanTasks.forEach { $0.cancel() }
+            DispatchQueue.main.async {
+                completion(updates)
+            }
+        }
+    }
+
+    private func ensureSession() -> URLSession {
+        lock.lock()
+        if let session {
+            lock.unlock()
+            return session
+        }
+        let configuration = URLSessionConfiguration.background(
+            withIdentifier: Self.backgroundSessionIdentifier
+        )
+        configuration.timeoutIntervalForRequest = 30
+        configuration.timeoutIntervalForResource = 7 * 24 * 3600
+        configuration.requestCachePolicy = .reloadIgnoringLocalCacheData
+        configuration.httpShouldSetCookies = false
+        configuration.isDiscretionary = false
+        if #available(macOS 11.0, *) {
+            configuration.sessionSendsLaunchEvents = true
+        }
+        let created = URLSession(
+            configuration: configuration,
+            delegate: self,
+            delegateQueue: delegateQueue
+        )
+        session = created
+        lock.unlock()
+        return created
+    }
+
+    /// 在 delegate 回调早于 reconcile 到达时，用启动时登记的任务补建 activity。
+    /// 调用方必须已持有 lock。
+    private func makeActivity(
+        for task: DownloadTask,
+        downloadTask: URLSessionDownloadTask
+    ) -> Activity {
+        let sourceURL = Self.validHTTPURL(task.source)
+            ?? downloadTask.originalRequest?.url
+            ?? downloadTask.currentRequest?.url
+            ?? URL(string: "https://invalid.local/")!
+        let access = DownloadFileAccess.resolveDirectory(
+            path: task.savePath,
+            bookmark: task.savePathBookmark
+        )
+        let activity = Activity(
+            task: task,
+            sourceURL: sourceURL,
+            saveDirectory: access.url,
+            securityScopedURL: access.securityScopedURL
+        )
+        activity.title = task.displayTitle
+        activity.filePaths = task.filePaths
+        activity.downloadedBytes = max(0, task.downloadedBytes)
+        activity.totalBytes = max(0, task.totalBytes)
+        activity.progress = task.normalizedProgress
+        return activity
     }
 
     // MARK: Protocol
@@ -182,6 +312,7 @@ final class HTTPDownloadEngine: NSObject, DownloadEngine, URLSessionDownloadDele
 
         let resumeURL = Self.resumeDataURL(for: task.id)
         let resumeData = try? Data(contentsOf: resumeURL)
+        let session = ensureSession()
 
         lock.lock()
         let activity: Activity
@@ -301,6 +432,7 @@ final class HTTPDownloadEngine: NSObject, DownloadEngine, URLSessionDownloadDele
         var paths: [String] = []
 
         lock.lock()
+        knownTasks.removeValue(forKey: task.id)
         if let activity = activities.removeValue(forKey: task.id) {
             target = activity.sessionTask
             scoped = activity.securityScopedURL
@@ -341,8 +473,7 @@ final class HTTPDownloadEngine: NSObject, DownloadEngine, URLSessionDownloadDele
 
         var update: DownloadTaskUpdate?
         lock.lock()
-        if let activity = activities[taskID],
-           activity.sessionTask?.taskIdentifier == downloadTask.taskIdentifier {
+        if let activity = activityForCallback(downloadTask, taskID: taskID) {
             applyResponseMetadataIfNeeded(activity, task: downloadTask)
             activity.status = .downloading
             activity.downloadedBytes = totalBytesWritten
@@ -388,8 +519,11 @@ final class HTTPDownloadEngine: NSObject, DownloadEngine, URLSessionDownloadDele
         var scopedToRelease: URL?
 
         lock.lock()
-        guard let activity = activities[taskID],
-              activity.sessionTask?.taskIdentifier == downloadTask.taskIdentifier else {
+        guard let activity = activityForCallback(
+            downloadTask,
+            taskID: taskID,
+            allowInactive: true
+        ) else {
             lock.unlock()
             return
         }
@@ -465,8 +599,12 @@ final class HTTPDownloadEngine: NSObject, DownloadEngine, URLSessionDownloadDele
         var scopedToRelease: URL?
 
         lock.lock()
-        guard let activity = activities[taskID],
-              activity.sessionTask?.taskIdentifier == task.taskIdentifier else {
+        guard let downloadTask = task as? URLSessionDownloadTask,
+              let activity = activityForCallback(
+                  downloadTask,
+                  taskID: taskID,
+                  allowInactive: true
+              ) else {
             lock.unlock()
             return
         }
@@ -512,6 +650,52 @@ final class HTTPDownloadEngine: NSObject, DownloadEngine, URLSessionDownloadDele
     private func taskID(from task: URLSessionTask) -> UUID? {
         guard let value = task.taskDescription else { return nil }
         return UUID(uuidString: value)
+    }
+
+    /// 取 activity；若后台任务在 reconcile 之前回调，则用 knownTasks 补建。
+    /// 调用方必须已持有 lock。
+    private func activityForCallback(
+        _ downloadTask: URLSessionDownloadTask,
+        taskID: UUID,
+        allowInactive: Bool = false
+    ) -> Activity? {
+        if let activity = activities[taskID] {
+            guard activity.status != .completed,
+                  activity.status != .failed else {
+                return nil
+            }
+            let isInactive = activity.status == .paused || activity.status == .stopped
+            if isInactive, !allowInactive { return nil }
+            if activity.sessionTask == nil {
+                activity.sessionTask = downloadTask
+            }
+            guard activity.sessionTask?.taskIdentifier == downloadTask.taskIdentifier else {
+                return nil
+            }
+            return activity
+        }
+
+        guard let known = knownTasks[taskID],
+              known.status != .completed,
+              known.status != .failed,
+              known.status != .paused,
+              known.status != .stopped else {
+            return nil
+        }
+
+        let activity = makeActivity(for: known, downloadTask: downloadTask)
+        activity.status = .downloading
+        activity.sessionTask = downloadTask
+        activity.downloadedBytes = max(0, downloadTask.countOfBytesReceived)
+        activity.totalBytes = max(0, downloadTask.countOfBytesExpectedToReceive)
+        if activity.totalBytes > 0 {
+            activity.progress = min(
+                max(Double(activity.downloadedBytes) / Double(activity.totalBytes), 0),
+                1
+            )
+        }
+        activities[taskID] = activity
+        return activity
     }
 
     private func makeUpdate(_ activity: Activity) -> DownloadTaskUpdate {
@@ -604,6 +788,10 @@ final class HTTPDownloadEngine: NSObject, DownloadEngine, URLSessionDownloadDele
 
     private static func resumeDataURL(for taskID: UUID) -> URL {
         resumeDataDirectory().appendingPathComponent("\(taskID.uuidString).resume")
+    }
+
+    static func hasResumeData(for taskID: UUID) -> Bool {
+        FileManager.default.fileExists(atPath: resumeDataURL(for: taskID).path)
     }
 
     private static func writeResumeData(_ data: Data, for taskID: UUID) {
@@ -717,6 +905,21 @@ final class TransmissionRPCEngine: DownloadEngine {
             ids: [engineID],
             indices: indices,
             wanted: wanted
+        )
+    }
+
+    func setFilePriority(
+        task: DownloadTask,
+        indices: [Int],
+        priority: TransmissionFilePriority
+    ) async throws {
+        guard let engineID = engineID(for: task) else {
+            throw TransmissionRPCError.unavailable(TransmissionRPCError.notDetectedMessage)
+        }
+        try await clientSnapshot().setFilePriorities(
+            ids: [engineID],
+            indices: indices,
+            priority: priority
         )
     }
 

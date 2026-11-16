@@ -237,6 +237,11 @@ final class DownloadPreferences {
         static let maxConcurrent = "download.maxConcurrent"
         static let notificationsEnabled = "download.notificationsEnabled"
         static let btOnboardingDismissed = "download.btOnboardingDismissed"
+        static let downloadSpeedLimitKBps = "download.speedLimit.downloadKBps"
+        static let uploadSpeedLimitKBps = "download.speedLimit.uploadKBps"
+        static let seedRatioLimit = "download.seedRatioLimit"
+        static let remotePathPrefix = "download.pathMapping.remotePrefix"
+        static let localPathPrefix = "download.pathMapping.localPrefix"
     }
 
     private let defaults: UserDefaults
@@ -360,6 +365,62 @@ final class DownloadPreferences {
 
     func setBTOnboardingDismissed(_ dismissed: Bool) {
         defaults.set(dismissed, forKey: Key.btOnboardingDismissed)
+    }
+
+    // MARK: Transfer limits / remote path mapping
+
+    /// 0 表示不限制；单位 KB/s。
+    var downloadSpeedLimitKBps: Int {
+        max(0, defaults.integer(forKey: Key.downloadSpeedLimitKBps))
+    }
+
+    /// 0 表示不限制；单位 KB/s。
+    var uploadSpeedLimitKBps: Int {
+        max(0, defaults.integer(forKey: Key.uploadSpeedLimitKBps))
+    }
+
+    /// 0 表示不启用分享率限制。
+    var seedRatioLimit: Double {
+        max(0, defaults.double(forKey: Key.seedRatioLimit))
+    }
+
+    var remotePathPrefix: String {
+        defaults.string(forKey: Key.remotePathPrefix)?
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+    }
+
+    var localPathPrefix: String {
+        defaults.string(forKey: Key.localPathPrefix)?
+            .trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+    }
+
+    func setTransferLimits(
+        downloadKBps: Int,
+        uploadKBps: Int,
+        seedRatio: Double
+    ) {
+        defaults.set(max(0, downloadKBps), forKey: Key.downloadSpeedLimitKBps)
+        defaults.set(max(0, uploadKBps), forKey: Key.uploadSpeedLimitKBps)
+        defaults.set(max(0, seedRatio), forKey: Key.seedRatioLimit)
+    }
+
+    func setRemotePathMapping(remotePrefix: String, localPrefix: String) {
+        defaults.set(
+            remotePrefix.trimmingCharacters(in: .whitespacesAndNewlines),
+            forKey: Key.remotePathPrefix
+        )
+        defaults.set(
+            localPrefix.trimmingCharacters(in: .whitespacesAndNewlines),
+            forKey: Key.localPathPrefix
+        )
+    }
+
+    var transferLimits: TransmissionTransferLimits {
+        TransmissionTransferLimits(
+            downloadKBps: downloadSpeedLimitKBps,
+            uploadKBps: uploadSpeedLimitKBps,
+            seedRatio: seedRatioLimit
+        )
     }
 
     var rpcConfiguration: TransmissionRPCConfiguration {
