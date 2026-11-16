@@ -1,0 +1,58 @@
+{
+  "api": "8",
+  "type": "anime",
+  "name": "xfdmnext",
+  "version": "1.1",
+  "baseURL": "https://next.xifanacg.com/",
+  "searchMode": "api",
+  "chapterMode": "api",
+  "searchURL": "",
+  "searchList": "",
+  "searchName": "",
+  "searchResult": "",
+  "chapterRoads": "",
+  "chapterResult": "",
+  "searchApiConfig": {
+    "request": {
+      "method": "POST",
+      "url": "https://api.xifanacg.com/rest/v1/rpc/search_animes",
+      "headers": {
+        "apikey": "test-key",
+        "Authorization": "Bearer test-key"
+      },
+      "bodyType": "json",
+      "body": {
+        "search_term": "@keyword",
+        "page_number": 1,
+        "items_per_page": 24
+      }
+    },
+    "listPath": "$[*]",
+    "namePath": "$.title",
+    "sourcePath": "$.id"
+  },
+  "chapterApiConfig": {
+    "request": {
+      "method": "POST",
+      "url": "https://api.xifanacg.com/rest/v1/rpc/get_anime_detail",
+      "headers": {
+        "apikey": "test-key",
+        "Authorization": "Bearer test-key"
+      },
+      "bodyType": "json",
+      "body": {
+        "p_id": "@source"
+      }
+    },
+    "format": "nested",
+    "roadsPath": "$.sources[*]",
+    "roadNamePath": "$.name",
+    "episodesPath": "$.episodes[*]",
+    "episodeNamePath": "$.title",
+    "episodeUrlPath": "$.id",
+    "episodePage": {
+      "url": "https://next.xifanacg.com/anime/@source/play/@episodeUrl",
+      "query": {}
+    }
+  }
+}

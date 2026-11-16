@@ -1,0 +1,8 @@
+{
+  "data": {
+    "episodes": [
+      { "episodeLabel": "第1话", "episodeOrder": 1 },
+      { "episodeLabel": "第2话", "episodeOrder": 2 }
+    ]
+  }
+}

@@ -26,12 +26,27 @@ final class OnlineHTMLDocument {
         // 页面在进入这里之前已按响应头/meta 解码成 Swift String。
         // 直接传 xmlString 可以让 libtidy 按 UTF-8 处理；若先转 Data，
         // tidy 可能按 Latin-1 解析，导致中文标题乱码。
-        do {
-            self.document = try XMLDocument(
-                xmlString: html,
-                options: [.documentTidyHTML, .nodePreserveAll]
-            )
-        } catch {
+        //
+        // Tidy HTML 会保留 HTML4 的树结构和未闭合的 <li> 等，但会丢掉
+        // <section>/<article> 等 HTML5 标签；Tidy XML 能保留这些标签，
+        // 但对未闭合标签的推断不如 Tidy HTML。优先 Tidy HTML，只有它确实
+        // 丢掉了规则可能用到的 HTML5 标签时才改用 Tidy XML。
+        let tidyHTML = try? XMLDocument(
+            xmlString: html,
+            options: [.documentTidyHTML, .nodePreserveAll]
+        )
+        let tidyXML = try? XMLDocument(
+            xmlString: html,
+            options: [.documentTidyXML, .nodePreserveAll]
+        )
+
+        if let tidyHTML, !Self.dropsHTML5Tags(html: html, document: tidyHTML) {
+            self.document = tidyHTML
+        } else if let tidyXML {
+            self.document = tidyXML
+        } else if let tidyHTML {
+            self.document = tidyHTML
+        } else {
             // 个别页面 tidy 失败，但仍是合法 XML/HTML 片段，再尝试不 tidy。
             do {
                 self.document = try XMLDocument(xmlString: html, options: [.nodePreserveAll])
@@ -40,6 +55,18 @@ final class OnlineHTMLDocument {
             }
         }
         self.baseURL = baseURL
+    }
+
+    private static func dropsHTML5Tags(html: String, document: XMLDocument) -> Bool {
+        let lowered = html.lowercased()
+        let tags = ["section", "article", "nav", "main", "header", "footer", "aside"]
+        for tag in tags where lowered.contains("<\(tag)") {
+            let count = (try? document.nodes(forXPath: "//\(tag)"))?.count ?? 0
+            if count == 0 {
+                return true
+            }
+        }
+        return false
     }
 
     // MARK: CSS
@@ -83,8 +110,65 @@ final class OnlineHTMLDocument {
     }
 
     func href(of element: XMLElement) -> URL? {
-        guard let raw = attribute("href", of: element) else { return nil }
+        return directHref(of: element)
+    }
+
+    /// 搜索/选集规则的 XPath 可能命中容器、文本节点或行内元素。
+    /// 依次查找自身 href、向下最近的 `<a href>`、向上最近的 href。
+    func href(of node: XMLNode) -> URL? {
+        if let element = node as? XMLElement {
+            if let url = directHref(of: element) {
+                return url
+            }
+            if let descendant = firstDescendantAnchor(in: element),
+               let url = directHref(of: descendant) {
+                return url
+            }
+            return ancestorHref(of: element)
+        }
+
+        var parent = node.parent
+        while let current = parent {
+            if let element = current as? XMLElement {
+                if let url = directHref(of: element) {
+                    return url
+                }
+                if let descendant = firstDescendantAnchor(in: element),
+                   let url = directHref(of: descendant) {
+                    return url
+                }
+            }
+            parent = current.parent
+        }
+        return nil
+    }
+
+    private func directHref(of element: XMLElement) -> URL? {
+        guard let raw = attribute("href", of: element)?
+            .trimmingCharacters(in: .whitespacesAndNewlines),
+              !raw.isEmpty else {
+            return nil
+        }
         return Self.absoluteURL(raw, baseURL: baseURL)
+    }
+
+    private func firstDescendantAnchor(in element: XMLElement) -> XMLElement? {
+        guard let nodes = try? element.nodes(forXPath: ".//a[@href]") else {
+            return nil
+        }
+        return nodes.compactMap { $0 as? XMLElement }.first
+    }
+
+    private func ancestorHref(of element: XMLElement) -> URL? {
+        var parent = element.parent
+        while let current = parent {
+            if let ancestor = current as? XMLElement,
+               let url = directHref(of: ancestor) {
+                return url
+            }
+            parent = current.parent
+        }
+        return nil
     }
 
     func text(of node: XMLNode?) -> String {
@@ -105,26 +189,7 @@ final class OnlineHTMLDocument {
     }
 
     static func absoluteURL(_ raw: String, baseURL: URL?) -> URL? {
-        var value = raw.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !value.isEmpty else { return nil }
-
-        // HTML 中常见的转义；XML 解析通常已经处理 &amp;，这里兜底。
-        value = value
-            .replacingOccurrences(of: "&amp;", with: "&")
-            .replacingOccurrences(of: "\\/", with: "/")
-
-        let lowered = value.lowercased()
-        guard !lowered.hasPrefix("javascript:"), !lowered.hasPrefix("mailto:") else {
-            return nil
-        }
-        guard value != "#" else { return nil }
-
-        if let url = URL(string: value, relativeTo: baseURL)?.absoluteURL,
-           let scheme = url.scheme?.lowercased(),
-           scheme == "http" || scheme == "https" {
-            return url
-        }
-        return nil
+        return KazumiURL.resolve(raw, base: baseURL)
     }
 
     static func origin(of url: URL) -> URL? {
@@ -135,6 +200,7 @@ final class OnlineHTMLDocument {
         if let port = url.port {
             components.port = port
         }
+        components.path = "/"
         return components.url
     }
 }
@@ -155,6 +221,16 @@ enum OnlineXPath {
         return parts.map { part -> String in
             let value = part.trimmingCharacters(in: .whitespacesAndNewlines)
             guard !value.isEmpty else { return "" }
+            if value == "." {
+                return "self::node()"
+            }
+            if value == ".." {
+                return "parent::node()"
+            }
+            if value == "/" || value == "//" {
+                // 规则里偶发只有 `/`；容器内求值等价于当前节点本身。
+                return "self::node()"
+            }
             if value.hasPrefix("./") || value.hasPrefix(".//") || value.hasPrefix("(") {
                 return value
             }

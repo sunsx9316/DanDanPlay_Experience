@@ -9212,6 +9212,902 @@
           }
         }
       }
+    },
+    "第 %d 集": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Episode %d"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "第 %d 集"
+          }
+        }
+      }
+    },
+    "Kazumi 规则": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kazumi rule"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kazumi 规则"
+          }
+        }
+      }
+    },
+    "API 搜索": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API search"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API 搜索"
+          }
+        }
+      }
+    },
+    "XPath 搜索": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "XPath search"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "XPath 搜索"
+          }
+        }
+      }
+    },
+    "API 选集": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API episodes"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API 选集"
+          }
+        }
+      }
+    },
+    "XPath 选集": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "XPath episodes"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "XPath 选集"
+          }
+        }
+      }
+    },
+    "站点内部条目 %@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Site item %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "站点内部条目 %@"
+          }
+        }
+      }
+    },
+    "没有可用的在线源 · %d 条规则未加载": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No online sources available · %d rules not loaded"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有可用的在线源 · %d 条规则未加载"
+          }
+        }
+      }
+    },
+    " · %d 条规则未加载": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " · %d rules not loaded"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " · %d 条规则未加载"
+          }
+        }
+      }
+    },
+    "没有结果；以下规则未加载：\n%@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No results; these rules were not loaded:\n%@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有结果；以下规则未加载：\n%@"
+          }
+        }
+      }
+    },
+    "以下规则未加载：\n%@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "These rules were not loaded:\n%@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "以下规则未加载：\n%@"
+          }
+        }
+      }
+    },
+    "未命名规则": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unnamed rule"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未命名规则"
+          }
+        }
+      }
+    },
+    "规则缺少名称。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The rule has no name."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "规则缺少名称。"
+          }
+        }
+      }
+    },
+    "搜索模式为 API，但缺少 searchApiConfig。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search mode is API but searchApiConfig is missing."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜索模式为 API，但缺少 searchApiConfig。"
+          }
+        }
+      }
+    },
+    "搜索 API 配置缺少请求地址。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The search API config has no request URL."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜索 API 配置缺少请求地址。"
+          }
+        }
+      }
+    },
+    "搜索 API 配置缺少 listPath。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The search API config has no listPath."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜索 API 配置缺少 listPath。"
+          }
+        }
+      }
+    },
+    "XPath 搜索规则缺少 searchURL。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The XPath search rule has no searchURL."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "XPath 搜索规则缺少 searchURL。"
+          }
+        }
+      }
+    },
+    "XPath 搜索规则缺少 searchList。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The XPath search rule has no searchList."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "XPath 搜索规则缺少 searchList。"
+          }
+        }
+      }
+    },
+    "XPath 搜索规则缺少 searchResult。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The XPath search rule has no searchResult."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "XPath 搜索规则缺少 searchResult。"
+          }
+        }
+      }
+    },
+    "选集模式为 API，但缺少 chapterApiConfig。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Episode mode is API but chapterApiConfig is missing."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选集模式为 API，但缺少 chapterApiConfig。"
+          }
+        }
+      }
+    },
+    "选集 API 配置缺少请求地址。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The episode API config has no request URL."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选集 API 配置缺少请求地址。"
+          }
+        }
+      }
+    },
+    "分隔选集配置缺少 roadEpisodesPath。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The delimited episode config has no roadEpisodesPath."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "分隔选集配置缺少 roadEpisodesPath。"
+          }
+        }
+      }
+    },
+    "分隔选集配置的线路/剧集/字段分隔符不能为空。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Road, episode, and field separators cannot be empty."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "分隔选集配置的线路/剧集/字段分隔符不能为空。"
+          }
+        }
+      }
+    },
+    "嵌套选集配置缺少 episodesPath。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The nested episode config has no episodesPath."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "嵌套选集配置缺少 episodesPath。"
+          }
+        }
+      }
+    },
+    "嵌套选集配置缺少 episodeUrlPath 或 episodePage。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The nested episode config has no episodeUrlPath or episodePage."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "嵌套选集配置缺少 episodeUrlPath 或 episodePage。"
+          }
+        }
+      }
+    },
+    "XPath 选集规则缺少 chapterRoads。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The XPath episode rule has no chapterRoads."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "XPath 选集规则缺少 chapterRoads。"
+          }
+        }
+      }
+    },
+    "XPath 选集规则缺少 chapterResult。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The XPath episode rule has no chapterResult."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "XPath 选集规则缺少 chapterResult。"
+          }
+        }
+      }
+    },
+    "规则文件无法读取。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The rule file could not be read."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "规则文件无法读取。"
+          }
+        }
+      }
+    },
+    "规则文件不是有效 JSON。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The rule file is not valid JSON."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "规则文件不是有效 JSON。"
+          }
+        }
+      }
+    },
+    "JSONPath 无效：%@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Invalid JSONPath: %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "JSONPath 无效：%@"
+          }
+        }
+      }
+    },
+    "JSONPath 暂不支持：%@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unsupported JSONPath: %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "JSONPath 暂不支持：%@"
+          }
+        }
+      }
+    },
+    "规则模板缺少变量 @%@。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The rule template is missing variable @%@."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "规则模板缺少变量 @%@。"
+          }
+        }
+      }
+    },
+    "API 规则只支持 GET/POST，当前为 %@。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API rules support only GET/POST; got %@."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API 规则只支持 GET/POST，当前为 %@。"
+          }
+        }
+      }
+    },
+    "API 请求地址为空。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The API request URL is empty."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "API 请求地址为空。"
+          }
+        }
+      }
+    },
+    "%@ 返回的不是有效 JSON。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ did not return valid JSON."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ 返回的不是有效 JSON。"
+          }
+        }
+      }
+    },
+    "选集 API 返回的不是有效 JSON。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The episode API did not return valid JSON."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选集 API 返回的不是有效 JSON。"
+          }
+        }
+      }
+    },
+    "选集 API 的变量 %@ 未匹配到值。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Episode API variable %@ matched no value."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选集 API 的变量 %@ 未匹配到值。"
+          }
+        }
+      }
+    },
+    "该规则没有可用的搜索地址。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This rule has no usable search URL."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "该规则没有可用的搜索地址。"
+          }
+        }
+      }
+    },
+    "该规则缺少 searchList，无法解析搜索结果。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This rule has no searchList, so search results cannot be parsed."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "该规则缺少 searchList，无法解析搜索结果。"
+          }
+        }
+      }
+    },
+    "该规则使用 API 搜索，但缺少 searchApiConfig。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This rule uses API search but has no searchApiConfig."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "该规则使用 API 搜索，但缺少 searchApiConfig。"
+          }
+        }
+      }
+    },
+    "该条目没有可用的作品页地址。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This item has no usable detail page URL."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "该条目没有可用的作品页地址。"
+          }
+        }
+      }
+    },
+    "该规则使用站点内部条目 ID，但选集模式为 XPath，缺少详情页地址；当前组合暂不支持。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This rule uses an internal site ID, but XPath episodes need a detail page URL; this combination is not supported yet."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "该规则使用站点内部条目 ID，但选集模式为 XPath，缺少详情页地址；当前组合暂不支持。"
+          }
+        }
+      }
+    },
+    "该规则使用 API 选集，但缺少 chapterApiConfig。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This rule uses API episodes but has no chapterApiConfig."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "该规则使用 API 选集，但缺少 chapterApiConfig。"
+          }
+        }
+      }
+    },
+    "该规则使用 API 选集，但搜索结果没有来源标识。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This rule uses API episodes, but the search result has no source token."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "该规则使用 API 选集，但搜索结果没有来源标识。"
+          }
+        }
+      }
+    },
+    "不支持的 HTTP 方法：%@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unsupported HTTP method: %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "不支持的 HTTP 方法：%@"
+          }
+        }
+      }
+    },
+    "请求体不是有效的 JSON。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The request body is not valid JSON."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请求体不是有效的 JSON。"
+          }
+        }
+      }
+    },
+    "没有可播放的剧集。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "There are no playable episodes."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有可播放的剧集。"
+          }
+        }
+      }
+    },
+    "共 %d 个源，已启用 %d 个": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d sources, %d enabled"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "共 %d 个源，已启用 %d 个"
+          }
+        }
+      }
+    },
+    " · API 模式 %d 个": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " · %d in API mode"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " · API 模式 %d 个"
+          }
+        }
+      }
+    },
+    "没有可用的在线源": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No online sources available"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有可用的在线源"
+          }
+        }
+      }
+    },
+    "已加载 %d 个源（Animeko %d / Kazumi %d）": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Loaded %d sources (Animeko %d / Kazumi %d)"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已加载 %d 个源（Animeko %d / Kazumi %d）"
+          }
+        }
+      }
+    },
+    "换一个关键词，或检查源是否可用": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Try another keyword or check whether the sources are available"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "换一个关键词，或检查源是否可用"
+          }
+        }
+      }
+    },
+    "剧集解析失败：%@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Failed to parse episodes: %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "剧集解析失败：%@"
+          }
+        }
+      }
+    },
+    "另有以下规则未加载：\n%@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "These rules were also not loaded:\n%@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "另有以下规则未加载：\n%@"
+          }
+        }
+      }
+    },
+    " · 缺少详情页模板，XPath 选集不可用": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " · No detail page template; XPath episodes are unavailable"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": " · 缺少详情页模板，XPath 选集不可用"
+          }
+        }
+      }
+    },
+    "搜索 API": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search API"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜索 API"
+          }
+        }
+      }
     }
   },
   "version": "1.1"

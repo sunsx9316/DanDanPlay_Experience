@@ -1,0 +1,53 @@
+{
+  "api": "9",
+  "type": "anime",
+  "name": "giriGiriLove",
+  "version": "2.7",
+  "baseURL": "https://ani.girigirilove.com",
+  "searchMode": "api",
+  "chapterMode": "api",
+  "searchApiConfig": {
+    "request": {
+      "method": "GET",
+      "url": "https://m3u8.girigirilove.com/api.php/Vod/get_list",
+      "query": {
+        "vod_name": "@keyword",
+        "offset": "0",
+        "limit": "24"
+      }
+    },
+    "listPath": "$.info.rows[*]",
+    "namePath": "$.vod_name",
+    "sourcePath": "$.vod_id",
+    "sourceTemplate": ""
+  },
+  "chapterApiConfig": {
+    "request": {
+      "method": "GET",
+      "url": "https://m3u8.girigirilove.com/api.php/Vod/get_detail",
+      "query": {
+        "vod_id": "@source"
+      }
+    },
+    "format": "delimited",
+    "roadNamesPath": "$.info.vod_play_from",
+    "roadEpisodesPath": "$.info.vod_play_url",
+    "roadSeparator": "$$$",
+    "episodeSeparator": "#",
+    "fieldSeparator": "$",
+    "episodePage": {
+      "url": "https://pl.girigirilove.com/addons/aplyer/atom.php",
+      "query": {
+        "key": "0",
+        "url": "@episodeUrl"
+      }
+    }
+  },
+  "searchURL": "",
+  "searchList": "",
+  "searchName": "",
+  "searchResult": "",
+  "chapterRoads": "",
+  "chapterResult": "",
+  "referer": ""
+}

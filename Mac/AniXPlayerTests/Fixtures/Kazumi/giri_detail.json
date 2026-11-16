@@ -1,0 +1,7 @@
+{
+  "code": 1,
+  "info": {
+    "vod_play_from": "线路A$$$线路B",
+    "vod_play_url": "第1集$https://a.example.com/play/1#第2集$https://a.example.com/play/2$$$第1集$https://b.example.com/play/1#第2集$https://b.example.com/play/2"
+  }
+}

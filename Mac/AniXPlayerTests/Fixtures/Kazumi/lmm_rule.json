@@ -1,0 +1,34 @@
+{
+  "api": "9",
+  "type": "anime",
+  "name": "LMM",
+  "version": "2.4",
+  "muliSources": true,
+  "useWebview": true,
+  "usePost": false,
+  "useLegacyParser": false,
+  "baseURL": "https://www.lmm22.com/",
+  "searchURL": "",
+  "searchMode": "api",
+  "chapterMode": "xpath",
+  "searchApiConfig": {
+    "request": {
+      "method": "GET",
+      "url": "https://www.lmm22.com/index.php/ajax/suggest",
+      "query": {
+        "mid": "1",
+        "wd": "@keyword"
+      }
+    },
+    "listPath": "$.list[*]",
+    "namePath": "$.name",
+    "sourcePath": "$.id",
+    "sourceTemplate": "https://www.lmm22.com/index.php/vod/detail/id/@source.html"
+  },
+  "searchList": "",
+  "searchName": "",
+  "searchResult": "",
+  "chapterRoads": "//div[contains(@class, 'module-player-list')]",
+  "chapterResult": ".//a[contains(@href, '/play/')]",
+  "referer": ""
+}

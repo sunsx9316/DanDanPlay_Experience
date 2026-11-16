@@ -20,8 +20,15 @@ final class OnlinePlaybackService {
     // MARK: - Sources
 
     func loadSources(forceRefresh: Bool = false, progress: ((String) -> Void)? = nil) async throws -> [OnlineMediaSource] {
-        let result = try await store.loadSources(forceRefresh: forceRefresh, progress: progress)
+        let result = try await loadSourceResult(forceRefresh: forceRefresh, progress: progress)
         return result.sources
+    }
+
+    func loadSourceResult(
+        forceRefresh: Bool = false,
+        progress: ((String) -> Void)? = nil
+    ) async throws -> OnlineSourceLoadResult {
+        return try await store.loadSources(forceRefresh: forceRefresh, progress: progress)
     }
 
     func enabledSources(from sources: [OnlineMediaSource], engine: OnlineSourceEngine? = nil) -> [OnlineMediaSource] {
@@ -79,39 +86,18 @@ final class OnlinePlaybackService {
             return collected
         }
 
-        var failures: [String: String] = [:]
-        var subjects: [OnlineSubject] = []
-        var seen = Set<String>()
         let pinnedSourceIDs = Set(OnlineSourcePreferences.pinnedSourceIDs)
-
-        for result in results.sorted(by: { lhs, rhs in
-            let lhsPinned = pinnedSourceIDs.contains(lhs.source.id)
-            let rhsPinned = pinnedSourceIDs.contains(rhs.source.id)
-            if lhsPinned != rhsPinned {
-                return lhsPinned
-            }
-            if lhs.source.tier != rhs.source.tier {
-                return lhs.source.tier < rhs.source.tier
-            }
-            if lhs.source.name != rhs.source.name {
-                return lhs.source.name.localizedStandardCompare(rhs.source.name) == .orderedAscending
-            }
-            return false
-        }) {
-            if let error = result.error {
-                failures[result.source.name] = error.localizedDescription
-                continue
-            }
-            for subject in result.subjects {
-                guard seen.insert(subject.url.absoluteString).inserted else { continue }
-                subjects.append(subject)
-            }
+        let merged = results.map {
+            OnlineSearchSourceResult(
+                source: $0.source,
+                subjects: $0.subjects,
+                error: $0.error
+            )
         }
-
-        return OnlineSearchOutcome(
-            subjects: Array(subjects.prefix(200)),
-            failures: failures,
-            sourceCount: usable.count
+        return OnlineSearchMerger.makeOutcome(
+            results: merged,
+            sourceCount: usable.count,
+            pinnedSourceIDs: pinnedSourceIDs
         )
     }
 
@@ -149,7 +135,9 @@ final class OnlinePlaybackService {
         progress: ((String) -> Void)? = nil
     ) async throws -> OnlinePlaylistPreparation {
         guard startIndex >= 0, startIndex < episodes.count else {
-            throw OnlinePlaybackError.videoNotFound(subject.url)
+            throw OnlinePlaybackError.unsupportedRule(
+                NSLocalizedString("没有可播放的剧集。", comment: "")
+            )
         }
 
         await OnlinePlaybackSession.shared.end()
@@ -237,7 +225,8 @@ final class OnlinePlaybackService {
                 let candidate = OnlineEpisode(
                     title: episode.title,
                     url: pageURL,
-                    sort: episode.sort
+                    sort: episode.sort,
+                    roadName: episode.roadName
                 )
                 let match = try await resolveMedia(source: source, episode: candidate, progress: progress)
                 progress?(NSLocalizedString("正在验证视频源…", comment: ""))
