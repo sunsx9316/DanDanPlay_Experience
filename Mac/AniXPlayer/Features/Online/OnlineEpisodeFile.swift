@@ -52,13 +52,12 @@ final class OnlineEpisodeFile: File {
         self.pageURL = pageURL
         self.sourceName = sourceName
 
-        let extensionName = streamURL.pathExtension.isEmpty
-            ? "mp4"
-            : streamURL.pathExtension
         let cleanedName = displayName.trimmingCharacters(in: .whitespacesAndNewlines)
         let baseName = cleanedName.isEmpty ? "在线视频" : cleanedName
+        // 在线播放器标题/弹幕匹配使用虚拟 .mp4 名（对齐 Windows 版）；
+        // 真实流扩展名仍由 pathExtension 通过 streamURL 提供。
         self.fileName = (baseName as NSString).pathExtension.isEmpty
-            ? "\(baseName).\(extensionName)"
+            ? "\(baseName).mp4"
             : baseName
 
         let stableKey = "\(sourceName ?? "online")|\(pageURL?.absoluteString ?? streamURL.absoluteString)"
