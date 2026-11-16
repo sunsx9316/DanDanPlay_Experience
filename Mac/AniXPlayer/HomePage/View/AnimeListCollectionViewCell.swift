@@ -27,6 +27,29 @@ protocol AnimeListItem {
 /// 子类覆写 viewDidLoad 向 infoStackView 插入额外视图即可
 class AnimeListCollectionViewCell: CollectionViewItem {
 
+    static let posterAspectRatio: CGFloat = 1.4
+
+    /// 与下方 Auto Layout 约束使用同一套尺寸，避免布局高度和实际内容不一致。
+    static func estimatedHeight(
+        for item: AnimeListItem,
+        width: CGFloat,
+        titleLineLimit: Int = 2
+    ) -> CGFloat {
+        let titleHeight: CGFloat
+        if titleLineLimit == 1 {
+            titleHeight = 18
+        } else {
+            let titleWidth = max(1, width - 26)
+            titleHeight = item.animeTitle.boundingRect(
+                with: NSSize(width: titleWidth, height: 40),
+                options: .usesLineFragmentOrigin,
+                attributes: [.font: NSFont.ddp_normal()]
+            ).height.rounded(.up)
+        }
+        let typeHeight: CGFloat = item.typeDescription.isEmpty ? 0 : 20
+        return width * posterAspectRatio + 8 + max(titleHeight, 18) + 4 + 16 + typeHeight
+    }
+
     // MARK: Subviews
 
     private lazy var posterContainer: NSView = {
@@ -65,8 +88,13 @@ class AnimeListCollectionViewCell: CollectionViewItem {
         let label = Label(labelWithString: "")
         label.font = .ddp_normal()
         label.textColor = .textColor
+        label.alignment = .left
         label.lineBreakMode = .byTruncatingTail
         label.maximumNumberOfLines = 2
+        label.cell?.wraps = true
+        label.cell?.isScrollable = false
+        label.cell?.truncatesLastVisibleLine = true
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
         return label
     }()
 
@@ -74,12 +102,16 @@ class AnimeListCollectionViewCell: CollectionViewItem {
         let btn = Button()
         btn.bezelStyle = .inline
         btn.isBordered = false
+        btn.imagePosition = .imageOnly
+        btn.setContentHuggingPriority(.required, for: .horizontal)
+        btn.setContentCompressionResistancePriority(.required, for: .horizontal)
         return btn
     }()
 
     lazy var isOnAirLabel: Label = {
         let label = Label(labelWithString: "")
         label.font = .ddp_small()
+        label.alignment = .left
         return label
     }()
 
@@ -102,17 +134,20 @@ class AnimeListCollectionViewCell: CollectionViewItem {
         return stack
     }()
 
-    private lazy var topRowStack: NSStackView = {
-        let stack = NSStackView()
-        stack.orientation = .horizontal
-        stack.spacing = 8
-        stack.alignment = .centerY
-        return stack
-    }()
+    private lazy var topRowView = NSView()
 
     var item: AnimeListItem?
 
     var onFavoriteToggle: ((Int, Bool) -> Void)?
+
+    func setTitleLineLimit(_ lineLimit: Int) {
+        let lines = max(1, lineLimit)
+        titleLabel.maximumNumberOfLines = lines
+        titleLabel.cell?.wraps = lines > 1
+        titleLabel.cell?.isScrollable = false
+        titleLabel.cell?.usesSingleLineMode = lines == 1
+        titleLabel.cell?.truncatesLastVisibleLine = true
+    }
 
     // MARK: Update
 
@@ -124,6 +159,7 @@ class AnimeListCollectionViewCell: CollectionViewItem {
         }
 
         self.titleLabel.text = item.animeTitle
+        self.titleLabel.toolTip = item.animeTitle
 
         if let ratingText = ratingNumberFormatter.string(from: NSNumber(value: item.rating)) {
             ratingBadge.text = "⭐ " + ratingText
@@ -156,7 +192,9 @@ class AnimeListCollectionViewCell: CollectionViewItem {
 
     func changeFavoritedStatus(isFavorited: Bool) {
         let symbolName = isFavorited ? "heart.fill" : "heart"
-        favoritedButton.image = NSImage(systemSymbolName: symbolName, accessibilityDescription: nil)
+        let configuration = NSImage.SymbolConfiguration(pointSize: 13, weight: .regular)
+        favoritedButton.image = NSImage(systemSymbolName: symbolName, accessibilityDescription: nil)?
+            .withSymbolConfiguration(configuration)
         favoritedButton.contentTintColor = .mainColor
     }
 
@@ -177,33 +215,45 @@ class AnimeListCollectionViewCell: CollectionViewItem {
             make.edges.equalToSuperview()
         }
         posterContainer.snp.makeConstraints { make in
-            make.height.equalTo(posterContainer.snp.width).multipliedBy(1.4)
+            make.height.equalTo(posterContainer.snp.width).multipliedBy(Self.posterAspectRatio)
         }
         ratingBadge.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(4)
             make.bottom.equalToSuperview().offset(-4)
         }
 
-        // top row
-        topRowStack.addArrangedSubview(titleLabel)
-        topRowStack.addArrangedSubview(favoritedButton)
+        // top row：使用明确约束，不让 StackView 按标题长短改变文字和按钮的位置。
+        topRowView.addSubview(titleLabel)
+        topRowView.addSubview(favoritedButton)
+        titleLabel.snp.makeConstraints { make in
+            make.leading.top.bottom.equalToSuperview()
+            make.trailing.equalTo(favoritedButton.snp.leading).offset(-8)
+        }
+        favoritedButton.snp.makeConstraints { make in
+            make.trailing.centerY.equalToSuperview()
+            make.width.height.equalTo(18)
+        }
 
         // info stack
-        infoStackView.addArrangedSubview(topRowStack)
+        infoStackView.addArrangedSubview(topRowView)
         infoStackView.addArrangedSubview(isOnAirLabel)
         infoStackView.addArrangedSubview(typeLabel)
+        topRowView.snp.makeConstraints { make in
+            make.width.equalTo(infoStackView)
+        }
+        isOnAirLabel.snp.makeConstraints { make in
+            make.width.equalTo(infoStackView)
+        }
 
-        // root stack
-        let rootStack = NSStackView(views: [posterContainer, infoStackView])
-        rootStack.orientation = .vertical
-        rootStack.spacing = 8
-        // 格子宽度由布局决定；海报和信息都撑满列宽，保证每张海报尺寸一致。
-        rootStack.alignment = .width
-
-        view.addSubview(rootStack)
-
-        rootStack.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+        // 海报和信息区直接撑满格子，避免嵌套 StackView 的 hugging 影响横向对齐。
+        view.addSubview(posterContainer)
+        view.addSubview(infoStackView)
+        posterContainer.snp.makeConstraints { make in
+            make.top.leading.trailing.equalToSuperview()
+        }
+        infoStackView.snp.makeConstraints { make in
+            make.top.equalTo(posterContainer.snp.bottom).offset(8)
+            make.leading.trailing.bottom.equalToSuperview()
         }
 
         favoritedButton.addTarget(self, action: #selector(onTouchLikeButton(_:)))

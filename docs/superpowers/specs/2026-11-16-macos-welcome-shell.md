@@ -83,10 +83,14 @@ macOS 的启动页不是单纯的品牌欢迎页，而是 Windows 版的「欢�
 - 星期 Tab：周一至周日 + 已关注 + 全部；默认今天。
 - 搜索框：标题过滤；清空恢复当前 Tab。
 - 海报网格：评分、关注/取消关注（复用 P4 的收藏接口）、点击详情。
+- 网格按阅读顺序逐行排列，同一行顶部对齐，末行从左侧连续开始；175pt 目标列宽，1100pt 窗口下为 166pt。
+- 标题单行截断并保留完整 tooltip，标题/收藏按钮/状态使用明确约束，卡片高度与真实内容一致。
 - 数据：`/homePage` 的 `shinBangumiList`、`shinBangumiOfCurrentSeason`、`shinBangumiOfPreviousSeason`；切换季度可调 `/bangumi/shin`、`/bangumi/season/anime/{year}/{month}`。
 
 ### 4.4 排行榜
 - 直接嵌入现有 `TrendingViewController`（热播/飙升/新番，周期/季度，关注切换，详情跳转）。
+- 使用逐行规则网格和 150pt 目标列宽，随窗口自动增减列数；1100pt 窗口下七列、海报约 141pt。
+- 标题单行截断，排名使用 15pt semibold，热度使用 11pt 次要文字；热度行与状态行保持统一基线。
 
 ### 4.5 继续播放
 - 最多 10 条；显示标题、播放进度、播放日期、文件目录。

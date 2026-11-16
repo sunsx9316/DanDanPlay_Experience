@@ -96,9 +96,10 @@ final class TrendingViewController: ViewController {
 
     private lazy var layout: WaterfallLayout = {
         let layout = WaterfallLayout()
+        layout.mode = .grid
         layout.columnCount = 4
         layout.itemPadding = 12
-        layout.sectionInset = NSEdgeInsets(top: 12, left: 16, bottom: 16, right: 16)
+        layout.sectionInset = NSEdgeInsets(top: 12, left: 22, bottom: 20, right: 22)
         layout.delegate = self
         return layout
     }()
@@ -141,8 +142,8 @@ final class TrendingViewController: ViewController {
 
         controls.snp.makeConstraints { make in
             make.top.equalToSuperview().offset(12)
-            make.leading.equalToSuperview().offset(16)
-            make.trailing.equalToSuperview().offset(-16)
+            make.leading.equalToSuperview().offset(22)
+            make.trailing.equalToSuperview().offset(-22)
         }
 
         summaryLabel.snp.makeConstraints { make in
@@ -171,6 +172,14 @@ final class TrendingViewController: ViewController {
     override func viewDidLayout() {
         super.viewDidLayout()
         let bounds = scrollView.contentView.bounds
+        guard bounds.width > 0 else { return }
+
+        // 排行榜使用更小的海报；列数随窗口变化，而不是固定四列随窗口放大。
+        let columns = max(2, Int(bounds.width / 150))
+        if layout.columnCount != columns {
+            layout.columnCount = columns
+        }
+
         let contentHeight = max(collectionView.collectionViewLayout?.collectionViewContentSize.height ?? 0, bounds.height)
         if collectionView.frame.width != bounds.width || collectionView.frame.height != contentHeight {
             collectionView.frame = NSRect(x: 0, y: 0, width: bounds.width, height: contentHeight)
@@ -335,6 +344,10 @@ extension TrendingViewController: NSCollectionViewDelegate {
 
 extension TrendingViewController: WaterfallLayoutDelegate {
     func waterfallLayout(_ layout: WaterfallLayout, heightForItemAt indexPath: IndexPath, itemWidth: CGFloat) -> CGFloat {
-        TrendingCollectionViewCell.estimatedHeight(for: itemWidth)
+        guard indexPath.item < items.count else { return itemWidth * 1.4 + 92 }
+        return TrendingCollectionViewCell.estimatedHeight(
+            for: items[indexPath.item],
+            width: itemWidth
+        )
     }
 }

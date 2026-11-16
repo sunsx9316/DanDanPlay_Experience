@@ -97,6 +97,7 @@ final class WelcomeScheduleViewController: ViewController, WelcomeShellLoginAwar
 
     private lazy var waterfallLayout: WaterfallLayout = {
         let layout = WaterfallLayout()
+        layout.mode = .grid
         layout.columnCount = 4
         layout.itemPadding = 12
         layout.sectionInset = NSEdgeInsets(top: 8, left: 22, bottom: 24, right: 22)
@@ -538,6 +539,7 @@ extension WelcomeScheduleViewController: NSCollectionViewDataSource {
         let cell = collectionView.dequeueItem(class: TimelineCollectionViewCell.self, for: indexPath)
         guard indexPath.item < filteredItems.count else { return cell }
         let item = filteredItems[indexPath.item]
+        cell.setTitleLineLimit(1)
         cell.configure(with: item)
         cell.view.setAccessibilityIdentifier("\(AccessibilityID.WelcomeShell.scheduleItemPrefix)\(item.animeId)")
         cell.favoritedButton.setAccessibilityIdentifier("\(AccessibilityID.WelcomeShell.scheduleFavoritePrefix)\(item.animeId)")
@@ -558,14 +560,12 @@ extension WelcomeScheduleViewController: NSCollectionViewDelegate {
 
 extension WelcomeScheduleViewController: WaterfallLayoutDelegate {
     func waterfallLayout(_ layout: WaterfallLayout, heightForItemAt indexPath: IndexPath, itemWidth: CGFloat) -> CGFloat {
-        guard indexPath.item < filteredItems.count else { return itemWidth * 1.4 + 82 }
-        let item = filteredItems[indexPath.item]
-        let titleHeight = item.animeTitle.boundingRect(
-            with: NSSize(width: itemWidth - 4, height: 40),
-            options: .usesLineFragmentOrigin,
-            attributes: [.font: NSFont.ddp_normal()]
-        ).height.rounded(.up)
-        return itemWidth * 1.4 + titleHeight + 54
+        guard indexPath.item < filteredItems.count else { return itemWidth * 1.4 + 48 }
+        return TimelineCollectionViewCell.estimatedHeight(
+            for: filteredItems[indexPath.item],
+            width: itemWidth,
+            titleLineLimit: 1
+        )
     }
 }
 

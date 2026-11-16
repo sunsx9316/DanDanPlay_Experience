@@ -12,14 +12,15 @@ final class TrendingCollectionViewCell: AnimeListCollectionViewCell {
 
     private let rankLabel: Label = {
         let label = Label(labelWithString: "")
-        label.font = .systemFont(ofSize: 18, weight: .bold)
+        label.font = .systemFont(ofSize: 15, weight: .semibold)
         label.textColor = .mainColor
+        label.alignment = .left
         return label
     }()
 
     private let metricLabel: Label = {
         let label = Label(labelWithString: "")
-        label.font = .ddp_small()
+        label.font = .systemFont(ofSize: 11)
         label.textColor = .subtitleTextColor
         label.lineBreakMode = .byTruncatingTail
         label.maximumNumberOfLines = 1
@@ -33,16 +34,30 @@ final class TrendingCollectionViewCell: AnimeListCollectionViewCell {
         return formatter
     }()
 
-    static func estimatedHeight(for width: CGFloat) -> CGFloat {
-        return width * 1.4 + 104
+    static func estimatedHeight(for item: TrendingItem, width: CGFloat) -> CGFloat {
+        // 排名和热度各一行，加上与基础信息区之间的两段间距。
+        AnimeListCollectionViewCell.estimatedHeight(
+            for: item,
+            width: width,
+            titleLineLimit: 1
+        ) + 44
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setTitleLineLimit(1)
         infoStackView.insertArrangedSubview(rankLabel, at: 0)
         infoStackView.addArrangedSubview(metricLabel)
         rankLabel.setContentHuggingPriority(.required, for: .vertical)
         metricLabel.setContentHuggingPriority(.required, for: .vertical)
+        rankLabel.snp.makeConstraints { make in
+            make.width.equalTo(infoStackView)
+            make.height.equalTo(20)
+        }
+        metricLabel.snp.makeConstraints { make in
+            make.width.equalTo(infoStackView)
+            make.height.equalTo(16)
+        }
     }
 
     func update(trending: TrendingItem, mode: TrendingMetricMode) {
