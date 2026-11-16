@@ -181,6 +181,11 @@ class PlayerViewController: ViewController {
         )
     }
 
+    /// 欢迎页“最近播放”使用：当前正在播放的媒体。
+    var currentMediaFile: File? {
+        return mediaModel.media
+    }
+
     //MARK: - Private
     private func bindModel() {
 

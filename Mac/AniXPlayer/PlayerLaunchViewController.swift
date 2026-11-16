@@ -7,34 +7,38 @@
 
 import Cocoa
 import SnapKit
-import ANXLog
 
+/// 播放器首页的外壳，保留 MainViewController 原有的调用方式。
+/// 实际界面由 WelcomeViewController 提供。
 class PlayerLaunchViewController: ViewController {
 
-    var onOpenFiles: (([File], File?) -> Void)?
+    var onOpenFiles: (([File], File?) -> Void)? {
+        get { welcomeVC.onOpenFiles }
+        set { welcomeVC.onOpenFiles = newValue }
+    }
 
-    private lazy var dragView: DragView = {
-        let view = DragView()
-        view.dragFilesCallBack = { [weak self] files in
-            guard let self = self else { return }
+    var onOpenNetworkFile: (() -> Void)? {
+        get { welcomeVC.onOpenNetworkFile }
+        set { welcomeVC.onOpenNetworkFile = newValue }
+    }
 
-            let mediaFiles = files.filter { !$0.url.isSubtitleFile && !$0.url.isDanmakuFile }
-            if !mediaFiles.isEmpty {
-                self.onOpenFiles?(mediaFiles, nil)
-            }
-        }
-        return view
-    }()
+    var onShowHomePage: (() -> Void)? {
+        get { welcomeVC.onShowHomePage }
+        set { welcomeVC.onShowHomePage = newValue }
+    }
 
-    private lazy var openButton: Button = {
-        let button = Button.custom()
-        button.bezelStyle = .texturedSquare
-        button.title = NSLocalizedString("打开或拖入文件/文件夹", comment: "")
-        button.isBordered = true
-        button.showsBorderOnlyWhileMouseInside = true
-        button.focusRingType = .none
-        button.addTarget(self, action: #selector(pickFile))
-        return button
+    var onShowSettings: (() -> Void)? {
+        get { welcomeVC.onShowSettings }
+        set { welcomeVC.onShowSettings = newValue }
+    }
+
+    var onShowMembership: (() -> Void)? {
+        get { welcomeVC.onShowMembership }
+        set { welcomeVC.onShowMembership = newValue }
+    }
+
+    private lazy var welcomeVC: WelcomeViewController = {
+        return WelcomeViewController()
     }()
 
     override func loadView() {
@@ -44,21 +48,11 @@ class PlayerLaunchViewController: ViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = AppInfoHelper.appDisplayName
-        self.view.setAccessibilityIdentifier(AccessibilityID.Launch.root)
-        self.dragView.setAccessibilityIdentifier(AccessibilityID.Launch.dragArea)
-        self.openButton.setAccessibilityIdentifier(AccessibilityID.Launch.openButton)
-        self.openButton.setAccessibilityLabel(NSLocalizedString("打开或拖入文件", comment: ""))
 
-        self.view.addSubview(dragView)
-        self.view.addSubview(openButton)
-
-        dragView.snp.makeConstraints { make in
+        addChild(welcomeVC)
+        view.addSubview(welcomeVC.view)
+        welcomeVC.view.snp.makeConstraints { make in
             make.edges.equalToSuperview()
-        }
-
-        openButton.snp.makeConstraints { make in
-            make.center.equalToSuperview()
-            make.size.equalTo(CGSize(width: 150, height: 60))
         }
 
         setupMenu()
@@ -76,20 +70,6 @@ class PlayerLaunchViewController: ViewController {
     // MARK: - Actions
 
     @objc private func pickFile() {
-        ANX.logInfo(.UI, "[PlayerLaunch] 点击打开文件")
-        LocalFile.fileManager.pickFiles(LocalFile.rootFile, from: self, filterType: .all) { [weak self] result in
-            guard let self = self else { return }
-
-            switch result {
-            case .success(let files):
-                if let first = files.first, files.count == 1, first.url.isSubtitleFile || first.url.isDanmakuFile {
-                    self.view.show(text: NSLocalizedString("请先打开视频文件", comment: ""))
-                    return
-                }
-                self.onOpenFiles?(files, nil)
-            case .failure:
-                break
-            }
-        }
+        welcomeVC.presentLocalFilePicker()
     }
 }

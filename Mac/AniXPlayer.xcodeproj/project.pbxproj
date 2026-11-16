@@ -232,6 +232,7 @@
 		8BF7B37074A76F6CDA780BE2 /* DetailEpisodeRowCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0550842B973C563EE98076B4 /* DetailEpisodeRowCollectionViewCell.swift */; };
 		8E0439F750C6F63A175F306F /* OAuthPKCE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D021EBACA202E6D6AA0847A /* OAuthPKCE.swift */; };
 		8E419CE788CC81E88C432CCA /* PlayerLaunchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43F77C4E05418E0933A7ABFE /* PlayerLaunchViewController.swift */; };
+		A7C0DE012233445566778899 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7C0DE022233445566778899 /* WelcomeViewController.swift */; };
 		8EBC72BB5AAB50C3AF366FA5 /* TagSearchResultViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 71324DC046A2F831C1F4A03A /* TagSearchResultViewController.swift */; };
 		916D561E0220BDE4FCBC2C06 /* APIEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86A0C502F750FC0AF75E83E /* APIEnvironment.swift */; };
 		922916DFF74AFC837D3F71A7 /* ServerHostTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 414F750A55D1C57A085D10A7 /* ServerHostTableViewCell.swift */; };
@@ -314,6 +315,7 @@
 		3EDE1E40F8F365CB98AE77BA /* AnimeListItem+Extensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "AnimeListItem+Extensions.swift"; sourceTree = "<group>"; };
 		414F750A55D1C57A085D10A7 /* ServerHostTableViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ServerHostTableViewCell.swift; sourceTree = "<group>"; };
 		43F77C4E05418E0933A7ABFE /* PlayerLaunchViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlayerLaunchViewController.swift; sourceTree = "<group>"; };
+		A7C0DE022233445566778899 /* WelcomeViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		4820BDBD38A6174F235E5BD0 /* DetailRelatedCollectionViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DetailRelatedCollectionViewCell.swift; sourceTree = "<group>"; };
 		4A21C25D75800DCFBE788056 /* APIError.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
 		4AAB9E83431753AB408E9028 /* TestSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TestSupport.swift; path = AniXPlayerTests/TestSupport.swift; sourceTree = "<group>"; };
@@ -591,6 +593,15 @@
 			);
 			name = PlaybackSmoke;
 			path = PlaybackSmoke;
+			sourceTree = "<group>";
+		};
+		A7C0DE032233445566778899 /* Welcome */ = {
+			isa = PBXGroup;
+			children = (
+				A7C0DE022233445566778899 /* WelcomeViewController.swift */,
+			);
+			name = Welcome;
+			path = Welcome;
 			sourceTree = "<group>";
 		};
 		1FB4061B2CF320FF661AF82C /* User */ = {
@@ -1395,6 +1406,7 @@
 			children = (
 				5A70D3186CE8B4B067E47917 /* Auth */,
 				1CE3658B9D3CA0A5C0F3DD90 /* PlaybackSmoke */,
+				A7C0DE032233445566778899 /* Welcome */,
 			);
 			name = Features;
 			path = Features;
@@ -1810,6 +1822,7 @@
 				6B51A591B864267D72FBAD54 /* PopUpButton.swift in Sources */,
 				76C8B3F33829BFE4671CA855 /* CheckBox.swift in Sources */,
 				8E419CE788CC81E88C432CCA /* PlayerLaunchViewController.swift in Sources */,
+				A7C0DE012233445566778899 /* WelcomeViewController.swift in Sources */,
 				0CEBAA8DC7317C3074C7D557 /* MainViewController.swift in Sources */,
 				44274A3B6F32476579579C2A /* NSView+ANXHUD.swift in Sources */,
 				65DA91415AEDEEE096659B9F /* ANXHUDProgressIndicatorLayer.swift in Sources */,

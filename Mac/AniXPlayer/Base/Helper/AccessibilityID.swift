@@ -15,8 +15,18 @@ enum AccessibilityID {
         static let dragArea = "launch.dragArea"
         static let recentHeader = "launch.recentHeader"
         static let recentList = "launch.recentList"
+        static let recentEmpty = "launch.recentEmpty"
+        static let recentClear = "launch.recentClear"
+        static let recentItemPrefix = "launch.recentItem."
+        static let networkButton = "launch.networkButton"
         static let homeButton = "launch.homeButton"
         static let settingsButton = "launch.settingsButton"
+        static let membershipButton = "launch.membershipButton"
+        static let quickActions = "launch.quickActions"
+        static let featureArea = "launch.featureArea"
+        static let featureDanmaku = "launch.featureDanmaku"
+        static let featureSummary = "launch.featureSummary"
+        static let featureMembership = "launch.featureMembership"
     }
 
     enum Player {

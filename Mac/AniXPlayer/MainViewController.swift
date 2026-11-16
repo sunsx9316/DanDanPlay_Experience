@@ -15,10 +15,25 @@ class MainViewController: ViewController {
         vc.onOpenFiles = { [weak self] files, startFile in
             self?.showPlayer(with: files, startWith: startFile)
         }
+        vc.onOpenNetworkFile = { [weak self] in
+            self?.showNetworkFiles()
+        }
+        vc.onShowHomePage = { [weak self] in
+            self?.showHomePage()
+        }
+        vc.onShowSettings = { [weak self] in
+            self?.showSettings()
+        }
+        // 会员中心暂未接入 macOS 端，保留可选回调，欢迎页会显示为禁用状态。
+        vc.onShowMembership = nil
         return vc
     }()
 
     private var playerVC: PlayerViewController?
+
+    private var homePageWindowController: HomePageNavigationWindowController?
+
+    private var mediaLibraryWindowController: MediaLibraryWindowController?
 
     override func loadView() {
         self.view = .init(frame: .init(x: 0, y: 0, width: 800, height: 600))
@@ -55,8 +70,13 @@ class MainViewController: ViewController {
     }
 
     private func showPlayer(with files: [File], startWith file: File?) {
+        if let recentFile = file ?? files.first(where: { $0.url.isFileURL }) {
+            WelcomeRecentStore.shared.record(file: recentFile)
+        }
+
         let vc = PlayerViewController()
         vc.onStopCallBack = { [weak self] in
+            self?.rememberCurrentPlayback()
             self?.hidePlayer()
         }
 
@@ -80,5 +100,64 @@ class MainViewController: ViewController {
         playerVC = nil
 
         showLaunch()
+    }
+
+    private func rememberCurrentPlayback() {
+        guard let playerVC = playerVC,
+              let file = playerVC.currentMediaFile else { return }
+
+        let snapshot = playerVC.playbackSnapshot()
+        let progress: Double?
+        if snapshot.duration > 0 {
+            let fraction = max(0, min(snapshot.position / snapshot.duration, 1))
+            // 播放到结尾时清空进度，避免下次从片尾继续。
+            progress = fraction >= 0.99 ? 0 : fraction
+        } else {
+            progress = nil
+        }
+        WelcomeRecentStore.shared.record(file: file, progress: progress)
+    }
+
+    // MARK: - Welcome shortcuts
+
+    private func showNetworkFiles() {
+        if let wc = mediaLibraryWindowController {
+            wc.window?.makeKeyAndOrderFront(nil)
+            return
+        }
+
+        let wc = MediaLibraryWindowController()
+        wc.onSelectFile = { [weak self] file, allFiles in
+            guard let self = self else { return }
+            self.openNetworkFiles(allFiles, startWith: file)
+            self.view.window?.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+        }
+        wc.windowWillCloseCallBack = { [weak self] in
+            self?.mediaLibraryWindowController = nil
+        }
+        wc.showWindow(nil)
+        mediaLibraryWindowController = wc
+    }
+
+    private func showHomePage() {
+        if let wc = homePageWindowController {
+            wc.window?.makeKeyAndOrderFront(nil)
+            return
+        }
+
+        let homeVC = HomePageViewController()
+        let wc = HomePageNavigationWindowController(rootViewController: homeVC)
+        homeVC.navigator = wc
+        wc.windowWillCloseCallBack = { [weak self] in
+            self?.homePageWindowController = nil
+        }
+        wc.showWindow(nil)
+        homePageWindowController = wc
+    }
+
+    private func showSettings() {
+        let vc = GlobalSettingViewController()
+        self.presentAsModalWindow(vc)
     }
 }
