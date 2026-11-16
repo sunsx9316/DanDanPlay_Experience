@@ -1,6 +1,6 @@
 # macOS 下载中心 MVP 设计（P7）
 
-> 状态：方案待实现（2026-11-16）
+> 状态：MVP 已实现并合并 win-porting（2026-11-16）
 > 范围：macOS；iOS/tvOS 不变。
 > 背景：Windows 使用 MonoTorrent + DLBT.dll；macOS 没有可直接复用的 BT 内核。
 
@@ -94,3 +94,14 @@ DownloadTask
 2. **边下边播**：不同容器/播放器对增长文件支持不一致，首期只能 best effort。
 3. **RPC 凭据安全**：密码必须进 Keychain，不能写 UserDefaults/日志。
 4. **许可证**：若后续捆绑 GPL 下载器，需要重新评估分发方式。
+
+## 8. 实现结果（2026-11-16）
+
+- 新增 `Mac/AniXPlayer/Features/Download/`：任务模型、SQLite 持久化、HTTP 引擎、Transmission RPC 引擎、管理器、窗口、添加/设置 sheet。
+- HTTP：URLSessionDownloadTask，暂停保留 resumeData、停止删除、2xx 校验、文件名冲突处理；macOS 12/13 无 resumeData API 时从头下载。
+- BT：默认 `127.0.0.1:9091`，409 session id 自动重试，magnet/metainfo add、get、start/stop/remove；`sequentialDownload` 不支持时自动回退。
+- 未检测到 Transmission 时不落库、不伪造任务，显示安装/重试提示。
+- RPC 密码优先 Keychain；Debug 回退 0600 文件，避免未签名构建弹钥匙串。
+- 菜单：功能 → 下载中心…；AX 标识 `download.*`。
+- 验证：192 个单测通过（DownloadTests 18 个）；HTTP 手工联调（27MB，暂停续传 Range 成功）；L2/UI 冒烟通过。
+- 限制：真实 Transmission 未联调；App 退出后 HTTP 任务不后台继续；BT 边下边播取决于版本与 sequential 支持；发布前仍需决定是否捆绑 BT 内核。

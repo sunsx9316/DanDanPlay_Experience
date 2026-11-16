@@ -130,8 +130,9 @@ XCUITest 暂缓：证书已有，但登录成功路径受验证码阻断，且 m
 
 ## 5. 未完成与后续
 
-- P7 下载中心（HTTP + 外部 Transmission RPC；不捆绑 BT 二进制）。
 - 支付与 AI 的真实端到端验收依赖账号、额度与后端联调。
+- macOS 专属 OAuth client 注册。
+- 真实 Transmission/BT 下载联调；是否捆绑 BT 内核仍需产品/法务决定。
 
 已完成（2026-11-16）：
 
@@ -139,4 +140,5 @@ XCUITest 暂缓：证书已有，但登录成功路径受验证码阻断，且 m
 - P4 收藏状态/评分/短评、追番队列详情、弹幕发送 401 刷新。
 - P5 Windows 式欢迎页外壳：左侧导航 + 概览 + 公告/未看/时间表/排行榜/继续播放/在线观看。
 - P6 本地媒体库：文件夹扫描、SQLite、前 16MB MD5 匹配、海报墙、独立播放器播放。
+- P7 下载中心：HTTP 内置、Transmission RPC 的磁力/种子、任务持久化、暂停/继续/删除、best-effort 边下边播。
 - 登录 token：Debug 默认沙盒文件（0600），Release 默认 Keychain。
