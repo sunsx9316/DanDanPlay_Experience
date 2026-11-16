@@ -31,6 +31,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private var mediaLibraryWindowController: MediaLibraryWindowController?
 
+    private var localLibraryWindowController: LocalLibraryWindowController?
+
     private var homePageWindowController: HomePageNavigationWindowController?
 
     private var playHistoryWindowController: PlayHistoryNavigationWindowController?
@@ -294,6 +296,36 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         playHistoryWindowController = wc
     }
 
+    @objc private func showLocalLibrary(_ item: NSMenuItem) {
+        Task { @MainActor in
+            self.presentLocalLibraryWindow()
+        }
+    }
+
+    @MainActor private func presentLocalLibraryWindow() {
+        if let wc = localLibraryWindowController {
+            wc.window?.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            return
+        }
+
+        let wc = LocalLibraryWindowController()
+        wc.onPlayFiles = { [weak self] files, startFile in
+            guard let self,
+                  let mainVC = self.mainWindowController.contentViewController as? MainViewController else {
+                return
+            }
+            self.mainWindowController.window?.makeKeyAndOrderFront(nil)
+            NSApp.activate(ignoringOtherApps: true)
+            mainVC.openLocalFiles(files, startWith: startFile)
+        }
+        wc.windowWillCloseCallBack = { [weak self] in
+            self?.localLibraryWindowController = nil
+        }
+        wc.showWindow(nil)
+        localLibraryWindowController = wc
+    }
+
     @objc private func showBangumiQueue(_ item: NSMenuItem) {
         Task { @MainActor in
             self.presentBangumiQueueWindow()
@@ -416,6 +448,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             menu.addItem(withTitle: NSLocalizedString("主页", comment: ""), action: #selector(showHomePage(_:)), keyEquivalent: "")
             menu.addItem(withTitle: NSLocalizedString("搜索…", comment: ""), action: #selector(showSearch(_:)), keyEquivalent: "")
             menu.addItem(withTitle: NSLocalizedString("播放历史", comment: ""), action: #selector(showPlayHistory(_:)), keyEquivalent: "")
+            menu.addItem(withTitle: NSLocalizedString("本地媒体库…", comment: ""), action: #selector(showLocalLibrary(_:)), keyEquivalent: "")
             menu.addItem(withTitle: NSLocalizedString("我的追番", comment: ""), action: #selector(showBangumiQueue(_:)), keyEquivalent: "")
             menu.addItem(NSMenuItem.separator())
             menu.addItem(withTitle: NSLocalizedString("全局设置", comment: ""), action: #selector(onGlobalSettingItemDidClick(_:)), keyEquivalent: ",")

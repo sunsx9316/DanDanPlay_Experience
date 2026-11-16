@@ -56,6 +56,9 @@ struct Match: Decodable {
     @Default<String> var typeDescription: String
     
     @Default<Int> var shift: Int
+
+    /// 作品海报图片地址（匹配接口 v2 返回；旧接口缺省为空）
+    @Default<String> var imageUrl: String
 }
 
 struct MatchCollection: Decodable {

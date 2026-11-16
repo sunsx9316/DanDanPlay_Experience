@@ -283,4 +283,22 @@ enum AccessibilityID {
         static let statusLabel = "search.statusLabel"
         static let loadingIndicator = "search.loadingIndicator"
     }
+
+    /// 本地媒体库（P6）。
+    enum LocalLibrary {
+        static let window = "LocalLibrary.window"
+        static let root = "LocalLibrary.root"
+        static let search = "LocalLibrary.search"
+        static let filter = "LocalLibrary.filter"
+        static let scan = "LocalLibrary.scan"
+        static let addFolder = "LocalLibrary.addFolder"
+        static let rematch = "LocalLibrary.rematch"
+        static let grid = "LocalLibrary.grid"
+        static let status = "LocalLibrary.status"
+        static let folders = "LocalLibrary.folders"
+        static let folderAll = "LocalLibrary.folder.all"
+        static let folderPrefix = "LocalLibrary.folder."
+        static let removeFolderPrefix = "LocalLibrary.folder.remove."
+        static let itemPrefix = "LocalLibrary.item."
+    }
 }
