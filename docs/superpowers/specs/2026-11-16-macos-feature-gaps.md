@@ -30,7 +30,18 @@
 - 没有 animeko/kazumi 配置读取、缓存、规则解析、网页嗅探。
 - `MembershipFeature.onlinePlayback` 与 `.mediaSniffer` 门禁枚举已存在，但没有业务接线。
 
-### 2.2 分阶段实现
+### 2.2 审计结论（2026-11-16）
+
+- 当前页面是「弹弹play 剧集搜索 + 浏览器搜索页跳转」，不是在线播放；剧集行只打开作品级网页，不解析流。
+- 播放器内核（VLC/MPV）可以接收 http/https/m3u8；现有 Emby/PC/SMB 已经用远程 URL 播放。但缺少通用 `OnlineEpisodeFile`、请求头注入、虚拟文件名/弹幕匹配、在线播放列表重解析。
+- Mac 没有 animeko/kazumi 的模型、缓存、解析、嗅探；WKWebView 仅用于 OAuth。
+- Windows 参考链路：源配置（Animeko `css1.json`；Kazumi `index.json` + rules）→ 多源并行搜索 → 作品/线路/剧集解析（CSS→XPath / XPath）→ WebView2 嗅探 + HTTP 正则回退 → `LoadEvent`（URL + headers + 虚拟文件名）→ VLC/MPV 本地代理注入请求头 → 用「作品名 + 剧集名」空哈希虚拟文件匹配弹幕。
+- Windows 在线观看/嗅探是 **15 次/月试用 + 会员无限**；Mac 目前只有登录检查，没有试用计数；若直接接 `EntitlementGate` 就是纯会员制。
+- 最大风险：WKWebView 没有 WebView2 的全量网络请求拦截能力，`URLProtocol` 也拦不到 WKWebView/VLC/MPV；动态页面嗅探必须用 JS hook + DOM/Performance 扫描重写，成功率低于 Windows。
+- 请求头/ Cookie 不能只塞进 `MPVMedia.options`（当前 wrapper 不读取）；需要给 `File` 增加 header 能力，或在 VLC `addOptions` / MPV `http-header-fields` 中注入，必要时用 GCDWebServer 做本地代理。
+- 弹幕匹配不能用空 MD5 当全局缓存键；要用稳定 `fileId`（源 + 剧集页 URL）/虚拟文件名，并让 `MatchNetworkHandle` 支持无扩展名、空哈希模式。
+
+### 2.3 分阶段实现
 
 **阶段 A：源配置与搜索/解析（纯网络 + 模型）**
 
@@ -147,6 +158,27 @@
 - 用 `NSScrollView + NSStackView` 替代手动 section 高度计算；每个 section 自撑高。
 - 统一 20pt 边距、12pt 区块间距、卡片圆角与分隔线；暗色模式验证。
 
+### 5.3 本轮已做（2026-11-16，b4d62e3）
+
+- Header 高度 170 → 250，封面 136×190，标题 25pt 两行，补原名/类型/集数/标签/简介/评分。
+- 关注按钮与「详细信息 ›」拆开；点击 header 不再误跳元数据页。
+- 追番卡片改为 `controlBackgroundColor` + 边框，去掉灰色块；高度 170。
+- 分集/短评入口行高度 60 → 72，补 subtitle trailing 约束。
+- 关联/相似从固定 2 列改为按宽度 4/3/2 列，修正高度估算（+34 而非 +26）。
+- 详情窗口标题实时更新；关闭横向滚动条、补布局刷新；section 间距 8。
+- 1000pt 与 500pt 宽度截图检查通过。
+
+### 5.4 审计补充（仍需处理）
+
+- 详情页会被推入 **490pt 固定不可缩放**的首页窗口，同时也会出现在 900/1000pt 窗口；建议统一给详情一个最小 860×620 的独立窗口，或至少提高首页窗口最小宽度。
+- 当前是 6 个 item 的单 section `NSCollectionView`，高度手算；建议后续改为 `NSScrollView + NSStackView` 卡片，彻底去掉 `collectionViewContentSize` 手动 frame 计算。
+- 缺加载/错误/空态（现在失败只显示 2 秒 HUD）；缺重试。
+- 短评列表固定 80pt 会裁切长评论；分页失败会跳页；首屏不足时不会自动加载下一页。
+- 元数据页是扁平固定高度列表，缺分组/换行/复制反馈。
+- 无 `AccessibilityID.BangumiDetail`；分集/短评行只有 gesture，键盘/VoiceOver 不可操作。
+- `.lightGray` 字幕色在浅色模式对比度不足，应统一 `.secondaryLabelColor`。
+- 关联/相似仍建议改成 WelcomeShell 的海报网格/横向 rail，而不是嵌套 collection view。
+
 ## 6. 截图 / GIF 动图（会员）
 
 ### 6.1 现状
@@ -158,21 +190,25 @@
 
 ### 6.2 后续增强
 
-1. 选项 sheet：时长 1/2/3/5 秒、帧率 5/10/15、最大宽度 480/640/原尺寸。
-2. 预览与另存为；失败/取消/无权限状态细化。
-3. 输出 WebP/APNG；可加片段裁剪（起止时间）与画质档位。
-4. 流媒体用播放器缩略图接口回退，或明确只对本地文件开放。
+1. **抓帧内核**：当前 MVP 用 `AVAssetImageGenerator`，只支持本地 AVFoundation 能解码的文件；大量 MKV/HEVC/AV1 与网络源会失败。应改为复用 `MPVFrameRenderer` / `MediaThumbnailFetcher` 的无头 MPV 抓帧，AVFoundation 只做本地回退。
+2. 选项 sheet：时长 1/2/3/5 秒、帧率 5/10/15、最大宽度 480/640/原尺寸；包含字幕开关。
+3. 进度/取消/媒体切换取消；当前 progress 闭包为空，`Task.checkCancellation` 在 GCD 块里没有实际取消路径。
+4. 预览与另存为；失败/取消/无权限状态细化（现在只有 2 秒 HUD）。
+5. 输出 WebP/APNG；可加片段裁剪（起止时间）与画质档位。会员文案目前写「GIF、WebP 或 APNG」，在实现前要改成实际能力。
+6. 弹幕默认不烧录；若产品要求，需离线弹幕合成器，不能依赖屏幕截图。
+7. 流媒体/远程源回退或明确提示；避免大内存占用（限制帧数/尺寸/分块编码）。
 
 ## 7. 优先级建议
 
 | 顺序 | 工作 | 理由 |
 |---|---|---|
-| ✅ | 截图/GIF MVP（会员） | 已完成 3 秒 GIF；后续补选项/WebP/APNG |
-| 1 | 番剧详情页重做 | 纯 UI、见效快、无外部依赖 |
+| ✅ | 截图/GIF MVP（会员） | 已完成 3 秒 GIF；后续补选项/WebP/APNG/无头 MPV |
+| ✅ | 番剧详情页首轮 | header/追番卡片/间距/关联列数已改；完整 stack 重做与加载态仍待做 |
+| 1 | 在线观看阶段 A/B | 源配置→解析→串流，先直链后嗅探；最大缺口 |
 | 2 | 媒体库体验补齐 | 已有骨架，补匹配修正/缺失/分组/缩略图 |
 | 3 | 下载中心补齐 | 先补 BT 引导/系统入口/通知/队列；BT 内核单独立项 |
-| 4 | 在线观看阶段 A/B | 源配置→解析→串流，先直链后嗅探 |
-| 5 | 在线观看阶段 C/D | WKWebView 嗅探、源管理、合规 |
+| 4 | 在线观看阶段 C/D | WKWebView 嗅探、源管理、合规 |
+| 5 | 详情页完整重做 | stack 卡片、加载/错误态、490pt 窗口、AX |
 | ➖ | 远程访问 / 投屏 | 暂不做 |
 
 ## 8. 验收边界
