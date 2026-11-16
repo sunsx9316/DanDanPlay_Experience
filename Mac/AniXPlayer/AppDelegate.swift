@@ -33,6 +33,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private var homePageWindowController: HomePageNavigationWindowController?
 
+    private var playHistoryWindowController: PlayHistoryNavigationWindowController?
+
     private var pendingOpenURLs: [URL] = []
 
     private var didFinishLaunching = false
@@ -242,6 +244,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         homePageWindowController = wc
     }
 
+    @objc private func showPlayHistory(_ item: NSMenuItem) {
+        if let wc = playHistoryWindowController {
+            wc.window?.makeKeyAndOrderFront(nil)
+            return
+        }
+        let wc = PlayHistoryNavigationWindowController()
+        wc.windowWillCloseCallBack = { [weak self] in
+            self?.playHistoryWindowController = nil
+        }
+        wc.showWindow(nil)
+        playHistoryWindowController = wc
+    }
+
     @objc private func onOpenNetworkFile(_ item: NSMenuItem) {
         let wc = MediaLibraryWindowController()
         wc.onSelectFile = { [weak self] file, allFiles in
@@ -328,6 +343,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             let menu = NSMenu(title: NSLocalizedString("功能", comment: ""))
 
             menu.addItem(withTitle: NSLocalizedString("主页", comment: ""), action: #selector(showHomePage(_:)), keyEquivalent: "")
+            menu.addItem(withTitle: NSLocalizedString("播放历史", comment: ""), action: #selector(showPlayHistory(_:)), keyEquivalent: "")
             menu.addItem(NSMenuItem.separator())
             menu.addItem(withTitle: NSLocalizedString("全局设置", comment: ""), action: #selector(onGlobalSettingItemDidClick(_:)), keyEquivalent: ",")
 
