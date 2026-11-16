@@ -108,6 +108,13 @@ actor SessionStore {
             break
         }
 
+        // 自动化/本地调试：完全不读 Keychain，按未登录处理。
+        // 见 MacAuthBootstrap 的 ANIX_DISABLE_KEYCHAIN。
+        if ProcessInfo.processInfo.environment["ANIX_DISABLE_KEYCHAIN"] == "1" {
+            setState(.loggedOut)
+            return false
+        }
+
         guard let refreshToken = (try? tokenStore.readRefreshToken()) ?? nil, !refreshToken.isEmpty else {
             setState(.loggedOut)
             return false
