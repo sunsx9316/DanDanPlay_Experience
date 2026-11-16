@@ -258,7 +258,7 @@ final class WelcomeOverviewViewController: WelcomeShellScrollPageViewController,
             identifier: AccessibilityID.WelcomeShell.overviewPlaylist
         )
         playlist.onClick = { [weak self] in
-            self?.view.show(text: NSLocalizedString("播放列表在播放器中可用，请先打开视频文件", comment: ""))
+            self?.router?.openPlayerPlaylist()
         }
 
         let remote = WelcomeShellActionTileView(

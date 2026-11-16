@@ -15,6 +15,7 @@ final class MainShellViewController: ViewController {
     var onOpenFiles: (([File], File?) -> Void)?
     var onResumeFiles: (([File], File?, Double) -> Void)?
     var onOpenNetworkFile: (() -> Void)?
+    var onOpenPlayerPlaylist: (() -> Void)?
     var onShowSettings: (() -> Void)?
     var onShowMembership: (() -> Void)?
     var onPlayFiles: (([File], File) -> Void)?
@@ -55,6 +56,9 @@ final class MainShellViewController: ViewController {
         }
         vc.onOpenNetworkFile = { [weak self] in
             self?.onOpenNetworkFile?()
+        }
+        vc.onOpenPlayerPlaylist = { [weak self] in
+            self?.onOpenPlayerPlaylist?()
         }
         vc.onShowSettings = { [weak self] in
             self?.onShowSettings?()

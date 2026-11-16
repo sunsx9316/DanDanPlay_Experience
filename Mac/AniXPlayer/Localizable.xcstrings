@@ -9453,18 +9453,82 @@
         }
       }
     },
-    "未在播放": {
+    "播放列表为空": {
       "localizations": {
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Not Playing"
+            "value": "Playlist is empty"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "未在播放"
+            "value": "播放列表为空"
+          }
+        }
+      }
+    },
+    "打开文件后会自动加入播放列表": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opened files are added to the playlist automatically"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "打开文件后会自动加入播放列表"
+          }
+        }
+      }
+    },
+    "打开文件": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open File"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "打开文件"
+          }
+        }
+      }
+    },
+    "打开文件开始播放": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open a file to start playing"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "打开文件开始播放"
+          }
+        }
+      }
+    },
+    "选择视频文件后会自动加入播放列表": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Selected videos are added to the playlist automatically"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择视频文件后会自动加入播放列表"
           }
         }
       }

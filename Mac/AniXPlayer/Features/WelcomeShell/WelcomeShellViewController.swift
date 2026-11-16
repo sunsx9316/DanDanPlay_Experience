@@ -65,6 +65,7 @@ protocol WelcomeShellRouting: AnyObject {
     func openDetail(animeId: Int)
     func openLocalFiles()
     func openRemoteFiles()
+    func openPlayerPlaylist()
     func openQueueWindow()
     func play(files: [File], startWith startFile: File?, progress: Double?)
 }
@@ -89,6 +90,7 @@ final class WelcomeShellViewController: ViewController {
     var onOpenFiles: (([File], File?) -> Void)?
     var onResumeFiles: (([File], File?, Double) -> Void)?
     var onOpenNetworkFile: (() -> Void)?
+    var onOpenPlayerPlaylist: (() -> Void)?
     var onShowHomePage: (() -> Void)?
     var onShowSettings: (() -> Void)?
     var onShowMembership: (() -> Void)?
@@ -374,6 +376,10 @@ extension WelcomeShellViewController: WelcomeShellRouting {
 
     func openRemoteFiles() {
         onOpenNetworkFile?()
+    }
+
+    func openPlayerPlaylist() {
+        onOpenPlayerPlaylist?()
     }
 
     func openQueueWindow() {

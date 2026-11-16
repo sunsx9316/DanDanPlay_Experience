@@ -21,6 +21,9 @@ class MainViewController: ViewController {
         vc.onOpenNetworkFile = { [weak self] in
             self?.showNetworkFiles()
         }
+        vc.onOpenPlayerPlaylist = { [weak self] in
+            self?.openPlaylist()
+        }
         vc.onShowSettings = { [weak self] in
             self?.showSettings()
         }
@@ -80,6 +83,20 @@ class MainViewController: ViewController {
         NSApp.activate(ignoringOtherApps: true)
     }
 
+    /// 首页快捷操作「播放列表」：复用已有播放器窗口；没有则创建空播放器并弹出列表。
+    func openPlaylist() {
+        if let existing = playerWindowController {
+            existing.showPlaylist()
+            return
+        }
+
+        let wc = makePlayerWindowController()
+        playerWindowController = wc
+        wc.showWindow(nil)
+        wc.window?.center()
+        wc.showPlaylist()
+    }
+
     /// 菜单入口：对当前播放器导出 GIF；没有播放器时给出提示。
     func exportCurrentPlayerGIF() {
         guard let player = playerWindowController?.playerViewController else {
@@ -117,6 +134,15 @@ class MainViewController: ViewController {
             return
         }
 
+        let wc = makePlayerWindowController()
+        playerWindowController = wc
+        wc.showWindow(nil)
+        wc.window?.center()
+
+        wc.playerViewController.loadFiles(files, startWith: file, progress: progress)
+    }
+
+    private func makePlayerWindowController() -> PlayerWindowController {
         let vc = PlayerViewController()
         vc.backupDanmakuAccessCheck = { [weak self] in
             await EntitlementGate.shared.require(
@@ -140,12 +166,7 @@ class MainViewController: ViewController {
         wc.onClose = { [weak self] in
             self?.playerWindowDidClose()
         }
-
-        playerWindowController = wc
-        wc.showWindow(nil)
-        wc.window?.center()
-
-        vc.loadFiles(files, startWith: file, progress: progress)
+        return wc
     }
 
     private func stopAndClosePlayerWindow() {
