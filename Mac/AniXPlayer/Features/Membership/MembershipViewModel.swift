@@ -69,6 +69,7 @@ final class MembershipViewModel {
     private let store: MembershipStore
     private let nowProvider: () -> Date
     private var paymentTask: Task<Void, Never>?
+    private var paymentGeneration = 0
     private var didBegin = false
 
     private struct CachedOrder {
@@ -108,6 +109,7 @@ final class MembershipViewModel {
     }
 
     func stopAll() {
+        paymentGeneration &+= 1
         paymentTask?.cancel()
         paymentTask = nil
     }
@@ -153,7 +155,7 @@ final class MembershipViewModel {
         if status.isActive, let expiresAt = status.expiresAt {
             return String(
                 format: NSLocalizedString("会员生效中，有效期至 %@", comment: ""),
-                MembershipDateFormatting.localDateTime(expiresAt)
+                MembershipDateFormatting.localDate(expiresAt)
             )
         }
         if let expiresAt = status.expiresAt {
@@ -203,7 +205,7 @@ final class MembershipViewModel {
         if status.isActive {
             return String(
                 format: NSLocalizedString("资源监视器权益有效期至 %@", comment: ""),
-                MembershipDateFormatting.localDateTime(expiresAt)
+                MembershipDateFormatting.localDate(expiresAt)
             )
         }
         return String(
@@ -316,6 +318,9 @@ final class MembershipViewModel {
 
     func selectProvider(id: String) {
         guard payConfigs.contains(where: { $0.providerId == id }) else { return }
+        guard id != selectedProviderId else { return }
+
+        resetPaymentForSelectionChange()
         selectedProviderId = id
         selectedItem = defaultItem(in: currentItems)
         onUpdate?()
@@ -323,24 +328,50 @@ final class MembershipViewModel {
 
     func selectItem(id: String) {
         guard let item = currentItems.first(where: { $0.id == id }) else { return }
+        guard item.id != selectedItem?.id else { return }
+
+        resetPaymentForSelectionChange()
         selectedItem = item
         onUpdate?()
+    }
+
+    /// 切换渠道/时长后回到表单：只停止本机轮询，不取消服务端订单。
+    private func resetPaymentForSelectionChange() {
+        guard paymentState != .idle else { return }
+        paymentGeneration &+= 1
+        paymentTask?.cancel()
+        paymentTask = nil
+        paymentState = .idle
     }
 
     // MARK: - Payment
 
     func startPayment() {
         guard !isPaymentInProgress,
+              !isRefreshing,
               let provider = selectedProvider,
               let item = selectedItem else {
             return
         }
 
         paymentTask?.cancel()
+        paymentGeneration &+= 1
+        let generation = paymentGeneration
         let providerId = provider.providerId
         let itemId = item.id
+
+        // 同步进入 creating，双击时第二次调用会被 isPaymentInProgress 拦住。
+        paymentState = .creating
+        onUpdate?()
+
         paymentTask = Task { @MainActor [weak self] in
-            await self?.performPayment(provider: provider, item: item, providerId: providerId, itemId: itemId)
+            await self?.performPayment(
+                provider: provider,
+                item: item,
+                providerId: providerId,
+                itemId: itemId,
+                generation: generation
+            )
         }
     }
 
@@ -348,29 +379,29 @@ final class MembershipViewModel {
         provider: MembershipPayConfig,
         item: MembershipPayItem,
         providerId: String,
-        itemId: String
+        itemId: String,
+        generation: Int
     ) async {
         let cacheKey = providerId + ":" + itemId
         var activeOrderId: String?
 
         do {
-            paymentState = .creating
-            onUpdate?()
+            try ensurePaymentGeneration(generation)
 
             if let cached = cachedOrder(for: cacheKey) {
                 activeOrderId = cached.presentation.orderId
-                paymentState = .waiting(cached.presentation, confirming: false)
-                onUpdate?()
+                updatePaymentState(.waiting(cached.presentation, confirming: false), generation: generation)
                 await pollOrder(
                     orderId: cached.presentation.orderId,
                     presentation: cached.presentation,
-                    orderExpireAt: cached.expiresAt
+                    orderExpireAt: cached.expiresAt,
+                    generation: generation
                 )
                 return
             }
 
             let order = try await api.createOrder(providerId: providerId, itemId: itemId)
-            try Task.checkCancellation()
+            try ensurePaymentGeneration(generation)
             activeOrderId = order.orderId
             guard !order.orderId.isEmpty else {
                 throw MembershipAPIError.invalidResponse(NSLocalizedString("未获取到订单信息，请稍后再试", comment: ""))
@@ -405,6 +436,8 @@ final class MembershipViewModel {
                 )
             }
 
+            try ensurePaymentGeneration(generation)
+
             let expiresAt = presentation.expireAt
                 ?? nowProvider().addingTimeInterval(15 * 60)
             cacheOrder(
@@ -412,25 +445,35 @@ final class MembershipViewModel {
                 for: cacheKey
             )
 
-            paymentState = .waiting(presentation, confirming: false)
-            onUpdate?()
+            updatePaymentState(.waiting(presentation, confirming: false), generation: generation)
             await pollOrder(
                 orderId: order.orderId,
                 presentation: presentation,
-                orderExpireAt: expiresAt
+                orderExpireAt: expiresAt,
+                generation: generation
             )
         } catch {
             if Task.isCancelled || (error as? APIError)?.isCancellation == true {
-                paymentState = .cancelled(orderId: activeOrderId)
-                onUpdate?()
+                updatePaymentState(.cancelled(orderId: activeOrderId), generation: generation)
                 return
             }
-            paymentState = .failed(
-                orderId: activeOrderId,
-                message: error.localizedDescription
+            updatePaymentState(
+                .failed(orderId: activeOrderId, message: error.localizedDescription),
+                generation: generation
             )
-            onUpdate?()
         }
+    }
+
+    private func ensurePaymentGeneration(_ generation: Int) throws {
+        guard generation == paymentGeneration, !Task.isCancelled else {
+            throw CancellationError()
+        }
+    }
+
+    private func updatePaymentState(_ state: MembershipPaymentUIState, generation: Int) {
+        guard generation == paymentGeneration else { return }
+        paymentState = state
+        onUpdate?()
     }
 
     private func makeWeChatPresentation(
@@ -509,13 +552,16 @@ final class MembershipViewModel {
     private func pollOrder(
         orderId: String,
         presentation: MembershipPaymentPresentation,
-        orderExpireAt: Date?
+        orderExpireAt: Date?,
+        generation: Int
     ) async {
         let deadline = nowProvider().addingTimeInterval(15 * 60)
         var machineState = MembershipPaymentState.waiting(orderId: orderId)
         var consecutiveQueryFailures = 0
 
         while !Task.isCancelled {
+            guard generation == paymentGeneration else { return }
+
             var status: MembershipOrderStatus?
             var queryFailed = false
 
@@ -529,6 +575,7 @@ final class MembershipViewModel {
                 consecutiveQueryFailures += 1
             }
 
+            guard generation == paymentGeneration else { return }
             if Task.isCancelled { break }
 
             let nextState = MembershipPaymentStateMachine.next(
@@ -546,11 +593,13 @@ final class MembershipViewModel {
                 if !queryFailed {
                     consecutiveQueryFailures = 0
                 }
-                paymentState = .waiting(
-                    presentation,
-                    confirming: queryFailed || consecutiveQueryFailures > 0
+                updatePaymentState(
+                    .waiting(
+                        presentation,
+                        confirming: queryFailed || consecutiveQueryFailures > 0
+                    ),
+                    generation: generation
                 )
-                onUpdate?()
 
             case .paid(let paidOrderId, let statusMemberExpireTime):
                 removeCachedOrder(orderId: paidOrderId)
@@ -560,6 +609,9 @@ final class MembershipViewModel {
                 } catch {
                     refreshedInfo = store.cachedUserInfo
                 }
+
+                guard generation == paymentGeneration, !Task.isCancelled else { return }
+
                 userInfo = refreshedInfo ?? userInfo
                 applyPayConfigs()
 
@@ -577,23 +629,27 @@ final class MembershipViewModel {
                 }
 
                 didCompletePurchase = true
-                paymentState = .success(
-                    orderId: paidOrderId,
-                    amountText: presentation.amountText,
-                    memberExpireAt: expireDate,
-                    message: message
+                updatePaymentState(
+                    .success(
+                        orderId: paidOrderId,
+                        amountText: presentation.amountText,
+                        memberExpireAt: expireDate,
+                        message: message
+                    ),
+                    generation: generation
                 )
                 onMembershipChanged?()
-                onUpdate?()
                 return
 
             case .timedOut(let timedOutOrderId, let reason):
                 removeCachedOrder(orderId: timedOutOrderId)
-                paymentState = .expired(
-                    orderId: timedOutOrderId,
-                    message: timeoutMessage(reason: reason, orderId: timedOutOrderId)
+                updatePaymentState(
+                    .expired(
+                        orderId: timedOutOrderId,
+                        message: timeoutMessage(reason: reason, orderId: timedOutOrderId)
+                    ),
+                    generation: generation
                 )
-                onUpdate?()
                 return
 
             }
@@ -613,8 +669,7 @@ final class MembershipViewModel {
         }
 
         if Task.isCancelled {
-            paymentState = .cancelled(orderId: orderId)
-            onUpdate?()
+            updatePaymentState(.cancelled(orderId: orderId), generation: generation)
         }
     }
 
@@ -634,23 +689,24 @@ final class MembershipViewModel {
     }
 
     func cancelPayment() {
-        paymentTask?.cancel()
-        paymentTask = nil
-
         let orderId: String?
         switch paymentState {
         case .waiting(let presentation, _):
             orderId = presentation.orderId
-        case .creating:
-            orderId = nil
         default:
             orderId = nil
         }
+
+        // 只停止本机轮询，不取消服务端订单；保留订单缓存以便用户继续支付。
+        paymentGeneration &+= 1
+        paymentTask?.cancel()
+        paymentTask = nil
         paymentState = .cancelled(orderId: orderId)
         onUpdate?()
     }
 
     func resetPayment() {
+        paymentGeneration &+= 1
         paymentTask?.cancel()
         paymentTask = nil
         paymentState = .idle
