@@ -24,7 +24,11 @@ enum MacAuthBootstrap {
             Preferences.shared.loginInfo = nil
         }
 
-        guard restoreSession else { return }
+        // 自动化/本地调试可显式关闭 Keychain 静默恢复：
+        //   ANIX_DISABLE_KEYCHAIN=1 open -n AniXPlayer.app
+        // 关闭后本次启动视为未登录，需要重新登录；不会弹钥匙串授权框。
+        let keychainDisabled = ProcessInfo.processInfo.environment["ANIX_DISABLE_KEYCHAIN"] == "1"
+        guard restoreSession, !keychainDisabled else { return }
 
         Task {
             _ = await SessionStore.shared.restoreIfPossible()
