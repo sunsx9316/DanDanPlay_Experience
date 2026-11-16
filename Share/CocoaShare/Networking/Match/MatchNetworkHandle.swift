@@ -64,6 +64,9 @@ class MatchNetworkHandle {
     
     
     
+    /// 空字符串的 MD5；在线/虚拟文件没有本地哈希时使用。
+    static let emptyFileHash = "d41d8cd98f00b204e9800998ecf8427e"
+
     /// 根据文件请求匹配的结果
     /// - Parameters:
     ///   - file: 文件
@@ -74,29 +77,31 @@ class MatchNetworkHandle {
                       matchMode: MatchMode = .hashAndFileName,
                       parseDataProgress: FileProgressAction? = nil,
                       completion: @escaping((MatchCollection?, Error?) -> Void)) {
-        
-        let requestMatchWithFileHashBlock = { (_ fileHash: String) in
-            
+
+        let requestMatchBlock: (String, String, Int, MatchMode, Bool) -> Void = { fileName, fileHash, fileSize, mode, cacheResult in
+
             var parameters = [String : String]()
-            parameters["fileName"] = file.fileName
+            parameters["fileName"] = fileName
             parameters["fileHash"] = fileHash
-            parameters["fileSize"] = "\(file.fileSize)"
-            parameters["matchMode"] = matchMode.rawValue
-            
+            parameters["fileSize"] = "\(fileSize)"
+            parameters["matchMode"] = mode.rawValue
+
             ANX.logInfo(.HTTP, "根据文件返回匹配的结果 请求参数: \(parameters)")
-            
+
             NetworkManager.shared.postOnBaseURL(additionUrl: "/match", parameters: parameters) { result in
                 switch result {
                 case .success(let data):
                     let result = Response<MatchCollection>(with: data)
-                    
+
                     let collection = result.result
-                    
-                    /// 精确匹配，缓存结果
-                    if collection?.isMatched == true && collection?.collection.count == 1 {
+
+                    /// 精确匹配，缓存结果；虚拟文件没有稳定哈希，不写入全局 hash 缓存。
+                    if cacheResult,
+                       collection?.isMatched == true,
+                       collection?.collection.count == 1 {
                         CacheManager.shared.setMatchResultWithHash(fileHash, data: data)
                     }
-                    
+
                     completion(collection, result.error)
                     ANX.logInfo(.HTTP, "根据文件返回匹配的结果 请求成功")
                 case .failure(let error):
@@ -105,20 +110,29 @@ class MatchNetworkHandle {
                 }
             }
         }
-        
+
+        // 在线/虚拟文件：用「作品名 + 剧集名」按文件名匹配，不读取本地哈希。
+        // 对齐 Windows 版 LoadManager_Matching / MatchManager 的虚拟文件逻辑。
+        if file.isVirtualFile {
+            let fileName = file.danmakuMatchFileName ?? file.fileName
+            ANX.logInfo(.HTTP, "根据虚拟文件匹配弹幕 fileName: \(fileName)")
+            requestMatchBlock(fileName, Self.emptyFileHash, 0, .fileNameOnly, false)
+            return
+        }
+
         if Preferences.shared.fastMatch,
            let hash = CacheManager.shared.matchHashWithFile(file) {
             ANX.logInfo(.HTTP, "根据文件返回匹配的结果 快速匹配 hash：\(hash)")
-            
+
             if let data = CacheManager.shared.matchResultWithHash(hash) {
                 let result = Response<MatchCollection>(with: data)
-                
+
                 completion(result.result, nil)
                 ANX.logInfo(.HTTP, "根据缓存返回匹配的结果 请求成功")
             } else {
-                requestMatchWithFileHashBlock(hash)
+                requestMatchBlock(file.fileName, hash, file.fileSize, matchMode, true)
             }
-            
+
         } else {
             ANX.logInfo(.HTTP, "根据文件返回匹配的结果 获取文件解析字节")
             file.getFileHashWithProgress(parseDataProgress) { result in
@@ -129,7 +143,7 @@ class MatchNetworkHandle {
                 case .success(let hash):
                     ANX.logInfo(.HTTP, "根据文件返回匹配的结果 成功 hash: \(hash)")
                     CacheManager.shared.setMatchHashWithFile(file, hash: hash)
-                    requestMatchWithFileHashBlock(hash)
+                    requestMatchBlock(file.fileName, hash, file.fileSize, matchMode, true)
                 }
             }
         }

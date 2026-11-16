@@ -105,6 +105,12 @@ enum AccessibilityID {
         static let onlineOpenBrowser = "online.openBrowser"
         static let onlineCopyLink = "online.copyLink"
         static let onlineLogin = "online.login"
+        static let onlineCancel = "online.cancel"
+        static let onlineSourceFilter = "online.sourceFilter"
+        static let onlineManageSources = "online.manageSources"
+        static let onlineEpisodePlay = "online.episode.play"
+        static let onlineEpisodeOpen = "online.episode.open"
+        static let onlineEpisodeCopy = "online.episode.copy"
 
         static let status = "welcomeShell.status"
         static let statusAction = "welcomeShell.statusAction"

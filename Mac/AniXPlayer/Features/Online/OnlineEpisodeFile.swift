@@ -71,6 +71,12 @@ final class OnlineEpisodeFile: File {
 
     var isCanDelete: Bool { false }
 
+    var isVirtualFile: Bool { true }
+
+    var danmakuMatchFileName: String? {
+        return (fileName as NSString).deletingPathExtension
+    }
+
     var pathExtension: String {
         streamURL.pathExtension.uppercased()
     }

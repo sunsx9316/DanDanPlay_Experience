@@ -145,6 +145,16 @@ extension File {
     var httpHeaders: [String: String] {
         return [:]
     }
+
+    /// 是否为在线/虚拟文件。虚拟文件没有本地哈希，弹幕匹配改用文件名。
+    var isVirtualFile: Bool {
+        return false
+    }
+
+    /// 弹幕匹配使用的文件名（不含扩展名）；nil 时使用 fileName。
+    var danmakuMatchFileName: String? {
+        return nil
+    }
     
     var isCanDelete: Bool {
         if self == Swift.type(of: self).rootFile {
