@@ -1,6 +1,6 @@
 # macOS Windows 式欢迎页 / 主页设计（P5）
 
-> 状态：待实现（2026-11-16，替代原先的品牌启动页）
+> 状态：已实现并合并 win-porting（2026-11-16），替代原先的品牌启动页。
 > 参考：Windows `AcplayWPFClient/Pages/Welcome/Welcome.xaml` 及其子页面
 > 范围：macOS；iOS/tvOS 行为不变。
 
@@ -123,3 +123,11 @@ macOS 的启动页不是单纯的品牌欢迎页，而是 Windows 版的「欢�
 3. 公告、未看、时间表、继续播放。
 4. 在线观看首版。
 5. 测试、截图、深浅色、窗口缩放。
+
+## 8. 实现结果（2026-11-16）
+
+- 新增 `Mac/AniXPlayer/Features/WelcomeShell/`：外壳、侧边栏、Overview、公告、未看、时间表、排行榜容器、继续播放、在线观看、详情/队列窗口 presenter。
+- `PlayerLaunchViewController` 成为薄壳，承载 `WelcomeShellViewController`，保留原有回调语义。
+- 继续播放通过 `onResumeFiles(files:startWith:progress:)` 把最近播放进度传给独立播放器窗口，并在时长就绪后自动跳转；已实测从 15% 续播。
+- AX 冒烟已更新为检查 `nav.home` 与 7 个导航项、`overview.openFile`、`player.window`。
+- 已知限制：在线观看首版只做搜索/浏览器打开，不包含网页嗅探或内嵌网页；公告模型没有日期字段。
