@@ -44,8 +44,10 @@ final class DetailUserDataCollectionViewCell: CollectionViewItem, NSTextViewDele
     private lazy var card: BaseView = {
         let view = BaseView()
         view.wantsLayer = true
-        view.layer?.backgroundColor = NSColor.cellHighlightColor.cgColor
-        view.layer?.cornerRadius = 8
+        view.layer?.backgroundColor = NSColor.controlBackgroundColor.cgColor
+        view.layer?.cornerRadius = 10
+        view.layer?.borderWidth = 1
+        view.layer?.borderColor = NSColor.separatorColor.withAlphaComponent(0.35).cgColor
         return view
     }()
 
@@ -186,9 +188,9 @@ final class DetailUserDataCollectionViewCell: CollectionViewItem, NSTextViewDele
         card.addSubview(saveButton)
 
         card.snp.makeConstraints { make in
-            make.leading.trailing.equalToSuperview().inset(16)
-            make.top.equalToSuperview().offset(4)
-            make.bottom.equalToSuperview().offset(-4)
+            make.leading.trailing.equalToSuperview().inset(20)
+            make.top.equalToSuperview().offset(8)
+            make.bottom.equalToSuperview().offset(-8)
         }
 
         statusTitleLabel.snp.makeConstraints { make in

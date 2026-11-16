@@ -50,6 +50,9 @@ class BangumiDetailViewController: ViewController, NSCollectionViewDataSource, N
         let sv = ScrollView<CollectionView>()
         sv.containerView = collectionView
         sv.hasVerticalScroller = true
+        sv.hasHorizontalScroller = false
+        sv.autohidesScrollers = true
+        sv.horizontalScrollElasticity = .none
         sv.borderType = .noBorder
         sv.drawsBackground = false
         return sv
@@ -86,6 +89,8 @@ class BangumiDetailViewController: ViewController, NSCollectionViewDataSource, N
 
     private func updateCollectionViewFrame() {
         let newWidth = scrollView.contentView.bounds.width
+        collectionView.collectionViewLayout?.invalidateLayout()
+        collectionView.layoutSubtreeIfNeeded()
         let contentSize = collectionView.collectionViewLayout?.collectionViewContentSize ?? .zero
         collectionView.frame = NSRect(
             x: 0,
@@ -119,6 +124,7 @@ class BangumiDetailViewController: ViewController, NSCollectionViewDataSource, N
                     self.view.show(error: error)
                 } else if let detail = rsp?.bangumi {
                     self.title = detail.animeTitle
+                    self.view.window?.title = detail.animeTitle
                     // Recompute visible sections
                     var visible: [SectionType] = [.info, .userData, .episodes, .comments]
                     if !detail.relateds.isEmpty { visible.append(.relateds) }
@@ -273,8 +279,6 @@ class BangumiDetailViewController: ViewController, NSCollectionViewDataSource, N
 
     func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
         collectionView.deselectItems(at: indexPaths)
-        guard let indexPath = indexPaths.first, sections[indexPath.item] == .info else { return }
-        pushMetadata()
     }
 
     func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> NSSize {
@@ -282,11 +286,11 @@ class BangumiDetailViewController: ViewController, NSCollectionViewDataSource, N
         let type = sections[indexPath.item]
         switch type {
         case .info:
-            return NSSize(width: width, height: 170)
+            return NSSize(width: width, height: 250)
         case .userData:
-            return NSSize(width: width, height: 158)
+            return NSSize(width: width, height: 170)
         case .episodes, .comments:
-            return NSSize(width: width, height: 60)
+            return NSSize(width: width, height: 72)
         case .relateds, .similars:
             let list = type == .relateds ? (detail?.relateds ?? []) : (detail?.similars ?? [])
             guard !list.isEmpty else { return NSSize(width: width, height: 0.01) }
@@ -296,7 +300,7 @@ class BangumiDetailViewController: ViewController, NSCollectionViewDataSource, N
     }
 
     func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return 0
+        return 8
     }
 
     func collectionView(_ collectionView: NSCollectionView, layout collectionViewLayout: NSCollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {

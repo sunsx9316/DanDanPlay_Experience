@@ -62,23 +62,32 @@ class DetailRelatedCollectionViewCell: CollectionViewItem, NSCollectionViewDataS
         }
     }
 
+    private static func columnCount(for width: CGFloat) -> Int {
+        if width >= 900 { return 4 }
+        if width >= 700 { return 3 }
+        return 2
+    }
+
     func configure(title: String, items: [BangumiIntro]) {
         titleLabel.text = title
         self.items = items
+        waterfallLayout.columnCount = Self.columnCount(for: view.bounds.width)
         innerCollectionView.reloadData()
-        innerCollectionView.layoutSubtreeIfNeeded()
-        let contentSize = waterfallLayout.collectionViewContentSize
-        innerCollectionView.frame.size = NSSize(
-            width: view.bounds.width,
-            height: max(contentSize.height, 180)
-        )
+    }
+
+    override func viewDidLayout() {
+        super.viewDidLayout()
+        let columns = Self.columnCount(for: view.bounds.width)
+        guard waterfallLayout.columnCount != columns else { return }
+        waterfallLayout.columnCount = columns
+        innerCollectionView.reloadData()
     }
 
     static func estimatedHeight(for items: [BangumiIntro], width: CGFloat) -> CGFloat {
         guard !items.isEmpty else { return 0 }
 
         let layout = WaterfallLayout()
-        layout.columnCount = 2
+        layout.columnCount = columnCount(for: width)
         let availableWidth = width - layout.sectionInset.left - layout.sectionInset.right
         let itemWidth = (availableWidth - layout.itemPadding * CGFloat(layout.columnCount - 1)) / CGFloat(layout.columnCount)
 
@@ -89,7 +98,7 @@ class DetailRelatedCollectionViewCell: CollectionViewItem, NSCollectionViewDataS
             columnHeights[column] = columnHeights[column] + height + layout.itemPadding
         }
         let waterfallHeight = (columnHeights.max() ?? layout.sectionInset.top) + layout.sectionInset.bottom
-        return 18 + 8 + waterfallHeight
+        return 34 + waterfallHeight
     }
 
     // MARK: - NSCollectionViewDataSource

@@ -50,6 +50,7 @@ class DetailEpisodeRowCollectionViewCell: CollectionViewItem {
 
         subtitleLabel.snp.makeConstraints { make in
             make.leading.equalTo(titleLabel)
+            make.trailing.equalTo(arrowImageView.snp.leading).offset(-8)
             make.top.equalTo(titleLabel.snp.bottom).offset(2)
         }
 
