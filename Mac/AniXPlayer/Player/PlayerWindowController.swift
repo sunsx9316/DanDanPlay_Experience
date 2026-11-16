@@ -96,6 +96,17 @@ final class PlayerWindowController: NSWindowController, NSWindowDelegate {
         NSApp.activate(ignoringOtherApps: true)
     }
 
+    /// 首页快捷操作：聚焦已有播放器并弹出播放列表；没有媒体时由播放器展示空态。
+    func showPlaylist() {
+        guard let window = self.window else { return }
+
+        if !window.isVisible {
+            showWindow(nil)
+        }
+        focusPlayer()
+        playerViewController.presentPlayerList()
+    }
+
     // MARK: - Picture in Picture
 
     /// 把播放器窗口切换为置顶小窗（复用播放器设置中的「画中画」开关）。

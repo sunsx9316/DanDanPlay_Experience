@@ -7,6 +7,7 @@
 //
 
 import Cocoa
+import SnapKit
 
 protocol PlayerListViewControllerDelegate: AnyObject {
     func numberOfRowAtPlayerListViewController() -> Int
@@ -17,8 +18,10 @@ protocol PlayerListViewControllerDelegate: AnyObject {
 }
 
 class PlayerListViewController: ViewController {
-    
-    
+
+    /// 播放列表为空时由播放器提供「打开文件」入口。
+    var onOpenFiles: (() -> Void)?
+
     private lazy var scrollView: ScrollView<TableView> = {
         let tableView = TableView()
         tableView.delegate = self
@@ -36,7 +39,48 @@ class PlayerListViewController: ViewController {
         var scrollView = ScrollView(containerView: tableView)
         return scrollView
     }()
-    
+
+    private lazy var emptyTitleLabel: Label = {
+        let label = Label(labelWithString: NSLocalizedString("播放列表为空", comment: ""))
+        label.font = .systemFont(ofSize: 14, weight: .semibold)
+        label.textColor = .secondaryLabelColor
+        label.alignment = .center
+        label.setAccessibilityIdentifier(AccessibilityID.Player.playlistEmptyTitle)
+        return label
+    }()
+
+    private lazy var emptyDetailLabel: Label = {
+        let label = Label(labelWithString: NSLocalizedString("打开文件后会自动加入播放列表", comment: ""))
+        label.font = .systemFont(ofSize: 12)
+        label.textColor = .tertiaryLabelColor
+        label.alignment = .center
+        label.maximumNumberOfLines = 2
+        label.lineBreakMode = .byWordWrapping
+        return label
+    }()
+
+    private lazy var emptyStateStack: NSStackView = {
+        let stack = NSStackView(views: [emptyTitleLabel, emptyDetailLabel])
+        stack.orientation = .vertical
+        stack.alignment = .centerX
+        stack.spacing = 6
+        return stack
+    }()
+
+    private lazy var openFileButton: NSButton = {
+        let button = NSButton(
+            title: NSLocalizedString("打开文件", comment: ""),
+            target: self,
+            action: #selector(onTouchOpenFile(_:))
+        )
+        button.bezelStyle = .rounded
+        button.controlSize = .regular
+        button.setAccessibilityIdentifier(AccessibilityID.Player.playlistOpenFile)
+        return button
+    }()
+
+    private lazy var footer = NSView()
+
     private lazy var cellHeightDic: [Int : CGFloat] = {
         return [Int : CGFloat]()
     }()
@@ -45,20 +89,54 @@ class PlayerListViewController: ViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
+        footer.addSubview(openFileButton)
         self.view.addSubview(self.scrollView)
+        self.view.addSubview(self.emptyStateStack)
+        self.view.addSubview(footer)
+
         self.scrollView.snp.makeConstraints { (make) in
-            make.edges.equalTo(self.view.safeAreaLayoutGuide.snp.edges)
+            make.top.leading.trailing.equalTo(self.view.safeAreaLayoutGuide)
         }
+
+        footer.snp.makeConstraints { make in
+            make.top.equalTo(self.scrollView.snp.bottom)
+            make.leading.trailing.bottom.equalTo(self.view.safeAreaLayoutGuide)
+            make.height.equalTo(38)
+        }
+
+        openFileButton.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().offset(-10)
+            make.centerY.equalToSuperview()
+        }
+
+        self.emptyStateStack.snp.makeConstraints { make in
+            make.center.equalTo(self.scrollView)
+            make.leading.greaterThanOrEqualToSuperview().offset(16)
+            make.trailing.lessThanOrEqualToSuperview().offset(-16)
+        }
+
+        updateEmptyState()
     }
     
     func reloadData() {
         cellHeightDic.removeAll()
         self.scrollView.containerView.reloadData()
+        updateEmptyState()
     }
     
     override func loadView() {
         self.view = .init(frame: .init(x: 0, y: 0, width: 400, height: 500))
+    }
+
+    @objc private func onTouchOpenFile(_ sender: NSButton) {
+        onOpenFiles?()
+    }
+
+    private func updateEmptyState() {
+        let isEmpty = (delegate?.numberOfRowAtPlayerListViewController() ?? 0) == 0
+        emptyStateStack.isHidden = !isEmpty
+        scrollView.isHidden = isEmpty
     }
     
     //MARK: Private Method
@@ -74,7 +152,7 @@ extension PlayerListViewController: NSMenuDelegate {
                 guard let self = self else { return }
                 
                 self.delegate?.playerListViewController(self, didDeleteRow: clickedRow)
-                self.scrollView.containerView.reloadData()
+                self.reloadData()
             }))
         }
     }

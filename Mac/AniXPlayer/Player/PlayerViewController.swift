@@ -63,6 +63,21 @@ class PlayerViewController: ViewController {
 
     private weak var snapshotPreviewView: SnapshotPreviewView?
 
+    /// 首页快捷操作打开的空播放列表；媒体变化时同步刷新。
+    private weak var playerListViewController: PlayerListViewController?
+
+    /// 首页快捷操作打开播放器、但还没有媒体时，展示「打开文件」空态。
+    private var wantsEmptyPlayerState = false
+
+    private lazy var emptyStateView: PlayerEmptyStateView = {
+        let view = PlayerEmptyStateView()
+        view.onOpenFile = { [weak self] in
+            self?.openMediaFilesFromPlaylist()
+        }
+        view.isHidden = true
+        return view
+    }()
+
     /// 进度条缩略图缓存（key = 秒）
     private var thumbnailCache = [Int: ANXImage]()
     
@@ -146,6 +161,11 @@ class PlayerViewController: ViewController {
         self.mediaModel.mediaView.autoresizingMask = [.maxYMargin, .maxXMargin, .width, .height]
         
         self.uiView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+
+        self.view.addSubview(self.emptyStateView)
+        self.emptyStateView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
         }
 
@@ -237,6 +257,7 @@ class PlayerViewController: ViewController {
             self.gifExportFlow?.cancelAndDismiss()
             self.uiView.title = file?.fileName
             self.onMediaChanged?(file)
+            self.updateEmptyPlayerState()
             OnlinePlaybackSession.shared.playerDidChange(file: file, player: self)
             self.playHistoryReporter.reset()
             if file != nil {
@@ -308,6 +329,7 @@ class PlayerViewController: ViewController {
         
         self.mediaModel.context.playList.subscribe(onNext: { [weak self] _ in
             guard let self = self else { return }
+            self.playerListViewController?.reloadData()
         }).disposed(by: self.disposeBag)
     }
     
@@ -475,6 +497,79 @@ class PlayerViewController: ViewController {
     func appendFiles(_ files: [File]) {
         guard !files.isEmpty else { return }
         self.mediaModel.loadMedias(files)
+    }
+
+    /// 展示播放列表 popover；首页快捷操作在没有媒体时同时进入空播放器状态。
+    /// 复用底部「选集」按钮和首页 tile 的展示路径，避免维护两套列表 UI。
+    func presentPlayerList() {
+        guard isViewLoaded, view.window != nil else { return }
+
+        if mediaModel.media == nil {
+            wantsEmptyPlayerState = true
+            updateEmptyPlayerState()
+        }
+
+        presentPlayerList(relativeTo: uiView, at: playerListAnchorRect)
+    }
+
+    /// 底部控制条隐藏时没有可用的按钮锚点，把 popover 放在播放器右下角。
+    private var playerListAnchorRect: NSRect {
+        let bounds = uiView.bounds
+        return NSRect(
+            x: max(0, bounds.maxX - 140),
+            y: max(0, bounds.maxY - 44),
+            width: 100,
+            height: 1
+        )
+    }
+
+    private func presentPlayerList(relativeTo positioningView: NSView, at positioningRect: NSRect) {
+        if let list = presentedViewControllers?.compactMap({ $0 as? PlayerListViewController }).first {
+            list.reloadData()
+            return
+        }
+
+        dismissPresented()
+
+        let vc = PlayerListViewController()
+        vc.delegate = self
+        vc.onOpenFiles = { [weak self] in
+            self?.openMediaFilesFromPlaylist()
+        }
+        self.playerListViewController = vc
+        present(vc, asPopoverRelativeTo: positioningRect, of: positioningView, preferredEdge: .minY, behavior: .transient)
+    }
+
+    /// 播放列表的「打开文件」入口：选择后直接把媒体加入列表并开始播放。
+    private func openMediaFilesFromPlaylist() {
+        let directory = self.mediaModel.media?.parentFile ?? LocalFile.rootFile
+        LocalFile.fileManager.pickFiles(directory, from: self, filterType: .video) { [weak self] result in
+            guard let self = self, case .success(let files) = result else { return }
+
+            let mediaFiles = files.filter { !$0.url.isSubtitleFile && !$0.url.isDanmakuFile }
+            guard !mediaFiles.isEmpty else {
+                self.view.show(text: NSLocalizedString("请先打开视频文件", comment: ""))
+                return
+            }
+
+            self.loadFiles(mediaFiles, startWith: mediaFiles.first)
+            self.playerListViewController?.reloadData()
+            // 打开面板会关闭 transient popover；文件加载后重新展示，保证用户看到更新后的列表。
+            DispatchQueue.main.async { [weak self] in
+                self?.presentPlayerListIfNeeded()
+            }
+        }
+    }
+
+    private func presentPlayerListIfNeeded() {
+        let isPresented = presentedViewControllers?.contains(where: { $0 is PlayerListViewController }) == true
+        guard !isPresented else { return }
+        presentPlayerList()
+    }
+
+    private func updateEmptyPlayerState() {
+        let isEmpty = self.wantsEmptyPlayerState && self.mediaModel.media == nil
+        self.emptyStateView.isHidden = !isEmpty
     }
 
     @objc private func pickFile() {
@@ -886,11 +981,7 @@ extension PlayerViewController: PlayerUIViewDelegate, NSMenuDelegate {
     
     func onTouchPlayerList(playerUIView: PlayerUIView, button: NSButton) {
         ANX.logInfo(.player, "[Player] 打开播放列表")
-        self.dismissPresented()
-
-        let vc = PlayerListViewController()
-        vc.delegate = self
-        self.present(vc, asPopoverRelativeTo: .zero, of: button, preferredEdge: .minY, behavior: .transient)
+        presentPlayerList(relativeTo: button, at: .zero)
     }
 
     func onTouchDanmakuSwitch(playerUIView: PlayerUIView, isOn: Bool) {
@@ -1078,4 +1169,86 @@ extension PlayerViewController: MediaSettingViewControllerDelegate {
         self.pickFile()
     }
     
+}
+
+// MARK: - 空播放器
+
+/// 无媒体时覆盖播放器画面，提供「打开文件」入口；正常播放时隐藏。
+private final class PlayerEmptyStateView: NSView {
+
+    var onOpenFile: (() -> Void)?
+
+    private let iconView = NSImageView()
+    private let titleLabel = NSTextField(labelWithString: NSLocalizedString("打开文件开始播放", comment: ""))
+    private let detailLabel = NSTextField(labelWithString: NSLocalizedString("选择视频文件后会自动加入播放列表", comment: ""))
+    private lazy var openFileButton: NSButton = {
+        let title = NSLocalizedString("打开文件", comment: "")
+        let button = NSButton(title: title, target: self, action: #selector(onTouchOpenFile(_:)))
+        button.isBordered = false
+        button.wantsLayer = true
+        button.layer?.backgroundColor = NSColor.mainColor.cgColor
+        button.layer?.cornerRadius = 6
+        button.attributedTitle = NSAttributedString(
+            string: title,
+            attributes: [
+                .foregroundColor: NSColor.white,
+                .font: NSFont.systemFont(ofSize: 13, weight: .semibold),
+            ]
+        )
+        button.setAccessibilityIdentifier(AccessibilityID.Player.emptyStateOpenFile)
+        return button
+    }()
+
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        setupInit()
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+        setupInit()
+    }
+
+    @objc private func onTouchOpenFile(_ sender: NSButton) {
+        onOpenFile?()
+    }
+
+    private func setupInit() {
+        wantsLayer = true
+        layer?.backgroundColor = NSColor.black.cgColor
+        setAccessibilityIdentifier(AccessibilityID.Player.emptyState)
+
+        iconView.image = NSImage(systemSymbolName: "play.rectangle", accessibilityDescription: nil)
+        iconView.contentTintColor = NSColor.white.withAlphaComponent(0.7)
+
+        titleLabel.font = .systemFont(ofSize: 18, weight: .semibold)
+        titleLabel.textColor = .white
+        titleLabel.alignment = .center
+
+        detailLabel.font = .systemFont(ofSize: 12)
+        detailLabel.textColor = NSColor.white.withAlphaComponent(0.6)
+        detailLabel.alignment = .center
+        detailLabel.maximumNumberOfLines = 2
+        detailLabel.lineBreakMode = .byWordWrapping
+
+        let stack = NSStackView(views: [iconView, titleLabel, detailLabel, openFileButton])
+        stack.orientation = .vertical
+        stack.alignment = .centerX
+        stack.spacing = 10
+        stack.setCustomSpacing(18, after: detailLabel)
+        addSubview(stack)
+
+        stack.snp.makeConstraints { make in
+            make.center.equalToSuperview()
+            make.leading.greaterThanOrEqualToSuperview().offset(20)
+            make.trailing.lessThanOrEqualToSuperview().offset(-20)
+        }
+        iconView.snp.makeConstraints { make in
+            make.width.height.equalTo(42)
+        }
+        openFileButton.snp.makeConstraints { make in
+            make.width.equalTo(120)
+            make.height.equalTo(32)
+        }
+    }
 }
