@@ -120,6 +120,7 @@
 		7BD9CDE11C070A8B48D3D45D /* TranslationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2960917C8C60CDFEF13B12C6 /* TranslationViewController.swift */; };
 		7BFAEED1E97045FA094CEAB2 /* SubtitleTranslationEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A10A1070F045F315CE31EDB /* SubtitleTranslationEngine.swift */; };
 		7E7B673691A7FAB00E6EEEEF /* AuthenticatedAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5362202DB450401585040F4D /* AuthenticatedAPIClient.swift */; };
+		7F4147D83E15B83550B980A6 /* OnlinePlaybackSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = E1BA4902F9A6DE36BA41E95B /* OnlinePlaybackSession.swift */; };
 		80F5B852187AA06F9F855790 /* DownloadStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD9C66E7E612A942A645F366 /* DownloadStore.swift */; };
 		830E75F40FE0389402A917F6 /* OnlineHTMLSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 090B817247899EE80920C625 /* OnlineHTMLSupport.swift */; };
 		84754E449E53BD27E6714627 /* BangumiQueueModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0447B6DF591652F3BA833D59 /* BangumiQueueModels.swift */; };
@@ -325,6 +326,7 @@
 		9E47CEAB9B2E43E5CEBB99DA /* BackupDanmakuService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8A2784817A26CA18C4BA2501 /* BackupDanmakuService.swift */; };
 		9E56254CD8A9DC99FB98581D /* WelcomeDetailPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC74E02F24EC4EDACF17BD27 /* WelcomeDetailPresenter.swift */; };
 		9E661CB0A130250E1E92C612 /* AnimeListItem+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDE1E40F8F365CB98AE77BA /* AnimeListItem+Extensions.swift */; };
+		9E7E9FD3E9BFBFC73747B76A /* OnlineSnifferWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB486BBD0F0D5E32CE5A4AC /* OnlineSnifferWindowController.swift */; };
 		9E9977C979A50330A307BA3D /* WelcomeShellViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8943E5F081146FDF6F781467 /* WelcomeShellViewController.swift */; };
 		9EA4880875CB99C1EE18639F /* BackupDanmakuMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E890B3B09B3B4443077814E /* BackupDanmakuMerge.swift */; };
 		9FD2498BAB968ACFEB0BDFC4 /* ANXHUDRoundProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D102DEC9BA23BDE0CBC97C86 /* ANXHUDRoundProgressView.swift */; };
@@ -532,6 +534,7 @@
 		75C8BB585408F5DE1DF0D28E /* DownloadNotifier.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DownloadNotifier.swift; sourceTree = "<group>"; };
 		7949B8C389D4592B988347CF /* CollectionViewItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CollectionViewItem.swift; sourceTree = "<group>"; };
 		7BCB65B00EB79D4503269564 /* RefreshTokenStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = RefreshTokenStore.swift; sourceTree = "<group>"; };
+		7CB486BBD0F0D5E32CE5A4AC /* OnlineSnifferWindowController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OnlineSnifferWindowController.swift; sourceTree = "<group>"; };
 		7CB9B28278FD6BBB9F4B4D97 /* PopUpButton.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PopUpButton.swift; sourceTree = "<group>"; };
 		7D25560286F204E78A1C3F49 /* SnapshotPreviewView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SnapshotPreviewView.swift; sourceTree = "<group>"; };
 		7DAC50DA9F3A1300E298C719 /* FileRefreshTokenStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FileRefreshTokenStore.swift; path = ../Share/CocoaShare/Session/FileRefreshTokenStore.swift; sourceTree = "<group>"; };
@@ -784,6 +787,7 @@
 		DEE81841357FA9377CE65F3E /* TrendingModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TrendingModels.swift; sourceTree = "<group>"; };
 		DF01B60C98F6AACBAADB4AAA /* TrendingViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TrendingViewController.swift; sourceTree = "<group>"; };
 		E127C204518FC79593B10854 /* LocalLibraryModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LocalLibraryModels.swift; path = AniXPlayer/Features/LocalLibrary/LocalLibraryModels.swift; sourceTree = "<group>"; };
+		E1BA4902F9A6DE36BA41E95B /* OnlinePlaybackSession.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OnlinePlaybackSession.swift; sourceTree = "<group>"; };
 		E42C2E6BDD7BA6129308382C /* CollectionView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = CollectionView.swift; sourceTree = "<group>"; };
 		E4F5D6AEDD5512FAF77A08D8 /* TrendingCollectionViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TrendingCollectionViewCell.swift; sourceTree = "<group>"; };
 		E542FCB51FD246FF873219DA /* FavoriteCollectionViewCell.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FavoriteCollectionViewCell.swift; sourceTree = "<group>"; };
@@ -1123,6 +1127,8 @@
 				077BE196170044F459AF2C65 /* OnlineSourceModels.swift */,
 				AA1825470C090DE382F2CE6F /* OnlineSourceStore.swift */,
 				3412A089262A5DA38C39E926 /* OnlineStreamSniffer.swift */,
+				E1BA4902F9A6DE36BA41E95B /* OnlinePlaybackSession.swift */,
+				7CB486BBD0F0D5E32CE5A4AC /* OnlineSnifferWindowController.swift */,
 			);
 			name = Online;
 			path = Online;
@@ -2521,6 +2527,8 @@
 				3017B03F675CF341E7E4C938 /* DownloadLimitsSheet.swift in Sources */,
 				FEB0634A76CDDF2D9D2DA42B /* DownloadRSS.swift in Sources */,
 				D9679B1DD827B71B30FCE771 /* DownloadRSSSheet.swift in Sources */,
+				7F4147D83E15B83550B980A6 /* OnlinePlaybackSession.swift in Sources */,
+				9E7E9FD3E9BFBFC73747B76A /* OnlineSnifferWindowController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

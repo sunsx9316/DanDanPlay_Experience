@@ -124,7 +124,11 @@ final class WelcomeShellOnlineResultRowView: WelcomeShellTapView {
     }
 
     func configure(with subject: OnlineSubject) {
-        sourceLabel.text = "\(subject.engine.displayName) · \(subject.sourceName)"
+        var parts = ["\(subject.engine.displayName) · \(subject.sourceName)"]
+        if OnlineSourcePreferences.isSourcePinned(subject.sourceID) {
+            parts.append(NSLocalizedString("★ 置顶", comment: ""))
+        }
+        sourceLabel.text = parts.joined(separator: " · ")
         titleLabel.text = subject.title
         detailLabel.text = subject.url.host ?? subject.url.absoluteString
         setAccessibilityLabel("\(subject.sourceName)，\(subject.title)")
@@ -364,6 +368,31 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
         return button
     }()
 
+    private lazy var snifferButton: WelcomeShellClosureButton = {
+        let button = WelcomeShellClosureButton(title: NSLocalizedString("媒体嗅探", comment: ""))
+        button.bezelStyle = .rounded
+        button.controlSize = .small
+        button.toolTip = NSLocalizedString("打开网页媒体嗅探窗口", comment: "")
+        button.setAccessibilityIdentifier(AccessibilityID.WelcomeShell.onlineSniffer)
+        button.onClick = { [weak self] in
+            self?.openMediaSniffer()
+        }
+        return button
+    }()
+
+    private lazy var continuousButton: NSButton = {
+        let button = NSButton(
+            checkboxWithTitle: NSLocalizedString("连续播放", comment: ""),
+            target: self,
+            action: #selector(continuousPlaybackChanged)
+        )
+        button.controlSize = .small
+        button.state = OnlineSourcePreferences.continuousPlayback ? .on : .off
+        button.toolTip = NSLocalizedString("播放当前集时预取后续剧集，自动继续播放", comment: "")
+        button.setAccessibilityIdentifier(AccessibilityID.WelcomeShell.onlineContinuousPlay)
+        return button
+    }()
+
     private let complianceBanner = NSView()
     private let complianceLabel = welcomeShellLabel(
         NSLocalizedString("第三方源由你自行配置，App 不内置站点；解析失败时请改用浏览器打开。", comment: ""),
@@ -430,7 +459,16 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
             make.width.equalTo(96)
         }
 
-        let searchRow = NSStackView(views: [searchField, searchButton, cancelButton, NSView(), enginePopup, manageButton])
+        let searchRow = NSStackView(views: [
+            searchField,
+            searchButton,
+            cancelButton,
+            NSView(),
+            continuousButton,
+            enginePopup,
+            snifferButton,
+            manageButton
+        ])
         searchRow.orientation = .horizontal
         searchRow.alignment = .centerY
         searchRow.spacing = 8
@@ -636,6 +674,25 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
         }
     }
 
+    @objc private func continuousPlaybackChanged() {
+        OnlineSourcePreferences.continuousPlayback = continuousButton.state == .on
+    }
+
+    private func openMediaSniffer() {
+        let initialURL = subjects.indices.contains(selectedIndex) ? subjects[selectedIndex].url : nil
+        MacFeatureLauncher.showMediaSniffer(
+            presenting: view.window,
+            initialURL: initialURL,
+            onPlay: { [weak self] file in
+                if let router = self?.router {
+                    router.play(files: [file], startWith: file, progress: nil)
+                } else {
+                    MacFeatureLauncher.playOnlineFile(file)
+                }
+            }
+        )
+    }
+
     // MARK: Search
 
     private var canSearch: Bool {
@@ -798,6 +855,27 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
             .joined(separator: "\n")
     }
 
+    /// 源管理里置顶/取消置顶后，当前搜索结果立即按置顶优先重排。
+    private func applyPinOrderToSubjects() {
+        guard !subjects.isEmpty else { return }
+        let currentID = subjects.indices.contains(selectedIndex) ? subjects[selectedIndex].id : nil
+        let pinned = Set(OnlineSourcePreferences.pinnedSourceIDs)
+        subjects = subjects.enumerated().sorted { lhs, rhs in
+            let lhsPinned = pinned.contains(lhs.element.sourceID)
+            let rhsPinned = pinned.contains(rhs.element.sourceID)
+            if lhsPinned != rhsPinned {
+                return lhsPinned
+            }
+            return lhs.offset < rhs.offset
+        }.map { $0.element }
+        if let currentID, let index = subjects.firstIndex(where: { $0.id == currentID }) {
+            selectedIndex = index
+        } else {
+            selectedIndex = 0
+        }
+        rebuildResults()
+    }
+
     // MARK: Episodes
 
     private func loadEpisodesForSelection() {
@@ -852,6 +930,11 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
         guard selectedIndex < subjects.count else { return }
         let subject = subjects[selectedIndex]
         guard let source = allSources.first(where: { $0.id == subject.sourceID }) else { return }
+        guard let startIndex = episodes.firstIndex(where: { $0.id == episode.id }) else { return }
+        let orderedEpisodes = episodes
+        let lookahead = OnlineSourcePreferences.continuousPlayback
+            ? OnlinePlaybackService.continuousLookahead
+            : 0
 
         playbackTask?.cancel()
         playbackTask = Task { @MainActor [weak self] in
@@ -869,21 +952,45 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
             self.summaryLabel.text = NSLocalizedString("正在解析视频地址…", comment: "")
 
             do {
-                let file = try await self.service.preparePlayback(
+                let preparation = try await self.service.preparePlaylist(
                     source: source,
                     subject: subject,
-                    episode: episode,
+                    episodes: orderedEpisodes,
+                    startIndex: startIndex,
+                    lookahead: lookahead,
                     progress: { message in
-                        DispatchQueue.main.async { [weak self] in
-                            self?.summaryLabel.text = message
+                        DispatchQueue.main.async {
+                            self.summaryLabel.text = message
                         }
                     }
                 )
                 guard !Task.isCancelled else { return }
+                guard let startFile = preparation.files.first else {
+                    throw OnlinePlaybackError.videoNotFound(episode.url)
+                }
                 self.busyEpisodeID = nil
                 self.rebuildEpisodes()
                 self.updateSourceSummary()
-                self.router?.play(files: [file], startWith: file, progress: nil)
+                self.router?.play(files: preparation.files, startWith: startFile, progress: nil)
+
+                if preparation.files.count > 1 {
+                    var text = String(
+                        format: NSLocalizedString("连续播放：已准备 %d 集", comment: ""),
+                        preparation.files.count
+                    )
+                    if preparation.skippedCount > 0 {
+                        text += String(
+                            format: NSLocalizedString("，跳过 %d 集", comment: ""),
+                            preparation.skippedCount
+                        )
+                    }
+                    self.summaryLabel.text = text
+                } else if lookahead > 0, startIndex + 1 < orderedEpisodes.count {
+                    self.summaryLabel.text = NSLocalizedString(
+                        "后续剧集解析失败，仅播放当前集",
+                        comment: ""
+                    )
+                }
             } catch {
                 guard !Task.isCancelled else { return }
                 self.busyEpisodeID = nil
@@ -899,11 +1006,14 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
         alert.alertStyle = .warning
         alert.messageText = NSLocalizedString("在线播放失败", comment: "")
         alert.informativeText = error.localizedDescription
+        alert.addButton(withTitle: NSLocalizedString("重试当前集", comment: ""))
         alert.addButton(withTitle: NSLocalizedString("在浏览器打开", comment: ""))
         alert.addButton(withTitle: NSLocalizedString("取消", comment: ""))
 
-        let handler: (NSApplication.ModalResponse) -> Void = { response in
+        let handler: (NSApplication.ModalResponse) -> Void = { [weak self] response in
             if response == .alertFirstButtonReturn {
+                self?.play(episode)
+            } else if response == .alertSecondButtonReturn {
                 NSWorkspace.shared.open(episode.url)
             }
         }
@@ -1118,6 +1228,9 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
                 self.showIdleState()
             }
         }
+        controller.onPinsChanged = { [weak self] in
+            self?.applyPinOrderToSubjects()
+        }
 
         let panel = NSPanel(
             contentRect: NSRect(x: 0, y: 0, width: 560, height: 640),
@@ -1170,6 +1283,7 @@ final class OnlineSourceSettingsViewController: ViewController {
 
     private var sources: [OnlineMediaSource]
     var onSourcesChanged: (([OnlineMediaSource]) -> Void)?
+    var onPinsChanged: (() -> Void)?
 
     private let sourceStore = OnlineSourceStore.shared
     private let service = OnlinePlaybackService.shared
@@ -1376,11 +1490,33 @@ final class OnlineSourceSettingsViewController: ViewController {
             checkbox.identifier = NSUserInterfaceItemIdentifier(source.id)
             checkbox.setAccessibilityLabel(source.name)
 
+            let isPinned = OnlineSourcePreferences.isSourcePinned(source.id)
+            let pinButton = WelcomeShellClosureButton()
+            pinButton.bezelStyle = .inline
+            pinButton.isBordered = false
+            pinButton.image = welcomeShellSymbol(isPinned ? "star.fill" : "star", pointSize: 12, weight: .medium)
+            pinButton.imagePosition = .imageOnly
+            pinButton.contentTintColor = isPinned ? .systemYellow : .secondaryLabelColor
+            pinButton.toolTip = isPinned
+                ? NSLocalizedString("取消置顶", comment: "")
+                : NSLocalizedString("置顶该源", comment: "")
+            pinButton.setAccessibilityIdentifier("\(AccessibilityID.WelcomeShell.onlineSourcePin).\(source.id)")
+            pinButton.setAccessibilityLabel(pinButton.toolTip)
+            pinButton.onClick = { [weak self] in
+                self?.togglePin(source.id)
+            }
+
             let name = welcomeShellLabel(
                 source.name,
                 font: .systemFont(ofSize: 11.5, weight: .medium),
                 color: .labelColor
             )
+            let pinBadge = welcomeShellLabel(
+                NSLocalizedString("置顶", comment: ""),
+                font: .systemFont(ofSize: 9.5, weight: .semibold),
+                color: .mainColor
+            )
+            pinBadge.isHidden = !isPinned
             let detailText = source.detail.isEmpty
                 ? source.engine.displayName
                 : "\(source.engine.displayName) · \(source.detail)"
@@ -1391,7 +1527,9 @@ final class OnlineSourceSettingsViewController: ViewController {
             )
 
             row.addArrangedSubview(checkbox)
+            row.addArrangedSubview(pinButton)
             row.addArrangedSubview(name)
+            row.addArrangedSubview(pinBadge)
             row.addArrangedSubview(detail)
             sourceScroll.stack.addArrangedSubview(row)
             row.snp.makeConstraints { make in
@@ -1399,6 +1537,20 @@ final class OnlineSourceSettingsViewController: ViewController {
             }
         }
         sourceScroll.layoutContent()
+    }
+
+    private func togglePin(_ id: String) {
+        let pinned = OnlineSourcePreferences.toggleSourcePinned(id)
+        if pinned {
+            updateStatus(NSLocalizedString("已置顶，搜索结果将优先显示该源。", comment: ""))
+        } else {
+            updateStatus(NSLocalizedString("已取消置顶。", comment: ""))
+        }
+        onPinsChanged?()
+        // 按钮正在处理点击事件，延后重建整行，避免在 action 中释放 sender。
+        DispatchQueue.main.async { [weak self] in
+            self?.rebuildSourceList()
+        }
     }
 
     @objc private func sourceToggled(_ sender: NSButton) {

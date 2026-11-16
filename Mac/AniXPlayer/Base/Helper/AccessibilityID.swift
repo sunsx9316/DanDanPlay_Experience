@@ -111,11 +111,33 @@ enum AccessibilityID {
         static let onlineEpisodePlay = "online.episode.play"
         static let onlineEpisodeOpen = "online.episode.open"
         static let onlineEpisodeCopy = "online.episode.copy"
+        static let onlineContinuousPlay = "online.continuousPlay"
+        static let onlineSniffer = "online.sniffer"
+        static let onlineSourcePin = "online.source.pin"
 
         static let status = "welcomeShell.status"
         static let statusAction = "welcomeShell.statusAction"
         static let detailWindow = "welcomeShell.detailWindow"
         static let queueWindow = "welcomeShell.queueWindow"
+    }
+
+    /// 独立「媒体嗅探」窗口。
+    enum OnlineSniffer {
+        static let window = "onlineSniffer.window"
+        static let menuOpen = "onlineSniffer.menu.open"
+        static let urlField = "onlineSniffer.urlField"
+        static let go = "onlineSniffer.go"
+        static let back = "onlineSniffer.back"
+        static let forward = "onlineSniffer.forward"
+        static let reload = "onlineSniffer.reload"
+        static let stop = "onlineSniffer.stop"
+        static let openInBrowser = "onlineSniffer.openInBrowser"
+        static let candidateList = "onlineSniffer.candidateList"
+        static let candidateRowPrefix = "onlineSniffer.candidate."
+        static let copySelected = "onlineSniffer.copySelected"
+        static let playSelected = "onlineSniffer.playSelected"
+        static let openSelectedInBrowser = "onlineSniffer.openSelectedInBrowser"
+        static let status = "onlineSniffer.status"
     }
 
     enum Player {
