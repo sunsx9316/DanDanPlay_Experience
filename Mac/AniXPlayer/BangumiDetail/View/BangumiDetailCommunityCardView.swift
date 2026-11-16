@@ -35,16 +35,16 @@ final class BangumiDetailCommunityCardView: BangumiDetailCardView {
         action: nil
     )
 
-    private let commentsContainer: NSStackView = {
-        let stack = NSStackView()
+    private let commentsContainer: BangumiDetailFullWidthStackView = {
+        let stack = BangumiDetailFullWidthStackView()
         stack.orientation = .vertical
         stack.alignment = .width
         stack.spacing = 10
         stack.detachesHiddenViews = true
         return stack
     }()
-    private let commentsRowsStack: NSStackView = {
-        let stack = NSStackView()
+    private let commentsRowsStack: BangumiDetailFullWidthStackView = {
+        let stack = BangumiDetailFullWidthStackView()
         stack.orientation = .vertical
         stack.alignment = .width
         stack.spacing = 12

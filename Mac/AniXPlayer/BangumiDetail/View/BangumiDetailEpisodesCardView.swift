@@ -21,8 +21,8 @@ final class BangumiDetailEpisodesCardView: BangumiDetailCardView {
         return label
     }()
 
-    private let rowsStack: NSStackView = {
-        let stack = NSStackView()
+    private let rowsStack: BangumiDetailFullWidthStackView = {
+        let stack = BangumiDetailFullWidthStackView()
         stack.orientation = .vertical
         stack.alignment = .width
         stack.spacing = 2
