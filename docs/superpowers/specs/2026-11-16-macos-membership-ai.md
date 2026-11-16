@@ -1,6 +1,6 @@
 # macOS 会员、AI 与内容发现设计
 
-> 状态：实现中（2026-11-16）
+> 状态：已实现并合并 win-porting（2026-11-16）；真实支付/AI 联调待账号与后端。
 > 范围：macOS 客户端；iOS/tvOS 行为保持不变。
 > 说明：本文只记录稳定架构与边界，不包含内部接口路径、密钥、账号或 Windows 源码。
 
@@ -122,7 +122,11 @@ Mac/AniXPlayer/Features/Summary/
 | L3 | 启动页/播放器 AX 可达性 | `bash scripts/mac-ui-smoke.sh` |
 | 手工 | 真实登录、真实小额支付、真实 AI 调用 | 发布前验收 |
 
+当前结果（2026-11-16）：99 个单测通过；L2 播放冒烟、AX/CGEvent UI 冒烟通过；macOS Debug/Release、iOS/tvOS Debug 全部 BUILD SUCCEEDED。
+
 XCUITest 暂缓：证书已有，但登录成功路径受验证码阻断，且 macOS 视频/自绘控件断言弱、启动慢。等发布签名/公证流水线时再补。
+
+播放/UI 冒烟通过 `MacAuthBootstrap.start(restoreSession: false)` 跳过 Keychain 会话恢复，因此不会弹钥匙串授权框。手工运行未签名 Debug App 仍可能弹框，这是构建身份频繁变化导致的；需要稳定签名才能彻底避免。
 
 ## 5. 未完成与后续
 
