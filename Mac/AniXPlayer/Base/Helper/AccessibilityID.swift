@@ -132,6 +132,7 @@ enum AccessibilityID {
         static let screenshotButton = "player.screenshotButton"
         static let miniProgressSlider = "player.miniProgressSlider"
         static let backupDanmakuItem = "player.backupDanmakuItem"
+        static let exportGIFItem = "player.exportGIFItem"
     }
 
     enum Login {

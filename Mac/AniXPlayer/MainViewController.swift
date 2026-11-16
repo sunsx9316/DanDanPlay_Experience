@@ -58,6 +58,15 @@ class MainViewController: ViewController {
         showPlayer(with: files, startWith: file, progress: progress)
     }
 
+    /// 菜单入口：对当前播放器导出 GIF；没有播放器时给出提示。
+    func exportCurrentPlayerGIF() {
+        guard let player = playerWindowController?.playerViewController else {
+            view.show(text: NSLocalizedString("请先打开视频", comment: ""))
+            return
+        }
+        player.exportGIF()
+    }
+
     /// L2 播放冒烟：当前播放器状态；没有播放器时返回 nil。
     var currentPlaybackSnapshot: PlaybackSnapshot? {
         return playerWindowController?.playerViewController.playbackSnapshot()
@@ -91,6 +100,13 @@ class MainViewController: ViewController {
             await EntitlementGate.shared.require(
                 .member,
                 feature: .backupDanmaku,
+                presenting: self?.view.window
+            )
+        }
+        vc.gifExportAccessCheck = { [weak self] in
+            await EntitlementGate.shared.require(
+                .member,
+                feature: .gifExport,
                 presenting: self?.view.window
             )
         }
