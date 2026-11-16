@@ -21,6 +21,7 @@ class BangumiDetailViewController: ViewController, NSCollectionViewDataSource, N
 
     private enum SectionType: CaseIterable {
         case info
+        case userData
         case episodes
         case comments
         case relateds
@@ -38,6 +39,7 @@ class BangumiDetailViewController: ViewController, NSCollectionViewDataSource, N
         cv.isSelectable = true
         cv.frame = NSRect(x: 0, y: 0, width: 600, height: 400)
         cv.registerItem(class: DetailHeaderCollectionViewCell.self)
+        cv.registerItem(class: DetailUserDataCollectionViewCell.self)
         cv.registerItem(class: DetailEpisodeRowCollectionViewCell.self)
         cv.registerItem(class: DetailCommentsRowCollectionViewCell.self)
         cv.registerItem(class: DetailRelatedCollectionViewCell.self)
@@ -105,21 +107,56 @@ class BangumiDetailViewController: ViewController, NSCollectionViewDataSource, N
                 return
             }
 
-            BangumiNetworkHandle.detail(animateId: self.animateId) { [weak self] rsp, error in
-                guard let self = self else { return }
-                DispatchQueue.main.async {
-                    if let error = error {
-                        self.view.show(error: error)
-                    } else if let detail = rsp?.bangumi {
-                        self.title = detail.animeTitle
-                        // Recompute visible sections
-                        var visible: [SectionType] = [.info, .episodes, .comments]
-                        if !detail.relateds.isEmpty { visible.append(.relateds) }
-                        if !detail.similars.isEmpty { visible.append(.similars) }
-                        self.sections = visible
-                        self.detail = detail
-                    }
+            self.refreshDetail()
+        }
+    }
+
+    private func refreshDetail() {
+        BangumiNetworkHandle.detail(animateId: self.animateId) { [weak self] rsp, error in
+            guard let self = self else { return }
+            DispatchQueue.main.async {
+                if let error = error {
+                    self.view.show(error: error)
+                } else if let detail = rsp?.bangumi {
+                    self.title = detail.animeTitle
+                    // Recompute visible sections
+                    var visible: [SectionType] = [.info, .userData, .episodes, .comments]
+                    if !detail.relateds.isEmpty { visible.append(.relateds) }
+                    if !detail.similars.isEmpty { visible.append(.similars) }
+                    self.sections = visible
+                    self.detail = detail
                 }
+            }
+        }
+    }
+
+    private func applyFavoriteEdit(_ edit: DetailUserDataCollectionViewCell.Edit) {
+        guard let detail = detail else { return }
+        let animeId = detail.animeId
+
+        Task { @MainActor [weak self] in
+            guard let self = self else { return }
+            guard await LoginGate.shared.ensureAccessToken(presenting: self.view.window) else {
+                return
+            }
+
+            do {
+                if edit.shouldRemove {
+                    try await FavoriteNetworkHandle.removeFavorite(animeId: animeId)
+                } else {
+                    try await FavoriteNetworkHandle.updateFavorite(
+                        animeId: animeId,
+                        favoriteStatus: edit.status,
+                        rating: edit.rating ?? 0,
+                        comment: edit.comment
+                    )
+                }
+                self.view.show(text: NSLocalizedString("已更新", comment: ""))
+                self.refreshDetail()
+            } catch {
+                self.view.show(error: error)
+                // 失败时不保留本地“已成功”的假象，恢复服务端当前值。
+                self.collectionView.reloadData()
             }
         }
     }
@@ -172,6 +209,15 @@ class BangumiDetailViewController: ViewController, NSCollectionViewDataSource, N
                 }
                 item.onTapMetadata = { [weak self] in
                     self?.pushMetadata()
+                }
+            }
+            return item
+        case .userData:
+            let item = collectionView.dequeueItem(class: DetailUserDataCollectionViewCell.self, for: indexPath)
+            if let detail = detail {
+                item.configure(with: detail)
+                item.onSave = { [weak self] edit in
+                    self?.applyFavoriteEdit(edit)
                 }
             }
             return item
@@ -237,6 +283,8 @@ class BangumiDetailViewController: ViewController, NSCollectionViewDataSource, N
         switch type {
         case .info:
             return NSSize(width: width, height: 170)
+        case .userData:
+            return NSSize(width: width, height: 158)
         case .episodes, .comments:
             return NSSize(width: width, height: 60)
         case .relateds, .similars:

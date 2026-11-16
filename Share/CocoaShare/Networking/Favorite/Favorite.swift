@@ -12,7 +12,7 @@ struct UserFavoriteResponse: Decodable {
     @Default<[UserFavoriteItem]> var favorites: [UserFavoriteItem]
 }
 
-enum FavoriteStatus: String, Decodable, DefaultValue {
+enum FavoriteStatus: String, Codable, DefaultValue {
     
     static var defaultValue = FavoriteStatus.unknow
     

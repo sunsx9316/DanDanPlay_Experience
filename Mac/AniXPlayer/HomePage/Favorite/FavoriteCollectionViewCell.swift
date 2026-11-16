@@ -39,6 +39,7 @@ class FavoriteCollectionViewCell: AnimeListCollectionViewCell {
 
     func configure(with item: UserFavoriteItem) {
         update(item: item, ratingNumberFormatter: ratingFormatter)
+        view.setAccessibilityIdentifier(AccessibilityID.Favorite.itemPrefix + "\(item.animeId)")
 
         if let lastWatch = item.lastWatchTime {
             let formatter = DateFormatter()

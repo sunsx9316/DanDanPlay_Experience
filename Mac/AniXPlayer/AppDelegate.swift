@@ -35,6 +35,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private var playHistoryWindowController: PlayHistoryNavigationWindowController?
 
+    private var bangumiQueueWindowController: BangumiQueueNavigationWindowController?
+
     private var pendingOpenURLs: [URL] = []
 
     private var didFinishLaunching = false
@@ -282,6 +284,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         playHistoryWindowController = wc
     }
 
+    @objc private func showBangumiQueue(_ item: NSMenuItem) {
+        Task { @MainActor in
+            self.presentBangumiQueueWindow()
+        }
+    }
+
+    @MainActor private func presentBangumiQueueWindow() {
+        if let wc = bangumiQueueWindowController {
+            wc.window?.makeKeyAndOrderFront(nil)
+            return
+        }
+        let wc = BangumiQueueNavigationWindowController()
+        wc.windowWillCloseCallBack = { [weak self] in
+            self?.bangumiQueueWindowController = nil
+        }
+        wc.showWindow(nil)
+        bangumiQueueWindowController = wc
+    }
+
     @objc private func onOpenNetworkFile(_ item: NSMenuItem) {
         let wc = MediaLibraryWindowController()
         wc.onSelectFile = { [weak self] file, allFiles in
@@ -369,6 +390,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
             menu.addItem(withTitle: NSLocalizedString("主页", comment: ""), action: #selector(showHomePage(_:)), keyEquivalent: "")
             menu.addItem(withTitle: NSLocalizedString("播放历史", comment: ""), action: #selector(showPlayHistory(_:)), keyEquivalent: "")
+            menu.addItem(withTitle: NSLocalizedString("我的追番", comment: ""), action: #selector(showBangumiQueue(_:)), keyEquivalent: "")
             menu.addItem(NSMenuItem.separator())
             menu.addItem(withTitle: NSLocalizedString("全局设置", comment: ""), action: #selector(onGlobalSettingItemDidClick(_:)), keyEquivalent: ",")
             menu.addItem(withTitle: NSLocalizedString("会员中心", comment: ""), action: #selector(showMembership(_:)), keyEquivalent: "")
