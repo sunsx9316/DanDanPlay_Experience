@@ -247,7 +247,8 @@ extension DanmakuSettingViewController: NSTableViewDelegate, NSTableViewDataSour
         case .danmakuInfo:
             let cell = tableView.dequeueReusableCell(class: TitleTableViewCell.self)
             let count = self.danmakuModel.danmakuList.count
-            cell.label.text = String(format: NSLocalizedString("弹幕信息(%d条)", comment: ""), count)
+            cell.label.text = String(format: NSLocalizedString("弹幕列表(%d条)", comment: ""), count)
+            cell.label.setAccessibilityIdentifier(AccessibilityID.Player.danmakuListItem)
             return cell
         case .loadDanmaku, .searchDanmaku, .filterDanmaku:
             let cell = tableView.dequeueReusableCell(class: TitleTableViewCell.self)

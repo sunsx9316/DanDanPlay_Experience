@@ -76,6 +76,12 @@ class PlayerViewController: ViewController {
     
     private var matchWindowController: WindowController?
 
+    /// 弹幕列表独立窗口；仅在播放器存在期间保留。
+    private var danmakuListWindowController: DanmakuListWindowController?
+
+    /// 弹幕是否仍在加载；用于弹幕列表的空态提示。
+    private var isLoadingDanmaku = false
+
     private let playHistoryReporter = PlayHistoryReporter()
 
     private weak var danmakuMenu: NSMenu?
@@ -103,11 +109,13 @@ class PlayerViewController: ViewController {
     
     deinit {
         self.closeMatchWindow()
+        self.closeDanmakuListWindow()
     }
 
     override func viewWillDisappear() {
         super.viewWillDisappear()
 
+        self.closeDanmakuListWindow()
         self.gifExportFlow?.cancelAndDismiss()
 
         if self.mediaModel.isPlaying {
@@ -236,6 +244,8 @@ class PlayerViewController: ViewController {
             // 切换媒体时取消正在进行的动图导出，避免抓到上一个视频或卡住进度 sheet。
             self.gifExportFlow?.cancelAndDismiss()
             self.uiView.title = file?.fileName
+            self.isLoadingDanmaku = file != nil
+            self.refreshDanmakuListWindow()
             self.onMediaChanged?(file)
             OnlinePlaybackSession.shared.playerDidChange(file: file, player: self)
             self.playHistoryReporter.reset()
@@ -399,6 +409,68 @@ class PlayerViewController: ViewController {
         self.matchWindowController = nil
     }
 
+    // MARK: - 弹幕列表
+
+    /// 打开（或聚焦）弹幕列表窗口；窗口由播放器持有，关闭播放器时同步关闭。
+    private func openDanmakuListWindow() {
+        if let controller = self.danmakuListWindowController {
+            controller.listViewController.update(
+                matchDescription: self.currentDanmakuMatchDescription(),
+                isLoading: self.isLoadingDanmaku
+            )
+            controller.present(relativeTo: self.view.window)
+            return
+        }
+
+        let controller = DanmakuListWindowController(danmakuModel: self.danmakuModel)
+        controller.listViewController.onSeek = { [weak self] time in
+            self?.seekToDanmakuTime(time)
+        }
+        controller.onClose = { [weak self] in
+            self?.danmakuListWindowController = nil
+        }
+        self.danmakuListWindowController = controller
+
+        controller.listViewController.update(
+            matchDescription: self.currentDanmakuMatchDescription(),
+            isLoading: self.isLoadingDanmaku
+        )
+        controller.present(relativeTo: self.view.window)
+    }
+
+    private func closeDanmakuListWindow() {
+        self.danmakuListWindowController?.close()
+        self.danmakuListWindowController = nil
+    }
+
+    private func refreshDanmakuListWindow() {
+        guard let controller = self.danmakuListWindowController else { return }
+        controller.listViewController.update(
+            matchDescription: self.currentDanmakuMatchDescription(),
+            isLoading: self.isLoadingDanmaku
+        )
+    }
+
+    private func currentDanmakuMatchDescription() -> String? {
+        let matchInfo = self.playerModel.currentMatchInfo
+            ?? self.mediaModel.media.flatMap { self.mediaModel.matchInfo(media: $0) }
+        return matchInfo?.matchDesc
+    }
+
+    /// 从弹幕列表跳转到指定时间；使用播放器现有的 changePosition 路径。
+    private func seekToDanmakuTime(_ time: TimeInterval) {
+        let duration = self.mediaModel.length
+        guard duration > 0 else {
+            self.view.show(text: NSLocalizedString("请先打开视频", comment: ""))
+            return
+        }
+
+        let clampedTime = max(0, min(time, duration))
+        ANX.logInfo(.player, "[Player] 从弹幕列表跳转: \(clampedTime)s")
+        self.playerModel.changePosition(from: 0, diffValue: CGFloat(clampedTime))
+        self.uiView.autoShowControlView()
+    }
+
     /// 会员补充弹幕：重新拉取 withRelated 弹幕，去重后喂给渲染器。
     private func requestBackupDanmaku() {
         guard !self.isLoadingBackupDanmaku else { return }
@@ -434,6 +506,7 @@ class PlayerViewController: ViewController {
                     existing: self.currentDanmakuMap()
                 )
                 _ = self.danmakuModel.setupDanmaku(result.danmakus).subscribe()
+                self.refreshDanmakuListWindow()
 
                 if result.addedCount > 0 {
                     self.view.show(
@@ -492,9 +565,15 @@ class PlayerViewController: ViewController {
                             self?.view.show(text: NSLocalizedString("加载本地字幕成功！", comment: ""))
                         })
                     } else if file.url.isDanmakuFile {
+                        self.isLoadingDanmaku = true
+                        self.refreshDanmakuListWindow()
                         _ = self.danmakuModel.loadDanmakuByUser(file).subscribe(onError: { [weak self] error in
+                            self?.isLoadingDanmaku = false
+                            self?.refreshDanmakuListWindow()
                             self?.view.show(error: error)
                         }, onCompleted: { [weak self] in
+                            self?.isLoadingDanmaku = false
+                            self?.refreshDanmakuListWindow()
                             self?.view.show(text: NSLocalizedString("加载本地弹幕成功！", comment: ""))
                         })
                     }
@@ -534,6 +613,9 @@ extension PlayerViewController: MatchsViewControllerDelegate {
 
         switch event {
         case .next(let element):
+            self.isLoadingDanmaku = true
+            self.refreshDanmakuListWindow()
+
             switch element {
             case .parse(let state, let progress):
 
@@ -559,6 +641,9 @@ extension PlayerViewController: MatchsViewControllerDelegate {
                 hud.progress = 1
                 hud.labelText = NSLocalizedString("即将开始播放...", comment: "")
 
+                self.isLoadingDanmaku = false
+                self.refreshDanmakuListWindow()
+
                 if let pendingSeekProgress = self.pendingSeekProgress {
                     self.pendingSeekProgress = nil
                     // 用户从“继续播放”明确选择了一个进度：直接跳转，不再弹上次进度提示。
@@ -568,6 +653,8 @@ extension PlayerViewController: MatchsViewControllerDelegate {
                 }
             }
         case .error(let error):
+            self.isLoadingDanmaku = false
+            self.refreshDanmakuListWindow()
             self.view.dismiss()
             if let error = error as? PlayerModel.ParseError {
                 switch error {
@@ -580,6 +667,8 @@ extension PlayerViewController: MatchsViewControllerDelegate {
                 self.view.show(error: error)
             }
         case .completed:
+            self.isLoadingDanmaku = false
+            self.refreshDanmakuListWindow()
             self.view.dismiss(delay: 0.3)
         }
     }
@@ -1062,7 +1151,9 @@ extension PlayerViewController: DanmakuSettingViewControllerDelegate {
     }
 
     func showDanmakuListInDanmakuSettingViewController(vc: DanmakuSettingViewController) {
-        // Mac 端暂不支持弹幕列表展示
+        ANX.logInfo(.player, "[Player] 打开弹幕列表")
+        self.dismissPresented()
+        self.openDanmakuListWindow()
     }
 
     func backupDanmakuInDanmakuSettingViewController(vc: DanmakuSettingViewController) {

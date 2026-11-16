@@ -181,6 +181,19 @@ enum AccessibilityID {
         static let backupDanmakuItem = "player.backupDanmakuItem"
         static let exportGIFItem = "player.exportGIFItem"
 
+        // 弹幕列表
+        static let danmakuListItem = "player.danmakuListItem"
+        static let danmakuListWindow = "player.danmakuList.window"
+        static let danmakuListRoot = "player.danmakuList.root"
+        static let danmakuListMatch = "player.danmakuList.match"
+        static let danmakuListSummary = "player.danmakuList.summary"
+        static let danmakuListSearchField = "player.danmakuList.searchField"
+        static let danmakuListTable = "player.danmakuList.table"
+        static let danmakuListStatus = "player.danmakuList.status"
+        static let danmakuListEmptyState = "player.danmakuList.emptyState"
+        static let danmakuListLoading = "player.danmakuList.loading"
+        static let danmakuListRowPrefix = "player.danmakuList.row."
+
         // 动图导出：选项 / 进度 / 预览
         static let gifExportOptionsWindow = "player.gifExport.optionsWindow"
         static let gifExportStartTimeField = "player.gifExport.startTimeField"
