@@ -232,6 +232,15 @@ final class PlayHistoryViewController: ViewController {
         }
     }
 
+    /// 主窗口「我的 → 播放历史」每次切回时刷新；独立窗口仍由刷新按钮触发。
+    func refreshContent() {
+        guard isViewLoaded else {
+            _ = view
+            return
+        }
+        startRefresh()
+    }
+
     @objc private func refresh() {
         startRefresh()
     }

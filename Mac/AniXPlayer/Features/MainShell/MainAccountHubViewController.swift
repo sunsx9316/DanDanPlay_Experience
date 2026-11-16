@@ -461,7 +461,7 @@ final class MainAccountHubViewController: WelcomeShellScrollPageViewController {
         userCard.update(isLoggedIn: isLoggedIn, profile: profile)
     }
 
-    private func refreshSession() {
+    func refreshSession() {
         let session = SessionStore.shared
         Task { @MainActor [weak self] in
             let loggedIn = await session.isLoggedIn()

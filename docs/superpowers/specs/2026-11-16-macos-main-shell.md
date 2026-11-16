@@ -12,20 +12,23 @@
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
-│ 74pt  #1B1B1E   app icon / 弹弹play / 一级导航 / 搜索 / 用户 / 齿轮 │
+│ 74pt  #1B1B1E  [弹弹play=首页] 搜索 媒体库 下载 我的  ... 用户/齿轮 │
 ├──────────────────────────────────────────────────────────────┤
-│ 38pt  #26262A   概览 公告 未看番剧 新番时间表 排行榜 继续播放 在线观看 │  ← 仅「首页」
+│ 38pt  #26262A   首页 公告 未看番剧 新番时间表 排行榜 继续播放 在线观看 │  ← 首页
+│              或 资源搜索 / 番剧搜索                              │  ← 搜索
+│              或 概览 / 播放历史                                  │  ← 我的
 ├──────────────────────────────────────────────────────────────┤
 │ content host: NSColor.windowBackgroundColor                   │
-│                                                              │
 └──────────────────────────────────────────────────────────────┘
 ```
 
-- 一级导航：首页 / 搜索 / 媒体库 / 下载 / 历史 / 我的。
+- 品牌区「弹弹play」同时是一级「首页」入口，不再单独显示「首页」按钮。
+- 一级导航：搜索 / 媒体库 / 下载 / 我的。
 - 顶部栏品牌从 x=86 开始，避开交通灯；应用图标 32×32，标题 16pt bold，版本 9.5pt。
 - 一级按钮 74pt 高，13pt semibold；默认 `#B9B9BF`，悬停/选中白色，选中下方 3px 品牌色。
+- 品牌区在首页时显示同样的 3px 品牌色下划线，点击文字或图标都回到首页。
 - 二级 pivot 38pt 高，11.5pt medium；默认 `#9A9AA1`，悬停/选中白色，选中下方 2px 品牌色。
-- 非首页分区隐藏 pivot，内容区向上填满；不保留空行，也不生成占位项。
+- 首页、搜索、我的显示 pivot；媒体库、下载隐藏 pivot，内容区向上填满。
 - 内容背景使用 `NSColor.windowBackgroundColor`，随系统外观切换更新。
 
 ## 窗口 chrome
@@ -48,29 +51,47 @@
 
 | 分区 | 内容 | 关键接线 |
 | --- | --- | --- |
-| 首页 | `WelcomeShellViewController`（无侧栏） | 原有打开文件 / 网络文件 / 播放回调 |
-| 搜索 | `SearchUpgradedViewController` | `onOpenDetail` → `WelcomeDetailPresenter` |
+| 首页（品牌区） | `WelcomeShellViewController`（无侧栏） | 原有打开文件 / 网络文件 / 播放回调 |
+| 搜索 | `MainSearchSectionViewController`：资源搜索 / 番剧搜索 | 资源下载 → 下载中心；番剧详情 → `WelcomeDetailPresenter` |
 | 媒体库 | `LocalLibraryViewController` + 真实 `LocalLibraryStore` | `onPlayFiles` → 主窗口播放器 |
 | 下载 | `DownloadViewController(manager: .shared)` | `onPlayFiles` → 主窗口播放器 |
-| 历史 | `PlayHistoryViewController` | `onOpenDetail` → `WelcomeDetailPresenter` |
-| 我的 | `MainAccountHubViewController` | 追番窗口、历史分区、会员/设置/翻译/总结 |
+| 我的 | `MainAccountSectionViewController`：概览 / 播放历史 | 追番窗口、会员/设置/翻译/总结、历史详情 |
 
 各分区视图控制器首次进入时创建，之后缓存并只切换可见性，保留滚动位置、搜索结果和选择状态。
 分区切换不会重建页面。
 
 ### 首页 pivot
 
-- 仅首页显示，7 项：概览 / 公告 / 未看番剧 / 新番时间表 / 排行榜 / 继续播放 / 在线观看。
+- 7 项：首页 / 公告 / 未看番剧 / 新番时间表 / 排行榜 / 继续播放 / 在线观看。
+- 第一项对应原来的「概览」，按 Windows 版命名改为「首页」。
 - 选择 pivot 调用 `WelcomeShellViewController.selectPage(_:)`。
-- 首页内部路由（例如概览跳转时间表）通过 `onPageChange` 同步 pivot 高亮。
-- 当已经处于「首页」时再次点击一级「首页」，若当前不是概览则回到概览；
+- 首页内部路由（例如首页跳转时间表）通过 `onPageChange` 同步 pivot 高亮。
+- 当已经处于首页时再次点击品牌区，若当前不是首页页则回到首页页；
   从其他一级分区切走再切回时，保留最后停留的首页子页面。
+
+### 搜索 pivot
+
+- 2 项：资源搜索 / 番剧搜索。
+- 资源搜索：`ResourceSearchViewController`，按关键词搜索 `res.dandanplay.net`，
+  支持分类/字幕组筛选，下载按钮把磁力或种子地址预填到下载中心。
+- 番剧搜索：原有 `SearchUpgradedViewController`，模式为动画/剧集/标签/高级。
+- 再次点击一级「搜索」回到资源搜索；从其他分区切回时保留最后停留的搜索子页面。
+
+### 我的 pivot
+
+- 2 项：概览 / 播放历史。
+- 概览：`MainAccountHubViewController`，账号/会员信息与快捷卡片。
+- 播放历史：`PlayHistoryViewController`，每次切回时刷新。
+- 「播放历史」不再是顶部一级入口；账号概览中的「播放历史」卡片也切换到该 pivot。
+- 再次点击一级「我的」回到概览。
 
 ### 全局搜索
 
-- Enter 后切换到「搜索」分区并调用 `SearchUpgradedViewController.applyExternalSearch(_:)`。
+- Enter 后切换到「搜索」分区、选中「番剧搜索」，并调用
+  `SearchUpgradedViewController.applyExternalSearch(_:)`。
 - 该方法确保视图已加载、切到「动画」模式、填入关键词并复用原有搜索动作。
-- 关键词为空时只切换分区并聚焦搜索页输入框。
+- 关键词为空时只切换分区并聚焦番剧搜索输入框。
+- 顶部搜索框只搜弹弹play 作品库；资源搜索使用搜索分区自己的输入框。
 - 从主窗口打开详情使用独立详情窗口，不依赖导航控制器。
 
 ## 账号与用户状态
@@ -85,9 +106,10 @@
 
 ## 可访问性与本地化
 
-- `AccessibilityID.MainShell` 提供 root、topBar、六个一级导航、pivot 前缀、搜索框、
-  用户区、登录、设置和账号卡片前缀。
-- 一级导航与 pivot 复用 `WelcomeShellTapView`，支持 Space / Return 激活。
+- `AccessibilityID.MainShell` 提供 root、topBar、品牌首页、四个一级导航、pivot 前缀、
+  搜索框、用户区、登录、设置和账号卡片前缀。
+- `AccessibilityID.ResourceSearch` 提供资源搜索页、输入框、筛选、表格、状态与空态标识。
+- 品牌首页、一级导航与 pivot 复用 `WelcomeShellTapView`，支持 Space / Return 激活。
 - 新增字符串已写入 `Mac/AniXPlayer/Localizable.xcstrings`，提供 English 与 zh-Hans。
 
 ## 窗口关闭
@@ -109,7 +131,7 @@
 - 首页 pivot 切换仍沿用 `WelcomeShellViewController` 原有的页面创建逻辑；
   一级分区缓存保证切走再切回时保留首页当前子页面，但同一首页内切换不同 pivot 会重建该子页面。
 - 没有新增远程访问、投屏、数据源或占位页面。
-- 本次只做编译验证，未运行网络/UI 功能测试。
+- 资源搜索只做单次关键词搜索，不做分页加载、批量下载或自动下载规则入口。
 
 ## 验证
 
@@ -122,5 +144,7 @@ DERIVED_DATA_PATH=/tmp/anix-dd-main-shell bash scripts/build-mac.sh Debug
 合并后主工作区验证：
 
 - macOS / iOS / tvOS Debug 全部 `BUILD SUCCEEDED`。
-- macOS 全量单测 224 个通过。
-- 手动截图检查：首页 1100×720、搜索、媒体库、下载、历史、我的；历史海报列宽已修正。
+- macOS 全量单测 228 个通过（含资源搜索 4 个）。
+- 手动截图检查：品牌区首页、搜索-资源搜索、搜索-番剧搜索、媒体库、下载、我的-概览、
+  我的-播放历史；资源搜索实际请求 `res.dandanplay.net` 并成功显示 200 条资源；
+  下载按钮成功切换到下载中心并预填磁力链接。

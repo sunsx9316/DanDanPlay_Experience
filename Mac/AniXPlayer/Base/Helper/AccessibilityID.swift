@@ -37,9 +37,10 @@ enum AccessibilityID {
         static let navSearch = "mainShell.nav.search"
         static let navLibrary = "mainShell.nav.library"
         static let navDownload = "mainShell.nav.download"
-        static let navHistory = "mainShell.nav.history"
         static let navAccount = "mainShell.nav.account"
         static let pivotPrefix = "mainShell.pivot."
+        static let searchRoot = "mainShell.search.root"
+        static let accountRoot = "mainShell.account.root"
         static let searchField = "mainShell.searchField"
         static let user = "mainShell.user"
         static let login = "mainShell.login"
@@ -388,6 +389,20 @@ enum AccessibilityID {
         static let resultsTable = "search.resultsTable"
         static let statusLabel = "search.statusLabel"
         static let loadingIndicator = "search.loadingIndicator"
+    }
+
+    /// 资源搜索（res.dandanplay.net）。
+    enum ResourceSearch {
+        static let root = "resourceSearch.root"
+        static let pageTitle = "resourceSearch.pageTitle"
+        static let searchField = "resourceSearch.searchField"
+        static let searchButton = "resourceSearch.searchButton"
+        static let typeFilter = "resourceSearch.typeFilter"
+        static let subgroupFilter = "resourceSearch.subgroupFilter"
+        static let status = "resourceSearch.status"
+        static let table = "resourceSearch.table"
+        static let emptyState = "resourceSearch.emptyState"
+        static let rowPrefix = "resourceSearch.row."
     }
 
     /// 本地媒体库（P6）。

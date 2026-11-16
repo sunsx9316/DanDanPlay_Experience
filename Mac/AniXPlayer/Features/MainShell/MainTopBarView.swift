@@ -32,6 +32,101 @@ private final class MainShellTopBarDragView: NSView {
     }
 }
 
+// MARK: - Brand / home button
+
+/// 「弹弹play」品牌区同时是首页入口，相当于 Windows 版左侧 LinkGroup 的组标题。
+private final class MainShellBrandButton: WelcomeShellTapView {
+
+    private let iconView = ImageView()
+    private let titleLabel = welcomeShellLabel(
+        "弹弹play",
+        font: .systemFont(ofSize: 16, weight: .bold),
+        color: .white
+    )
+    private let versionLabel = welcomeShellLabel(
+        {
+            let version = AppInfoHelper.appVersion
+            return version.isEmpty ? "" : "v" + version
+        }(),
+        font: .systemFont(ofSize: 9.5),
+        color: MainShellPalette.secondaryText
+    )
+    private let underline = NSView()
+    private var isHovered = false
+
+    var isSelected = false {
+        didSet { updateSelection() }
+    }
+
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        normalBackground = .clear
+        layer?.cornerRadius = 0
+        setContentHuggingPriority(.required, for: .horizontal)
+        toolTip = NSLocalizedString("首页", comment: "")
+
+        iconView.image = NSApplication.shared.applicationIconImage
+        iconView.setScaling(.aspectFit)
+
+        let textStack = NSStackView(views: [titleLabel, versionLabel])
+        textStack.orientation = .vertical
+        textStack.alignment = .leading
+        textStack.spacing = 1
+
+        underline.wantsLayer = true
+        underline.layer?.backgroundColor = NSColor.mainColor.cgColor
+
+        addSubview(iconView)
+        addSubview(textStack)
+        addSubview(underline)
+
+        iconView.snp.makeConstraints { make in
+            make.leading.equalToSuperview()
+            make.centerY.equalToSuperview()
+            make.width.height.equalTo(32)
+        }
+        textStack.snp.makeConstraints { make in
+            make.leading.equalTo(iconView.snp.trailing).offset(10)
+            make.trailing.equalToSuperview()
+            make.centerY.equalToSuperview()
+        }
+        underline.snp.makeConstraints { make in
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalToSuperview()
+            make.height.equalTo(3)
+        }
+        snp.makeConstraints { make in
+            make.height.equalTo(74)
+        }
+
+        setAccessibilityIdentifier(AccessibilityID.MainShell.navHome)
+        setAccessibilityLabel(NSLocalizedString("首页", comment: ""))
+        updateSelection()
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+    override func mouseEntered(with event: NSEvent) {
+        super.mouseEntered(with: event)
+        isHovered = true
+        updateSelection()
+    }
+
+    override func mouseExited(with event: NSEvent) {
+        super.mouseExited(with: event)
+        isHovered = false
+        updateSelection()
+    }
+
+    private func updateSelection() {
+        underline.isHidden = !isSelected
+        titleLabel.textColor = (isSelected || isHovered) ? .white : NSColor.white.withAlphaComponent(0.92)
+        setAccessibilityValue(isSelected ? NSLocalizedString("已选中", comment: "") : "")
+    }
+}
+
 // MARK: - Primary nav button
 
 private final class MainShellNavButton: WelcomeShellTapView {
@@ -110,11 +205,11 @@ private final class MainShellNavButton: WelcomeShellTapView {
     }
 }
 
-// MARK: - Home pivot button
+// MARK: - Pivot button
 
 private final class MainShellPivotButton: WelcomeShellTapView {
 
-    let page: WelcomeShellPage
+    let pivot: MainShellPivot
     private let titleLabel: Label
     private let underline = NSView()
     private var isHovered = false
@@ -123,10 +218,10 @@ private final class MainShellPivotButton: WelcomeShellTapView {
         didSet { updateSelection() }
     }
 
-    init(page: WelcomeShellPage) {
-        self.page = page
+    init(pivot: MainShellPivot) {
+        self.pivot = pivot
         self.titleLabel = welcomeShellLabel(
-            page.mainShellPivotTitle,
+            pivot.title,
             font: .systemFont(ofSize: 11.5, weight: .medium),
             color: MainShellPalette.pivotNormal,
             alignment: .center
@@ -154,8 +249,8 @@ private final class MainShellPivotButton: WelcomeShellTapView {
             make.height.equalTo(38)
         }
 
-        setAccessibilityIdentifier("\(AccessibilityID.MainShell.pivotPrefix)\(page.mainShellKey)")
-        setAccessibilityLabel(page.mainShellPivotTitle)
+        setAccessibilityIdentifier(pivot.accessibilityID)
+        setAccessibilityLabel(pivot.title)
         updateSelection()
     }
 
@@ -187,24 +282,6 @@ private final class MainShellPivotButton: WelcomeShellTapView {
     }
 }
 
-private extension WelcomeShellPage {
-    var mainShellPivotTitle: String {
-        return self == .overview ? NSLocalizedString("概览", comment: "") : title
-    }
-
-    var mainShellKey: String {
-        switch self {
-        case .overview: return "overview"
-        case .announcement: return "announcement"
-        case .queue: return "queue"
-        case .schedule: return "schedule"
-        case .trending: return "trending"
-        case .recent: return "recent"
-        case .online: return "online"
-        }
-    }
-}
-
 // MARK: - Global search field
 
 private final class MainShellSearchView: NSView {
@@ -228,7 +305,7 @@ private final class MainShellSearchView: NSView {
         searchField.font = .systemFont(ofSize: 12)
         searchField.textColor = .white
         searchField.placeholderAttributedString = NSAttributedString(
-            string: NSLocalizedString("搜索动画、剧集、标签", comment: ""),
+            string: NSLocalizedString("搜索番剧、剧集、标签", comment: ""),
             attributes: [
                 .foregroundColor: NSColor.white.withAlphaComponent(0.42),
                 .font: NSFont.systemFont(ofSize: 12),
@@ -347,10 +424,12 @@ private final class MainShellUserAreaView: WelcomeShellTapView {
                 format: NSLocalizedString("会员有效期至 %@", comment: ""),
                 formatter.string(from: memberDate)
             )
+            toolTip = membershipLabel.toolTip
             membershipLabel.textColor = MainShellPalette.secondaryText
         } else {
             membershipLabel.text = NSLocalizedString("未开通会员", comment: "")
             membershipLabel.toolTip = nil
+            toolTip = nil
             membershipLabel.textColor = MainShellPalette.secondaryText
         }
     }
@@ -361,7 +440,7 @@ private final class MainShellUserAreaView: WelcomeShellTapView {
 final class MainTopBarView: NSView {
 
     var onSelectSection: ((MainShellSection) -> Void)?
-    var onSelectPivot: ((WelcomeShellPage) -> Void)?
+    var onSelectPivot: ((MainShellPivot) -> Void)?
     var onSubmitSearch: ((String) -> Void)?
     var onLogin: (() -> Void)?
     var onShowMembership: (() -> Void)?
@@ -372,13 +451,15 @@ final class MainTopBarView: NSView {
     private let pivotBackground = MainShellTopBarDragView()
     private let pivotStack = NSStackView()
     private let navStack = NSStackView()
+    private let brandButton = MainShellBrandButton()
     private let searchView = MainShellSearchView()
     private let userArea = MainShellUserAreaView()
     private let loginButton = WelcomeShellTapView()
     private let accountStack = NSStackView()
     private let gearButton = WelcomeShellTapView()
     private var navButtons: [MainShellSection: MainShellNavButton] = [:]
-    private var pivotButtons: [WelcomeShellPage: MainShellPivotButton] = [:]
+    private var pivotButtons: [MainShellPivot: MainShellPivotButton] = [:]
+    private var pivotItems: [MainShellPivot] = []
 
     var preferredHeight: CGFloat {
         return pivotRow.isHidden ? 74 : 112
@@ -409,37 +490,13 @@ final class MainTopBarView: NSView {
             make.height.equalTo(74)
         }
 
-        let brandIcon = ImageView()
-        brandIcon.image = NSApplication.shared.applicationIconImage
-        brandIcon.setScaling(.aspectFit)
-
-        let brandTitle = welcomeShellLabel(
-            "弹弹play",
-            font: .systemFont(ofSize: 16, weight: .bold),
-            color: .white
-        )
-        let version = AppInfoHelper.appVersion
-        let brandVersion = welcomeShellLabel(
-            version.isEmpty ? "" : "v" + version,
-            font: .systemFont(ofSize: 9.5),
-            color: MainShellPalette.secondaryText
-        )
-
-        let brandText = NSStackView(views: [brandTitle, brandVersion])
-        brandText.orientation = .vertical
-        brandText.alignment = .leading
-        brandText.spacing = 1
-
-        addSubview(brandIcon)
-        addSubview(brandText)
-
-        brandIcon.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(86)
-            make.centerY.equalTo(primaryBackground)
-            make.width.height.equalTo(32)
+        // 品牌区同时是首页入口。
+        brandButton.onClick = { [weak self] in
+            self?.onSelectSection?(.home)
         }
-        brandText.snp.makeConstraints { make in
-            make.leading.equalTo(brandIcon.snp.trailing).offset(10)
+        addSubview(brandButton)
+        brandButton.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(86)
             make.centerY.equalTo(primaryBackground)
         }
 
@@ -449,7 +506,7 @@ final class MainTopBarView: NSView {
         navStack.spacing = 2
         addSubview(navStack)
 
-        for section in MainShellSection.allCases {
+        for section in MainShellSection.primaryNavigation {
             let button = MainShellNavButton(section: section)
             button.onClick = { [weak self] in
                 self?.onSelectSection?(section)
@@ -459,7 +516,7 @@ final class MainTopBarView: NSView {
             navStack.addArrangedSubview(button)
         }
         navStack.snp.makeConstraints { make in
-            make.leading.equalTo(brandText.snp.trailing).offset(26)
+            make.leading.equalTo(brandButton.snp.trailing).offset(26)
             make.centerY.equalTo(primaryBackground)
             make.height.equalTo(74)
         }
@@ -563,19 +620,12 @@ final class MainTopBarView: NSView {
         pivotStack.alignment = .centerY
         pivotStack.spacing = 24
         pivotRow.addSubview(pivotStack)
-        for page in WelcomeShellPage.allCases {
-            let button = MainShellPivotButton(page: page)
-            button.onClick = { [weak self] in
-                self?.onSelectPivot?(page)
-            }
-            pivotButtons[page] = button
-            pivotStack.addArrangedSubview(button)
-        }
         pivotStack.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(86)
             make.centerY.equalToSuperview()
             make.height.equalTo(38)
         }
+        pivotRow.isHidden = true
 
         // 一级导航底部分隔线（pivot 可见时压在深色条与 pivot 的交界处）。
         let hairline = NSView()
@@ -601,11 +651,33 @@ final class MainTopBarView: NSView {
         for (item, button) in navButtons {
             button.isSelected = item == section
         }
+        brandButton.isSelected = section == .home
     }
 
-    func setSelectedPivot(_ page: WelcomeShellPage) {
+    /// 切换二级 pivot 项目。不同一级分区使用不同的项目集合。
+    func setPivot(_ items: [MainShellPivot], selected: MainShellPivot?) {
+        if items != pivotItems {
+            pivotItems = items
+            pivotButtons.removeAll()
+            pivotStack.arrangedSubviews.forEach { view in
+                pivotStack.removeArrangedSubview(view)
+                view.removeFromSuperview()
+            }
+            for pivot in items {
+                let button = MainShellPivotButton(pivot: pivot)
+                button.onClick = { [weak self] in
+                    self?.onSelectPivot?(pivot)
+                }
+                pivotButtons[pivot] = button
+                pivotStack.addArrangedSubview(button)
+            }
+        }
+        setSelectedPivot(selected)
+    }
+
+    func setSelectedPivot(_ pivot: MainShellPivot?) {
         for (item, button) in pivotButtons {
-            button.isSelected = item == page
+            button.isSelected = item == pivot
         }
     }
 

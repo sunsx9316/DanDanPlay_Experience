@@ -39,7 +39,9 @@ final class MainShellViewController: ViewController {
     private var currentChild: NSViewController?
     private var sectionChildren: [MainShellSection: NSViewController] = [:]
     private var libraryViewController: LocalLibraryViewController?
-    private var accountHubViewController: MainAccountHubViewController?
+    private var downloadViewController: DownloadViewController?
+    private var searchSectionViewController: MainSearchSectionViewController?
+    private var accountSectionViewController: MainAccountSectionViewController?
     private var didApplyWindowChrome = false
     private var didObserveWindowClose = false
 
@@ -60,8 +62,9 @@ final class MainShellViewController: ViewController {
         vc.onShowMembership = { [weak self] in
             self?.onShowMembership?()
         }
-        vc.onPageChange = { [weak self] page in
-            self?.topBar.setSelectedPivot(page)
+        vc.onPageChange = { [weak self] _ in
+            guard let self = self, self.currentSection == .home else { return }
+            self.syncPivotSelection()
         }
         return vc
     }()
@@ -83,8 +86,8 @@ final class MainShellViewController: ViewController {
         topBar.onSelectSection = { [weak self] section in
             self?.handlePrimarySelection(section)
         }
-        topBar.onSelectPivot = { [weak self] page in
-            self?.homeViewController.selectPage(page)
+        topBar.onSelectPivot = { [weak self] pivot in
+            self?.handlePivotSelection(pivot)
         }
         topBar.onSubmitSearch = { [weak self] keyword in
             self?.performGlobalSearch(keyword)
@@ -149,14 +152,47 @@ final class MainShellViewController: ViewController {
     // MARK: Section switching
 
     private func handlePrimarySelection(_ section: MainShellSection) {
-        if section == .home, currentSection == .home {
-            // 已经在一级「首页」时，再点一次回到概览。
-            if homeViewController.selectedPage != .overview {
+        switch section {
+        case .home:
+            if currentSection == .home {
                 homeViewController.selectPage(.overview)
+            } else {
+                select(.home)
             }
-            return
+        case .search:
+            if currentSection == .search {
+                // 再次点击「搜索」回到第一个子页面：资源搜索。
+                searchSectionViewController?.select(.resource)
+                syncPivotSelection()
+            } else {
+                select(.search)
+            }
+        case .account:
+            if currentSection == .account {
+                accountSectionViewController?.select(.overview)
+            } else {
+                select(.account)
+            }
+        case .library, .download:
+            select(section)
         }
-        select(section)
+    }
+
+    private func handlePivotSelection(_ pivot: MainShellPivot) {
+        switch pivot {
+        case .home(let page):
+            select(.home)
+            homeViewController.selectPage(page)
+            syncPivotSelection()
+        case .search(let page):
+            select(.search)
+            searchSectionViewController?.select(page)
+            syncPivotSelection()
+        case .account(let page):
+            select(.account)
+            accountSectionViewController?.select(page)
+            syncPivotSelection()
+        }
     }
 
     private func showSection(_ section: MainShellSection) {
@@ -169,13 +205,51 @@ final class MainShellViewController: ViewController {
         currentSection = section
 
         topBar.setSelectedSection(section)
-        let showsPivot = section == .home
-        topBar.setPivotVisible(showsPivot)
-        if showsPivot {
-            topBar.setSelectedPivot(homeViewController.selectedPage)
+        configurePivot(for: section)
+
+        if section == .account {
+            accountSectionViewController?.refreshSession()
         }
+    }
+
+    private func configurePivot(for section: MainShellSection) {
+        let items: [MainShellPivot]
+        let selected: MainShellPivot
+
+        switch section {
+        case .home:
+            items = WelcomeShellPage.allCases.map(MainShellPivot.home)
+            selected = .home(homeViewController.selectedPage)
+        case .search:
+            items = MainSearchPage.allCases.map(MainShellPivot.search)
+            selected = .search(searchSectionViewController?.selectedPage ?? .resource)
+        case .account:
+            items = MainAccountPage.allCases.map(MainShellPivot.account)
+            selected = .account(accountSectionViewController?.selectedPage ?? .overview)
+        case .library, .download:
+            topBar.setPivotVisible(false)
+            topBarHeightConstraint?.update(offset: topBar.preferredHeight)
+            view.needsLayout = true
+            return
+        }
+
+        topBar.setPivot(items, selected: selected)
+        topBar.setPivotVisible(true)
         topBarHeightConstraint?.update(offset: topBar.preferredHeight)
         view.needsLayout = true
+    }
+
+    private func syncPivotSelection() {
+        switch currentSection {
+        case .home:
+            topBar.setSelectedPivot(.home(homeViewController.selectedPage))
+        case .search:
+            topBar.setSelectedPivot(.search(searchSectionViewController?.selectedPage ?? .resource))
+        case .account:
+            topBar.setSelectedPivot(.account(accountSectionViewController?.selectedPage ?? .overview))
+        case .library, .download:
+            break
+        }
     }
 
     private func childViewController(for section: MainShellSection) -> NSViewController {
@@ -188,10 +262,14 @@ final class MainShellViewController: ViewController {
         case .home:
             child = homeViewController
         case .search:
-            let vc = SearchUpgradedViewController()
+            let vc = MainSearchSectionViewController()
             vc.onOpenDetail = { [weak self] animeId in
                 self?.openDetail(animeId: animeId)
             }
+            vc.onDownloadResource = { [weak self] item in
+                self?.openResourceDownload(item)
+            }
+            searchSectionViewController = vc
             child = vc
         case .library:
             let store: LocalLibraryStore?
@@ -214,25 +292,23 @@ final class MainShellViewController: ViewController {
             vc.onPlayFiles = { [weak self] files, startFile in
                 self?.onPlayFiles?(files, startFile)
             }
-            child = vc
-        case .history:
-            let vc = PlayHistoryViewController()
-            vc.onOpenDetail = { [weak self] animeId in
-                self?.openDetail(animeId: animeId)
-            }
+            downloadViewController = vc
             child = vc
         case .account:
-            let vc = MainAccountHubViewController()
-            vc.onShowHistory = { [weak self] in
-                self?.select(.history)
-            }
+            let vc = MainAccountSectionViewController()
             vc.onShowMembership = { [weak self] in
                 self?.onShowMembership?()
             }
             vc.onShowSettings = { [weak self] in
                 self?.onShowSettings?()
             }
-            accountHubViewController = vc
+            vc.onOpenDetail = { [weak self] animeId in
+                self?.openDetail(animeId: animeId)
+            }
+            vc.onPageChange = { [weak self] _ in
+                self?.syncPivotSelection()
+            }
+            accountSectionViewController = vc
             child = vc
         }
 
@@ -250,11 +326,20 @@ final class MainShellViewController: ViewController {
 
     private func performGlobalSearch(_ keyword: String) {
         select(.search)
-        guard let search = sectionChildren[.search] as? SearchUpgradedViewController else { return }
         if keyword.isEmpty {
-            search.focusSearchField()
+            searchSectionViewController?.select(.bangumi)
         } else {
-            search.applyExternalSearch(keyword)
+            searchSectionViewController?.applyExternalSearch(keyword)
+        }
+        syncPivotSelection()
+    }
+
+    private func openResourceDownload(_ item: ResourceSearchItem) {
+        guard let source = item.downloadSource else { return }
+        select(.download)
+        DispatchQueue.main.async { [weak self] in
+            guard let self = self, let download = self.downloadViewController else { return }
+            download.openAddSheet(prefillSource: source)
         }
     }
 
@@ -279,7 +364,7 @@ final class MainShellViewController: ViewController {
             let isLoggedIn = await session.isLoggedIn()
             let profile = await session.currentProfile()
             self.topBar.updateSession(isLoggedIn: isLoggedIn, profile: profile)
-            self.accountHubViewController?.updateSession(isLoggedIn: isLoggedIn, profile: profile)
+            self.accountSectionViewController?.updateSession(isLoggedIn: isLoggedIn, profile: profile)
         }
     }
 

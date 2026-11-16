@@ -378,6 +378,24 @@ class WelcomeShellTapView: NSView {
         isHovered = false
     }
 
+    /// 卡片/导航按钮里的文字和图片只是展示，不应拦截点击；
+    /// 否则用户点在「首页」文字上时不会触发整块区域的动作。
+    /// 子视图里真正的按钮/输入框仍保留自己的点击。
+    override func hitTest(_ point: NSPoint) -> NSView? {
+        guard isTapEnabled, isEnabledForTap, !isHidden, alphaValue > 0 else { return nil }
+        guard let hit = super.hitTest(point) else { return nil }
+        if hit === self { return self }
+
+        var candidate: NSView? = hit
+        while let view = candidate, view !== self {
+            if view is NSButton || view is NSSearchField || view is NSPopUpButton || view is NSSlider {
+                return view
+            }
+            candidate = view.superview
+        }
+        return self
+    }
+
     override func mouseDown(with event: NSEvent) {
         guard isTapEnabled, isEnabledForTap else { return }
         window?.makeFirstResponder(self)
