@@ -1457,7 +1457,7 @@ final class OnlineSourceSettingsViewController: ViewController {
             guard let self = self else { return }
             do {
                 await self.sourceStore.updateURLs(animeko: animeko, kazumi: kazumi)
-                await self.sourceStore.clearCache()
+                // 保留旧缓存用于网络失败回退；需要强制重下时用户可点“清空缓存”。
                 let loaded = try await self.service.loadSources(
                     forceRefresh: true,
                     progress: { message in
