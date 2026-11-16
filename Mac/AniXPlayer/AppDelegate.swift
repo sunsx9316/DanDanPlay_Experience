@@ -290,6 +290,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
     }
 
+    @objc private func exportCurrentGIF(_ item: NSMenuItem) {
+        guard let main = mainWindowController.contentViewController as? MainViewController else { return }
+        main.exportCurrentPlayerGIF()
+    }
+
     @objc private func showPlayHistory(_ item: NSMenuItem) {
         if let wc = playHistoryWindowController {
             wc.window?.makeKeyAndOrderFront(nil)
@@ -495,6 +500,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             menu.addItem(withTitle: NSLocalizedString("会员中心", comment: ""), action: #selector(showMembership(_:)), keyEquivalent: "")
             menu.addItem(withTitle: NSLocalizedString("翻译字幕…", comment: ""), action: #selector(showTranslation(_:)), keyEquivalent: "")
             menu.addItem(withTitle: NSLocalizedString("AI 视频总结…", comment: ""), action: #selector(showSummary(_:)), keyEquivalent: "")
+            let exportGIFItem = NSMenuItem(
+                title: NSLocalizedString("导出 3 秒动图", comment: ""),
+                action: #selector(exportCurrentGIF(_:)),
+                keyEquivalent: ""
+            )
+            exportGIFItem.identifier = NSUserInterfaceItemIdentifier(AccessibilityID.Player.exportGIFItem)
+            menu.addItem(exportGIFItem)
 
             menu.addItem(NSMenuItem.separator())
 

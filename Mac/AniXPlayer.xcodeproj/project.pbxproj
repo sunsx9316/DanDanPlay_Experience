@@ -313,6 +313,7 @@
 		9E9977C979A50330A307BA3D /* WelcomeShellViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8943E5F081146FDF6F781467 /* WelcomeShellViewController.swift */; };
 		9EA4880875CB99C1EE18639F /* BackupDanmakuMerge.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E890B3B09B3B4443077814E /* BackupDanmakuMerge.swift */; };
 		9FD2498BAB968ACFEB0BDFC4 /* ANXHUDRoundProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D102DEC9BA23BDE0CBC97C86 /* ANXHUDRoundProgressView.swift */; };
+		A02B8AAF9A09A36671A669C5 /* GIFExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F63BF875755033BDC5B40A /* GIFExportService.swift */; };
 		A0F3C0A082F0421A3290A371 /* FavoriteUserDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B8E5B0C6EF68249D97700E /* FavoriteUserDataService.swift */; };
 		A37922529E949B313F1FAF0E /* SessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7426E639FBC8FE8B8626A93F /* SessionStore.swift */; };
 		A546C2584CAC40A6BFD3AD77 /* ThemedTableRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D126C7B2C39D46C1AA1B4176 /* ThemedTableRowView.swift */; };
@@ -434,6 +435,7 @@
 		23691226CF538A3B941DD7E6 /* LocalLibraryWindowController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LocalLibraryWindowController.swift; sourceTree = "<group>"; };
 		23F268B6B06684283A4E523C /* Slider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Slider.swift; sourceTree = "<group>"; };
 		26B904AB7A349F6BFBE391D4 /* ANXHUDBarProgressView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ANXHUDBarProgressView.swift; sourceTree = "<group>"; };
+		26F63BF875755033BDC5B40A /* GIFExportService.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GIFExportService.swift; sourceTree = "<group>"; };
 		2927587DD372C5CE0508B5CC /* LocalLibraryStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LocalLibraryStore.swift; path = AniXPlayer/Features/LocalLibrary/LocalLibraryStore.swift; sourceTree = "<group>"; };
 		2960917C8C60CDFEF13B12C6 /* TranslationViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TranslationViewController.swift; sourceTree = "<group>"; };
 		29E4262B0275EF78A1403CD8 /* FileRefreshTokenStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = FileRefreshTokenStore.swift; sourceTree = "<group>"; };
@@ -1842,9 +1844,19 @@
 				E6337FE360FC138E6202F0D9 /* WelcomeShell */,
 				41AB61A6C6F3325C6074A392 /* LocalLibrary */,
 				434C69AA6800AD1DB0E36F8F /* Download */,
+				D7FAFB9F1514A1D8CF7C9B50 /* GIFExport */,
 			);
 			name = Features;
 			path = Features;
+			sourceTree = "<group>";
+		};
+		D7FAFB9F1514A1D8CF7C9B50 /* GIFExport */ = {
+			isa = PBXGroup;
+			children = (
+				26F63BF875755033BDC5B40A /* GIFExportService.swift */,
+			);
+			name = GIFExport;
+			path = GIFExport;
 			sourceTree = "<group>";
 		};
 		DE454581F5B4C179FE806110 /* View */ = {
@@ -2408,6 +2420,7 @@
 				C44BF0439933109801984BBE /* DownloadSheets.swift in Sources */,
 				0E5C963A83E8C9E01122A150 /* DownloadViewController.swift in Sources */,
 				6373C33D8D6D68A7A19A9C14 /* DownloadWindowController.swift in Sources */,
+				A02B8AAF9A09A36671A669C5 /* GIFExportService.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

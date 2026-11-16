@@ -86,7 +86,11 @@ class PlayerViewController: ViewController {
     /// 会员补充弹幕门禁；由集成方注入会员检查/付费墙。默认放行。
     var backupDanmakuAccessCheck: () async -> Bool = { true }
 
+    /// 会员动图导出（GIF）门禁；由集成方注入会员检查/付费墙。默认放行。
+    var gifExportAccessCheck: () async -> Bool = { true }
+
     private var isLoadingBackupDanmaku = false
+    private var isExportingGIF = false
 
     // 开始活动以防止系统休眠
     private var activityToken: NSObjectProtocol?
@@ -651,7 +655,55 @@ extension PlayerViewController: PlayerUIViewDataSource {
 
 // MARK: - PlayerUIViewDelegate
 extension PlayerViewController: PlayerUIViewDelegate, NSMenuDelegate {
-    
+
+    /// 会员动图导出：从当前播放位置截取 3 秒 GIF。
+    /// 首版只支持 AVFoundation 能解码的本地文件；远程流会明确提示。
+    func exportGIF() {
+        guard !isExportingGIF else { return }
+        guard let item = mediaModel.media, item.url.isFileURL else {
+            self.view.show(text: NSLocalizedString("当前视频不是本地文件，暂不支持导出动图", comment: ""))
+            return
+        }
+
+        let startTime = mediaModel.currentTime
+        let duration = mediaModel.length
+        guard duration > 0, startTime < duration - 0.5 else {
+            self.view.show(text: NSLocalizedString("当前位置之后没有足够的视频内容", comment: ""))
+            return
+        }
+
+        isExportingGIF = true
+        Task { @MainActor [weak self] in
+            guard let self = self else { return }
+
+            guard await self.gifExportAccessCheck() else {
+                self.isExportingGIF = false
+                return
+            }
+
+            self.view.show(text: NSLocalizedString("正在导出动图…", comment: ""))
+            GIFExportService().export(
+                videoURL: item.url,
+                startTime: startTime,
+                configuration: .default,
+                progress: { _ in }
+            ) { [weak self] result in
+                guard let self = self else { return }
+                self.isExportingGIF = false
+
+                switch result {
+                case .success(let url):
+                    ANX.logInfo(.player, "[Player] 动图已保存: \(url.path)")
+                    self.view.show(text: NSLocalizedString("动图已保存", comment: ""))
+                    NSWorkspace.shared.activateFileViewerSelecting([url])
+                case .failure(let error):
+                    ANX.logError(.player, "[Player] 动图导出失败: \(error)")
+                    self.view.show(error: error)
+                }
+            }
+        }
+    }
+
     func onTouchThumbnailerButton(playerUIView: PlayerUIView) {
         ANX.logInfo(.player, "[Player] 点击截图")
 
