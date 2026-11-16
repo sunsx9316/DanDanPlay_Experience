@@ -401,6 +401,7 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
         title = NSLocalizedString("在线观看", comment: "")
 
         setupLayout()
+        searchField.recentSearches = OnlineSourcePreferences.searchHistory
         showInitialState()
         loadSources()
     }
@@ -661,6 +662,7 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
 
         lastKeyword = keyword
         OnlineSourcePreferences.addSearchHistory(keyword)
+        searchField.recentSearches = OnlineSourcePreferences.searchHistory
 
         searchTask?.cancel()
         episodesTask?.cancel()
