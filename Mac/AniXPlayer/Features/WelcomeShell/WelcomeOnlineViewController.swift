@@ -330,6 +330,7 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
     private lazy var searchField: NSSearchField = {
         let field = NSSearchField()
         field.placeholderString = NSLocalizedString("输入番剧关键词", comment: "")
+        field.configureSearchOnReturn()
         field.target = self
         field.action = #selector(startSearch)
         field.setAccessibilityIdentifier(AccessibilityID.WelcomeShell.onlineSearchField)
@@ -754,7 +755,11 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
     @objc private func startSearch() {
         let keyword = searchField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !keyword.isEmpty else {
-            showState(title: NSLocalizedString("请输入搜索关键词", comment: ""))
+            // 清空搜索框（含点击清除按钮）不自动清空当前结果；
+            // 保留已有搜索结果，等下一次有效搜索再更新。
+            if subjects.isEmpty {
+                showState(title: NSLocalizedString("请输入搜索关键词", comment: ""))
+            }
             return
         }
         guard canSearch else {
