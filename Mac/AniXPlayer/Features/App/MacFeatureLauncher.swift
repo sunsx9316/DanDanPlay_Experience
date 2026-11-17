@@ -26,6 +26,10 @@ enum MacFeatureLauncher {
         }
     }
 
+    static func showAccountProfile(presenting: NSWindow? = nil) {
+        AccountProfileWindowController.present(presenting: presenting)
+    }
+
     static func showTranslation(presenting: NSWindow? = nil) {
         installEntitlements()
 
