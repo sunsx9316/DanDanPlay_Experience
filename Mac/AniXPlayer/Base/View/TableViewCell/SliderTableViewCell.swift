@@ -45,9 +45,20 @@ class SliderTableViewCell: NSView {
         }
     }
 
-    lazy var titleLabel = Label()
+    lazy var titleLabel: Label = {
+        let label = Label()
+        label.lineBreakMode = .byTruncatingTail
+        label.usesSingleLineMode = true
+        label.maximumNumberOfLines = 1
+        label.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        return label
+    }()
 
-    lazy var currentValueLabel = Label()
+    lazy var currentValueLabel: Label = {
+        let label = Label()
+        label.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
+        return label
+    }()
 
     lazy var minValueLabel = Label()
 
@@ -94,10 +105,12 @@ class SliderTableViewCell: NSView {
         currentValueLabel.snp.makeConstraints { make in
             make.leading.equalTo(titleLabel.snp.trailing).offset(10)
             make.centerY.equalTo(titleLabel)
+            make.trailing.lessThanOrEqualToSuperview().offset(-10)
         }
         minValueLabel.snp.makeConstraints { make in
             make.leading.equalTo(titleLabel)
             make.top.equalTo(titleLabel.snp.bottom).offset(10)
+            make.bottom.lessThanOrEqualToSuperview().offset(-10)
         }
         valueSlider.snp.makeConstraints { make in
             make.leading.equalTo(minValueLabel.snp.trailing).offset(10)

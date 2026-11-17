@@ -12,7 +12,13 @@ protocol MediaSettingViewControllerDelegate: AnyObject {
 }
 
 class MediaSettingViewController: ViewController {
-    
+
+    private enum Layout {
+        /// 面板内容宽度。字幕轨道/音轨等弹出菜单在 400pt 时会互相挤压。
+        static let contentWidth: CGFloat = 440
+        static let contentHeight: CGFloat = 600
+    }
+
     private lazy var dataSource = [MediaSettingInfo]()
     
     private lazy var scrollView: ScrollView<OutlineView> = {
@@ -67,11 +73,12 @@ class MediaSettingViewController: ViewController {
         }
         
         NSFontManager.shared.isEnabled = true
+        self.preferredContentSize = NSSize(width: Layout.contentWidth, height: Layout.contentHeight)
         self.reloadDataSource()
     }
     
     override func loadView() {
-        self.view = .init(frame: .init(x: 0, y: 0, width: 400, height: 600))
+        self.view = .init(frame: NSRect(x: 0, y: 0, width: Layout.contentWidth, height: Layout.contentHeight))
     }
     
     deinit {
@@ -110,13 +117,17 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
             return 40
         } else if let type = item as? MediaSettingType {
             switch type {
-            case .playerSpeed, .jumpTitleDuration, .jumpEndingDuration, .subtitleYPosition, .subtitleFontSize, .subtitleFont:
+            case .subtitleFont, .subtitleColor:
+                /// 标题 + 副标题 + 上下间距，40pt 会裁切副标题。
+                return 68
+            case .subtitleTrack, .audioTrack, .aspectRatio, .playerMode:
+                /// 弹出菜单需要完整高度和宽度。
+                return 44
+            case .playerSpeed, .jumpTitleDuration, .jumpEndingDuration, .subtitleYPosition, .subtitleFontSize:
                 return 80
-            case .subtitleSafeArea, .subtitleTrack, .audioTrack,
-                    .playerMode, .loadSubtitle, .subtitleDelay,
+            case .subtitleSafeArea, .loadSubtitle, .subtitleDelay,
                     .matchInfo, .audioDelay, .autoJumpTitleEnding,
-                    .subtitleColor, .subtitleStyle, .aspectRatio, .playerPiP,
-                    .miniProgressBar:
+                    .subtitleStyle, .playerPiP, .miniProgressBar:
                 return 40
             }
         }
@@ -165,7 +176,7 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
                 return cell
             case .playerMode:
                 let cell = outlineView.dequeueReusableCell(class: SheetTableViewCell.self)
-                cell.titleLabel.text = type.title
+                cell.setTitle(type.title)
                 
                 let allItems = PlayerMode.allCases
                 let titles = allItems.compactMap { $0.title }
@@ -186,7 +197,7 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
                 return cell
             case .subtitleTrack:
                 let cell = outlineView.dequeueReusableCell(class: SheetTableViewCell.self)
-                cell.titleLabel.text = type.title
+                cell.setTitle(type.title)
                 
                 let allItems = self.mediaModel.subtitleList
                 let titles = allItems.compactMap { $0.subtitleName }
@@ -202,7 +213,7 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
                 return cell
             case .audioTrack:
                 let cell = outlineView.dequeueReusableCell(class: SheetTableViewCell.self)
-                cell.titleLabel.text = type.title
+                cell.setTitle(type.title)
                 
                 let allItems = self.mediaModel.audioChannelList
                 let titles = allItems.compactMap { $0.audioName }
@@ -410,8 +421,7 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
                 return cell
             case .subtitleFont:
                 let cell = outlineView.dequeueReusableCell(class: TitleDetailTableViewCell.self)
-                cell.titleLabel.text = type.title
-                cell.subtitleLabel.text = self.mediaModel.subtitleFontReadableName()
+                cell.configure(title: type.title, subtitle: self.mediaModel.subtitleFontReadableName())
                 return cell
             case .subtitleStyle:
                 let cell = outlineView.dequeueReusableCell(class: SwitchTableViewCell.self)
@@ -424,11 +434,11 @@ extension MediaSettingViewController: NSOutlineViewDelegate {
                 return cell
             case .subtitleColor:
                 let cell = outlineView.dequeueReusableCell(class: TitleDetailTableViewCell.self)
-                cell.titleLabel.text = type.title
+                cell.configure(title: type.title, subtitle: nil)
                 return cell
             case .aspectRatio:
                 let cell = outlineView.dequeueReusableCell(class: SheetTableViewCell.self)
-                cell.titleLabel.text = type.title
+                cell.setTitle(type.title)
                 let allItems = self.mediaModel.aspectRatioList
                 let titles = allItems.compactMap { $0.name }
                 cell.setItems(titles, selectedItem: self.mediaModel.aspectRatio.name)
