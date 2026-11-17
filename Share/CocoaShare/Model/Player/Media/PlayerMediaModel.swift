@@ -206,10 +206,18 @@ extension PlayerMediaModel {
         if self.player.coreType == .mpv {
             subtitleSettings.append(.subtitleStyle)
             if Preferences.shared.subtitleStyle {
-                subtitleSettings.append(contentsOf: [.subtitleYPosition, .subtitleFontSize, .subtitleColor])
+                subtitleSettings.append(contentsOf: [.subtitleYPosition, .subtitleFontSize])
+#if os(macOS)
+                /// macOS 通过字体面板修改字幕字体，与字体大小一起展示。
+                subtitleSettings.append(.subtitleFont)
+#endif
+                subtitleSettings.append(.subtitleColor)
             }
         } else {
             subtitleSettings.append(contentsOf: [.subtitleYPosition, .subtitleFontSize])
+#if os(macOS)
+            subtitleSettings.append(.subtitleFont)
+#endif
         }
 
         dataSource.append(MediaSettingInfo(title: NSLocalizedString("字幕设置", comment: ""),
