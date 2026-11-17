@@ -242,8 +242,10 @@ final class OnlinePlaybackService {
             throw lastError ?? OnlinePlaybackError.videoNotFound(episode.url)
         }
 
-        let displayName = "\(subject.title) \(episode.title)"
-            .trimmingCharacters(in: .whitespacesAndNewlines)
+        let displayName = OnlineDanmakuMatchQuery.keyword(
+            subjectTitle: subject.title,
+            episodeTitle: episode.title
+        )
         return OnlineEpisodeFile(
             streamURL: match.url,
             displayName: displayName.isEmpty ? episode.title : displayName,

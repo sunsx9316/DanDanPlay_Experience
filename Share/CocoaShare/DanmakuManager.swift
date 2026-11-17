@@ -64,6 +64,13 @@ class DanmakuManager {
                      danmakuCompletion: @escaping((DanmakuMapResult?, _ matchInfo: MatchInfo?, Error?) -> Void)) {
         progress?(.parseMedia)
 
+        // 用户明确选择「直接播放（不加载弹幕）」时跳过所有匹配/缓存，直接以空弹幕开始播放。
+        if let skippable = media as? DanmakuAutoMatchSkippable, skippable.skipDanmakuAutoMatch {
+            ANX.logInfo(.player, "[DanmakuManager] 文件要求跳过弹幕自动匹配，直接播放")
+            danmakuCompletion([:], nil, nil)
+            return
+        }
+
         // 检查用户手动匹配缓存
         if let userMatch = CacheManager.shared.userMatchInfo(with: media.fileId) {
             ANX.logInfo(.player, "[DanmakuManager] 用户匹配缓存命中 matchId: \(userMatch.matchId)")

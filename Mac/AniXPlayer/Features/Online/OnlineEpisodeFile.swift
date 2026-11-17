@@ -14,7 +14,7 @@ import Foundation
 import VLCKit
 import MPVFramework
 
-final class OnlineEpisodeFile: File {
+final class OnlineEpisodeFile: File, DanmakuAutoMatchSkippable {
 
     static var fileManager: FileManagerProtocol {
         LocalFileManager.shared
@@ -40,6 +40,13 @@ final class OnlineEpisodeFile: File {
     let pageURL: URL?
     let sourceName: String?
 
+    /// 用户在「选择弹幕库」窗口点击「直接播放（不加载弹幕）」时置为 true。
+    /// `DanmakuManager.loadDanmaku` 会在最前面检查并跳过网络匹配/用户缓存。
+    var skipDanmakuAutoMatch = false
+
+    /// 弹幕匹配用的虚拟文件名（不含扩展名）。
+    private let danmakuMatchName: String
+
     init(
         streamURL: URL,
         displayName: String,
@@ -54,6 +61,9 @@ final class OnlineEpisodeFile: File {
 
         let cleanedName = displayName.trimmingCharacters(in: .whitespacesAndNewlines)
         let baseName = cleanedName.isEmpty ? "在线视频" : cleanedName
+        self.danmakuMatchName = (baseName.lowercased().hasSuffix(".mp4")
+            ? String(baseName.dropLast(4))
+            : baseName)
         // 在线播放器标题/弹幕匹配使用虚拟 .mp4 名（对齐 Windows 版）；
         // 真实流扩展名仍由 pathExtension 通过 streamURL 提供。
         self.fileName = (baseName as NSString).pathExtension.isEmpty
@@ -73,7 +83,7 @@ final class OnlineEpisodeFile: File {
     var isVirtualFile: Bool { true }
 
     var danmakuMatchFileName: String? {
-        return (fileName as NSString).deletingPathExtension
+        return danmakuMatchName
     }
 
     var pathExtension: String {
