@@ -56,10 +56,18 @@ struct OnlineMediaSource: Identifiable, Equatable {
     let subjectSelectLists: String
     let subjectSelectNames: String
     let subjectSelectLinks: String
+    /// Animeko `subjectFormatId == "jsonpath"` 时的 JSONPath 选择器。
+    /// 路径作用于搜索接口返回的 JSON；为空时该规则无法使用 JSONPath 搜索。
+    let subjectJSONPathNames: String
+    let subjectJSONPathLinks: String
     let preferShorterName: Bool
 
     // Animeko 剧集选择器
     let channelFormat: String
+    /// index-grouped 时与 selectEpisodeLists 一一对应的频道名选择器。
+    let selectChannelNames: String
+    /// 规则提供的频道名过滤正则；为空表示不过滤。
+    let matchChannelName: String
     let selectEpisodeLists: String
     let selectEpisodesFromList: String
     let selectEpisodes: String

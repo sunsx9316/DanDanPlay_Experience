@@ -34,6 +34,17 @@ enum KazumiURL {
     static func resolve(_ raw: String, base: URL?) -> URL? {
         var value = raw.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !value.isEmpty else { return nil }
+
+        // 模板对整个 @source 编码后可能得到 https%3A%2F%2F...；
+        // 只在明确是编码后的协议/协议相对地址时还原，避免误改普通路径。
+        let loweredEncoded = value.lowercased()
+        if loweredEncoded.hasPrefix("http%3a")
+            || loweredEncoded.hasPrefix("https%3a")
+            || loweredEncoded.hasPrefix("%2f%2f"),
+           let decoded = value.removingPercentEncoding {
+            value = decoded
+        }
+
         value = value
             .replacingOccurrences(of: "&amp;", with: "&")
             .replacingOccurrences(of: "\\/", with: "/")
@@ -251,6 +262,13 @@ struct KazumiAPISearchItem {
 
 enum KazumiAPISearchParser {
 
+    /// sourceTemplate 为空时，允许从搜索结果里读取这些明确的 URL 字段；
+    /// 不会用 baseURL + ID 猜测详情页。
+    private static let urlFieldNames = [
+        "url", "link", "href", "detailUrl", "detail_url", "detailURL",
+        "sourceUrl", "source_url", "webUrl", "web_url", "playUrl", "play_url"
+    ]
+
     static func parse(
         text: String,
         config: KazumiSearchAPIConfig,
@@ -267,30 +285,86 @@ enum KazumiAPISearchParser {
             let source = KazumiJSONPath.stringValue(
                 try? KazumiJSONPath.first(in: node, path: config.sourcePath)
             )
-            guard !name.isEmpty, !source.isEmpty else { continue }
+            guard !name.isEmpty else { continue }
 
-            var url: URL?
-            if config.sourceTemplate.isEmpty {
-                // 没有 sourceTemplate 时 source 是站点内部 ID/令牌：
-                // 只有它本身就是明确的绝对 URL 才保留，绝不拼出假地址。
-                if source.lowercased().hasPrefix("http://")
-                    || source.lowercased().hasPrefix("https://")
-                    || source.hasPrefix("//") {
-                    url = KazumiURL.resolve(source, base: baseURL)
-                }
-            } else {
-                let rendered = try KazumiTemplate.render(
-                    config.sourceTemplate,
-                    variables: ["source": .string(source)],
-                    encode: true
-                )
-                url = KazumiURL.resolve(rendered, base: baseURL)
-            }
+            let url = try detailURL(
+                node: node,
+                source: source,
+                config: config,
+                baseURL: baseURL
+            )
+            guard !source.isEmpty || url != nil else { continue }
 
             items.append(KazumiAPISearchItem(name: name, source: source, url: url))
             if items.count >= 100 { break }
         }
         return items
+    }
+
+    private static func detailURL(
+        node: Any,
+        source: String,
+        config: KazumiSearchAPIConfig,
+        baseURL: URL?
+    ) throws -> URL? {
+        let template = config.sourceTemplate
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+
+        if !template.isEmpty {
+            guard !source.isEmpty else { return nil }
+            if template == "@source" {
+                return KazumiURL.resolve(source, base: baseURL)
+            }
+            let rendered = try KazumiTemplate.render(
+                template,
+                variables: ["source": .string(source)],
+                encode: true
+            )
+            return KazumiURL.resolve(rendered, base: baseURL)
+        }
+
+        // sourcePath 本身可能直接返回 URL/根相对路径。
+        if looksLikeURLValue(source) {
+            return KazumiURL.resolve(source, base: baseURL)
+        }
+
+        // 规则没有 sourceTemplate 时，先尝试搜索结果自带的 URL 字段。
+        for key in urlFieldNames {
+            let value = try? KazumiJSONPath.first(in: node, path: "$['\(key)']")
+            let raw = KazumiJSONPath.stringValue(value)
+            guard looksLikeURLFieldValue(raw),
+                  let url = KazumiURL.resolve(raw, base: baseURL) else {
+                continue
+            }
+            return url
+        }
+
+        return nil
+    }
+
+    private static func looksLikeURLValue(_ raw: String) -> Bool {
+        let value = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !value.isEmpty else { return false }
+        let lowered = value.lowercased()
+        return lowered.hasPrefix("http://")
+            || lowered.hasPrefix("https://")
+            || lowered.hasPrefix("//")
+            || value.hasPrefix("/")
+            || value.hasPrefix("./")
+            || value.hasPrefix("../")
+    }
+
+    /// URL 字段也可能是相对路径；只接受看起来像路径的值，
+    /// 避免把裸 ID（例如 "42"）拼成 baseURL/42。
+    private static func looksLikeURLFieldValue(_ raw: String) -> Bool {
+        let value = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !value.isEmpty else { return false }
+        if looksLikeURLValue(value) { return true }
+        let lowered = value.lowercased()
+        return value.contains("/")
+            || value.contains("?")
+            || lowered.hasSuffix(".html")
+            || lowered.hasSuffix(".htm")
     }
 
     private static func jsonDocument(text: String, kind: String) throws -> Any {
@@ -509,11 +583,18 @@ enum KazumiAPIChapterParser {
         localVariables["episodeIndex"] = .int(episodeIndex)
         localVariables["episodeNumber"] = .int(episodeIndex + 1)
 
-        let renderedURL = try KazumiTemplate.render(
-            page.url,
-            variables: localVariables,
-            encode: true
-        )
+        let pageTemplate = page.url.trimmingCharacters(in: .whitespacesAndNewlines)
+        let renderedURL: String
+        if pageTemplate == "@episodeUrl" {
+            // 模板本身就是完整地址时不能再做整体百分号编码。
+            renderedURL = rawURL
+        } else {
+            renderedURL = try KazumiTemplate.render(
+                pageTemplate,
+                variables: localVariables,
+                encode: true
+            )
+        }
         guard var components = URLComponents(string: renderedURL) else {
             throw OnlinePlaybackError.invalidURL(renderedURL)
         }

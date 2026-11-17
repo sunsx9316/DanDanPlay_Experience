@@ -1,0 +1,25 @@
+{
+  "api": "9",
+  "type": "anime",
+  "name": "mgnacgLike",
+  "version": "1.0",
+  "baseURL": "https://www.mgnacg.com/media/",
+  "searchURL": "",
+  "searchMode": "api",
+  "chapterMode": "xpath",
+  "searchApiConfig": {
+    "request": {
+      "method": "GET",
+      "url": "https://www.mgnacg.com/index.php/ajax/suggest",
+      "query": {
+        "mid": "1",
+        "wd": "@keyword"
+      }
+    },
+    "listPath": "$.list[*]",
+    "namePath": "$.name",
+    "sourcePath": "$.id"
+  },
+  "chapterRoads": "//ul[@class='episode-list']",
+  "chapterResult": ".//li/a"
+}

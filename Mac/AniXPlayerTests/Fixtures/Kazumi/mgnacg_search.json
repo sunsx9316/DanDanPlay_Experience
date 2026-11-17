@@ -1,0 +1,23 @@
+{
+  "list": [
+    {
+      "id": "101",
+      "name": "有相对 URL",
+      "url": "/media/101.html"
+    },
+    {
+      "id": "102",
+      "name": "没有 URL"
+    },
+    {
+      "id": "103",
+      "name": "有绝对 URL",
+      "link": "https://www.mgnacg.com/media/103.html"
+    },
+    {
+      "id": "104",
+      "name": "URL 字段是裸 ID",
+      "url": "104"
+    }
+  ]
+}

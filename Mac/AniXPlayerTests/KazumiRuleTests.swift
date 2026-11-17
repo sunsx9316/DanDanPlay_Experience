@@ -43,7 +43,10 @@ final class KazumiRuleTests: XCTestCase {
             try KazumiJSONPath.first(in: document, path: "$['weird key']") as? String,
             "value"
         )
-        XCTAssertThrowsError(try KazumiJSONPath.read(document, path: "$..name"))
+        XCTAssertEqual(
+            try KazumiJSONPath.read(document, path: "$..name").compactMap { $0 as? String },
+            ["A", "B"]
+        )
         XCTAssertThrowsError(try KazumiJSONPath.read(document, path: "list[*]"))
     }
 
@@ -169,6 +172,167 @@ final class KazumiRuleTests: XCTestCase {
         XCTAssertEqual(subjects[0].sourceToken, "77")
         XCTAssertNil(subjects[0].url)
         XCTAssertEqual(subjects[0].identityKey, "kazumi:giriGiriLove|token:77")
+    }
+
+    func testAPISearchWithoutTemplateUsesURLFieldForXPathChapters() async throws {
+        let source = try makeSource("mgnacg_rule.json")
+        XCTAssertTrue(source.detail.contains("搜索结果 URL"))
+
+        let searchData = try fixtureData("mgnacg_search.json")
+        let detail = try fixtureData("mgnacg_detail.html")
+        let client = makeClient()
+
+        StubURLProtocol.handler = { request in
+            let url = try XCTUnwrap(request.url)
+            if url.path.contains("suggest") {
+                return (200, ["Content-Type": "application/json"], searchData)
+            }
+            if url.path == "/media/101.html" {
+                return (200, ["Content-Type": "text/html; charset=utf-8"], detail)
+            }
+            XCTFail("不应猜测或请求其他详情页地址：\(url.absoluteString)")
+            return (404, [:], Data())
+        }
+
+        let resolver = OnlineMediaResolver(httpClient: client)
+        let subjects = try await resolver.search(source: source, keyword: "测试番剧")
+
+        XCTAssertEqual(
+            subjects.map(\.title),
+            ["有相对 URL", "没有 URL", "有绝对 URL", "URL 字段是裸 ID"]
+        )
+        XCTAssertEqual(
+            subjects[0].url?.absoluteString,
+            "https://www.mgnacg.com/media/101.html"
+        )
+        XCTAssertNil(subjects[1].url)
+        XCTAssertEqual(
+            subjects[2].url?.absoluteString,
+            "https://www.mgnacg.com/media/103.html"
+        )
+        XCTAssertNil(subjects[3].url)
+
+        let episodes = try await resolver.loadEpisodes(source: source, subject: subjects[0])
+        XCTAssertEqual(episodes.map(\.title), ["第1集", "第2集"])
+        XCTAssertEqual(
+            episodes[0].url.absoluteString,
+            "https://www.mgnacg.com/play/101-1.html"
+        )
+
+        do {
+            _ = try await resolver.loadEpisodes(source: source, subject: subjects[1])
+            XCTFail("没有详情页 URL 时不应伪造地址")
+        } catch {
+            XCTAssertTrue(error.localizedDescription.contains("XPath"))
+            XCTAssertTrue(error.localizedDescription.contains("URL"))
+        }
+    }
+
+    func testSourceTemplateEncodingRelativeAndAbsoluteSource() throws {
+        let searchJSON = """
+        {
+          "list": [
+            { "id": "abc/def", "name": "相对模板" },
+            { "id": "https://cdn.example.com/watch/7?x=1", "name": "绝对地址" }
+          ]
+        }
+        """
+
+        let relativeConfig = KazumiSearchAPIConfig(json: [
+            "request": [
+                "method": "GET",
+                "url": "https://api.example.com/search"
+            ],
+            "listPath": "$.list[*]",
+            "namePath": "$.name",
+            "sourcePath": "$.id",
+            "sourceTemplate": "detail/@source.html"
+        ])
+        let base = try XCTUnwrap(URL(string: "https://www.example.com/media/"))
+        let relativeItems = try KazumiAPISearchParser.parse(
+            text: searchJSON,
+            config: relativeConfig,
+            baseURL: base
+        )
+        XCTAssertEqual(
+            relativeItems[0].url?.absoluteString,
+            "https://www.example.com/media/detail/abc%2Fdef.html"
+        )
+
+        let absoluteConfig = KazumiSearchAPIConfig(json: [
+            "request": [
+                "method": "GET",
+                "url": "https://api.example.com/search"
+            ],
+            "listPath": "$.list[*]",
+            "namePath": "$.name",
+            "sourcePath": "$.id",
+            "sourceTemplate": "@source"
+        ])
+        let absoluteItems = try KazumiAPISearchParser.parse(
+            text: searchJSON,
+            config: absoluteConfig,
+            baseURL: base
+        )
+        XCTAssertEqual(
+            absoluteItems[1].url?.absoluteString,
+            "https://cdn.example.com/watch/7?x=1"
+        )
+    }
+
+    func testInvalidJSONPathRuleIsSkippedWithClearReason() throws {
+        let invalid = """
+        {
+          "name": "BadJSONPath",
+          "version": "1.0",
+          "baseURL": "https://www.example.com/media/",
+          "searchMode": "api",
+          "chapterMode": "xpath",
+          "searchApiConfig": {
+            "request": { "method": "GET", "url": "https://api.example.com/search" },
+            "listPath": "$.list[?(@.id > 1)]",
+            "namePath": "$.name",
+            "sourcePath": "$.id"
+          },
+          "chapterRoads": "//ul[@class='episodes']",
+          "chapterResult": ".//a"
+        }
+        """
+        switch try parseRuleResult(json: invalid) {
+        case .loaded:
+            XCTFail("不支持的 JSONPath 语法不应让规则静默加载")
+        case .skipped(let name, let reason):
+            XCTAssertEqual(name, "BadJSONPath")
+            XCTAssertTrue(reason.contains("JSONPath"))
+        }
+
+        // 同一批规则里其他规则仍应正常解析。
+        let valid = try makeSource("lmm_rule.json")
+        XCTAssertEqual(valid.name, "LMM")
+
+        let filterRule = """
+        {
+          "name": "FilteredAPI",
+          "version": "1.0",
+          "baseURL": "https://www.example.com/media/",
+          "searchMode": "api",
+          "chapterMode": "xpath",
+          "searchApiConfig": {
+            "request": { "method": "GET", "url": "https://api.example.com/search" },
+            "listPath": "$.list[?(@.type == 'anime')]",
+            "namePath": "$.name",
+            "sourcePath": "$.id"
+          },
+          "chapterRoads": "//ul[@class='episodes']",
+          "chapterResult": ".//a"
+        }
+        """
+        switch try parseRuleResult(json: filterRule) {
+        case .loaded(let source):
+            XCTAssertEqual(source.name, "FilteredAPI")
+        case .skipped(_, let reason):
+            XCTFail("常用过滤表达式不应导致规则被跳过：\(reason)")
+        }
     }
 
     func testLegacyXPathUsePostSendsFormBody() async throws {
@@ -402,7 +566,7 @@ final class KazumiRuleTests: XCTestCase {
         }
         """
         let source = try makeSource(json: rule)
-        XCTAssertTrue(source.detail.contains("XPath 选集不可用"))
+        XCTAssertTrue(source.detail.contains("搜索结果 URL"))
         let subject = OnlineSubject(
             source: source,
             title: "测试番剧",
@@ -509,6 +673,13 @@ final class KazumiRuleTests: XCTestCase {
         XCTAssertEqual(
             KazumiURL.resolve("//cdn.example.com/x", base: nil)?.absoluteString,
             "https://cdn.example.com/x"
+        )
+        XCTAssertEqual(
+            KazumiURL.resolve(
+                "https%3A%2F%2Fcdn.example.com%2Fa%2Fb.m3u8",
+                base: https
+            )?.absoluteString,
+            "https://cdn.example.com/a/b.m3u8"
         )
         XCTAssertNil(KazumiURL.resolve("/relative", base: nil))
         XCTAssertNil(KazumiURL.resolve("javascript:void(0)", base: https))

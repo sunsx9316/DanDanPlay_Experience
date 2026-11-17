@@ -64,11 +64,16 @@ final class OnlineMediaResolver {
             url,
             headers: source.requestHeaders(pageURL: url)
         )
-        let document = try OnlineHTMLDocument(
-            html: response.text,
-            baseURL: source.baseURL ?? response.finalURL
-        )
-        return parseAnimekoSearch(source: source, document: document, response: response)
+        let base = source.baseURL ?? response.finalURL
+        if source.subjectFormat == "jsonpath" {
+            return try parseAnimekoJSONPathSearch(
+                source: source,
+                text: response.text,
+                baseURL: base
+            )
+        }
+        let document = try OnlineHTMLDocument(html: response.text, baseURL: base)
+        return parseAnimekoSearch(source: source, document: document, baseURL: base)
     }
 
     private func searchKazumiXPath(
@@ -182,12 +187,56 @@ final class OnlineMediaResolver {
         return subjects
     }
 
+    private func parseAnimekoJSONPathSearch(
+        source: OnlineMediaSource,
+        text: String,
+        baseURL: URL
+    ) throws -> [OnlineSubject] {
+        let namesPath = source.subjectJSONPathNames
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        let linksPath = source.subjectJSONPathLinks
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !namesPath.isEmpty, !linksPath.isEmpty else {
+            throw OnlinePlaybackError.unsupportedRule(
+                NSLocalizedString(
+                    "Animeko JSONPath 搜索缺少 selectorSubjectFormatJsonPathIndexed.selectNames / selectLinks。",
+                    comment: ""
+                )
+            )
+        }
+
+        let root: Any
+        do {
+            root = try JSONSerialization.jsonObject(
+                with: Data(text.utf8),
+                options: [.fragmentsAllowed]
+            )
+        } catch {
+            throw OnlinePlaybackError.unsupportedRule(String(
+                format: NSLocalizedString("%@ 返回的不是有效 JSON。", comment: ""),
+                "Animeko JSONPath"
+            ))
+        }
+
+        let names = try KazumiJSONPath.read(root, path: namesPath)
+        let links = try KazumiJSONPath.read(root, path: linksPath)
+
+        var items: [(String, URL)] = []
+        for index in 0..<min(names.count, links.count) {
+            let title = KazumiJSONPath.stringValue(names[index])
+            let rawLink = KazumiJSONPath.stringValue(links[index])
+            guard let url = KazumiURL.resolve(rawLink, base: baseURL) else { continue }
+            items.append((title, url))
+        }
+
+        return makeAnimekoSubjects(source: source, items: items)
+    }
+
     private func parseAnimekoSearch(
         source: OnlineMediaSource,
         document: OnlineHTMLDocument,
-        response: OnlineHTTPResponse
+        baseURL: URL
     ) -> [OnlineSubject] {
-        let base = source.baseURL ?? response.finalURL
         var items: [(String, URL)] = []
 
         if source.subjectFormat == "indexed",
@@ -215,31 +264,41 @@ final class OnlineMediaResolver {
             }
         }
 
-        // 按 URL 去重；preferShorterName 时取更短的标题。
+        return makeAnimekoSubjects(source: source, items: items)
+    }
+
+    /// 按 URL 去重；preferShorterName 时取更短的标题。
+    private func makeAnimekoSubjects(
+        source: OnlineMediaSource,
+        items: [(String, URL)]
+    ) -> [OnlineSubject] {
+        var order: [String] = []
         var byURL: [String: (String, URL)] = [:]
+
         for (title, url) in items {
             let key = url.absoluteString
             let value = title.isEmpty ? url.lastPathComponent : title
+            guard !value.isEmpty else { continue }
+
             if let existing = byURL[key] {
                 if source.preferShorterName, value.count < existing.0.count {
                     byURL[key] = (value, url)
                 }
             } else {
+                order.append(key)
                 byURL[key] = (value, url)
             }
         }
 
-        return byURL.values
-            .filter { !$0.0.isEmpty }
-            .prefix(100)
-            .map {
-                OnlineSubject(
-                    source: source,
-                    title: $0.0,
-                    url: $0.1,
-                    sourceToken: $0.1.absoluteString
-                )
-            }
+        return order.prefix(100).compactMap { key in
+            guard let value = byURL[key] else { return nil }
+            return OnlineSubject(
+                source: source,
+                title: value.0,
+                url: value.1,
+                sourceToken: value.1.absoluteString
+            )
+        }
     }
 
     private func parseKazumiSearch(
@@ -315,7 +374,7 @@ final class OnlineMediaResolver {
             guard let url = subject.url else {
                 throw OnlinePlaybackError.unsupportedRule(
                     NSLocalizedString(
-                        "该规则使用站点内部条目 ID，但选集模式为 XPath，缺少详情页地址；当前组合暂不支持。",
+                        "搜索结果没有可用的详情页地址，无法使用 XPath 选集；请让规则提供 sourceTemplate，或让搜索 API 返回 URL 字段。",
                         comment: ""
                     )
                 )
@@ -385,7 +444,22 @@ final class OnlineMediaResolver {
 
         if source.channelFormat == "index-grouped", !source.selectEpisodeLists.isEmpty {
             let lists = document.elements(css: source.selectEpisodeLists)
-            for list in lists {
+            let channelNames: [XMLElement]
+            if !source.matchChannelName.isEmpty, !source.selectChannelNames.isEmpty {
+                channelNames = document.elements(css: source.selectChannelNames)
+            } else {
+                channelNames = []
+            }
+
+            for (index, list) in lists.enumerated() {
+                // 规则提供了 matchChannelName 时，只保留名称匹配的线路；
+                // 名称节点缺失时不猜测，保持原有行为。
+                if !source.matchChannelName.isEmpty, index < channelNames.count {
+                    let name = document.text(of: channelNames[index])
+                    guard Self.isValidChannelName(name, pattern: source.matchChannelName) else {
+                        continue
+                    }
+                }
                 nodes.append(contentsOf: document.elements(css: source.selectEpisodesFromList, in: list))
             }
         }
@@ -617,6 +691,25 @@ final class OnlineMediaResolver {
     }
 
     // MARK: - Helpers
+
+    /// Animeko 的 matchChannelName 与 Windows 版一致：先排除常见广告/公告名，
+    /// 再用规则正则匹配。正则无效时保守保留该线路。
+    private static func isValidChannelName(_ name: String, pattern: String) -> Bool {
+        let value = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !value.isEmpty else { return false }
+
+        let invalidWords = ["广告", "推广", "公告", "通知", "失效", "无效"]
+        if invalidWords.contains(where: { value.contains($0) }) {
+            return false
+        }
+
+        guard !pattern.isEmpty else { return true }
+        guard let regex = try? NSRegularExpression(pattern: pattern, options: [.caseInsensitive]) else {
+            return true
+        }
+        let range = NSRange(value.startIndex..., in: value)
+        return regex.firstMatch(in: value, range: range) != nil
+    }
 
     private func normalizedHTML(_ html: String) -> String {
         return html

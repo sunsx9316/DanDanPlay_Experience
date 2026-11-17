@@ -1,0 +1,22 @@
+[
+  {
+    "title": "葬送的芙莉莲",
+    "url": "/anime/1"
+  },
+  {
+    "name": "葬送的芙莉莲 第二季",
+    "link": "https://anime.example.com/anime/2"
+  },
+  {
+    "title": "短名",
+    "url": "https://anime.example.com/anime/2"
+  },
+  {
+    "title": "坏地址",
+    "url": "javascript:void(0)"
+  },
+  {
+    "title": "空地址",
+    "url": ""
+  }
+]
