@@ -54,9 +54,46 @@ class MainViewController: ViewController {
     /// 菜单/其他窗口切回主窗口指定分区。
     func showMainSection(_ section: MainShellSection) {
         _ = view
+        activateMainWindow()
         shellVC.select(section)
-        view.window?.makeKeyAndOrderFront(nil)
-        NSApp.activate(ignoringOtherApps: true)
+    }
+
+    /// 菜单「主页」「我的追番」：切到首页对应子页面。
+    func openHomePage(_ page: WelcomeShellPage) {
+        _ = view
+        activateMainWindow()
+        shellVC.openHomePage(page)
+    }
+
+    /// 菜单「搜索…」：切到番剧搜索并聚焦搜索框。
+    func openSearchPage(_ page: MainSearchPage, focusSearch: Bool) {
+        _ = view
+        activateMainWindow()
+        shellVC.openSearchPage(page, focusSearch: focusSearch)
+    }
+
+    /// 菜单「播放历史」：切到「我的 → 播放历史」。
+    func openAccountPage(_ page: MainAccountPage) {
+        _ = view
+        activateMainWindow()
+        shellVC.openAccountPage(page)
+    }
+
+    /// 菜单「本地媒体库…」：切到主窗口「媒体库」。
+    func openLibrary() {
+        _ = view
+        activateMainWindow()
+        shellVC.openLibrary()
+    }
+
+    /// 菜单/通知/系统下载入口：切到主窗口「下载」，可定位任务并预填添加。
+    func openDownload(selectingTaskID: UUID? = nil, prefillSources: [String] = []) {
+        _ = view
+        activateMainWindow()
+        shellVC.openDownload(
+            selectingTaskID: selectingTaskID,
+            prefillSources: prefillSources
+        )
     }
 
     func openNetworkFiles(_ files: [File], startWith file: File, progress: Double? = nil) {
@@ -70,17 +107,15 @@ class MainViewController: ViewController {
     /// 详情页「搜索资源」：切到搜索分区并预填番剧标题。
     func openResourceSearch(keyword: String) {
         _ = view
+        activateMainWindow()
         shellVC.openResourceSearch(keyword: keyword)
-        view.window?.makeKeyAndOrderFront(nil)
-        NSApp.activate(ignoringOtherApps: true)
     }
 
     /// 详情页「在线观看」：切到首页在线观看并预填番剧标题。
     func openOnlineSearch(keyword: String) {
         _ = view
+        activateMainWindow()
         shellVC.openOnlineSearch(keyword: keyword)
-        view.window?.makeKeyAndOrderFront(nil)
-        NSApp.activate(ignoringOtherApps: true)
     }
 
     /// 首页快捷操作「播放列表」：复用已有播放器窗口；没有则创建空播放器并弹出列表。
@@ -112,6 +147,19 @@ class MainViewController: ViewController {
     }
 
     // MARK: - Private
+
+    /// 菜单/外部入口：显示主窗口并让其成为 key window（含从最小化恢复）。
+    private func activateMainWindow() {
+        guard let window = view.window else {
+            NSApp.activate(ignoringOtherApps: true)
+            return
+        }
+        if window.isMiniaturized {
+            window.deminiaturize(nil)
+        }
+        window.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
+    }
 
     private func showShell() {
         addChild(shellVC)
