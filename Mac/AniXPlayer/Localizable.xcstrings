@@ -818,6 +818,22 @@
         }
       }
     },
+    "从当前时间导出动图": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Export an animated image from the current position"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "从当前时间导出动图"
+          }
+        }
+      }
+    },
     "从媒体库移除所选 %d 个文件？": {
       "localizations": {
         "en": {
@@ -1150,6 +1166,22 @@
           "stringUnit": {
             "state": "translated",
             "value": "保存"
+          }
+        }
+      }
+    },
+    "保存动图": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save Animated Image"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "保存动图"
           }
         }
       }

@@ -186,6 +186,7 @@ enum AccessibilityID {
         static let emptyStateOpenFile = "player.emptyState.openFile"
         static let moreButton = "player.moreButton"
         static let screenshotButton = "player.screenshotButton"
+        static let snapshotSaveGIF = "player.snapshot.saveGIF"
         static let miniProgressSlider = "player.miniProgressSlider"
         static let backupDanmakuItem = "player.backupDanmakuItem"
         static let exportGIFItem = "player.exportGIFItem"
