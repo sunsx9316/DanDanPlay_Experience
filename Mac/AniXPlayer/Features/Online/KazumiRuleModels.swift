@@ -527,7 +527,7 @@ enum KazumiRuleParser {
         if searchMode == "api",
            chapterMode == "xpath",
            (searchAPI?.sourceTemplate.isEmpty ?? true) {
-            detail += NSLocalizedString(" · 缺少详情页模板，XPath 选集不可用", comment: "")
+            detail += NSLocalizedString(" · 缺少详情页模板，将尝试搜索结果 URL", comment: "")
         }
 
         let referer = string(raw["referer"]).nilIfEmpty
@@ -558,8 +558,12 @@ enum KazumiRuleParser {
             subjectSelectLists: "",
             subjectSelectNames: "",
             subjectSelectLinks: "",
+            subjectJSONPathNames: "",
+            subjectJSONPathLinks: "",
             preferShorterName: false,
             channelFormat: "no-channel",
+            selectChannelNames: "",
+            matchChannelName: "",
             selectEpisodeLists: "",
             selectEpisodesFromList: "",
             selectEpisodes: "",

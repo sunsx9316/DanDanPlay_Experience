@@ -1,0 +1,111 @@
+{
+  "exportedMediaSourceDataList": {
+    "mediaSources": [
+      {
+        "id": "animeko-jsonpath",
+        "factoryId": "web-selector",
+        "arguments": {
+          "name": "JSONPath 源",
+          "description": "JSONPath 搜索 + 频道过滤测试",
+          "searchConfig": {
+            "searchUrl": "https://anime.example.com/search?q={keyword}",
+            "rawBaseUrl": "https://anime.example.com/",
+            "searchUseOnlyFirstWord": true,
+            "searchRemoveSpecial": true,
+            "subjectFormatId": "jsonpath",
+            "selectorSubjectFormatA": {
+              "selectLists": "a.subject",
+              "preferShorterName": false
+            },
+            "selectorSubjectFormatIndexed": {
+              "selectNames": ".subject-name",
+              "selectLinks": "a.subject",
+              "preferShorterName": false
+            },
+            "selectorSubjectFormatJsonPathIndexed": {
+              "selectNames": "$[*]['title','name']",
+              "selectLinks": "$[*]['url','link']",
+              "preferShorterName": true
+            },
+            "channelFormatId": "index-grouped",
+            "selectorChannelFormatFlattened": {
+              "selectChannelNames": ".channel-tab a",
+              "matchChannelName": "(.*超清.*)",
+              "selectEpisodeLists": ".episode-list",
+              "selectEpisodesFromList": "a.episode",
+              "matchEpisodeSortFromName": "第\\s*(?<ep>\\d+)\\s*集"
+            },
+            "selectorChannelFormatNoChannel": {
+              "selectEpisodes": "a.episode",
+              "matchEpisodeSortFromName": "第\\s*(?<ep>\\d+)\\s*集"
+            }
+          }
+        }
+      },
+      {
+        "id": "animeko-bad-jsonpath",
+        "factoryId": "web-selector",
+        "arguments": {
+          "name": "坏规则 源",
+          "description": "JSONPath 不支持语法的隔离测试",
+          "searchConfig": {
+            "searchUrl": "https://anime.example.com/search?q={keyword}",
+            "rawBaseUrl": "https://anime.example.com/",
+            "subjectFormatId": "jsonpath",
+            "selectorSubjectFormatJsonPathIndexed": {
+              "selectNames": "$[?(@.score > 8)]",
+              "selectLinks": "$[*]['url','link']"
+            },
+            "channelFormatId": "no-channel",
+            "selectorChannelFormatNoChannel": {
+              "selectEpisodes": "a.episode"
+            }
+          }
+        }
+      },
+      {
+        "id": "animeko-episodes-default",
+        "factoryId": "web-selector",
+        "arguments": {
+          "name": "DefaultEpisodes 源",
+          "description": "showAllEpisodes 默认 false",
+          "searchConfig": {
+            "searchUrl": "https://anime.example.com/search?q={keyword}",
+            "rawBaseUrl": "https://anime.example.com/",
+            "subjectFormatId": "a",
+            "selectorSubjectFormatA": {
+              "selectLists": "a.subject"
+            },
+            "channelFormatId": "no-channel",
+            "selectorChannelFormatNoChannel": {
+              "selectEpisodes": "a.episode",
+              "matchEpisodeSortFromName": "第\\s*(?<ep>\\d+)\\s*集"
+            }
+          }
+        }
+      },
+      {
+        "id": "animeko-episodes-all",
+        "factoryId": "web-selector",
+        "arguments": {
+          "name": "ShowAllEpisodes 源",
+          "description": "showAllEpisodes 显式 true",
+          "searchConfig": {
+            "searchUrl": "https://anime.example.com/search?q={keyword}",
+            "rawBaseUrl": "https://anime.example.com/",
+            "subjectFormatId": "a",
+            "selectorSubjectFormatA": {
+              "selectLists": "a.subject"
+            },
+            "channelFormatId": "no-channel",
+            "selectorChannelFormatNoChannel": {
+              "selectEpisodes": "a.episode",
+              "matchEpisodeSortFromName": "第\\s*(?<ep>\\d+)\\s*集"
+            },
+            "showAllEpisodes": true
+          }
+        }
+      }
+    ]
+  }
+}

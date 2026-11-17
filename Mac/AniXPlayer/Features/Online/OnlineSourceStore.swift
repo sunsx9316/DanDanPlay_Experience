@@ -427,6 +427,7 @@ actor OnlineSourceStore {
 
         var remoteWarning: String?
         var entries: [KazumiIndexEntry] = []
+        var downloadSkipped: [OnlineSkippedSourceRule] = []
 
         do {
             let indexURLFull = baseURL.appendingPathComponent("index.json")
@@ -458,29 +459,49 @@ actor OnlineSourceStore {
 
             let localFile = OnlineSourcePaths.kazumiRuleFile(name: entry.name)
             let localVersion = Self.readKazumiRuleVersion(at: localFile)
-            if localVersion == entry.version, FileManager.default.fileExists(atPath: localFile.path) {
+            let localExists = FileManager.default.fileExists(atPath: localFile.path)
+            if localVersion == entry.version, localExists {
                 continue
             }
 
             guard let ruleURL = Self.kazumiRuleURL(baseURL: baseURL, name: entry.name) else {
+                if !localExists {
+                    downloadSkipped.append(OnlineSkippedSourceRule(
+                        name: entry.name,
+                        reason: NSLocalizedString("规则下载地址无效。", comment: "")
+                    ))
+                }
                 continue
             }
             do {
                 let data = try await OnlineHTTPClient.shared.getData(ruleURL, headers: ["Accept": "application/json"])
                 try Self.writeAtomically(data, to: localFile)
             } catch {
-                // 保留旧规则文件；没有旧文件时跳过该源。
+                // 保留旧规则文件；没有旧文件时记录跳过原因，避免规则静默消失。
+                if !localExists {
+                    downloadSkipped.append(OnlineSkippedSourceRule(
+                        name: entry.name,
+                        reason: String(
+                            format: NSLocalizedString("规则下载失败：%@", comment: ""),
+                            error.localizedDescription
+                        )
+                    ))
+                }
                 continue
             }
         }
 
         Self.removeUnknownKazumiRules(entries: entries)
         let parsed = Self.parseKazumiRules()
+        var skippedRules = parsed.skippedRules
+        for item in downloadSkipped where !skippedRules.contains(where: { $0.name == item.name }) {
+            skippedRules.append(item)
+        }
         if parsed.sources.isEmpty, let remoteWarning {
             return EngineResult(
                 sources: [],
                 warning: remoteWarning,
-                skippedRules: parsed.skippedRules
+                skippedRules: skippedRules
             )
         }
         return EngineResult(
@@ -488,7 +509,7 @@ actor OnlineSourceStore {
             warning: parsed.sources.isEmpty
                 ? NSLocalizedString("Kazumi 没有可用规则。", comment: "")
                 : remoteWarning,
-            skippedRules: parsed.skippedRules
+            skippedRules: skippedRules
         )
     }
 
@@ -522,6 +543,7 @@ actor OnlineSourceStore {
 
             let selectorA = searchConfig["selectorSubjectFormatA"] as? [String: Any] ?? [:]
             let selectorIndexed = searchConfig["selectorSubjectFormatIndexed"] as? [String: Any] ?? [:]
+            let selectorJSONPath = searchConfig["selectorSubjectFormatJsonPathIndexed"] as? [String: Any] ?? [:]
             let channelFlattened = searchConfig["selectorChannelFormatFlattened"] as? [String: Any] ?? [:]
             let channelNoChannel = searchConfig["selectorChannelFormatNoChannel"] as? [String: Any] ?? [:]
 
@@ -549,17 +571,24 @@ actor OnlineSourceStore {
                 subjectSelectLists: (selectorA["selectLists"] as? String) ?? "a",
                 subjectSelectNames: (selectorIndexed["selectNames"] as? String) ?? "",
                 subjectSelectLinks: (selectorIndexed["selectLinks"] as? String) ?? "",
-                preferShorterName: (selectorA["preferShorterName"] as? Bool)
-                    ?? (selectorIndexed["preferShorterName"] as? Bool)
-                    ?? false,
+                subjectJSONPathNames: (selectorJSONPath["selectNames"] as? String) ?? "",
+                subjectJSONPathLinks: (selectorJSONPath["selectLinks"] as? String) ?? "",
+                preferShorterName: [selectorA, selectorIndexed, selectorJSONPath].contains {
+                    Self.boolValue($0["preferShorterName"]) == true
+                },
                 channelFormat: channelFormat,
+                selectChannelNames: (channelFlattened["selectChannelNames"] as? String) ?? "",
+                matchChannelName: (channelFlattened["matchChannelName"] as? String)
+                    ?? (searchConfig["matchChannelName"] as? String)
+                    ?? "",
                 selectEpisodeLists: (channelFlattened["selectEpisodeLists"] as? String) ?? "",
                 selectEpisodesFromList: (channelFlattened["selectEpisodesFromList"] as? String) ?? "",
                 selectEpisodes: (channelNoChannel["selectEpisodes"] as? String) ?? "",
                 matchEpisodeSortFromName: (channelFlattened["matchEpisodeSortFromName"] as? String)
                     ?? (channelNoChannel["matchEpisodeSortFromName"] as? String)
+                    ?? (searchConfig["matchEpisodeSortFromName"] as? String)
                     ?? "",
-                showAllEpisodes: false,
+                showAllEpisodes: Self.boolValue(searchConfig["showAllEpisodes"]) ?? false,
                 enableNestedURL: (matchVideo["enableNestedUrl"] as? Bool) ?? false,
                 matchNestedURL: (matchVideo["matchNestedUrl"] as? String) ?? "",
                 matchVideoURL: (matchVideo["matchVideoUrl"] as? String) ?? "",
@@ -696,6 +725,22 @@ actor OnlineSourceStore {
             }
         }
         return result
+    }
+
+    private static func boolValue(_ value: Any?) -> Bool? {
+        if let bool = value as? Bool { return bool }
+        if let number = value as? NSNumber { return number.boolValue }
+        if let string = value as? String {
+            switch string.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() {
+            case "true", "1", "yes":
+                return true
+            case "false", "0", "no":
+                return false
+            default:
+                return nil
+            }
+        }
+        return nil
     }
 
     private static func headerValue(_ headers: [String: String], keys: [String]) -> String? {
