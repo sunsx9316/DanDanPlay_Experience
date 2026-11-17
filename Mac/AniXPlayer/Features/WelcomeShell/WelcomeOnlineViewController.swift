@@ -315,6 +315,7 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
     private var searchTask: Task<Void, Never>?
     private var episodesTask: Task<Void, Never>?
     private var playbackTask: Task<Void, Never>?
+    private var danmakuMatchWindowController: OnlineDanmakuMatchWindowController?
     private var sourceSettingsPanel: NSPanel?
     private var complianceHeightConstraint: Constraint?
 
@@ -455,6 +456,11 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
         searchTask?.cancel()
         episodesTask?.cancel()
         playbackTask?.cancel()
+        if let controller = danmakuMatchWindowController {
+            Task { @MainActor in
+                controller.cancel()
+            }
+        }
         sourceSettingsPanel?.close()
     }
 
@@ -1022,6 +1028,10 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
             ? OnlinePlaybackService.continuousLookahead
             : 0
 
+        // 上一集还在等用户选择弹幕时，新的点击视为放弃旧选择；不能偷偷开始旧播放。
+        danmakuMatchWindowController?.cancel()
+        danmakuMatchWindowController = nil
+
         playbackTask?.cancel()
         playbackTask = Task { @MainActor [weak self] in
             guard let self = self else { return }
@@ -1057,26 +1067,14 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
                 self.busyEpisodeID = nil
                 self.rebuildEpisodes()
                 self.updateSourceSummary()
-                self.router?.play(files: preparation.files, startWith: startFile, progress: nil)
-
-                if preparation.files.count > 1 {
-                    var text = String(
-                        format: NSLocalizedString("连续播放：已准备 %d 集", comment: ""),
-                        preparation.files.count
-                    )
-                    if preparation.skippedCount > 0 {
-                        text += String(
-                            format: NSLocalizedString("，跳过 %d 集", comment: ""),
-                            preparation.skippedCount
-                        )
-                    }
-                    self.summaryLabel.text = text
-                } else if lookahead > 0, startIndex + 1 < orderedEpisodes.count {
-                    self.summaryLabel.text = NSLocalizedString(
-                        "后续剧集解析失败，仅播放当前集",
-                        comment: ""
-                    )
-                }
+                self.summaryLabel.text = NSLocalizedString("请选择弹幕库…", comment: "")
+                self.presentDanmakuMatch(
+                    for: startFile,
+                    preparation: preparation,
+                    orderedEpisodes: orderedEpisodes,
+                    startIndex: startIndex,
+                    lookahead: lookahead
+                )
             } catch {
                 guard !Task.isCancelled else { return }
                 self.busyEpisodeID = nil
@@ -1084,6 +1082,88 @@ final class WelcomeOnlineViewController: ViewController, WelcomeShellLoginAware,
                 self.updateSourceSummary()
                 self.showPlaybackError(error, episode: episode)
             }
+        }
+    }
+
+    /// 视频直链解析完成、真正打开播放器之前，先让用户选择弹幕库。
+    /// 取消会中止本次播放；连续播放的后续集不经过这里。
+    private func presentDanmakuMatch(
+        for file: OnlineEpisodeFile,
+        preparation: OnlinePlaybackService.OnlinePlaylistPreparation,
+        orderedEpisodes: [OnlineEpisode],
+        startIndex: Int,
+        lookahead: Int
+    ) {
+        danmakuMatchWindowController?.cancel()
+
+        let keyword = file.danmakuMatchFileName ?? file.fileName
+        let controller = OnlineDanmakuMatchWindowController(initialKeyword: keyword) { [weak self] outcome in
+            guard let self else { return }
+            self.danmakuMatchWindowController = nil
+
+            switch outcome {
+            case .cancelled:
+                self.busyEpisodeID = nil
+                self.rebuildEpisodes()
+                self.updateSourceSummary()
+                self.summaryLabel.text = NSLocalizedString("已取消弹幕选择，未开始播放", comment: "")
+                OnlinePlaybackSession.shared.end()
+
+            case .directPlay:
+                file.skipDanmakuAutoMatch = true
+                self.startPreparedPlayback(
+                    preparation: preparation,
+                    startFile: file,
+                    orderedEpisodes: orderedEpisodes,
+                    startIndex: startIndex,
+                    lookahead: lookahead
+                )
+
+            case .matched(let match):
+                let userMatch = UserMatchInfo(matchId: match.episodeId, matchDesc: match.matchDesc)
+                CacheManager.shared.setUserMatchInfo(with: file.fileId, info: userMatch)
+                self.startPreparedPlayback(
+                    preparation: preparation,
+                    startFile: file,
+                    orderedEpisodes: orderedEpisodes,
+                    startIndex: startIndex,
+                    lookahead: lookahead
+                )
+            }
+        }
+        danmakuMatchWindowController = controller
+        controller.present(presenting: view.window)
+    }
+
+    private func startPreparedPlayback(
+        preparation: OnlinePlaybackService.OnlinePlaylistPreparation,
+        startFile: OnlineEpisodeFile,
+        orderedEpisodes: [OnlineEpisode],
+        startIndex: Int,
+        lookahead: Int
+    ) {
+        busyEpisodeID = nil
+        rebuildEpisodes()
+        updateSourceSummary()
+        router?.play(files: preparation.files, startWith: startFile, progress: nil)
+
+        if preparation.files.count > 1 {
+            var text = String(
+                format: NSLocalizedString("连续播放：已准备 %d 集", comment: ""),
+                preparation.files.count
+            )
+            if preparation.skippedCount > 0 {
+                text += String(
+                    format: NSLocalizedString("，跳过 %d 集", comment: ""),
+                    preparation.skippedCount
+                )
+            }
+            summaryLabel.text = text
+        } else if lookahead > 0, startIndex + 1 < orderedEpisodes.count {
+            summaryLabel.text = NSLocalizedString(
+                "后续剧集解析失败，仅播放当前集",
+                comment: ""
+            )
         }
     }
 

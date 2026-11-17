@@ -13197,6 +13197,294 @@
           }
         }
       }
+    },
+    "双击匹配结果可直接开始播放": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Double-click a match to start playback"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "双击匹配结果可直接开始播放"
+          }
+        }
+      }
+    },
+    "已找到 %d 个匹配结果": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d matches found"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已找到 %d 个匹配结果"
+          }
+        }
+      }
+    },
+    "开始播放": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start Playback"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "开始播放"
+          }
+        }
+      }
+    },
+    "弹幕库": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Danmaku Library"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "弹幕库"
+          }
+        }
+      }
+    },
+    "弹幕库 #%d": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Danmaku Library #%d"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "弹幕库 #%d"
+          }
+        }
+      }
+    },
+    "弹幕库搜索关键词": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Danmaku library search keyword"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "弹幕库搜索关键词"
+          }
+        }
+      }
+    },
+    "搜索弹幕库失败：%@": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Danmaku library search failed: %@"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "搜索弹幕库失败：%@"
+          }
+        }
+      }
+    },
+    "未知作品": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unknown Title"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未知作品"
+          }
+        }
+      }
+    },
+    "未知剧集": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unknown Episode"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "未知剧集"
+          }
+        }
+      }
+    },
+    "正在搜索弹幕库…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Searching danmaku library…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "正在搜索弹幕库…"
+          }
+        }
+      }
+    },
+    "没有找到匹配的弹幕库，可修改关键词后重新搜索": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "No matching danmaku library was found. Change the keyword and search again."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "没有找到匹配的弹幕库，可修改关键词后重新搜索"
+          }
+        }
+      }
+    },
+    "直接播放（不加载弹幕）": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Play Directly (No Danmaku)"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "直接播放（不加载弹幕）"
+          }
+        }
+      }
+    },
+    "请选择匹配结果，或直接播放（不加载弹幕）": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Select a match, or play directly without danmaku."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请选择匹配结果，或直接播放（不加载弹幕）"
+          }
+        }
+      }
+    },
+    "选择弹幕库": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose Danmaku Library"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择弹幕库"
+          }
+        }
+      }
+    },
+    "选择弹幕库窗口": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose Danmaku Library Window"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "选择弹幕库窗口"
+          }
+        }
+      }
+    },
+    "默认使用在线剧集的虚拟文件名匹配，可修改后重新搜索。": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The online episode’s virtual file name is used by default. Edit it to search again."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "默认使用在线剧集的虚拟文件名匹配，可修改后重新搜索。"
+          }
+        }
+      }
+    },
+    "请选择弹幕库…": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Choose a danmaku library…"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "请选择弹幕库…"
+          }
+        }
+      }
+    },
+    "已取消弹幕选择，未开始播放": {
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Danmaku selection cancelled. Playback did not start."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "已取消弹幕选择，未开始播放"
+          }
+        }
+      }
     }
   }
 }

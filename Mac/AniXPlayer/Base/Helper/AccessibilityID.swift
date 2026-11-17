@@ -163,6 +163,20 @@ enum AccessibilityID {
         static let status = "onlineSniffer.status"
     }
 
+    /// 在线播放前的「选择弹幕库」窗口。
+    enum OnlineDanmakuMatch {
+        static let window = "onlineDanmakuMatch.window"
+        static let root = "onlineDanmakuMatch.root"
+        static let searchField = "onlineDanmakuMatch.searchField"
+        static let searchButton = "onlineDanmakuMatch.searchButton"
+        static let results = "onlineDanmakuMatch.results"
+        static let status = "onlineDanmakuMatch.status"
+        static let start = "onlineDanmakuMatch.start"
+        static let directPlay = "onlineDanmakuMatch.directPlay"
+        static let cancel = "onlineDanmakuMatch.cancel"
+        static let rowPrefix = "onlineDanmakuMatch.row."
+    }
+
     enum Player {
         static let window = "player.window"
         static let root = "player.root"

@@ -68,9 +68,12 @@ class NetworkManager {
     ///   - url: url
     ///   - parameters: 参数
     ///   - complection: 完成回调
-    func post(url: String, parameters: Encodable = [String: String](), headers: HTTPHeaders? = nil, complection: @escaping((Result<Data, Error>) -> Void)) {
+    /// - Returns: 可取消的网络请求；调用方不需要时忽略即可
+    @discardableResult
+    func post(url: String, parameters: Encodable = [String: String](), headers: HTTPHeaders? = nil, complection: @escaping((Result<Data, Error>) -> Void)) -> DataRequest? {
         ANX.logInfo(.HTTP, "发起 post 请求 url: \(url), 参数: \(parameters)")
-        self.defaultSession.request(url, method: .post, parameters: parameters, encoder: JSONParameterEncoder.default, headers: headers).responseData { (response) in
+        let request = self.defaultSession.request(url, method: .post, parameters: parameters, encoder: JSONParameterEncoder.default, headers: headers)
+        request.responseData { (response) in
             switch response.result {
             case .success(let data):
                 
@@ -87,6 +90,7 @@ class NetworkManager {
                 complection(.failure(error))
             }
         }
+        return request
     }
     
     /// 发起delete请求
@@ -131,9 +135,11 @@ class NetworkManager {
     ///   - additionUrl: 附加路径，需要自己加/分隔符
     ///   - parameters: 参数
     ///   - complection: 完成回调
-    func postOnBaseURL(additionUrl: String, parameters: Encodable = [String: String](), complection: @escaping((Result<Data, Error>) -> Void)) {
+    /// - Returns: 可取消的网络请求；调用方不需要时忽略即可
+    @discardableResult
+    func postOnBaseURL(additionUrl: String, parameters: Encodable = [String: String](), complection: @escaping((Result<Data, Error>) -> Void)) -> DataRequest? {
         let tmpPath = apiVersion + additionUrl
-        self.post(url: self.baseURL + tmpPath, parameters: parameters, headers: createHeaders(path: tmpPath), complection: complection)
+        return self.post(url: self.baseURL + tmpPath, parameters: parameters, headers: createHeaders(path: tmpPath), complection: complection)
     }
     
     /// 基于baseurl 拼接 additionUrl发起delete请求

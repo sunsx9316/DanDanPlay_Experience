@@ -50,6 +50,12 @@ protocol FileDelegate: AnyObject {
     func mediaBufferDidChange(file: File, bufferInfo: MediaBufferInfo)
 }
 
+/// 允许文件在本次播放中跳过弹幕自动匹配。
+/// 例如在线观看时用户选择「直接播放（不加载弹幕）」。
+protocol DanmakuAutoMatchSkippable: AnyObject {
+    var skipDanmakuAutoMatch: Bool { get }
+}
+
 protocol File: AnyObject, HistoryManager.lastWatchDateStoreable {
     
     var url: URL { get }

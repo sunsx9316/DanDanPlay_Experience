@@ -18,6 +18,97 @@ enum MatchMode: String {
 
 class MatchNetworkHandle {
     
+    /// 可取消的弹幕匹配请求。
+    /// `MatchsViewController` 等旧调用方可以忽略返回值；在线播放前的弹幕选择窗口用它取消请求。
+    final class MatchRequest {
+        private let lock = NSLock()
+        private var cancelHandler: (() -> Void)?
+        private var cancelled = false
+
+        fileprivate init() {}
+
+        var isCancelled: Bool {
+            lock.lock()
+            defer { lock.unlock() }
+            return cancelled
+        }
+
+        fileprivate func attachCancelHandler(_ handler: @escaping () -> Void) {
+            var shouldCancelImmediately = false
+            lock.lock()
+            if cancelled {
+                shouldCancelImmediately = true
+            } else {
+                cancelHandler = handler
+            }
+            lock.unlock()
+
+            if shouldCancelImmediately {
+                handler()
+            }
+        }
+
+        func cancel() {
+            let handler: (() -> Void)?
+            lock.lock()
+            guard !cancelled else {
+                lock.unlock()
+                return
+            }
+            cancelled = true
+            handler = cancelHandler
+            cancelHandler = nil
+            lock.unlock()
+
+            handler?()
+        }
+
+        fileprivate func finish() {
+            lock.lock()
+            cancelHandler = nil
+            lock.unlock()
+        }
+    }
+
+    /// 按文件名直接请求匹配结果（在线虚拟文件 / 用户修改关键词后重新搜索）。
+    /// - Parameters:
+    ///   - fileName: 用于匹配的虚拟文件名，不需要带扩展名
+    ///   - matchMode: 匹配模式，默认 `.fileNameOnly`
+    ///   - completion: 完成回调
+    /// - Returns: 可取消的请求
+    @discardableResult
+    static func match(fileName: String,
+                      matchMode: MatchMode = .fileNameOnly,
+                      completion: @escaping((MatchCollection?, Error?) -> Void)) -> MatchRequest {
+        var parameters = [String : String]()
+        parameters["fileName"] = fileName
+        parameters["fileHash"] = Self.emptyFileHash
+        parameters["fileSize"] = "0"
+        parameters["matchMode"] = matchMode.rawValue
+
+        ANX.logInfo(.HTTP, "根据文件名匹配弹幕 请求参数: \(parameters)")
+
+        let request = MatchRequest()
+        let dataRequest = NetworkManager.shared.postOnBaseURL(additionUrl: "/match", parameters: parameters) { result in
+            guard !request.isCancelled else { return }
+            request.finish()
+
+            switch result {
+            case .success(let data):
+                let result = Response<MatchCollection>(with: data)
+                completion(result.result, result.error)
+                ANX.logInfo(.HTTP, "根据文件名匹配弹幕 请求成功")
+            case .failure(let error):
+                completion(nil, error)
+                ANX.logInfo(.HTTP, "根据文件名匹配弹幕 请求失败: \(error)")
+            }
+        }
+        request.attachCancelHandler {
+            dataRequest?.cancel()
+        }
+        return request
+    }
+
     /// 匹配文件，当匹配结果为1时，则自动获取弹幕
     /// - Parameters:
     ///   - file: 文件
@@ -116,7 +207,7 @@ class MatchNetworkHandle {
         if file.isVirtualFile {
             let fileName = file.danmakuMatchFileName ?? file.fileName
             ANX.logInfo(.HTTP, "根据虚拟文件匹配弹幕 fileName: \(fileName)")
-            requestMatchBlock(fileName, Self.emptyFileHash, 0, .fileNameOnly, false)
+            _ = self.match(fileName: fileName, matchMode: .fileNameOnly, completion: completion)
             return
         }
 
