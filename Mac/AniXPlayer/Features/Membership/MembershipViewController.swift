@@ -481,8 +481,8 @@ final class MembershipViewController: NSViewController {
     private let featureTitleLabel = NSTextField(labelWithString: "")
     private let featureSummaryLabel = NSTextField(labelWithString: "")
     private let introTitleLabel = NSTextField(labelWithString: NSLocalizedString("会员权益说明", comment: ""))
-    private let introTextView = NSTextView()
-    private let introScrollView = NSScrollView()
+    private let introTextView = MarkdownTextView()
+    private lazy var introScrollView = MarkdownScrollView(textView: introTextView)
     private let headerStack = NSStackView()
 
     // 右侧用户卡
@@ -659,28 +659,9 @@ final class MembershipViewController: NSViewController {
         introTitleLabel.font = .systemFont(ofSize: 17, weight: .semibold)
         introTitleLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        introTextView.isEditable = false
-        introTextView.isSelectable = true
-        introTextView.drawsBackground = false
-        introTextView.textContainerInset = NSSize(width: 0, height: 6)
-        introTextView.minSize = NSSize(width: 0, height: 0)
-        introTextView.maxSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
-        introTextView.isVerticallyResizable = true
-        introTextView.isHorizontallyResizable = false
-        introTextView.autoresizingMask = [.width]
-        introTextView.textContainer?.widthTracksTextView = true
-        introTextView.textContainer?.containerSize = NSSize(
-            width: 0,
-            height: CGFloat.greatestFiniteMagnitude
-        )
         introTextView.setAccessibilityIdentifier(AccessibilityID.Membership.introTextView)
 
         introScrollView.translatesAutoresizingMaskIntoConstraints = false
-        introScrollView.hasVerticalScroller = true
-        introScrollView.scrollerStyle = .overlay
-        introScrollView.drawsBackground = false
-        introScrollView.borderType = .noBorder
-        introScrollView.documentView = introTextView
         introScrollView.setAccessibilityIdentifier(AccessibilityID.Membership.introScrollView)
 
         headerStack.orientation = .vertical
@@ -1596,7 +1577,7 @@ final class MembershipViewController: NSViewController {
     private func renderIntro() {
         guard renderedIntroMarkdown != viewModel.introMarkdown else { return }
         renderedIntroMarkdown = viewModel.introMarkdown
-        introTextView.textStorage?.setAttributedString(Self.markdownText(viewModel.introMarkdown))
+        introTextView.setMarkdown(viewModel.introMarkdown, skipsLeadingH1: true)
         introTextView.scrollToBeginningOfDocument(nil)
     }
 
@@ -1777,82 +1758,6 @@ final class MembershipViewController: NSViewController {
     private static func limitedPromoCode(_ raw: String) -> String {
         let sanitized = MembershipViewModel.sanitizedPromoCode(raw)
         return String(sanitized.prefix(20))
-    }
-
-    // MARK: - Markdown（轻量渲染，失败也不阻塞会员中心）
-
-    private static func markdownText(_ markdown: String) -> NSAttributedString {
-        let result = NSMutableAttributedString()
-        let bodyFont = NSFont.systemFont(ofSize: 12.5)
-        let paragraph = NSMutableParagraphStyle()
-        paragraph.lineSpacing = 2.5
-        paragraph.paragraphSpacing = 4
-
-        var lines = markdown.components(separatedBy: .newlines)
-        // 窗口已有「弹弹play 会员」标题，服务端 Markdown 若以同名 H1 开头则跳过，避免重复。
-        if let firstIndex = lines.firstIndex(where: { !$0.trimmingCharacters(in: .whitespaces).isEmpty }) {
-            let first = lines[firstIndex].trimmingCharacters(in: .whitespaces)
-            let normalized = first
-                .replacingOccurrences(of: "#", with: "")
-                .replacingOccurrences(of: " ", with: "")
-                .lowercased()
-            if first.hasPrefix("# "),
-               normalized == "弹弹play会员" || normalized == "dandanplaymembership" {
-                lines.remove(at: firstIndex)
-            }
-        }
-
-        for rawLine in lines {
-            var line = rawLine
-            var font = bodyFont
-
-            if line.hasPrefix("### ") {
-                line = String(line.dropFirst(4))
-                font = NSFont.systemFont(ofSize: 13, weight: .semibold)
-            } else if line.hasPrefix("## ") {
-                line = String(line.dropFirst(3))
-                font = NSFont.systemFont(ofSize: 14, weight: .semibold)
-            } else if line.hasPrefix("# ") {
-                line = String(line.dropFirst(2))
-                font = NSFont.systemFont(ofSize: 16, weight: .bold)
-            } else if line.hasPrefix("- ") {
-                line = "• " + String(line.dropFirst(2))
-            }
-
-            line = line.replacingOccurrences(of: "**", with: "")
-            line = line.replacingOccurrences(of: "__", with: "")
-            line = line.replacingOccurrences(of: "`", with: "")
-            line = replacingMarkdownLinks(in: line)
-
-            if line.isEmpty {
-                result.append(NSAttributedString(
-                    string: "\n",
-                    attributes: [.font: bodyFont, .paragraphStyle: paragraph]
-                ))
-                continue
-            }
-
-            result.append(NSAttributedString(
-                string: line + "\n",
-                attributes: [
-                    .font: font,
-                    .foregroundColor: NSColor.labelColor,
-                    .paragraphStyle: paragraph
-                ]
-            ))
-        }
-        return result
-    }
-
-    private static func replacingMarkdownLinks(in line: String) -> String {
-        var output = line
-        while let start = output.range(of: "["),
-              let middle = output.range(of: "](", range: start.upperBound..<output.endIndex),
-              let end = output.range(of: ")", range: middle.upperBound..<output.endIndex) {
-            let title = output[start.upperBound..<middle.lowerBound]
-            output.replaceSubrange(start.lowerBound..<end.upperBound, with: title)
-        }
-        return output
     }
 }
 
