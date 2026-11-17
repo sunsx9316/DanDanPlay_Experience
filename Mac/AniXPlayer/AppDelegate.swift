@@ -31,16 +31,6 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     private var mediaLibraryWindowController: MediaLibraryWindowController?
 
-    private var localLibraryWindowController: LocalLibraryWindowController?
-
-    private var downloadWindowController: DownloadWindowController?
-
-    private var playHistoryWindowController: PlayHistoryNavigationWindowController?
-
-    private var bangumiQueueWindowController: BangumiQueueNavigationWindowController?
-
-    private var searchWindowController: SearchWindowController?
-
     private var pendingOpenURLs: [URL] = []
 
     private var didFinishLaunching = false
@@ -65,6 +55,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         NSApp.activate(ignoringOtherApps: true)
     }
 
+    @MainActor
+    private var mainViewController: MainViewController? {
+        _ = mainWindowController
+        return mainWindowController.contentViewController as? MainViewController
+    }
+
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         
         Launcher.launch()
@@ -86,7 +82,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             DownloadNotifier.shared.activate()
             DownloadNotifier.shared.onSelectTask = { [weak self] taskID in
                 Task { @MainActor in
-                    self?.presentDownloadCenterWindow(selectingTaskID: taskID)
+                    self?.openDownloadInMainWindow(selectingTaskID: taskID)
                 }
             }
             DownloadManager.shared.bootstrap()
@@ -223,7 +219,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         if !downloadSources.isEmpty {
             Task { @MainActor in
-                self.presentDownloadCenterWindow(prefillSources: downloadSources)
+                self.openDownloadInMainWindow(prefillSources: downloadSources)
             }
         }
 
@@ -334,10 +330,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     @objc private func showHomePage(_ item: NSMenuItem) {
-        mainWindowController.window?.makeKeyAndOrderFront(nil)
-        NSApp.activate(ignoringOtherApps: true)
-        if let mainVC = mainWindowController.contentViewController as? MainViewController {
-            mainVC.showMainSection(.home)
+        Task { @MainActor in
+            self.mainViewController?.openHomePage(.overview)
         }
     }
 
@@ -368,51 +362,20 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc private func showPlayHistory(_ item: NSMenuItem) {
-        if let wc = playHistoryWindowController {
-            wc.window?.makeKeyAndOrderFront(nil)
-            return
+        Task { @MainActor in
+            self.mainViewController?.openAccountPage(.history)
         }
-        let wc = PlayHistoryNavigationWindowController()
-        wc.windowWillCloseCallBack = { [weak self] in
-            self?.playHistoryWindowController = nil
-        }
-        wc.showWindow(nil)
-        playHistoryWindowController = wc
     }
 
     @objc private func showLocalLibrary(_ item: NSMenuItem) {
         Task { @MainActor in
-            self.presentLocalLibraryWindow()
+            self.mainViewController?.openLibrary()
         }
-    }
-
-    @MainActor private func presentLocalLibraryWindow() {
-        if let wc = localLibraryWindowController {
-            wc.window?.makeKeyAndOrderFront(nil)
-            NSApp.activate(ignoringOtherApps: true)
-            return
-        }
-
-        let wc = LocalLibraryWindowController()
-        wc.onPlayFiles = { [weak self] files, startFile in
-            guard let self,
-                  let mainVC = self.mainWindowController.contentViewController as? MainViewController else {
-                return
-            }
-            self.mainWindowController.window?.makeKeyAndOrderFront(nil)
-            NSApp.activate(ignoringOtherApps: true)
-            mainVC.openLocalFiles(files, startWith: startFile)
-        }
-        wc.windowWillCloseCallBack = { [weak self] in
-            self?.localLibraryWindowController = nil
-        }
-        wc.showWindow(nil)
-        localLibraryWindowController = wc
     }
 
     @objc private func showDownloadCenter(_ item: NSMenuItem) {
         Task { @MainActor in
-            self.presentDownloadCenterWindow()
+            self.openDownloadInMainWindow()
         }
     }
 
@@ -446,7 +409,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
 
         Task { @MainActor in
-            self.presentDownloadCenterWindow(prefillSources: sources)
+            self.openDownloadInMainWindow(prefillSources: sources)
         }
     }
 
@@ -458,76 +421,26 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         DownloadManager.shared.resumeAll()
     }
 
-    @MainActor private func presentDownloadCenterWindow(
+    @MainActor private func openDownloadInMainWindow(
         selectingTaskID: UUID? = nil,
         prefillSources: [String] = []
     ) {
-        DownloadManager.shared.bootstrap()
-
-        let wc: DownloadWindowController
-        if let existing = downloadWindowController {
-            wc = existing
-        } else {
-            let created = DownloadWindowController()
-            created.onPlayFiles = { [weak self] files, startFile in
-                guard let self,
-                      let mainVC = self.mainWindowController.contentViewController as? MainViewController else {
-                    return
-                }
-                self.mainWindowController.window?.makeKeyAndOrderFront(nil)
-                NSApp.activate(ignoringOtherApps: true)
-                mainVC.openLocalFiles(files, startWith: startFile)
-            }
-            created.windowWillCloseCallBack = { [weak self] in
-                self?.downloadWindowController = nil
-            }
-            created.showWindow(nil)
-            downloadWindowController = created
-            wc = created
-        }
-
-        wc.window?.makeKeyAndOrderFront(nil)
-        NSApp.activate(ignoringOtherApps: true)
-
-        if let selectingTaskID {
-            wc.revealTask(id: selectingTaskID)
-        }
-        if !prefillSources.isEmpty {
-            wc.presentAddSheet(prefillSources: prefillSources)
-        }
+        guard let mainVC = mainViewController else { return }
+        mainVC.openDownload(
+            selectingTaskID: selectingTaskID,
+            prefillSources: prefillSources
+        )
     }
 
     @objc private func showBangumiQueue(_ item: NSMenuItem) {
         Task { @MainActor in
-            self.presentBangumiQueueWindow()
+            self.mainViewController?.openHomePage(.queue)
         }
-    }
-
-    @MainActor private func presentBangumiQueueWindow() {
-        if let wc = bangumiQueueWindowController {
-            wc.window?.makeKeyAndOrderFront(nil)
-            return
-        }
-        let wc = BangumiQueueNavigationWindowController()
-        wc.windowWillCloseCallBack = { [weak self] in
-            self?.bangumiQueueWindowController = nil
-        }
-        wc.showWindow(nil)
-        bangumiQueueWindowController = wc
     }
 
     @objc private func showSearch(_ item: NSMenuItem) {
         Task { @MainActor in
-            if let wc = self.searchWindowController {
-                wc.window?.makeKeyAndOrderFront(nil)
-                return
-            }
-            let wc = SearchWindowController()
-            wc.windowWillCloseCallBack = { [weak self] in
-                self?.searchWindowController = nil
-            }
-            wc.showWindow(nil)
-            self.searchWindowController = wc
+            self.mainViewController?.openSearchPage(.bangumi, focusSearch: true)
         }
     }
 

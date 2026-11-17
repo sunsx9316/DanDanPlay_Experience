@@ -145,9 +145,56 @@ final class MainShellViewController: ViewController {
     }
 
     func selectHomePage(_ page: WelcomeShellPage) {
+        openHomePage(page)
+    }
+
+    /// 菜单/外部入口：切到「首页」并打开指定子页面。
+    func openHomePage(_ page: WelcomeShellPage) {
         _ = view
-        showSection(.home)
+        select(.home)
         homeViewController.selectPage(page)
+        syncPivotSelection()
+    }
+
+    /// 菜单/外部入口：切到「搜索」并打开指定子页面，可选择聚焦搜索框。
+    func openSearchPage(_ page: MainSearchPage, focusSearch: Bool) {
+        _ = view
+        select(.search)
+        searchSectionViewController?.select(page, focusSearch: focusSearch)
+        syncPivotSelection()
+    }
+
+    /// 菜单/外部入口：切到「我的」并打开指定子页面。
+    func openAccountPage(_ page: MainAccountPage) {
+        _ = view
+        select(.account)
+        accountSectionViewController?.select(page)
+        syncPivotSelection()
+    }
+
+    /// 菜单/外部入口：切到「媒体库」。
+    func openLibrary() {
+        _ = view
+        select(.library)
+    }
+
+    /// 菜单/通知入口：切到「下载」，可定位任务并预填添加下载。
+    func openDownload(selectingTaskID: UUID? = nil, prefillSources: [String] = []) {
+        _ = view
+        DownloadManager.shared.bootstrap()
+        select(.download)
+
+        guard selectingTaskID != nil || !prefillSources.isEmpty else { return }
+        // 等下载页完成首次布局/进入窗口后再定位或弹出添加 sheet。
+        DispatchQueue.main.async { [weak self] in
+            guard let self, let download = self.downloadViewController else { return }
+            if let selectingTaskID {
+                download.revealTask(id: selectingTaskID)
+            }
+            if !prefillSources.isEmpty {
+                download.enqueuePrefillSources(prefillSources)
+            }
+        }
     }
 
     /// 详情页「搜索资源」入口：切换到资源搜索子页并自动搜索。
