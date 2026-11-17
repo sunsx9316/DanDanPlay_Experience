@@ -703,7 +703,9 @@ final class MembershipViewModelPaymentGuardTests: XCTestCase {
             feature: nil,
             api: api,
             store: store,
-            now: { fixedNow }
+            now: { fixedNow },
+            // 单测不能启动系统浏览器；mock 订单的 example.com/pay 只用于验证降级路径。
+            openURL: { _ in true }
         )
         viewModel.begin()
         return (viewModel, api)

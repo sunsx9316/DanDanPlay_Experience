@@ -68,6 +68,8 @@ final class MembershipViewModel {
     private let api: MembershipAPIServing
     private let store: MembershipStore
     private let nowProvider: () -> Date
+    /// 打开网页支付；测试可注入不启动系统浏览器的实现。
+    private let openURL: (URL) -> Bool
     private var paymentTask: Task<Void, Never>?
     private var paymentGeneration = 0
     private var didBegin = false
@@ -83,12 +85,14 @@ final class MembershipViewModel {
         feature: MembershipFeature?,
         api: MembershipAPIServing = MembershipAPI(),
         store: MembershipStore? = nil,
-        now: @escaping () -> Date = Date.init
+        now: @escaping () -> Date = Date.init,
+        openURL: @escaping (URL) -> Bool = { NSWorkspace.shared.open($0) }
     ) {
         self.feature = feature
         self.api = api
         self.store = store ?? MembershipStore.shared
         self.nowProvider = now
+        self.openURL = openURL
     }
 
     // MARK: - Lifecycle
@@ -724,7 +728,7 @@ final class MembershipViewModel {
 
     @discardableResult
     private func openWebURL(_ url: URL) -> Bool {
-        if NSWorkspace.shared.open(url) {
+        if openURL(url) {
             return true
         }
         let pasteboard = NSPasteboard.general
