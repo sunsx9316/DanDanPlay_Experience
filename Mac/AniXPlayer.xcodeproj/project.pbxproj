@@ -68,6 +68,7 @@
 		363D377B83189153B3D261A9 /* MembershipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F00F187A667382050B83E4B /* MembershipViewModel.swift */; };
 		36842F2B2B5FB391FAC199B2 /* TimelineCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CD9D8801CD6415C20C34C0B /* TimelineCollectionViewCell.swift */; };
 		3848354E49B8A3CAADBB0CE2 /* SummaryTranscriptParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4E58AC70F1AF66B1C7E56C /* SummaryTranscriptParser.swift */; };
+		38F761B4442A03D9693CCED1 /* PlayHistoryRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF0E140EF08FA64FD629D3B /* PlayHistoryRowView.swift */; };
 		39F6F5D4CFE74D6B45A0A40B /* SearchWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7477F7E7A4B033159CBB328 /* SearchWindowController.swift */; };
 		3C66BB9E567625BAD0C3DAAC /* OAuthPKCE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D021EBACA202E6D6AA0847A /* OAuthPKCE.swift */; };
 		3D2D32F025349FE8771575C4 /* DownloadTorrentImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0E40F11216A6BB5C63420499 /* DownloadTorrentImporter.swift */; };
@@ -91,8 +92,8 @@
 		5705E100B70F7D09D7363625 /* BangumiDetailMetadataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D79B4A389B4960269D87CA2D /* BangumiDetailMetadataViewController.swift */; };
 		5974AF42F8C48A4EEE8A6AE6 /* RefreshTokenStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCB65B00EB79D4503269564 /* RefreshTokenStore.swift */; };
 		5C4771BCEC594B3806205F10 /* StoreBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = F497A44E6438238BFAAD4350 /* StoreBackend.swift */; };
-		5D790D707635278633B521A9 /* DanmakuListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CBB9F77E66374F2208A2691 /* DanmakuListTests.swift */; };
 		5D3E1BDCCE3DE3771E614EEA /* KazumiJSONPath.swift in Sources */ = {isa = PBXBuildFile; fileRef = F67623CB5879FFFB37580A7F /* KazumiJSONPath.swift */; };
+		5D790D707635278633B521A9 /* DanmakuListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CBB9F77E66374F2208A2691 /* DanmakuListTests.swift */; };
 		5DDD07F68EFDB5B2715984DB /* BangumiDetailCommentPreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7671FD343D3DE6902AFDD7E /* BangumiDetailCommentPreviewView.swift */; };
 		5E87D50AF0C9341D579164DC /* WelcomeShellComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1036AAA68C6CFD11AD36E41A /* WelcomeShellComponents.swift */; };
 		5F47EDB01C8FC313CE532904 /* MediaLibrarySectionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B82F5E7B3769B6409FAEB726 /* MediaLibrarySectionTableViewCell.swift */; };
@@ -354,8 +355,8 @@
 		A02B8AAF9A09A36671A669C5 /* GIFExportService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F63BF875755033BDC5B40A /* GIFExportService.swift */; };
 		A09C41260DD474A4DD21EF6C /* KazumiAPISupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E74A8487741C9AA1C30A75A /* KazumiAPISupport.swift */; };
 		A0F3C0A082F0421A3290A371 /* FavoriteUserDataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B8E5B0C6EF68249D97700E /* FavoriteUserDataService.swift */; };
-		A1F75F1D2C381A4205356485 /* NowPlayingCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D053F3A536DDEF88028013 /* NowPlayingCardView.swift */; };
 		A129ACE915485E39F1489DD6 /* OnlineHTTPClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE68D415C6DBC6622ABFA068 /* OnlineHTTPClient.swift */; };
+		A1F75F1D2C381A4205356485 /* NowPlayingCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A4D053F3A536DDEF88028013 /* NowPlayingCardView.swift */; };
 		A37922529E949B313F1FAF0E /* SessionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7426E639FBC8FE8B8626A93F /* SessionStore.swift */; };
 		A546C2584CAC40A6BFD3AD77 /* ThemedTableRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D126C7B2C39D46C1AA1B4176 /* ThemedTableRowView.swift */; };
 		A6F4333E9C4C8E0101F8337A /* WelcomeOnlineViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF2E393991A8B67540256B2B /* WelcomeOnlineViewController.swift */; };
@@ -486,8 +487,8 @@
 		090B817247899EE80920C625 /* OnlineHTMLSupport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OnlineHTMLSupport.swift; sourceTree = "<group>"; };
 		0A5CC1100C0C9BB28F1260A5 /* LocalLibraryModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = LocalLibraryModels.swift; sourceTree = "<group>"; };
 		0A5DBB78FE61F69ABDF59309 /* PlayHistoryModels.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PlayHistoryModels.swift; path = ../Share/CocoaShare/Networking/PlayHistory/PlayHistoryModels.swift; sourceTree = "<group>"; };
-		0D10F4198C55F41FFB70DC41 /* DanmakuListLogic.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DanmakuListLogic.swift; path = AniXPlayer/Player/DanmakuList/DanmakuListLogic.swift; sourceTree = "<group>"; };
 		0AC2B5CC91FA54BFA29F9BFD /* OnlineSearchMerger.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = OnlineSearchMerger.swift; sourceTree = "<group>"; };
+		0D10F4198C55F41FFB70DC41 /* DanmakuListLogic.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DanmakuListLogic.swift; path = AniXPlayer/Player/DanmakuList/DanmakuListLogic.swift; sourceTree = "<group>"; };
 		0E40F11216A6BB5C63420499 /* DownloadTorrentImporter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DownloadTorrentImporter.swift; sourceTree = "<group>"; };
 		0ECD311C6DBAD4EF73F4A791 /* TransmissionRPC.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TransmissionRPC.swift; sourceTree = "<group>"; };
 		0EEBEB1FAB48A522E35F9CDB /* WelcomeAnnouncementViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WelcomeAnnouncementViewController.swift; sourceTree = "<group>"; };
@@ -826,6 +827,7 @@
 		BAFB032FB619882F8CF2E038 /* MembershipStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MembershipStore.swift; path = ../Share/CocoaShare/Membership/MembershipStore.swift; sourceTree = "<group>"; };
 		BBE9D86B181B2B670C368484 /* WelcomeRecentViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WelcomeRecentViewController.swift; sourceTree = "<group>"; };
 		BD0D50ED0B14914047E291D0 /* SubtitleDocument.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SubtitleDocument.swift; sourceTree = "<group>"; };
+		BDF0E140EF08FA64FD629D3B /* PlayHistoryRowView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlayHistoryRowView.swift; sourceTree = "<group>"; };
 		BE64C56DBEC7C545E7DBCCF2 /* DownloadSheets.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DownloadSheets.swift; sourceTree = "<group>"; };
 		BF9BABE66AA1BBB2B8521EE2 /* DownloadPreferences.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DownloadPreferences.swift; sourceTree = "<group>"; };
 		BFF420A1C44027D77A9C67E7 /* BangumiDetailTagFlowView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BangumiDetailTagFlowView.swift; sourceTree = "<group>"; };
@@ -1208,6 +1210,7 @@
 			children = (
 				F1705B7D73B9C09189CED761 /* PlayHistoryReporter.swift */,
 				5115FE4B0D3484C630A5912F /* PlayHistoryWindow.swift */,
+				BDF0E140EF08FA64FD629D3B /* PlayHistoryRowView.swift */,
 			);
 			name = History;
 			path = History;
@@ -2696,6 +2699,7 @@
 				6049FD287E2ACAB0F7C3A25A /* KazumiRuleModels.swift in Sources */,
 				DE4BD1CC0E61AE1E70B0AA0C /* KazumiAPISupport.swift in Sources */,
 				EBE6018EAC12A2B001D044E0 /* OnlineSearchMerger.swift in Sources */,
+				38F761B4442A03D9693CCED1 /* PlayHistoryRowView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
