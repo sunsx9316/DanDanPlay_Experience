@@ -87,26 +87,15 @@ final class SummaryViewController: ViewController {
         return button
     }()
 
-    private lazy var textView: TextView = {
-        let textView = TextView()
-        textView.isEditable = false
-        textView.isSelectable = true
-        textView.drawsBackground = false
+    private lazy var textView: MarkdownTextView = {
+        let textView = MarkdownTextView()
         textView.textContainerInset = NSSize(width: 12, height: 12)
-        textView.textContainer?.widthTracksTextView = true
-        textView.textContainer?.heightTracksTextView = false
-        textView.isHorizontallyResizable = false
-        textView.isVerticallyResizable = true
-        textView.autoresizingMask = [.width]
-        textView.minSize = .zero
-        textView.maxSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
         textView.setAccessibilityIdentifier(AccessibilityID.Summary.textView)
         return textView
     }()
 
-    private lazy var scrollView: ScrollView<TextView> = {
-        let scrollView = ScrollView(containerView: textView)
-        scrollView.hasHorizontalScroller = false
+    private lazy var scrollView: MarkdownScrollView = {
+        let scrollView = MarkdownScrollView(textView: textView)
         scrollView.autohidesScrollers = true
         scrollView.borderType = .bezelBorder
         scrollView.drawsBackground = true
@@ -244,21 +233,6 @@ final class SummaryViewController: ViewController {
         statusLabel.stringValue = NSLocalizedString("选择字幕文件后生成总结", comment: "")
     }
 
-    override func viewDidLayout() {
-        super.viewDidLayout()
-
-        let contentSize = scrollView.contentSize
-        guard contentSize.width > 0 else { return }
-        if textView.frame.width != contentSize.width || textView.frame.height <= 0 {
-            var frame = textView.frame
-            frame.size.width = contentSize.width
-            if frame.height <= 0 {
-                frame.size.height = contentSize.height
-            }
-            textView.frame = frame
-        }
-    }
-
     func cancelPendingWork() {
         hashTask?.cancel()
         generationTask?.cancel()
@@ -267,6 +241,12 @@ final class SummaryViewController: ViewController {
     // MARK: - UI Setup
 
     private func setupUI() {
+        // 时间戳仍由 MarkdownTextView 复制；这里只补充状态栏提示。
+        textView.onTimestampActivated = { [weak self] _, _ in
+            self?.statusLabel.stringValue = NSLocalizedString("已复制到剪贴板", comment: "")
+            return false
+        }
+
         let videoRow = makeFormRow(
             title: NSLocalizedString("视频文件", comment: ""),
             field: videoPathField,
@@ -611,38 +591,14 @@ final class SummaryViewController: ViewController {
     }
 
     private func renderMarkdown(_ markdown: String) {
-        let options = AttributedString.MarkdownParsingOptions(interpretedSyntax: .full)
-        let base = (try? NSAttributedString(markdown: markdown, options: options))
-            ?? NSAttributedString(string: markdown)
-        let result = NSMutableAttributedString(attributedString: base)
-        let fullRange = NSRange(location: 0, length: result.length)
-
-        result.enumerateAttribute(.font, in: fullRange) { value, range, _ in
-            var font = NSFont.systemFont(ofSize: 13)
-            if let oldFont = value as? NSFont {
-                let traits = NSFontManager.shared.traits(of: oldFont)
-                if traits.contains(.boldFontMask) {
-                    font = NSFont.boldSystemFont(ofSize: 13)
-                }
-            }
-            result.addAttribute(.font, value: font, range: range)
-        }
-        result.addAttribute(.foregroundColor, value: NSColor.textColor, range: fullRange)
-
-        textView.textStorage?.setAttributedString(result)
+        textView.setMarkdown(markdown)
         textView.scrollToBeginningOfDocument(nil)
     }
 
     private func showPlaceholder() {
-        let attributes: [NSAttributedString.Key: Any] = [
-            .font: NSFont.systemFont(ofSize: 13),
-            .foregroundColor: NSColor.tertiaryLabelColor
-        ]
-        textView.textStorage?.setAttributedString(
-            NSAttributedString(
-                string: NSLocalizedString("生成结果将显示在这里", comment: ""),
-                attributes: attributes
-            )
+        textView.setPlainText(
+            NSLocalizedString("生成结果将显示在这里", comment: ""),
+            color: .tertiaryLabelColor
         )
     }
 
