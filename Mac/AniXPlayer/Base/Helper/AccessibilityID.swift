@@ -306,6 +306,8 @@ enum AccessibilityID {
         static let list = "history.list"
         static let refreshButton = "history.refreshButton"
         static let statusLabel = "history.statusLabel"
+        static let itemPrefix = "history.item."
+        static let chipPrefix = "history.chip."
     }
 
     enum Favorite {

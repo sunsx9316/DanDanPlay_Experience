@@ -9,115 +9,16 @@ import Cocoa
 import SnapKit
 import Kingfisher
 
-final class PlayHistoryItem: AnimeListItem {
+struct PlayHistoryItem {
     let anime: PlayHistoryAnime
-
-    init(anime: PlayHistoryAnime) {
-        self.anime = anime
-    }
 
     var animeId: Int { anime.animeId }
     var animeTitle: String { anime.animeTitle }
     var imageUrl: String { anime.imageUrl }
-    var rating: Double { 0 }
-    var typeDescription: String { anime.typeDescription }
-    var isOnAir: Bool { anime.isOnAir }
-    var isFavorited: Bool { false }
+    var episodes: [PlayHistoryEpisode] { anime.episodes }
 
     var lastWatched: Date? {
         anime.episodes.compactMap(\.lastWatched).max()
-    }
-
-    var episodeText: String {
-        if anime.episodes.isEmpty {
-            return NSLocalizedString("暂无剧集记录", comment: "")
-        }
-        return String(
-            format: NSLocalizedString("看过 %d 集", comment: ""),
-            anime.episodes.count
-        )
-    }
-}
-
-final class PlayHistoryCollectionViewCell: CollectionViewItem {
-    static func estimatedHeight(for width: CGFloat) -> CGFloat {
-        return width * 1.4 + 72
-    }
-
-    private lazy var posterView: ImageView = {
-        let view = ImageView()
-        // 统一按 1.4 比例裁切填充，避免不同封面比例导致格子视觉大小不一致。
-        view.setScaling(.aspectFill)
-        view.wantsLayer = true
-        view.layer?.cornerRadius = 6
-        view.layer?.masksToBounds = true
-        return view
-    }()
-
-    private lazy var titleLabel: Label = {
-        let label = Label(labelWithString: "")
-        label.font = .ddp_normal()
-        label.textColor = .textColor
-        label.maximumNumberOfLines = 2
-        label.lineBreakMode = .byTruncatingTail
-        return label
-    }()
-
-    private lazy var detailLabel: Label = {
-        let label = Label(labelWithString: "")
-        label.font = .ddp_small()
-        label.textColor = .subtitleTextColor
-        label.lineBreakMode = .byTruncatingTail
-        return label
-    }()
-
-    private lazy var timeLabel: Label = {
-        let label = Label(labelWithString: "")
-        label.font = .ddp_small()
-        label.textColor = .subtitleTextColor
-        return label
-    }()
-
-    override func loadView() {
-        view = NSView()
-    }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        let infoStack = NSStackView(views: [titleLabel, detailLabel, timeLabel])
-        infoStack.orientation = .vertical
-        infoStack.spacing = 3
-        infoStack.alignment = .leading
-
-        let root = NSStackView(views: [posterView, infoStack])
-        root.orientation = .vertical
-        root.spacing = 8
-        // 让海报与文字撑满瀑布流列宽；否则低分辨率海报会按 intrinsic width 缩成一小块。
-        root.alignment = .width
-
-        view.addSubview(root)
-        root.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
-        }
-        posterView.snp.makeConstraints { make in
-            make.height.equalTo(posterView.snp.width).multipliedBy(1.4)
-        }
-    }
-
-    func update(item: PlayHistoryItem, dateFormatter: DateFormatter) {
-        if let url = URL(string: item.imageUrl) {
-            posterView.kf.setImage(with: url)
-        } else {
-            posterView.image = nil
-        }
-        titleLabel.text = item.animeTitle
-        detailLabel.text = item.episodeText
-        if let date = item.lastWatched {
-            timeLabel.text = dateFormatter.string(from: date)
-        } else {
-            timeLabel.text = ""
-        }
     }
 }
 
@@ -128,6 +29,10 @@ final class PlayHistoryViewController: ViewController {
 
     private var items: [PlayHistoryItem] = []
     private var refreshTask: Task<Void, Never>?
+    private var referenceDate = Date()
+    private var lastTableWidth: CGFloat = 0
+    private var lastOpenTime: TimeInterval = 0
+    private var lastOpenAnimeId: Int?
 
     private lazy var titleLabel: Label = {
         let label = Label(labelWithString: NSLocalizedString("播放历史", comment: ""))
@@ -152,40 +57,42 @@ final class PlayHistoryViewController: ViewController {
         return label
     }()
 
-    private lazy var layout: WaterfallLayout = {
-        let layout = WaterfallLayout()
-        layout.columnCount = 4
-        layout.itemPadding = 12
-        layout.sectionInset = NSEdgeInsets(top: 12, left: 16, bottom: 16, right: 16)
-        layout.delegate = self
-        return layout
+    private lazy var tableView: TableView = {
+        let tv = TableView()
+        tv.dataSource = self
+        tv.delegate = self
+        tv.backgroundColor = .clear
+        tv.headerView = nil
+        tv.rowSizeStyle = .custom
+        tv.rowHeight = PlayHistoryRowLayout.minimumHeight
+        tv.usesAutomaticRowHeights = false
+        tv.selectionHighlightStyle = .regular
+        tv.columnAutoresizingStyle = .uniformColumnAutoresizingStyle
+        tv.autoresizingMask = [.width]
+        tv.intercellSpacing = NSSize(width: 0, height: 0)
+        tv.registerClassCell(class: PlayHistoryRowView.self)
+
+        let column = NSTableColumn(identifier: NSUserInterfaceItemIdentifier("history"))
+        column.resizingMask = .autoresizingMask
+        tv.addTableColumn(column)
+
+        tv.target = self
+        tv.action = #selector(handleRowClick)
+        tv.setAccessibilityIdentifier(AccessibilityID.History.list)
+        tv.enableRowHoverTracking()
+        return tv
     }()
 
-    private lazy var collectionView: CollectionView = {
-        let cv = CollectionView()
-        cv.collectionViewLayout = layout
-        cv.registerItem(class: PlayHistoryCollectionViewCell.self)
-        cv.dataSource = self
-        cv.delegate = self
-        cv.backgroundColors = [.clear]
-        cv.isSelectable = true
-        cv.setAccessibilityIdentifier(AccessibilityID.History.list)
-        return cv
-    }()
-
-    private lazy var scrollView: ScrollView<CollectionView> = {
-        let sv = ScrollView<CollectionView>()
-        sv.containerView = collectionView
+    private lazy var scrollView: ScrollView<TableView> = {
+        let sv = ScrollView<TableView>()
+        sv.containerView = tableView
         sv.hasVerticalScroller = true
+        sv.hasHorizontalScroller = false
+        sv.autohidesScrollers = true
+        sv.horizontalScrollElasticity = .none
         sv.borderType = .noBorder
         sv.drawsBackground = false
         return sv
-    }()
-
-    private lazy var dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm"
-        return formatter
     }()
 
     override func viewDidLoad() {
@@ -225,12 +132,12 @@ final class PlayHistoryViewController: ViewController {
 
     override func viewDidLayout() {
         super.viewDidLayout()
-        let bounds = scrollView.contentView.bounds
-        let height = max(collectionView.collectionViewLayout?.collectionViewContentSize.height ?? 0, bounds.height)
-        if collectionView.frame.width != bounds.width || collectionView.frame.height != height {
-            collectionView.frame = NSRect(x: 0, y: 0, width: bounds.width, height: height)
-            collectionView.collectionViewLayout?.invalidateLayout()
-        }
+
+        let width = tableView.bounds.width
+        guard width > 0, abs(width - lastTableWidth) > 0.5 else { return }
+        lastTableWidth = width
+        guard !items.isEmpty else { return }
+        tableView.reloadData()
     }
 
     /// 主窗口「我的 → 播放历史」每次切回时刷新；独立窗口仍由刷新按钮触发。
@@ -246,15 +153,39 @@ final class PlayHistoryViewController: ViewController {
         startRefresh()
     }
 
+    @objc private func handleRowClick() {
+        let row = tableView.clickedRow >= 0 ? tableView.clickedRow : tableView.selectedRow
+        openDetail(at: row)
+    }
+
+    private func openDetail(at row: Int) {
+        guard row >= 0, row < items.count else { return }
+        let item = items[row]
+
+        let now = ProcessInfo.processInfo.systemUptime
+        let isDuplicateClick = lastOpenAnimeId == item.animeId && now - lastOpenTime < 0.35
+        lastOpenTime = now
+        lastOpenAnimeId = item.animeId
+        tableView.deselectAll(nil)
+        guard !isDuplicateClick else { return }
+
+        if let onOpenDetail = onOpenDetail {
+            onOpenDetail(item.animeId)
+        } else {
+            navigator?.pushViewController(BangumiDetailViewController(animateId: item.animeId))
+        }
+    }
+
     private func startRefresh() {
         refreshTask?.cancel()
         statusLabel.isHidden = false
         statusLabel.text = NSLocalizedString("正在加载播放历史…", comment: "")
-        collectionView.isHidden = true
+        tableView.isHidden = true
 
         refreshTask = Task { @MainActor [weak self] in
             guard let self else { return }
             guard await LoginGate.shared.ensureAccessToken(presenting: self.view.window) else {
+                guard !Task.isCancelled else { return }
                 self.statusLabel.text = NSLocalizedString("登录后才能查看播放历史", comment: "")
                 return
             }
@@ -262,21 +193,21 @@ final class PlayHistoryViewController: ViewController {
             do {
                 let response = try await PlayHistoryNetworkHandle.fetch()
                 guard !Task.isCancelled else { return }
+                self.referenceDate = Date()
                 self.items = response.animes
                     .sorted { ($0.episodes.compactMap(\.lastWatched).max() ?? .distantPast) > ($1.episodes.compactMap(\.lastWatched).max() ?? .distantPast) }
-                    .map(PlayHistoryItem.init)
-                self.collectionView.reloadData()
-                self.collectionView.isHidden = self.items.isEmpty
+                    .map(PlayHistoryItem.init(anime:))
+                self.tableView.reloadData()
+                self.tableView.isHidden = self.items.isEmpty
                 self.statusLabel.isHidden = !self.items.isEmpty
                 self.statusLabel.text = self.items.isEmpty
                     ? NSLocalizedString("还没有播放历史", comment: "")
                     : ""
-                self.viewDidLayout()
             } catch {
                 guard !Task.isCancelled else { return }
                 self.items = []
-                self.collectionView.reloadData()
-                self.collectionView.isHidden = true
+                self.tableView.reloadData()
+                self.tableView.isHidden = true
                 self.statusLabel.isHidden = false
                 self.statusLabel.text = error.localizedDescription
             }
@@ -284,35 +215,37 @@ final class PlayHistoryViewController: ViewController {
     }
 }
 
-extension PlayHistoryViewController: NSCollectionViewDataSource {
-    func collectionView(_ collectionView: NSCollectionView, numberOfItemsInSection section: Int) -> Int {
+extension PlayHistoryViewController: NSTableViewDataSource {
+    func numberOfRows(in tableView: NSTableView) -> Int {
         items.count
     }
+}
 
-    func collectionView(_ collectionView: NSCollectionView, itemForRepresentedObjectAt indexPath: IndexPath) -> NSCollectionViewItem {
-        let cell = collectionView.dequeueItem(class: PlayHistoryCollectionViewCell.self, for: indexPath)
-        guard indexPath.item < items.count else { return cell }
-        cell.update(item: items[indexPath.item], dateFormatter: dateFormatter)
+extension PlayHistoryViewController: NSTableViewDelegate {
+    func tableView(_ tableView: NSTableView, viewFor tableColumn: NSTableColumn?, row: Int) -> NSView? {
+        guard row >= 0, row < items.count else { return nil }
+        let cell = tableView.dequeueReusableCell(class: PlayHistoryRowView.self)
+        cell.onActivate = { [weak self] in
+            self?.openDetail(at: row)
+        }
+        cell.update(
+            item: items[row],
+            now: referenceDate,
+            width: max(tableView.bounds.width, 320)
+        )
         return cell
     }
-}
 
-extension PlayHistoryViewController: NSCollectionViewDelegate {
-    func collectionView(_ collectionView: NSCollectionView, didSelectItemsAt indexPaths: Set<IndexPath>) {
-        guard let indexPath = indexPaths.first, indexPath.item < items.count else { return }
-        collectionView.deselectItems(at: indexPaths)
-        let item = items[indexPath.item]
-        if let onOpenDetail = onOpenDetail {
-            onOpenDetail(item.animeId)
-        } else {
-            navigator?.pushViewController(BangumiDetailViewController(animateId: item.animeId))
-        }
+    func tableView(_ tableView: NSTableView, heightOfRow row: Int) -> CGFloat {
+        guard row >= 0, row < items.count else { return PlayHistoryRowLayout.minimumHeight }
+        return PlayHistoryRowView.height(
+            for: items[row],
+            width: max(tableView.bounds.width, 320)
+        )
     }
-}
 
-extension PlayHistoryViewController: WaterfallLayoutDelegate {
-    func waterfallLayout(_ layout: WaterfallLayout, heightForItemAt indexPath: IndexPath, itemWidth: CGFloat) -> CGFloat {
-        PlayHistoryCollectionViewCell.estimatedHeight(for: itemWidth)
+    func tableView(_ tableView: NSTableView, rowViewForRow row: Int) -> NSTableRowView? {
+        tableView.themedRowView(forRow: row)
     }
 }
 

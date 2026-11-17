@@ -72,6 +72,7 @@
 		363D377B83189153B3D261A9 /* MembershipViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F00F187A667382050B83E4B /* MembershipViewModel.swift */; };
 		36842F2B2B5FB391FAC199B2 /* TimelineCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CD9D8801CD6415C20C34C0B /* TimelineCollectionViewCell.swift */; };
 		3848354E49B8A3CAADBB0CE2 /* SummaryTranscriptParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2E4E58AC70F1AF66B1C7E56C /* SummaryTranscriptParser.swift */; };
+		38F761B4442A03D9693CCED1 /* PlayHistoryRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDF0E140EF08FA64FD629D3B /* PlayHistoryRowView.swift */; };
 		39F6F5D4CFE74D6B45A0A40B /* SearchWindowController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7477F7E7A4B033159CBB328 /* SearchWindowController.swift */; };
 		3C66BB9E567625BAD0C3DAAC /* OAuthPKCE.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D021EBACA202E6D6AA0847A /* OAuthPKCE.swift */; };
 		3C844F9E26AEADA488BF670C /* AccountEditSheetViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0821D0F2AF5E43F3A720AE55 /* AccountEditSheetViewController.swift */; };
@@ -862,6 +863,7 @@
 		BAFB032FB619882F8CF2E038 /* MembershipStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MembershipStore.swift; path = ../Share/CocoaShare/Membership/MembershipStore.swift; sourceTree = "<group>"; };
 		BBE9D86B181B2B670C368484 /* WelcomeRecentViewController.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = WelcomeRecentViewController.swift; sourceTree = "<group>"; };
 		BD0D50ED0B14914047E291D0 /* SubtitleDocument.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SubtitleDocument.swift; sourceTree = "<group>"; };
+		BDF0E140EF08FA64FD629D3B /* PlayHistoryRowView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PlayHistoryRowView.swift; sourceTree = "<group>"; };
 		BE64C56DBEC7C545E7DBCCF2 /* DownloadSheets.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DownloadSheets.swift; sourceTree = "<group>"; };
 		BF9BABE66AA1BBB2B8521EE2 /* DownloadPreferences.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DownloadPreferences.swift; sourceTree = "<group>"; };
 		BFF420A1C44027D77A9C67E7 /* BangumiDetailTagFlowView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BangumiDetailTagFlowView.swift; sourceTree = "<group>"; };
@@ -1262,6 +1264,7 @@
 			children = (
 				F1705B7D73B9C09189CED761 /* PlayHistoryReporter.swift */,
 				5115FE4B0D3484C630A5912F /* PlayHistoryWindow.swift */,
+				BDF0E140EF08FA64FD629D3B /* PlayHistoryRowView.swift */,
 			);
 			name = History;
 			path = History;
@@ -2783,6 +2786,7 @@
 				81ACE5886646C90BF30AE892 /* OnlineDanmakuMatchModels.swift in Sources */,
 				FAF06525BD81268BB158F17F /* OnlineDanmakuMatchViewController.swift in Sources */,
 				4BE8CDFA78C767A48001615E /* OnlineDanmakuMatchWindowController.swift in Sources */,
+				38F761B4442A03D9693CCED1 /* PlayHistoryRowView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
