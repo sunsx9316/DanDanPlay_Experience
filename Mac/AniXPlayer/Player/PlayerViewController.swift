@@ -1089,6 +1089,11 @@ extension PlayerViewController: PlayerUIViewDelegate, NSMenuDelegate {
                 preview?.didClickReveal = {
                     NSWorkspace.shared.activateFileViewerSelecting([url])
                 }
+                // 保存成功后才提供动图入口；点击关闭预览卡并沿用现有 GIF 导出流程。
+                preview?.onSaveGIF = { [weak self] in
+                    self?.exportGIF()
+                }
+                preview?.setSaveGIFVisible(true)
             case .failure(let error):
                 ANX.logError(.player, "[Player] 截图保存失败: \(error)")
                 if self.isSnapshotPermissionError(error) {
