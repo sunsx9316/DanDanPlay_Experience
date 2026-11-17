@@ -101,8 +101,10 @@ macOS 的启动页不是单纯的品牌欢迎页，而是 Windows 版的「欢�
 ### 4.6 在线观看
 - 现已在首版基础上补齐源规则、连续播放、独立媒体嗅探窗口和源置顶；详见
   `2026-11-16-macos-online-viewing.md`。
-- 支持 Animeko CSS→XPath 与 Kazumi XPath 规则；Kazumi 的 API/POST、JSONPath、嵌套/分隔剧集
-  等边界已补齐，见 `2026-11-16-macos-batch-2.md` §4。
+- 支持 Animeko CSS→XPath / JSONPath 与 Kazumi XPath / API 规则；Kazumi 的 API/POST、JSONPath、
+  嵌套/分隔剧集见 `2026-11-16-macos-batch-2.md` §4，Animeko JSONPath 与 JSONPath 扩展见
+  `2026-11-17-macos-batch-3.md` §6。
+- 搜索框只在 Return 或点击「搜索」时请求；在线播放前先弹出「选择弹幕库」，选定后开始播放。
 - 搜索免费；播放走 `.onlinePlayback` 会员门禁，嗅探走 `.mediaSniffer`。
 - 不实现网页内嵌登录、DRM/验证码绕过；解析失败必须明确提示并可重试/换源，不伪造结果。
 

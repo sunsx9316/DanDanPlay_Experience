@@ -176,7 +176,8 @@
 1. Kazumi API/POST 模式规则（JSONPath/请求体/分页）：已完成，规格与结果见
    `2026-11-16-macos-batch-2.md` §4；覆盖 `searchMode/chapterMode = api`、GET/POST、
    delimited/nested 剧集、sourceTemplate 与 episodePage。
-2. Animeko JSONPath 搜索。
+2. Animeko JSONPath 搜索：已完成；Animeko/Kazumi JSONPath 常用过滤、递归、切片、union
+   见 `2026-11-17-macos-batch-3.md` §6。高级比较/正则/逻辑/函数表达式仍明确报错。
 3. 更完整的请求头转发（本地 GCDWebServer 代理）以覆盖强防盗链源；独立嗅探窗口目前只带默认 UA + Referer，无法复制窗口内的全部请求头。
 4. 嗅探成功率与广告过滤继续按真实源站校准；可视窗口可增加候选指纹/过滤规则。
 5. 搜索历史独立面板（当前仍使用 `NSSearchField.recentSearches`）。

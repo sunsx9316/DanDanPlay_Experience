@@ -1,9 +1,25 @@
 # macOS 第三批并行改进（搜索 / 历史 / 在线弹幕 / 解析 / 账号 / 动图 / Markdown / 菜单 / 视频设置）
 
-> 状态：已批准，按 worktree 并行执行（2026-11-17）
+> 状态：已完成并合并（2026-11-17，win-porting）
 > 范围：仅 macOS；iOS/tvOS 行为保持不变。
 > 原则：先补用户可见闭环，不做无关重构；不伪造本地文件、在线源、账号资料或搜索结果。
 > 参考：Windows `Pages/User/UserPlayHistoryControl.xaml`、`PlayHistoryEpisodeDisplayItem.cs`、`Pages/Welcome/OnlinePlayerPage.xaml.cs`、`Pages/User/UserCenterPage.xaml`、`Pages/Resources`、`Pages/Applets`。
+
+## 0. 完成状态
+
+| # | 任务 | 分支 | 提交 | 结果 |
+|---|---|---|---|---|
+| 1 | 搜索框回车/按钮触发 | `feat/search-enter` | `61b261e` | ✅ 已合并 |
+| 2 | 播放历史列表 + 剧集状态 | `feat/history-status` | `6a37001` | ✅ 已合并 |
+| 3 | 在线播放前弹幕选择 | `feat/online-danmaku` | `56dedbf` | ✅ 已合并 |
+| 4 | Animeko/Kazumi 解析缺口 | `feat/online-parser` | `4a97236` | ✅ 已合并 |
+| 5 | 用户资料 + 退出登录 | `feat/user-profile` | `ab7afe0` | ✅ 已合并 |
+| 6 | 截图后保存动图 | `feat/snapshot-gif` | `98cd5d5` | ✅ 已合并 |
+| 7 | Markdown 渲染 | `feat/markdown` | `a1b9b89` | ✅ 已合并 |
+| 8 | 菜单切换主界面 tab | `feat/menu-routing` | `529b463` | ✅ 已合并 |
+| 9 | 视频设置面板排版 | `feat/media-settings-layout` | `b9acdad` + `7bb263f` | ✅ 已合并 |
+
+最终集成：macOS / iOS / tvOS Debug 全部 `BUILD SUCCEEDED`；`AniXPlayerTests` **310 个通过**。
 
 ## 1. 总目标
 
@@ -373,3 +389,35 @@ Windows `OnlinePlayerPage` 在启动播放时把 `SubjectName + EpisodeTitle` �
 - 会员 Markdown 文案由服务端返回，需用真实响应检查标题/列表/链接。
 - GIF 导出仍走会员门禁和现有无头 MPV/AVFoundation 流程；本任务只加入口。
 - 菜单路由只改菜单入口，不删除旧独立窗口类；旧窗口可能仍被其他代码/脚本打开。
+
+## 14. 实现结果与备注
+
+### 14.1 已完成
+
+- 番剧搜索、在线观看只在 Return / 搜索按钮触发；外部预填搜索仍自动执行。
+- 播放历史改为 Windows 式列表：100×150 海报、剧集 chip、已看/未看/未上映状态；独立窗口与主窗口内嵌均正常滚动。
+- 在线观看首次播放前显示弹幕选择窗口，支持搜索更多、选择、直接播放、取消；选择结果写入 `UserMatchInfo`，首帧即有弹幕；直接播放跳过自动匹配。
+- Animeko JSONPath 搜索；Kazumi JSONPath 过滤/递归/切片/union；`showAllEpisodes`、频道过滤；`sourceTemplate` 相对/绝对 URL 与 `@source`/`@episodeUrl` 处理；单规则失败隔离。
+- 账号资料窗口：昵称、邮箱、密码、邮箱验证、bangumi.tv 关联/管理、退出登录；`linkedAccounts.bangumi` 可选解析。
+- 截图保存成功后预览卡出现「保存动图」，进入现有 GIF 流程；悬停/聚焦暂停自动消失。
+- 共享 Markdown 渲染器用于会员权益说明和 AI 总结；支持标题/粗体/列表/代码/引用/链接；时间戳链接可点击并复制时间戳。
+- 菜单「主页/搜索/播放历史/媒体库/下载/追番」切主窗口 tab；通知/剪贴板/系统下载入口也切下载页。
+- 视频设置面板 440pt；字幕字体/颜色行 68pt；Sheet 行 44pt；补回「字幕字体」设置项；长标题截断 + tooltip。
+
+### 14.2 仍需手工验收
+
+- 真实账号：昵称/邮箱/密码接口、邮箱验证页、bangumi 授权与管理、退出登录。
+- 真实在线源：弹幕选择、Animeko JSONPath、Kazumi API/JSONPath、mgnacg 响应。
+- 真实会员 Markdown 文案与 AI 总结结果。
+- 真实 GIF 导出（本任务只加入口，不改现有流程）。
+- 播放历史真实数据、点击详情、极端长番 chip 行高。
+- 菜单路由在主窗口最小化/多窗口焦点切换下的实际体验。
+
+### 14.3 已知限制
+
+- `mgnacg` 这类「API 搜索 + XPath 选集 + sourceTemplate 为空且搜索响应没有 URL」的规则仍会明确报错，不猜测详情地址。
+- JSONPath 仍不支持比较/正则/逻辑/函数、负步长、`..[...]` 等高级语法。
+- `showAllEpisodes` 只做规则解析和 resolver 使用，没有新增在线页 UI 开关。
+- 在线弹幕选择是普通独立窗口而非 sheet；选定弹幕后下载失败时，既有降级逻辑仍可能回退到自动匹配。
+- 菜单路由保留旧独立窗口类；「打开网络文件…」仍走媒体库选择窗口。
+- 视频设置面板高度仍为 600pt，内容多时需滚动。
