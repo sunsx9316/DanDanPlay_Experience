@@ -215,8 +215,9 @@ final class SearchUpgradedViewController: ViewController {
     private lazy var searchField: NSSearchField = {
         let field = NSSearchField()
         field.placeholderString = mode.placeholder
+        field.configureSearchOnReturn()
         field.target = self
-        field.action = #selector(performSearch)
+        field.action = #selector(searchFieldAction)
         field.setAccessibilityIdentifier(AccessibilityID.Search.searchField)
         field.setAccessibilityLabel(NSLocalizedString("搜索关键词", comment: ""))
         field.setContentHuggingPriority(.defaultLow, for: .horizontal)
@@ -591,6 +592,21 @@ final class SearchUpgradedViewController: ViewController {
         startSearch()
     }
 
+    /// 搜索框的回车/清除按钮都走 action；清除按钮发送空字符串时不重新搜索，
+    /// 保留当前结果，等下一次 Return 或点击「搜索」按钮再更新。
+    @objc private func searchFieldAction() {
+        let keyword = searchField.stringValue.trimmingCharacters(in: .whitespacesAndNewlines)
+        if keyword.isEmpty, !isReturnKeyAction {
+            return
+        }
+        startSearch()
+    }
+
+    private var isReturnKeyAction: Bool {
+        guard let event = NSApp.currentEvent else { return true }
+        return event.type == .keyDown
+    }
+
     private func startSearch() {
         searchTask?.cancel()
 
@@ -598,7 +614,10 @@ final class SearchUpgradedViewController: ViewController {
         let currentMode = mode
 
         if currentMode != .advanced && keyword.isEmpty {
-            showErrorState(NSLocalizedString("请输入搜索关键词", comment: ""))
+            // 清空输入不自动清空当前结果；没有结果时才提示输入关键词。
+            if nodes.isEmpty {
+                showErrorState(NSLocalizedString("请输入搜索关键词", comment: ""))
+            }
             return
         }
 

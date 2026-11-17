@@ -19,3 +19,13 @@ extension NSTextField {
     }
     
 }
+
+extension NSSearchField {
+
+    /// 搜索框只在按下 Return 或点击「搜索」按钮时提交；
+    /// 输入、删除、粘贴文字时不自动发送 action。
+    func configureSearchOnReturn() {
+        sendsWholeSearchString = true
+        sendsSearchStringImmediately = false
+    }
+}
