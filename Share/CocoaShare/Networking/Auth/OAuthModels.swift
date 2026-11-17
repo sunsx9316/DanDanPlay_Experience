@@ -88,6 +88,107 @@ struct OAuthPrivileges: Decodable, Equatable {
     }
 }
 
+/// `/user/me` 中已关联的第三方账号（目前只有 bangumi.tv）。
+struct OAuthLinkedAccount: Decodable, Equatable {
+    let userId: String
+    let userName: String
+    let display: String
+    let avatar: String
+    let expires: Date?
+
+    enum CodingKeys: String, CodingKey {
+        case userId
+        case userName
+        case display
+        case avatar
+        case expires
+    }
+
+    init(
+        userId: String = "",
+        userName: String = "",
+        display: String = "",
+        avatar: String = "",
+        expires: Date? = nil
+    ) {
+        self.userId = userId
+        self.userName = userName
+        self.display = display
+        self.avatar = avatar
+        self.expires = expires
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.userId = Self.decodeIdentifier(container, key: .userId)
+        self.userName = Self.decodeString(container, key: .userName)
+        self.display = Self.decodeString(container, key: .display)
+        self.avatar = Self.decodeString(container, key: .avatar)
+        if let raw = Self.decodeOptionalString(container, key: .expires), !raw.isEmpty {
+            self.expires = DDPDateParser.parse(raw)
+        } else {
+            self.expires = nil
+        }
+    }
+
+    var displayName: String {
+        if !display.isEmpty { return display }
+        if !userName.isEmpty { return userName }
+        if !userId.isEmpty { return userId }
+        return NSLocalizedString("bangumi.tv 用户", comment: "")
+    }
+
+    func isExpired(now: Date = Date()) -> Bool {
+        guard let expires = expires else { return false }
+        return expires <= now
+    }
+
+    private static func decodeString(
+        _ container: KeyedDecodingContainer<CodingKeys>,
+        key: CodingKeys
+    ) -> String {
+        decodeOptionalString(container, key: key) ?? ""
+    }
+
+    private static func decodeOptionalString(
+        _ container: KeyedDecodingContainer<CodingKeys>,
+        key: CodingKeys
+    ) -> String? {
+        if let value = try? container.decodeIfPresent(String.self, forKey: key) {
+            return value
+        }
+        if let value = try? container.decodeIfPresent(Int.self, forKey: key) {
+            return String(value)
+        }
+        return nil
+    }
+
+    private static func decodeIdentifier(
+        _ container: KeyedDecodingContainer<CodingKeys>,
+        key: CodingKeys
+    ) -> String {
+        decodeOptionalString(container, key: key) ?? ""
+    }
+}
+
+/// `linkedAccounts` 容器；旧版 `/user/me` 不返回该字段时整体为 nil。
+struct OAuthLinkedAccounts: Decodable, Equatable {
+    let bangumi: OAuthLinkedAccount?
+
+    enum CodingKeys: String, CodingKey {
+        case bangumi
+    }
+
+    init(bangumi: OAuthLinkedAccount? = nil) {
+        self.bangumi = bangumi
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.bangumi = try? container.decodeIfPresent(OAuthLinkedAccount.self, forKey: .bangumi)
+    }
+}
+
 /// `/user/me` 的模型（只保留本阶段需要的字段）。
 struct OAuthUserProfile: Decodable, Equatable {
     let userId: Int
@@ -99,6 +200,7 @@ struct OAuthUserProfile: Decodable, Equatable {
     let accountTier: String?
     let appScope: String?
     let privileges: OAuthPrivileges?
+    let linkedAccounts: OAuthLinkedAccounts?
 
     enum CodingKeys: String, CodingKey {
         case userId
@@ -110,6 +212,7 @@ struct OAuthUserProfile: Decodable, Equatable {
         case accountTier
         case appScope
         case privileges
+        case linkedAccounts
     }
 
     init(
@@ -121,7 +224,8 @@ struct OAuthUserProfile: Decodable, Equatable {
         profileImage: String = "",
         accountTier: String? = nil,
         appScope: String? = nil,
-        privileges: OAuthPrivileges? = nil
+        privileges: OAuthPrivileges? = nil,
+        linkedAccounts: OAuthLinkedAccounts? = nil
     ) {
         self.userId = userId
         self.userName = userName
@@ -132,6 +236,7 @@ struct OAuthUserProfile: Decodable, Equatable {
         self.accountTier = accountTier
         self.appScope = appScope
         self.privileges = privileges
+        self.linkedAccounts = linkedAccounts
     }
 
     init(from decoder: Decoder) throws {
@@ -145,6 +250,7 @@ struct OAuthUserProfile: Decodable, Equatable {
         self.accountTier = try container.decodeIfPresent(String.self, forKey: .accountTier)
         self.appScope = try container.decodeIfPresent(String.self, forKey: .appScope)
         self.privileges = try container.decodeIfPresent(OAuthPrivileges.self, forKey: .privileges)
+        self.linkedAccounts = try? container.decodeIfPresent(OAuthLinkedAccounts.self, forKey: .linkedAccounts)
     }
 
     var displayName: String {
@@ -156,6 +262,10 @@ struct OAuthUserProfile: Decodable, Equatable {
     var isMember: Bool {
         guard let member = privileges?.member else { return false }
         return member > Date()
+    }
+
+    var bangumiAccount: OAuthLinkedAccount? {
+        linkedAccounts?.bangumi
     }
 }
 

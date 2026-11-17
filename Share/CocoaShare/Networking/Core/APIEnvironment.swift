@@ -69,4 +69,20 @@ struct APIEnvironment {
     var revokeEndpoint: URL! { makeURL("/oauth/revoke") }
     var logoutEndpoint: URL! { makeURL("/oauth/logout") }
     var userMeEndpoint: URL! { makeURL("/user/me") }
+
+    // MARK: - Account settings
+
+    var userProfileUpdateEndpoint: URL? { makeURL("/user/profile") }
+    var userEmailUpdateEndpoint: URL? { makeURL("/user/email") }
+    var userPasswordUpdateEndpoint: URL? { makeURL("/user/password") }
+    var webTokenEndpoint: URL? { makeURL("/oauth/webToken") }
+    var emailVerifyPageEndpoint: URL? { makeURL("/account/email/verify") }
+
+    func oauthProviderLoginEndpoint(provider: String) -> URL? {
+        makeURL("/oauthprovider/\(provider)/login")
+    }
+
+    func oauthProviderManageEndpoint(provider: String) -> URL? {
+        makeURL("/oauthprovider/\(provider)/manage")
+    }
 }

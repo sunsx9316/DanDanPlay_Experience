@@ -15,6 +15,7 @@ private final class MainAccountUserCardView: NSView {
 
     var onLogin: (() -> Void)?
     var onShowMembership: (() -> Void)?
+    var onShowProfile: (() -> Void)?
 
     private let background = WelcomeShellCardView()
     private let avatarView = ImageView()
@@ -33,6 +34,8 @@ private final class MainAccountUserCardView: NSView {
         font: .systemFont(ofSize: 10.5),
         color: .tertiaryLabelColor
     )
+    private let actionStack = NSStackView()
+    private let profileButton = WelcomeShellClosureButton()
     private let actionButton = WelcomeShellClosureButton()
     private var isLoggedIn = false
 
@@ -65,11 +68,33 @@ private final class MainAccountUserCardView: NSView {
             "\(AccessibilityID.MainShell.accountCardPrefix)profileAction"
         )
 
+        profileButton.bezelStyle = .rounded
+        profileButton.controlSize = .regular
+        profileButton.title = NSLocalizedString("账号资料", comment: "")
+        profileButton.onClick = { [weak self] in
+            self?.onShowProfile?()
+        }
+        profileButton.setAccessibilityIdentifier(AccessibilityID.Account.openButton)
+        profileButton.setAccessibilityLabel(NSLocalizedString("账号资料", comment: ""))
+
+        actionStack.orientation = .vertical
+        actionStack.alignment = .trailing
+        actionStack.spacing = 6
+        actionStack.detachesHiddenViews = true
+        actionStack.addArrangedSubview(profileButton)
+        actionStack.addArrangedSubview(actionButton)
+        profileButton.snp.makeConstraints { make in
+            make.width.equalTo(108)
+        }
+        actionButton.snp.makeConstraints { make in
+            make.width.equalTo(108)
+        }
+
         addSubview(avatarView)
         addSubview(nameLabel)
         addSubview(statusLabel)
         addSubview(detailLabel)
-        addSubview(actionButton)
+        addSubview(actionStack)
 
         avatarView.snp.makeConstraints { make in
             make.leading.equalToSuperview().offset(18)
@@ -79,25 +104,24 @@ private final class MainAccountUserCardView: NSView {
         nameLabel.snp.makeConstraints { make in
             make.leading.equalTo(avatarView.snp.trailing).offset(14)
             make.top.equalToSuperview().offset(18)
-            make.trailing.lessThanOrEqualTo(actionButton.snp.leading).offset(-14)
+            make.trailing.lessThanOrEqualTo(actionStack.snp.leading).offset(-14)
         }
         statusLabel.snp.makeConstraints { make in
             make.leading.equalTo(nameLabel)
             make.top.equalTo(nameLabel.snp.bottom).offset(4)
-            make.trailing.lessThanOrEqualTo(actionButton.snp.leading).offset(-14)
+            make.trailing.lessThanOrEqualTo(actionStack.snp.leading).offset(-14)
         }
         detailLabel.snp.makeConstraints { make in
             make.leading.equalTo(nameLabel)
             make.top.equalTo(statusLabel.snp.bottom).offset(2)
-            make.trailing.lessThanOrEqualTo(actionButton.snp.leading).offset(-14)
+            make.trailing.lessThanOrEqualTo(actionStack.snp.leading).offset(-14)
         }
-        actionButton.snp.makeConstraints { make in
+        actionStack.snp.makeConstraints { make in
             make.trailing.equalToSuperview().offset(-18)
             make.centerY.equalToSuperview()
-            make.width.equalTo(108)
         }
         snp.makeConstraints { make in
-            make.height.equalTo(92)
+            make.height.equalTo(100)
         }
 
         setAccessibilityIdentifier("\(AccessibilityID.MainShell.accountCardPrefix)profile")
@@ -117,6 +141,7 @@ private final class MainAccountUserCardView: NSView {
             statusLabel.textColor = .secondaryLabelColor
             detailLabel.text = ""
             detailLabel.isHidden = true
+            profileButton.isHidden = false
             actionButton.title = NSLocalizedString("登录弹弹play", comment: "")
             avatarView.kf.cancelDownloadTask()
             avatarView.image = welcomeShellSymbol("person.crop.circle.fill", pointSize: 44, weight: .regular)
@@ -126,6 +151,7 @@ private final class MainAccountUserCardView: NSView {
         }
 
         nameLabel.text = profile?.displayName ?? NSLocalizedString("已登录用户", comment: "")
+        profileButton.isHidden = false
 
         if let memberDate = profile?.privileges?.member, memberDate > Date() {
             let formatter = DateFormatter()
@@ -429,6 +455,10 @@ final class MainAccountHubViewController: WelcomeShellScrollPageViewController {
         }
         userCard.onShowMembership = { [weak self] in
             self?.onShowMembership?()
+        }
+        userCard.onShowProfile = { [weak self] in
+            guard let self = self else { return }
+            MacFeatureLauncher.showAccountProfile(presenting: self.view.window)
         }
 
         cardGrid.onSelect = { [weak self] key in

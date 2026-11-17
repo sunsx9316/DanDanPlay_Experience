@@ -229,6 +229,40 @@ enum AccessibilityID {
         static let webView = "login.webView"
     }
 
+    /// 账号资料窗口与表单。
+    enum Account {
+        static let openButton = "account.open"
+        static let window = "account.window"
+        static let root = "account.root"
+        static let header = "account.header"
+        static let headerAction = "account.header.action"
+        static let status = "account.status"
+
+        static let nicknameRow = "account.nickname.row"
+        static let emailRow = "account.email.row"
+        static let passwordRow = "account.password.row"
+        static let verifyEmailRow = "account.verifyEmail.row"
+        static let logoutRow = "account.logout.row"
+
+        static let bangumiCard = "account.bangumi.card"
+        static let bangumiAuthorize = "account.bangumi.authorize"
+        static let bangumiManage = "account.bangumi.manage"
+        static let bangumiRefresh = "account.bangumi.refresh"
+
+        static let nicknameSheet = "account.nickname.sheet"
+        static let emailSheet = "account.email.sheet"
+        static let passwordSheet = "account.password.sheet"
+        static let nicknameField = "account.nickname.field"
+        static let oldEmailField = "account.email.oldField"
+        static let newEmailField = "account.email.newField"
+        static let oldPasswordField = "account.password.oldField"
+        static let newPasswordField = "account.password.newField"
+        static let confirmPasswordField = "account.password.confirmField"
+        static let formError = "account.form.error"
+        static let formSave = "account.form.save"
+        static let formCancel = "account.form.cancel"
+    }
+
     enum Home {
         static let root = "home.root"
         static let banner = "home.banner"
