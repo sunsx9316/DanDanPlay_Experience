@@ -51,7 +51,7 @@ iOS / tvOS 有两种发布模式：
 
 | 模式 | 版本号 | Build | 说明 |
 |------|--------|-------|------|
-| TestFlight | 不变 | 只增 build | 内部测试，同一版本可多次上传 |
+| TestFlight | 不变 | 只增 build | 上传后自动分发到公开测试组，同一版本可多次上传 |
 | App Store | 更新 | 更新 | 正式发布 |
 
 macOS 跳过此步骤，直接到 Step 2。
@@ -234,8 +234,14 @@ bash scripts/release/publish.sh mac /tmp/export/AniXPlayer.dmg <shortVersion> <b
 **iOS / tvOS:**
 ```bash
 cd /Users/jimhuang/Dev/DanDanPlay_Experience
+# TestFlight 模式（上传后自动分发到 Public 外部测试组）
+bash scripts/release/publish.sh <ios|tvos> /tmp/export/AniXPlayer.ipa <shortVersion> <build> /tmp/release_changelog_<platform>.txt --testflight
+
+# App Store 模式（上传后到 App Store Connect 提审）
 bash scripts/release/publish.sh <ios|tvos> /tmp/export/AniXPlayer.ipa <shortVersion> <build> /tmp/release_changelog_<platform>.txt
 ```
+
+`--testflight` 会在上传成功后后台启动 `scripts/release/testflight_public.sh`：等待构建处理完成、写入 What to Test、加入 `Public` 外部测试组、提交 Beta App Review，并在审核通过后自动确认分发。日志位于 `/tmp/testflight_<platform>_<build>.log`。
 
 ## 注意事项
 
@@ -245,7 +251,9 @@ bash scripts/release/publish.sh <ios|tvos> /tmp/export/AniXPlayer.ipa <shortVers
 - `gh release create` 会自动创建并推送 git tag，`publish.sh` 已做幂等处理（tag 存在则跳过）
 - iOS / tvOS 环境前提：`APP_SPECIFIC_PASSWORD` 环境变量（建议写入 `~/.zshrc` 持久化）+ `APPLE_ID`（默认 `jimhuang099@gmail.com`）
 - iOS / tvOS 上传凭证：`publish.sh` 统一使用 `@env:APP_SPECIFIC_PASSWORD`（Xcode 17+ 的 altool 读取 keychain 条目已不可靠），未设置时脚本会直接报错退出
+- TestFlight 自动分发前提：App Store Connect API Key（App Manager 角色）+ `ASC_KEY_ID` + `ASC_ISSUER_ID`，`.p8` 放到 `~/.appstoreconnect/private_keys/AuthKey_<KEY_ID>.p8`；这些变量可写入 `~/.appstoreconnect/release.env`，`publish.sh` 会自动加载
 - 症状：`publish.sh` 无任何输出且 `exit 1` → `.zshrc` 被 bash `source` 时被 oh-my-zsh 终止，已修复（改用 zsh 子进程回捞变量）
 - macOS 发布会推送到 GitHub Release + Gitee 更新仓库 + git tag
-- iOS / tvOS 发布会上传 `.ipa` 到 App Store Connect + git tag（后续需在 App Store Connect 中完成提审）
+- iOS / tvOS 发布会上传 `.ipa` 到 App Store Connect + git tag；TestFlight 模式加 `--testflight` 后自动分发（含 Beta 审核轮询），App Store 模式仍需在 App Store Connect 提审
+- TestFlight 外部测试必须经过 Beta App Review，脚本只能自动提交和等待，不能跳过审核
 - 如果某步失败，用户可以从失败的那步重来（子脚本可独立运行）

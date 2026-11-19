@@ -18,7 +18,7 @@ load_release_env() {
                 ;;
         esac
     done < <(zsh -ic '
-        for key in GITEE_TOKEN APPLE_ID APP_SPECIFIC_PASSWORD APPLE_TEAM_ID UPDATE_REPO_PATH; do
+        for key in GITEE_TOKEN APPLE_ID APP_SPECIFIC_PASSWORD APPLE_TEAM_ID UPDATE_REPO_PATH ASC_KEY_ID ASC_ISSUER_ID ASC_KEY_PATH TESTFLIGHT_GROUP BUNDLE_ID; do
             value="${(P)key}"
             [ -n "$value" ] && print -r -- "__RELEASE_ENV__${key}=${value}"
         done
@@ -26,8 +26,17 @@ load_release_env() {
 }
 load_release_env
 
+# 可选的本机发布配置（API Key ID / Issuer ID / 测试组等，不含密钥内容）
+RELEASE_ENV_FILE="${RELEASE_ENV_FILE:-$HOME/.appstoreconnect/release.env}"
+if [ -f "$RELEASE_ENV_FILE" ]; then
+    set -a
+    # shellcheck disable=SC1090
+    . "$RELEASE_ENV_FILE"
+    set +a
+fi
+
 # 发布：DMG + GitHub Release + git tag + 更新仓库
-# 用法: publish.sh <platform> <app_path> <short_version> <build> <changelog_file>
+# 用法: publish.sh <platform> <app_path> <short_version> <build> <changelog_file> [--testflight]
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PLATFORM="$1"
@@ -35,9 +44,14 @@ APP_PATH="$2"
 SHORT_VERSION="$3"
 BUILD="$4"
 CHANGELOG_FILE="$5"
+TESTFLIGHT_AUTO=0
+
+if [ "${6:-}" = "--testflight" ]; then
+    TESTFLIGHT_AUTO=1
+fi
 
 if [ -z "$PLATFORM" ] || [ -z "$APP_PATH" ] || [ -z "$SHORT_VERSION" ] || [ -z "$BUILD" ] || [ -z "$CHANGELOG_FILE" ]; then
-    echo "用法: $0 <mac|ios|tvos> <app_path> <short_version> <build> <changelog_file>" >&2
+    echo "用法: $0 <mac|ios|tvos> <app_path> <short_version> <build> <changelog_file> [--testflight]" >&2
     exit 1
 fi
 
@@ -169,8 +183,40 @@ elif [ "$PLATFORM" = "ios" ] || [ "$PLATFORM" = "tvos" ]; then
     git tag "$VERSION_TAG"
     git push origin "$VERSION_TAG"
 
+    if [ "$TESTFLIGHT_AUTO" = "1" ]; then
+        echo "=== TestFlight 自动分发 ==="
+        if [ -z "${ASC_KEY_ID:-}" ] || [ -z "${ASC_ISSUER_ID:-}" ]; then
+            echo "警告: 未设置 ASC_KEY_ID / ASC_ISSUER_ID，跳过 TestFlight 自动分发" >&2
+        else
+            TF_KEY_PATH="${ASC_KEY_PATH:-$HOME/.appstoreconnect/private_keys/AuthKey_${ASC_KEY_ID}.p8}"
+            if [ ! -f "$TF_KEY_PATH" ]; then
+                echo "警告: 找不到 API Key: $TF_KEY_PATH，跳过 TestFlight 自动分发" >&2
+            else
+                TF_LOG="/tmp/testflight_${PLATFORM}_${BUILD}.log"
+                TF_GROUP="${TESTFLIGHT_GROUP:-Public}"
+                TF_BUNDLE="${BUNDLE_ID:-com.anixplayer.ios}"
+                nohup env \
+                    ASC_KEY_ID="$ASC_KEY_ID" \
+                    ASC_ISSUER_ID="$ASC_ISSUER_ID" \
+                    ASC_KEY_PATH="$TF_KEY_PATH" \
+                    BUNDLE_ID="$TF_BUNDLE" \
+                    TESTFLIGHT_GROUP="$TF_GROUP" \
+                    "$SCRIPT_DIR/testflight_public.sh" "$BUILD" --whats-new-file "$CHANGELOG_FILE" \
+                    >"$TF_LOG" 2>&1 &
+                TF_PID=$!
+                disown "$TF_PID" 2>/dev/null || true
+                echo "TestFlight 自动分发已后台启动（pid $TF_PID），审核通过后自动发布到 $TF_GROUP"
+                echo "分发日志: $TF_LOG"
+            fi
+        fi
+    fi
+
     echo "=== 发布完成 ==="
-    echo "App 已上传至 App Store Connect，请在 App Store Connect 中完成提审"
+    if [ "$TESTFLIGHT_AUTO" = "1" ]; then
+        echo "App 已上传；TestFlight 分发在后台继续，无需手动操作"
+    else
+        echo "App 已上传至 App Store Connect，请在 App Store Connect 中完成提审"
+    fi
     echo ""
     echo "=== 更新日志 ==="
     cat "$CHANGELOG_FILE"
