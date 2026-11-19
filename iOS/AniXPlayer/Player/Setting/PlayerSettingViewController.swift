@@ -109,12 +109,6 @@ class PlayerSettingViewController: ViewController {
         }
         
         self.view.addSubview(self.segmentedControl)
-
-        let closeButton = UIButton(type: .system)
-        closeButton.setImage(UIImage(systemName: "xmark"), for: .normal)
-        closeButton.tintColor = .textColor
-        closeButton.addTarget(self, action: #selector(onTouchCloseButton), for: .touchUpInside)
-        self.view.addSubview(closeButton)
         
         self.blurView.snp.makeConstraints { (make) in
             make.edges.equalToSuperview()
@@ -122,29 +116,17 @@ class PlayerSettingViewController: ViewController {
         
         self.segmentedControl.snp.makeConstraints { (make) in
             make.top.equalTo(10)
-            make.leading.equalToSuperview().inset(10)
-            make.trailing.equalToSuperview().inset(40)
-        }
-
-        closeButton.snp.makeConstraints { make in
-            make.top.equalTo(10)
-            make.trailing.equalTo(-10)
-            make.width.height.equalTo(30)
+            make.leading.trailing.equalTo(self.view.safeAreaLayoutGuide).inset(10)
         }
         
         self.segmentedControl.selectedSegmentIndex = 0
         self.selectedIndex(0)
     }
     
-
     //MARK: Private Method
     @objc private func onTouchSegmentedControl(_ segmentedControl: UISegmentedControl) {
         let index = segmentedControl.selectedSegmentIndex
         self.selectedIndex(index)
-    }
-
-    @objc private func onTouchCloseButton() {
-        dismiss(animated: true)
     }
     
     private func selectedIndex(_ index: Int) {
